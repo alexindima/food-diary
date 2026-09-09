@@ -11,8 +11,8 @@ on:
     - cron: '17 3 * * 1'
 
 jobs:
-  llm-wiki:
-    name: LLM Wiki verification
+  llm-wiki-focused:
+    name: LLM Wiki focused regressions
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
         working-directory: FoodDiary.Web.Client
         run: npm ci --ignore-scripts
 
-      - name: Verify LLM Wiki (full)
+      - name: Resolve Wiki comparison base
         shell: pwsh
         env:
           EVENT_BEFORE: ${{ github.event.before }}
@@ -45,22 +45,31 @@ jobs:
             $baseRef = "HEAD^"
           }
 
-          # Pull requests use the complete focused catalog. Pushes, the weekly
-          # schedule, and manual audits additionally run the legacy monolithic
-          # Full profile outside the latency-sensitive PR path.
-          $verificationProfile = if ("${{ github.event_name }}" -eq "pull_request") { "Focused" } else { "Full" }
-          ./.llm-wiki/wiki.ps1 verify-full -BaseRef $baseRef -VerificationProfile $verificationProfile
+          "WIKI_BASE_REF=$baseRef" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding utf8
 
+      - name: Verify complete Wiki focused catalog
+        shell: pwsh
+        run: ./.llm-wiki/wiki.ps1 verify-full -BaseRef $env:WIKI_BASE_REF -VerificationProfile Focused
+
+      - name: Check Wiki API compatibility
+        shell: pwsh
+        run: |
           ./.llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1 `
-            -BaseRef $baseRef `
+            -BaseRef $env:WIKI_BASE_REF `
             -FailOnBreaking
 
+      - name: Inspect Wiki dependency changes
+        shell: pwsh
+        run: |
           ./.llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1 `
-            -BaseRef $baseRef
+            -BaseRef $env:WIKI_BASE_REF
 
+      - name: Compile Wiki review report
+        shell: pwsh
+        run: |
           $reviewReport = Join-Path $env:RUNNER_TEMP "llm-wiki-review.md"
           ./.llm-wiki/wiki.ps1 report `
-            -BaseRef $baseRef `
+            -BaseRef $env:WIKI_BASE_REF `
             -HeadRef HEAD `
             -OutputPath $reviewReport
           Get-Content -LiteralPath $reviewReport | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
@@ -70,7 +79,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: llm-wiki-failure-logs
+          name: llm-wiki-focused-failure-logs
           include-hidden-files: true
           path: |
             .artifacts/llm-wiki/**/*.log
@@ -78,6 +87,76 @@ jobs:
             .artifacts/llm-wiki/context-evaluation/*.json
           if-no-files-found: warn
           retention-days: 7
+
+  llm-wiki-audit:
+    name: LLM Wiki monolithic Full audit
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js for Wiki compiler analysis
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+
+      - name: Install Wiki compiler dependencies
+        working-directory: FoodDiary.Web.Client
+        run: npm ci --ignore-scripts
+
+      - name: Run isolated monolithic Full audit
+        shell: pwsh
+        run: |
+          $logRoot = Join-Path $PWD '.artifacts/llm-wiki/ci-audit'
+          New-Item -ItemType Directory -Path $logRoot -Force | Out-Null
+          Start-Transcript -LiteralPath (Join-Path $logRoot 'full-audit.log') | Out-Null
+          try {
+            $global:LASTEXITCODE = 0
+            ./.llm-wiki/tools/Test-LlmWikiTools.ps1 -Profile Full
+            if (-not $? -or $LASTEXITCODE -ne 0) { throw 'Monolithic Wiki audit failed.' }
+          } finally {
+            Stop-Transcript | Out-Null
+          }
+
+      - name: Upload Wiki audit failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: llm-wiki-audit-failure-logs
+          include-hidden-files: true
+          path: |
+            .artifacts/llm-wiki/**/*.log
+            .artifacts/llm-wiki/context-evaluation/*.json
+          if-no-files-found: warn
+          retention-days: 7
+
+  llm-wiki:
+    name: LLM Wiki verification
+    if: always()
+    needs: [llm-wiki-focused, llm-wiki-audit]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Wiki gate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Require all applicable Wiki checks
+        shell: pwsh
+        env:
+          WIKI_FOCUSED_RESULT: ${{ needs.llm-wiki-focused.result }}
+          WIKI_AUDIT_RESULT: ${{ needs.llm-wiki-audit.result }}
+          WIKI_EVENT_NAME: ${{ github.event_name }}
+        run: |
+          ./scripts/ci/Test-WikiCiResult.ps1
+          ./scripts/ci/Assert-WikiCiResult.ps1 `
+            -EventName $env:WIKI_EVENT_NAME `
+            -FocusedResult $env:WIKI_FOCUSED_RESULT `
+            -AuditResult $env:WIKI_AUDIT_RESULT
 
   tech-radar:
     name: Technology Radar build and evidence validation

@@ -70,6 +70,8 @@ sources:
   - .llm-wiki/tools/LlmWikiProcess.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
+  - scripts/ci/Assert-WikiCiResult.ps1
+  - scripts/ci/Test-WikiCiResult.ps1
 ---
 
 # Run the Staged Index Pipeline
@@ -98,7 +100,7 @@ native command length and unions the path results. Large generated or imported
 change sets therefore preserve semantic test ranking on Windows without exceeding
 the process command-line limit.
 
-Ordinary `wiki verify` is always affected and resumable. `wiki verify-full` keeps the explicit full-repository gate but defaults to independently maintained `Focused` regressions; `-VerificationProfile Core|Full` opts into legacy monolithic audits. Pull requests use `Focused`, while pushes, weekly scheduled CI, and manual CI use `Full`. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them. Every verify run owns `.artifacts/llm-wiki/verify-runs/<run-id>/progress.json` and its own stage logs; the legacy `verify-progress.json` is only the latest-run pointer. Inspect an exact run with `wiki.ps1 verify-status -VerifyRunId <run-id>`; tests and automation may also reserve a unique ID through the same parameter. The affected-smoke stage reserves a 360-second expected duration and a 600-second hard timeout so the promoted 490-case context-search suite and diagnostic corpora can complete alongside graph prewarm and other selected smoke groups on slower CI runners.
+Ordinary `wiki verify` is always affected and resumable. `wiki verify-full` keeps the explicit full-repository gate but defaults to independently maintained `Focused` regressions; `-VerificationProfile Core|Full` opts into legacy monolithic audits. CI always runs the complete Focused catalog. Pushes, weekly scheduled CI, and manual CI additionally run the monolithic Full audit in a parallel job with its own checkout and SQLite cache. The stable `LLM Wiki verification` gate waits for both jobs and rejects failures, cancellations, and unexpected skips; only pull requests expect the Full audit to be skipped. API compatibility, dependency inspection, and review reporting remain required steps in the focused job and expose separate CI timings. Worker failure artifacts have distinct names. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them. Every verify run owns `.artifacts/llm-wiki/verify-runs/<run-id>/progress.json` and its own stage logs; the legacy `verify-progress.json` is only the latest-run pointer. Inspect an exact run with `wiki.ps1 verify-status -VerifyRunId <run-id>`; tests and automation may also reserve a unique ID through the same parameter. The affected-smoke stage reserves a 360-second expected duration and a 600-second hard timeout so the promoted 490-case context-search suite and diagnostic corpora can complete alongside graph prewarm and other selected smoke groups on slower CI runners.
 
 When concurrent unfinished frontend work makes frontend indexes stale, use
 `wiki verify -Area Backend` to verify only backend generators and receive an

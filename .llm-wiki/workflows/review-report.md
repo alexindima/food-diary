@@ -50,7 +50,9 @@ appear as `conditional` instead of making an otherwise valid pull request fail.
 Use the strict readiness command when those artifacts are part of the delivery
 contract.
 
-The dedicated CI Wiki job runs full verification alongside the backend,
-PostgreSQL, dependency-audit, and frontend jobs. It starts with deterministic
-lint and portable regressions, then runs index checks and the complete
-stateful developer-tool smoke suite concurrently before publishing this report.
+The CI Wiki focused job runs the complete focused regression catalog and index
+checks alongside the backend, PostgreSQL, dependency-audit, and frontend jobs.
+It then checks API compatibility and dependencies before publishing this report
+in a separately timed step. Pushes, scheduled runs, and manual runs also execute
+the monolithic Full audit in an independent job. The stable `LLM Wiki verification`
+gate requires both applicable workers to succeed; only pull requests skip Full.

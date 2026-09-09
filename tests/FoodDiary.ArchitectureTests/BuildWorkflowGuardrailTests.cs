@@ -1,10 +1,50 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BuildWorkflowGuardrailTests {
+    [Fact]
+    public void WikiCi_RunsIndependentWorkersAndRequiresTheirCombinedResult() {
+        string workflow = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml"))
+            .Replace("\r\n", "\n", StringComparison.Ordinal);
+        string focused = ReadJob("llm-wiki-focused");
+        string audit = ReadJob("llm-wiki-audit");
+        string gate = ReadJob("llm-wiki");
+        Assert.Multiple(
+            () => Assert.DoesNotContain("needs:", focused, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("needs:", audit, StringComparison.Ordinal),
+            () => Assert.Contains("fetch-depth: 0", focused, StringComparison.Ordinal),
+            () => Assert.Contains("fetch-depth: 0", audit, StringComparison.Ordinal),
+            () => Assert.Contains("-VerificationProfile Focused", focused, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("-VerificationProfile Full", focused, StringComparison.Ordinal),
+            () => Assert.Contains("if: github.event_name != 'pull_request'", audit, StringComparison.Ordinal),
+            () => Assert.Contains("Test-LlmWikiTools.ps1 -Profile Full", audit, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("verify-full", audit, StringComparison.Ordinal),
+            () => Assert.Contains("name: LLM Wiki verification", gate, StringComparison.Ordinal),
+            () => Assert.Contains("if: always()", gate, StringComparison.Ordinal),
+            () => Assert.Contains("needs: [llm-wiki-focused, llm-wiki-audit]", gate, StringComparison.Ordinal),
+            () => Assert.Contains("${{ needs.llm-wiki-focused.result }}", gate, StringComparison.Ordinal),
+            () => Assert.Contains("${{ needs.llm-wiki-audit.result }}", gate, StringComparison.Ordinal),
+            () => Assert.Contains("Test-WikiCiResult.ps1", gate, StringComparison.Ordinal),
+            () => Assert.Contains("Assert-WikiCiResult.ps1", gate, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("continue-on-error", focused + audit + gate, StringComparison.Ordinal),
+            () => Assert.Contains("Test-LlmWikiApiCompatibility.ps1", focused, StringComparison.Ordinal),
+            () => Assert.Contains("Get-LlmWikiDependencyChanges.ps1", focused, StringComparison.Ordinal),
+            () => Assert.Contains("wiki.ps1 report", focused, StringComparison.Ordinal),
+            () => Assert.Contains("llm-wiki-focused-failure-logs", focused, StringComparison.Ordinal),
+            () => Assert.Contains("llm-wiki-audit-failure-logs", audit, StringComparison.Ordinal));
+
+        string ReadJob(string id) {
+            Match match = Regex.Match(workflow, $"^  {Regex.Escape(id)}:\\n(?<body>.*?)(?=^  [a-zA-Z0-9_-]+:|\\z)",
+                RegexOptions.Multiline | RegexOptions.Singleline, TimeSpan.FromSeconds(1));
+            Assert.True(match.Success, $"Missing CI job: {id}");
+            return match.Groups["body"].Value;
+        }
+    }
+
     [Fact]
     public void CiAndPrePush_RunCompleteBackendSuitesWithBoundedParallelism() {
         string ciWorkflow = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml"));
