@@ -179,12 +179,20 @@
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
           "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "d4b762fd09a631ed5d2bef2a4086ba2dfb6876c7c1f58e19a2e7b5a343d7e928"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
+          "sha256": "0b2faca55869d32d49e7694753ad98b0b88757d2ab0f8a06c3af158b07707ee2"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:34:51.6267949Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:36:05.1622364Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -208,13 +216,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "af22f8093006c98f33554a125a31c3b6141bc098f854d1f98b82130b7b301cb6"
+          "sha256": "3e86e6479b70223950bed53ef60df79156e68c681d5c5966e76a3a5d187cc9c0"
         }
       ],
-      "reason": "Reviewed final implementation diff: private dead code removal, method-local Billing constant, equivalent image compensation in finally, and receipt exception preservation add no project edges or ownership changes. All 1202 architecture tests passed on the updated sources.",
+      "reason": "Reviewed integration onto master: preserved backend coverage changes and regenerated combined Wiki indexes. Wiki tooling is unchanged from the passing full verification; batching, cache invalidation, test selection and privacy contracts remain covered by existing reviews and regression tests.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:00:07.6636213Z"
+      "gitHead": "5f19657ae3ba7c1a995245b84871fa84122bed24",
+      "reviewedAtUtc": "2026-09-09T02:28:05.4933227Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -224,12 +232,16 @@
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
           "sha256": "140f0f725466f23ffc2f118985e939692f68d22d22d663ece7c99fa6527478e3"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
         }
       ],
-      "reason": "Final Meals validator tests exercise existing optional ManualAlcohol boundaries (null, zero, maximum, negative, above maximum) for create and update. All 174 Meals application tests passed. No public contracts, routes, payloads or API snapshots changed; existing backend contract review guidance remains accurate.",
+      "reason": "Final Meals validator tests exercise existing optional ManualAlcohol boundaries (null, zero, maximum, negative, above maximum) for create and update. All 174 Meals application tests passed. No public contracts, routes, payloads or API snapshots changed; existing backend contract review guidance remains accurate. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
       "baseRef": "HEAD",
       "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:22:55.8309962Z"
+      "reviewedAtUtc": "2026-09-09T00:26:50.9101112Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -268,7 +280,7 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "d8f8cde33f2fbba74cbc925e19aa6caad5bae9760dacf5fefc2d02e2ed94a1ff",
+      "pageSha256": "6939ffcb9192e26e0d7fd9eb80bdf102d4d00bc1d5dd93f00bdc24d4a9757b15",
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-generalization.json",
@@ -311,8 +323,12 @@
           "sha256": "045f0b00f9b51a57cbfae927cc79973c47097fe4348bbf1cff3fe024cd185205"
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
+        },
+        {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "9981ba14bacb17c399f3f9f7fd5f392fc679af2407219ad4564127b11028477b"
+          "sha256": "84180fb499d007847824bc97ed736390ebc2cefca9bbc7b4a15508aa68c77b1c"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
@@ -324,17 +340,17 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "c5ab2e40979a49922752a3ef93feadbd7928d75c29d2dfd5597e4a8d7ca3196b"
+          "sha256": "277b12cb1e3d8270510c21acc0a04ad708e0791e1e3dd11b9eedd0f94eb7d719"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
           "sha256": "064918be1eb5385e2e3032e93b3727e3f1071c02048ce7ddaa4fe6c3e1ae94b6"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:12.8259861Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T00:26:51.8047787Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -373,7 +389,7 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "9981ba14bacb17c399f3f9f7fd5f392fc679af2407219ad4564127b11028477b"
+          "sha256": "84180fb499d007847824bc97ed736390ebc2cefca9bbc7b4a15508aa68c77b1c"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
@@ -384,10 +400,10 @@
           "sha256": "3609439f485159343cf37b591784e346a67c0d5082e52061af3fa2126eced5c3"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:13.6786219Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T00:26:52.7231499Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -538,14 +554,18 @@
           "sha256": "21732e8d0658c7d454743409cd19a285d4533428fdfd62d0318f0967a2ba6823"
         },
         {
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "d4b762fd09a631ed5d2bef2a4086ba2dfb6876c7c1f58e19a2e7b5a343d7e928"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
+          "sha256": "adcbb334339ea42ed9c5854ca738940694eb8cbd37b61f1e2a5855da5c1ddf80"
         }
       ],
-      "reason": "Module-scoped research now resolves current application roots using the shared layout helper. This repairs discovery without changing adaptive routing, budget, JSON/SQLite authority or task completion semantics.",
+      "reason": "Module-scoped research now resolves current application roots using the shared layout helper. This repairs discovery without changing adaptive routing, budget, JSON/SQLite authority or task completion semantics. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:15.3488961Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:36:06.1714507Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -643,6 +663,10 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
           "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
         },
@@ -651,10 +675,10 @@
           "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:19.5877027Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T00:26:53.4296559Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -833,12 +857,16 @@
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "d6eccbc95cc442325e2beeb3ba060a017a0fd21bf6ed490e5479572e512ba49c"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
         }
       ],
-      "reason": "Reviewed refreshed sensitive-data index and coverage changes. Tests use synthetic identities and keys; production collection, persistence, logging and transfer contracts are unchanged. Candidate classification and lifecycle guidance remain accurate.",
+      "reason": "Reviewed refreshed sensitive-data index and coverage changes. Tests use synthetic identities and keys; production collection, persistence, logging and transfer contracts are unchanged. Candidate classification and lifecycle guidance remain accurate. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
       "baseRef": "HEAD",
       "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T00:06:23.4548395Z"
+      "reviewedAtUtc": "2026-09-09T00:26:54.2916651Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -877,13 +905,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c9344ac87cf6c6efc93fa7ba82e466c1567d6e5b8bf73a69ac2cde32e84ab2ab"
+          "sha256": "5c30edd276ff4f055a4cbf620e2575d8732c35aac0bdc30e9473c1abcc51c33f"
         }
       ],
-      "reason": "Reviewed updated test and source references. Native dotCover 2025.1.5 verifies ConfirmImageUploadCommandHandler 49/49, BugAcknowledgementReceipts 15/15, worker 25/25 and BillingDomainGuard 20/20 statements. Static references remain navigation, consistent with the workflow.",
+      "reason": "Reviewed integration onto master: preserved backend coverage changes and regenerated combined Wiki indexes. Wiki tooling is unchanged from the passing full verification; batching, cache invalidation, test selection and privacy contracts remain covered by existing reviews and regression tests.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:00:12.1753424Z"
+      "gitHead": "5f19657ae3ba7c1a995245b84871fa84122bed24",
+      "reviewedAtUtc": "2026-09-09T02:28:06.1687672Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -975,21 +1003,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c9344ac87cf6c6efc93fa7ba82e466c1567d6e5b8bf73a69ac2cde32e84ab2ab"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "54044423c9290560efba0700b2140d94be9384f8f977488a21ba9ec1f1f1f6cf"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d6eccbc95cc442325e2beeb3ba060a017a0fd21bf6ed490e5479572e512ba49c"
+          "sha256": "5c30edd276ff4f055a4cbf620e2575d8732c35aac0bdc30e9473c1abcc51c33f"
         }
       ],
-      "reason": "Reviewed refreshed evidence projections and final persistence change. Admin keeps the same receipt-only capabilities, no raw SQL or foreign writes, and the reviewed technical source fingerprints agree with the passing architecture checks. No authentication, authorization, secret handling or destination change; workflow remains evidence navigation.",
+      "reason": "Reviewed integration onto master: preserved backend coverage changes and regenerated combined Wiki indexes. Wiki tooling is unchanged from the passing full verification; batching, cache invalidation, test selection and privacy contracts remain covered by existing reviews and regression tests.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:00:14.6364375Z"
+      "gitHead": "5f19657ae3ba7c1a995245b84871fa84122bed24",
+      "reviewedAtUtc": "2026-09-09T02:28:06.8211928Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1062,13 +1082,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
+          "sha256": "adcbb334339ea42ed9c5854ca738940694eb8cbd37b61f1e2a5855da5c1ddf80"
         }
       ],
-      "reason": "Facade trace passes Layer through its graph calls; dispatch/scheduler/task receipt logic is unchanged. No task completion receipt or authority is inferred from graph candidates.",
+      "reason": "Facade trace passes Layer through its graph calls; dispatch/scheduler/task receipt logic is unchanged. No task completion receipt or authority is inferred from graph candidates. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:22.5650021Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:36:10.4082964Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1248,12 +1268,24 @@
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
           "sha256": "59084971011fe827718dad07a35851d593fca8f54ec706a3179dd09381af8af1"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "84180fb499d007847824bc97ed736390ebc2cefca9bbc7b4a15508aa68c77b1c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
+          "sha256": "4e2541b4fe2dc47fb1d32272d00ee883618cec408c414ebdf1e8435592601234"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:40.4472979Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:36:08.1657648Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1265,14 +1297,18 @@
           "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
         },
         {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "adcbb334339ea42ed9c5854ca738940694eb8cbd37b61f1e2a5855da5c1ddf80"
+        },
+        {
           "path": "AGENTS.md",
           "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:31.2134984Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:36:08.9228994Z"
     }
   ]
 }

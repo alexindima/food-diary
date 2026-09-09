@@ -256,6 +256,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'ui-continuation' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiToolStartup.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiUiContinuation.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiTestPlanPrecision.ps1')
@@ -381,6 +383,11 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
     }
     $stopwatch.Stop()
     $durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
+    $completedFingerprint = & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') `
+        -Stage "affected smoke:$group" -Arguments @{ group = $group } -Format Text
+    if ([string]$completedFingerprint -cne [string]$fingerprint) {
+        throw "Inputs changed during smoke group '$group'; no success receipt will be published."
+    }
     $receipt = [ordered]@{
         schemaVersion = 1
         group = $group
@@ -388,6 +395,12 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         recordedAtUtc = [DateTime]::UtcNow.ToString('o')
         durationSeconds = $durationSeconds
     }
-    [IO.File]::WriteAllText($receiptPath, (($receipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    $temporaryReceiptPath = "$receiptPath.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        [IO.File]::WriteAllText($temporaryReceiptPath, (($receipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temporaryReceiptPath -Destination $receiptPath -Force
+    } finally {
+        Remove-Item -LiteralPath $temporaryReceiptPath -Force -ErrorAction SilentlyContinue
+    }
     Write-Host " - ${group}: ${durationSeconds}s"
 }

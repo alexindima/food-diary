@@ -1,5 +1,5 @@
 Set-StrictMode -Version Latest
-if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) {
+if (-not (Test-Path Function:\Invoke-LlmWikiGitPathList)) {
     . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 }
 

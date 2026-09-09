@@ -21,22 +21,7 @@ $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 
 function Get-VerificationFingerprint {
-    $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for verification resume.').Lines[0].Trim()
-    $status = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to resolve working-tree state for verification resume.').Lines)
-    $material = [Text.StringBuilder]::new()
-    $null = $material.AppendLine($head)
-    foreach ($line in $status) {
-        $null = $material.AppendLine([string]$line)
-        $path = ([string]$line).Substring(3).Trim('"').Replace('/', [IO.Path]::DirectorySeparatorChar)
-        if ($path -match ' -> ') { $path = ($path -split ' -> ')[-1] }
-        $absolutePath = Join-Path $repositoryRoot $path
-        if (Test-Path -LiteralPath $absolutePath -PathType Leaf) {
-            $null = $material.AppendLine((Get-FileHash -LiteralPath $absolutePath -Algorithm SHA256).Hash)
-        }
-    }
-    $bytes = [Text.Encoding]::UTF8.GetBytes($material.ToString())
-    $sha = [Security.Cryptography.SHA256]::Create()
-    try { return ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
+    & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage 'full verification' -Format Text
 }
 
 $verificationFingerprint = if ($ResumePassedStages) { Get-VerificationFingerprint } else { $null }

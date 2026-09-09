@@ -1,8 +1,30 @@
 [CmdletBinding()]
-param()
+param([switch]$Isolated)
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+# The real writers must share a lock with each other, but must not rewrite the
+# indexes read by unrelated parity tests in the parallel regression catalog.
+if (-not $Isolated) {
+    $fixtureParent = Join-Path $repositoryRoot '.artifacts/llm-wiki/concurrent-index-fixtures'
+    $fixtureRoot = Join-Path $fixtureParent ([guid]::NewGuid().ToString('N'))
+    $null = New-Item -ItemType Directory -Path $fixtureParent -Force
+    try {
+        & git clone --shared --quiet $repositoryRoot $fixtureRoot
+        if ($LASTEXITCODE -ne 0) { throw 'Unable to clone the concurrent index fixture.' }
+        Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.llm-wiki') -Force |
+            Copy-Item -Destination (Join-Path $fixtureRoot '.llm-wiki') -Recurse -Force
+        $fixtureShell = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+        & $fixtureShell -NoLogo -NoProfile -File (Join-Path $fixtureRoot '.llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1') -Isolated
+        if ($LASTEXITCODE -ne 0) { throw 'Isolated concurrent index update regression failed.' }
+    } finally {
+        $resolvedFixture = [IO.Path]::GetFullPath($fixtureRoot)
+        $fixturePrefix = [IO.Path]::GetFullPath($fixtureParent).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+        if (-not $resolvedFixture.StartsWith($fixturePrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe concurrent index fixture path.' }
+        if (Test-Path -LiteralPath $resolvedFixture) { Remove-Item -LiteralPath $resolvedFixture -Recurse -Force }
+    }
+    return
+}
 $artifactRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
 $testRoot = Join-Path $artifactRoot "concurrent-index-test-$([guid]::NewGuid().ToString('N'))"
 $null = New-Item -ItemType Directory -Path $testRoot -Force

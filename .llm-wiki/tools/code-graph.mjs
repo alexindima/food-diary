@@ -5,6 +5,8 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writ
 import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
+import { searchContextBatch } from './code-graph-batch.mjs';
+import { runGraphProcess } from './code-graph-process.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
 import { directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
 
@@ -108,9 +110,8 @@ function ensureRoslynExtractor() {
   const sources = [roslynProject, resolve(dirname(roslynProject), 'Program.cs')];
   const requiresBuild = !existsSync(roslynDll)
     || sources.some((path) => statSync(path).mtimeMs > statSync(roslynDll).mtimeMs);
-  if (requiresBuild) execFileSync('dotnet', ['build', roslynProject, '-c', 'Release', '--nologo', '--verbosity', 'quiet'], {
+  if (requiresBuild) runGraphProcess('dotnet', ['build', roslynProject, '-c', 'Release', '--nologo', '--verbosity', 'quiet'], {
     cwd: repositoryRoot,
-    stdio: ['ignore', 'ignore', 'pipe'],
   });
 }
 
@@ -2158,7 +2159,7 @@ function englishMorphologicalVariants(term) {
   return variants;
 }
 
-function searchContext(database, query, limit, filters = {}) {
+function searchContext(database, query, limit, filters = {}, batchState) {
   const started = performance.now();
   const negativeRoleGroups = negatedRoleTermGroups(query);
   const negativeRoleTerms = new Set(negativeRoleGroups.flat());
@@ -2176,7 +2177,7 @@ function searchContext(database, query, limit, filters = {}) {
   const explicitlyRequestsTest = boostTerms.includes('test');
   const explicitlyRequestsMcp = /(^|\W)mcp(\W|$)/iu.test(String(query));
   const fingerprint = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null;
-  const indexedDocuments = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
+  const indexedDocuments = batchState?.indexedDocuments ?? database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
   if (terms.length === 0 || !fingerprint || indexedDocuments === 0) {
     return {
       query,
@@ -2787,12 +2788,7 @@ try {
   else if (action === 'search-batch') {
     const inputPath = resolve(repositoryRoot, options.input ?? '');
     const requests = JSON.parse(readFileSync(inputPath, 'utf8'));
-    result = {
-      requestCount: requests.length,
-      results: requests.map((request) => searchContext(database, request.query ?? '', Number(request.limit ?? 20), {
-        module: request.module, path: request.path, changeType: request.changeType,
-      })),
-    };
+    result = searchContextBatch(database, requests, searchContext);
   }
   else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'coverage') result = coverage(database);

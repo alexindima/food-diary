@@ -42,10 +42,12 @@ function Get-LlmWikiVerificationReceiptRoot([string]$RepositoryRoot) {
 }
 
 function Get-LlmWikiVerificationReceipts([string]$RepositoryRoot) {
-    $state = Get-LlmWikiVerificationFingerprint $RepositoryRoot
     $root = Get-LlmWikiVerificationReceiptRoot $RepositoryRoot
     if (-not (Test-Path -LiteralPath $root -PathType Container)) { return @() }
-    return @(Get-ChildItem -LiteralPath $root -Filter '*.json' -File -ErrorAction SilentlyContinue | ForEach-Object {
+    $receiptFiles = @(Get-ChildItem -LiteralPath $root -Filter '*.json' -File -ErrorAction SilentlyContinue)
+    if ($receiptFiles.Count -eq 0) { return @() }
+    $state = Get-LlmWikiVerificationFingerprint $RepositoryRoot
+    return @($receiptFiles | ForEach-Object {
         try {
             $receipt = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json
             $receipt | Add-Member -NotePropertyName validForCurrentState -NotePropertyValue (

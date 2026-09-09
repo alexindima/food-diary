@@ -553,6 +553,11 @@ without seeing an empty ignored `.artifacts` tree. Commands that require a fresh
 compiled projection rebuild the graph inside that stable snapshot, so an active
 writer in the source worktree cannot invalidate a long research query halfway
 through its graph refresh.
+Facade compiler-dependency detection uses the original checkout only when the
+current repository is the active read-only snapshot. This matches the graph's
+dependency resolution and avoids an unnecessary JSON fallback in that snapshot.
+An unrelated cold checkout still falls back to JSON when dependencies are absent;
+an explicit JSON selection is always preserved.
 Fast research requires an explicit module or planned path and returns bounded
 source, dependency, and downstream-consumer evidence. Its boundary report keeps
 the logical module, current project, physical source root, and target-project

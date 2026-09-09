@@ -21,6 +21,11 @@ sources:
   - FoodDiary.Web.Client/.husky/pre-push
   - .llm-wiki/policies/affected-smoke-catalog.psd1
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/Test-LlmWikiToolStartup.ps1
+  - .llm-wiki/tools/LlmWikiModuleTestRoots.ps1
+  - .llm-wiki/tools/LlmWikiQueryCache.ps1
+  - .llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1
+  - .llm-wiki/tools/LlmWikiExtractionPlanning.ps1
   - .llm-wiki/tools/Test-LlmWikiKnowledgeIsolation.ps1
   - .llm-wiki/tools/Test-LlmWikiFormattingReady.ps1
   - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
@@ -49,6 +54,11 @@ sources:
   - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1
+  - .llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1
+  - .llm-wiki/tools/Test-LlmWikiFullResume.ps1
+  - .llm-wiki/tools/code-graph-batch.mjs
+  - .llm-wiki/tools/code-graph-process.mjs
+  - .llm-wiki/tools/code-graph-performance.test.mjs
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
   - .llm-wiki/tools/LlmWikiProcess.ps1
   - .llm-wiki/wiki.ps1
@@ -56,6 +66,18 @@ sources:
 ---
 
 # Run the Staged Index Pipeline
+
+The concurrent-index regression runs its two real pipeline writers in a private
+Git clone. Their lock and matching-result reuse are still tested together, while
+temporary JSON line-ending rewrites cannot race with the parallel parity readers.
+The query-cache group depends on graph inputs because it includes task-brief SQL
+parity. No regression groups or assertion thresholds are removed for performance.
+
+Tool startup checks already loaded helper functions directly, without triggering
+PowerShell module discovery. Test planning ignores empty proposed paths instead
+of walking the repository root, and an empty verification-receipt directory does
+not require hashing source inputs. Existing receipts still receive full current
+input validation before they can satisfy a command.
 
 Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
 
@@ -255,8 +277,12 @@ working-tree inputs relevant to that stage. Adding a source-impact receipt no
 longer invalidates already-passed indexes or adaptive evals, while a real input
 change still invalidates its dependent stage. The five newest receipts per stage
 are retained. Hooks and CI omit this switch and therefore remain fully uncached.
-Focused smoke receipts use group-specific source patterns, so editing one test or
-formatter does not invalidate unrelated task, memory, context, and eval groups.
+Pure focused groups retain group-specific source patterns. Graph-dependent
+groups and the aggregate gate include product-source edits as well as Wiki
+inputs and runtime versions. Full-stage resume uses the same fingerprint
+implementation, including NUL-delimited Git paths and content hashes for
+Unicode names and rename destinations. Review-only metadata stays with the
+separate source-impact gate and does not invalidate graph smoke.
 
 `verify-strict-affected` is the final local gate for a grounded visual UI change.
 It is read-only and deliberately bypasses verification and index caches, stale
@@ -405,8 +431,15 @@ visible instead of treating index latency as an opaque fixed cost.
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 After a complete focused group set passes, the runner records one aggregate
 content-addressed receipt. An unchanged repeat validates that fingerprint once
-and skips child-process fan-out; any relevant Wiki implementation edit restores
-the ordinary per-group validation path.
+and skips child-process fan-out; a relevant product or Wiki edit restores the
+ordinary per-group validation path. A group publishes its receipt atomically
+only when its starting and completed fingerprints match; the aggregate gate
+also rejects input changes during the run.
+
+SQL search batches read their document count once inside a read transaction.
+Concurrent writers can commit while every query in that batch observes one
+snapshot; the next batch reads fresh metadata. Compiler subprocess failures
+preserve both stdout and stderr, including MSBuild diagnostics written to stdout.
 
 `wiki verify` is the interactive affected gate. `wiki verify-full` and CI add the
 portable contract, index freshness, and the complete focused regression catalog.

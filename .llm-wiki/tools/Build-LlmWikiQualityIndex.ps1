@@ -160,11 +160,20 @@ $productionSourceFiles = @(
         Where-Object { $_.extension -eq '.cs' -and $_.path -notmatch '(^|/)tests/' } |
         ForEach-Object { [pscustomobject]@{ path = $_.path; content = [IO.File]::ReadAllText($_.fullPath) } }
 )
+$consumersByPath = [Collections.Generic.Dictionary[string, Collections.Generic.List[object]]]::new([StringComparer]::OrdinalIgnoreCase)
+foreach ($candidate in $symbolCoverage) {
+    if (-not $consumersByPath.ContainsKey($candidate.path)) {
+        $consumersByPath[$candidate.path] = [Collections.Generic.List[object]]::new()
+    }
+    $consumersByPath[$candidate.path].Add($candidate)
+}
 foreach ($coverage in @($symbolCoverage | Where-Object testReferenceCount -eq 0)) {
     $consumerCoverage = @(
         foreach ($sourceFile in $productionSourceFiles) {
             if ($sourceFile.path -eq $coverage.path -or $sourceFile.content.IndexOf($coverage.name, [StringComparison]::Ordinal) -lt 0) { continue }
-            foreach ($consumer in @($symbolCoverage | Where-Object { $_.path -eq $sourceFile.path -and $_.testReferenceCount -gt 0 })) {
+            foreach ($consumer in $consumersByPath[$sourceFile.path]) {
+                # Keep live objects: earlier iterations can add inherited coverage.
+                if ($consumer.testReferenceCount -le 0) { continue }
                 [pscustomobject]@{ symbol = $consumer.name; path = $consumer.path; testReferences = @($consumer.testReferences) }
             }
         }

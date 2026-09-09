@@ -2,6 +2,8 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+& (Join-Path $PSScriptRoot 'Test-LlmWikiStageFingerprint.ps1')
+& (Join-Path $PSScriptRoot 'Test-LlmWikiFullResume.ps1')
 $toolsRoot = $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')

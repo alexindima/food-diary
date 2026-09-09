@@ -93,7 +93,7 @@ foreach ($case in $cases) {
     }
     if ([int64]$sqlite.analysis.impactIndex.sourceBytesVerified -ne [int64]$json.analysis.impactIndex.sourceBytesVerified -or
         [int64]$sqlite.analysis.impactIndex.sourceBytesMaterialized -ge [int64]$json.analysis.impactIndex.sourceBytesMaterialized) {
-        throw "$($case.Intent): SQLite impact projection did not preserve freshness coverage while reducing materialized JSON bytes."
+        throw "$($case.Intent): SQLite impact projection did not preserve freshness coverage while reducing materialized JSON bytes. Verified bytes: SQLite=$($sqlite.analysis.impactIndex.sourceBytesVerified), JSON=$($json.analysis.impactIndex.sourceBytesVerified); materialized bytes: SQLite=$($sqlite.analysis.impactIndex.sourceBytesMaterialized), JSON=$($json.analysis.impactIndex.sourceBytesMaterialized)."
     }
     $sqliteImpactCandidates.Add([int]$sqlite.analysis.impactIndex.candidateRecords)
     $sqliteImpactBytes.Add([int64]$sqlite.analysis.impactIndex.sourceBytesMaterialized)

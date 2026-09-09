@@ -1,7 +1,7 @@
-if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) {
+if (-not (Test-Path Function:\Invoke-LlmWikiGitPathList)) {
     . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 }
-if (-not (Get-Command Get-LlmWikiChangeSetSnapshot -ErrorAction SilentlyContinue)) {
+if (-not (Test-Path Function:\Get-LlmWikiChangeSetSnapshot)) {
     . (Join-Path $PSScriptRoot 'LlmWikiChangeSetSnapshot.ps1')
 }
 

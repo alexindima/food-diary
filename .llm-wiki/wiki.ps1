@@ -384,10 +384,16 @@ $automaticJsonFallbackCommands = @(
     'decision', 'ownership', 'rollout', 'topology', 'privacy', 'security'
 )
 $compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
+$compilerDependencyRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT) -and
+    -not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT) -and
+    $compilerDependencyRoot -eq [IO.Path]::GetFullPath($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)) {
+    $compilerDependencyRoot = [IO.Path]::GetFullPath($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT)
+}
 if (-not $compiledIndexSourceWasExplicit -and
     $CompiledIndexSource -eq 'Sqlite' -and
     $Command -in $automaticJsonFallbackCommands -and
-    -not (Test-Path -LiteralPath (Join-Path $PSScriptRoot '../FoodDiary.Web.Client/node_modules/typescript/package.json') -PathType Leaf)) {
+    -not (Test-Path -LiteralPath (Join-Path $compilerDependencyRoot 'FoodDiary.Web.Client/node_modules/typescript/package.json') -PathType Leaf)) {
     $CompiledIndexSource = 'Json'
     Write-Warning "TypeScript prerequisites are unavailable; '$Command' is using the read-only JSON baseline. Pass explicit -CompiledIndexSource Sqlite to require the full compiled graph."
 }

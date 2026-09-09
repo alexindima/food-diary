@@ -11,6 +11,8 @@ tags:
 sources:
   - docs/TESTING_STRATEGY.md
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/LlmWikiModuleTestRoots.ps1
+  - .llm-wiki/tools/Test-LlmWikiToolStartup.ps1
   - .llm-wiki/tools/Get-LlmWikiCoveragePlan.ps1
   - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
@@ -45,7 +47,9 @@ plan.
 
 Use `-ProposedPath <path>` before code exists; it may be repeated or supplied as
 an array. The planner combines proposed and changed paths and preserves the
-proposed paths in JSON output. When it resolves an existing Angular spec, its
+effective proposed paths in JSON output. Empty or whitespace-only proposed paths
+do not select the repository root for recursive test discovery. The planner preserves the
+same focused selection rules. When it resolves an existing Angular spec, its
 focused command uses the project's `test:ci:*` script with Angular's supported
 `--include` option. An existing backend test-project directory also contributes
 its C# tests and exact `.csproj`; that project is emitted as a required focused

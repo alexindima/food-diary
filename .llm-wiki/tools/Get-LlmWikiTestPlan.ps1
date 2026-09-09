@@ -148,6 +148,7 @@ if ($identitySessionIntent) {
 }
 
 foreach ($proposedDirectory in @($ProposedPath)) {
+    if ([string]::IsNullOrWhiteSpace([string]$proposedDirectory)) { continue }
     $normalizedDirectory = ([string]$proposedDirectory).Replace('\', '/').TrimEnd('/')
     $absoluteDirectory = Join-Path $repositoryRoot $normalizedDirectory
     if (Test-Path -LiteralPath $absoluteDirectory -PathType Leaf) {

@@ -11,9 +11,19 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 
+$graphSensitive = $Stage -in @('affected smoke', 'full verification')
+if ($Stage.StartsWith('affected smoke:', [StringComparison]::Ordinal)) {
+    $catalog = Import-PowerShellDataFile -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/policies/affected-smoke-catalog.psd1')
+    $groupId = $Stage.Substring('affected smoke:'.Length)
+    $graphSensitive = @($catalog.Groups | Where-Object { $_.Id -eq $groupId -and $_.GraphDependent }).Count -gt 0
+}
+
 function Test-RelevantPath([string]$Path) {
     $normalized = $Path.Replace('\', '/')
     if ($normalized.StartsWith('.git/') -or $normalized.StartsWith('.artifacts/')) { return $false }
+    # Review receipts are validated by the separate source-impact gate, not by
+    # graph/tool smoke. Publishing a review must not rerun the expensive suite.
+    if ($graphSensitive) { return -not $normalized.StartsWith('.llm-wiki/reviews/') }
     $smokeInfrastructure = '^\.llm-wiki/tools/(?:Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiParallelSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$'
     switch ($Stage) {
         'workspace policy' { return $normalized -match '(^|/)AGENTS\.md$|^\.llm-wiki/(policies/workspace|tools/Get-LlmWikiWorkspacePolicy)' }
@@ -54,16 +64,32 @@ function Test-RelevantPath([string]$Path) {
 
 $material = [Text.StringBuilder]::new()
 $null = $material.AppendLine("stage=$Stage")
+$null = $material.AppendLine("powershell=$($PSVersionTable.PSVersion);runtime=$([Runtime.InteropServices.RuntimeInformation]::FrameworkDescription)")
+if ($graphSensitive) {
+    Push-Location $repositoryRoot
+    try {
+        foreach ($runtimeCommand in @('node', 'dotnet')) {
+            $runtimeVersion = & $runtimeCommand --version
+            if ($LASTEXITCODE -ne 0) { throw "Unable to resolve $runtimeCommand version for verification fingerprint." }
+            $null = $material.AppendLine("${runtimeCommand}=$runtimeVersion")
+        }
+    } finally { Pop-Location }
+}
 $null = $material.AppendLine("head=$((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the verification stage fingerprint.').Lines[0].Trim())")
 $canonicalArguments = [ordered]@{}
 foreach ($key in @($Arguments.Keys | Sort-Object)) { $canonicalArguments[[string]$key] = $Arguments[$key] }
 $null = $material.AppendLine("arguments=$(($canonicalArguments | ConvertTo-Json -Depth 8 -Compress))")
-foreach ($line in @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to enumerate working-tree status for the verification stage fingerprint.').Lines)) {
-    $path = ([string]$line).Substring(3).Trim('"')
-    if ($path -match ' -> ') { $path = ($path -split ' -> ')[-1] }
-    $path = $path.Replace('\', '/')
-    if (-not (Test-RelevantPath $path)) { continue }
-    $null = $material.AppendLine("path=$path")
+$statusOutput = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('-c', 'core.fsmonitor=false', 'status', '--porcelain=v1', '-z', '--untracked-files=all') -FailureMessage 'Unable to enumerate working-tree status for the verification stage fingerprint.').StandardOutput
+$records = @($statusOutput.Split([char]0, [StringSplitOptions]::RemoveEmptyEntries))
+for ($index = 0; $index -lt $records.Count; $index++) {
+    $record = $records[$index]
+    $state = $record.Substring(0, 2)
+    $path = $record.Substring(3).Replace('\', '/')
+    # In porcelain -z, rename/copy destination comes first, followed by source.
+    $originalPath = $null
+    if ($state -match '[RC]') { $index++; $originalPath = $records[$index] }
+    if (-not (Test-RelevantPath $path) -and ($null -eq $originalPath -or -not (Test-RelevantPath $originalPath))) { continue }
+    $null = $material.AppendLine("state=$state;path=$path;original=$originalPath")
     $absolutePath = Join-Path $repositoryRoot $path
     if (Test-Path -LiteralPath $absolutePath -PathType Leaf) {
         $null = $material.AppendLine("sha=$((Get-FileHash -LiteralPath $absolutePath -Algorithm SHA256).Hash.ToLowerInvariant())")

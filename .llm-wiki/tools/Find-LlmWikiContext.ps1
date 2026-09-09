@@ -525,8 +525,8 @@ if ($null -ne $frontendIndex) {
         $absoluteImplementationPath = Join-Path $repositoryRoot $implementationPath
         $pathScore = Get-SearchScore $implementationPath $tokens 14 30
         $contentScore = 0
-        if (Test-Path -LiteralPath $absoluteImplementationPath -PathType Leaf) {
-            $content = Get-Content -LiteralPath $absoluteImplementationPath -Raw
+        if ([IO.File]::Exists($absoluteImplementationPath)) {
+            $content = [IO.File]::ReadAllText($absoluteImplementationPath)
             $contentScore = [Math]::Min((Get-SearchScore $content $tokens 2 8), 16)
         }
         $score = $pathScore + $contentScore + $scopeAffinity

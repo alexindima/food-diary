@@ -267,6 +267,11 @@ try {
 }
 $stopwatch.Stop()
 if ($aggregateReceiptPath) {
+    $completedFingerprint = & (Join-Path $PSScriptRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') `
+        -Stage 'affected smoke' -Arguments @{ groups = @($groups | Sort-Object) } -Format Text
+    if ([string]$completedFingerprint -cne [string]$aggregateFingerprint) {
+        throw 'Inputs changed during parallel smoke; no aggregate success receipt will be published.'
+    }
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $aggregateReceiptPath) -Force
     $aggregateReceipt = [ordered]@{
         schemaVersion = 1
