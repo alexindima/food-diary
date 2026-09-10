@@ -56,11 +56,16 @@ public static class ToolExecution {
         };
     }
 
-    private static string SuccessMessage<T>(T data) =>
-        data is WikiCommandResult { StructuredOutput: { ValueKind: JsonValueKind.Object } output } &&
-        output.TryGetProperty("status", out JsonElement status) && string.Equals(status.GetString(), "no-match", StringComparison.Ordinal)
-            ? "No matching indexed symbol was found. See warnings and nextSteps for scope and recovery."
-            : "Structured FoodDiary development context is available.";
+    private static string SuccessMessage<T>(T data) {
+        if (data is DevelopmentContext context && context.RetrievalWarnings.Count > 0) {
+            return context.RetrievalWarnings[0];
+        }
+        if (data is WikiCommandResult { StructuredOutput: { ValueKind: JsonValueKind.Object } output } &&
+            output.TryGetProperty("status", out JsonElement status) && string.Equals(status.GetString(), "no-match", StringComparison.Ordinal)) {
+            return "No matching indexed symbol was found. See warnings and nextSteps for scope and recovery.";
+        }
+        return "Structured FoodDiary development context is available.";
+    }
 
     private static DevelopmentMcpResult<T> Failure<T>(string errorCode, string errorMessage) =>
         new(

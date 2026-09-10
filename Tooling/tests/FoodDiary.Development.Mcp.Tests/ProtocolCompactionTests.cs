@@ -27,6 +27,23 @@ public sealed class ProtocolCompactionTests {
     }
 
     [Fact]
+    public void TraceCompaction_BoundsNestedDependenciesAndRetainsParentEvidence() {
+        WikiCommandResult trace = CreateResult("trace", new {
+            nestedDependencies = new[] {
+                new { parentPath = "Search.cs", contract = "ICache", status = "source-candidate" },
+                new { parentPath = "Search.cs", contract = "IProvider", status = "implementation-not-resolved" },
+            },
+            nestedDependenciesTruncated = false,
+        }).ToCompactTrace(itemLimit: 1);
+        JsonElement output = trace.StructuredOutput!.Value;
+        Assert.Multiple(
+            () => Assert.Single(output.GetProperty("nestedDependencies").EnumerateArray()),
+            () => Assert.Equal("Search.cs", output.GetProperty("nestedDependencies")[0].GetProperty("parentPath").GetString()),
+            () => Assert.True(output.GetProperty("nestedDependenciesTruncated").GetBoolean()),
+            () => Assert.True(output.GetProperty("truncated").GetBoolean()));
+    }
+
+    [Fact]
     public void TestPlanCompaction_PreservesGraphEvidenceAndReportsTruncation() {
         WikiCommandResult plan = CreateResult("test-plan", new {
             mode = "sqlite-graph-only",

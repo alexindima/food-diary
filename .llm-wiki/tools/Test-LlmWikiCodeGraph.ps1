@@ -249,6 +249,10 @@ $measurementSpecs = @(Get-ChildItem -LiteralPath @($measurementPaths | ForEach-O
 if ($measurementSpecs.Count -lt 20 -or @($measurementTestPlan.required | Where-Object { $_ -match '/(?:weight-history|waist-history|shared/measurements)/.+\.spec\.ts$' }).Count -ne $measurementSpecs.Count) {
     throw 'Graph-only test plan did not prioritize every spec under the planned frontend directories.'
 }
+$nodeTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath '.llm-wiki/tools/code-graph-query-terms.mjs' -Limit 100 -Format Json | ConvertFrom-Json
+if (@($nodeTestPlan.recommended) -notcontains '.llm-wiki/tools/code-graph-performance.test.mjs') {
+    throw 'Graph test-plan did not recognize an imported Node ESM test consumer.'
+}
 $broadFrontendPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath 'FoodDiary.Web.Client/src/app/features' -Limit 20 -Format Json | ConvertFrom-Json
 if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confidence -ne 'low') {
     throw 'Graph-only test plan did not diagnose an overly broad frontend scope.'

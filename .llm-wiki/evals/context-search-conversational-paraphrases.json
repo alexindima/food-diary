@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "description": "Frozen after implementation, before execution. Source-aware paraphrases on existing targets, not independent blind diagnosis.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.75,
+    "minimumTop10Rate": 0.95,
+    "minimumMeanReciprocalRank": 0.8
+  },
+  "cases": [
+    {
+      "id": "paraphrase-1-ru",
+      "query": "Где находится защита от потери несохранённых изменений при переходе на другую страницу?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/guards/unsaved-changes.guard.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-1-en",
+      "query": "Which guard prevents losing unsaved changes during page navigation?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/guards/unsaved-changes.guard.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-3-ru",
+      "query": "Где клиент разбирает JWT и получает время истечения токена?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-3-en",
+      "query": "Find the browser JWT payload decoding and expiration extraction service.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-7-ru",
+      "query": "Где браузер перезагружается при невозможности восстановить версию приложения?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-7-en",
+      "query": "Which client service handles unrecoverable service worker application versions?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-9-ru",
+      "query": "Найди клиентский сервис подписки на push уведомления.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-9-en",
+      "query": "Where is the browser service for managing push notification subscriptions?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-12-ru",
+      "query": "Где клиент применяет предпочтительный язык интерфейса?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-12-en",
+      "query": "Find the frontend localization service that applies a language preference.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-17-ru",
+      "query": "Где клиент запускает окно checkout для транзакции Paddle?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-17-en",
+      "query": "Which frontend service opens a Paddle transaction checkout?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.ts"
+      ]
+    },
+    {
+      "id": "paraphrase-22-ru",
+      "query": "Найди серверный обработчик добавления измерения веса.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "paraphrase-22-en",
+      "query": "Where is the application handler that creates a weight measurement entry?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "paraphrase-25-ru",
+      "query": "Где сервис рассчитывает прогноз следующего менструального цикла?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Services/CyclePredictionService.cs"
+      ]
+    },
+    {
+      "id": "paraphrase-25-en",
+      "query": "Locate the menstrual cycle prediction calculation service.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Services/CyclePredictionService.cs"
+      ]
+    },
+    {
+      "id": "paraphrase-30-ru",
+      "query": "Найди серверный обработчик отключения носимого устройства.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "paraphrase-30-en",
+      "query": "Where is the backend handler for disconnecting a wearable connection?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "paraphrase-45-ru",
+      "query": "Какой инструмент вики находит структурные риски и пробелы тестовых ссылок?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1"
+      ]
+    },
+    {
+      "id": "paraphrase-45-en",
+      "query": "Which Wiki tool finds quality risks and missing direct test references?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1"
+      ]
+    }
+  ],
+  "firstRunBaseline": {
+    "top1": 16,
+    "top10": 19,
+    "caseCount": 20
+  },
+  "switchCriteria": {
+    "minimumTop1Rate": 0.75,
+    "minimumTop10Rate": 0.95,
+    "minimumMeanReciprocalRank": 0.8,
+    "minimumCaseCount": 20
+  }
+}

@@ -3,7 +3,11 @@ id: workflow.evals
 kind: workflow
 status: current
 sources:
+  - .llm-wiki/evals/context-search-conversational.json
+  - .llm-wiki/evals/context-search-conversational-paraphrases.json
+  - .llm-wiki/evals/development-context-cross-layer.json
   - .llm-wiki/evals/development-context-historical.json
+  - .llm-wiki/evals/development-context-symptoms.json
   - .llm-wiki/evals/cases.json
   - .llm-wiki/evals/answer-quality-intake-template.json
   - .llm-wiki/tools/Invoke-LlmWikiEvals.ps1
@@ -149,3 +153,19 @@ These fix-informed queries are retrieval regressions, not blind agent diagnosis
 or proof that the referenced tests have been executed. Screen-reader intent
 excludes backend reader-role boosts; component identity and provider request/cache
 behavior receive bounded structural ranking signals.
+
+The bilingual symptom corpus covers concurrent refresh, image deletion delivery,
+local-day boundaries, duplicate payment notifications, and recipe nutrition
+snapshots. Optional `requiredScopePaths` requires every named source in the
+expanded scope, so cross-module cases cannot pass by finding only one side.
+These source-informed regressions are not independent diagnosis trials.
+
+Conversational retrieval now has 89 source-informed regressions and 20 separately
+worded validation cases. Preserve the first-run baseline; one misworded assessment
+query was excluded explicitly. The SQL gate checks exact targets and Node/.NET
+parity, while four full-context cases require both client and server paths.
+These authored cases do not establish independent real-user diagnosis quality.
+
+Two full-context Wiki planning cases distinguish questions about selecting tests
+from requests to find the tests themselves. Explicit test-search intent remains
+covered by MCP query-service regressions.

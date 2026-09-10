@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "description": "Bilingual symptom retrieval regressions authored after source inspection; not a blind diagnosis benchmark. Required scope paths check cross-module recall.",
+  "thresholds": {
+    "minimumSqlitePrimaryRate": 1.0,
+    "minimumScopeRecallRate": 1.0,
+    "minimumSqlTopTenRecallRate": 1.0,
+    "minimumCompleteBundleRate": 0.8,
+    "minimumFocusedChecksRate": 1,
+    "minimumExpectedLayersRate": 1.0,
+    "minimumExplainableRankingRate": 1.0,
+    "minimumContextBundleReadyRate": 1,
+    "minimumUnplannedQueryRate": 0.5,
+    "maximumAverageExpandedScopePaths": 11.0,
+    "maximumP95DurationMilliseconds": 20000,
+    "maximumWarmP95DurationMilliseconds": 10000,
+    "maximumCompactCharacters": 120000
+  },
+  "cases": [
+    {
+      "id": "refresh-en",
+      "intent": "Several parallel requests get 401, token refresh runs twice and the user is logged out",
+      "query": "Several parallel requests get 401, token refresh runs twice and the user is logged out",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/auth.service.ts"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "FoodDiary.Web.Client/src/app/services/auth.service.spec.ts"
+      ]
+    },
+    {
+      "id": "refresh-ru",
+      "intent": "Несколько запросов одновременно получают 401, обновление токена выполняется дважды и пользователя выбрасывает из аккаунта",
+      "query": "Несколько запросов одновременно получают 401, обновление токена выполняется дважды и пользователя выбрасывает из аккаунта",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/auth.service.ts"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "FoodDiary.Web.Client/src/app/services/auth.service.spec.ts"
+      ]
+    },
+    {
+      "id": "image-en",
+      "intent": "A deleted meal photo still occupies object storage after the database operation succeeds",
+      "query": "A deleted meal photo still occupies object storage after the database operation succeeds",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "tests/FoodDiary.Infrastructure.Tests/Persistence/ImageObjectDeletionOutboxTests.cs"
+      ]
+    },
+    {
+      "id": "image-ru",
+      "intent": "Фото удалённого приёма пищи осталось в хранилище файлов, хотя запись из базы удалена",
+      "query": "Фото удалённого приёма пищи осталось в хранилище файлов, хотя запись из базы удалена",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "tests/FoodDiary.Infrastructure.Tests/Persistence/ImageObjectDeletionOutboxTests.cs"
+      ]
+    },
+    {
+      "id": "day-en",
+      "intent": "After local midnight a meal is counted in yesterday instead of today on the dashboard",
+      "query": "After local midnight a meal is counted in yesterday instead of today on the dashboard",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs"
+      ]
+    },
+    {
+      "id": "day-ru",
+      "intent": "После полуночи приём пищи попадает во вчерашний день на главном экране, часовой пояс пользователя отличается от UTC",
+      "query": "После полуночи приём пищи попадает во вчерашний день на главном экране, часовой пояс пользователя отличается от UTC",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs"
+      ]
+    },
+    {
+      "id": "billing-en",
+      "intent": "The payment provider sends the same webhook twice and premium access is extended twice",
+      "query": "The payment provider sends the same webhook twice and premium access is extended twice",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs"
+      ]
+    },
+    {
+      "id": "billing-ru",
+      "intent": "Платёжный провайдер повторно прислал уведомление об оплате, и подписка продлилась два раза",
+      "query": "Платёжный провайдер повторно прислал уведомление об оплате, и подписка продлилась два раза",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs"
+      ]
+    },
+    {
+      "id": "recipe-en",
+      "intent": "Changing ingredient weight updates recipe calories but meal totals still show old nutrition values",
+      "query": "Changing ingredient weight updates recipe calories but meal totals still show old nutrition values",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Meals/Application/Services/MealNutritionService.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealNutritionServiceTests.cs"
+      ],
+      "requiredScopePaths": [
+        "Modules/Meals/Application/Services/MealNutritionService.cs",
+        "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      ]
+    },
+    {
+      "id": "recipe-ru",
+      "intent": "Изменили вес ингредиента в рецепте, калории рецепта обновились, но в приёме пищи остались старые значения",
+      "query": "Изменили вес ингредиента в рецепте, калории рецепта обновились, но в приёме пищи остались старые значения",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Meals/Application/Services/MealNutritionService.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealNutritionServiceTests.cs"
+      ],
+      "requiredScopePaths": [
+        "Modules/Meals/Application/Services/MealNutritionService.cs",
+        "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      ]
+    }
+  ]
+}

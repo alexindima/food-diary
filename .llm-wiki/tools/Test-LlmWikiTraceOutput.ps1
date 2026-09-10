@@ -35,10 +35,23 @@ foreach ($queryName in @('GetAdminMailInboxMessagePageQuery')) {
         throw "HTTP query mapping lost its controller for $queryName."
     }
 }
+$mailClientEdge = @($queryTrace.nestedDependencies | Where-Object contract -eq 'IMailInboxClient')
+if ($mailClientEdge.Count -ne 1 -or @($mailClientEdge[0].implementations | Where-Object path -eq 'Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs').Count -ne 1) {
+    throw 'Admin reader trace must expose the external-service client package as its next source hop.'
+}
 $providerTrace = & $backendTraceScript -Query SearchOpenFoodFactsQuery -Format Json | ConvertFrom-Json
 $providerMapping = @($providerTrace.presentation | Where-Object confidence -eq 'mapping-method')
 if ($providerMapping.Count -ne 1 -or $providerMapping[0].method -ne 'OpenFoodFactsHttpMappings.ToSearchQuery' -or $providerMapping[0].path -notmatch '/OpenFoodFactsController\.cs$') {
     throw 'Static mapping trace must follow the search factory, without unrelated barcode mappings.'
+}
+foreach ($nestedContract in @('IOpenFoodFactsService', 'IOpenFoodFactsProductCacheReadRepository', 'IOpenFoodFactsProductCacheWriteRepository', 'IUnitOfWork')) {
+    $edge = @($providerTrace.nestedDependencies | Where-Object contract -eq $nestedContract)
+    if ($edge.Count -ne 1 -or $edge[0].parentSymbol -ne 'OpenFoodFactsCachedProductSearch' -or $edge[0].status -ne 'source-candidate' -or @($edge[0].implementations).Count -ne 1) {
+        throw "Nested service trace lost a source-linked dependency: $nestedContract."
+    }
+}
+if ($providerTrace.nestedDependenciesTruncated -or @($providerTrace.nestedDependencies | Where-Object parentSymbol -ne 'OpenFoodFactsCachedProductSearch').Count -gt 0) {
+    throw 'Nested dependency trace must stop after one service hop and preserve complete bounded results.'
 }
 $facadeText = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../wiki.ps1') -Raw
 if (-not $facadeText.Contains("if (-not `$FullTrace -and `$Format -eq 'Text')") -or

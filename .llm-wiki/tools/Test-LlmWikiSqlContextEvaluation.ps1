@@ -76,12 +76,18 @@ if (($controlTop1Rate - $blindTop1Rate) -gt 0.25) {
 }
 $rankingPolicy = Get-Content (Join-Path $PSScriptRoot '../policies/context-search-ranking.json') -Raw | ConvertFrom-Json
 $normalizationRuleCount = @($rankingPolicy.queryTermExpansions.PSObject.Properties).Count +
-    @($rankingPolicy.queryPrefixExpansions.PSObject.Properties).Count
+    @($rankingPolicy.queryPrefixExpansions.PSObject.Properties).Count + @($rankingPolicy.queryContextExpansions).Count
 $rankingRuleCount = @($rankingPolicy.pathBoosts).Count + @($rankingPolicy.identityBoosts).Count +
     @($rankingPolicy.structuralRoleBoosts).Count
 if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or
     ($normalizationRuleCount + $rankingRuleCount) -gt 700 -or $null -eq $rankingPolicy.genericAffinities) {
     throw "Context search exceeded its staged complexity budget or lost generic affinities: normalization=$normalizationRuleCount/400; ranking=$rankingRuleCount/400; combined=$($normalizationRuleCount + $rankingRuleCount)/700."
+}
+$conversationalCorpus = Join-Path $PSScriptRoot '../evals/context-search-conversational.json'
+$conversationalEvaluation = & $measure -CorpusPath $conversationalCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$conversationalParaphrases = & $measure -CorpusPath (Join-Path $PSScriptRoot '../evals/context-search-conversational-paraphrases.json') -SkipBuild -Format Json | ConvertFrom-Json
+if (-not $conversationalEvaluation.passed -or -not $conversationalParaphrases.passed) {
+    throw "Conversational retrieval regression: primary=$($conversationalEvaluation.metrics.top10Count)/$($conversationalEvaluation.caseCount), paraphrases=$($conversationalParaphrases.metrics.top10Count)/$($conversationalParaphrases.caseCount)."
 }
 $allEvaluations = @($mailRegressionEvaluation, $primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $securityRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 # Persist per-case rankings before enforcing thresholds so CI failures are actionable.
@@ -372,4 +378,5 @@ function Assert-CurrentRuntimeParity(
 }
 Assert-CurrentRuntimeParity $retirementHoldoutEvaluation $retirementHoldoutCorpusPath 'Independent holdout'
 Assert-CurrentRuntimeParity $unseenEvaluation $unseenCorpusPath 'Target-aware unseen corpus'
+Assert-CurrentRuntimeParity $conversationalEvaluation $conversationalCorpus 'Conversational corpus'
 Write-Host "LLM Wiki SQL context evaluation passed: promoted top1=$strictTop1Count/$strictCaseCount and top10=$strictTop10Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount); controls=$($postFixControlEvaluation.metrics.top1Count)/30 and $($postTuneControlEvaluation.metrics.top1Count)/30 top1, both 30/30 top10."

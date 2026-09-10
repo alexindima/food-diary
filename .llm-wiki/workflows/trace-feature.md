@@ -99,8 +99,12 @@ Semantic source traces follow one same-namespace interface-inheritance hop when
 interface names are unambiguous. Implementation entries expose `viaContract`
 and `evidence: source-declaration`. `traceDepth`, `limitations`, and
 `unresolvedDependencies` prevent a bounded result from implying a complete
-runtime chain. Nested services, DI factory choices, and external/framework
-implementations require separate inspection. These semantic fields apply to the
+runtime chain. One additional primary-constructor service hop is exposed in
+`nestedDependencies`, with parent paths, contract names, source candidates, and
+explicit unresolved or multiple-candidate status. Expansion stops after 12 direct
+implementations, 24 dependency entries, and four targets per entry; truncation is
+reported. Deeper services, conventional constructors, DI factory choices, and
+external/framework implementations require separate inspection. These semantic fields apply to the
 explicit source scan (`-FullTrace`), not an expanded traversal of fast MCP graph results.
 
 Qualified static mapping calls returning the exact request type are followed

@@ -19,6 +19,8 @@ test('English plural recall preserves previous alternatives and recognizes es pl
   assert.deepEqual(englishMorphologicalVariants('class'), []);
   assert.deepEqual(englishMorphologicalVariants('индексы'), []);
   assert.ok(englishMorphologicalVariants('running').includes('run'));
+  assert.ok(englishMorphologicalVariants('retried').includes('retry'));
+  assert.ok(englishMorphologicalVariants('verified').includes('verify'));
 });
 
 test('bounded identity recall is independent of body length and uses stable ties', () => {

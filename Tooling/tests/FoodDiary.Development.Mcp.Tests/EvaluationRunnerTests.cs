@@ -10,6 +10,7 @@ public sealed class EvaluationRunnerTests {
     [InlineData("rank")]
     [InlineData("test")]
     [InlineData("forbidden")]
+    [InlineData("scope")]
     public async Task DevelopmentContextEvaluationRunner_RejectsImpreciseEvidenceDespitePermissiveRates(string failure) {
         const string expected = "FoodDiary.Application.Users/Handler.cs";
         string corpusPath = await WriteCorpusAsync(JsonSerializer.Serialize(new {
@@ -20,6 +21,7 @@ public sealed class EvaluationRunnerTests {
                 expectedPaths = new[] { expected }, expectedLayers = Array.Empty<string>(),
                 maximumExpectedRank = string.Equals(failure, "rank", StringComparison.Ordinal) ? 1 : 10,
                 forbiddenTopPathPrefixes = string.Equals(failure, "forbidden", StringComparison.Ordinal) ? new[] { "FoodDiary.Application.Users/Noise" } : [],
+                requiredScopePaths = string.Equals(failure, "scope", StringComparison.Ordinal) ? new[] { "OtherLayer.cs" } : [],
                 expectedTestPaths = string.Equals(failure, "test", StringComparison.Ordinal) ? new[] { "tests/RequiredTests.cs" } : [],
             }, },
         }));

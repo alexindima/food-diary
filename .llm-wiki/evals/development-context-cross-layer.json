@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "description": "Strict client/server scope regressions from the source-informed conversational assessment.",
+  "thresholds": {
+    "minimumSqlitePrimaryRate": 1.0,
+    "minimumScopeRecallRate": 1.0,
+    "minimumSqlTopTenRecallRate": 1.0,
+    "minimumCompleteBundleRate": 0.8,
+    "minimumFocusedChecksRate": 1,
+    "minimumExpectedLayersRate": 1.0,
+    "minimumExplainableRankingRate": 1.0,
+    "minimumContextBundleReadyRate": 1,
+    "minimumUnplannedQueryRate": 0.5,
+    "maximumAverageExpandedScopePaths": 11.0,
+    "maximumP95DurationMilliseconds": 20000,
+    "maximumWarmP95DurationMilliseconds": 10000,
+    "maximumCompactCharacters": 120000
+  },
+  "cases": [
+    {
+      "id": "new100-14-ru",
+      "intent": "Найди клиент и сервер: получение URL загрузки изображения и подтверждение загрузки.",
+      "query": "Найди клиент и сервер: получение URL загрузки изображения и подтверждение загрузки.",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 10,
+      "requiredScopePaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
+        "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-14-en",
+      "intent": "Find both frontend and backend for requesting an image upload URL and confirming the upload.",
+      "query": "Find both frontend and backend for requesting an image upload URL and confirming the upload.",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 10,
+      "requiredScopePaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
+        "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-15-ru",
+      "intent": "Найди клиентский запрос экспорта дневника и серверный обработчик этого экспорта.",
+      "query": "Найди клиентский запрос экспорта дневника и серверный обработчик этого экспорта.",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/export.service.ts"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 10,
+      "requiredScopePaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/export.service.ts",
+        "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-15-en",
+      "intent": "Find both the diary export frontend API client and the backend export query handler.",
+      "query": "Find both the diary export frontend API client and the backend export query handler.",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/export.service.ts"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 10,
+      "requiredScopePaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/export.service.ts",
+        "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs"
+      ]
+    }
+  ]
+}

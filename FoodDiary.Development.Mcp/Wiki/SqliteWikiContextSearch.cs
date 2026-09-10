@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -40,6 +40,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
     private static readonly Regex McpIntent = new(
         @"(^|\W)mcp(\W|$)",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
+        TimeSpan.FromMilliseconds(100));
+    private static readonly Regex ExplicitIdentifier = new(
+        @"\b[A-Za-z][A-Za-z0-9_]{5,}\b",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
         TimeSpan.FromMilliseconds(100));
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly string _databasePath;
@@ -431,6 +435,21 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         Dictionary<string, int> testSubjectWeights = stronglyRequestsTest
             ? GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity)
             : [];
+        ConversationalAffinity? conversation = policy.ConversationalAffinity;
+        bool conversational = conversation is not null && query.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length >= conversation.MinimumWords &&
+            (query.Contains('?', StringComparison.Ordinal) || Regex.IsMatch(query, @"^(?:where|find|locate|which|где|как|какие|найди|нужно|хочу)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)));
+        bool frontendIntent = conversational && Regex.IsMatch(query, @"frontend|browser|on the client|client.*(?:api|recovery)|клиент|браузер", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
+        bool backendIntent = conversational && Regex.IsMatch(query, @"backend|сервер", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
+        bool wikiIntent = conversational && terms.Overlaps(["wiki", "вики"]);
+        Dictionary<string, int> subjectWeights = [];
+        if (conversational) {
+            string[] candidateIdentities = [.. candidates.Select(candidate => new string([.. ExpandSearchText(Path.GetFileName(candidate.Path)).Where(char.IsLetterOrDigit)]))];
+            foreach (string term in terms.Where(term => (term.Length >= 3 || string.Equals(term, "ai", StringComparison.Ordinal)) && term.All(character => character is >= 'a' and <= 'z') &&
+                !conversation!.ExcludedTerms.Contains(term, StringComparer.Ordinal))) {
+                int count = candidateIdentities.Count(identity => identity.Contains(term, StringComparison.OrdinalIgnoreCase));
+                if (count > 0) { subjectWeights[term] = Math.Max(0, conversation!.ScorePerSubject - (conversation.FrequencyPenalty * (int)Math.Floor(Math.Log2(count + 1)))); }
+            }
+        }
         List<RankedCandidate> ranked = [];
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
@@ -467,11 +486,33 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             string searchableIdentity = $"{searchablePath} {normalizedTitle}";
             string searchableFileIdentity =
                 ExpandSearchText(Path.GetFileName(NormalizePath(candidate.Path))).ToLowerInvariant();
+            if (conversational) {
+                string subjectIdentity = new([.. searchableFileIdentity.Where(char.IsLetterOrDigit)]);
+                int subjectScore = Math.Min(conversation!.MaximumSubjectScore, subjectWeights.Where(pair => subjectIdentity.Contains(pair.Key, StringComparison.Ordinal)).Sum(pair => pair.Value));
+                score += subjectScore;
+                if (subjectScore > 0) { reasons.Add("conversational subject identity affinity"); }
+                bool frontendSource = normalizedPath.StartsWith("fooddiary.web.client/", StringComparison.Ordinal);
+                if (!wikiIntent && frontendIntent && frontendSource) { score += conversation.LayerScore; reasons.Add("requested frontend source"); }
+                if (!wikiIntent && frontendIntent && !backendIntent && frontendSource && terms.Overlaps(["request", "requests", "api", "http"]) &&
+                    (normalizedPath.EndsWith(".service.ts", StringComparison.Ordinal) || normalizedPath.EndsWith(".interceptor.ts", StringComparison.Ordinal))) {
+                    score += conversation.LayerScore; reasons.Add("requested frontend transport implementation");
+                }
+                if (!wikiIntent && backendIntent && !frontendIntent && frontendSource) { score -= conversation.LayerScore; reasons.Add("backend intent excludes frontend source"); }
+                if (!isTest && !isExplicitTestCandidate && !wikiIntent && !frontendIntent && (backendIntent || terms.Overlaps(["query", "command"])) && searchableFileIdentity.Contains("handler", StringComparison.Ordinal) &&
+                    !terms.Overlaps(["validator", "repository", "controller", "domain", "entity"])) { score += conversation.RoleScore; reasons.Add("application flow handler"); }
+                if (wikiIntent && normalizedPath.StartsWith(".llm-wiki/tools/", StringComparison.Ordinal)) {
+                    score += isExplicitTestCandidate ? -conversation.LayerScore : conversation.RoleScore;
+                    reasons.Add("wiki capability tool role");
+                }
+            }
             string topLevelModuleIdentity = GetRankingModuleIdentity(normalizedPath);
             string[] normalizedDirectTerms = [.. directQueryTerms.Select(term =>
                 new string([.. term.Where(char.IsLetterOrDigit)]))];
+            int moduleIdentityTermCount = string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
+                !normalizedPath.StartsWith("fooddiary.web.client/", StringComparison.Ordinal)
+                ? policy.ModuleIdentityLeadingTermCount : policy.ModuleIdentityAffinityLeadingTermCount;
             if (topLevelModuleIdentity.Length >= policy.ModuleIdentityMinimumLength &&
-                normalizedDirectTerms.Take(policy.ModuleIdentityLeadingTermCount).Contains(
+                normalizedDirectTerms.Take(moduleIdentityTermCount).Contains(
                     topLevelModuleIdentity,
                     StringComparer.Ordinal)) {
                 score += policy.ModuleIdentityScore;
@@ -892,6 +933,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 Math.Round(candidate.Raw.LexicalRank, 6, MidpointRounding.AwayFromZero),
                 candidate.Reasons));
         }
+        bool unmatchedIdentifier = ExplicitIdentifier.Matches(query).Select(match => match.Value)
+            .Any(value => (value.Any(char.IsDigit) || CamelBoundary.IsMatch(value)) && !candidates.Any(candidate => candidate.Path.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+                candidate.Title.Contains(value, StringComparison.OrdinalIgnoreCase)));
         var fileNameCounts = result
             .GroupBy(candidate => Path.GetFileName(candidate.Path), StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Count(), StringComparer.OrdinalIgnoreCase);
@@ -905,10 +949,12 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)) &&
                 policy.ConfidenceCalibration.DocumentationRecordTypes.Any(recordType =>
                     string.Equals(recordType, candidate.RecordType, StringComparison.OrdinalIgnoreCase));
-            bool ambiguous = recordTypeMismatch || (scoreMargin is not null &&
+            bool ambiguous = unmatchedIdentifier || recordTypeMismatch || (scoreMargin is not null &&
                 scoreMargin <= policy.ConfidenceCalibration.AmbiguityMaximumMargin);
             string? ambiguityReason = null;
-            if (recordTypeMismatch) {
+            if (unmatchedIdentifier) {
+                ambiguityReason = "unmatched-query-identifier";
+            } else if (recordTypeMismatch) {
                 ambiguityReason = "record-type-change-type-mismatch";
             } else if (ambiguous) {
                 ambiguityReason = "top-score-margin";
@@ -1004,6 +1050,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         string[] directTerms = GetDirectQueryTerms(query, policy);
         List<string> terms = [.. directTerms];
         HashSet<string> seen = new(terms, StringComparer.Ordinal);
+        if (query.Contains('?', StringComparison.Ordinal) || Regex.IsMatch(query, @"^(?:where|find|locate|which|где|как|какие|найди|нужно|хочу)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))) {
+            foreach (string term in directTerms) { AddExpansions(GetEnglishMorphologicalVariants(term), terms, seen); }
+        }
         AddConfiguredExpansions(directTerms, policy, terms, seen);
         return [.. terms.Take(policy.MaximumQueryTerms)];
     }
@@ -1034,7 +1083,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         foreach (string term in directTerms) {
             foreach ((string termGroup, string[] expansions) in policy.QueryTermExpansions) {
                 if (termGroup.Split('|', StringSplitOptions.RemoveEmptyEntries).Contains(term, StringComparer.Ordinal)) {
-                    AddExpansions(expansions, terms, seen);
+                    AddExpansions(expansions.Contains("@inflect", StringComparer.Ordinal) ? [.. GetEnglishMorphologicalVariants(term).Take(1)] : expansions, terms, seen);
                 }
             }
             foreach ((string prefix, string[] prefixExpansions) in policy.QueryPrefixExpansions) {
@@ -1043,6 +1092,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     AddExpansions(prefixExpansions, terms, seen);
                 }
             }
+        }
+        foreach (QueryContextExpansion expansion in policy.QueryContextExpansions ?? []) {
+            if (expansion.RequiredTerms.All(seen.Contains)) { AddExpansions(expansion.Terms, terms, seen); }
         }
     }
 
@@ -1068,6 +1120,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 variants.Add(stem[..^1]);
             }
         }
+        if (term.Length > 4 && term.EndsWith("ied", StringComparison.Ordinal)) { variants.Add($"{term[..^3]}y"); }
         if (term.Length > 4 && term.EndsWith("ed", StringComparison.Ordinal)) {
             variants.Add(term[..^2]);
             variants.Add(term[..^1]);
@@ -1167,6 +1220,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.QueryPrefixExpansions is null ||
             policy.ModuleIdentityMinimumLength < 1 ||
             policy.ModuleIdentityLeadingTermCount < 1 ||
+            policy.ModuleIdentityAffinityLeadingTermCount < 1 ||
             policy.AdminIntentTerms is null ||
             policy.UnrequestedAdminPenaltyExemptionMatches < 1 ||
             policy.DocumentationImplementationPenalty is null ||
@@ -1382,6 +1436,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int CrossLayerPenalty,
         int ModuleIdentityMinimumLength,
         int ModuleIdentityLeadingTermCount,
+        int ModuleIdentityAffinityLeadingTermCount,
         int ModuleIdentityScore,
         string[] AdminIntentTerms,
         int UnrequestedAdminPenalty,
@@ -1394,7 +1449,13 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         PathBoost[] PathBoosts,
         IdentityBoost[] IdentityBoosts,
         GenericAffinities GenericAffinities,
-        StructuralRoleBoost[]? StructuralRoleBoosts = null);
+        StructuralRoleBoost[]? StructuralRoleBoosts = null,
+        ConversationalAffinity? ConversationalAffinity = null,
+        QueryContextExpansion[]? QueryContextExpansions = null);
+
+    private sealed record QueryContextExpansion(string[] RequiredTerms, string[] Terms);
+
+    private sealed record ConversationalAffinity(int MinimumWords, int ScorePerSubject, int MaximumSubjectScore, int FrequencyPenalty, int LayerScore, int RoleScore, string[] ExcludedTerms);
 
     private sealed record ConfidenceCalibration(
         int AmbiguityMaximumMargin,

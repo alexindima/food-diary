@@ -71,8 +71,9 @@ internal static class DevelopmentContextEvaluationRunner {
                 !(context.SqlContextSearch?.Candidates.Take(3).Any(candidate =>
                     (evaluationCase.ForbiddenTopPathPrefixes ?? []).Any(prefix => candidate.Path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))) is true);
             bool namedTestsPresent = (evaluationCase.ExpectedTestPaths ?? []).All(path => HasNamedTest(context.TestPlan, path));
+            bool requiredScopePathsPresent = (evaluationCase.RequiredScopePaths ?? []).All(path => context.ExpandedScopePaths.Contains(path, StringComparer.OrdinalIgnoreCase));
             bool contextBundleReady = scopeHit && sqlTopTenHit && expectedLayersPresent &&
-                completeBundle && focusedChecksPresent && explainableRanking && preciseRanking && namedTestsPresent;
+                completeBundle && focusedChecksPresent && explainableRanking && preciseRanking && namedTestsPresent && requiredScopePathsPresent;
             bool unplannedQuery = string.IsNullOrWhiteSpace(evaluationCase.PlannedPath);
             int compactCharacters = JsonSerializer.Serialize(context.ToCompact(), OutputOptions).Length;
             results.Add(new EvaluationResult(
@@ -93,7 +94,7 @@ internal static class DevelopmentContextEvaluationRunner {
                 compactCharacters,
                 Math.Round(stopwatch.Elapsed.TotalMilliseconds, 2, MidpointRounding.AwayFromZero),
                 [.. context.ComponentErrors.Select(error => $"{error.Component}:{error.ErrorCode}")],
-                [.. context.ExpandedScopePaths.Take(12)], preciseRanking, namedTestsPresent));
+                [.. context.ExpandedScopePaths.Take(12)], preciseRanking, namedTestsPresent, requiredScopePathsPresent));
         }
 
         double sqlitePrimaryRate = Rate(results.Count(result => result.SqlitePrimary), results.Count);
@@ -122,7 +123,7 @@ internal static class DevelopmentContextEvaluationRunner {
         double warmP95DurationMilliseconds = warmDurations[warmP95Index];
         double coldStartDurationMilliseconds = results[0].DurationMilliseconds;
         int maximumCompactCharacters = results.Max(result => result.CompactCharacters);
-        bool passed = results.All(result => result.PreciseRanking && result.NamedTestsPresent) &&
+        bool passed = results.All(result => result.PreciseRanking && result.NamedTestsPresent && result.RequiredScopePathsPresent) &&
             sqlitePrimaryRate >= corpus.Thresholds.MinimumSqlitePrimaryRate &&
             scopeRecallRate >= corpus.Thresholds.MinimumScopeRecallRate &&
             sqlTopTenRecallRate >= corpus.Thresholds.MinimumSqlTopTenRecallRate &&
@@ -252,7 +253,8 @@ internal static class DevelopmentContextEvaluationRunner {
         string[] ExpectedLayers,
         int? MaximumExpectedRank = null,
         string[]? ForbiddenTopPathPrefixes = null,
-        string[]? ExpectedTestPaths = null);
+        string[]? ExpectedTestPaths = null,
+        string[]? RequiredScopePaths = null);
 
     private sealed record EvaluationResult(
         string Id,
@@ -274,5 +276,6 @@ internal static class DevelopmentContextEvaluationRunner {
         string[] ComponentErrors,
         string[] ExpandedScopePaths,
         bool PreciseRanking,
-        bool NamedTestsPresent);
+        bool NamedTestsPresent,
+        bool RequiredScopePathsPresent);
 }

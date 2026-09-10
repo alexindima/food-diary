@@ -60,6 +60,13 @@ function extract(path) {
     }
     if (ts.isImportDeclaration(node) && ts.isStringLiteralLike(node.moduleSpecifier)) {
       addEdge('module-import', node.moduleSpecifier.text, node.moduleSpecifier);
+      const bindings = node.importClause?.namedBindings;
+      if (bindings && ts.isNamedImports(bindings)) {
+        for (const binding of bindings.elements) {
+          const importedName = (binding.propertyName ?? binding.name).text;
+          if (importedName.length >= 3) addEdge('named-import', importedName, binding);
+        }
+      }
     }
     if (ts.isHeritageClause(node)) {
       for (const type of node.types) addEdge(node.token === ts.SyntaxKind.ImplementsKeyword ? 'type-implementation' : 'type-inheritance', type.expression.getText(sourceFile), type);
@@ -93,7 +100,7 @@ function extract(path) {
     ts.forEachChild(node, visit);
   }
   visit(sourceFile);
-  if (/(^|\/)(?:tests?|__tests__)(\/|$)|\.(?:spec|test)\.ts$/.test(path)) {
+  if (/(^|\/)(?:tests?|__tests__)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
     edges.push({ kind: 'test-ownership', target: path, line: 1, evidence: path, confidence: 'high' });
   }
   return { path, language: 'typescript', symbols, tokens: [...tokens], projectReferences: [], edges };

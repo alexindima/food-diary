@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "description": "Wiki test planning asks for the selection implementation, not its tests; source-informed full-context regressions.",
+  "thresholds": {
+    "minimumSqlitePrimaryRate": 1.0,
+    "minimumScopeRecallRate": 1.0,
+    "minimumSqlTopTenRecallRate": 1.0,
+    "minimumCompleteBundleRate": 0.8,
+    "minimumFocusedChecksRate": 1,
+    "minimumExpectedLayersRate": 1.0,
+    "minimumExplainableRankingRate": 1.0,
+    "minimumContextBundleReadyRate": 1,
+    "minimumUnplannedQueryRate": 0.5,
+    "maximumAverageExpandedScopePaths": 11.0,
+    "maximumP95DurationMilliseconds": 20000,
+    "maximumWarmP95DurationMilliseconds": 10000,
+    "maximumCompactCharacters": 120000
+  },
+  "cases": [
+    {
+      "id": "wiki-test-planning-ru",
+      "intent": "Как вики выбирает тесты только по графу зависимостей?",
+      "query": "Как вики выбирает тесты только по графу зависимостей?",
+      "plannedPath": null,
+      "expectedPaths": [
+        ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1"
+      ],
+      "requiredScopePaths": [
+        ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 10
+    },
+    {
+      "id": "wiki-test-planning-en",
+      "intent": "How does wiki select tests from the dependency graph?",
+      "query": "How does wiki select tests from the dependency graph?",
+      "plannedPath": null,
+      "expectedPaths": [
+        ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1"
+      ],
+      "requiredScopePaths": [
+        ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 10
+    }
+  ]
+}

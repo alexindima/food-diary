@@ -241,18 +241,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "12b8c6ac90ce6f5bf0c3ac9fcceeb2bd3423b4fa344952f9772e7c176de20e13"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
+          "sha256": "f93fdc774f1083979dd3acecb660a03f21edef6a26bf7af97d8631dc26862ed8"
         }
       ],
-      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
+      "reason": "Named imports are now separate typed graph edges, consumed by bounded impact lookup; they do not alter lexical file tokens. Reviewed current source contracts: static navigation evidence only, with existing same-name uncertainty and no runtime/API/privacy authority changes.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:36:15.3599709Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T17:33:34.8292807Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -295,17 +291,21 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "3dc4c5c0e842255f987dc9c44e406adaf1faa6ae015473a0179579e3d8e66bd6"
+          "sha256": "6f546061df6a892f18611fa32a339b2becf32666f676224ad35d47147097087a"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1",
-          "sha256": "040900950660f0fdbe83ea15ee611e65fc6a72d712c0f126e57184bad17092dd"
+          "sha256": "6d7a8b0d07f164cbcd2f8c58b438522eb76e32fdfcce6293da109b62656ab468"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+          "sha256": "1965e3c1a5c8a036bdb4080c774ffaf031a2000c769c7e56cbc7e1dbc78f1022"
         }
       ],
-      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
+      "reason": "Reviewed bounded bilingual symptom roles, explicit persistence-role exclusions, and unchanged confidence gates. Removed redundant expansions to preserve the 700-rule complexity budget.",
       "baseRef": "HEAD",
-      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
-      "reviewedAtUtc": "2026-09-10T14:43:01.5532088Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T15:31:52.2812047Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -603,13 +603,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
+          "sha256": "f93fdc774f1083979dd3acecb660a03f21edef6a26bf7af97d8631dc26862ed8"
         }
       ],
-      "reason": "Reviewed current sources: backend exact trace scope filtering and module HTTP mapping evidence, preserved compact MCP graph/semantic contracts, CI guardrail selection and empty-plan warning. Updated trace/test-plan/code-graph guides; contract, privacy, runtime and impact query semantics remain unchanged.",
+      "reason": "Named imports are now separate typed graph edges, consumed by bounded impact lookup; they do not alter lexical file tokens. Reviewed current source contracts: static navigation evidence only, with existing same-name uncertainty and no runtime/API/privacy authority changes.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:15:05.7388781Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T17:33:35.4260112Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -647,18 +647,14 @@
       "pageSha256": "956836ea8d3085ebfd97b63a64edcc3e7aaa616a63a94981501426f19ad72171",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "885ab345573f15badea90130d46b277966c00e5295b0ad909652a9fe5f8a4a8d"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "64a0defe4bd14b5aee4eb0415daba8ea2c2c5566121016975a487462b8415a70"
         }
       ],
-      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
+      "reason": "Reviewed conversational ranking, shared morphology and explicit unmatched-identifier confidence. Contract/privacy/impact projection shapes and freshness guarantees remain unchanged; regenerated quality/runtime source metrics reviewed. Existing smoke and corpus gates remain required.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:36:16.9237485Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T16:30:03.2919174Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -791,13 +787,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
+          "sha256": "f93fdc774f1083979dd3acecb660a03f21edef6a26bf7af97d8631dc26862ed8"
         }
       ],
-      "reason": "Reviewed current sources: backend exact trace scope filtering and module HTTP mapping evidence, preserved compact MCP graph/semantic contracts, CI guardrail selection and empty-plan warning. Updated trace/test-plan/code-graph guides; contract, privacy, runtime and impact query semantics remain unchanged.",
+      "reason": "Named imports are now separate typed graph edges, consumed by bounded impact lookup; they do not alter lexical file tokens. Reviewed current source contracts: static navigation evidence only, with existing same-name uncertainty and no runtime/API/privacy authority changes.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:15:07.1160242Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T17:33:36.0154505Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -836,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2a0ec41a9e17b58a536134243adfdd34dde6a73ef34b26b6a1af3f9566293979"
+          "sha256": "eae559cc267ca08c4aaddc58d3ede88527425f9a9be2eb91594e0ec869950975"
         }
       ],
-      "reason": "Reviewed generated structural metrics for the extended semantic trace and additive MCP response properties; higher trace complexity is covered by HTTP query, static mapping, inherited repository, and compact protocol regressions. Static references remain distinct from execution coverage.",
+      "reason": "Reviewed final source changes: named TypeScript imports now contribute static consumer evidence and Node ESM tests are recognized by graph planning. Parser version invalidates older projections. This expands navigation evidence only, not runtime/API/privacy authority or executed coverage; refreshed quality/runtime hashes reflect MCP routing tests.",
       "baseRef": "HEAD",
-      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
-      "reviewedAtUtc": "2026-09-10T14:51:48.5089585Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T17:27:49.2659008Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -911,13 +907,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7e52d8a0d0a8d63fd8a155d8a773f8b9ca88f553630be6e723b1fc03ac3b1a00"
+          "sha256": "5e4710687cf207a76298a0272682f3e4c4cec8ce3e830908f475004955dc03b7"
         }
       ],
-      "reason": "Runtime topology changes only its source fingerprint after MCP source edits; service, worker, provider and deployment records are unchanged. Existing runtime-review guidance remains accurate.",
+      "reason": "Reviewed final source changes: named TypeScript imports now contribute static consumer evidence and Node ESM tests are recognized by graph planning. Parser version invalidates older projections. This expands navigation evidence only, not runtime/API/privacy authority or executed coverage; refreshed quality/runtime hashes reflect MCP routing tests.",
       "baseRef": "HEAD",
-      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
-      "reviewedAtUtc": "2026-09-10T14:51:50.4759195Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T17:27:49.9894219Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -926,21 +922,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2a0ec41a9e17b58a536134243adfdd34dde6a73ef34b26b6a1af3f9566293979"
+          "sha256": "eae559cc267ca08c4aaddc58d3ede88527425f9a9be2eb91594e0ec869950975"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7e52d8a0d0a8d63fd8a155d8a773f8b9ca88f553630be6e723b1fc03ac3b1a00"
+          "sha256": "5e4710687cf207a76298a0272682f3e4c4cec8ce3e830908f475004955dc03b7"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "3dc4c5c0e842255f987dc9c44e406adaf1faa6ae015473a0179579e3d8e66bd6"
+          "sha256": "6204b99aec074ab87a11a07515a6758a9cfa5692aa918766ded610f66d8d382b"
         }
       ],
-      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
+      "reason": "Reviewed final source changes: named TypeScript imports now contribute static consumer evidence and Node ESM tests are recognized by graph planning. Parser version invalidates older projections. This expands navigation evidence only, not runtime/API/privacy authority or executed coverage; refreshed quality/runtime hashes reflect MCP routing tests.",
       "baseRef": "HEAD",
-      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
-      "reviewedAtUtc": "2026-09-10T14:43:02.5214569Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T17:27:50.8056675Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1069,21 +1065,21 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "904baeea337dd872751021458ca02e357d4ff7f20b7f7087a06f41456776e164",
+      "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-          "sha256": "71526878250ea934c6fc5eb36eee1403062131ad6f320d269f4d3f92b3cfca5b"
+          "sha256": "4dfd1eb1a1e07b2fe83f37b3ad644602e18b7404683dce1404bfc5b985688af0"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-          "sha256": "842d29dd00933ea501a803591528aa94517ed1d191b7bcbe296c09486d9bb91e"
+          "sha256": "cdde9d4895d99792d19d263458f5bd7459ee230de910e490f504d7eb3f00bba3"
         }
       ],
-      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
+      "reason": "Reviewed one-hop semantic constructor navigation and bounded compaction against source declarations, OpenFoodFacts provider/repository and Admin client regressions. Generated changes are structural metrics and source fingerprints; runtime/security topology and fast MCP behavior remain unchanged. Source candidates do not prove runtime DI or calls.",
       "baseRef": "HEAD",
-      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
-      "reviewedAtUtc": "2026-09-10T14:43:03.3461466Z"
+      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
+      "reviewedAtUtc": "2026-09-10T14:58:16.6864127Z"
     },
     {
       "pageId": "workflow-verification-planner",

@@ -112,6 +112,32 @@ $interfaceDeclarations = @(
 $interfaceNameCounts = @{}
 foreach ($group in @($interfaceDeclarations | Group-Object name)) { $interfaceNameCounts[$group.Name] = $group.Count }
 
+$implementationCache = @{}
+function Resolve-TraceImplementation([string]$Dependency) {
+    if ($implementationCache.ContainsKey($Dependency)) { return $implementationCache[$Dependency] }
+    $plainDependency = $Dependency -replace '<.*$', ''
+    $names = @($plainDependency)
+    $definitions = @($interfaceDeclarations | Where-Object name -eq $plainDependency)
+    if ($definitions.Count -eq 1) {
+        $names += @($interfaceDeclarations | Where-Object {
+            $_.namespace -eq $definitions[0].namespace -and $interfaceNameCounts[$_.name] -eq 1 -and
+            $_.bases -match "\b$([regex]::Escape($plainDependency))\b"
+        } | ForEach-Object name)
+    }
+    $contractPattern = (@($names | Sort-Object -Unique) | ForEach-Object { [regex]::Escape($_) }) -join '|'
+    $resolved = @(
+        foreach ($document in $sourceDocuments) {
+            if ($document.isTest) { continue }
+            $match = [regex]::Match($document.content, "(?:class|record)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)[^;{]*:\s*[^`r`n{]*\b(?<via>$contractPattern)\b")
+            if ($match.Success) {
+                [pscustomobject]@{ contract = $Dependency; viaContract = $match.Groups['via'].Value; evidence = 'source-declaration'; implementation = $match.Groups['name'].Value; path = $document.repositoryPath; line = Get-LineNumber $document.content $match.Index }
+            }
+        }
+    )
+    $implementationCache[$Dependency] = $resolved
+    return $resolved
+}
+
 $handlerCandidates = [System.Collections.Generic.List[object]]::new()
 foreach ($document in $sourceDocuments) {
     if ($document.isTest) { continue }
@@ -173,18 +199,8 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
     $tests = [System.Collections.Generic.List[object]]::new()
     $directConsumers = [System.Collections.Generic.List[object]]::new()
 
-    $dependencyContracts = @{}
     foreach ($dependency in $candidate.dependencies) {
-        $plainDependency = $dependency -replace '<.*$', ''
-        $names = @($plainDependency)
-        $definitions = @($interfaceDeclarations | Where-Object name -eq $plainDependency)
-        if ($definitions.Count -eq 1) {
-            $names += @($interfaceDeclarations | Where-Object {
-                $_.namespace -eq $definitions[0].namespace -and $interfaceNameCounts[$_.name] -eq 1 -and
-                $_.bases -match "\b$([regex]::Escape($plainDependency))\b"
-            } | ForEach-Object name)
-        }
-        $dependencyContracts[$dependency] = @($names | Sort-Object -Unique)
+        foreach ($implementation in @(Resolve-TraceImplementation $dependency)) { $implementations.Add($implementation) }
     }
 
     foreach ($document in $sourceDocuments) {
@@ -200,24 +216,6 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
             $requestDefinition = [pscustomobject]@{
                 path = $repositoryPath
                 line = Get-LineNumber $content $definitionMatch.Index
-            }
-        }
-
-        foreach ($dependency in $candidate.dependencies) {
-            if ($document.isTest) { continue }
-            $contractPattern = ($dependencyContracts[$dependency] | ForEach-Object { [regex]::Escape($_) }) -join '|'
-            $implementationMatch = [regex]::Match(
-                $content,
-                "(?:class|record)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)[^;{]*:\s*[^`r`n{]*\b(?<via>$contractPattern)\b")
-            if ($implementationMatch.Success) {
-                $implementations.Add([pscustomobject]@{
-                    contract = $dependency
-                    viaContract = $implementationMatch.Groups['via'].Value
-                    evidence = 'source-declaration'
-                    implementation = $implementationMatch.Groups['name'].Value
-                    path = $repositoryPath
-                    line = Get-LineNumber $content $implementationMatch.Index
-                })
             }
         }
 
@@ -269,6 +267,32 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
             }
         }
     }
+    # Expand only primary-constructor dependencies of direct implementations.
+    # Never enqueue these children again: cycles and deep graphs remain bounded.
+    $nestedDependencies = [System.Collections.Generic.List[object]]::new()
+    $nestedTruncated = $false
+    $directImplementations = @($implementations | Sort-Object path, implementation -Unique)
+    if ($directImplementations.Count -gt 12) { $nestedTruncated = $true }
+    foreach ($parent in @($directImplementations | Select-Object -First 12)) {
+        if ($nestedDependencies.Count -ge 24) { $nestedTruncated = $true; break }
+        $parentDocument = $sourceDocuments | Where-Object repositoryPath -eq $parent.path | Select-Object -First 1
+        $constructor = [regex]::Match($parentDocument.content, "\b(?:class|record)\s+$([regex]::Escape($parent.implementation))\s*\((?<parameters>[^;{]*?)\)\s*:")
+        if (-not $constructor.Success) {
+            $nestedDependencies.Add([pscustomobject]@{ parentPath = $parent.path; parentSymbol = $parent.implementation; status = 'constructor-not-resolved'; contract = $null; implementations = @(); truncated = $false })
+            continue
+        }
+        $contracts = @([regex]::Matches($constructor.Groups['parameters'].Value, '(?<type>[A-Z][A-Za-z0-9_]*(?:<[^>]+>)?)\s+[A-Za-z_][A-Za-z0-9_]*') | ForEach-Object { $_.Groups['type'].Value } | Sort-Object -Unique)
+        foreach ($contract in $contracts) {
+            if ($nestedDependencies.Count -ge 24) { $nestedTruncated = $true; break }
+            $targets = @(Resolve-TraceImplementation $contract)
+            $nestedDependencies.Add([pscustomobject]@{
+                parentPath = $parent.path; parentSymbol = $parent.implementation; contract = $contract
+                status = if ($targets.Count -eq 0) { 'implementation-not-resolved' } elseif ($targets.Count -gt 1) { 'multiple-source-candidates' } else { 'source-candidate' }
+                implementations = @($targets | Select-Object -First 4); truncated = $targets.Count -gt 4
+            })
+        }
+        if ($nestedTruncated -and $nestedDependencies.Count -ge 24) { break }
+    }
     $filteredDirectConsumers = @($directConsumers | Where-Object {
         $null -eq $requestDefinition -or $_.path -ne $requestDefinition.path
     } | Group-Object path | ForEach-Object { $_.Group | Select-Object -First 1 } | Sort-Object path)
@@ -294,8 +318,10 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
             path = $candidate.path
             line = $candidate.line
         }
-        traceDepth = 'handler-dependencies-plus-one-interface-hop'
-        limitations = @('Source navigation only; constructor dependencies are not runtime call or DI proof. Nested service dependencies and external/framework implementations are not expanded.')
+        traceDepth = 'handler-plus-one-service-hop'
+        limitations = @('Source navigation only; constructor dependencies are not runtime call or DI proof. Only one primary-constructor service hop is expanded; deeper dependencies, conventional constructors, and runtime DI require inspection.')
+        nestedDependencies = @($nestedDependencies)
+        nestedDependenciesTruncated = $nestedTruncated
         unresolvedDependencies = @($candidate.dependencies | Where-Object { $_ -notin @($implementations | ForEach-Object contract) })
         dependencies = $candidate.dependencies
         implementations = @($implementations | Sort-Object contract, implementation, path -Unique)

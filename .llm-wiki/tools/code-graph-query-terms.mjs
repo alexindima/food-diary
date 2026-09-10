@@ -11,6 +11,7 @@ export function englishMorphologicalVariants(term) {
     variants.push(stem, `${stem}e`);
     if (stem.length > 2 && stem.at(-1) === stem.at(-2)) variants.push(stem.slice(0, -1));
   }
+  if (term.length > 4 && term.endsWith('ied')) variants.push(`${term.slice(0, -3)}y`);
   if (term.length > 4 && term.endsWith('ed')) variants.push(term.slice(0, -2), term.slice(0, -1));
   return variants;
 }

@@ -31,7 +31,7 @@ if (-not $evaluation.passed) {
 }
 Write-Host "LLM Wiki development-context evaluation passed: cases=$($evaluation.caseCount), sqlite=$($evaluation.metrics.sqlitePrimaryRate), scope=$($evaluation.metrics.scopeRecallRate), complete=$($evaluation.metrics.completeBundleRate), checks=$($evaluation.metrics.focusedChecksRate), contextReady=$($evaluation.metrics.contextBundleReadyRate), unplanned=$($evaluation.metrics.unplannedQueryRate), averageScope=$($evaluation.metrics.averageExpandedScopePaths), warmP95=$($evaluation.metrics.warmP95DurationMilliseconds)ms, cold=$($evaluation.metrics.coldStartDurationMilliseconds)ms, maxCompact=$($evaluation.metrics.maximumCompactCharacters) chars."
 if ($includePractical) {
-    foreach ($name in @('development-context-practical.json', 'development-context-practical-holdout.json', 'development-context-historical.json')) {
+    foreach ($name in @('development-context-practical.json', 'development-context-practical-holdout.json', 'development-context-historical.json', 'development-context-symptoms.json', 'development-context-cross-layer.json', 'development-context-wiki-planning.json')) {
         & $PSCommandPath -CorpusPath (Join-Path $PSScriptRoot "../evals/$name") -SkipBuild
     }
 }

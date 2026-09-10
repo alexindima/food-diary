@@ -24,11 +24,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1460,
-      "decisionPoints": 314,
+      "nonBlankLines": 1519,
+      "decisionPoints": 367,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 500.2
+      "structuralRiskScore": 580.88
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
@@ -303,6 +303,22 @@
       "structuralRiskScore": 116.98
     },
     {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+      "nonBlankLines": 458,
+      "decisionPoints": 71,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 115.66
+    },
+    {
+      "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
+      "nonBlankLines": 345,
+      "decisionPoints": 71,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 115.4
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiRepairLoop.ps1",
       "nonBlankLines": 342,
       "decisionPoints": 71,
@@ -439,20 +455,20 @@
       "structuralRiskScore": 105.42
     },
     {
-      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 452,
-      "decisionPoints": 64,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 105.04
-    },
-    {
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
       "nonBlankLines": 511,
       "decisionPoints": 63,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 104.72
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+      "nonBlankLines": 266,
+      "decisionPoints": 66,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 104.32
     },
     {
       "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -501,22 +517,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 99.98
-    },
-    {
-      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-      "nonBlankLines": 263,
-      "decisionPoints": 63,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 99.76
-    },
-    {
-      "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-      "nonBlankLines": 312,
-      "decisionPoints": 59,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 96.74
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
@@ -1082,11 +1082,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-      "nonBlankLines": 312,
-      "decisionPoints": 59,
+      "nonBlankLines": 345,
+      "decisionPoints": 71,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 96.74
+      "structuralRiskScore": 115.4
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
@@ -1266,11 +1266,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-      "nonBlankLines": 75,
-      "decisionPoints": 17,
+      "nonBlankLines": 76,
+      "decisionPoints": 18,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29
+      "structuralRiskScore": 30.52
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
@@ -2722,11 +2722,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContext.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 1,
+      "nonBlankLines": 48,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
+      "structuralRiskScore": 5.46
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContextComponentError.cs",
@@ -2778,11 +2778,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Tools/ToolExecution.cs",
-      "nonBlankLines": 64,
-      "decisionPoints": 6,
+      "nonBlankLines": 69,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.28
+      "structuralRiskScore": 14.88
     },
     {
       "path": "FoodDiary.Development.Mcp/Tools/WikiTools.cs",
@@ -2826,11 +2826,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-      "nonBlankLines": 263,
-      "decisionPoints": 63,
+      "nonBlankLines": 266,
+      "decisionPoints": 66,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 99.76
+      "structuralRiskScore": 104.32
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs",
@@ -2858,11 +2858,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1460,
-      "decisionPoints": 314,
+      "nonBlankLines": 1519,
+      "decisionPoints": 367,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 500.2
+      "structuralRiskScore": 580.88
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -2874,11 +2874,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandResult.cs",
-      "nonBlankLines": 171,
-      "decisionPoints": 14,
+      "nonBlankLines": 173,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.42
+      "structuralRiskScore": 25.96
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandStageTiming.cs",
@@ -2930,11 +2930,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 452,
-      "decisionPoints": 64,
+      "nonBlankLines": 458,
+      "decisionPoints": 71,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 105.04
+      "structuralRiskScore": 115.66
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeMetrics.cs",

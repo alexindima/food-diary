@@ -479,9 +479,15 @@ public sealed class WikiQueryService(
             char.IsLetterOrDigit(character)
                 ? char.ToLowerInvariant(character)
                 : ' '));
-        return normalized
-            .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Any(term =>
+        string[] terms = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        bool asksHowWikiPlansTests = terms.FirstOrDefault() is "how" or "как" &&
+            terms.Any(term => term is "wiki" or "вики") &&
+            terms.Any(term => term.StartsWith("select", StringComparison.Ordinal) ||
+                term.StartsWith("choos", StringComparison.Ordinal) ||
+                term.StartsWith("plan", StringComparison.Ordinal) ||
+                term.StartsWith("выбир", StringComparison.Ordinal) ||
+                term.StartsWith("план", StringComparison.Ordinal));
+        return !asksHowWikiPlansTests && terms.Any(term =>
                 term is "test" or "tests" or "testing" or "spec" or "specs" ||
                 term.StartsWith("тест", StringComparison.Ordinal));
     }

@@ -1113,6 +1113,10 @@ public sealed class WikiQueryServiceTests {
     [InlineData("tests for the Web Push sender", "Tests")]
     [InlineData("component specs for auth dialog", "Tests")]
     [InlineData("update user handler", "Any")]
+    [InlineData("Как вики выбирает тесты только по графу зависимостей?", "Any")]
+    [InlineData("How does wiki select tests from the dependency graph?", "Any")]
+    [InlineData("tests for wiki test plan selection", "Tests")]
+    [InlineData("Как тестируется выбор тестов в вики?", "Tests")]
     public async Task GetDevelopmentContextAsync_InfersTestSearchTypeFromQueryWithoutPlannedPath(
         string query,
         string expectedChangeType) {

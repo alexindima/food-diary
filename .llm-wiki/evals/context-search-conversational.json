@@ -1,0 +1,824 @@
+{
+  "schemaVersion": 1,
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.6,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.7
+  },
+  "cases": [
+    {
+      "id": "new100-01-ru",
+      "query": "Пользователь уходит со страницы с несохранённой формой, где решается показывать ли подтверждение?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/guards/unsaved-changes.guard.ts"
+      ]
+    },
+    {
+      "id": "new100-01-en",
+      "query": "Where is navigation away from a dirty form blocked or confirmed?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/guards/unsaved-changes.guard.ts"
+      ]
+    },
+    {
+      "id": "new100-02-ru",
+      "query": "Где браузер сохраняет токены сессии и очищает их при выходе?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/token-storage.service.ts"
+      ]
+    },
+    {
+      "id": "new100-02-en",
+      "query": "Locate browser session token persistence and cleanup on sign out.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/token-storage.service.ts"
+      ]
+    },
+    {
+      "id": "new100-03-ru",
+      "query": "Нужно проверить извлечение срока действия из JWT на клиенте.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts"
+      ]
+    },
+    {
+      "id": "new100-03-en",
+      "query": "Where does the frontend decode a JWT to read its expiry?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts"
+      ]
+    },
+    {
+      "id": "new100-04-ru",
+      "query": "Какие неудачные HTTP запросы клиент пробует отправить повторно?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/interceptor/retry.interceptor.ts"
+      ]
+    },
+    {
+      "id": "new100-04-en",
+      "query": "Which failed browser HTTP requests are automatically retried?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/interceptor/retry.interceptor.ts"
+      ]
+    },
+    {
+      "id": "new100-05-ru",
+      "query": "Индикатор загрузки завис после завершения HTTP запроса, с какого перехватчика начать?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/interceptor/global-loading.interceptor.ts"
+      ]
+    },
+    {
+      "id": "new100-05-en",
+      "query": "The loading indicator remains visible after an HTTP request finishes; locate the relevant interceptor.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/interceptor/global-loading.interceptor.ts"
+      ]
+    },
+    {
+      "id": "new100-06-en",
+      "query": "Find the browser HTTP interceptor responsible for observability context.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/interceptor/frontend-observability.interceptor.ts"
+      ]
+    },
+    {
+      "id": "new100-07-ru",
+      "query": "После обновления приложения браузер работает со старой версией, где логика восстановления версии?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts"
+      ]
+    },
+    {
+      "id": "new100-07-en",
+      "query": "Find client recovery logic when the running application version becomes outdated.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts"
+      ]
+    },
+    {
+      "id": "new100-08-ru",
+      "query": "Уведомления перестали приходить в реальном времени, где клиентское подключение?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/notifications/notification-realtime.service.ts"
+      ]
+    },
+    {
+      "id": "new100-08-en",
+      "query": "Where is the frontend connection for receiving realtime notifications managed?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/notifications/notification-realtime.service.ts"
+      ]
+    },
+    {
+      "id": "new100-09-ru",
+      "query": "Где клиент регистрирует push подписку браузера?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts"
+      ]
+    },
+    {
+      "id": "new100-09-en",
+      "query": "Find browser push subscription registration on the frontend.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts"
+      ]
+    },
+    {
+      "id": "new100-10-ru",
+      "query": "Хочу разобраться как на клиенте выбираются метрические и имперские единицы.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/measurements/measurement-system.service.ts"
+      ]
+    },
+    {
+      "id": "new100-10-en",
+      "query": "Where does the frontend choose metric versus imperial measurement units?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/measurements/measurement-system.service.ts"
+      ]
+    },
+    {
+      "id": "new100-11-ru",
+      "query": "Где клиент запоминает источник рекламного перехода?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts"
+      ]
+    },
+    {
+      "id": "new100-11-en",
+      "query": "Locate frontend persistence of marketing campaign attribution.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts"
+      ]
+    },
+    {
+      "id": "new100-12-ru",
+      "query": "Нужно изменить выбор языка приложения, где соответствующий сервис?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts"
+      ]
+    },
+    {
+      "id": "new100-12-en",
+      "query": "Where is application language selection managed on the client?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts"
+      ]
+    },
+    {
+      "id": "new100-13-ru",
+      "query": "Где браузер взаимодействует с Google при входе?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/auth/google-identity.service.ts"
+      ]
+    },
+    {
+      "id": "new100-13-en",
+      "query": "Locate the frontend integration with Google identity sign in.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/auth/google-identity.service.ts"
+      ]
+    },
+    {
+      "id": "new100-14-ru",
+      "query": "Найди клиент и сервер: получение URL загрузки изображения и подтверждение загрузки.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts"
+      ]
+    },
+    {
+      "id": "new100-14-en",
+      "query": "Find both frontend and backend for requesting an image upload URL and confirming the upload.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts"
+      ]
+    },
+    {
+      "id": "new100-15-ru",
+      "query": "Найди клиентский запрос экспорта дневника и серверный обработчик этого экспорта.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/export.service.ts"
+      ]
+    },
+    {
+      "id": "new100-15-en",
+      "query": "Find both the diary export frontend API client and the backend export query handler.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/export.service.ts"
+      ]
+    },
+    {
+      "id": "new100-16-ru",
+      "query": "Нужно найти клиентские запросы распознавания еды через ИИ.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts"
+      ]
+    },
+    {
+      "id": "new100-16-en",
+      "query": "Where does the frontend call AI food recognition?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts"
+      ]
+    },
+    {
+      "id": "new100-17-ru",
+      "query": "Где открывается платёжное окно Paddle в браузере?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.ts"
+      ]
+    },
+    {
+      "id": "new100-17-en",
+      "query": "Locate the browser service that launches Paddle checkout.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.ts"
+      ]
+    },
+    {
+      "id": "new100-18-ru",
+      "query": "Вес порции рецепта неверный, где клиентский расчёт граммов порции?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/meals/lib/recipe-serving/recipe-serving-weight.service.ts"
+      ]
+    },
+    {
+      "id": "new100-18-en",
+      "query": "Where is recipe serving weight calculated on the client?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/meals/lib/recipe-serving/recipe-serving-weight.service.ts"
+      ]
+    },
+    {
+      "id": "new100-19-ru",
+      "query": "Где на сервере выполняется повтор уже существующего приёма пищи?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-19-en",
+      "query": "Find the backend use case for repeating an existing meal.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-20-ru",
+      "query": "Хочу проверить серверный сценарий удаления приёма пищи.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Meals/Application/Commands/DeleteMeal/DeleteMealCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-20-en",
+      "query": "Locate the application handler responsible for deleting a meal.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Meals/Application/Commands/DeleteMeal/DeleteMealCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-21-ru",
+      "query": "Где собирается обзор приёмов пищи на сервере?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-21-en",
+      "query": "Find the backend query handler that builds the meals overview.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-22-ru",
+      "query": "Где обрабатывается добавление новой записи веса пользователя?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-22-en",
+      "query": "Locate the application command for adding a user weight entry.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-23-ru",
+      "query": "Нужно найти серверную сводку страницы истории веса.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-23-en",
+      "query": "Where is the weight history page summary assembled on the backend?",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-24-ru",
+      "query": "Хочу проверить обработку нового измерения талии.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-24-en",
+      "query": "Locate the backend handler for creating a waist measurement.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-25-ru",
+      "query": "Где рассчитывается прогноз менструального цикла?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Services/CyclePredictionService.cs"
+      ]
+    },
+    {
+      "id": "new100-25-en",
+      "query": "Find the service that calculates menstrual cycle predictions.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Services/CyclePredictionService.cs"
+      ]
+    },
+    {
+      "id": "new100-26-ru",
+      "query": "Где обрабатывается изменение существующего эпизода менструации?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-26-en",
+      "query": "Locate the command handler for editing a menstrual episode.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-27-ru",
+      "query": "Где собираются показатели питания с учётом цикла?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-27-en",
+      "query": "Find the query that produces the cycle nutrition summary.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-28-ru",
+      "query": "Где создаётся и проверяется OAuth state для подключения носимого устройства?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs"
+      ]
+    },
+    {
+      "id": "new100-28-en",
+      "query": "Locate OAuth state handling for wearable account authorization.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs"
+      ]
+    },
+    {
+      "id": "new100-29-ru",
+      "query": "Нужно разобраться в серверном сценарии синхронизации данных носимого устройства.",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-29-en",
+      "query": "Find the application flow that synchronizes wearable data.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-30-ru",
+      "query": "Где выполняется отключение интеграции с носимым устройством?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-30-en",
+      "query": "Locate the backend use case for disconnecting a wearable provider.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-31-ru",
+      "query": "Где сервер собирает дневную сводку данных носимых устройств?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-31-en",
+      "query": "Find the query handler for the daily wearable summary.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-32-ru",
+      "query": "Где создаётся список покупок из плана питания?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs"
+      ]
+    },
+    {
+      "id": "new100-32-en",
+      "query": "Locate the service responsible for creating a shopping list.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs"
+      ]
+    },
+    {
+      "id": "new100-33-ru",
+      "query": "Где на сервере выполняется поиск рецептов для раздела обзора сообщества?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-33-en",
+      "query": "Find the backend query for exploring community recipes.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-34-ru",
+      "query": "Где реализована проверка доступа к рецепту?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Recipes/Infrastructure/Services/RecipeAccessService.cs"
+      ]
+    },
+    {
+      "id": "new100-34-en",
+      "query": "Locate the infrastructure service for checking recipe access.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Recipes/Infrastructure/Services/RecipeAccessService.cs"
+      ]
+    },
+    {
+      "id": "new100-35-ru",
+      "query": "Где реализация поиска рецепта для других потребителей?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Recipes/Infrastructure/Services/RecipeLookupService.cs"
+      ]
+    },
+    {
+      "id": "new100-35-en",
+      "query": "Find the concrete recipe lookup service used by consumers.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Recipes/Infrastructure/Services/RecipeLookupService.cs"
+      ]
+    },
+    {
+      "id": "new100-36-ru",
+      "query": "Где собирается еженедельный отчёт пользователя?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-36-en",
+      "query": "Locate the application query for a weekly check in.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-37-ru",
+      "query": "Где создаётся или обновляется недельная цель?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-37-en",
+      "query": "Find the backend command for creating or updating a weekly goal.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-38-ru",
+      "query": "Где сервер формирует выводы по суточным энергозатратам?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-38-en",
+      "query": "Locate the query that produces TDEE insights.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-39-ru",
+      "query": "Где сервер выбирает совет дня для пользователя?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-39-en",
+      "query": "Find the application query that returns the daily advice.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-40-ru",
+      "query": "Где выполняется добавление записи упражнения?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-40-en",
+      "query": "Locate the backend command for creating an exercise entry.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "new100-41-ru",
+      "query": "Как вики выбирает тесты только по графу зависимостей?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1"
+      ]
+    },
+    {
+      "id": "new100-41-en",
+      "query": "Locate the Wiki graph-only focused test planner.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1"
+      ]
+    },
+    {
+      "id": "new100-42-ru",
+      "query": "Где вики ищет цепочку backend обработчика и его зависимостей?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiTrace.ps1"
+      ]
+    },
+    {
+      "id": "new100-42-en",
+      "query": "Find the Wiki tool that traces a backend handler and its dependencies.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiTrace.ps1"
+      ]
+    },
+    {
+      "id": "new100-43-ru",
+      "query": "Где вики собирает исходники и свидетельства для проверки безопасности?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1"
+      ]
+    },
+    {
+      "id": "new100-43-en",
+      "query": "Locate the Wiki compiler of security review evidence.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1"
+      ]
+    },
+    {
+      "id": "new100-44-ru",
+      "query": "Где вики ищет фоновые задачи, внешние клиенты и сервисы?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1"
+      ]
+    },
+    {
+      "id": "new100-44-en",
+      "query": "Find the Wiki runtime topology query for workers and external clients.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1"
+      ]
+    },
+    {
+      "id": "new100-45-ru",
+      "query": "Где вики показывает сложные участки и пробелы прямых ссылок на тесты?",
+      "cohort": "ru",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1"
+      ]
+    },
+    {
+      "id": "new100-45-en",
+      "query": "Locate the Wiki tool for structural hotspots and direct test reference gaps.",
+      "cohort": "en",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1"
+      ]
+    }
+  ],
+  "description": "Source-informed 89 conversational retrieval regressions from a frozen 100-call assessment (45 paired tasks, 10 negatives). The misworded new100-06-ru is excluded; original frozen corpus remains in the assessment. Not a blind diagnosis benchmark.",
+  "baseline": {
+    "top1": 26,
+    "top10": 49,
+    "caseCount": 89
+  },
+  "switchCriteria": {
+    "minimumTop1Rate": 0.6,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.7,
+    "minimumCaseCount": 89
+  }
+}

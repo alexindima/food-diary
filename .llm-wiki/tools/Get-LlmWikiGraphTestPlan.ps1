@@ -11,7 +11,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $scope = [string[]]@((@($ProposedPath) + @($ChangedPath)) | Where-Object { $_ } | Sort-Object -Unique)
 if ($scope.Length -eq 0) { throw 'Fast graph test-plan requires -ChangedPath or -PlannedPath.' }
 $impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action impact -ChangedPath $scope -Limit ([Math]::Min(500, $Limit * 10)) -Format Json | ConvertFrom-Json
-$isTestPath = { param($Path) [string]$Path -match '(^|/)(?:tests?/|[^/]+\.Tests?/)|\.(?:spec|test)\.(?:ts|js)$|(^|/)Test-[^/]+\.ps1$' }
+$isTestPath = { param($Path) [string]$Path -match '(^|/)(?:tests?/|[^/]+\.Tests?/)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$|(^|/)Test-[^/]+\.ps1$' }
 $scoped = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 $graphConsumers = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 $scopeTooBroad = [Collections.Generic.List[object]]::new()
@@ -22,7 +22,7 @@ foreach ($path in $scope) {
     if (Test-Path -LiteralPath $absolutePath -PathType Container) {
         $directoryTests = @(
             Get-ChildItem -LiteralPath $absolutePath -Recurse -File |
-                Where-Object { $_.Name -match '\.(?:spec|test)\.(?:ts|js)$' } |
+                Where-Object { $_.Name -match '\.(?:spec|test)\.(?:ts|js|mjs|cjs)$' } |
                 Select-Object -First (($Limit * 2) + 1)
         )
         if ($directoryTests.Count -gt ($Limit * 2)) {
@@ -42,6 +42,7 @@ foreach ($path in $scope) {
     foreach ($candidate in @(
         ($normalizedPath -replace '\.ts$', '.spec.ts')
         ($normalizedPath -replace '\.cs$', 'Tests.cs')
+        $(if ($normalizedPath -match '\.(?:js|mjs|cjs)$') { $normalizedPath -replace '\.(js|mjs|cjs)$', '.test.$1' })
         $(if ($normalizedPath -match '\.ps1$') { $normalizedPath -replace '/(?:Get|Set|Write|Build|Find|Invoke|Manage|Update|New)-([^/]+)\.ps1$', '/Test-$1.ps1' })
     )) {
         if ($candidate -and $candidate -ne $normalizedPath -and (Test-Path -LiteralPath (Join-Path $repositoryRoot $candidate) -PathType Leaf)) { [void]$scoped.Add($candidate) }

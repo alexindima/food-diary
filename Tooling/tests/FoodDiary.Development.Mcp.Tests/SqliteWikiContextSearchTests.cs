@@ -4,6 +4,58 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SqliteWikiContextSearchTests : IDisposable {
+    [Theory]
+    [InlineData("Find the integration with GhostNutrition927 provider", true)]
+    [InlineData("Find the integration with NutritionProvider provider", false)]
+    public async Task SearchAsync_ReportsUnmatchedExplicitIdentifierWithoutHidingCandidates(string query, bool unmatched) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code','provider','Area/NutritionProvider.cs','provider','csharp','NutritionProvider','integration nutrition provider');
+            """;
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Any", module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Multiple(
+            () => Assert.True(result.Ready),
+            () => Assert.Equal(unmatched, string.Equals(candidate.AmbiguityReason, "unmatched-query-identifier", StringComparison.Ordinal)),
+            () => Assert.Equal(unmatched ? "low" : "unknown", candidate.Confidence));
+    }
+
+    [Theory]
+    [InlineData("Which failed browser HTTP calls are retried?", "retry")]
+    [InlineData("Где сервер получает сводку веса пользователя?", "weight")]
+    [InlineData("Where are the verified boundaries and identities?", "verify")]
+    public async Task SearchAsync_NormalizesConversationalInflections(string query, string expectedTerm) {
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Any", module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.Contains(expectedTerm, result.QueryTerms, StringComparer.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("Frontend", "client interface for dashboard layout service", false)]
+    [InlineData("Backend", "client interface for dashboard layout service", true)]
+    [InlineData("Frontend", "dashboard layout service", true)]
+    public async Task SearchAsync_PreservesLeadingModuleButRespectsExplicitFrontendLayer(string changeType, string query, bool moduleAffinity) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code','dashboard','Modules/Dashboard/Application/DashboardService.cs','dashboard','csharp','DashboardService','client interface dashboard layout service');
+            """;
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, changeType, module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(moduleAffinity, candidate.Reasons.Contains("exact module identity dashboard", StringComparer.Ordinal));
+    }
+
     [Fact]
     public async Task SearchAsync_RecallsLongIndexPageWithBoundedIdentityPoolAsync() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");

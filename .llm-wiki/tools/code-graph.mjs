@@ -14,7 +14,7 @@ import { directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicit
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '14-backend-only-bootstrap-v1';
+const parserVersion = '15-named-import-function-consumers-v2';
 const contextSearchSchemaVersion = '8';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '9';
@@ -2020,15 +2020,20 @@ function impact(database, paths, limit) {
   if (names.length > 0) {
     const nameSlots = names.map(() => '?').join(',');
     downstream = database.prepare(`
-      SELECT DISTINCT t.token symbol, f.path, f.language FROM file_tokens t JOIN files f ON f.id = t.file_id
-      WHERE t.token IN (${nameSlots}) COLLATE NOCASE AND f.path NOT IN (${placeholders})
+      WITH consumer_symbols AS (
+        SELECT file_id, token FROM file_tokens WHERE token IN (${nameSlots}) COLLATE NOCASE
+        UNION
+        SELECT file_id, target AS token FROM typed_edges WHERE kind = 'named-import' AND target IN (${nameSlots}) COLLATE NOCASE
+      )
+      SELECT DISTINCT t.token symbol, f.path, f.language FROM consumer_symbols t JOIN files f ON f.id = t.file_id
+      WHERE f.path NOT IN (${placeholders})
         AND EXISTS (
           SELECT 1 FROM symbols declaration
           JOIN files declaration_file ON declaration_file.id = declaration.file_id
           WHERE declaration.name = t.token COLLATE NOCASE AND declaration_file.language = f.language
         )
       ORDER BY f.path LIMIT ?
-    `).all(...names, ...normalized, limit);
+    `).all(...names, ...names, ...normalized, limit);
   }
   const references = database.prepare(`
     SELECT DISTINCT t.token symbol, s.kind, sf.path declarationPath, f.path sourcePath
@@ -2105,13 +2110,14 @@ function searchTerms(query) {
   const direct = directSearchTerms(query);
   const expanded = [...direct];
   for (const term of direct) expanded.push(...englishMorphologicalVariants(term));
-  expanded.push(...configuredSearchTermExpansions(direct));
+  expanded.push(...configuredSearchTermExpansions(direct, expanded));
   return [...new Set(expanded)].slice(0, Number(contextSearchRanking.maximumQueryTerms ?? 24));
 }
 
 function rankingTerms(query) {
   const direct = directSearchTerms(query);
-  return [...new Set([...direct, ...configuredSearchTermExpansions(direct)])]
+  const inflected = query.includes('?') || /^(?:where|find|locate|which|где|как|какие|найди|нужно|хочу)(?:\s|$)/i.test(query) ? direct.flatMap(englishMorphologicalVariants) : [];
+  return [...new Set([...direct, ...inflected, ...configuredSearchTermExpansions(direct, [...direct, ...inflected])])]
     .slice(0, Number(contextSearchRanking.maximumQueryTerms ?? 24));
 }
 
@@ -2123,15 +2129,21 @@ function directSearchTerms(query) {
     .filter((term) => term.length >= 2 && !stopTerms.has(term));
 }
 
-function configuredSearchTermExpansions(direct) {
+function configuredSearchTermExpansions(direct, contextSeed = direct) {
   const expanded = [];
   const configuredTerms = contextSearchRanking.queryTermExpansions ?? {};
   for (const term of direct) {
     for (const [termGroup, expansions] of Object.entries(configuredTerms)) {
-      if (termGroup.split('|').includes(term)) expanded.push(...expansions);
+      if (termGroup.split('|').includes(term)) expanded.push(...(expansions.includes('@inflect') ? englishMorphologicalVariants(term).slice(0, 1) : expansions));
     }
     for (const [prefixGroup, expansions] of Object.entries(contextSearchRanking.queryPrefixExpansions ?? {})) {
       if (prefixGroup.split('|').some((prefix) => term.startsWith(prefix))) expanded.push(...expansions);
+    }
+  }
+  const seen = new Set([...contextSeed, ...expanded]);
+  for (const rule of contextSearchRanking.queryContextExpansions ?? []) {
+    if (rule.requiredTerms.every(term => seen.has(term))) {
+      for (const term of rule.terms) { if (!seen.has(term)) { expanded.push(term); seen.add(term); } }
     }
   }
   return expanded;
@@ -2284,6 +2296,20 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     .filter((boost) => boostMatchesChangeType(boost) && boostMatchesQuery(boost, 0));
   const applicablePathBoosts = (contextSearchRanking.pathBoosts ?? [])
     .filter((boost) => boostMatchesQuery(boost));
+  const conversation = contextSearchRanking.conversationalAffinity;
+  const conversational = !!conversation && query.trim().split(/\s+/).length >= conversation.minimumWords &&
+    (query.includes('?') || /^(?:where|find|locate|which|где|как|какие|найди|нужно|хочу)(?:\s|$)/i.test(query));
+  const frontendIntent = conversational && /frontend|browser|on the client|client.*(?:api|recovery)|клиент|браузер/i.test(query);
+  const backendIntent = conversational && /backend|сервер/i.test(query);
+  const wikiIntent = conversational && boostTerms.some(term => ['wiki', 'вики'].includes(term));
+  const subjectWeights = new Map();
+  if (conversational) {
+    const candidateIdentities = candidates.map(candidate => expandSearchText(basename(candidate.path)).toLowerCase().replaceAll(/[^\p{L}\p{N}]/gu, ''));
+    for (const term of boostTerms.filter(term => (term.length >= 3 || term === 'ai') && /^[a-z]+$/.test(term) && !conversation.excludedTerms.includes(term))) {
+      const count = candidateIdentities.filter(identity => identity.includes(term)).length;
+      if (count > 0) subjectWeights.set(term, Math.max(0, conversation.scorePerSubject - conversation.frequencyPenalty * Math.floor(Math.log2(count + 1))));
+    }
+  }
   const ranked = candidates.map((item, index) => {
     const path = String(item.path ?? '').replaceAll('\\', '/');
     const normalizedPath = path.toLowerCase();
@@ -2318,7 +2344,9 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     const normalizedDirectTerms = directTerms.map((term) => term.replaceAll(/[^\p{L}\p{N}]/gu, ''));
     const moduleIdentityMinimumLength = Number(contextSearchRanking.moduleIdentityMinimumLength ?? 8);
     const moduleIdentityLeadingTermCount = Number(contextSearchRanking.moduleIdentityLeadingTermCount ?? 1);
-    const leadingDirectTerms = normalizedDirectTerms.slice(0, moduleIdentityLeadingTermCount);
+    const moduleIdentityTermCount = changeType === 'frontend' && !normalizedPath.startsWith('fooddiary.web.client/')
+      ? moduleIdentityLeadingTermCount : Number(contextSearchRanking.moduleIdentityAffinityLeadingTermCount ?? moduleIdentityLeadingTermCount);
+    const leadingDirectTerms = normalizedDirectTerms.slice(0, moduleIdentityTermCount);
     if (topLevelModuleIdentity.length >= moduleIdentityMinimumLength && leadingDirectTerms.includes(topLevelModuleIdentity)) {
       score += Number(contextSearchRanking.moduleIdentityScore ?? 0);
       reasons.push(`exact module identity ${topLevelModuleIdentity}`);
@@ -2345,6 +2373,23 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       reasons.push(`path/title affinity ${identityMatches.join(', ')}`);
     }
     const directFileNameAffinity = contextSearchRanking.directFileNameAffinity ?? {};
+    if (conversational) {
+      const subjectIdentity = searchableFileIdentity.replaceAll(/[^\p{L}\p{N}]/gu, '');
+      const subjectScore = Math.min(conversation.maximumSubjectScore, [...subjectWeights].filter(([term]) => subjectIdentity.includes(term)).reduce((sum, [,weight]) => sum + weight, 0));
+      score += subjectScore;
+      if (subjectScore > 0) reasons.push('conversational subject identity affinity');
+      const frontendSource = normalizedPath.startsWith('fooddiary.web.client/');
+      if (!wikiIntent && frontendIntent && frontendSource) { score += conversation.layerScore; reasons.push('requested frontend source'); }
+      if (!wikiIntent && frontendIntent && !backendIntent && frontendSource && boostTerms.some(term => ['request','requests','api','http'].includes(term)) &&
+          /\.(?:service|interceptor)\.ts$/.test(normalizedPath)) { score += conversation.layerScore; reasons.push('requested frontend transport implementation'); }
+      if (!wikiIntent && backendIntent && !frontendIntent && frontendSource) { score -= conversation.layerScore; reasons.push('backend intent excludes frontend source'); }
+      if (!isTest && !isExplicitTestCandidate && !wikiIntent && !frontendIntent && (backendIntent || boostTerms.some(term => ['query','command'].includes(term))) && searchableFileIdentity.includes('handler') &&
+          !boostTerms.some(term => ['validator','repository','controller','domain','entity'].includes(term))) { score += conversation.roleScore; reasons.push('application flow handler'); }
+      if (wikiIntent && normalizedPath.startsWith('.llm-wiki/tools/')) {
+        score += isExplicitTestCandidate ? -conversation.layerScore : conversation.roleScore;
+        reasons.push('wiki capability tool role');
+      }
+    }
     const directFileNameMatches = directTerms.filter((term) =>
       directIdentifierTermMatchesMinimum(term, Number(directFileNameAffinity.minimumTermLength ?? 3))
       && (searchableFileIdentity.includes(term) || (isExplicitTestCandidate && stronglyRequestsTest &&
@@ -2609,6 +2654,10 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       }
     }
   }
+  const unmatchedIdentifier = (query.match(/\b[A-Za-z][A-Za-z0-9_]{5,}\b/g) ?? [])
+    .filter((value) => /[0-9]|[a-z][A-Z]/.test(value))
+    .some((value) => !candidates.some((candidate) =>
+      `${candidate.path} ${candidate.title}`.toLowerCase().includes(value.toLowerCase())));
   const fileNameCounts = new Map();
   for (const item of records) {
     const key = basename(String(item.path ?? '')).toLowerCase();
@@ -2630,7 +2679,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       .map((value) => String(value).toLowerCase());
     const recordTypeMismatch = implementationChangeTypes.includes(changeType)
       && documentationRecordTypes.includes(String(item.recordType ?? '').toLowerCase());
-    const ambiguous = (scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch;
+    const ambiguous = unmatchedIdentifier || (scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch;
     const confidence = ambiguous
       ? 'low'
       : scoreMargin === null
@@ -2644,7 +2693,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       scoreMargin,
       confidence,
       ambiguous,
-      ambiguityReason: recordTypeMismatch ? 'record-type-change-type-mismatch' : ambiguous ? 'top-score-margin' : null,
+      ambiguityReason: unmatchedIdentifier ? 'unmatched-query-identifier' : recordTypeMismatch ? 'record-type-change-type-mismatch' : ambiguous ? 'top-score-margin' : null,
       sameNameCandidateCount,
     };
   });

@@ -631,3 +631,15 @@ The benchmark uses Recipes as a stable cross-layer scenario. Compare exact
 symbol trace and contract consumers directly; module impact is broader than the
 specialized extraction-readiness analyzer and should be assessed for relevance
 as well as duration.
+
+Conversational source discovery uses bounded subject-name weights and explicit
+frontend/backend intent, with separate transport and Wiki-tool role selection.
+Short technical queries retain their existing role interpretation. The shared
+`@inflect` expansion operator keeps established English inflections in one group;
+conversational questions also use general morphology, including `-ied` to `-y`.
+Conditional vocabulary expansion requires all context terms (for example Wiki
+plus background work) before adding navigation terms. It counts toward the
+existing 700-rule budget and never follows recursive expansion loops.
+An explicit compound or digit-bearing identifier absent from candidate identities
+marks results `unmatched-query-identifier` and low confidence. This signals weak
+retrieval evidence, not proof that a feature is absent from the repository.

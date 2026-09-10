@@ -162,3 +162,19 @@ explains that candidates are not confirmed edits or a complete dependency chain.
 Compact output preserves the partition of its bounded scope. Semantic trace
 compaction preserves depth, limitations, and unresolved dependency names when
 provided by the source scan; the normal MCP trace remains the fast indexed route.
+
+Semantic trace compaction also preserves bounded `nestedDependencies` and its
+truncation flag. Each entry identifies its parent implementation and distinguishes
+source candidates from unresolved dependencies. The source scan expands one
+primary-constructor service hop; the normal MCP fast route is unchanged.
+
+Development-context `retrievalAssessment` distinguishes ranked candidates, an
+ambiguous leader, a low-confidence leader, and unavailable fresh retrieval.
+`retrievalWarnings` makes weak evidence explicit without treating it as an
+execution failure or proof that a requested feature exists or is absent.
+
+Conversation-style questions use shared bounded subject and layer affinity in
+Node and .NET. An unmatched explicit identifier lowers candidate confidence with
+`ambiguityReason=unmatched-query-identifier`; callers still receive candidates
+and must inspect sources. This does not turn a retrieval result into a feature
+existence claim. Cross-layer evaluation requires both client and server sources.

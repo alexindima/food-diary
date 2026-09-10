@@ -51,6 +51,8 @@ public sealed record WikiCommandResult(
                 truncated = GetArray(impact, "paths").GetArrayLength() > itemLimit || GetArray(impact, "consumers").GetArrayLength() > itemLimit,
             },
             ["request"] = GetOptional(output, "request"),
+            ["nestedDependencies"] = GetArray(output, "nestedDependencies").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["nestedDependenciesTruncated"] = GetOptional(output, "nestedDependenciesTruncated")?.GetBoolean() == true || GetArray(output, "nestedDependencies").GetArrayLength() > itemLimit,
             ["traceDepth"] = GetOptional(output, "traceDepth"),
             ["limitations"] = GetOptional(output, "limitations"),
             ["unresolvedDependencies"] = GetArray(output, "unresolvedDependencies").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
@@ -61,7 +63,7 @@ public sealed record WikiCommandResult(
             ["presentation"] = GetArray(output, "presentation").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
             ["tests"] = GetArray(output, "tests").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
             ["directConsumers"] = GetArray(output, "directConsumers").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
-            ["truncated"] = new[] { "unresolvedDependencies", "dependencies", "implementations", "presentation", "tests", "directConsumers" }
+            ["truncated"] = new[] { "nestedDependencies", "unresolvedDependencies", "dependencies", "implementations", "presentation", "tests", "directConsumers" }
                 .Any(name => GetArray(output, name).GetArrayLength() > itemLimit),
         };
         return this with {

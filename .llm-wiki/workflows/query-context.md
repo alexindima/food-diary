@@ -17,6 +17,7 @@ sources:
   - .llm-wiki/evals/context-search-holdout-100.json
   - .llm-wiki/evals/context-search-unseen-20260826.json
   - .llm-wiki/generated/repository-catalog.json
+  - FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs
   - AGENTS.md
 ---
 
@@ -27,8 +28,7 @@ most `identityCandidatePoolLimit` candidates from a compact path/title FTS index
 This index excludes document bodies so long pages retain title-based recall.
 The Node writer rebuilds it with the search projection after a schema change;
 the .NET reader remains read-only. Both runtimes recognize English `-es` plurals
-such as `indexes` while retaining previous query alternatives. Pool limits,
-ranking policy, and frozen evaluation thresholds remain unchanged.
+such as `indexes` while retaining previous query alternatives. Pool limits and frozen evaluation thresholds remain unchanged.
 
 Use the context resolver before exploring a cross-cutting change. It returns a
 compact packet built around one unified ranked candidate list, plus derived
@@ -158,3 +158,11 @@ Frontend API discovery is strongest for direct literal calls. When a feature
 service inherits request helpers or composes endpoint suffixes through a base
 URL, a zero-result API query is inconclusive; inspect the service and its tests
 directly.
+
+Conversation-style questions also use bounded subject-name and explicit layer
+affinity. Unknown compound identifiers produce low-confidence candidates with
+`unmatched-query-identifier`; this is a retrieval limitation, not proof of absence.
+
+MCP distinguishes how Wiki selects tests from a request to locate those tests.
+Graph-only test planning recognizes `.test.mjs` and `.test.cjs` consumers as well
+as JavaScript, TypeScript, C# and PowerShell tests. References are not execution evidence.
