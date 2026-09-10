@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1142,
     "ambiguousContracts": 0,
-    "consumerEdges": 8145,
+    "consumerEdges": 8147,
     "productionConsumerEdges": 4825,
-    "testConsumerEdges": 3320,
+    "testConsumerEdges": 3322,
     "consumedContracts": 1142,
     "unconsumedContracts": 0
   },
@@ -53008,7 +53008,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "IChangeSetSnapshotService",
@@ -107126,7 +107126,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "IWikiCommandExecutor",
@@ -117943,6 +117943,32 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "StartFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/McpServerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/ProtocolCompactionTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "StartFastingHttpRequest",

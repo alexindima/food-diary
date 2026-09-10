@@ -6,6 +6,17 @@ $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'Test-LlmWikiProjectLookup.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
+$scriptPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath '.llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1' -Format Json | ConvertFrom-Json
+if ('.llm-wiki/tools/Test-LlmWikiContextEvaluationSnapshot.ps1' -notin $scriptPlan.required) { throw 'Fast plan lost the PowerShell companion test.' }
+$ciPlan = & $tool -ChangedPath '.github/workflows/ci-tests.yml' -Format Json | ConvertFrom-Json
+if ('tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' -notin $ciPlan.focusedTestFiles -or
+    @($ciPlan.commands | Where-Object { $_.command -match 'FullyQualifiedName~BuildWorkflowGuardrailTests' -and $_.priority -eq 'required' }).Count -ne 1) {
+    throw 'CI workflow changes must select their architecture guardrail and runnable command.'
+}
+$ciFastPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ChangedPath '.github/workflows/ci-tests.yml' -Format Json | ConvertFrom-Json
+if ('tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' -notin $ciFastPlan.required) {
+    throw 'Fast CI test plan dropped the required workflow guardrail.'
+}
 $changedPaths = @(
     'FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs'
     'FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs'

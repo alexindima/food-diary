@@ -6,6 +6,21 @@ $ErrorActionPreference = 'Stop'
 if ($LASTEXITCODE -ne 0) { throw 'Trace scope unit regression failed.' }
 $frontendTraceScript = Join-Path $PSScriptRoot 'Find-LlmWikiFrontendTrace.ps1'
 $backendTraceScript = Join-Path $PSScriptRoot 'Find-LlmWikiTrace.ps1'
+$backendGraph = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action trace -Query StartFasting -Layer Backend -Format Json | ConvertFrom-Json
+$backendMatches = @($backendGraph.symbols) + @($backendGraph.candidates)
+if (@($backendMatches | Where-Object { $_.language -eq 'typescript' }).Count -gt 0 -or
+    @($backendMatches | Where-Object { $_.path -match 'StartFastingCommand' }).Count -eq 0) {
+    throw 'Backend trace must not stop at identically named frontend methods.'
+}
+$fasting = & $backendTraceScript -Query StartFasting -Format Json | ConvertFrom-Json
+if ($fasting.handler.name -ne 'StartFastingCommandHandler' -or
+    @($fasting.presentation | Where-Object { $_.path -match '/FastingController\.cs$' -and $_.requestType -eq 'StartFastingHttpRequest' }).Count -ne 1 -or
+    @($fasting.tests | Where-Object { $_.path -match 'FastingFeatureTests.Start.cs$' }).Count -ne 1) {
+    throw 'StartFasting trace must preserve handler, mapped HTTP controller, and feature test evidence.'
+}
+if (@($fasting.presentation | Where-Object { $_.confidence -eq 'mapping-type' -and $_.requestType -ne 'StartFastingHttpRequest' }).Count -gt 0) {
+    throw 'Unrelated HTTP request mappings leaked into StartFasting trace.'
+}
 $facadeText = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../wiki.ps1') -Raw
 if (-not $facadeText.Contains("if (-not `$FullTrace -and `$Format -eq 'Text')") -or
     -not $facadeText.Contains('$traceArguments.Compact = $true')) {

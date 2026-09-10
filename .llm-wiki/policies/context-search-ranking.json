@@ -91,7 +91,7 @@
     "powershellIntentTerms": ["powershell", "pwsh", "ps1"],
     "powershellPathSuffixes": [".ps1"],
     "powershellScore": 220,
-    "wikiToolIntentTerms": ["wiki", "powershell", "frontend", "tool", "tooling"],
+    "wikiToolIntentTerms": ["wiki", "powershell", "tool", "tooling"],
     "wikiToolPathPrefixes": [".llm-wiki/tools/"],
     "wikiToolScore": 420
   },
@@ -282,7 +282,7 @@
     "прогресс": ["progress"],
     "генератор": ["build", "builder", "generate"],
     "кэш": ["cache"],
-    "пакет|массов": ["bulk", "dispatch"],
+    "пакет|массов": ["batch", "bulk"],
     "уникальн": ["unique"],
     "прием": ["meal"],
     "https": ["https"],
@@ -2072,6 +2072,18 @@
     }
   ],
   "structuralRoleBoosts": [
+    {
+      "id": "code-navigation-tool",
+      "queryTerms": ["symbol", "route", "consumers", "selector"],
+      "minimumMatches": 3,
+      "candidateTerms": ["trace", "consumer"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 420,
+      "identityScope": "file",
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "recordTypes": ["code"]
+    },
     {
       "id": "endpoint-security-test-role",
       "queryTerms": ["endpoint", "security"],

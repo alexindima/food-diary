@@ -65,6 +65,10 @@ sources:
 
 # Local Code Intelligence Graph
 
+Trace layer, module, and path filters apply to exact results before an early
+return, as well as to ranked candidates. Fast test plans include the explicit
+CI workflow guardrail alongside graph-discovered tests.
+
 The experimental graph stores reconstructable code intelligence in
 `.artifacts/llm-wiki/code-graph/code-graph.sqlite`. It is a local cache and is
 never committed. Human-reviewed policy, acceptance, evidence, journeys, and

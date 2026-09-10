@@ -23,6 +23,15 @@ sources:
 
 # Generate a change-aware test plan
 
+The fast graph plan recognizes `Test-*.ps1` scripts as tests and discovers an
+existing same-directory `Test-<name>.ps1` companion for standard PowerShell
+implementation verbs. These are navigation candidates, not execution evidence.
+
+Changes to `.github/workflows/ci-tests.yml` select `BuildWorkflowGuardrailTests`
+and its filtered architecture-test command. The fast graph plan also retains
+this test path. An empty full plan explicitly warns that coverage evidence is
+missing; it does not imply that verification can be skipped.
+
 For line or branch coverage work with an exact test file, compile reproducible
 commands before editing:
 

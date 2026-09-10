@@ -95,6 +95,32 @@ default for trace, test-plan, brief, and aggregate tools. Use
 `includeDetailedContext` for complete structured data or `includeRawOutput` for
 raw diagnostics.
 
+Compact results preserve both graph and semantic trace contracts, including
+handler locations, mapped HTTP presentation evidence, and related tests. Fast
+test plans retain their required/recommended paths and confidence; an empty
+discovery is not evidence that verification can be skipped. CI workflow changes
+select the build workflow architecture guardrail in both test-plan routes.
+
+For a quick exact-symbol lookup, start with `trace_backend_flow`. Use
+`get_development_context` when a change brief and verification scope are needed
+together. Inspect `get_server_status` before diagnosing missing or stale context.
+If the client does not list the five tools, distinguish client registration from
+server health by testing the stdio launcher; a healthy standalone process does
+not prove that an already-open client loaded the project configuration.
+
+An unmatched PascalCase identifier in the fast backend trace returns `status: no-match`,
+warnings, and recovery steps, preserved in compact output and the MCP text
+summary. It does not claim the feature is absent. Natural-language queries and
+explicit full traces retain their semantic source scan. Snapshot/index failures
+remain errors rather than no-match results.
+
+Development-context evaluation cases can require a maximum expected path rank,
+exclude path prefixes from the top three results, and require named selected
+test paths. The default evaluation runs the practical corpus and its separate
+paraphrases as well as the original bundle corpus. Generic `frontend` wording
+does not imply Wiki-tool intent; Russian batch wording expands to batch/bulk,
+without inferring dispatch behavior.
+
 The command executor admits at most three PowerShell queries at once and caps
 each stdout/stderr stream at 8 MiB. Cancellation, timeout, and output overflow
 terminate the complete command process tree; corrupt JSON query-cache entries
@@ -121,8 +147,9 @@ the same runtime, so they do not lock shared `bin` output and disconnected
 clients do not accumulate one directory per session. Active runtimes hold a
 shared lock; old fingerprints and legacy session directories are removed only
 after the lock can be acquired exclusively. The repository registration marks this server as
-required and allows 120 seconds for startup, so startup failures are reported
-instead of silently leaving the FoodDiary tools unavailable.
+optional and allows 120 seconds for startup. If tools are absent, inspect the
+client startup diagnostics and test the configured launcher directly; optional
+registration allows unrelated repository work to continue after startup failure.
 
 The trusted-project `.codex/config.toml` registers this server for Codex. Restart
 the desktop app or extension after pulling/building the project.

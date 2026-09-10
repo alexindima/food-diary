@@ -28,9 +28,13 @@ public sealed record WikiCommandResult(
         JsonElement symbols = GetArray(output, "symbols");
         JsonElement consumers = GetArray(output, "consumers");
         JsonElement candidates = GetArray(output, "candidates");
+        JsonElement impact = GetObject(output, "impact");
         Dictionary<string, object?> summary = new(StringComparer.Ordinal) {
             ["compact"] = true,
             ["query"] = GetOptional(output, "query"),
+            ["status"] = GetOptional(output, "status"),
+            ["warnings"] = GetOptional(output, "warnings"),
+            ["nextSteps"] = GetOptional(output, "nextSteps"),
             ["symbolCount"] = symbols.GetArrayLength(),
             ["symbols"] = symbols.EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
             ["consumerCount"] = consumers.GetArrayLength(),
@@ -40,6 +44,22 @@ public sealed record WikiCommandResult(
             ["scopePaths"] = GetScopePaths().Take(itemLimit).ToArray(),
             ["scopePathsTruncated"] = GetScopePaths().Count > itemLimit,
             ["ranking"] = GetOptional(output, "ranking"),
+            ["namespaceFilters"] = GetArray(output, "namespaceFilters").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["impact"] = new {
+                paths = GetArray(impact, "paths").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+                consumers = GetArray(impact, "consumers").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+                truncated = GetArray(impact, "paths").GetArrayLength() > itemLimit || GetArray(impact, "consumers").GetArrayLength() > itemLimit,
+            },
+            ["request"] = GetOptional(output, "request"),
+            ["requestDefinition"] = GetOptional(output, "requestDefinition"),
+            ["handler"] = GetOptional(output, "handler"),
+            ["dependencies"] = GetArray(output, "dependencies").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["implementations"] = GetArray(output, "implementations").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["presentation"] = GetArray(output, "presentation").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["tests"] = GetArray(output, "tests").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["directConsumers"] = GetArray(output, "directConsumers").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["truncated"] = new[] { "dependencies", "implementations", "presentation", "tests", "directConsumers" }
+                .Any(name => GetArray(output, name).GetArrayLength() > itemLimit),
         };
         return this with {
             RawOutput = includeRawOutput ? RawOutput : null,
@@ -60,6 +80,9 @@ public sealed record WikiCommandResult(
         if (focusedTests.GetArrayLength() == 0) {
             focusedTests = GetArray(output, "focusedTests");
         }
+        if (focusedTests.GetArrayLength() == 0) {
+            focusedTests = GetArray(output, "focusedTestFiles");
+        }
         JsonElement commands = GetArray(output, "commands");
         JsonElement scenarios = GetArray(output, "scenarios");
         Dictionary<string, object?> summary = new(StringComparer.Ordinal) {
@@ -75,7 +98,15 @@ public sealed record WikiCommandResult(
             ["scenarios"] = scenarios.EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
             ["reviewObligationIds"] = GetOptional(output, "reviewObligationIds") ?? GetOptional(output, "reviewObligations"),
             ["warnings"] = GetOptional(output, "warnings"),
-            ["truncated"] = focusedTests.GetArrayLength() > itemLimit || commands.GetArrayLength() > itemLimit || scenarios.GetArrayLength() > itemLimit,
+            ["mode"] = GetOptional(output, "mode"),
+            ["scope"] = GetOptional(output, "scope"),
+            ["confidence"] = GetOptional(output, "confidence"),
+            ["required"] = GetArray(output, "required").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["recommended"] = GetArray(output, "recommended").EnumerateArray().Take(itemLimit).Select(item => item.Clone()).ToArray(),
+            ["scopeTooBroad"] = GetOptional(output, "scopeTooBroad"),
+            ["fullRegression"] = GetOptional(output, "fullRegression"),
+            ["truncated"] = focusedTests.GetArrayLength() > itemLimit || commands.GetArrayLength() > itemLimit || scenarios.GetArrayLength() > itemLimit ||
+                GetArray(output, "required").GetArrayLength() > itemLimit || GetArray(output, "recommended").GetArrayLength() > itemLimit,
         };
         return this with {
             RawOutput = includeRawOutput ? RawOutput : null,

@@ -356,6 +356,7 @@ foreach ($path in @($directTests | Sort-Object)) { $null = $discoveredTests.Add(
 foreach ($path in @($diff.focusedTests)) { $null = $discoveredTests.Add($path) }
 
 $rankedFocusedTests = [System.Collections.Generic.List[object]]::new()
+$ciWorkflowChange = @($effectivePaths | Where-Object { $_.Replace('\', '/') -eq '.github/workflows/ci-tests.yml' }).Count -gt 0
 $rankedSeen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 function Add-RankedTests {
     param([string[]]$Paths, [int]$Rank, [string]$Reason)
@@ -373,6 +374,9 @@ Add-RankedTests $changedTestFiles 100 'changed-test'
 Add-RankedTests @($declaredTypeTests | Sort-Object) 98 'references-changed-declared-type'
 Add-RankedTests @($plannedDirectoryTests | Sort-Object) 95 'planned-directory-test'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
+if ($ciWorkflowChange) {
+    Add-RankedTests @('tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs') 100 'ci-workflow-guardrail'
+}
 Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'
 $changedFrontendFeatureRoots = @($effectivePaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/(?:src/app|projects/[^/]+/src/app)/features/[^/]+' } | ForEach-Object {
     [regex]::Match(([string]$_).Replace('\', '/'), '^FoodDiary\.Web\.Client/(?:src/app|projects/[^/]+/src/app)/features/[^/]+').Value
@@ -732,6 +736,16 @@ if ($presentationBoundaryChange -or ($contractBoundaryChange -and @($effectivePa
         source = 'contract-boundary'; priority = 'required'; reason = 'presentation-namespace-or-contract-consumer-change'; commandEvidence = 'Presentation API path or consumer'
     }
 }
+if ($ciWorkflowChange) {
+    $otherArchitectureTests = @($selectedFocusedTests | Where-Object { $_.path -like 'tests/FoodDiary.ArchitectureTests/*' -and $_.path -ne 'tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' })
+    if ($otherArchitectureTests.Count -eq 0) {
+        $commands = @($commands | Where-Object { $_.id -ne 'focused-backend-fooddiary.architecturetests' })
+    }
+    $commands += [pscustomobject]@{
+        id = 'ci-workflow-guardrails'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --filter FullyQualifiedName~BuildWorkflowGuardrailTests'
+        source = 'ci-workflow'; priority = 'required'; reason = 'workflow-file-contract'; commandEvidence = '.github/workflows/ci-tests.yml'
+    }
+}
 $commands = @($commands | Group-Object { ([string]$_.command) -replace '\s+--no-restore\s*$', '' } | ForEach-Object {
     @($_.Group | Sort-Object @{ Expression = { switch ($_.priority) { 'required' { 0 } 'recommended' { 1 } 'contextual' { 2 } default { 3 } } } }, command | Select-Object -First 1)
 } | Sort-Object command)
@@ -834,6 +848,7 @@ $result = [pscustomobject]@{
     reviewObligations = @($policy.reviewObligations)
     repositoryAntipatterns = @($repositoryAntipatterns)
     warnings = @(
+        $(if (@($selectedFocusedTests).Count -eq 0 -and @($commands).Count -eq 0) { 'No focused verification was discovered; this is missing coverage evidence, not proof that no checks are needed.' })
         $(if ($NoBaseline) { 'API compatibility baseline unavailable; provide baseRevision to enable compatibility checks.' })
         $(if ($repositoryAntipatterns.Count -gt 1) { "Repeated repository antipattern found in $($repositoryAntipatterns.Count) locations; review all matches, not only the changed file." })
     )

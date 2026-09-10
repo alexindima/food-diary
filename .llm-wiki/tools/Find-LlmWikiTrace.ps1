@@ -191,7 +191,7 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
             }
         }
 
-        if ($file.FullName -match '[\\/]FoodDiary\.Presentation\.Api[\\/]' -and
+        if ($repositoryPath -match '^(?:FoodDiary\.Presentation\.Api/|Modules/[^/]+/Presentation/)' -and
             ($content -match $requestPattern -or
              ($repositoryPath -match '/Features/' -and
               $repositoryPath -match "/$([regex]::Escape(($candidate.request -replace '(Command|Query|Request)$', '')))[^/]*"))) {
@@ -217,6 +217,21 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
         }
     }
 
+    # Follow an HTTP request type from a command mapping to its controller.
+    # Restrict the second hop to the same presentation feature and exact type.
+    foreach ($mapping in @($presentation | Where-Object { $_.confidence -eq 'direct' -and $_.path -match '/Mappings/' })) {
+        $mappingDocument = $sourceDocuments | Where-Object repositoryPath -eq $mapping.path | Select-Object -First 1
+        $featureRoot = $mapping.path -replace '/Mappings/.*$', '/'
+        $httpTypes = @([regex]::Matches($mappingDocument.content, '(?s)extension\((?<type>[A-Z][A-Za-z0-9_]*HttpRequest)\s+\w+\)\s*\{(?<body>.*?)\}') | Where-Object { $_.Groups['body'].Value -match $requestPattern } | ForEach-Object { $_.Groups['type'].Value } | Sort-Object -Unique)
+        foreach ($document in $sourceDocuments) {
+            if (-not $document.repositoryPath.StartsWith($featureRoot, [StringComparison]::Ordinal) -or $document.repositoryPath -notmatch 'Controller\.cs$') { continue }
+            foreach ($httpType in $httpTypes) {
+                if ($document.content -match "\b$([regex]::Escape($httpType))\b") {
+                    $presentation.Add([pscustomobject]@{ path = $document.repositoryPath; confidence = 'mapping-type'; via = $mapping.path; requestType = $httpType })
+                }
+            }
+        }
+    }
     $filteredDirectConsumers = @($directConsumers | Where-Object {
         $null -eq $requestDefinition -or $_.path -ne $requestDefinition.path
     } | Group-Object path | ForEach-Object { $_.Group | Select-Object -First 1 } | Sort-Object path)

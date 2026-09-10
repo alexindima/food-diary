@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Development.Mcp.Protocol;
+using FoodDiary.Development.Mcp.Wiki;
 using ModelContextProtocol.Protocol;
 
 namespace FoodDiary.Development.Mcp.Tools;
@@ -49,11 +50,17 @@ public static class ToolExecution {
             IsError = !result.Success,
             Content = [new TextContentBlock {
                 Text = result.Success
-                    ? "Structured FoodDiary development context is available."
+                    ? SuccessMessage(result.Data)
                     : $"{result.ErrorCode}: {result.ErrorMessage}",
             }],
         };
     }
+
+    private static string SuccessMessage<T>(T data) =>
+        data is WikiCommandResult { StructuredOutput: { ValueKind: JsonValueKind.Object } output } &&
+        output.TryGetProperty("status", out JsonElement status) && string.Equals(status.GetString(), "no-match", StringComparison.Ordinal)
+            ? "No matching indexed symbol was found. See warnings and nextSteps for scope and recovery."
+            : "Structured FoodDiary development context is available.";
 
     private static DevelopmentMcpResult<T> Failure<T>(string errorCode, string errorMessage) =>
         new(

@@ -65,8 +65,14 @@ internal static class DevelopmentContextEvaluationRunner {
                 "low",
                 StringComparison.OrdinalIgnoreCase);
             bool ambiguousTopResult = topCandidate?.Ambiguous is true;
+            bool preciseRanking = (evaluationCase.MaximumExpectedRank is null ||
+                context.SqlContextSearch?.Candidates.Take(evaluationCase.MaximumExpectedRank.Value)
+                    .Any(candidate => evaluationCase.ExpectedPaths.Contains(candidate.Path, StringComparer.OrdinalIgnoreCase)) is true) &&
+                !(context.SqlContextSearch?.Candidates.Take(3).Any(candidate =>
+                    (evaluationCase.ForbiddenTopPathPrefixes ?? []).Any(prefix => candidate.Path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))) is true);
+            bool namedTestsPresent = (evaluationCase.ExpectedTestPaths ?? []).All(path => HasNamedTest(context.TestPlan, path));
             bool contextBundleReady = scopeHit && sqlTopTenHit && expectedLayersPresent &&
-                completeBundle && focusedChecksPresent && explainableRanking;
+                completeBundle && focusedChecksPresent && explainableRanking && preciseRanking && namedTestsPresent;
             bool unplannedQuery = string.IsNullOrWhiteSpace(evaluationCase.PlannedPath);
             int compactCharacters = JsonSerializer.Serialize(context.ToCompact(), OutputOptions).Length;
             results.Add(new EvaluationResult(
@@ -87,7 +93,7 @@ internal static class DevelopmentContextEvaluationRunner {
                 compactCharacters,
                 Math.Round(stopwatch.Elapsed.TotalMilliseconds, 2, MidpointRounding.AwayFromZero),
                 [.. context.ComponentErrors.Select(error => $"{error.Component}:{error.ErrorCode}")],
-                [.. context.ExpandedScopePaths.Take(12)]));
+                [.. context.ExpandedScopePaths.Take(12)], preciseRanking, namedTestsPresent));
         }
 
         double sqlitePrimaryRate = Rate(results.Count(result => result.SqlitePrimary), results.Count);
@@ -116,7 +122,8 @@ internal static class DevelopmentContextEvaluationRunner {
         double warmP95DurationMilliseconds = warmDurations[warmP95Index];
         double coldStartDurationMilliseconds = results[0].DurationMilliseconds;
         int maximumCompactCharacters = results.Max(result => result.CompactCharacters);
-        bool passed = sqlitePrimaryRate >= corpus.Thresholds.MinimumSqlitePrimaryRate &&
+        bool passed = results.All(result => result.PreciseRanking && result.NamedTestsPresent) &&
+            sqlitePrimaryRate >= corpus.Thresholds.MinimumSqlitePrimaryRate &&
             scopeRecallRate >= corpus.Thresholds.MinimumScopeRecallRate &&
             sqlTopTenRecallRate >= corpus.Thresholds.MinimumSqlTopTenRecallRate &&
             completeBundleRate >= corpus.Thresholds.MinimumCompleteBundleRate &&
@@ -169,6 +176,17 @@ internal static class DevelopmentContextEvaluationRunner {
         4,
         MidpointRounding.AwayFromZero);
 
+    private static bool HasNamedTest(WikiCommandResult? testPlan, string path) {
+        if (testPlan?.StructuredOutput is not { ValueKind: JsonValueKind.Object } output) { return false; }
+        string[] fields = ["required", "recommended", "focusedTests", "focusedTestFiles", "focusedTestDetails"];
+        return fields.Any(field => output.TryGetProperty(field, out JsonElement items) && items.ValueKind == JsonValueKind.Array &&
+            items.EnumerateArray().Any(item => {
+                string? candidatePath = null;
+                if (item.ValueKind == JsonValueKind.String) { candidatePath = item.GetString(); } else if (item.ValueKind == JsonValueKind.Object && item.TryGetProperty("path", out JsonElement testPath)) { candidatePath = testPath.GetString(); }
+                return string.Equals(candidatePath, path, StringComparison.OrdinalIgnoreCase);
+            }));
+    }
+
     private static bool HasFocusedChecks(WikiCommandResult? testPlan) {
         if (testPlan is null) {
             return false;
@@ -194,7 +212,8 @@ internal static class DevelopmentContextEvaluationRunner {
             string.IsNullOrWhiteSpace(evaluationCase.Id) ||
             string.IsNullOrWhiteSpace(evaluationCase.Intent) ||
             string.IsNullOrWhiteSpace(evaluationCase.Query) ||
-            evaluationCase.ExpectedPaths.Length == 0)) {
+            evaluationCase.ExpectedPaths.Length == 0 ||
+            evaluationCase.MaximumExpectedRank is < 1 or > 20)) {
             throw new InvalidDataException("Development-context evaluation contains an invalid case.");
         }
         if (corpus.Cases.Select(evaluationCase => evaluationCase.Id)
@@ -230,7 +249,10 @@ internal static class DevelopmentContextEvaluationRunner {
         string Query,
         string? PlannedPath,
         string[] ExpectedPaths,
-        string[] ExpectedLayers);
+        string[] ExpectedLayers,
+        int? MaximumExpectedRank = null,
+        string[]? ForbiddenTopPathPrefixes = null,
+        string[]? ExpectedTestPaths = null);
 
     private sealed record EvaluationResult(
         string Id,
@@ -250,5 +272,7 @@ internal static class DevelopmentContextEvaluationRunner {
         int CompactCharacters,
         double DurationMilliseconds,
         string[] ComponentErrors,
-        string[] ExpandedScopePaths);
+        string[] ExpandedScopePaths,
+        bool PreciseRanking,
+        bool NamedTestsPresent);
 }

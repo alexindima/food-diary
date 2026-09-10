@@ -8,6 +8,32 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 [Collection("PowerShell Wiki process")]
 public sealed class McpServerTests {
+    [PowerShellFact]
+    public async Task ConfiguredServer_CompactBackendTracePreservesBackendCandidates() {
+        var configuration = CodexMcpTestConfiguration.Load(FindRepositoryRoot());
+        var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary trace usefulness test"));
+        using CancellationTokenSource timeout = new(TimeSpan.FromMinutes(2));
+        await using McpClient client = await McpClient.CreateAsync(transport, cancellationToken: timeout.Token);
+        CallToolResult result = await client.CallToolAsync(
+            "trace_backend_flow",
+            new Dictionary<string, object?>(StringComparer.Ordinal) { ["query"] = "StartFasting" },
+            cancellationToken: timeout.Token);
+        Assert.False(result.IsError, JsonSerializer.Serialize(result));
+        string payload = JsonSerializer.Serialize(result.StructuredContent);
+        Assert.Contains("StartFastingCommand", payload, StringComparison.Ordinal);
+        Assert.DoesNotContain("fasting-controls.ts", payload, StringComparison.Ordinal);
+        var stopwatch = Stopwatch.StartNew();
+        CallToolResult noMatch = await client.CallToolAsync(
+            "trace_backend_flow",
+            new Dictionary<string, object?>(StringComparer.Ordinal) { ["query"] = "ZzUnimplementedQuantumDiary92841" },
+            cancellationToken: timeout.Token);
+        stopwatch.Stop();
+        Assert.False(noMatch.IsError, JsonSerializer.Serialize(noMatch));
+        Assert.Contains("no-match", JsonSerializer.Serialize(noMatch.StructuredContent), StringComparison.Ordinal);
+        Assert.Contains("No matching indexed symbol", Assert.IsType<TextContentBlock>(Assert.Single(noMatch.Content)).Text, StringComparison.Ordinal);
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(20), $"Exact no-match took {stopwatch.Elapsed}.");
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

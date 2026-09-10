@@ -1091,6 +1091,16 @@ switch ($Command) {
                 }
                 break
             }
+            if ($Fast -and -not $FullTrace -and $Query -cmatch '^[A-Z][A-Za-z0-9_]{2,}$') {
+                $noMatch = [ordered]@{
+                    query = $Query; status = 'no-match'; symbols = @(); consumers = @(); candidates = @()
+                    warnings = @('No matching indexed symbol was found in the requested scope. This does not prove the feature is absent.')
+                    nextSteps = @('Check spelling or describe the behavior; use trace -FullTrace for an explicit source scan.')
+                }
+                if ($Format -eq 'Json') { $noMatch | ConvertTo-Json -Depth 5 }
+                else { Write-Host $noMatch.warnings[0]; Write-Host $noMatch.nextSteps[0] }
+                break
+            }
             Write-Host "Code graph found no exact symbol, typed relation, or qualified literal for '$Query'; falling back to semantic trace."
         }
         $traceArguments = @{

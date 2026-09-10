@@ -5,6 +5,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$includePractical = [string]::IsNullOrWhiteSpace($CorpusPath)
 $repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 if ([string]::IsNullOrWhiteSpace($CorpusPath)) {
     $CorpusPath = Join-Path $repositoryRoot '.llm-wiki/evals/development-context-bundles.json'
@@ -29,3 +30,8 @@ if (-not $evaluation.passed) {
     throw "Development-context evaluation missed its thresholds: sqlite=$($evaluation.metrics.sqlitePrimaryRate), scope=$($evaluation.metrics.scopeRecallRate), complete=$($evaluation.metrics.completeBundleRate), checks=$($evaluation.metrics.focusedChecksRate), contextReady=$($evaluation.metrics.contextBundleReadyRate), unplanned=$($evaluation.metrics.unplannedQueryRate), warmP95=$($evaluation.metrics.warmP95DurationMilliseconds)ms."
 }
 Write-Host "LLM Wiki development-context evaluation passed: cases=$($evaluation.caseCount), sqlite=$($evaluation.metrics.sqlitePrimaryRate), scope=$($evaluation.metrics.scopeRecallRate), complete=$($evaluation.metrics.completeBundleRate), checks=$($evaluation.metrics.focusedChecksRate), contextReady=$($evaluation.metrics.contextBundleReadyRate), unplanned=$($evaluation.metrics.unplannedQueryRate), averageScope=$($evaluation.metrics.averageExpandedScopePaths), warmP95=$($evaluation.metrics.warmP95DurationMilliseconds)ms, cold=$($evaluation.metrics.coldStartDurationMilliseconds)ms, maxCompact=$($evaluation.metrics.maximumCompactCharacters) chars."
+if ($includePractical) {
+    foreach ($name in @('development-context-practical.json', 'development-context-practical-holdout.json')) {
+        & $PSCommandPath -CorpusPath (Join-Path $PSScriptRoot "../evals/$name") -SkipBuild
+    }
+}

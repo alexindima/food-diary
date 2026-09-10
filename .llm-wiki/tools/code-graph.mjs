@@ -2060,6 +2060,11 @@ function trace(database, query, limit) {
 
 function rankedTrace(database, query, limit, filters = {}) {
   const direct = trace(database, query, limit);
+  const originalSymbolCount = direct.symbols.length;
+  direct.symbols = direct.symbols.filter((row) => traceCandidateMatchesScope(row, filters));
+  direct.consumers = direct.consumers.filter((row) => traceCandidateMatchesScope(row, filters));
+  direct.namespaceFilters = direct.namespaceFilters.filter((row) => traceCandidateMatchesScope({ ...row, language: 'csharp' }, filters));
+  if (direct.symbols.length !== originalSymbolCount) direct.impact = impact(database, direct.symbols.map((row) => row.path), limit);
   if (direct.symbols.length > 0 || direct.consumers.length > 0 || direct.namespaceFilters.length > 0) return { ...direct, candidates: [] };
   const terms = [...new Set(query.toLowerCase().match(/[a-z0-9]+/g) ?? [])].filter((term) => term.length >= 3);
   const backendTerms = new Set(['smtp', 'persistence', 'repository', 'readiness', 'telemetry', 'outbox', 'hosted', 'service', 'handler', 'worker', 'database', 'infrastructure']);

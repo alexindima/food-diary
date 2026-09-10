@@ -22,6 +22,20 @@ sources:
 
 # Trace an existing feature
 
+With `-Fast`, a PascalCase identifier query with no graph matches returns an
+explicit `status: no-match`, warnings, and recovery steps without a full source
+scan. This means no indexed match in the requested scope, not proof that a
+feature is absent. `-FullTrace` retains the explicit source-scan route. Snapshot
+preparation still validates the graph before lookup; stale/unavailable failures
+are not converted into a no-match result.
+
+Backend graph filtering applies to exact matches as well as ranked candidates;
+an identically named frontend method cannot satisfy `-TraceView Backend`.
+Semantic backend traces include module-owned presentation mappings and follow
+the mapped HTTP request type to controllers within the same feature. The
+`mapping-type` confidence records this evidence separately from direct command
+references; it remains navigation rather than runtime call-graph proof.
+
 Use this before changing an existing command, query, or Angular component:
 
 ```powershell

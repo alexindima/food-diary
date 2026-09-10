@@ -5,6 +5,39 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ProtocolCompactionTests {
     [Fact]
+    public void TraceCompaction_PreservesSemanticHandlerAndHttpEvidence() {
+        WikiCommandResult trace = CreateResult("trace", new {
+            request = "StartFastingCommand",
+            handler = new { path = "StartFastingCommandHandler.cs", line = 12 },
+            presentation = new[] { new { path = "FastingController.cs", confidence = "mapping-type" } },
+            tests = new[] { new { path = "FastingFeatureTests.Start.cs" } },
+        }).ToCompactTrace();
+        JsonElement output = trace.StructuredOutput!.Value;
+        Assert.Multiple(
+            () => Assert.Equal("StartFastingCommand", output.GetProperty("request").GetString()),
+            () => Assert.Equal(12, output.GetProperty("handler").GetProperty("line").GetInt32()),
+            () => Assert.Single(output.GetProperty("presentation").EnumerateArray()),
+            () => Assert.Single(output.GetProperty("tests").EnumerateArray()));
+    }
+
+    [Fact]
+    public void TestPlanCompaction_PreservesGraphEvidenceAndReportsTruncation() {
+        WikiCommandResult plan = CreateResult("test-plan", new {
+            mode = "sqlite-graph-only",
+            confidence = "low",
+            required = new[] { "BuildWorkflowGuardrailTests.cs", "OtherTests.cs" },
+            recommended = new[] { "ConsumerTests.cs" },
+            fullRegression = new[] { "Use ordinary test-plan" },
+        }).ToCompactTestPlan(itemLimit: 1);
+        JsonElement output = plan.StructuredOutput!.Value;
+        Assert.Multiple(
+            () => Assert.Equal("BuildWorkflowGuardrailTests.cs", output.GetProperty("required")[0].GetString()),
+            () => Assert.Equal("ConsumerTests.cs", output.GetProperty("recommended")[0].GetString()),
+            () => Assert.Equal("low", output.GetProperty("confidence").GetString()),
+            () => Assert.True(output.GetProperty("truncated").GetBoolean()));
+    }
+
+    [Fact]
     public void DevelopmentContext_CompactionAndRawRemoval_TransformNestedResults() {
         WikiCommandResult change = CreateResult("brief", new { change = new { paths = new[] { "one.cs" } } });
         WikiCommandResult trace = CreateResult("trace", new { symbols = new[] { new { path = "one.cs" } } });

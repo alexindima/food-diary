@@ -227,13 +227,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "bdb93ce6207c6b96c397ba5437a0b0684f1856ce5439e3bd6f642b27a368e309"
+          "sha256": "12b8c6ac90ce6f5bf0c3ac9fcceeb2bd3423b4fa344952f9772e7c176de20e13"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
         }
       ],
-      "reason": "Reviewed the generated index diff for ModuleTelemetryBehavior and ModuleOperationTelemetry: only runtime measurement symbols and test consumers were added; no HTTP, message or application DTO contracts changed. The contract review workflow remains accurate.",
+      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
       "baseRef": "HEAD",
-      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
-      "reviewedAtUtc": "2026-09-09T06:16:51.5389616Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:36:15.3599709Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -534,22 +538,14 @@
       "pageSha256": "9f6bae95818d903f73f64f0e716692d7ed0c9cab0f4ded06be4253df021bb5ba",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "21732e8d0658c7d454743409cd19a285d4533428fdfd62d0318f0967a2ba6823"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "d4b762fd09a631ed5d2bef2a4086ba2dfb6876c7c1f58e19a2e7b5a343d7e928"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "adcbb334339ea42ed9c5854ca738940694eb8cbd37b61f1e2a5855da5c1ddf80"
+          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
         }
       ],
-      "reason": "Module-scoped research now resolves current application roots using the shared layout helper. This repairs discovery without changing adaptive routing, budget, JSON/SQLite authority or task completion semantics. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
+      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:36:06.1714507Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:36:16.1526288Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -648,13 +644,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c707aaa6b5c7325332f322df3857ab653cd5053448d632e015fc4706f9976284"
+          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
         }
       ],
-      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
+      "reason": "Reviewed current sources: backend exact trace scope filtering and module HTTP mapping evidence, preserved compact MCP graph/semantic contracts, CI guardrail selection and empty-plan warning. Updated trace/test-plan/code-graph guides; contract, privacy, runtime and impact query semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T04:59:42.8739154Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:15:05.7388781Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -689,21 +685,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "1436657ef1793bf07e8ebda9dd6b3655810273b427af13ebceb94c82cbca03a6",
+      "pageSha256": "956836ea8d3085ebfd97b63a64edcc3e7aaa616a63a94981501426f19ad72171",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "eec97e7c42b4f11d782609a643ca5f5791a2bf7e81b42f368782412910531b68"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "885ab345573f15badea90130d46b277966c00e5295b0ad909652a9fe5f8a4a8d"
         },
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "794ba650e686cba20f384e825cdcc8920a8b34e16d95a0343cbc2dd8dd4162f1"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
         }
       ],
-      "reason": "Added focused registry-reuse regression to facade-contract; exhaustive audit assertion inventory and CI partitioning remain unchanged.",
+      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
       "baseRef": "HEAD",
-      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
-      "reviewedAtUtc": "2026-09-09T23:54:37.2396349Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:36:16.9237485Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -836,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c707aaa6b5c7325332f322df3857ab653cd5053448d632e015fc4706f9976284"
+          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
         }
       ],
-      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
+      "reason": "Reviewed current sources: backend exact trace scope filtering and module HTTP mapping evidence, preserved compact MCP graph/semantic contracts, CI guardrail selection and empty-plan warning. Updated trace/test-plan/code-graph guides; contract, privacy, runtime and impact query semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T04:59:43.4781045Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:15:07.1160242Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -881,13 +877,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "65f03d1ea51b423cbdd2e46425088f6c38a78581c71d31ef615563df4526e724"
+          "sha256": "6e99b6d81aad4808bd9467dc0b5407e6dfe9455575b678a886cc5ac6bb625053"
         }
       ],
-      "reason": "Regenerated static Wiki tool metrics after removing duplicate dispatch validation; risk query interpretation and static-coverage limitations are unchanged.",
+      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
       "baseRef": "HEAD",
-      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
-      "reviewedAtUtc": "2026-09-09T23:54:38.2459491Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:36:17.7856546Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -956,13 +952,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "570711eae2f9fd78eaa30980606d5948a12cfc890b8721db2468c482d32d435b"
+          "sha256": "d477874e70e9fb859d55f880b1b76a73449a52bc0f49be1d0e4ed44a390f1b25"
         }
       ],
-      "reason": "Runtime topology changed only its source fingerprint and source file count for two runtime telemetry files. The existing meter/exporter and deployment units are reused; no new worker, client, endpoint or retry behavior was introduced. Runtime impact guidance remains accurate.",
+      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
       "baseRef": "HEAD",
-      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
-      "reviewedAtUtc": "2026-09-09T06:17:15.1348697Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:36:19.1416299Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -971,13 +967,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "65f03d1ea51b423cbdd2e46425088f6c38a78581c71d31ef615563df4526e724"
+          "sha256": "6e99b6d81aad4808bd9467dc0b5407e6dfe9455575b678a886cc5ac6bb625053"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "d477874e70e9fb859d55f880b1b76a73449a52bc0f49be1d0e4ed44a390f1b25"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "184e4378bf4a00ae0fa65048160ec45d2e6cb3ad64e692cf208b5d6cc55de4d2"
         }
       ],
-      "reason": "Quality index changes concern Wiki scheduler tool metrics only; security discovery controls and runtime security boundaries are unchanged.",
+      "reason": "Reviewed shared ranking refinement: explicit symbol/route/consumer navigation retains Wiki tool discovery without treating generic frontend product requests as tooling. No-match, PowerShell test selection and strict eval contracts remain documented; other workflow semantics unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
-      "reviewedAtUtc": "2026-09-09T23:54:39.2519517Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:39:50.3419495Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1046,17 +1050,17 @@
     {
       "pageId": "workflow-task-dispatch-receipts",
       "pagePath": ".llm-wiki/workflows/task-dispatch-receipts.md",
-      "pageSha256": "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
+      "pageSha256": "70d6be88b293deccf4d573fc9bede72453bc9e17b6a0215335058e6e7746afc3",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "adcbb334339ea42ed9c5854ca738940694eb8cbd37b61f1e2a5855da5c1ddf80"
+          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
         }
       ],
-      "reason": "Facade trace passes Layer through its graph calls; dispatch/scheduler/task receipt logic is unchanged. No task completion receipt or authority is inferred from graph candidates. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
+      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:36:10.4082964Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:36:20.5992951Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1223,29 +1227,17 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "31d7171d7feb8c70d3bca4652b01ca7b2e728901878069ff810ba852bbb6c49f",
+      "pageSha256": "c8db2cfcca522f98221db0a31eaf2dba5b57c48f38ce72fe56f3dfd218b9c1e7",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "59084971011fe827718dad07a35851d593fca8f54ec706a3179dd09381af8af1"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "84180fb499d007847824bc97ed736390ebc2cefca9bbc7b4a15508aa68c77b1c"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
-          "sha256": "4e2541b4fe2dc47fb1d32272d00ee883618cec408c414ebdf1e8435592601234"
+          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
+      "reason": "Reviewed current sources: backend exact trace scope filtering and module HTTP mapping evidence, preserved compact MCP graph/semantic contracts, CI guardrail selection and empty-plan warning. Updated trace/test-plan/code-graph guides; contract, privacy, runtime and impact query semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:36:08.1657648Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:15:08.3743253Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1253,22 +1245,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "adcbb334339ea42ed9c5854ca738940694eb8cbd37b61f1e2a5855da5c1ddf80"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
+          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
+      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:36:08.9228994Z"
+      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
+      "reviewedAtUtc": "2026-09-10T08:36:18.4677542Z"
     }
   ]
 }

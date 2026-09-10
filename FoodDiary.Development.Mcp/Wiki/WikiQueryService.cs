@@ -71,7 +71,7 @@ public sealed class WikiQueryService(
         ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
         return await ExecuteCachedAsync(
             "trace",
-            ["-Format", "Json", "-Fast", "-Query", query],
+            ["-Format", "Json", "-Fast", "-TraceView", "Backend", "-Query", query],
             snapshot,
             cancellationToken).ConfigureAwait(false);
     }

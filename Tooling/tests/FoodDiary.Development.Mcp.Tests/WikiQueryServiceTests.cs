@@ -766,6 +766,8 @@ public sealed class WikiQueryServiceTests {
                 "-Format",
                 "Json",
                 "-Fast",
+                "-TraceView",
+                "Backend",
                 "-Query",
                 "SomeQuery",
             })),

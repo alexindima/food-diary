@@ -7,6 +7,42 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class EvaluationRunnerTests {
     [Theory]
+    [InlineData("rank")]
+    [InlineData("test")]
+    [InlineData("forbidden")]
+    public async Task DevelopmentContextEvaluationRunner_RejectsImpreciseEvidenceDespitePermissiveRates(string failure) {
+        const string expected = "FoodDiary.Application.Users/Handler.cs";
+        string corpusPath = await WriteCorpusAsync(JsonSerializer.Serialize(new {
+            schemaVersion = 1,
+            thresholds = new { maximumAverageExpandedScopePaths = 20, maximumP95DurationMilliseconds = 10000, maximumCompactCharacters = 20000, minimumContextBundleReadyRate = 0 },
+            cases = new[] { new {
+                id = "precision", intent = "Inspect users", query = "users", plannedPath = expected,
+                expectedPaths = new[] { expected }, expectedLayers = Array.Empty<string>(),
+                maximumExpectedRank = string.Equals(failure, "rank", StringComparison.Ordinal) ? 1 : 10,
+                forbiddenTopPathPrefixes = string.Equals(failure, "forbidden", StringComparison.Ordinal) ? new[] { "FoodDiary.Application.Users/Noise" } : [],
+                expectedTestPaths = string.Equals(failure, "test", StringComparison.Ordinal) ? new[] { "tests/RequiredTests.cs" } : [],
+            }, },
+        }));
+        IWikiCommandExecutor executor = Substitute.For<IWikiCommandExecutor>();
+        executor.ExecuteAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(CreateCommandResult(call.ArgAt<string>(0))));
+        IChangeSetSnapshotService snapshots = Substitute.For<IChangeSetSnapshotService>();
+        var snapshot = new ChangeSetSnapshot("head", "fingerprint", [], DateTimeOffset.UtcNow);
+        snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        var search = new SequencedContextSearch([CreateSearchResult([
+            new WikiContextSearchCandidate(1, "FoodDiary.Application.Users/Noise.cs", "code", "Application", 200, 1, ["noise"]),
+            new WikiContextSearchCandidate(2, expected, "code", "Application", 100, 1, ["match"]),
+        ])]);
+        await using var output = new StringWriter();
+        try {
+            await DevelopmentContextEvaluationRunner.RunAsync(new WikiQueryService(executor, snapshots, contextSearch: search), corpusPath, output, CancellationToken.None);
+            using var document = JsonDocument.Parse(output.ToString());
+            Assert.False(document.RootElement.GetProperty("passed").GetBoolean());
+        } finally { File.Delete(corpusPath); }
+    }
+
+    [Theory]
     [InlineData("null", false)]
     [InlineData("[]", false)]
     [InlineData("{}", false)]

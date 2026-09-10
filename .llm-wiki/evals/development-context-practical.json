@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "description": "Frozen practical bug descriptions: top-three source precision and named tests, without planned paths. Companion paraphrases provide separate validation.",
+  "thresholds": {
+    "minimumSqlitePrimaryRate": 1.0,
+    "minimumScopeRecallRate": 1.0,
+    "minimumSqlTopTenRecallRate": 1.0,
+    "minimumCompleteBundleRate": 0.8,
+    "minimumFocusedChecksRate": 1,
+    "minimumExpectedLayersRate": 1.0,
+    "minimumExplainableRankingRate": 1.0,
+    "minimumContextBundleReadyRate": 1,
+    "minimumUnplannedQueryRate": 0.5,
+    "maximumAverageExpandedScopePaths": 11.0,
+    "maximumP95DurationMilliseconds": 20000,
+    "maximumWarmP95DurationMilliseconds": 10000,
+    "maximumCompactCharacters": 120000
+  },
+  "cases": [
+    {
+      "id": "cleanup-bug-en",
+      "intent": "Investigate why cleanup of old login events keeps running; find batching and cancellation behavior and focused tests",
+      "query": "cleanup old authentication login events batch cancellation",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "forbiddenTopPathPrefixes": [
+        "Modules/Dietologist/",
+        "FoodDiary.Web.Client/src/app/features/shopping-lists/"
+      ],
+      "expectedTestPaths": []
+    },
+    {
+      "id": "cleanup-bug-ru",
+      "intent": "Найти причину зависания очистки старых событий входа и выбрать проверки",
+      "query": "очистка старых событий входа зависает при пакетном удалении",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "forbiddenTopPathPrefixes": [
+        "Modules/Dietologist/",
+        "FoodDiary.Web.Client/src/app/features/shopping-lists/"
+      ],
+      "expectedTestPaths": []
+    },
+    {
+      "id": "nutrition-bug",
+      "intent": "Investigate incorrect calorie mismatch warnings when alcohol is entered; locate calculation and tests",
+      "query": "frontend nutrition form calorie mismatch alcohol calculation",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/lib/nutrition-form.utils.ts"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "forbiddenTopPathPrefixes": [
+        ".llm-wiki/"
+      ],
+      "expectedTestPaths": [
+        "FoodDiary.Web.Client/src/app/shared/lib/nutrition-form.utils.spec.ts"
+      ]
+    },
+    {
+      "id": "powershell-tests",
+      "intent": "Check context benchmark snapshot writer",
+      "query": "PowerShell tool writes context evaluation benchmark snapshot",
+      "plannedPath": null,
+      "expectedPaths": [
+        ".llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        ".llm-wiki/tools/Test-LlmWikiContextEvaluationSnapshot.ps1"
+      ]
+    }
+  ]
+}

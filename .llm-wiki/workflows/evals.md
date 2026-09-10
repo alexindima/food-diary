@@ -10,9 +10,21 @@ sources:
   - .llm-wiki/tools/Measure-LlmWikiAnswerQuality.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Test-LlmWikiChangePolicy.ps1
+  - .llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1
+  - .llm-wiki/evals/development-context-practical.json
+  - .llm-wiki/evals/development-context-practical-holdout.json
 ---
 
 # AI Development Evals
+
+`Test-LlmWikiDevelopmentContextEvaluation.ps1` also runs a frozen practical
+retrieval corpus and separate paraphrases. Optional `maximumExpectedRank`,
+`forbiddenTopPathPrefixes` (first three candidates), and `expectedTestPaths`
+are strict per-case gates even when aggregate recall thresholds pass. They
+check source ranking and named selected tests, not model-authored answers or
+proof of a bug. The paraphrases are agent-authored validation, not a claim of
+independent human holdout. The MCP protocol test separately covers explicit
+no-match semantics and a bounded exact-symbol lookup time.
 
 The eval suite protects the quality of agent context and change-policy
 classification with representative synthetic change sets.
