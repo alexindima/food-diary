@@ -11,22 +11,28 @@ if ($parseErrors.Count) { throw 'Full audit has syntax errors.' }
 $expected = @{
     Core = @{ count = 333; hash = '7b0fd833649aef95b2e3b2e2d572424a9586f752ec0ecc7fa9c37c0f345381b6' }
     Governed = @{ count = 376; hash = '42bf7167f835ab9d6ca667002f60d80f6edcca9b2b93677f406cd84fd0594cc7' }
+    Workspace = @{ count = 279; hash = 'ea7979f9f97d186fb115138cb4ab4085dc228f5c58cfb4444367b0643958d005' }
+    Orchestration = @{ count = 97; hash = '3aeed905ee4fd448d167168544359a407ba47b4af347add97351f53c411a35e7' }
     Common = @{ count = 1; hash = '43c752083d5bd294ccf4a8efb8bdf4cd9831a14bc33acdbaa06de6659838f6bd' }
 }
-$groups = @{ Core = @(); Governed = @(); Common = @() }
+$groups = @{ Core = @(); Governed = @(); Workspace = @(); Orchestration = @(); Common = @() }
 foreach ($command in $ast.FindAll({ param($node)
     $node -is [Management.Automation.Language.CommandAst] -and $node.GetCommandName() -eq 'Assert-Wiki'
 }, $true)) {
     $group = 'Common'
+    $partition = ''
     for ($parent = $command.Parent; $null -ne $parent; $parent = $parent.Parent) {
         if ($parent -isnot [Management.Automation.Language.IfStatementAst]) { continue }
         $condition = [string]$parent.Clauses[0].Item1.Extent.Text
-        if ($condition -ceq '$AuditShard -ne ''Governed''') { $group = 'Core'; break }
+        if ($condition -ceq '$AuditShard -ne ''Orchestration''') { $partition = 'Workspace' }
+        if ($condition -ceq '$Profile -eq ''Full'' -and $AuditShard -ne ''Workspace''') { $partition = 'Orchestration' }
+        if ($condition -ceq '$AuditShard -in @(''All'', ''Core'')') { $group = 'Core'; break }
         if ($condition -ceq '$Profile -eq ''Full'' -and $AuditShard -ne ''Core''') { $group = 'Governed'; break }
     }
     $groups[$group] += $command.Extent.Text.Replace("`r`n", "`n")
+    if ($partition) { $groups[$partition] += $command.Extent.Text.Replace("`r`n", "`n") }
 }
-foreach ($group in @('Core', 'Governed', 'Common')) {
+foreach ($group in @('Core', 'Governed', 'Workspace', 'Orchestration', 'Common')) {
     [string[]]$items = $groups[$group]
     [Array]::Sort($items, [StringComparer]::Ordinal)
     $hash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes(($items -join "`n---`n")))).ToLowerInvariant()
@@ -47,7 +53,7 @@ foreach ($profile in @('Focused', 'Core')) {
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $workflow = [IO.File]::ReadAllText((Join-Path $repositoryRoot '.github/workflows/ci-tests.yml'))
 $audit = [regex]::Match($workflow, '(?s)\n  llm-wiki-audit:.*?(?=\n  llm-wiki:)').Value
-foreach ($required in @('shard: [Core, Governed]', 'fail-fast: false', '-Profile Full -AuditShard $env:WIKI_AUDIT_SHARD', 'llm-wiki-audit-${{ matrix.shard }}-failure-logs', 'actions/checkout@')) {
+foreach ($required in @('shard: [Core, Workspace, Orchestration]', 'fail-fast: false', '-Profile Full -AuditShard $env:WIKI_AUDIT_SHARD', 'llm-wiki-audit-${{ matrix.shard }}-failure-logs', 'actions/checkout@')) {
     if (-not $audit.Contains($required)) { throw "CI audit shard contract missing: $required" }
 }
 if (-not $workflow.Contains('needs: [llm-wiki-focused, llm-wiki-audit]') -or

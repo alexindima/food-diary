@@ -2,7 +2,7 @@
 param(
     [ValidateSet('Focused', 'Core', 'Full')]
     [string]$Profile = 'Focused',
-    [ValidateSet('All', 'Core', 'Governed')]
+    [ValidateSet('All', 'Core', 'Governed', 'Workspace', 'Orchestration')]
     [string]$AuditShard = 'All',
     [ValidateRange(1, 8)]
     [int]$MaxConcurrency = 4
@@ -88,7 +88,7 @@ function Get-WikiObjectFingerprint([object]$Value) {
 
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
 Enable-LlmWikiStringDateJsonParsing
-if ($AuditShard -ne 'Governed') {
+if ($AuditShard -in @('All', 'Core')) {
 $crossPlatformFixtureRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/cross-platform-fixtures'
 $jsonFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.json'
 $textFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.md'
@@ -1170,6 +1170,7 @@ $agentRegistryPath = Join-Path (Split-Path -Parent $wikiRoot) '.artifacts/llm-wi
 $agentRegistryExisted = Test-Path -LiteralPath $agentRegistryPath -PathType Leaf
 $agentRegistryRaw = if ($agentRegistryExisted) { Get-Content -LiteralPath $agentRegistryPath -Raw } else { '' }
 try {
+    if ($AuditShard -ne 'Orchestration') {
     & (Join-Path $toolsRoot 'Initialize-LlmWikiTaskWorkspace.ps1') `
         -Objective 'Safely evolve the fasting command.' `
         -Criterion @('Existing consumers remain compatible.', 'Invalid input is rejected.') `
@@ -3931,7 +3932,25 @@ try {
             if (Test-Path -LiteralPath $fixtureAbsolute) { Remove-Item -LiteralPath $fixtureAbsolute -Recurse -Force }
         }
     }
-    if ($Profile -eq 'Full') {
+    } else {
+        # Construct the two conflicting tasks independently of migration/export tests.
+        foreach ($orchestrationWorkspace in @($taskWorkspacePath, $cacheSourceWorkspacePath)) {
+            & (Join-Path $toolsRoot 'Initialize-LlmWikiTaskWorkspace.ps1') `
+                -Objective 'Safely evolve the fasting command.' `
+                -Criterion @('Existing consumers remain compatible.', 'Invalid input is rejected.') `
+                -WorkspacePath $orchestrationWorkspace `
+                -ChangedPath $contractPath | Out-Null
+            & (Join-Path $toolsRoot 'Manage-LlmWikiTaskJournal.ps1') add `
+                -WorkspacePath $orchestrationWorkspace -JournalType decision `
+                -Text 'Preserve command compatibility.' -Rationale 'Independent orchestration fixture.' | Out-Null
+            & (Join-Path $toolsRoot 'Manage-LlmWikiTaskJournal.ps1') add `
+                -WorkspacePath $orchestrationWorkspace -JournalType blocker `
+                -Text 'Consumer compatibility is not yet proven.' -Rationale 'Must remain blocked until explicitly resolved.' | Out-Null
+            & (Join-Path $toolsRoot 'Test-LlmWikiTaskWorkspace.ps1') `
+                -WorkspacePath $orchestrationWorkspace -FailOnInvalid -Format Json | Out-Null
+        }
+    }
+    if ($Profile -eq 'Full' -and $AuditShard -ne 'Workspace') {
         Write-GovernedBlockTiming 'conflicts and orchestration preparation'
         $extendedStopwatch = [Diagnostics.Stopwatch]::StartNew()
         Write-Host 'Starting extended orchestration smoke coverage.'
@@ -4960,9 +4979,10 @@ try {
         $extendedStopwatch.Stop()
         Write-Host "Extended orchestration smoke coverage passed in $([Math]::Round($extendedStopwatch.Elapsed.TotalSeconds, 2))s."
     } else {
-        Write-Host 'Skipped extended orchestration smoke coverage for the Core profile.'
+        Write-Host 'Skipped extended orchestration smoke coverage for the Workspace shard.'
     }
 
+    if ($AuditShard -ne 'Orchestration') {
     & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') check `
         -Path "$taskWorkspacePath/evidence.json" `
         -Id 'architecture-tests' `
@@ -5078,6 +5098,7 @@ try {
         $overwriteRejected = $_.Exception.Message -match 'already exists'
     }
     Assert-Wiki $overwriteRejected 'Task workspace initializer did not reject an existing workspace.'
+    }
 } finally {
     foreach ($exportArtifact in @($absoluteTaskExportPath, $absoluteStrictTaskExportPath)) {
         if (Test-Path -LiteralPath $exportArtifact) {
@@ -5125,7 +5146,7 @@ try {
     Write-Host 'Skipped governed task-workspace and orchestration smoke coverage for the Core profile/shard.'
 }
 
-if ($AuditShard -ne 'Governed') {
+if ($AuditShard -in @('All', 'Core')) {
 $manifestPath = '.artifacts/llm-wiki/tool-smoke-change-manifest.json'
 $absoluteManifestPath = Join-Path (Split-Path -Parent $wikiRoot) $manifestPath
 try {
