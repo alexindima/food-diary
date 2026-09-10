@@ -153,3 +153,12 @@ registration allows unrelated repository work to continue after startup failure.
 
 The trusted-project `.codex/config.toml` registers this server for Codex. Restart
 the desktop app or extension after pulling/building the project.
+
+Development-context output adds `suggestedStartingPaths` (the first three scope
+paths, with an explicit planned path first) and `additionalCandidatePaths`.
+These partition the existing ranked navigation scope; they do not certify
+relevance or change the full scope used for test planning. `scopeInterpretation`
+explains that candidates are not confirmed edits or a complete dependency chain.
+Compact output preserves the partition of its bounded scope. Semantic trace
+compaction preserves depth, limitations, and unresolved dependency names when
+provided by the source scan; the normal MCP trace remains the fast indexed route.

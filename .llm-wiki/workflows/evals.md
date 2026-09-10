@@ -3,6 +3,7 @@ id: workflow.evals
 kind: workflow
 status: current
 sources:
+  - .llm-wiki/evals/development-context-historical.json
   - .llm-wiki/evals/cases.json
   - .llm-wiki/evals/answer-quality-intake-template.json
   - .llm-wiki/tools/Invoke-LlmWikiEvals.ps1
@@ -140,3 +141,11 @@ order determines shard membership, every static or promoted case is selected
 exactly once, and a failure in any shard fails the whole gate. Direct `wiki
 evals` remains a single-process complete run; `-ShardIndex` and `-ShardCount`
 are internal performance controls for the orchestrator.
+
+Historical symptom regressions in `development-context-historical.json` cover
+provider duplicate requests, cache eviction under a backwards clock, and chart
+accessibility. They require a top-three implementation and its named test.
+These fix-informed queries are retrieval regressions, not blind agent diagnosis
+or proof that the referenced tests have been executed. Screen-reader intent
+excludes backend reader-role boosts; component identity and provider request/cache
+behavior receive bounded structural ranking signals.

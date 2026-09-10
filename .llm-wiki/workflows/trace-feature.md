@@ -32,7 +32,7 @@ are not converted into a no-match result.
 Backend graph filtering applies to exact matches as well as ranked candidates;
 an identically named frontend method cannot satisfy `-TraceView Backend`.
 Semantic backend traces include module-owned presentation mappings and follow
-the mapped HTTP request type to controllers within the same feature. The
+the mapped `HttpRequest` or `HttpQuery` type to controllers within the same feature. The
 `mapping-type` confidence records this evidence separately from direct command
 references; it remains navigation rather than runtime call-graph proof.
 
@@ -94,3 +94,14 @@ select `-CompiledIndexSource Json`, and custom `-IndexRoot` fixtures require tha
 explicit source; neither path is an automatic fallback. The eight-case parity
 smoke checks exact functional JSON, both normalized source hashes, payload
 reduction, and a required end-to-end improvement.
+
+Semantic source traces follow one same-namespace interface-inheritance hop when
+interface names are unambiguous. Implementation entries expose `viaContract`
+and `evidence: source-declaration`. `traceDepth`, `limitations`, and
+`unresolvedDependencies` prevent a bounded result from implying a complete
+runtime chain. Nested services, DI factory choices, and external/framework
+implementations require separate inspection. These semantic fields apply to the
+explicit source scan (`-FullTrace`), not an expanded traversal of fast MCP graph results.
+
+Qualified static mapping calls returning the exact request type are followed
+within the same feature with `mapping-method` evidence and the method name.

@@ -75,14 +75,14 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
             cancellationToken);
 
     [McpServerTool(Name = "get_development_context", ReadOnly = true, Idempotent = true)]
-    [Description("Traces a backend flow, then builds change context and a focused test plan against one verified Git/worktree snapshot.")]
+    [Description("Ranks repository sources with SQLite, suggests starting paths, and builds change context and a test plan against one verified Git/worktree snapshot. Candidates are navigation evidence, not a complete dependency chain.")]
     public Task<CallToolResult> GetDevelopmentContextAsync(
         [Description("The intended code or architecture change.")] string intent,
-        [Description("The backend command, query, route, handler, or feature to trace.")] string query,
+        [Description("The behavior, bug symptoms, symbol, or feature to find in backend, frontend, or tooling sources.")] string query,
         [Description("Optional likely repository path used to focus the result.")] string? plannedPath = null,
         [Description("Optional immutable base revision for compatibility and diff analysis. Required for compatibility analysis on a clean worktree.")] string? baseRevision = null,
         [Description("Optional head revision. Defaults to the current worktree HEAD.")] string? headRevision = null,
-        [Description("Return complete trace, brief, and test-plan payloads instead of compact summaries.")] bool includeDetailedContext = false,
+        [Description("Return complete search, brief, and test-plan payloads instead of compact summaries.")] bool includeDetailedContext = false,
         [Description("Include verbose raw Wiki output for diagnostics. Defaults to false.")] bool includeRawOutput = false,
         CancellationToken cancellationToken = default) =>
         ToolExecution.RunToolAsync(

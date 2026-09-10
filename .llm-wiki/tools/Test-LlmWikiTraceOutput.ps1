@@ -21,6 +21,25 @@ if ($fasting.handler.name -ne 'StartFastingCommandHandler' -or
 if (@($fasting.presentation | Where-Object { $_.confidence -eq 'mapping-type' -and $_.requestType -ne 'StartFastingHttpRequest' }).Count -gt 0) {
     throw 'Unrelated HTTP request mappings leaked into StartFasting trace.'
 }
+foreach ($expectedContract in @('IFastingPlanWriteRepository', 'IFastingOccurrenceWriteRepository')) {
+    if (@($fasting.implementations | Where-Object { $_.contract -eq $expectedContract -and $_.viaContract -ne $expectedContract -and $_.path -match '^Modules/Fasting/Infrastructure/' }).Count -ne 1) {
+        throw "Inherited repository implementation missing for $expectedContract."
+    }
+}
+if (@($fasting.unresolvedDependencies) -notcontains 'TimeProvider' -or @($fasting.limitations).Count -eq 0) {
+    throw 'Trace must disclose unresolved framework dependencies and bounded source-navigation depth.'
+}
+foreach ($queryName in @('GetAdminMailInboxMessagePageQuery')) {
+    $queryTrace = & $backendTraceScript -Query $queryName -Format Json | ConvertFrom-Json
+    if (@($queryTrace.presentation | Where-Object { $_.confidence -eq 'mapping-type' -and $_.requestType -match 'HttpQuery$' -and $_.path -match 'Controller\.cs$' }).Count -ne 1) {
+        throw "HTTP query mapping lost its controller for $queryName."
+    }
+}
+$providerTrace = & $backendTraceScript -Query SearchOpenFoodFactsQuery -Format Json | ConvertFrom-Json
+$providerMapping = @($providerTrace.presentation | Where-Object confidence -eq 'mapping-method')
+if ($providerMapping.Count -ne 1 -or $providerMapping[0].method -ne 'OpenFoodFactsHttpMappings.ToSearchQuery' -or $providerMapping[0].path -notmatch '/OpenFoodFactsController\.cs$') {
+    throw 'Static mapping trace must follow the search factory, without unrelated barcode mappings.'
+}
 $facadeText = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../wiki.ps1') -Raw
 if (-not $facadeText.Contains("if (-not `$FullTrace -and `$Format -eq 'Text')") -or
     -not $facadeText.Contains('$traceArguments.Compact = $true')) {

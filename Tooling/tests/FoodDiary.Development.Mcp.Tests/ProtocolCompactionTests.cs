@@ -8,6 +8,9 @@ public sealed class ProtocolCompactionTests {
     public void TraceCompaction_PreservesSemanticHandlerAndHttpEvidence() {
         WikiCommandResult trace = CreateResult("trace", new {
             request = "StartFastingCommand",
+            traceDepth = "handler-dependencies-plus-one-interface-hop",
+            limitations = new[] { "Source navigation only" },
+            unresolvedDependencies = new[] { "TimeProvider" },
             handler = new { path = "StartFastingCommandHandler.cs", line = 12 },
             presentation = new[] { new { path = "FastingController.cs", confidence = "mapping-type" } },
             tests = new[] { new { path = "FastingFeatureTests.Start.cs" } },
@@ -15,6 +18,9 @@ public sealed class ProtocolCompactionTests {
         JsonElement output = trace.StructuredOutput!.Value;
         Assert.Multiple(
             () => Assert.Equal("StartFastingCommand", output.GetProperty("request").GetString()),
+            () => Assert.Equal("TimeProvider", output.GetProperty("unresolvedDependencies")[0].GetString()),
+            () => Assert.Single(output.GetProperty("limitations").EnumerateArray()),
+            () => Assert.Equal("handler-dependencies-plus-one-interface-hop", output.GetProperty("traceDepth").GetString()),
             () => Assert.Equal(12, output.GetProperty("handler").GetProperty("line").GetInt32()),
             () => Assert.Single(output.GetProperty("presentation").EnumerateArray()),
             () => Assert.Single(output.GetProperty("tests").EnumerateArray()));
@@ -82,6 +88,10 @@ public sealed class ProtocolCompactionTests {
 
         Assert.Multiple(
             () => Assert.Equal(20, compact.ExpandedScopePaths.Count),
+            () => Assert.Equal(context.ExpandedScopePaths.Take(3), compact.SuggestedStartingPaths, StringComparer.Ordinal),
+            () => Assert.Equal(compact.ExpandedScopePaths, compact.SuggestedStartingPaths.Concat(compact.AdditionalCandidatePaths), StringComparer.Ordinal),
+            () => Assert.Equal(17, compact.AdditionalCandidatePaths.Count),
+            () => Assert.Contains("not a confirmed edit scope", compact.ScopeInterpretation, StringComparison.Ordinal),
             () => Assert.Equal(24, compactSearch.QueryTerms.Count),
             () => Assert.Equal(20, compactSearch.Candidates.Count),
             () => Assert.Equal("raw", compact.ChangeContext!.RawOutput),

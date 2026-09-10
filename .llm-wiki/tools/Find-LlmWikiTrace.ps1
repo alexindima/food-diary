@@ -98,6 +98,20 @@ $sourceDocuments = @(
     }
 )
 
+# Index declared interface inheritance once; follow one unambiguous same-namespace hop.
+$interfaceDeclarations = @(
+    foreach ($document in $sourceDocuments) {
+        if ($document.isTest) { continue }
+        $namespace = [regex]::Match($document.content, '\bnamespace\s+([A-Za-z_][A-Za-z0-9_.]*)').Groups[1].Value
+        foreach ($declaration in [regex]::Matches($document.content, '\binterface\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*(?::\s*(?<bases>[^;{]+))?[;{]')) {
+            [pscustomobject]@{ name = $declaration.Groups['name'].Value; namespace = $namespace; bases = $declaration.Groups['bases'].Value; path = $document.repositoryPath }
+        }
+    }
+)
+
+$interfaceNameCounts = @{}
+foreach ($group in @($interfaceDeclarations | Group-Object name)) { $interfaceNameCounts[$group.Name] = $group.Count }
+
 $handlerCandidates = [System.Collections.Generic.List[object]]::new()
 foreach ($document in $sourceDocuments) {
     if ($document.isTest) { continue }
@@ -159,6 +173,20 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
     $tests = [System.Collections.Generic.List[object]]::new()
     $directConsumers = [System.Collections.Generic.List[object]]::new()
 
+    $dependencyContracts = @{}
+    foreach ($dependency in $candidate.dependencies) {
+        $plainDependency = $dependency -replace '<.*$', ''
+        $names = @($plainDependency)
+        $definitions = @($interfaceDeclarations | Where-Object name -eq $plainDependency)
+        if ($definitions.Count -eq 1) {
+            $names += @($interfaceDeclarations | Where-Object {
+                $_.namespace -eq $definitions[0].namespace -and $interfaceNameCounts[$_.name] -eq 1 -and
+                $_.bases -match "\b$([regex]::Escape($plainDependency))\b"
+            } | ForEach-Object name)
+        }
+        $dependencyContracts[$dependency] = @($names | Sort-Object -Unique)
+    }
+
     foreach ($document in $sourceDocuments) {
         $file = $document.file
         $content = $document.content
@@ -177,13 +205,15 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
 
         foreach ($dependency in $candidate.dependencies) {
             if ($document.isTest) { continue }
-            $plainDependency = $dependency -replace '<.*$', ''
+            $contractPattern = ($dependencyContracts[$dependency] | ForEach-Object { [regex]::Escape($_) }) -join '|'
             $implementationMatch = [regex]::Match(
                 $content,
-                "(?:class|record)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)[^;{]*:\s*[^`r`n{]*\b$([regex]::Escape($plainDependency))\b")
+                "(?:class|record)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)[^;{]*:\s*[^`r`n{]*\b(?<via>$contractPattern)\b")
             if ($implementationMatch.Success) {
                 $implementations.Add([pscustomobject]@{
                     contract = $dependency
+                    viaContract = $implementationMatch.Groups['via'].Value
+                    evidence = 'source-declaration'
                     implementation = $implementationMatch.Groups['name'].Value
                     path = $repositoryPath
                     line = Get-LineNumber $content $implementationMatch.Index
@@ -222,9 +252,16 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
     foreach ($mapping in @($presentation | Where-Object { $_.confidence -eq 'direct' -and $_.path -match '/Mappings/' })) {
         $mappingDocument = $sourceDocuments | Where-Object repositoryPath -eq $mapping.path | Select-Object -First 1
         $featureRoot = $mapping.path -replace '/Mappings/.*$', '/'
-        $httpTypes = @([regex]::Matches($mappingDocument.content, '(?s)extension\((?<type>[A-Z][A-Za-z0-9_]*HttpRequest)\s+\w+\)\s*\{(?<body>.*?)\}') | Where-Object { $_.Groups['body'].Value -match $requestPattern } | ForEach-Object { $_.Groups['type'].Value } | Sort-Object -Unique)
+        $mappingClass = [regex]::Match($mappingDocument.content, '\bstatic\s+class\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)').Groups['name'].Value
+        $mappingMethods = @([regex]::Matches($mappingDocument.content, "\bpublic\s+static\s+$([regex]::Escape($candidate.request))\s+(?<method>[A-Za-z_][A-Za-z0-9_]*)\s*\(") | ForEach-Object { $_.Groups['method'].Value } | Sort-Object -Unique)
+        $httpTypes = @([regex]::Matches($mappingDocument.content, '(?s)extension\((?<type>[A-Z][A-Za-z0-9_]*Http(?:Request|Query))\s+\w+\)\s*\{(?<body>.*?)\}') | Where-Object { $_.Groups['body'].Value -match $requestPattern } | ForEach-Object { $_.Groups['type'].Value } | Sort-Object -Unique)
         foreach ($document in $sourceDocuments) {
             if (-not $document.repositoryPath.StartsWith($featureRoot, [StringComparison]::Ordinal) -or $document.repositoryPath -notmatch 'Controller\.cs$') { continue }
+            foreach ($mappingMethod in $mappingMethods) {
+                if ($mappingClass -and $document.content -match "\b$([regex]::Escape($mappingClass))\s*\.\s*$([regex]::Escape($mappingMethod))\s*\(") {
+                    $presentation.Add([pscustomobject]@{ path = $document.repositoryPath; confidence = 'mapping-method'; via = $mapping.path; method = "$mappingClass.$mappingMethod" })
+                }
+            }
             foreach ($httpType in $httpTypes) {
                 if ($document.content -match "\b$([regex]::Escape($httpType))\b") {
                     $presentation.Add([pscustomobject]@{ path = $document.repositoryPath; confidence = 'mapping-type'; via = $mapping.path; requestType = $httpType })
@@ -257,6 +294,9 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
             path = $candidate.path
             line = $candidate.line
         }
+        traceDepth = 'handler-dependencies-plus-one-interface-hop'
+        limitations = @('Source navigation only; constructor dependencies are not runtime call or DI proof. Nested service dependencies and external/framework implementations are not expanded.')
+        unresolvedDependencies = @($candidate.dependencies | Where-Object { $_ -notin @($implementations | ForEach-Object contract) })
         dependencies = $candidate.dependencies
         implementations = @($implementations | Sort-Object contract, implementation, path -Unique)
         presentation = @($presentation | Sort-Object path -Unique)

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "description": "Historical bug symptom regressions, authored with knowledge of fixes 9265ed90b, 160547749 and 40aeff70b. Retrieval checks are separate from isolated before/after test execution; not a blind diagnosis benchmark.",
+  "thresholds": {
+    "minimumSqlitePrimaryRate": 1.0,
+    "minimumScopeRecallRate": 1.0,
+    "minimumSqlTopTenRecallRate": 1.0,
+    "minimumCompleteBundleRate": 0.8,
+    "minimumFocusedChecksRate": 1,
+    "minimumExpectedLayersRate": 1.0,
+    "minimumExplainableRankingRate": 1.0,
+    "minimumContextBundleReadyRate": 1,
+    "minimumUnplannedQueryRate": 0.5,
+    "maximumAverageExpandedScopePaths": 11.0,
+    "maximumP95DurationMilliseconds": 20000,
+    "maximumWarmP95DurationMilliseconds": 10000,
+    "maximumCompactCharacters": 120000
+  },
+  "cases": [
+    {
+      "id": "off-duplicate",
+      "intent": "OpenFoodFacts sends repeated HTTP requests for identical simultaneous searches",
+      "query": "OpenFoodFacts sends repeated HTTP requests for identical simultaneous searches",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Services/OpenFoodFactsServiceTests.cs"
+      ]
+    },
+    {
+      "id": "off-eviction",
+      "intent": "OpenFoodFacts fresh search result disappears when cache is full and clock moves backwards",
+      "query": "OpenFoodFacts fresh search result disappears when cache is full and clock moves backwards",
+      "plannedPath": null,
+      "expectedPaths": [
+        "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Services/OpenFoodFactsServiceTests.cs"
+      ]
+    },
+    {
+      "id": "chart-accessibility",
+      "intent": "Bar chart columns receive keyboard focus but screen reader does not announce their values",
+      "query": "Bar chart columns receive keyboard focus but screen reader does not announce their values",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.ts",
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.html"
+      ],
+      "expectedLayers": [],
+      "maximumExpectedRank": 3,
+      "expectedTestPaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.spec.ts"
+      ]
+    }
+  ]
+}

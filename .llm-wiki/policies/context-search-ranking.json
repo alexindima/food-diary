@@ -754,7 +754,7 @@
     {
       "id": "read-service-intent",
       "queryTerms": ["read"],
-      "excludedQueryTerms": ["readonly"],
+      "excludedQueryTerms": ["readonly", "screen", "accessibility", "aria"],
       "minimumMatches": 1,
       "identityTerms": ["readservice", "reader"],
       "score": 70,
@@ -1302,6 +1302,7 @@
     },
     {
       "id": "explicit-reader-role",
+      "excludedQueryTerms": ["screen", "accessibility", "aria"],
       "queryTerms": ["reader"],
       "minimumMatches": 1,
       "identityTerms": ["readservice", "reader"],
@@ -2072,6 +2073,8 @@
     }
   ],
   "structuralRoleBoosts": [
+    {"id": "accessible-component-identity", "queryTerms": ["keyboard", "screen", "accessibility", "aria", "focus"], "minimumMatches": 2, "candidateTerms": ["chart", "input", "menu", "dialog", "tabs", "button"], "minimumCandidateMatches": 1, "minimumQueryIdentityMatches": 2, "score": 400, "identityScope": "file", "pathPrefixes": ["FoodDiary.Web.Client/"], "recordTypes": ["code"], "excludeTests": true},
+    {"id": "provider-request-cache-behavior", "queryTerms": ["http", "simultaneous", "identical", "cache", "clock", "eviction"], "minimumMatches": 2, "candidateTerms": ["service", "client"], "minimumCandidateMatches": 1, "minimumQueryIdentityMatches": 1, "score": 350, "identityScope": "file", "pathPrefixes": ["Modules/"], "pathSuffixes": ["Service.cs", "Client.cs"], "recordTypes": ["code"], "excludeTests": true},
     {
       "id": "code-navigation-tool",
       "queryTerms": ["symbol", "route", "consumers", "selector"],

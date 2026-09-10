@@ -2,6 +2,21 @@
   "schemaVersion": 1,
   "reviews": [
     {
+      "pageId": "generated-context-evaluation-summary",
+      "pagePath": ".llm-wiki/generated/context-evaluation-summary.md",
+      "pageSha256": "5199e751921d6bd1b5ebfe1c31ca3a50d3008ba171740180cd13de6d8ef391b6",
+      "sources": [
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "3dc4c5c0e842255f987dc9c44e406adaf1faa6ae015473a0179579e3d8e66bd6"
+        }
+      ],
+      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
+      "baseRef": "HEAD",
+      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
+      "reviewedAtUtc": "2026-09-10T14:43:00.7480336Z"
+    },
+    {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
       "pageSha256": "eaac3733a7811ffabb1a5249aafa3cb7f3f6e9f476b14ad0d231f371c4653e9d",
@@ -276,77 +291,21 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "6939ffcb9192e26e0d7fd9eb80bdf102d4d00bc1d5dd93f00bdc24d4a9757b15",
+      "pageSha256": "0d3d1d66ab6eeadd67a5ac4f4cc102c1408cf55c0d2a715f9a46d44ebbf24eb4",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "bfe668f8d430da577d3370b536620181798f608102f7fb8d7f2f82ef10d62e07"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "0451b67c129e11f013c405ca2cd7200d04b54b07255305f40567e63ec890e796"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "7f29a1e9f99de0060db9ea4ce0800c3663526b439af857e160c481f43ed88c54"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "610a5ab5c9bbc8e491f9b38bcf0a57929b461a70faed029ee2d4cdc1a67bc4be"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "43e7951d3d3d9f9274397e87ded3c29ffcb79839d414b665277c2509ce8ec499"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-6.json",
-          "sha256": "f6571bc1d77a42dd622f6735c22c5c33821f917eaab1916a005fd70295fd08de"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "f269b22a9dbc52ff7ceab0d8a5ed8618fa62ba2c41f51b1275a080c2ca2331e3"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-validation.json",
-          "sha256": "6676081b2dd3543346d4a0c7534b407981c5414386d9ed0183e59a96ec3652e5"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "844b25336aff258603ac3b3671794858b0d277430c45632501144413b316734a"
-        },
-        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "045f0b00f9b51a57cbfae927cc79973c47097fe4348bbf1cff3fe024cd185205"
+          "sha256": "3dc4c5c0e842255f987dc9c44e406adaf1faa6ae015473a0179579e3d8e66bd6"
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "84180fb499d007847824bc97ed736390ebc2cefca9bbc7b4a15508aa68c77b1c"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "277b12cb1e3d8270510c21acc0a04ad708e0791e1e3dd11b9eedd0f94eb7d719"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
-          "sha256": "064918be1eb5385e2e3032e93b3727e3f1071c02048ce7ddaa4fe6c3e1ae94b6"
+          "path": ".llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1",
+          "sha256": "040900950660f0fdbe83ea15ee611e65fc6a72d712c0f126e57184bad17092dd"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
+      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T00:26:51.8047787Z"
+      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
+      "reviewedAtUtc": "2026-09-10T14:43:01.5532088Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -877,13 +836,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6e99b6d81aad4808bd9467dc0b5407e6dfe9455575b678a886cc5ac6bb625053"
+          "sha256": "2a0ec41a9e17b58a536134243adfdd34dde6a73ef34b26b6a1af3f9566293979"
         }
       ],
-      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
+      "reason": "Reviewed generated structural metrics for the extended semantic trace and additive MCP response properties; higher trace complexity is covered by HTTP query, static mapping, inherited repository, and compact protocol regressions. Static references remain distinct from execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:36:17.7856546Z"
+      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
+      "reviewedAtUtc": "2026-09-10T14:51:48.5089585Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -952,13 +911,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d477874e70e9fb859d55f880b1b76a73449a52bc0f49be1d0e4ed44a390f1b25"
+          "sha256": "7e52d8a0d0a8d63fd8a155d8a773f8b9ca88f553630be6e723b1fc03ac3b1a00"
         }
       ],
-      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
+      "reason": "Runtime topology changes only its source fingerprint after MCP source edits; service, worker, provider and deployment records are unchanged. Existing runtime-review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:36:19.1416299Z"
+      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
+      "reviewedAtUtc": "2026-09-10T14:51:50.4759195Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -967,21 +926,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6e99b6d81aad4808bd9467dc0b5407e6dfe9455575b678a886cc5ac6bb625053"
+          "sha256": "2a0ec41a9e17b58a536134243adfdd34dde6a73ef34b26b6a1af3f9566293979"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d477874e70e9fb859d55f880b1b76a73449a52bc0f49be1d0e4ed44a390f1b25"
+          "sha256": "7e52d8a0d0a8d63fd8a155d8a773f8b9ca88f553630be6e723b1fc03ac3b1a00"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "184e4378bf4a00ae0fa65048160ec45d2e6cb3ad64e692cf208b5d6cc55de4d2"
+          "sha256": "3dc4c5c0e842255f987dc9c44e406adaf1faa6ae015473a0179579e3d8e66bd6"
         }
       ],
-      "reason": "Reviewed shared ranking refinement: explicit symbol/route/consumer navigation retains Wiki tool discovery without treating generic frontend product requests as tooling. No-match, PowerShell test selection and strict eval contracts remain documented; other workflow semantics unchanged.",
+      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:39:50.3419495Z"
+      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
+      "reviewedAtUtc": "2026-09-10T14:43:02.5214569Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1110,21 +1069,21 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "a0810645611569287dbdf6001b403f168d87acc926b142faffa6793bffde5677",
+      "pageSha256": "904baeea337dd872751021458ca02e357d4ff7f20b7f7087a06f41456776e164",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f9fe028170da3f8d060dcfdf36a90d2d82acd3737d190028d90fe7763dff9625"
+          "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
+          "sha256": "71526878250ea934c6fc5eb36eee1403062131ad6f320d269f4d3f92b3cfca5b"
         },
         {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "23e49fa38f5ca20a3fbf3b11a673ef48f6ac5b0c42a689f9efd0580bd6a68ac0"
+          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
+          "sha256": "842d29dd00933ea501a803591528aa94517ed1d191b7bcbe296c09486d9bb91e"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:42.6564007Z"
+      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
+      "reviewedAtUtc": "2026-09-10T14:43:03.3461466Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1178,21 +1137,21 @@
     {
       "pageId": "workflow.evals",
       "pagePath": ".llm-wiki/workflows/evals.md",
-      "pageSha256": "50ed04637edde217df4523303843af0ba9259b09af6ed1903b66160fc32b97b8",
+      "pageSha256": "5b899900b0cfb76014af8d825ed6cd4f6c74f1f63baf1632fa65e97fdc985f68",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "1b0db260fec3eb6c9a5086034b4d7561a8eaafe69e45d277467890152ff60204"
+          "path": ".llm-wiki/evals/development-context-historical.json",
+          "sha256": "e65ec6dc8bce1faa64f3408bebe2548e4cea8b8c1352c6be35ffe2629f5f81de"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+          "path": ".llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1",
+          "sha256": "040900950660f0fdbe83ea15ee611e65fc6a72d712c0f126e57184bad17092dd"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:16.8286169Z"
+      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
+      "reviewedAtUtc": "2026-09-10T14:43:04.0106171Z"
     },
     {
       "pageId": "workflow.evidence-bundle",

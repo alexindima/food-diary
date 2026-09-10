@@ -511,6 +511,14 @@
       "structuralRiskScore": 99.76
     },
     {
+      "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
+      "nonBlankLines": 312,
+      "decisionPoints": 59,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 96.74
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
       "nonBlankLines": 316,
       "decisionPoints": 58,
@@ -637,14 +645,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 87.68
-    },
-    {
-      "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-      "nonBlankLines": 282,
-      "decisionPoints": 53,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.14
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
@@ -1082,11 +1082,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-      "nonBlankLines": 282,
-      "decisionPoints": 53,
+      "nonBlankLines": 312,
+      "decisionPoints": 59,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.14
+      "structuralRiskScore": 96.74
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
@@ -2722,11 +2722,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContext.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 0,
+      "nonBlankLines": 36,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 2.22
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContextComponentError.cs",
@@ -2874,11 +2874,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandResult.cs",
-      "nonBlankLines": 168,
+      "nonBlankLines": 171,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.36
+      "structuralRiskScore": 24.42
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandStageTiming.cs",
