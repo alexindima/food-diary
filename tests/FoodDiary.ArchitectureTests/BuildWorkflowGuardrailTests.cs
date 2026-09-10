@@ -35,7 +35,10 @@ public sealed class BuildWorkflowGuardrailTests {
             () => Assert.Contains("Get-LlmWikiDependencyChanges.ps1", focused, StringComparison.Ordinal),
             () => Assert.Contains("wiki.ps1 report", focused, StringComparison.Ordinal),
             () => Assert.Contains("llm-wiki-focused-failure-logs", focused, StringComparison.Ordinal),
-            () => Assert.Contains("llm-wiki-audit-failure-logs", audit, StringComparison.Ordinal));
+            () => Assert.Contains("shard: [Core, Workspace, Orchestration]", audit, StringComparison.Ordinal),
+            () => Assert.Contains("fail-fast: false", audit, StringComparison.Ordinal),
+            () => Assert.Contains("-AuditShard $env:WIKI_AUDIT_SHARD", audit, StringComparison.Ordinal),
+            () => Assert.Contains("llm-wiki-audit-${{ matrix.shard }}-failure-logs", audit, StringComparison.Ordinal));
 
         string ReadJob(string id) {
             Match match = Regex.Match(workflow, $"^  {Regex.Escape(id)}:\\n(?<body>.*?)(?=^  [a-zA-Z0-9_-]+:|\\z)",
