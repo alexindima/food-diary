@@ -13,6 +13,7 @@ tags:
   - dispatch
   - lease
 sources:
+  - .llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskLease.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1
@@ -101,7 +102,11 @@ The scheduler includes a compact metrics summary, task audit embeds the full
 metrics object, and handoff shows both global rates and the current dispatch
 owner's reliability when history is available.
 
-Metrics do not maintain a second mutable store. Pruning intentionally bounds
+Metrics do not maintain a second mutable store. Direct metrics callers can request
+`-IncludeDispatchRegistry` to receive the complete freshly validated registry
+alongside windowed metrics; the scheduler uses this to avoid a second validation
+scan. Default metrics JSON remains unchanged, and the registry includes invalid
+and out-of-window entries needed for scheduling decisions. Pruning bounds
 their historical horizon, so retention should be at least as long as the
 default metrics window when long-term comparisons are required.
 

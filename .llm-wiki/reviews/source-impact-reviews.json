@@ -380,22 +380,14 @@
       "pageSha256": "2adbebf7ac1a14cca9d9ab6aa9a8bdd9502bef62346c9960e3c3d5901ba7545e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "84180fb499d007847824bc97ed736390ebc2cefca9bbc7b4a15508aa68c77b1c"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
-          "sha256": "3609439f485159343cf37b591784e346a67c0d5082e52061af3fa2126eced5c3"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1",
+          "sha256": "76b676cbc43db2124b28055dd7156544d879f5d0b888ad10e9dd8a0048506b5f"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
+      "reason": "Reviewed scheduler reuse: dispatch validation still verifies context provenance on every invocation; bundle construction, drift checks and security boundaries are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T00:26:52.7231499Z"
+      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
+      "reviewedAtUtc": "2026-09-09T23:54:35.4251613Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -697,25 +689,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "5aeae95bb74667022e36b205f944a8f6f559ddab52dea7047f12456f08e63583",
+      "pageSha256": "1436657ef1793bf07e8ebda9dd6b3655810273b427af13ebceb94c82cbca03a6",
       "sources": [
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "b399b2b606fcd28b4578d2c3b21b7eb4118847287f2f20a401b1b806d9c9fe86"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "89ab91db595439bab0f38841a0aa51cc683673edba159537cc2214cbf707e4d1"
+          "sha256": "eec97e7c42b4f11d782609a643ca5f5791a2bf7e81b42f368782412910531b68"
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "a5dbbd324aa29ffb482be2bd3b70dda5b67893691f60624577c3d152347d901c"
+          "sha256": "794ba650e686cba20f384e825cdcc8920a8b34e16d95a0343cbc2dd8dd4162f1"
         }
       ],
-      "reason": "Reviewed neighbor discovery memoization within one test-plan invocation: original first-four ordering, file predicates and per-test self-exclusion preserved. Complete plan JSON matches baseline in eight runs; affected smoke routing remains unchanged.",
+      "reason": "Added focused registry-reuse regression to facade-contract; exhaustive audit assertion inventory and CI partitioning remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
-      "reviewedAtUtc": "2026-09-09T22:24:17.2446223Z"
+      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
+      "reviewedAtUtc": "2026-09-09T23:54:37.2396349Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -893,13 +881,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "35f4f5f82e7865d3a16087dfe218f20ae06332de778946f3ab90ca2ff42aa8d6"
+          "sha256": "65f03d1ea51b423cbdd2e46425088f6c38a78581c71d31ef615563df4526e724"
         }
       ],
-      "reason": "Reviewed quality-index regeneration after audit routing guards and assertion-inventory regression: only Wiki test/tool structural metrics change; risk interpretation and security obligations remain unchanged.",
+      "reason": "Regenerated static Wiki tool metrics after removing duplicate dispatch validation; risk query interpretation and static-coverage limitations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "45e8de30ea8f28e625258cfcd963c4dba72a8ddc",
-      "reviewedAtUtc": "2026-09-09T23:10:04.9891675Z"
+      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
+      "reviewedAtUtc": "2026-09-09T23:54:38.2459491Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -983,13 +971,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "35f4f5f82e7865d3a16087dfe218f20ae06332de778946f3ab90ca2ff42aa8d6"
+          "sha256": "65f03d1ea51b423cbdd2e46425088f6c38a78581c71d31ef615563df4526e724"
         }
       ],
-      "reason": "Reviewed quality-index regeneration after audit routing guards and assertion-inventory regression: only Wiki test/tool structural metrics change; risk interpretation and security obligations remain unchanged.",
+      "reason": "Quality index changes concern Wiki scheduler tool metrics only; security discovery controls and runtime security boundaries are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "45e8de30ea8f28e625258cfcd963c4dba72a8ddc",
-      "reviewedAtUtc": "2026-09-09T23:10:05.7568931Z"
+      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
+      "reviewedAtUtc": "2026-09-09T23:54:39.2519517Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1088,17 +1076,17 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "29db37a4c99ffc488523bf72c8ad43f02e79b329dc88f83ca38813bdd2312683",
+      "pageSha256": "389153ec6bdaa0031c64a5294d755935731286a3500b49527087672f334804b2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1",
+          "sha256": "76b676cbc43db2124b28055dd7156544d879f5d0b888ad10e9dd8a0048506b5f"
         }
       ],
-      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "reason": "Reviewed scheduler reuse: full validated dispatch views preserve lane, conflict and ownership decisions, including invalid and out-of-window receipts.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:12.456825Z"
+      "gitHead": "4ac63c2d8fec5bfc1fad192ec6e4cb4b5f2cdb4c",
+      "reviewedAtUtc": "2026-09-09T23:54:36.3218829Z"
     },
     {
       "pageId": "workflow-test-plan",

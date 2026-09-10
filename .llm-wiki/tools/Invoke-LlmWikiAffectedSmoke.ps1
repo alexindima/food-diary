@@ -168,6 +168,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             Write-Host "Dependency analysis smoke passed: $($rootResult.changeCount) current change(s), cwd-independent."
         }
         'facade-contract' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiDispatchMetricsReuse.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiFullAuditShards.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiFacadeCommandCatalog.ps1')

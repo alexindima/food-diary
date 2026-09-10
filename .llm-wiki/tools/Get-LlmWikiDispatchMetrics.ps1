@@ -3,6 +3,7 @@ param(
     [Nullable[int]]$WindowDays,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
     [switch]$FailOnAttention,
+    [switch]$IncludeDispatchRegistry,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
@@ -272,6 +273,9 @@ $response = [pscustomobject][ordered]@{
     dispatches = @($records)
 }
 
+if ($IncludeDispatchRegistry) {
+    $response | Add-Member -NotePropertyName dispatchRegistry -NotePropertyValue $dispatchList
+}
 if ($Format -eq 'Json') {
     $response | ConvertTo-Json -Depth 10
 } else {

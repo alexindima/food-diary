@@ -19,8 +19,8 @@ if ($effectiveConcurrency -lt 1 -or $effectiveConcurrency -gt [int]$policy.sched
 }
 $graph = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskGraph.ps1') -TasksPath $TasksPath -Format Json | ConvertFrom-Json
 $leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json
-$dispatchRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json
-$dispatchMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiDispatchMetrics.ps1') -AsOfUtc $now -Format Json | ConvertFrom-Json
+$dispatchMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiDispatchMetrics.ps1') -AsOfUtc $now -IncludeDispatchRegistry -Format Json | ConvertFrom-Json
+$dispatchRegistry = $dispatchMetrics.dispatchRegistry
 $contextFeedback = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextFeedback.ps1') metrics -AsOfUtc $now -Format Json | ConvertFrom-Json
 $agentRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiAgentRegistry.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json
 $circuitRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiWorkspaceCircuit.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json

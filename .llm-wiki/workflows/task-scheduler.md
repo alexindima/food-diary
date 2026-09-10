@@ -12,6 +12,8 @@ tags:
   - orchestration
 sources:
   - .llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1
+  - .llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1
+  - .llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskLease.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1
   - .llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1
@@ -32,6 +34,11 @@ sources:
 ---
 
 # Schedule Concurrent AI Tasks
+
+Each schedule request obtains metrics and the complete validated dispatch registry
+from one metrics invocation (`-IncludeDispatchRegistry`). Registry validation stays
+fresh on every request; it is not cached. Invalid and out-of-window dispatches
+remain available to scheduling even when excluded from metric samples.
 
 Compile the next safe orchestration cycle:
 

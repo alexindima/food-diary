@@ -72,11 +72,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 431,
-      "decisionPoints": 130,
+      "nonBlankLines": 433,
+      "decisionPoints": 131,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 205.62
+      "structuralRiskScore": 207.16
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -1218,11 +1218,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
-      "nonBlankLines": 275,
-      "decisionPoints": 35,
+      "nonBlankLines": 279,
+      "decisionPoints": 37,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 60
+      "structuralRiskScore": 63.08
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExperience.ps1",
@@ -1506,11 +1506,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 431,
-      "decisionPoints": 130,
+      "nonBlankLines": 433,
+      "decisionPoints": 131,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 205.62
+      "structuralRiskScore": 207.16
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
@@ -49709,8 +49709,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -50009,8 +50010,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -50101,8 +50103,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskWorkspace.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1"
@@ -51295,8 +51298,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiOrchestrationLineage.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
