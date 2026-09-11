@@ -10,6 +10,28 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task SurfaceStyle_RoundTripsAndSurvivesUnrelatedProfileUpdate() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"surface-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        User loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
+        Assert.Equal("normal", loaded.SurfaceStyle);
+        loaded.UpdatePreferences(new FoodDiary.Domain.ValueObjects.UserPreferenceUpdate(SurfaceStyle: "matte"));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
+        Assert.Equal("matte", loaded.SurfaceStyle);
+        loaded.UpdatePreferences(new FoodDiary.Domain.ValueObjects.UserPreferenceUpdate(Theme: "dark"));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
+        Assert.Equal("matte", loaded.SurfaceStyle);
+        Assert.Equal("dark", loaded.Theme);
+    }
+
+    [RequiresDockerFact]
     public async Task SaveChangesAsync_WithConcurrentUserUpdates_RejectsStaleWriter() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         await using (FoodDiaryDbContext setupContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true)) {

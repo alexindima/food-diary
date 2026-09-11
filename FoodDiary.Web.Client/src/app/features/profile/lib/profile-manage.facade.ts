@@ -78,7 +78,7 @@ export class ProfileManageFacade {
 
                 this.user.set(user);
                 void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
-                this.themeService.syncWithUserPreferences(user.theme, user.uiStyle);
+                this.themeService.syncWithUserPreferences(user.theme, user.uiStyle, user.surfaceStyle);
                 this.clearGlobalError();
                 this.showSuccessDialog();
             },
@@ -261,7 +261,7 @@ export class ProfileManageFacade {
                 this.dietologistRelationship.set(overview.dietologistRelationship);
                 this.clearGlobalError();
                 void this.localizationService.applyLanguagePreferenceAsync(overview.user.language ?? null);
-                this.themeService.syncWithUserPreferences(overview.user.theme, overview.user.uiStyle);
+                this.themeService.syncWithUserPreferences(overview.user.theme, overview.user.uiStyle, overview.user.surfaceStyle);
             },
             error: () => {
                 this.user.set(null);
@@ -300,7 +300,7 @@ export class ProfileManageFacade {
                         this.user.set(user);
                         this.profileSavedVersion.update(version => version + 1);
                         void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
-                        this.themeService.syncWithUserPreferences(user.theme, user.uiStyle);
+                        this.themeService.syncWithUserPreferences(user.theme, user.uiStyle, user.surfaceStyle);
                         this.clearGlobalError();
                     }
                 },

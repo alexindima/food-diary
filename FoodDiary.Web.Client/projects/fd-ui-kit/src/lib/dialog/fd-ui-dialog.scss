@@ -31,7 +31,9 @@
     flex-direction: column;
     background: var(--fd-bg-dialog);
     border-radius: var(--fd-radius-dialog);
-    box-shadow: var(--fd-shadow-xl);
+    box-shadow: var(--fd-surface-highlight), var(--fd-surface-dialog-shadow);
+    backdrop-filter: var(--fd-surface-backdrop-filter);
+    -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
     border: var(--fd-border-strong);
     padding: var(--fd-space-dialog-padding);
     box-sizing: border-box;

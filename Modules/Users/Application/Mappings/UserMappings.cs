@@ -111,7 +111,8 @@ public static class UserMappings {
             user.AiConsentAcceptedAt,
             user.MustChangePassword,
             !string.IsNullOrWhiteSpace(user.GoogleIssuer) &&
-            !string.IsNullOrWhiteSpace(user.GoogleSubject)
+            !string.IsNullOrWhiteSpace(user.GoogleSubject),
+            user.SurfaceStyle
         );
     }
 

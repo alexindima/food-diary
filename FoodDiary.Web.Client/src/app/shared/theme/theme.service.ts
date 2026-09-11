@@ -3,11 +3,14 @@ import { inject, Service, signal } from '@angular/core';
 
 import {
     APP_THEMES,
+    type AppSurfaceStyleName,
     type AppThemeDefinition,
     type AppThemeName,
     type AppUiStyleName,
+    DEFAULT_APP_SURFACE_STYLE,
     DEFAULT_APP_THEME,
     DEFAULT_APP_UI_STYLE,
+    isAppSurfaceStyleName,
     isAppThemeName,
     isAppUiStyleName,
 } from '../../theme/app-theme.config';
@@ -40,12 +43,24 @@ export class ThemeService {
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly themeStorageKey = 'fd_theme';
     private readonly uiStyleStorageKey = 'fd_ui_style';
+    private readonly surfaceStyleStorageKey = 'fd_surface_style';
+    private readonly surfaceStyleState = signal<AppSurfaceStyleName>(DEFAULT_APP_SURFACE_STYLE);
     private readonly themeState = signal<AppThemeName>(DEFAULT_APP_THEME);
     private readonly uiStyleState = signal<AppUiStyleName>(DEFAULT_APP_UI_STYLE);
 
     public readonly theme = this.themeState.asReadonly();
     public readonly uiStyle = this.uiStyleState.asReadonly();
     public readonly themes = APP_THEMES;
+    public readonly surfaceStyle = this.surfaceStyleState.asReadonly();
+
+    public setSurfaceStyle(surfaceStyle: string): void {
+        if (!isAppSurfaceStyleName(surfaceStyle)) {
+            return;
+        }
+
+        this.applySurfaceStyle(surfaceStyle);
+        this.storage.setItem('local', this.surfaceStyleStorageKey, surfaceStyle);
+    }
 
     public initializeTheme(): void {
         this.applyThemeForRoute(this.browserWindow.getPathname() ?? '/');
@@ -76,9 +91,15 @@ export class ThemeService {
         this.applyUiStyle(uiStyle, true);
     }
 
-    public syncWithUserPreferences(theme: string | null | undefined, uiStyle: string | null | undefined): void {
+    public syncWithUserPreferences(
+        theme: string | null | undefined,
+        uiStyle: string | null | undefined,
+        surfaceStyle?: string | null,
+    ): void {
         const resolvedTheme = this.resolveTheme(theme);
         const resolvedUiStyle = this.resolveUiStyle(uiStyle);
+        const resolvedSurface = isAppSurfaceStyleName(surfaceStyle) ? surfaceStyle : DEFAULT_APP_SURFACE_STYLE;
+        this.storage.setItem('local', this.surfaceStyleStorageKey, resolvedSurface);
 
         if (this.isPublicRoute(this.browserWindow.getPathname() ?? '/')) {
             this.persistThemePreference(resolvedTheme);
@@ -88,14 +109,18 @@ export class ThemeService {
 
         this.applyTheme(resolvedTheme, true);
         this.applyUiStyle(resolvedUiStyle, true);
+        this.applySurfaceStyle(resolvedSurface);
     }
 
     private applyDefaultPublicTheme(): void {
+        this.applySurfaceStyle(DEFAULT_APP_SURFACE_STYLE);
         this.applyTheme(DEFAULT_APP_THEME, false);
         this.applyUiStyle(DEFAULT_APP_UI_STYLE, false);
     }
 
     private applyStoredTheme(): void {
+        const storedSurfaceStyle = this.storage.getItem('local', this.surfaceStyleStorageKey);
+        this.applySurfaceStyle(isAppSurfaceStyleName(storedSurfaceStyle) ? storedSurfaceStyle : DEFAULT_APP_SURFACE_STYLE);
         const storedTheme = this.getStoredTheme();
         const storedUiStyle = this.getStoredUiStyle();
 
@@ -115,6 +140,11 @@ export class ThemeService {
         if (persist) {
             this.persistThemePreference(theme);
         }
+    }
+
+    private applySurfaceStyle(surfaceStyle: AppSurfaceStyleName): void {
+        this.surfaceStyleState.set(surfaceStyle);
+        this.document.documentElement.setAttribute('data-surface-style', surfaceStyle);
     }
 
     private applyUiStyle(uiStyle: AppUiStyleName, persist: boolean): void {

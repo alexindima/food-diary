@@ -29374,6 +29374,12 @@
       "Name": "UpdateUserAppearanceHttpRequest",
       "Properties": [
         {
+          "Name": "surfaceStyle",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "theme",
           "Required": false,
           "Type": "string",
@@ -30156,6 +30162,12 @@
           "Required": false,
           "Type": "integer",
           "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "surfaceStyle",
+          "Required": false,
+          "Type": "string",
           "Nullable": true
         },
         {

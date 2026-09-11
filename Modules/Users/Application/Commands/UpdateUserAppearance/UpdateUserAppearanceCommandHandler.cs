@@ -28,7 +28,8 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
 
         Result<UserAppearancePreferences> preferencesResult = UserAppearancePreferencesParser.ParseOptional(
             command.Theme,
-            command.UiStyle);
+            command.UiStyle,
+            command.SurfaceStyle);
         if (preferencesResult.IsFailure) {
             return Result.Failure<UserModel>(preferencesResult.Error);
         }
@@ -37,7 +38,8 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
         UserAppearancePreferences preferences = preferencesResult.Value;
         user.UpdatePreferences(new UserPreferenceUpdate(
             Theme: preferences.Theme,
-            UiStyle: preferences.UiStyle));
+            UiStyle: preferences.UiStyle,
+            SurfaceStyle: preferences.SurfaceStyle));
 
         await userContextService.UpdateUserAsync(user, cancellationToken).ConfigureAwait(false);
 

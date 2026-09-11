@@ -36,6 +36,7 @@ export type User = {
     language?: string;
     theme?: string;
     uiStyle?: string;
+    surfaceStyle?: string;
     pushNotificationsEnabled: boolean;
     fastingPushNotificationsEnabled: boolean;
     socialPushNotificationsEnabled: boolean;
@@ -122,10 +123,12 @@ export class UpdateUserDto {
 export class UpdateUserAppearanceDto {
     public theme?: string;
     public uiStyle?: string;
+    public surfaceStyle?: string;
 
-    public constructor(formValues: { theme?: string | null; uiStyle?: string | null }) {
+    public constructor(formValues: { theme?: string | null; uiStyle?: string | null; surfaceStyle?: string | null }) {
         this.theme = normalizeTheme(formValues.theme);
         this.uiStyle = normalizeUiStyle(formValues.uiStyle);
+        this.surfaceStyle = formValues.surfaceStyle ?? undefined;
     }
 }
 

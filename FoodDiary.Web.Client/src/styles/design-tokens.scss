@@ -1051,6 +1051,9 @@ $fd-theme-design-tokens: (
         --fd-color-ai: #{fd-theme-token($theme, colors, ai)};
         --fd-color-ai-strong: #{fd-theme-token($theme, colors, ai-strong)};
         --fd-color-surface: #{fd-theme-token($theme, colors, surface)};
+        --fd-material-base-surface: #{fd-theme-token($theme, colors, surface)};
+        --fd-material-base-muted: #{fd-theme-token($theme, colors, surface-muted)};
+        --fd-material-base-raised: #{fd-theme-token($theme, colors, surface-raised)};
         --fd-color-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
         --fd-color-surface-raised: #{fd-theme-token($theme, colors, surface-raised)};
         --fd-color-dialog-surface: #{fd-theme-token($theme, colors, surface-raised)};
@@ -1168,6 +1171,11 @@ $fd-theme-design-tokens: (
         --fd-bg-border: var(--fd-color-border);
         --fd-bg-border-strong: var(--fd-color-border-strong);
         --fd-bg-track-muted: var(--fd-color-slate-200);
+        --fd-surface-backdrop-filter: none;
+        --fd-surface-dialog-shadow: var(--fd-shadow-xl);
+        --fd-surface-navigation-background: var(--fd-bg-surface);
+        --fd-surface-popover-background: var(--fd-bg-surface-raised);
+        --fd-surface-highlight: inset 0 0 0 transparent;
         --fd-bg-dialog: var(--fd-color-dialog-surface);
         --fd-bg-dialog-muted: var(--fd-color-dialog-surface-muted);
         --fd-bg-overlay: var(--fd-color-dialog-overlay);

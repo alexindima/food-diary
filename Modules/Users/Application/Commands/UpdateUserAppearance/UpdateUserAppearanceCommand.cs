@@ -7,5 +7,6 @@ namespace FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 public sealed record UpdateUserAppearanceCommand(
     Guid? UserId,
     string? Theme,
-    string? UiStyle
+    string? UiStyle,
+    string? SurfaceStyle = null
 ) : ICommand<Result<UserModel>>, IUserRequest;

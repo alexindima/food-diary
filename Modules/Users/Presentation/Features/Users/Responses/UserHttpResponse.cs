@@ -40,4 +40,5 @@ public sealed record UserHttpResponse(
     DateTime? LastLoginAtUtc,
     DateTime? AiConsentAcceptedAt,
     bool MustChangePassword,
-    bool HasGoogleIdentity);
+    bool HasGoogleIdentity,
+    string SurfaceStyle = "normal");

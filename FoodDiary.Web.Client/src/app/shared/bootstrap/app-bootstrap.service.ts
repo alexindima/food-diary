@@ -33,7 +33,7 @@ export class AppBootstrapService {
         const user = await firstValueFrom(this.userService.getInfoSilently());
         await this.localizationService.applyLanguagePreferenceAsync(user?.language ?? null);
         await this.localizationService.loadApplicationTranslationsAsync();
-        this.themeService.syncWithUserPreferences(user?.theme, user?.uiStyle);
+        this.themeService.syncWithUserPreferences(user?.theme, user?.uiStyle, user?.surfaceStyle);
     }
 
     public initializeObservability(): void {

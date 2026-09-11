@@ -9,7 +9,8 @@ public readonly record struct UserPreferenceState(
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,
     int FastingCheckInReminderHours,
-    int FastingCheckInFollowUpReminderHours) {
+    int FastingCheckInFollowUpReminderHours,
+    string SurfaceStyle = "normal") {
     public static UserPreferenceState CreateInitial() {
         return new UserPreferenceState(
             DashboardLayoutJson: null,

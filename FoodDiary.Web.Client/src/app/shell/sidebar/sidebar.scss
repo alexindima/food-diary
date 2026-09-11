@@ -397,9 +397,11 @@
     display: none;
     gap: var(--fd-space-sidebar-mobile-nav-gap);
     padding: var(--fd-space-sidebar-mobile-nav-padding);
-    background: var(--fd-bg-surface);
+    background: var(--fd-surface-navigation-background);
+    backdrop-filter: var(--fd-surface-backdrop-filter);
+    -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
     border-top: var(--fd-border-default);
-    box-shadow: var(--fd-shadow-xl);
+    box-shadow: var(--fd-surface-highlight), var(--fd-surface-dialog-shadow);
     z-index: var(--fd-z-index-floating-panel);
 
     @media #{variables.$media-tablet} {
@@ -541,10 +543,12 @@
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
         bottom: calc(100% + var(--fd-space-xs));
-        background: var(--fd-bg-surface);
+        background: var(--fd-surface-navigation-background);
+        backdrop-filter: var(--fd-surface-backdrop-filter);
+        -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
         border-radius: var(--fd-radius-dialog);
         padding: var(--fd-space-sidebar-mobile-sheet-padding);
-        box-shadow: var(--fd-shadow-xl);
+        box-shadow: var(--fd-surface-highlight), var(--fd-surface-dialog-shadow);
         border: var(--fd-border-default);
         display: grid;
         gap: var(--sidebar-mobile-sheet-gap);

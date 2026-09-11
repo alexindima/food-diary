@@ -14,7 +14,7 @@ public sealed class UpdateUserAppearanceCommandValidator : AbstractValidator<Upd
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x)
-            .Must(command => command.Theme is not null || command.UiStyle is not null)
+            .Must(command => command.Theme is not null || command.UiStyle is not null || command.SurfaceStyle is not null)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("At least one appearance field must be provided.");
     }

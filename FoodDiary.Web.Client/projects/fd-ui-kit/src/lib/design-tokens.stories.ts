@@ -286,3 +286,19 @@ export const Layout: Story = {
         tableRows: layoutTokens,
     },
 };
+
+export const SurfaceMaterials: Story = {
+    args: {
+        pageTitle: 'Surface Materials',
+        intro: 'Use data-surface-style="normal", "matte" or "glass" on html, independently of data-theme and data-ui-style. Matte changes shared card and panel colors, flattens decorative surfaces and softens shadows. Glass keeps content opaque and blurs floating dialogs, menus, navigation and mobile headers. Glass falls back to opaque surfaces when transparency is reduced or backdrop filtering is unavailable. The preference is saved in the user profile.',
+        swatchGroups: [],
+        tableTitle: 'Surface Tokens',
+        tableDescription: 'Do not change spacing or radii when applying a material. Keep blur on major layers rather than nested cards.',
+        tableRows: [
+            { name: 'Backdrop filter', value: 'var(--fd-surface-backdrop-filter)' },
+            { name: 'Inner highlight', value: 'var(--fd-surface-highlight)' },
+            { name: 'Dialog background', value: 'var(--fd-bg-dialog)' },
+            { name: 'Sidebar background', value: 'var(--fd-bg-sidebar)' },
+        ],
+    },
+};

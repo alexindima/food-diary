@@ -78,7 +78,8 @@ public static class UserHttpMappings {
             return new UpdateUserAppearanceCommand(
                 UserId: userId,
                 Theme: request.Theme,
-                UiStyle: request.UiStyle
+                UiStyle: request.UiStyle,
+                SurfaceStyle: request.SurfaceStyle
             );
         }
     }

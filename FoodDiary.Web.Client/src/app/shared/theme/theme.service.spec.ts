@@ -19,6 +19,7 @@ beforeEach(() => {
     localStorage.clear();
     documentRef.documentElement.removeAttribute('data-theme');
     documentRef.documentElement.removeAttribute('data-ui-style');
+    documentRef.documentElement.removeAttribute('data-surface-style');
     documentRef.documentElement.style.colorScheme = '';
     ensureMetaThemeColor();
 });
@@ -91,6 +92,48 @@ describe('ThemeService public routes', () => {
 });
 
 describe('ThemeService preferences', () => {
+    it('restores the account material and clears stale material when switching to a legacy account', () => {
+        window.history.replaceState({}, '', '/dashboard');
+        service.applyThemeForRoute('/dashboard');
+        service.syncWithUserPreferences('dark', 'modern', 'matte');
+        expect(service.surfaceStyle()).toBe('matte');
+        expect(localStorage.getItem('fd_surface_style')).toBe('matte');
+        service.syncWithUserPreferences('leaf', 'classic');
+        expect(service.surfaceStyle()).toBe('normal');
+        expect(localStorage.getItem('fd_surface_style')).toBe('normal');
+        window.history.replaceState({}, '', '/');
+    });
+
+    it('preserves surface material across theme, geometry and route changes', () => {
+        service.setSurfaceStyle('glass');
+        service.setTheme('dark');
+        service.setUiStyle('modern');
+        expect(service.surfaceStyle()).toBe('glass');
+        expect(localStorage.getItem('fd_surface_style')).toBe('glass');
+
+        service.applyThemeForRoute('/');
+        expect(service.surfaceStyle()).toBe('normal');
+        expect(localStorage.getItem('fd_surface_style')).toBe('glass');
+
+        service.applyThemeForRoute('/dashboard');
+        expect(service.surfaceStyle()).toBe('glass');
+        expect(documentRef.documentElement.getAttribute('data-surface-style')).toBe('glass');
+        expect(service.theme()).toBe('dark');
+        expect(service.uiStyle()).toBe('modern');
+    });
+
+    it('rejects invalid surface values and recovers from invalid stored preferences', () => {
+        service.setSurfaceStyle('matte');
+        service.setSurfaceStyle('invalid');
+        expect(service.surfaceStyle()).toBe('matte');
+        expect(localStorage.getItem('fd_surface_style')).toBe('matte');
+
+        localStorage.setItem('fd_surface_style', 'invalid');
+        service.applyThemeForRoute('/dashboard');
+        expect(service.surfaceStyle()).toBe('normal');
+        expect(documentRef.documentElement.getAttribute('data-surface-style')).toBe('normal');
+    });
+
     it('should apply dark color scheme for the dark theme', () => {
         service.setTheme('dark');
 

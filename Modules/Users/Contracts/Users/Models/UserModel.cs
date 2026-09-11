@@ -41,4 +41,5 @@ public sealed record UserModel(
     DateTime? LastLoginAtUtc,
     DateTime? AiConsentAcceptedAt,
     bool MustChangePassword = false,
-    bool HasGoogleIdentity = false);
+    bool HasGoogleIdentity = false,
+    string SurfaceStyle = "normal");

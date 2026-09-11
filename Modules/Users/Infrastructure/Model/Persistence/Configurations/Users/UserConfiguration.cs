@@ -62,6 +62,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasDefaultValue("en");
         builder.Property(e => e.Theme)
             .HasDefaultValue("ocean");
+        builder.Property(e => e.SurfaceStyle)
+            .HasMaxLength(16)
+            .HasDefaultValue("normal")
+            .IsRequired();
+
         builder.Property(e => e.UiStyle)
             .HasDefaultValue("classic");
         builder.Property(e => e.PushNotificationsEnabled)

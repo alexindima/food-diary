@@ -9,4 +9,5 @@ public readonly record struct UserPreferenceUpdate(
     bool? FastingPushNotificationsEnabled = null,
     bool? SocialPushNotificationsEnabled = null,
     int? FastingCheckInReminderHours = null,
-    int? FastingCheckInFollowUpReminderHours = null);
+    int? FastingCheckInFollowUpReminderHours = null,
+    string? SurfaceStyle = null);

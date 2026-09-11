@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { of, Subject, throwError } from 'rxjs';
@@ -9,24 +10,14 @@ import { ThemeService } from '../../../../shared/theme/theme.service';
 import { DashboardAppearanceFacade } from './dashboard-appearance.facade';
 import { DashboardAppearanceDialogComponent } from './dashboard-appearance-dialog';
 
-describe('DashboardAppearanceDialogComponent', () => {
-    let fixture: ComponentFixture<DashboardAppearanceDialogComponent>;
-    let appearance: DashboardAppearanceFacade;
-    let themeService: {
-        setTheme: ReturnType<typeof vi.fn>;
-        setUiStyle: ReturnType<typeof vi.fn>;
-        syncWithUserPreferences: ReturnType<typeof vi.fn>;
-    };
-    let userService: {
-        updateAppearance: ReturnType<typeof vi.fn>;
-    };
+let fixture: ComponentFixture<DashboardAppearanceDialogComponent>;
+let appearance: DashboardAppearanceFacade;
+let themeService: ReturnType<typeof createThemeServiceMock>;
+let userService: { updateAppearance: ReturnType<typeof vi.fn> };
 
+describe('DashboardAppearanceDialogComponent', () => {
     beforeEach(async () => {
-        themeService = {
-            setTheme: vi.fn(),
-            setUiStyle: vi.fn(),
-            syncWithUserPreferences: vi.fn(),
-        };
+        themeService = createThemeServiceMock();
         userService = {
             updateAppearance: vi.fn().mockReturnValue(
                 of({
@@ -70,14 +61,26 @@ describe('DashboardAppearanceDialogComponent', () => {
         appearance.selectUiStyle('modern');
 
         expect(userService.updateAppearance).toHaveBeenCalledTimes(1);
-        expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('leaf', 'modern');
+        expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('leaf', 'modern', 'normal');
     });
 
     it('reverts preview and shows error when autosave fails', () => {
         userService.updateAppearance.mockReturnValueOnce(throwError(() => new Error('save failed')));
         appearance.selectTheme('dark');
 
-        expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('ocean', 'classic');
+        expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('ocean', 'classic', 'normal');
+        expect(appearance.submitError()).toBeTruthy();
+    });
+
+    it('persists surface selection and rolls back failed previews', () => {
+        userService.updateAppearance.mockReturnValueOnce(of({ theme: 'ocean', uiStyle: 'classic', surfaceStyle: 'matte' }));
+        appearance.selectSurfaceStyle('matte');
+        expect(userService.updateAppearance).toHaveBeenLastCalledWith(expect.objectContaining({ surfaceStyle: 'matte' }));
+        expect(themeService.setSurfaceStyle).toHaveBeenCalledWith('matte');
+        userService.updateAppearance.mockReturnValueOnce(throwError(() => new Error('save failed')));
+        appearance.selectSurfaceStyle('glass');
+        expect(appearance.selectedSurfaceStyle()).toBe('matte');
+        expect(themeService.syncWithUserPreferences).toHaveBeenLastCalledWith('ocean', 'classic', 'matte');
         expect(appearance.submitError()).toBeTruthy();
     });
 
@@ -87,6 +90,8 @@ describe('DashboardAppearanceDialogComponent', () => {
 
         appearance.selectTheme('leaf');
         appearance.selectUiStyle('modern');
+
+        appearance.selectSurfaceStyle('glass');
 
         expect(userService.updateAppearance).toHaveBeenCalledTimes(1);
 
@@ -101,5 +106,22 @@ describe('DashboardAppearanceDialogComponent', () => {
 
         expect(queuedAppearance.theme).toBe('leaf');
         expect(queuedAppearance.uiStyle).toBe('modern');
+        expect(queuedAppearance).toEqual(expect.objectContaining({ surfaceStyle: 'glass' }));
     });
 });
+
+function createThemeServiceMock(): {
+    setTheme: ReturnType<typeof vi.fn>;
+    setUiStyle: ReturnType<typeof vi.fn>;
+    setSurfaceStyle: ReturnType<typeof vi.fn>;
+    surfaceStyle: ReturnType<typeof signal<string>>;
+    syncWithUserPreferences: ReturnType<typeof vi.fn>;
+} {
+    return {
+        setTheme: vi.fn(),
+        setUiStyle: vi.fn(),
+        setSurfaceStyle: vi.fn(),
+        surfaceStyle: signal('normal'),
+        syncWithUserPreferences: vi.fn(),
+    };
+}

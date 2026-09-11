@@ -82,7 +82,7 @@ describe('AppBootstrapService', () => {
         expect(localizationService.loadApplicationTranslationsAsync).toHaveBeenCalledTimes(2);
         expect(userService.getInfoSilently).toHaveBeenCalled();
         expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenCalledWith('ru');
-        expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('leaf', 'modern');
+        expect(themeService.syncWithUserPreferences).toHaveBeenCalledWith('leaf', 'modern', undefined);
     });
 
     it('skips user preference loading when session is anonymous', async () => {

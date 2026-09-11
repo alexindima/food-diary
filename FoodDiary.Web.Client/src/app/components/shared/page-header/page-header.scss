@@ -11,6 +11,9 @@
         margin-inline: 0;
         border-bottom: var(--fd-border-width) solid var(--fd-page-header-mobile-border-color);
         background: var(--fd-page-header-mobile-background);
+        backdrop-filter: var(--fd-surface-backdrop-filter);
+        -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
+        box-shadow: var(--fd-surface-highlight);
         --fd-bg-page: var(--fd-page-header-mobile-background);
     }
 }

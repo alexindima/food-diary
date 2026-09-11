@@ -24,7 +24,9 @@
     height: 100dvh;
     background: var(--fd-ui-sidebar-background);
     border-right: var(--fd-ui-sidebar-border);
-    box-shadow: var(--fd-ui-sidebar-shadow);
+    box-shadow: var(--fd-surface-highlight), var(--fd-ui-sidebar-shadow);
+    backdrop-filter: var(--fd-surface-backdrop-filter);
+    -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
     color: var(--fd-ui-sidebar-text);
     overflow: visible;
 }

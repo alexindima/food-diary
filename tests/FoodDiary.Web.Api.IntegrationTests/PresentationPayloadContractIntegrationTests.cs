@@ -257,6 +257,24 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     [Fact]
+    public async Task UserAppearance_SurfaceStyle_IsPersistedAndValidated() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        HttpResponseMessage saved = await client.PatchAsJsonAsync("/api/v1/users/preferences/appearance",
+            new { theme = "dark", uiStyle = "modern", surfaceStyle = "matte" });
+        Assert.Equal(HttpStatusCode.OK, saved.StatusCode);
+        HttpResponseMessage legacy = await client.PatchAsJsonAsync("/api/v1/users/preferences/appearance", new { theme = "leaf" });
+        Assert.Equal(HttpStatusCode.OK, legacy.StatusCode);
+        HttpResponseMessage invalid = await client.PatchAsJsonAsync("/api/v1/users/preferences/appearance", new { surfaceStyle = "unknown" });
+        Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+        using var info = JsonDocument.Parse(await client.GetStringAsync("/api/v1/users/info"));
+        Assert.Equal("matte", info.RootElement.GetProperty("surfaceStyle").GetString());
+        Assert.Equal("leaf", info.RootElement.GetProperty("theme").GetString());
+        Assert.Equal("modern", info.RootElement.GetProperty("uiStyle").GetString());
+    }
+
+    [Fact]
     public async Task UserOverview_AfterRegister_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);

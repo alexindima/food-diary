@@ -19,6 +19,10 @@
     margin: 0;
 }
 
+.dashboard-appearance-dialog__surface-toggle {
+    --fd-radius-toggle: var(--fd-radius-input);
+}
+
 .dashboard-appearance-dialog__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }

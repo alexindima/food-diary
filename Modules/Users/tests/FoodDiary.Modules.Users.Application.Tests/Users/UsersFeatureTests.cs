@@ -441,11 +441,45 @@ public partial class UsersFeatureTests {
         var user = User.Create("appearance-success@example.com", "hash");
         var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
 
-        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", "modern"), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", "modern", "matte"), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal("dark", result.Value.Theme);
         Assert.Equal("modern", result.Value.UiStyle);
+        Assert.Equal("matte", result.Value.SurfaceStyle);
+    }
+
+    [Fact]
+    public async Task UpdateUserAppearanceHandler_SurfaceOnly_PreservesThemeAndNormalizesMaterial() {
+        var user = User.Create("surface@example.com", "hash");
+        var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
+        Assert.Equal("normal", user.SurfaceStyle);
+        await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", "modern"), CancellationToken.None);
+
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, Theme: null, UiStyle: null, " GLASS "), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("glass", result.Value.SurfaceStyle);
+        Assert.Equal("dark", result.Value.Theme);
+        Assert.Equal("modern", result.Value.UiStyle);
+        Result<UserModel> legacyUpdate = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "leaf", UiStyle: null), CancellationToken.None);
+        Assert.Equal("glass", legacyUpdate.Value.SurfaceStyle);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("invalid")]
+    public async Task UpdateUserAppearanceHandler_InvalidSurface_DoesNotChangePreferences(string surfaceStyle) {
+        var user = User.Create("invalid-surface@example.com", "hash");
+        var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
+        string? originalTheme = user.Theme;
+
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", "modern", surfaceStyle), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Equal("normal", user.SurfaceStyle);
+        Assert.Equal(originalTheme, user.Theme);
     }
 
     [Fact]

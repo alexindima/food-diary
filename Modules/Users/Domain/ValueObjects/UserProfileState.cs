@@ -22,7 +22,8 @@ public readonly record struct UserProfileState(
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,
     int FastingCheckInReminderHours,
-    int FastingCheckInFollowUpReminderHours) {
+    int FastingCheckInFollowUpReminderHours,
+    string SurfaceStyle = "normal") {
     public static UserProfileState CreateInitial() {
         return new UserProfileState(
             Username: null,
@@ -67,5 +68,6 @@ public readonly record struct UserProfileState(
         FastingPushNotificationsEnabled,
         SocialPushNotificationsEnabled,
         FastingCheckInReminderHours,
-        FastingCheckInFollowUpReminderHours);
+        FastingCheckInFollowUpReminderHours,
+        SurfaceStyle);
 }

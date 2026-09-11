@@ -47,7 +47,8 @@ public static class UserHttpResponseMappings {
                 model.LastLoginAtUtc,
                 model.AiConsentAcceptedAt,
                 model.MustChangePassword,
-                model.HasGoogleIdentity
+                model.HasGoogleIdentity,
+                model.SurfaceStyle
             );
         }
     }

@@ -123,5 +123,6 @@
 
     .fd-ui-segmented-toggle--wrap-on-narrow .fd-ui-segmented-toggle__item {
         flex: 1 1 30%;
+        min-width: max-content;
     }
 }

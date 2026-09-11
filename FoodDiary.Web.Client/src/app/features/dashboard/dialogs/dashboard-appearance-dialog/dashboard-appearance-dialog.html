@@ -64,6 +64,29 @@
             </div>
         </section>
 
+        <section class="dashboard-appearance-dialog__section fd-stack fd-gap-sm" aria-labelledby="dashboard-appearance-surface-heading">
+            <h3 id="dashboard-appearance-surface-heading" class="dashboard-appearance-dialog__section-title fd-ui-card-title">
+                {{ 'DASHBOARD.APPEARANCE.SURFACE_LABEL' | translate }}
+            </h3>
+            <fd-ui-segmented-toggle
+                class="dashboard-appearance-dialog__surface-toggle"
+                appearance="soft"
+                [options]="appearance.surfaceStyles"
+                [selectedValue]="appearance.selectedSurfaceStyle()"
+                [ariaLabel]="'DASHBOARD.APPEARANCE.SURFACE_LABEL' | translate"
+                [fullWidth]="true"
+                [stackOnNarrow]="false"
+                [wrapOnNarrow]="true"
+                (selectedValueChange)="appearance.selectSurfaceStyle($event)"
+            />
+            <p class="dashboard-appearance-dialog__section-copy fd-ui-body-sm fd-ui-text-muted" aria-live="polite">
+                {{ appearance.surfaceDescriptionKey() | translate }}
+            </p>
+            <p class="dashboard-appearance-dialog__section-copy fd-ui-caption fd-ui-text-muted">
+                {{ 'DASHBOARD.APPEARANCE.SURFACE_DEVICE_HINT' | translate }}
+            </p>
+        </section>
+
         @if (appearance.submitError()) {
             <p class="dashboard-appearance-dialog__error" role="alert">{{ appearance.submitError() }}</p>
         }

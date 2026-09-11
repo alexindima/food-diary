@@ -61,6 +61,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public string? Language { get; private set; }
     public string? Theme { get; private set; }
     public string? UiStyle { get; private set; }
+    public string SurfaceStyle { get; private set; } = SurfaceStyleCode.Default.Value;
     public bool PushNotificationsEnabled { get; private set; }
     public bool FastingPushNotificationsEnabled { get; private set; }
     public bool SocialPushNotificationsEnabled { get; private set; }
@@ -307,7 +308,8 @@ public sealed partial class User : AggregateRoot<UserId> {
             FastingPushNotificationsEnabled,
             SocialPushNotificationsEnabled,
             FastingCheckInReminderHours,
-            FastingCheckInFollowUpReminderHours);
+            FastingCheckInFollowUpReminderHours,
+            SurfaceStyle);
     }
 
     private UserPersonalProfileState GetPersonalProfileState() {
@@ -338,6 +340,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         Language = state.Language;
         Theme = state.Theme;
         UiStyle = state.UiStyle;
+        SurfaceStyle = state.SurfaceStyle;
         PushNotificationsEnabled = state.PushNotificationsEnabled;
         FastingPushNotificationsEnabled = state.FastingPushNotificationsEnabled;
         SocialPushNotificationsEnabled = state.SocialPushNotificationsEnabled;

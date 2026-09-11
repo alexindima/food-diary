@@ -1,5 +1,13 @@
 export type AppThemeName = 'ocean' | 'leaf' | 'dark';
 export type AppUiStyleName = 'classic' | 'modern';
+export type AppSurfaceStyleName = 'normal' | 'matte' | 'glass';
+
+export const APP_SURFACE_STYLES: readonly AppSurfaceStyleName[] = ['normal', 'matte', 'glass'];
+export const DEFAULT_APP_SURFACE_STYLE: AppSurfaceStyleName = 'normal';
+
+export function isAppSurfaceStyleName(value: string | null | undefined): value is AppSurfaceStyleName {
+    return (APP_SURFACE_STYLES as readonly string[]).includes(value ?? '');
+}
 
 export type AppThemeDefinition = {
     name: AppThemeName;

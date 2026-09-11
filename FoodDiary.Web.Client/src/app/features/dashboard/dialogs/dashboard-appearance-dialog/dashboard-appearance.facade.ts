@@ -7,10 +7,13 @@ import { UserFacade } from '../../../../shared/lib/user.facade';
 import { UpdateUserAppearanceDto } from '../../../../shared/models/user.data';
 import { ThemeService } from '../../../../shared/theme/theme.service';
 import {
+    APP_SURFACE_STYLES,
     APP_THEMES,
     APP_UI_STYLES,
+    type AppSurfaceStyleName,
     type AppThemeName,
     type AppUiStyleName,
+    isAppSurfaceStyleName,
     isAppThemeName,
     isAppUiStyleName,
 } from '../../../../theme/app-theme.config';
@@ -39,14 +42,38 @@ export class DashboardAppearanceFacade {
         descriptionKey: `DASHBOARD.APPEARANCE.UI_STYLE_DESCRIPTION_${uiStyle.name.toUpperCase()}`,
     }));
     public readonly selectedTheme = signal<AppThemeName>(this.initialTheme);
+    public readonly surfaceStyles = APP_SURFACE_STYLES.map(value => ({
+        value,
+        labelKey: `DASHBOARD.APPEARANCE.SURFACE_${value.toUpperCase()}`,
+    }));
+    public readonly selectedSurfaceStyle = signal<AppSurfaceStyleName>(this.themeService.surfaceStyle());
+    public readonly persistedSurfaceStyle = signal<AppSurfaceStyleName>(this.themeService.surfaceStyle());
+    public readonly surfaceDescriptionKey = computed(
+        () => `DASHBOARD.APPEARANCE.SURFACE_DESCRIPTION_${this.selectedSurfaceStyle().toUpperCase()}`,
+    );
+
     public readonly selectedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
     public readonly persistedTheme = signal<AppThemeName>(this.initialTheme);
     public readonly persistedUiStyle = signal<AppUiStyleName>(this.initialUiStyle);
     public readonly isSaving = signal(false);
     public readonly submitError = signal<string | null>(null);
     public readonly hasChanges = computed(
-        () => this.selectedTheme() !== this.persistedTheme() || this.selectedUiStyle() !== this.persistedUiStyle(),
+        () =>
+            this.selectedTheme() !== this.persistedTheme() ||
+            this.selectedUiStyle() !== this.persistedUiStyle() ||
+            this.selectedSurfaceStyle() !== this.persistedSurfaceStyle(),
     );
+
+    public selectSurfaceStyle(value: string): void {
+        if (!isAppSurfaceStyleName(value) || value === this.selectedSurfaceStyle()) {
+            return;
+        }
+
+        this.selectedSurfaceStyle.set(value);
+        this.themeService.setSurfaceStyle(value);
+        this.submitError.set(null);
+        this.persistSelection();
+    }
 
     public selectTheme(theme: AppThemeName): void {
         if (this.selectedTheme() === theme) {
@@ -82,10 +109,13 @@ export class DashboardAppearanceFacade {
 
         const requestedTheme = this.selectedTheme();
         const requestedUiStyle = this.selectedUiStyle();
+        const requestedSurfaceStyle = this.selectedSurfaceStyle();
         this.isSaving.set(true);
 
         this.userFacade
-            .updateAppearance(new UpdateUserAppearanceDto({ theme: requestedTheme, uiStyle: requestedUiStyle }))
+            .updateAppearance(
+                new UpdateUserAppearanceDto({ theme: requestedTheme, uiStyle: requestedUiStyle, surfaceStyle: requestedSurfaceStyle }),
+            )
             .pipe(
                 finalize(() => {
                     this.isSaving.set(false);
@@ -106,9 +136,15 @@ export class DashboardAppearanceFacade {
                     const persistedUiStyle = isAppUiStyleName(user.uiStyle) ? user.uiStyle : requestedUiStyle;
                     this.persistedTheme.set(persistedTheme);
                     this.persistedUiStyle.set(persistedUiStyle);
+                    const persistedSurfaceStyle = isAppSurfaceStyleName(user.surfaceStyle) ? user.surfaceStyle : requestedSurfaceStyle;
+                    this.persistedSurfaceStyle.set(persistedSurfaceStyle);
 
-                    if (this.selectedTheme() === requestedTheme && this.selectedUiStyle() === requestedUiStyle) {
-                        this.themeService.syncWithUserPreferences(persistedTheme, persistedUiStyle);
+                    if (
+                        this.selectedTheme() === requestedTheme &&
+                        this.selectedUiStyle() === requestedUiStyle &&
+                        this.selectedSurfaceStyle() === requestedSurfaceStyle
+                    ) {
+                        this.themeService.syncWithUserPreferences(persistedTheme, persistedUiStyle, persistedSurfaceStyle);
                     }
                 },
                 error: () => {
@@ -121,7 +157,8 @@ export class DashboardAppearanceFacade {
         this.pendingPersist = false;
         this.selectedTheme.set(this.persistedTheme());
         this.selectedUiStyle.set(this.persistedUiStyle());
-        this.themeService.syncWithUserPreferences(this.persistedTheme(), this.persistedUiStyle());
+        this.selectedSurfaceStyle.set(this.persistedSurfaceStyle());
+        this.themeService.syncWithUserPreferences(this.persistedTheme(), this.persistedUiStyle(), this.persistedSurfaceStyle());
         this.submitError.set(this.translateService.instant('DASHBOARD.APPEARANCE.ERROR'));
     }
 }

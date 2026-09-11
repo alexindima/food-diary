@@ -160,7 +160,9 @@
     gap: var(--fd-space-menu-gap);
     padding: var(--fd-space-menu-padding);
     border-radius: var(--fd-radius-menu);
-    background: var(--fd-bg-surface-raised);
+    background: var(--fd-surface-popover-background);
+    backdrop-filter: var(--fd-surface-backdrop-filter);
+    -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
     border: var(--fd-border-subtle);
     box-shadow: var(--fd-shadow-xl);
     outline: none;

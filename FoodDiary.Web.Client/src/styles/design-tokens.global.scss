@@ -8,3 +8,57 @@
 
 @include design-tokens.fd-emit-ui-style-variables(classic, ':root, html[data-ui-style="classic"]');
 @include design-tokens.fd-emit-ui-style-variables(modern, 'html[data-ui-style="modern"]');
+
+// Surface material is independent of palette, radii and spacing.
+html[data-surface-style='matte'] {
+    --fd-color-surface: color-mix(in srgb, var(--fd-material-base-surface) 84%, var(--fd-color-slate-400));
+    --fd-color-surface-raised: var(--fd-color-surface);
+    --fd-color-surface-muted: var(--fd-material-base-muted);
+    --fd-bg-page: var(--fd-material-base-muted);
+    --fd-bg-body: var(--fd-bg-page);
+    --fd-bg-dialog: var(--fd-color-surface);
+    --fd-bg-sidebar: var(--fd-color-surface);
+    --fd-bg-surface-soft: var(--fd-bg-surface);
+    --fd-bg-surface-subtle: var(--fd-bg-surface);
+    --fd-bg-surface-elevated: var(--fd-bg-surface);
+    --fd-bg-surface-panel: var(--fd-bg-surface);
+    --fd-bg-surface-solid: var(--fd-bg-surface);
+    --fd-bg-surface-panel-gradient: var(--fd-bg-surface);
+    --fd-bg-card-editor-gradient: var(--fd-bg-surface);
+    --fd-bg-card-profile-gradient: var(--fd-bg-surface);
+    --fd-bg-stat-tile: var(--fd-bg-surface);
+    --fd-bg-media-card-raised: var(--fd-bg-surface);
+    --fd-bg-empty-state-surface: var(--fd-bg-surface-muted);
+    --fd-shadow-sm: 0 1px 2px color-mix(in srgb, var(--fd-color-slate-900) 5%, transparent);
+    --fd-shadow-md: 0 3px 10px color-mix(in srgb, var(--fd-color-slate-900) 7%, transparent);
+    --fd-shadow-lg: var(--fd-shadow-md);
+    --fd-shadow-xl: 0 8px 24px color-mix(in srgb, var(--fd-color-slate-900) 12%, transparent);
+    --fd-shadow-card-hover: var(--fd-shadow-md);
+    --fd-shadow-accent: var(--fd-shadow-sm);
+    --fd-shadow-accent-strong: var(--fd-shadow-sm);
+    --fd-shadow-accent-glow: 0 0 0 transparent;
+    --fd-shadow-highlight-inset-dialog: inset 0 0 0 transparent;
+    --fd-surface-navigation-background: var(--fd-bg-sidebar);
+    --fd-page-header-mobile-background: var(--fd-bg-dialog);
+    --fd-shadow-dialog-shell: var(--fd-shadow-md);
+    --fd-surface-dialog-shadow: var(--fd-shadow-md);
+    --fd-shadow-shell-sidebar: var(--fd-shadow-none);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) {
+        html[data-surface-style='glass'] {
+            // Content stays opaque: only floating surfaces blur what is behind them.
+            --fd-color-surface: color-mix(in srgb, var(--fd-material-base-surface) 94%, var(--fd-color-primary-500));
+            --fd-color-surface-raised: color-mix(in srgb, var(--fd-material-base-raised) 96%, var(--fd-color-primary-500));
+            --fd-surface-backdrop-filter: blur(20px) saturate(125%);
+            --fd-surface-highlight: inset 0 1px 0 color-mix(in srgb, var(--fd-color-white) 38%, transparent);
+            --fd-bg-dialog: color-mix(in srgb, var(--fd-color-dialog-surface) 86%, transparent);
+            --fd-bg-sidebar: color-mix(in srgb, var(--fd-color-surface) 86%, transparent);
+            --fd-surface-navigation-background: var(--fd-bg-sidebar);
+            --fd-surface-popover-background: color-mix(in srgb, var(--fd-material-base-raised) 88%, transparent);
+            --fd-page-header-mobile-background: var(--fd-bg-dialog);
+            --fd-color-dialog-border: color-mix(in srgb, var(--fd-color-text-muted) 35%, transparent);
+        }
+    }
+}

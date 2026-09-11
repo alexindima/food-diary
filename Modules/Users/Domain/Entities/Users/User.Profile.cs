@@ -112,7 +112,8 @@ public sealed partial class User {
             update.FastingPushNotificationsEnabled,
             update.SocialPushNotificationsEnabled,
             update.FastingCheckInReminderHours,
-            update.FastingCheckInFollowUpReminderHours)) {
+            update.FastingCheckInFollowUpReminderHours,
+            update.SurfaceStyle)) {
             SetModified();
         }
     }
@@ -256,7 +257,8 @@ public sealed partial class User {
         bool? fastingPushNotificationsEnabled,
         bool? socialPushNotificationsEnabled,
         int? fastingCheckInReminderHours,
-        int? fastingCheckInFollowUpReminderHours) {
+        int? fastingCheckInFollowUpReminderHours,
+        string? surfaceStyle = null) {
         UserPreferenceState state = GetPreferenceState();
 
         EnsureLanguage(language, nameof(language));
@@ -266,6 +268,13 @@ public sealed partial class User {
         EnsureReminderHours(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
 
         UserPreferenceState nextState = ApplyPreferenceTextChanges(state, dashboardLayoutJson, language, theme, uiStyle);
+        if (surfaceStyle is not null) {
+            if (!SurfaceStyleCode.TryParse(surfaceStyle, out SurfaceStyleCode parsedSurface)) {
+                throw new ArgumentOutOfRangeException(nameof(surfaceStyle), "Surface style must be one of the supported codes.");
+            }
+
+            nextState = nextState with { SurfaceStyle = parsedSurface.Value };
+        }
         nextState = ApplyNotificationPreferenceChanges(
             nextState,
             pushNotificationsEnabled,
