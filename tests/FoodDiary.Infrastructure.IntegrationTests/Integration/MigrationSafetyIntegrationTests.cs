@@ -83,18 +83,13 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             IMigrator migrator = legacyContext.GetService<IMigrator>();
             await migrator.MigrateAsync(BeforeFastingProtocolRenameMigration);
 
-            // The current EF model uses explicit unit names while this test intentionally
-            // seeds a schema from before that rename migration.
-            await legacyContext.Database.ExecuteSqlRawAsync("""
-                ALTER TABLE "Users" RENAME COLUMN "Weight" TO "WeightKg";
-                ALTER TABLE "Users" RENAME COLUMN "Height" TO "HeightCm";
-                ALTER TABLE "Users" RENAME COLUMN "DesiredWeight" TO "DesiredWeightKg";
-                ALTER TABLE "Users" RENAME COLUMN "DesiredWaist" TO "DesiredWaistCm";
-                ALTER TABLE "Users" ADD COLUMN "SecurityVersion" bigint NOT NULL DEFAULT 0;
-                """);
-
             var user = User.Create($"fasting-migration-{Guid.NewGuid():N}@example.com", "hash");
-            legacyContext.Users.Add(user);
+            // Seed the historical Users schema directly so later User properties do not
+            // require changing the schema under test before applying its migrations.
+            await legacyContext.Database.ExecuteSqlInterpolatedAsync($"""
+                INSERT INTO "Users" ("Id", "Email", "Password", "CreatedOnUtc", "ActivityLevel", "CalorieCyclingEnabled")
+                VALUES ({user.Id.Value}, {user.Email}, 'hash', {DateTime.UtcNow}, 'Sedentary', false);
+                """);
             legacyContext.FastingSessions.AddRange(protocols.Select(protocol =>
                 FastingSession.Create(user.Id, protocol, FastingSession.GetDefaultDuration(protocol), DateTime.UtcNow)));
             legacyContext.FastingPlans.Add(FastingPlan.CreateExtended(
@@ -107,14 +102,6 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
                 DateTime.UtcNow,
                 protocol: FastingProtocol.Fast24.ToString()));
             await legacyContext.SaveChangesAsync();
-
-            await legacyContext.Database.ExecuteSqlRawAsync("""
-                ALTER TABLE "Users" DROP COLUMN "SecurityVersion";
-                ALTER TABLE "Users" RENAME COLUMN "WeightKg" TO "Weight";
-                ALTER TABLE "Users" RENAME COLUMN "HeightCm" TO "Height";
-                ALTER TABLE "Users" RENAME COLUMN "DesiredWeightKg" TO "DesiredWeight";
-                ALTER TABLE "Users" RENAME COLUMN "DesiredWaistCm" TO "DesiredWaist";
-                """);
 
             await legacyContext.Database.ExecuteSqlRawAsync("""
                 UPDATE "FastingSessions"
