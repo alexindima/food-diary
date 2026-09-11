@@ -1,14 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace><IsPackable>false</IsPackable></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Outbox.Abstractions\FoodDiary.Outbox.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Outbox.Management.Contracts\FoodDiary.Outbox.Management.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
+    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
@@ -20,9 +25,15 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseCollection.cs" Link="Support/PostgresDatabaseCollection.cs" />
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs" Link="Support/PostgresDatabaseFixture.cs" />
   </ItemGroup>
-  <ItemGroup><Using Include="FoodDiary.Testing" /><Using Include="System.Diagnostics.CodeAnalysis" /><Using Include="Xunit" /></ItemGroup>
+
+  <ItemGroup>
+    <Using Include="FoodDiary.Testing" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="Xunit" />
+  </ItemGroup>
 </Project>

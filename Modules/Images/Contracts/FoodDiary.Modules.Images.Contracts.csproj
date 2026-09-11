@@ -1,5 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Domain</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Domain</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
   </ItemGroup>

@@ -6,14 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
+    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="../../../Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
-    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

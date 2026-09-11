@@ -1,10 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Infrastructure</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />

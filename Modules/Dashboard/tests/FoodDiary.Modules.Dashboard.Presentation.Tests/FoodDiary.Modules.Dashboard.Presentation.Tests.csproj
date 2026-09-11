@@ -4,23 +4,27 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
+    <ProjectReference Include="../../../Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
+    <ProjectReference Include="../../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../../Tdee/Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
-    <ProjectReference Include="../../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
-    <ProjectReference Include="../../../Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
-    <ProjectReference Include="../../Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
     <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />

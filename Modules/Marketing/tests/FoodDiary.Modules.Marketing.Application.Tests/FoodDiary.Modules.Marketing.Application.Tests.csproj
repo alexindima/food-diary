@@ -1,21 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Application.Tests</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Using Include="FoodDiary.Application.Tests.Support" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\..\..\..\tests\FoodDiary.Application.Tests\Support\ResultAssert.cs" Link="Support\ResultAssert.cs" />
-    <ProjectReference Include="..\..\Application\FoodDiary.Application.Marketing.csproj" />
-    <ProjectReference Include="../../../Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Application.Marketing.csproj" />
+    <ProjectReference Include="../../../Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
   </ItemGroup>
 </Project>

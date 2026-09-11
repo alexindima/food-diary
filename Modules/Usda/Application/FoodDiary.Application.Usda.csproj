@@ -3,19 +3,22 @@
     <AssemblyName>FoodDiary.Application.Usda</AssemblyName>
     <RootNamespace>FoodDiary.Application.Usda</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Abstractions/**/*.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Domain\FoodDiary.Modules.Usda.Domain.csproj" />
-    <ProjectReference Include="Abstractions\FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Contracts\FoodDiary.Modules.Usda.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Usda.Contracts.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Usda.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />

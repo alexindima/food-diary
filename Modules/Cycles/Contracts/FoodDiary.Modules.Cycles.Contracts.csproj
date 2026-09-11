@@ -1,9 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Application.Cycles</RootNamespace><NoWarn>$(NoWarn);IDE0130</NoWarn></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Application.Cycles</RootNamespace>
+    <NoWarn>$(NoWarn);IDE0130</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

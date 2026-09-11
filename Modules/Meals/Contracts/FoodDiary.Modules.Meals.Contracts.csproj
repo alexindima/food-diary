@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Application.Abstractions</RootNamespace><NoWarn>$(NoWarn);IDE0130</NoWarn></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Application.Abstractions</RootNamespace>
+    <NoWarn>$(NoWarn);IDE0130</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />

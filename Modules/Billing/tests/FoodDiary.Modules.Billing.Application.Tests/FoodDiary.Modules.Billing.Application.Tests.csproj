@@ -1,26 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><AssemblyName>FoodDiary.Application.Tests</AssemblyName><RootNamespace>FoodDiary.Application.Tests</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.Tests</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Using Include="FoodDiary.Application.Tests.Support" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\..\..\..\tests\FoodDiary.Application.Tests\Support\ResultAssert.cs" Link="Support\ResultAssert.cs" />
-    <ProjectReference Include="..\..\Application\FoodDiary.Application.Billing.csproj" />
-    <ProjectReference Include="..\..\..\..\Modules\Users\Application\FoodDiary.Modules.Users.Application.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Application.Billing.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../../Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

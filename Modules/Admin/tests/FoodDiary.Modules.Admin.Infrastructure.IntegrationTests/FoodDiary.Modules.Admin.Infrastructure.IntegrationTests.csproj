@@ -3,15 +3,17 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../../Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
-    <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
-    <ProjectReference Include="../../../Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
-    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
+    <ProjectReference Include="../../../Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
+    <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
@@ -23,9 +25,14 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseCollection.cs" Link="Support/PostgresDatabaseCollection.cs" />
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs" Link="Support/PostgresDatabaseFixture.cs" />
   </ItemGroup>
-  <ItemGroup><Using Include="FoodDiary.Testing" /><Using Include="Xunit" /></ItemGroup>
+
+  <ItemGroup>
+    <Using Include="FoodDiary.Testing" />
+    <Using Include="Xunit" />
+  </ItemGroup>
 </Project>

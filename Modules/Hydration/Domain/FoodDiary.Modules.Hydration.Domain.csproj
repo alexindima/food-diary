@@ -1,5 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Domain</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Domain</RootNamespace>
+  </PropertyGroup>
+
   <PropertyGroup>
     <NoWarn>$(NoWarn);RCS1170</NoWarn>
   </PropertyGroup>

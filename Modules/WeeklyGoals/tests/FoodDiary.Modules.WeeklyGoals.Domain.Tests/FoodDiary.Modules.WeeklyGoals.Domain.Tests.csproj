@@ -1,14 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Domain.Tests</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Domain.Tests</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
-  <ItemGroup><Using Include="Xunit" /></ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

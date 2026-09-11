@@ -3,9 +3,10 @@
     <AssemblyName>FoodDiary.Modules.Cycles.Application.Abstractions</AssemblyName>
     <RootNamespace>FoodDiary.Application.Abstractions.Cycles</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

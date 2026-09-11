@@ -3,24 +3,27 @@
     <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Infrastructure</AssemblyName>
     <RootNamespace>FoodDiary.Modules.OpenFoodFacts.Infrastructure</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Model/**/*.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Application\FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="Model\FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
-    <ProjectReference Include="../Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
+    <ProjectReference Include="Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-    <PackageReference Include="Npgsql" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Http" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="Npgsql" />
   </ItemGroup>
 </Project>

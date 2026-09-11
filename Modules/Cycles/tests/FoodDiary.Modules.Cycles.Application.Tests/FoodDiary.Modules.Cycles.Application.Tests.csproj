@@ -1,11 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Application.Tests</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
+    <ProjectReference Include="../../Application/FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\Application\FoodDiary.Application.Cycles.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
@@ -13,6 +17,7 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Using Include="FoodDiary.Application.Tests.Support" />
     <Using Include="NSubstitute" />

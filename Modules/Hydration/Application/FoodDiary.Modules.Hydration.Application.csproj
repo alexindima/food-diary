@@ -10,13 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Abstractions\FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Contracts\FoodDiary.Modules.Hydration.Contracts.csproj" />
-    <ProjectReference Include="..\Domain\FoodDiary.Modules.Hydration.Domain.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

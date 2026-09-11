@@ -2,15 +2,21 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Domain.Tests</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
-  <ItemGroup><Using Include="Xunit" /><Using Include="NSubstitute" /></ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="NSubstitute" />
+  </ItemGroup>
 </Project>

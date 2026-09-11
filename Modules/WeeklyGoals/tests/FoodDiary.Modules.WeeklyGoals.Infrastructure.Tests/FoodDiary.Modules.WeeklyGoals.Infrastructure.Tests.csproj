@@ -1,20 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.IntegrationTests.Integration</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Infrastructure.IntegrationTests.Integration</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="SSH.NET" />
     <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
-  <ItemGroup><Using Include="FoodDiary.Testing" /><Using Include="Xunit" /></ItemGroup>
+
   <ItemGroup>
+    <Using Include="FoodDiary.Testing" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="..\..\..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\..\tests\FoodDiary.Testing\FoodDiary.Testing.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Application.Abstractions.Dashboard</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />

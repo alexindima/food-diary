@@ -6,14 +6,17 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+    <ProjectReference Include="../Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj" />
   </ItemGroup>
 
 </Project>

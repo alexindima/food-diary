@@ -8,37 +8,37 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
-    <ProjectReference Include="..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
-    <ProjectReference Include="..\..\Modules\Users\Domain.Contracts\FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="..\..\Modules\Usda\Domain\FoodDiary.Modules.Usda.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Products\Domain\FoodDiary.Modules.Products.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Images\Domain\FoodDiary.Modules.Images.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Identity\Domain\FoodDiary.Modules.Identity.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Billing\Domain\FoodDiary.Modules.Billing.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\ContentReports\Domain\FoodDiary.Modules.ContentReports.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Gamification\Domain\FoodDiary.Modules.Gamification.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Wearables\Domain\FoodDiary.Modules.Wearables.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Dietologist\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Cycles\Domain\FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\OpenFoodFacts\Domain\FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\Notifications\Domain\FoodDiary.Modules.Notifications.Domain.csproj" />
-    <ProjectReference Include="..\..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
-    <ProjectReference Include="../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="../../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
+    <ProjectReference Include="../../Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
+    <ProjectReference Include="../../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj" />
+    <ProjectReference Include="../../Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
+    <ProjectReference Include="../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

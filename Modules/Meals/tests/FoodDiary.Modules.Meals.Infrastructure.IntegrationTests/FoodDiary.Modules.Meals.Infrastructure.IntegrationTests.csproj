@@ -1,13 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace><IsPackable>false</IsPackable></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
@@ -19,9 +24,14 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseCollection.cs" Link="Support/PostgresDatabaseCollection.cs" />
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs" Link="Support/PostgresDatabaseFixture.cs" />
   </ItemGroup>
-  <ItemGroup><Using Include="FoodDiary.Testing" /><Using Include="Xunit" /></ItemGroup>
+
+  <ItemGroup>
+    <Using Include="FoodDiary.Testing" />
+    <Using Include="Xunit" />
+  </ItemGroup>
 </Project>

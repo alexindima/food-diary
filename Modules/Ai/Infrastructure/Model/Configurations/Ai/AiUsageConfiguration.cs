@@ -23,11 +23,6 @@ internal sealed class AiUsageConfiguration : IEntityTypeConfiguration<AiUsage> {
             .IsRequired()
             .HasMaxLength(64);
 
-        builder.HasOne<global::FoodDiary.Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasIndex(e => e.UserId);
         builder.HasIndex(e => e.CreatedOnUtc);
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });

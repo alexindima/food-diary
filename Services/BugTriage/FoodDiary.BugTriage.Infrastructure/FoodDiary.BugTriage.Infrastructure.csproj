@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="Npgsql" />
     <PackageReference Include="MailKit" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Npgsql" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="../FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj" />
     <ProjectReference Include="../../MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />

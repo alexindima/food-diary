@@ -9,16 +9,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Admin.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="../../Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.Admin.Domain.csproj" />
+    <ProjectReference Include="../../Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,19 +4,22 @@
     <AssemblyName>FoodDiary.Application.Identity</AssemblyName>
     <RootNamespace>FoodDiary.Application.Identity</RootNamespace>
   </PropertyGroup>
-  <ItemGroup><Compile Remove="Abstractions/**/*.cs" /></ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.Identity.Domain.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
-    <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <Compile Remove="Abstractions/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Identity.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Audit.Contracts\FoodDiary.Audit.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Authentication.Contracts\FoodDiary.Authentication.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Email.Contracts\FoodDiary.Email.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

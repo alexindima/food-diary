@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FoodDiary.MailRelay.Application\FoodDiary.MailRelay.Application.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.MailRelay.Domain\FoodDiary.MailRelay.Domain.csproj" />
+    <ProjectReference Include="../../FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj" />
+    <ProjectReference Include="../../FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodDiary.MailInbox.Application\FoodDiary.MailInbox.Application.csproj" />
-    <ProjectReference Include="..\FoodDiary.MailInbox.Infrastructure\FoodDiary.MailInbox.Infrastructure.csproj" />
+    <ProjectReference Include="../FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />
+    <ProjectReference Include="../FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

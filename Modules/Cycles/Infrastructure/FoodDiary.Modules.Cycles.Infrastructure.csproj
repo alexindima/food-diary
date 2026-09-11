@@ -3,18 +3,21 @@
     <AssemblyName>FoodDiary.Modules.Cycles.Infrastructure</AssemblyName>
     <RootNamespace>FoodDiary.Modules.Cycles.Infrastructure</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Model/**/*.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="..\Application\FoodDiary.Application.Cycles.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="Model\FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Application.Cycles.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
+    <ProjectReference Include="Model/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>

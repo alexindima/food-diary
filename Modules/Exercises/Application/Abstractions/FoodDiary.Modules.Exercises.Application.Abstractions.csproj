@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Application.Abstractions</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Application.Abstractions</RootNamespace>
+  </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Exercises.Domain.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Exercises.Domain.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

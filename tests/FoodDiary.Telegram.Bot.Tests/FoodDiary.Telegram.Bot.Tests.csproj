@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FoodDiary.Telegram.Bot\FoodDiary.Telegram.Bot.csproj" />
+    <ProjectReference Include="../../FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj" />
   </ItemGroup>
 
 </Project>

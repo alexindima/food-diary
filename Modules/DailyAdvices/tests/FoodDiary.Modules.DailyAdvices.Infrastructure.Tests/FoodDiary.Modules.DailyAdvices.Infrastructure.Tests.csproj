@@ -1,11 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
-  <ItemGroup><Using Include="Xunit" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.DailyAdvices.Infrastructure.csproj" />
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" /></ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

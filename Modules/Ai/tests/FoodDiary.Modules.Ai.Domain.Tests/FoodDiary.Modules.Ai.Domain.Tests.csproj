@@ -1,10 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RootNamespace>FoodDiary.Domain.Tests</RootNamespace><IsPackable>false</IsPackable><IsTestProject>true</IsTestProject></PropertyGroup>
-  <ItemGroup><Using Include="Xunit" /><Using Include="NSubstitute" /></ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Domain.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="NSubstitute" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Ai.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />

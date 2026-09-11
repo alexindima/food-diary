@@ -1,7 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><AssemblyName>FoodDiary.Modules.Dietologist.Domain</AssemblyName><RootNamespace>FoodDiary.Domain</RootNamespace><NoWarn>$(NoWarn);RCS1170</NoWarn></PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Dietologist.Domain</AssemblyName>
+    <RootNamespace>FoodDiary.Domain</RootNamespace>
+    <NoWarn>$(NoWarn);RCS1170</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

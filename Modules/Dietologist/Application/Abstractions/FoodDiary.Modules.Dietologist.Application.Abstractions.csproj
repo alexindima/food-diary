@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><AssemblyName>FoodDiary.Modules.Dietologist.Application.Abstractions</AssemblyName><RootNamespace>FoodDiary.Application.Abstractions</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Dietologist.Application.Abstractions</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Abstractions</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>

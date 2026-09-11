@@ -3,6 +3,7 @@
     <AssemblyName>FoodDiary.Modules.Marketing.Domain</AssemblyName>
     <RootNamespace>FoodDiary.Domain</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>

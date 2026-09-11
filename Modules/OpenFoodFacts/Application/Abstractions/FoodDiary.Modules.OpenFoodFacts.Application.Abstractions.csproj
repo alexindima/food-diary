@@ -3,7 +3,8 @@
     <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Application.Abstractions</AssemblyName>
     <RootNamespace>FoodDiary.Application.Abstractions.OpenFoodFacts</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\Contracts\FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
   </ItemGroup>
 </Project>

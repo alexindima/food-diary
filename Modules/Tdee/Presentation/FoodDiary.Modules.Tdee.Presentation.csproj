@@ -10,9 +10,12 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Modules.Tdee.Application.csproj" />
   </ItemGroup>
 
 </Project>

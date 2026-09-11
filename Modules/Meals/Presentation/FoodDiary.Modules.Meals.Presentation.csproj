@@ -9,15 +9,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Meals.Application.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
-    <ProjectReference Include="../../Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj" />
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Modules.Meals.Application.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
+    <ProjectReference Include="../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

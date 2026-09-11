@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 251,
-    "documentationPages": 173
+    "documentationPages": 174
   },
   "dotnet": {
     "projects": [
@@ -111,6 +111,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
+          "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
           "Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
           "Modules/Billing/Infrastructure/Model/FoodDiary.Modules.Billing.PersistenceModel.csproj",
@@ -1190,8 +1191,8 @@
         "projectReferences": [
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
-          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -14236,6 +14237,7 @@
       "docs/ai/ai-module-extraction-wiki-findings.md",
       "docs/ai/ai-module-integration.md",
       "docs/ai/ai-ownership-inventory.md",
+      "docs/ai/ai-persistence-boundary.md",
       "docs/ai/application-abstractions-retirement-inventory.md",
       "docs/ai/application-abstractions-retirement-wiki-findings.md",
       "docs/ai/auth-storage-provider-ownership.md",

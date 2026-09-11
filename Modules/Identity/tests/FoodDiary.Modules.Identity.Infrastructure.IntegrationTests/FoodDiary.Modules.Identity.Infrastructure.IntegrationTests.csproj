@@ -3,12 +3,14 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
@@ -20,9 +22,14 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseCollection.cs" Link="Support/PostgresDatabaseCollection.cs" />
     <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs" Link="Support/PostgresDatabaseFixture.cs" />
   </ItemGroup>
-  <ItemGroup><Using Include="FoodDiary.Testing" /><Using Include="Xunit" /></ItemGroup>
+
+  <ItemGroup>
+    <Using Include="FoodDiary.Testing" />
+    <Using Include="Xunit" />
+  </ItemGroup>
 </Project>

@@ -10,12 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="..\Application\FoodDiary.Application.BodyMetrics.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="Model\FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Application.BodyMetrics.csproj" />
+    <ProjectReference Include="Model/FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

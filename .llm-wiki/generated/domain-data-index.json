@@ -7,7 +7,7 @@
     "invariants": 505,
     "persistenceMappings": 87,
     "indexes": 160,
-    "relationships": 100
+    "relationships": 96
   },
   "domainTypes": [
     {
@@ -5319,13 +5319,7 @@
       "entity": "AiQuotaPeriod",
       "table": null,
       "indexes": [],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "global::FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiQuotaPeriodConfiguration.cs"
     },
     {
@@ -5353,13 +5347,7 @@
         "e => e.UserId)",
         "e => new { e.UserId, e.CreatedOnUtc })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "global::FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiUsageConfiguration.cs"
     },
     {
@@ -5846,18 +5834,7 @@
         "x => new { x.UserId, x.CreatedOnUtc })",
         "x => x.UpdatedOnUtc)"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ").WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade)"
-        },
-        {
-          "kind": "HasOne",
-          "target": "ImageAsset",
-          "expression": ").WithMany().HasForeignKey(x => x.ImageAssetId).OnDelete(DeleteBehavior.ClientNoAction)"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/FoodRecognitionJobConfiguration.cs"
     },
     {

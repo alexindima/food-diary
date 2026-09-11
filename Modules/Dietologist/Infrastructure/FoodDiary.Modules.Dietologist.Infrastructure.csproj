@@ -1,13 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><AssemblyName>FoodDiary.Modules.Dietologist.Infrastructure</AssemblyName><RootNamespace>FoodDiary.Modules.Dietologist.Infrastructure</RootNamespace><NoWarn>$(NoWarn);IDE0130</NoWarn></PropertyGroup>
-  <ItemGroup><Compile Remove="Model/**/*.cs" /></ItemGroup>
-  <ItemGroup><PackageReference Include="Microsoft.EntityFrameworkCore" /><PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" /></ItemGroup>
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Dietologist.Infrastructure</AssemblyName>
+    <RootNamespace>FoodDiary.Modules.Dietologist.Infrastructure</RootNamespace>
+    <NoWarn>$(NoWarn);IDE0130</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="..\Application\FoodDiary.Modules.Dietologist.Application.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="Model\FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <Compile Remove="Model/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Dietologist.Application.csproj" />
+    <ProjectReference Include="Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

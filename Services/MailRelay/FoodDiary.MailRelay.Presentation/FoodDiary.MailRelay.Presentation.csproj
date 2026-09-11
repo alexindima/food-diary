@@ -5,8 +5,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodDiary.MailRelay.Application\FoodDiary.MailRelay.Application.csproj" />
-    <ProjectReference Include="..\FoodDiary.MailRelay.Client\FoodDiary.MailRelay.Client.csproj" />
+    <ProjectReference Include="../FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj" />
+    <ProjectReference Include="../FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj" />
   </ItemGroup>
 
 </Project>

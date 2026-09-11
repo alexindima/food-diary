@@ -1,20 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><AssemblyName>FoodDiary.Infrastructure.Tests</AssemblyName><RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace></PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Infrastructure.Tests</AssemblyName>
+    <RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Stripe.net" />
+    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Billing.Infrastructure.csproj" />
-    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

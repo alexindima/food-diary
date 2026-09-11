@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3813,
-    "symbols": 3753,
+    "sourceFiles": 3814,
+    "symbols": 3754,
     "interfaceImplementationLinks": 254,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1944,
+      "class": 1945,
       "enum": 63,
       "interface": 455,
       "record": 1170,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 68,
-      "Other": 1501,
+      "Other": 1502,
       "Query": 183,
       "QueryHandler": 136,
       "ReadModelRepository": 30,
@@ -566,6 +566,13 @@
       "line": 7
     },
     {
+      "name": "AiCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/AiCrossModuleRelationships.cs",
+      "line": 8
+    },
+    {
       "name": "EfUnitOfWork",
       "kind": "class",
       "role": "Other",
@@ -633,7 +640,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 22
+      "line": 23
     },
     {
       "name": "FoodDiaryDbContext",
@@ -4826,7 +4833,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/FoodRecognitionJobConfiguration.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "ModuleRegistration",

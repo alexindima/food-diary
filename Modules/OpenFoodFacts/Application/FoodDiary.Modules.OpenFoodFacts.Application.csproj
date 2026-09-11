@@ -3,15 +3,18 @@
     <AssemblyName>FoodDiary.Application.OpenFoodFacts</AssemblyName>
     <RootNamespace>FoodDiary.Application.OpenFoodFacts</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Abstractions/**/*.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="Abstractions\FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Contracts\FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />

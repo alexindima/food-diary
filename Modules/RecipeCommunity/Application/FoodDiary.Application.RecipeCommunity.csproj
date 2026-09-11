@@ -3,18 +3,23 @@
     <AssemblyName>FoodDiary.Application.RecipeCommunity</AssemblyName>
     <RootNamespace>FoodDiary.Application.RecipeCommunity</RootNamespace>
   </PropertyGroup>
-  <ItemGroup><Compile Remove="Abstractions/**/*.cs" /></ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
-    <ProjectReference Include="Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
-    <ProjectReference Include="../../Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <Compile Remove="Abstractions/**/*.cs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />

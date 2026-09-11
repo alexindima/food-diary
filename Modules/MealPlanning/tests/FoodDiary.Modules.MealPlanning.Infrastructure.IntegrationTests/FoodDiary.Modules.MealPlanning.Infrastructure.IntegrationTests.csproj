@@ -2,24 +2,27 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="SSH.NET" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="SSH.NET" />
     <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
+
   <ItemGroup>
     <Using Include="Xunit" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="FoodDiary.Testing" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 </Project>

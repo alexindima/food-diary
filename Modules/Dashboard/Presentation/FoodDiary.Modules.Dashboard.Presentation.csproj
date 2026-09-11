@@ -9,19 +9,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Dashboard.Application.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+    <ProjectReference Include="../../BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj" />
     <ProjectReference Include="../../Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj" />
+    <ProjectReference Include="../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <ProjectReference Include="../../Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj" />
     <ProjectReference Include="../../Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj" />
     <ProjectReference Include="../../Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj" />
     <ProjectReference Include="../../Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj" />
     <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
-    <ProjectReference Include="../../BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj" />
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Modules.Dashboard.Application.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

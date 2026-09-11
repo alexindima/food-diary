@@ -1,12 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup><Compile Remove="Model/**/*.cs" /></ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Application\FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="Model\FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
+    <Compile Remove="Model/**/*.cs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Application.Exercises.csproj" />
+    <ProjectReference Include="Model/FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />

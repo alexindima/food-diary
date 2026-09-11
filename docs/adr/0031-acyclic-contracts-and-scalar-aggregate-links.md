@@ -59,3 +59,7 @@ behavior. Removing CLR navigations changes EF metadata but requires no schema mi
 verify HasPendingModelChanges and existing PostgreSQL FK/cascade and projection tests.
 Run analyzer positive/negative/exception cases, architecture guards and affected
 application/domain/infrastructure suites in one consolidated verification batch.
+
+## AI persistence composition refinement
+
+The AI-only pilot in [AI persistence boundary](../ai/ai-persistence-boundary.md) moves its four foreign relationship mappings into shared Infrastructure composition. AI retains its owned model and scalar contracts, with no foreign Domain assembly references. Other module mappings and the shared-database decision remain unchanged.

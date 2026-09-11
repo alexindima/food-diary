@@ -9,12 +9,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Application.BodyMetrics.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+    <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

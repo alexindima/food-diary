@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodDiary.MailRelay.Application\FoodDiary.MailRelay.Application.csproj" />
-    <ProjectReference Include="..\FoodDiary.MailRelay.Infrastructure\FoodDiary.MailRelay.Infrastructure.csproj" />
-    <ProjectReference Include="..\FoodDiary.MailRelay.Presentation\FoodDiary.MailRelay.Presentation.csproj" />
+    <ProjectReference Include="../FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj" />
+    <ProjectReference Include="../FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj" />
+    <ProjectReference Include="../FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

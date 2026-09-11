@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodDiary.MailRelay.Application\FoodDiary.MailRelay.Application.csproj" />
+    <ProjectReference Include="../FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj" />
   </ItemGroup>
 
 </Project>

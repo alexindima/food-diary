@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5090,
+    "productionFiles": 5091,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 819,
@@ -3065,6 +3065,14 @@
       "structuralRiskScore": 13.38
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/AiCrossModuleRelationships.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -3194,11 +3202,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 60,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.16
+      "structuralRiskScore": 1.2
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -16522,11 +16530,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiQuotaPeriodConfiguration.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.34
     },
     {
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiQuotaReservationConfiguration.cs",
@@ -16538,19 +16546,19 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiUsageConfiguration.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.48
     },
     {
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/FoodRecognitionJobConfiguration.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",

@@ -3,6 +3,15 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class AiModuleExtractionTests {
     [Fact]
+    public void PersistenceModel_DoesNotReferenceForeignDomainAssemblies() {
+        Assert.DoesNotContain(
+            typeof(FoodDiary.Infrastructure.Persistence.AiPersistenceModelRegistration).Assembly.GetReferencedAssemblies(),
+            reference => reference.Name!.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal)
+                && reference.Name.EndsWith(".Domain", StringComparison.Ordinal)
+                && !string.Equals(reference.Name, "FoodDiary.Modules.Ai.Domain", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Admin_ConsumesSemanticAiCapabilitiesWithoutQuotaOrPromptRepositories() {
         string adminRoot = ArchitectureTestPaths.FromRoot("Modules", "Admin", "Application");
         Assert.NotEmpty(SourceScanner.SourceFiles(adminRoot));

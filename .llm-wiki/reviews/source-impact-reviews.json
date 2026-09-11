@@ -71,14 +71,14 @@
       "pageSha256": "19b4a19aacfe2c095a6a1dd83977162a2d3cc4f203f30f546a8eeb8ffffa5673",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "69a4bd947e2e2dd9ba2194eb343aef18c0b33c08f9b3014d90eeb2d7f1450b0f"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "f05041c84487ad9b82dd1749576c4912f57d32e97a8e448f2340afdea4026880"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed AI-only persistence composition against source: owned mappings remain in AI; four foreign FKs move to shared Infrastructure. Matrix replaces Users/Images Domain edges with ID contracts and adds direct Ai.Domain at composition. Runtime topology and owner write rules remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:02.4091458Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:49:26.6540378Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,13 +87,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "687dab10083512e74f634b767b175eacc8320ef99b3e2a266e833e8abb102974"
+          "sha256": "b4ec37b49a162758e62dccf14e553fb1f073e91796ba97040601f31600e0c63b"
         }
       ],
-      "reason": "Reviewed the Ai model ImageAsset FK edge, JobManager Ai application registration and narrow processor port, and explicit test references. The worker owns no HTTP transport, the Ai store mutates only Ai technical records, and all 1204 architecture tests pass; the layer overview remains accurate.",
+      "reason": "Reviewed AI-only persistence composition against source: owned mappings remain in AI; four foreign FKs move to shared Infrastructure. Matrix replaces Users/Images Domain edges with ID contracts and adds direct Ai.Domain at composition. Runtime topology and owner write rules remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:09:05.2153731Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:49:28.4612188Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -215,17 +215,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "6e8adf57e1d6bf0f105c4fd45ad302812f1b0f6f8621d5912c8cfb110ebe88dc"
+          "sha256": "54486b5ea926118096bb8426933ddfc3ddbc5fc12131e0880373e403708cc101"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "687dab10083512e74f634b767b175eacc8320ef99b3e2a266e833e8abb102974"
+          "sha256": "b4ec37b49a162758e62dccf14e553fb1f073e91796ba97040601f31600e0c63b"
         }
       ],
-      "reason": "Reviewed each changed matrix edge against current project references and the Ai-owned queue/image retention design. All 1204 architecture tests pass, including persistence capability and image lifecycle guards. No project removals or application module cycles were introduced; health-review guidance remains accurate.",
+      "reason": "Reviewed AI-only persistence composition against source: owned mappings remain in AI; four foreign FKs move to shared Infrastructure. Matrix replaces Users/Images Domain edges with ID contracts and adds direct Ai.Domain at composition. Runtime topology and owner write rules remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:09:09.0189461Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:49:30.0001771Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -505,13 +505,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "38e28a68c061e5a48dcf1a0a683a8c5af50e14ecf38e35fa2c502e0c07c226d9"
+          "sha256": "38a4d8d4a3d66179822e5ee4d7b9cfb9a6851d0a8a43e4bd75773d06c86823d9"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "f05041c84487ad9b82dd1749576c4912f57d32e97a8e448f2340afdea4026880"
         }
       ],
-      "reason": "Reviewed FoodRecognitionJob mapping, typed owner/image IDs, primary key, indexes and ClientNoAction/Cascade relationships. PostgreSQL tests prove admission and claim concurrency, terminal fencing, retention, and no pending model changes. Generated data inventory additions do not alter the domain-review workflow.",
+      "reason": "Reviewed moved typed FK declarations against their original configurations: three User Cascade links and one ImageAsset ClientNoAction link retain scalar keys and deletion semantics. No entity or scalar mapping changes; model equivalence and PostgreSQL regressions are the validation criteria.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:41.8029890Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:48:33.2766535Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -824,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b1d4a352c41d6d89c05fb77ceb91e71cf79260467dc35b6c9171b9db961a3cf0"
+          "sha256": "9ddf0fa5390349113796233546e1ac9c81e57bb1a4351d0f7c76e6431bbd65ce"
         }
       ],
-      "reason": "Reviewed generated hotspots as navigation leads. Actual tests cover PostgreSQL concurrency and expiry, mocked provider ordering, browser recovery and account switches; no coverage claim is inferred from static references. Quality-index additions leave this workflow accurate.",
+      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:51.4760267Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:51:05.4030650Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dd96302019bc652ffc739b476cfac33fd115f57571d5e30dced3d021ba2e7290"
+          "sha256": "7d46de8a19b35dd4612d13dca1f3a5742aa16e0495c8f47e99f4486ba5a1b936"
         }
       ],
-      "reason": "Reviewed worker and notifier lifecycle: durable claim commits before AI, provider work is outside DB retries, abandoned claims expire without replay, and late updates are fenced. HTTP polling recovers missed hints. Deployment order and rollback/draining are documented. Regenerated runtime inventory preserves the workflow limitations.",
+      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:53.8611148Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:51:23.8812140Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +918,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b1d4a352c41d6d89c05fb77ceb91e71cf79260467dc35b6c9171b9db961a3cf0"
+          "sha256": "9ddf0fa5390349113796233546e1ac9c81e57bb1a4351d0f7c76e6431bbd65ce"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dd96302019bc652ffc739b476cfac33fd115f57571d5e30dced3d021ba2e7290"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5df92806614f40556794c51df5923dd5f68d5033dcf199d89d54844fb4a68767"
+          "sha256": "7d46de8a19b35dd4612d13dca1f3a5742aa16e0495c8f47e99f4486ba5a1b936"
         }
       ],
-      "reason": "Reviewed owner-scoped store reads, authenticated hub, Premium start authorization, consent gates and bounded per-user admission. Twenty HTTP tests and PostgreSQL ownership checks pass; telemetry sanitization remains unchanged. Generated security leads are not claimed as a full security audit, matching the workflow.",
+      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:55.1909386Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:51:33.4091923Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1178,13 +1178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "64958943fda2db29f99f93fc8b38861b9a899d4a73b6d16bf56eca9034600aa8"
+          "sha256": "ee53a15182617d6ca4c8f179cba21e3e160b72588787d0cb1ee5e872c64c1749"
         }
       ],
-      "reason": "Reviewed repository-catalog additions for the new Ai slices, worker, SignalR hub and frontend service/history. Navigation ranking and SQLite query tooling are unchanged, and source paths were verified directly. Existing context-query guidance remains accurate.",
+      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:52.5774927Z"
+      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
+      "reviewedAtUtc": "2026-09-11T20:51:12.1570838Z"
     },
     {
       "pageId": "workflow.review-diff",

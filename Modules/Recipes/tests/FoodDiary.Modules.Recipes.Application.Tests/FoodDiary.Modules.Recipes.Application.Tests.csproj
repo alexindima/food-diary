@@ -2,30 +2,33 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <Using Include="Xunit" />
     <Using Include="NSubstitute" />
     <Using Include="FoodDiary.Application.Tests.Support" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
-    <ProjectReference Include="..\..\..\Products\Domain\FoodDiary.Modules.Products.Domain.csproj" />
-    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Application/FoodDiary.Modules.Recipes.Application.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../../Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
-    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
-    <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../Favorites/Application/FoodDiary.Application.Favorites.csproj" />
-    <ProjectReference Include="../../../Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.Recipes.Application.csproj" />
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj" />
+    <ProjectReference Include="../../../Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Favorites/Application/FoodDiary.Application.Favorites.csproj" />
+    <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
+    <ProjectReference Include="../../../Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
+    <ProjectReference Include="../../../RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Nutrition.Contracts\FoodDiary.Nutrition.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />

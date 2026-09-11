@@ -2,10 +2,12 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Infrastructure.Persistence.Email</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />

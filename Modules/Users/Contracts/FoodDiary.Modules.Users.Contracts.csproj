@@ -2,11 +2,12 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Application.Abstractions</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
   </ItemGroup>
 </Project>

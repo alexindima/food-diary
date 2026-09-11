@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Composition;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.MealPlanning.Infrastructure.Model;
 using FoodDiary.Infrastructure.Persistence.Audit;
@@ -57,5 +58,6 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyProductsPersistenceModel();
         modelBuilder.ApplyMealsPersistenceModel();
         modelBuilder.ApplyRecentItemsPersistenceModel();
+        AiCrossModuleRelationships.Configure(modelBuilder);
     }
 }

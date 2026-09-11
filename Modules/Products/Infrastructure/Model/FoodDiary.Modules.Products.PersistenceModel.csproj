@@ -2,14 +2,16 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Infrastructure.Persistence</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../../Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Products.Domain.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="../../../Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
+    <ProjectReference Include="../../../Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
