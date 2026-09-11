@@ -20,6 +20,32 @@ public sealed class OpenAiFoodServiceTests {
     private const string TextPrompt = "Parse text '{{userText}}'. {{languageHint}}";
     private const string NutritionPrompt = "Estimate nutrition for {{itemsJson}}.";
 
+    [Fact]
+    public async Task AnalyzeFoodImageAsync_PreservesDataUrlForTokenCountAndRecognition() {
+        const string dataUrl = "data:image/png;base64,AQID";
+        var requests = new List<string>();
+        using var httpClient = new HttpClient(new CapturingHttpMessageHandler(request => {
+            using var body = JsonDocument.Parse(CapturingHttpMessageHandler.LastRequestBody!);
+            JsonElement image = body.RootElement.GetProperty("input")[0].GetProperty("content")
+                .EnumerateArray().Single(item => string.Equals(item.GetProperty("type").GetString(), "input_image", StringComparison.Ordinal));
+            Assert.Equal(dataUrl, image.GetProperty("image_url").GetString());
+            string path = request.RequestUri!.AbsolutePath;
+            requests.Add(path);
+            return path.EndsWith("input_tokens", StringComparison.Ordinal)
+                ? CreateTokenCountResponse(100) : CreateVisionSuccessResponse();
+        }));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key", VisionModel = "vision-primary", VisionFallbackModel = "vision-fallback",
+        });
+
+        Result<AiProviderTokenBudget> budget = await client.GetAnalyzeFoodImageTokenBudgetAsync(dataUrl, "en", description: null, VisionPrompt, CancellationToken.None);
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(dataUrl, "en", description: null, VisionPrompt, CancellationToken.None);
+
+        Assert.True(budget.IsSuccess);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new[] { "/v1/responses/input_tokens", "/v1/responses/input_tokens", "/v1/responses" }, requests, StringComparer.Ordinal);
+    }
+
     [Theory]
     [InlineData("vision")]
     [InlineData("text")]

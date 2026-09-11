@@ -67,3 +67,5 @@ The AI-only pilot in [AI persistence boundary](../ai/ai-persistence-boundary.md)
 ## Scalar persistence boundary extension
 
 Hydration, RecentItems, Exercises and WeeklyGoals follow the AI pilot: their User foreign keys move to typed shared Infrastructure composition, preserving Cascade and the complete relational model. The models directly consume Users.Domain.Contracts. See [scalar persistence boundaries](../ai/scalar-persistence-boundaries.md).
+
+Images, Cycles, BodyMetrics and Wearables extend the same decision to six more User foreign keys. The shared composition references Wearables.Domain directly for its two mappings. All nine migrated models reject foreign Domain references; the shared database, owner lifecycle rules and relational schema remain unchanged.

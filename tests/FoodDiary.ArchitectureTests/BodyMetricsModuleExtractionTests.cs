@@ -51,7 +51,8 @@ public sealed class BodyMetricsModuleExtractionTests {
 
         foreach ((string feature, string navigation) in new[] { ("WeightEntry", "WeightEntries"), ("WaistEntry", "WaistEntries") }) {
             string configurationSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-                "Modules", "BodyMetrics", "Infrastructure", "Model", "Configurations", $"{feature}Configuration.cs"));
+                "FoodDiary.Infrastructure", "Persistence", "Composition", "BodyMetricsCrossModuleRelationships.cs"));
+            Assert.Contains($"modelBuilder.Entity<{feature}>().HasOne<User>()", configurationSource, StringComparison.Ordinal);
             Assert.Contains(".WithMany()", configurationSource, StringComparison.Ordinal);
             Assert.DoesNotContain($"u => u.{navigation}", configurationSource, StringComparison.Ordinal);
         }

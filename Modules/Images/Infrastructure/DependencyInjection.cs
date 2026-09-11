@@ -12,6 +12,7 @@ public static class DependencyInjection {
     public static IServiceCollection AddImagesInfrastructure(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ImagesUserDataPurgeParticipant>());
         services.AddScoped<IImageAssetOwnershipService, ImageAssetOwnershipService>();
+        services.AddScoped<IImageAssetContentService, ImageAssetContentService>();
         services.AddScoped<IUserProfileImageService, UserProfileImageService>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, ImageDeletionOutboxReplayStream>());
         services.AddScoped<IImageAssetCleanupBatch, ImageAssetCleanupBatch>();

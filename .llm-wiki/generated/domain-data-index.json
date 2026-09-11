@@ -7,7 +7,7 @@
     "invariants": 505,
     "persistenceMappings": 87,
     "indexes": 160,
-    "relationships": 92
+    "relationships": 86
   },
   "domainTypes": [
     {
@@ -5516,11 +5516,6 @@
       ],
       "relationships": [
         {
-          "kind": "HasOne",
-          "target": "global::FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        },
-        {
           "kind": "HasMany",
           "target": "",
           "expression": "e => e.Factors)"
@@ -5846,13 +5841,7 @@
       "entity": "ImageAsset",
       "table": null,
       "indexes": [],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs"
     },
     {
@@ -6593,13 +6582,7 @@
       "indexes": [
         "e => new { e.UserId, e.Date }).IsUnique()"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs"
     },
     {
@@ -6619,13 +6602,7 @@
       "indexes": [
         "e => new { e.UserId, e.Provider }).IsUnique()"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableConnectionConfiguration.cs"
     },
     {
@@ -6636,13 +6613,7 @@
         "e => new { e.UserId, e.Date })",
         "e => new { e.UserId, e.Provider, e.DataType, e.Date }).IsUnique()"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableSyncEntryConfiguration.cs"
     },
     {
@@ -6680,13 +6651,7 @@
       "indexes": [
         "e => new { e.UserId, e.Date }).IsUnique()"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs"
     },
     {

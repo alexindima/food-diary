@@ -10,6 +10,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Assets;
@@ -23,9 +24,9 @@ namespace FoodDiary.Application.Tests.Ai;
 public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageHandler_MapsExplicitForbiddenWithoutCallingProvider() {
-        IImageAssetAccessService images = Substitute.For<IImageAssetAccessService>();
-        images.ResolveOptionalAsync(Arg.Any<ImageAssetId?>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel?>(new Error("Image.Forbidden", "Denied", ErrorKind.Forbidden)));
+        IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
+        images.GetDataUrlAsync(Arg.Any<ImageAssetId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<string>(new Error("Image.Forbidden", "Denied", ErrorKind.Forbidden)));
         IOpenAiFoodService provider = CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls);
         var handler = new AnalyzeFoodImageCommandHandler(images, CreateAiUserContextService(user: null), provider);
 
@@ -80,7 +81,7 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var user = User.Create("ai-handler@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository()),
+            CreateImageContentService(CreateImageAssetRepository()),
             CreateAiUserContextService(user),
             CreateOpenAiFoodService());
 
@@ -96,7 +97,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository()),
+            CreateImageContentService(CreateImageAssetRepository()),
             CreateAiUserContextService(User.Create("ai-empty-image-user@example.com", "hash")),
             CreateOpenAiFoodService());
 
@@ -113,7 +114,7 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WhenImageAssetMissing_ReturnsImageNotFound() {
         var user = User.Create("ai-missing-image@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository()),
+            CreateImageContentService(CreateImageAssetRepository()),
             CreateAiUserContextService(user),
             CreateOpenAiFoodService());
 
@@ -131,7 +132,7 @@ public class AiValidatorsTests {
         var requester = User.Create("ai-image-requester@example.com", "hash");
         var asset = ImageAsset.Create(owner.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
+            CreateImageContentService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(requester),
             CreateOpenAiFoodService());
 
@@ -148,7 +149,7 @@ public class AiValidatorsTests {
         var user = User.Create("ai-invalid-image@example.com", "hash");
         var asset = ImageAsset.Create(user.Id, "images/invalid.jpg", "https://cdn.example.com/invalid.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
+            CreateImageContentService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(user),
             CreateOpenAiFoodService());
 
@@ -168,7 +169,7 @@ public class AiValidatorsTests {
         asset.Confirm();
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
+            CreateImageContentService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(user: null),
             openAiFoodService);
 
@@ -189,7 +190,7 @@ public class AiValidatorsTests {
         asset.Confirm();
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
+            CreateImageContentService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(user),
             openAiFoodService);
 
@@ -199,7 +200,7 @@ public class AiValidatorsTests {
 
         ResultAssert.Success(result);
         Assert.True(openAiCalls.WasAnalyzeFoodImageCalled);
-        Assert.Equal(asset.Url, openAiCalls.LastImageUrl);
+        Assert.Equal(TestImageDataUrl, openAiCalls.LastImageUrl);
         Assert.Equal("ru", openAiCalls.LastLanguage);
         Assert.Equal("dinner", openAiCalls.LastDescription);
     }
@@ -518,6 +519,19 @@ public class AiValidatorsTests {
         IAiUsageReadRepository aiUsageRepository,
         TimeProvider dateTimeProvider) =>
         new UserAiUsageSummaryReadService(aiUserContextService, aiUsageRepository, dateTimeProvider);
+
+    private const string TestImageDataUrl = "data:image/png;base64,AQID";
+
+    private static IImageAssetContentService CreateImageContentService(IImageAssetReadRepository repository) {
+        var access = new ImageAssetAccessService(repository);
+        IImageAssetContentService content = Substitute.For<IImageAssetContentService>();
+        content.GetDataUrlAsync(Arg.Any<ImageAssetId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(async call => {
+                Result<ImageAssetReadModel?> result = await access.ResolveOptionalAsync(call.ArgAt<ImageAssetId>(0), call.ArgAt<UserId>(1), call.ArgAt<CancellationToken>(2));
+                return result.IsFailure ? Result.Failure<string>(result.Error) : Result.Success(TestImageDataUrl);
+            });
+        return content;
+    }
 
     private static IImageAssetRepository CreateImageAssetRepository(ImageAsset? asset = null) {
         IImageAssetRepository repository = Substitute.For<IImageAssetRepository>();

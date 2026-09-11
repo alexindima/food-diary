@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 251,
-    "documentationPages": 175
+    "documentationPages": 176
   },
   "dotnet": {
     "projects": [
@@ -163,6 +163,7 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj",
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj",
           "Modules/Wearables/Infrastructure/Model/FoodDiary.Modules.Wearables.PersistenceModel.csproj",
           "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj",
           "Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj",
@@ -1806,7 +1807,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -2390,7 +2391,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -5757,6 +5758,7 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
@@ -5809,7 +5811,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj"
         ],
         "packageReferences": [
@@ -6004,7 +6006,9 @@
         "isTestProject": true,
         "projectReferences": [
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
+          "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
@@ -10298,7 +10302,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj"
         ],
         "packageReferences": [
@@ -14260,6 +14264,7 @@
       "docs/ai/export-pdf-infrastructure-extraction.md",
       "docs/ai/favorites-contracts-extraction.md",
       "docs/ai/feature-error-retirement.md",
+      "docs/ai/food-recognition-image-transport.md",
       "docs/ai/identity-authentication-adapters.md",
       "docs/ai/identity-domain-extraction.md",
       "docs/ai/identity-module-extraction-wiki-findings.md",

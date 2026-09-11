@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1149,
+    "contracts": 1150,
     "ambiguousContracts": 0,
-    "consumerEdges": 8191,
-    "productionConsumerEdges": 4860,
-    "testConsumerEdges": 3331,
-    "consumedContracts": 1149,
+    "consumerEdges": 8198,
+    "productionConsumerEdges": 4864,
+    "testConsumerEdges": 3334,
+    "consumedContracts": 1150,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -10512,6 +10512,23 @@
       ],
       "definitionPaths": [
         "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -71104,19 +71121,6 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageAssetAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -71380,19 +71384,6 @@
       "consumerPath": "Modules/Recipes/Application/Services/RecipeStepAppender.cs",
       "isTest": false,
       "referenceCount": 3
-    },
-    {
-      "contract": "IImageAssetAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IImageAssetAccessService",
@@ -71993,6 +71984,71 @@
       "referenceCount": 1
     },
     {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ModuleAggregateIsolationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IImageAssetOwnershipService",
       "roles": [
         "Service"
@@ -72105,7 +72161,33 @@
         "Modules/Images/Application/Abstractions/Common/IImageAssetReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Abstractions/Common/IImageAssetReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IImageAssetReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Abstractions/Common/IImageAssetReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/ImageAssetContentServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -80827,6 +80909,19 @@
         "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IObjectStorageClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/ImagesProviderRegistration.cs",
       "isTest": false,
       "referenceCount": 2
@@ -80869,6 +80964,19 @@
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IObjectStorageClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/ImageAssetContentServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IObjectStorageClient",
@@ -111301,7 +111409,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 31
+      "referenceCount": 32
     },
     {
       "contract": "OpenFoodFactsProductHttpResponse",

@@ -72,13 +72,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "86ec4386442a8d1d67fec393f58fa91b4acc50bf8ed4e8d50359cf51e2869bf3"
+          "sha256": "78c584ab4bd96e7cb23c8aa2cbf065aea623b1d2daa13f27220899ee5f67effe"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed central composition ownership and module guides: Images Cycles BodyMetrics Wearables keep owned scalar mappings, six User Cascade FKs move to central typed composers; no foreign writes or new runtime adapters.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:08.1895381Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T22:18:54.4011095Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,13 +87,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3a96447e2e82aca1b1d86469b8115592ce329dfddd3d22b790f1a1522a21bcaa"
+          "sha256": "dfca0b69a2196820b1111b5086f5cb7d1ec0097a16a84dc62611002a399428bf"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:11.3099044Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T23:00:46.4417980Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -214,14 +214,18 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "6b72a9e1c5adc5a6869225980a563abeca85318564c8f61d2a04bac15c6fbb93"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3a96447e2e82aca1b1d86469b8115592ce329dfddd3d22b790f1a1522a21bcaa"
+          "sha256": "dfca0b69a2196820b1111b5086f5cb7d1ec0097a16a84dc62611002a399428bf"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:15.1231999Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T23:00:46.7561366Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "67b49c0d5a79e207aed0edb86e227fdc034271d6a04f3d44bab757af08932a12"
+          "sha256": "549028435f33e8ed29317cd6354bd29cff724a4588c108b3e4a64fbf02679157"
         }
       ],
-      "reason": "Reviewed regenerated contract records against IFoodRecognitionJobStore, IFoodRecognitionProcessor, command/query handlers, DI registrations and HTTP mappings. Existing synchronous contracts are retained; actual processor and API tests pass. The consumer-review workflow remains accurate.",
+      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:38.9403428Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T23:00:47.4520079Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -501,17 +505,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "5197c6002a5c75b710bb85c5643039c73dde5e787349b4b636b11c5c59923626"
+          "sha256": "047e3b21e24356e94c30a420a678604f958e40831ad8db0fb9c40430c804408b"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "86ec4386442a8d1d67fec393f58fa91b4acc50bf8ed4e8d50359cf51e2869bf3"
+          "sha256": "78c584ab4bd96e7cb23c8aa2cbf065aea623b1d2daa13f27220899ee5f67effe"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed six moved UserId relationships, all Cascade with unchanged properties/indexes; domain-data index reflects central ownership. Runtime schema equivalence remains required in ModuleAggregateIsolationTests.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:17.9127841Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T22:18:59.4829754Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -824,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19e504fd1ed1f4a597753de357c12ea89c5232668b2fe24d83f788fdc0ddf297"
+          "sha256": "7e22d48ba4ece898f46f9a93216d33de58b951612ca296f159f87c53beafd82d"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:20.7034924Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T23:00:48.0532511Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dc57463449017c3eded8a5cdce8869de2f29c927560e6c26a7e89b8b0b8a485a"
+          "sha256": "0a146f58cc28aa519e09edad4a9e6311fc0fb5c5dc76ebf6ebce6c09affedc8f"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:37.6624722Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T23:00:48.6871734Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,17 +918,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19e504fd1ed1f4a597753de357c12ea89c5232668b2fe24d83f788fdc0ddf297"
+          "sha256": "7e22d48ba4ece898f46f9a93216d33de58b951612ca296f159f87c53beafd82d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dc57463449017c3eded8a5cdce8869de2f29c927560e6c26a7e89b8b0b8a485a"
+          "sha256": "0a146f58cc28aa519e09edad4a9e6311fc0fb5c5dc76ebf6ebce6c09affedc8f"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:41.7884085Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T23:00:49.1391356Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1174,13 +1178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c6be871efa0097ec68064ca1b32435facb251db239c5033e06efc5615fd438c8"
+          "sha256": "224116b0c9dbdc97819b50574049b72c280a2ae90bc563994896ccd6285ed059"
         }
       ],
-      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
+      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
       "baseRef": "HEAD",
-      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
-      "reviewedAtUtc": "2026-09-11T21:25:24.5208077Z"
+      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
+      "reviewedAtUtc": "2026-09-11T23:00:48.4101854Z"
     },
     {
       "pageId": "workflow.review-diff",

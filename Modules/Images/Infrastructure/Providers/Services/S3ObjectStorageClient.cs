@@ -19,6 +19,10 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             Verb = HttpVerb.PUT,
             Expires = expiresAt,
             ContentType = contentType,
+            Protocol = Uri.TryCreate(s3Client.Config.ServiceURL, UriKind.Absolute, out Uri? endpoint)
+                && string.Equals(endpoint.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase)
+                    ? Protocol.HTTP
+                    : Protocol.HTTPS,
         };
         request.Headers.ContentLength = contentLength;
 

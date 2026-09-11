@@ -63,6 +63,7 @@
     <ProjectReference Include="../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj" />
     <ProjectReference Include="../Modules/Wearables/Infrastructure/Model/FoodDiary.Modules.Wearables.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <ProjectReference Include="../Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />

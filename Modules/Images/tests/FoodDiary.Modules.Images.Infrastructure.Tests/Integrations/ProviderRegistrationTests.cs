@@ -59,7 +59,7 @@ public sealed class ProviderRegistrationTests {
     public void AddImagesProvider_ConfiguredStorageStillRequiresExplicitPublicAccess() {
         using ServiceProvider provider = new ServiceCollection().AddImagesProvider(Configuration("eu-central-1", endpoint: null, allowPublic: false)).BuildServiceProvider();
         OptionsValidationException error = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<S3Options>>().Value);
-        Assert.Equal(["S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users and external AI providers."], error.Failures, StringComparer.Ordinal);
+        Assert.Equal(["S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users."], error.Failures, StringComparer.Ordinal);
     }
 
     private static IConfiguration Configuration(string region, string? endpoint, bool allowPublic) =>

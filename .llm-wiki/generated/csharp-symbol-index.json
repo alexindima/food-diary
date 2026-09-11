@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3818,
-    "symbols": 3758,
-    "interfaceImplementationLinks": 254,
-    "dependencyInjectionRegistrations": 159,
+    "sourceFiles": 3824,
+    "symbols": 3764,
+    "interfaceImplementationLinks": 255,
+    "dependencyInjectionRegistrations": 160,
     "kinds": {
-      "class": 1949,
+      "class": 1954,
       "enum": 63,
-      "interface": 455,
+      "interface": 456,
       "record": 1170,
       "record struct": 121
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 68,
-      "Other": 1506,
+      "Other": 1510,
       "Query": 183,
       "QueryHandler": 136,
       "ReadModelRepository": 30,
@@ -40,7 +40,7 @@
       "Repository": 104,
       "Request": 139,
       "Response": 203,
-      "Service": 299,
+      "Service": 301,
       "Validator": 218,
       "ValueObject": 115,
       "WriteRepository": 46
@@ -573,6 +573,20 @@
       "line": 8
     },
     {
+      "name": "BodyMetricsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/BodyMetricsCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "CyclesCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/CyclesCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
       "name": "ExercisesCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
@@ -587,10 +601,24 @@
       "line": 6
     },
     {
+      "name": "ImagesCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/ImagesCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
       "name": "RecentItemsCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/RecentItemsCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "WearablesCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/WearablesCrossModuleRelationships.cs",
       "line": 6
     },
     {
@@ -4553,7 +4581,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "AnalyzeFoodImageCommandValidator",
@@ -6352,14 +6380,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WeightEntryConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ModuleRegistration",
@@ -14566,6 +14594,13 @@
       "line": 10
     },
     {
+      "name": "ImageAssetContentService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
+      "line": 11
+    },
+    {
       "name": "ImagesProviderRegistration",
       "kind": "class",
       "role": "Other",
@@ -14577,7 +14612,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ImageObjectDeletionOutboxMessageConfiguration",
@@ -14753,6 +14788,13 @@
       "role": "Service",
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
       "line": 6
+    },
+    {
+      "name": "IImageAssetContentService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs",
+      "line": 5
     },
     {
       "name": "ImageAssetIdParser",
@@ -23026,14 +23068,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableConnectionConfiguration.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "WearableSyncEntryConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableSyncEntryConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WearablesPersistenceModelRegistration",
@@ -27203,6 +27245,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IImageAssetContentService",
+      "interfacePath": "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs",
+      "implementation": "ImageAssetContentService",
+      "implementationPath": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IImageAssetOwnershipService",
       "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetOwnershipService.cs",
       "implementation": "ImageAssetOwnershipService",
@@ -28787,39 +28836,46 @@
       "line": 14
     },
     {
+      "service": "IImageAssetContentService",
+      "implementation": "ImageAssetContentService",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 15
+    },
+    {
       "service": "IUserProfileImageService",
       "implementation": "UserProfileImageService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 15
+      "line": 16
     },
     {
       "service": "IImageAssetCleanupBatch",
       "implementation": "ImageAssetCleanupBatch",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IImageAssetRepository",
       "implementation": "ImageAssetRepository",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 18
+      "line": 19
     },
     {
       "service": "IImageObjectDeletionOutbox",
       "implementation": "ImageObjectDeletionOutbox",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IImageObjectDeletionOutboxProcessor",
       "implementation": "ImageObjectDeletionOutboxProcessor",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "ILessonReadService",

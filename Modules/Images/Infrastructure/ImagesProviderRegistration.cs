@@ -22,7 +22,7 @@ public static class ImagesProviderRegistration {
             .Validate(S3Options.HasValidPublicBaseUrl,
                 "S3:PublicBaseUrl must be an absolute HTTP or HTTPS URL when provided.")
             .Validate(S3Options.HasExplicitPublicImageAccessPolicy,
-                "S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users and external AI providers.")
+                "S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users.")
             .Validate(S3Options.HasValidServiceUrl,
                 "S3:ServiceUrl must be an absolute HTTP or HTTPS URL when provided.")
             .ValidateOnStart();

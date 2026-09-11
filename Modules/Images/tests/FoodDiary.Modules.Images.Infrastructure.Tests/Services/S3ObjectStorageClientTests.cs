@@ -37,6 +37,9 @@ public sealed class S3ObjectStorageClientTests {
     public void GetPreSignedUploadUrl_BuildsPutRequestAndReturnsUrl() {
         GetPreSignedUrlRequest? capturedRequest = null;
         IAmazonS3 amazonS3 = CreateS3Client((method, args) => {
+            if (string.Equals(method.Name, "get_Config", StringComparison.Ordinal)) {
+                return new AmazonS3Config();
+            }
             if (string.Equals(method.Name, nameof(IAmazonS3.GetPreSignedURL), StringComparison.Ordinal) &&
                 args is [GetPreSignedUrlRequest request]) {
                 capturedRequest = request;
@@ -54,11 +57,40 @@ public sealed class S3ObjectStorageClientTests {
         Assert.NotNull(capturedRequest);
         Assert.Multiple(
             () => Assert.Equal("bucket", capturedRequest.BucketName),
+            () => Assert.Equal(Protocol.HTTPS, capturedRequest.Protocol),
             () => Assert.Equal("images/key.webp", capturedRequest.Key),
             () => Assert.Equal(HttpVerb.PUT, capturedRequest.Verb),
             () => Assert.Equal(expiresAt, capturedRequest.Expires),
             () => Assert.Equal("image/webp", capturedRequest.ContentType),
             () => Assert.Equal(1234, capturedRequest.Headers.ContentLength));
+    }
+
+    [Theory]
+    [InlineData("http://127.0.0.1:9000", "http", "127.0.0.1", 9000)]
+    [InlineData("https://storage.example.com:9443", "https", "storage.example.com", 9443)]
+    [InlineData(null, "https", "staging.s3.us-east-1.amazonaws.com", 443)]
+    public void GetPreSignedUploadUrl_PreservesConfiguredEndpointProtocol(
+        string? serviceUrl, string expectedScheme, string expectedHost, int expectedPort) {
+        var config = new AmazonS3Config {
+            RegionEndpoint = Amazon.RegionEndpoint.USEast1,
+            AuthenticationRegion = "us-east-1",
+            ForcePathStyle = serviceUrl is not null,
+        };
+        if (serviceUrl is not null) {
+            config.ServiceURL = serviceUrl;
+        }
+        using var amazonS3 = new AmazonS3Client("test-access", "test-secret", config);
+        var client = new S3ObjectStorageClient(amazonS3);
+
+        var url = new Uri(client.GetPreSignedUploadUrl(
+            "staging", "images/test.png", "image/png", 1234, DateTime.UtcNow.AddMinutes(15)));
+
+        Assert.Multiple(
+            () => Assert.Equal(expectedScheme, url.Scheme),
+            () => Assert.Equal(expectedHost, url.Host),
+            () => Assert.Equal(expectedPort, url.Port),
+            () => Assert.Equal(serviceUrl is null ? "/images/test.png" : "/staging/images/test.png", url.AbsolutePath),
+            () => Assert.Contains("X-Amz-Signature=", url.Query, StringComparison.Ordinal));
     }
 
     [Fact]

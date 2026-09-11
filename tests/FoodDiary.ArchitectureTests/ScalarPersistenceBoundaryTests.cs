@@ -1,3 +1,5 @@
+using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
+using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
@@ -8,6 +10,10 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class ScalarPersistenceBoundaryTests {
     [Theory]
     [InlineData(typeof(AiPersistenceModelRegistration), "Ai")]
+    [InlineData(typeof(ImagesPersistenceModelBuilderExtensions), "Images")]
+    [InlineData(typeof(CyclesPersistenceModelRegistration), "Cycles")]
+    [InlineData(typeof(BodyMetricsPersistenceModelRegistration), "BodyMetrics")]
+    [InlineData(typeof(WearablesPersistenceModelRegistration), "Wearables")]
     [InlineData(typeof(HydrationPersistenceModelRegistration), "Hydration")]
     [InlineData(typeof(RecentItemsPersistenceModelRegistration), "RecentItems")]
     [InlineData(typeof(ExercisesPersistenceModelRegistration), "Exercises")]

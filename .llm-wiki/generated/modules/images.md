@@ -43,14 +43,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 19
+- Public contract files: 20
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 19
-- Interfaces: 10
+- Public contract types: 20
+- Interfaces: 11
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
@@ -61,6 +61,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IImageAssetAccessService`
 - `interface IImageAssetCleanupBatch`
 - `interface IImageAssetCleanupService`
+- `interface IImageAssetContentService`
 - `interface IImageAssetOwnershipService`
 - `interface IImageAssetReadRepository`
 - `interface IImageAssetRepository`
@@ -90,6 +91,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/ImageAssetCleanupBatchTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/ImageAssetContentServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ImageStorageServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ObjectStorageClientTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/UserProfileImageServiceTests.cs`

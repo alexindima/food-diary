@@ -58,10 +58,18 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyProductsPersistenceModel();
         modelBuilder.ApplyMealsPersistenceModel();
         modelBuilder.ApplyRecentItemsPersistenceModel();
+        ConfigureCrossModuleRelationships(modelBuilder);
+    }
+
+    private static void ConfigureCrossModuleRelationships(ModelBuilder modelBuilder) {
         AiCrossModuleRelationships.Configure(modelBuilder);
         HydrationCrossModuleRelationships.Configure(modelBuilder);
         RecentItemsCrossModuleRelationships.Configure(modelBuilder);
         ExercisesCrossModuleRelationships.Configure(modelBuilder);
         WeeklyGoalsCrossModuleRelationships.Configure(modelBuilder);
+        ImagesCrossModuleRelationships.Configure(modelBuilder);
+        CyclesCrossModuleRelationships.Configure(modelBuilder);
+        BodyMetricsCrossModuleRelationships.Configure(modelBuilder);
+        WearablesCrossModuleRelationships.Configure(modelBuilder);
     }
 }

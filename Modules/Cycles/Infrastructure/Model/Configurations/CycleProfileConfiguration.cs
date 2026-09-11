@@ -34,11 +34,6 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
     }
 
     private static void ConfigureRelationships(EntityTypeBuilder<CycleProfile> builder) {
-        builder.HasOne<global::FoodDiary.Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasMany(e => e.Factors)
             .WithOne(e => e.CycleProfile)
             .HasForeignKey(e => e.CycleProfileId)
@@ -73,7 +68,6 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
             .WithOne(e => e.CycleProfile)
             .HasForeignKey(e => e.CycleProfileId)
             .OnDelete(DeleteBehavior.Cascade);
-
     }
 
     private static void ConfigureNavigations(EntityTypeBuilder<CycleProfile> builder) {
@@ -84,6 +78,5 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
         builder.Navigation(e => e.MenstrualEpisodes).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.Consents).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.PredictionRevisions).UsePropertyAccessMode(PropertyAccessMode.Field);
-
     }
 }

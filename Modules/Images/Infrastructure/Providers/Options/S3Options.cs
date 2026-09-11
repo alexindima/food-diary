@@ -45,7 +45,7 @@ public sealed class S3Options {
     public string? PublicBaseUrl { get; init; }
 
     /// <summary>
-    /// Explicitly acknowledges that stored image URLs must be reachable by users and external AI providers.
+    /// Explicitly acknowledges that stored image URLs must be reachable by users.
     /// Keep disabled unless the bucket or CDN access policy is intentionally public.
     /// </summary>
     public bool AllowPublicImageAccess { get; init; }

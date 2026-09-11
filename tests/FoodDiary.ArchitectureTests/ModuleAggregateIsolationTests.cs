@@ -55,6 +55,7 @@ public sealed class ModuleAggregateIsolationTests {
         Assert.Equal(
             new[] {
                 typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetAccessService),
+                typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetContentService),
                 typeof(FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel),
                 typeof(FoodDiary.Application.Images.Common.ImageAssetIdParser),
                 typeof(FoodDiary.Application.Images.Common.ImageAssetResolution),
