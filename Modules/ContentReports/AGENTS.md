@@ -7,3 +7,10 @@ ReportStatus and ReportTargetType live in `Domain/Enums` with the stable
 these types reference ContentReports Domain explicitly. Preserve string EF
 conversions and HTTP strings; moving the assembly owner requires coordinated
 consumer rebuilds. Central FoodDiary.Domain must not reference this module.
+
+## Scalar persistence boundary
+
+PersistenceModel uses Users.Domain.Contracts for UserId. Its foreign User Cascade
+relationship is composed by ContentReportsCrossModuleRelationships in central
+Infrastructure after owned models. Keep local mappings and same-owner relationships
+unchanged; do not restore a Users.Domain dependency to the model.

@@ -15,10 +15,6 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
         ConfigureStatusAndPeriods(builder);
         ConfigureIndexes(builder);
 
-        builder.HasOne<Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 
     private static void ConfigureIdentifiers(EntityTypeBuilder<BillingSubscription> builder) {

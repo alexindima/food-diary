@@ -107,3 +107,5 @@ Use `./scripts/Format-ProjectFiles.ps1` to format project groups and sort refere
 Hydration, RecentItems, Exercises and WeeklyGoals use the same scalar persistence boundary as AI: owned mappings stay local, typed User Cascade FKs live under Persistence/Composition and are installed after module registrations. ScalarPersistenceBoundaryTests and the exact matrix prohibit foreign Domain dependencies in these nine models. Preserve schema and lifecycle behavior; see docs/ai/scalar-persistence-boundaries.md.
 
 Images, Cycles, BodyMetrics and Wearables also use scalar persistence boundaries. Their six User Cascade FKs live in typed central composers; preserve owned mappings, user isolation and schema. Central Infrastructure references Wearables.Domain directly for its two entity mappings.
+
+ScalarPersistenceBoundaryTests now covers thirteen models, including ContentReports, Lessons, Gamification and Notifications. Preserve their five User Cascade FKs centrally and enforce snapshot equivalence through ModuleAggregateIsolationTests.

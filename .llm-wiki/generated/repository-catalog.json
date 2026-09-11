@@ -1509,7 +1509,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -2080,7 +2080,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -4124,7 +4124,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -4780,7 +4780,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj"
         ],
         "packageReferences": [
@@ -6191,7 +6191,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -7511,7 +7511,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj"
         ],
         "packageReferences": [

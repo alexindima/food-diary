@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5101,
+    "productionFiles": 5107,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 819,
@@ -3073,12 +3073,28 @@
       "structuralRiskScore": 0.52
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/BillingCrossModuleRelationships.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/BodyMetricsCrossModuleRelationships.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.32
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/ContentReportsCrossModuleRelationships.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/CyclesCrossModuleRelationships.cs",
@@ -3090,6 +3106,22 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/ExercisesCrossModuleRelationships.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/FastingCrossModuleRelationships.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/GamificationCrossModuleRelationships.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -3111,6 +3143,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.24
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/LessonsCrossModuleRelationships.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/NotificationsCrossModuleRelationships.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/RecentItemsCrossModuleRelationships.cs",
@@ -3266,11 +3314,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 71,
+      "nonBlankLines": 77,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.42
+      "structuralRiskScore": 1.54
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -17450,11 +17498,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Model/BillingPaymentConfiguration.cs",
-      "nonBlankLines": 77,
+      "nonBlankLines": 73,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.54
+      "structuralRiskScore": 1.46
     },
     {
       "path": "Modules/Billing/Infrastructure/Model/BillingPersistenceModelRegistration.cs",
@@ -17466,11 +17514,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Model/BillingSubscriptionConfiguration.cs",
-      "nonBlankLines": 73,
+      "nonBlankLines": 69,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.46
+      "structuralRiskScore": 1.38
     },
     {
       "path": "Modules/Billing/Infrastructure/Model/BillingWebhookEventConfiguration.cs",
@@ -18770,11 +18818,11 @@
     },
     {
       "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 29,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.68
+      "structuralRiskScore": 0.58
     },
     {
       "path": "Modules/ContentReports/Infrastructure/Model/ContentReportsPersistenceModelRegistration.cs",
@@ -24306,35 +24354,35 @@
     },
     {
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingCheckInConfiguration.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingOccurrenceConfiguration.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.92
+      "structuralRiskScore": 0.82
     },
     {
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingPlanConfiguration.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.54
     },
     {
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingTelemetryEventConfiguration.cs",
@@ -25674,11 +25722,11 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.54
     },
     {
       "path": "Modules/Gamification/Infrastructure/Model/GamificationPersistenceModelRegistration.cs",
@@ -28458,11 +28506,11 @@
     },
     {
       "path": "Modules/Lessons/Infrastructure/Model/Configurations/UserLessonProgressConfiguration.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.46
     },
     {
       "path": "Modules/Lessons/Infrastructure/Model/LessonsPersistenceModelRegistration.cs",
@@ -31778,11 +31826,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/Model/NotificationConfiguration.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.54
     },
     {
       "path": "Modules/Notifications/Infrastructure/Model/NotificationWebPushOutboxMessage.cs",
@@ -31810,11 +31858,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/Model/WebPushSubscriptionConfiguration.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 30,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
+      "structuralRiskScore": 0.6
     },
     {
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",

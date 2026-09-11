@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +20,6 @@ internal sealed class UserLessonProgressConfiguration : IEntityTypeConfiguration
             value => new NutritionLessonId(value));
 
         builder.HasIndex(e => new { e.UserId, e.LessonId }).IsUnique();
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(e => e.Lesson)
             .WithMany()

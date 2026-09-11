@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -33,9 +32,5 @@ internal sealed class FastingCheckInConfiguration : IEntityTypeConfiguration<Fas
             .HasForeignKey(checkIn => checkIn.OccurrenceId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(checkIn => checkIn.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

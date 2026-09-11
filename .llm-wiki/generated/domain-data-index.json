@@ -7,7 +7,7 @@
     "invariants": 505,
     "persistenceMappings": 87,
     "indexes": 160,
-    "relationships": 86
+    "relationships": 75
   },
   "domainTypes": [
     {
@@ -5375,11 +5375,6 @@
       "relationships": [
         {
           "kind": "HasOne",
-          "target": "Domain.Entities.Users.User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
           "target": "BillingSubscription",
           "expression": ")"
         }
@@ -5396,13 +5391,7 @@
         "e => new { e.Provider, e.ExternalPaymentMethodId })",
         "e => new { e.Provider, e.ExternalSubscriptionId })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "Domain.Entities.Users.User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Billing/Infrastructure/Model/BillingSubscriptionConfiguration.cs"
     },
     {
@@ -5468,13 +5457,7 @@
         "e => new { e.Status, e.CreatedOnUtc })",
         "e => new { e.UserId, e.TargetType, e.TargetId }).IsUnique()"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs"
     },
     {
@@ -5657,11 +5640,6 @@
           "kind": "HasOne",
           "target": "",
           "expression": "checkIn => checkIn.Occurrence)"
-        },
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
         }
       ],
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingCheckInConfiguration.cs"
@@ -5681,11 +5659,6 @@
       "relationships": [
         {
           "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
           "target": "",
           "expression": "occurrence => occurrence.Plan)"
         }
@@ -5700,13 +5673,7 @@
         "plan => new { plan.UserId, plan.Status })",
         "plan => plan.UserId)"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingPlanConfiguration.cs"
     },
     {
@@ -5717,13 +5684,7 @@
         "e => e.UserId)",
         "e => new { e.UserId, e.IsCompleted })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs"
     },
     {
@@ -6016,13 +5977,7 @@
         "e => e.UserId)",
         "e => new { e.UserId, e.IsRead })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Notifications/Infrastructure/Model/NotificationConfiguration.cs"
     },
     {
@@ -6461,13 +6416,7 @@
         "achievement => new { achievement.UserId, achievement.AchievementKey })",
         "achievement => new { achievement.UserId, achievement.EarnedAtUtc })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs"
     },
     {
@@ -6478,11 +6427,6 @@
         "e => new { e.UserId, e.LessonId }).IsUnique()"
       ],
       "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
         {
           "kind": "HasOne",
           "target": "",
@@ -6624,13 +6568,7 @@
         "e => e.Endpoint)",
         "e => e.UserId)"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Notifications/Infrastructure/Model/WebPushSubscriptionConfiguration.cs"
     },
     {

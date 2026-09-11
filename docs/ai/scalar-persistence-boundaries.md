@@ -13,3 +13,28 @@ No database migration, provider call, transaction change or deployment configura
 The same boundary now covers ImageAsset, CycleProfile, WeightEntry, WaistEntry, WearableConnection and WearableSyncEntry. Their six UserId foreign keys retain Cascade deletion in four typed central composers. All four PersistenceModel projects reference Users.Domain.Contracts. Central Infrastructure adds an explicit Wearables.Domain reference because it now consumes those entity types directly.
 
 ScalarPersistenceBoundaryTests covers all nine models. ModuleAggregateIsolationTests retains full relational snapshot equivalence. Focused PostgreSQL regression coverage exercises Images ownership/confirmation, Cycles aggregate deletion, BodyMetrics persistence and Wearables concurrent connection/sync creation. No migration, query, credential protection, provider call or transaction ownership changes are intended.
+
+## ContentReports, Lessons, Gamification and Notifications
+
+Four more models use Users.Domain.Contracts instead of Users.Domain. Four typed
+central composers preserve five UserId Cascade foreign keys: ContentReport,
+UserLessonProgress, UserAchievement, Notification and WebPushSubscription. Central
+Infrastructure already references their Domain assemblies. Same-owner lesson and
+notification-outbox relationships remain local. No domain, query, transaction,
+provider, API or schema changes are introduced.
+
+ScalarPersistenceBoundaryTests covers all thirteen isolated models. The relational
+snapshot-equivalence check and focused PostgreSQL report, lesson-progress,
+achievement and notification/subscription scenarios protect persistence behavior.
+
+## Fasting and Billing
+
+Both models replace Users.Domain with Users.Domain.Contracts. Central typed
+composers preserve six UserId Cascade foreign keys: FastingPlan, FastingOccurrence,
+FastingSession, FastingCheckIn, BillingSubscription and BillingPayment. Existing
+central Domain references suffice. Payment-to-subscription SetNull and same-owner
+Fasting relationships remain local. No migrations, provider calls, transaction
+changes or financial workflow changes are introduced.
+
+The compiled boundary guard covers fifteen models. Relational snapshot equivalence
+and focused PostgreSQL Fasting and Billing repository scenarios protect the move.

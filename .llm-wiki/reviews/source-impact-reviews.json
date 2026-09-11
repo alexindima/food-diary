@@ -72,13 +72,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "78c584ab4bd96e7cb23c8aa2cbf065aea623b1d2daa13f27220899ee5f67effe"
+          "sha256": "9fb990d8fa4d47292161e5b0f4bec2b8d726508b77f8277a4ecdfb11eaf778a6"
         }
       ],
-      "reason": "Reviewed central composition ownership and module guides: Images Cycles BodyMetrics Wearables keep owned scalar mappings, six User Cascade FKs move to central typed composers; no foreign writes or new runtime adapters.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T22:18:54.4011095Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:26.8174660Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,13 +87,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "dfca0b69a2196820b1111b5086f5cb7d1ec0097a16a84dc62611002a399428bf"
+          "sha256": "896e1541baaa27adc49b56820b7e618884326fe3e76c13c1eb5bd47bb45a8698"
         }
       ],
-      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T23:00:46.4417980Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:27.3675442Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -214,18 +214,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "6b72a9e1c5adc5a6869225980a563abeca85318564c8f61d2a04bac15c6fbb93"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "dfca0b69a2196820b1111b5086f5cb7d1ec0097a16a84dc62611002a399428bf"
+          "sha256": "896e1541baaa27adc49b56820b7e618884326fe3e76c13c1eb5bd47bb45a8698"
         }
       ],
-      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T23:00:46.7561366Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:28.5771195Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -505,17 +501,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "047e3b21e24356e94c30a420a678604f958e40831ad8db0fb9c40430c804408b"
+          "sha256": "4151fb10225cac32cb97d88a8bf58e5e23264cb0e8a2c5c8790423788281668a"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "78c584ab4bd96e7cb23c8aa2cbf065aea623b1d2daa13f27220899ee5f67effe"
+          "sha256": "9fb990d8fa4d47292161e5b0f4bec2b8d726508b77f8277a4ecdfb11eaf778a6"
         }
       ],
-      "reason": "Reviewed six moved UserId relationships, all Cascade with unchanged properties/indexes; domain-data index reflects central ownership. Runtime schema equivalence remains required in ModuleAggregateIsolationTests.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T22:18:59.4829754Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:29.5453024Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -828,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7e22d48ba4ece898f46f9a93216d33de58b951612ca296f159f87c53beafd82d"
+          "sha256": "9036198383419e5cd16591883ff0c27dbd50f315323daa9f147cba33ac716a15"
         }
       ],
-      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T23:00:48.0532511Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:30.3691281Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a146f58cc28aa519e09edad4a9e6311fc0fb5c5dc76ebf6ebce6c09affedc8f"
+          "sha256": "36013782459b5fb3ec9c05d16e108c336867de347c59af128680e13aa90f855b"
         }
       ],
-      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T23:00:48.6871734Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:31.5438816Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,17 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7e22d48ba4ece898f46f9a93216d33de58b951612ca296f159f87c53beafd82d"
+          "sha256": "9036198383419e5cd16591883ff0c27dbd50f315323daa9f147cba33ac716a15"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a146f58cc28aa519e09edad4a9e6311fc0fb5c5dc76ebf6ebce6c09affedc8f"
+          "sha256": "36013782459b5fb3ec9c05d16e108c336867de347c59af128680e13aa90f855b"
         }
       ],
-      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T23:00:49.1391356Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:32.2629507Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1178,13 +1174,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "224116b0c9dbdc97819b50574049b72c280a2ae90bc563994896ccd6285ed059"
+          "sha256": "47515eb1cf44176216d4eb84dccde874f750fd08b8ef55e60025beaff5359eaa"
         }
       ],
-      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
+      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T23:00:48.4101854Z"
+      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
+      "reviewedAtUtc": "2026-09-11T23:32:30.9881464Z"
     },
     {
       "pageId": "workflow.review-diff",

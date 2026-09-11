@@ -160,3 +160,7 @@ AI persistence boundary pilot: AI-owned entity configurations remain in its Pers
 Hydration, RecentItems, Exercises and WeeklyGoals use the same scalar persistence boundary as AI: owned mappings stay local, typed User Cascade FKs live under Persistence/Composition and are installed after module registrations. ScalarPersistenceBoundaryTests and the exact matrix prohibit foreign Domain dependencies in these nine models. Preserve schema and lifecycle behavior; see docs/ai/scalar-persistence-boundaries.md.
 
 Images, Cycles, BodyMetrics and Wearables also use scalar persistence boundaries. Their six User Cascade FKs live in typed central composers; preserve owned mappings, user isolation and schema. Central Infrastructure references Wearables.Domain directly for its two entity mappings.
+
+ContentReports, Lessons, Gamification and Notifications also use central typed relationship composers for five User Cascade FKs. Their thirteen-model guardrail includes these four PersistenceModel assemblies; keep all owned mappings and same-owner relationships local.
+
+Fasting and Billing extend the scalar boundary to fifteen models. Their six User Cascade FKs are configured in central typed composers. Preserve Billing payment-to-subscription SetNull and all same-owner Fasting mappings locally.

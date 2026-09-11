@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3824,
-    "symbols": 3764,
+    "sourceFiles": 3830,
+    "symbols": 3770,
     "interfaceImplementationLinks": 255,
     "dependencyInjectionRegistrations": 160,
     "kinds": {
-      "class": 1954,
+      "class": 1960,
       "enum": 63,
       "interface": 456,
       "record": 1170,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 68,
-      "Other": 1510,
+      "Other": 1516,
       "Query": 183,
       "QueryHandler": 136,
       "ReadModelRepository": 30,
@@ -573,10 +573,24 @@
       "line": 8
     },
     {
+      "name": "BillingCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/BillingCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
       "name": "BodyMetricsCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/BodyMetricsCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "ContentReportsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/ContentReportsCrossModuleRelationships.cs",
       "line": 6
     },
     {
@@ -594,6 +608,20 @@
       "line": 6
     },
     {
+      "name": "FastingCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/FastingCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "GamificationCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/GamificationCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
       "name": "HydrationCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
@@ -605,6 +633,20 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/ImagesCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "LessonsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/LessonsCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "NotificationsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/NotificationsCrossModuleRelationships.cs",
       "line": 6
     },
     {
@@ -6744,7 +6786,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ContentReportsPersistenceModelRegistration",
@@ -11511,28 +11553,28 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingCheckInConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FastingOccurrenceConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingOccurrenceConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FastingPlanConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingPlanConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FastingSessionConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FastingTelemetryEventConfiguration",
@@ -12687,7 +12729,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "GamificationPersistenceModelRegistration",
@@ -15088,7 +15130,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Lessons/Infrastructure/Model/Configurations/UserLessonProgressConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "LessonsPersistenceModelRegistration",
@@ -17944,7 +17986,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Notifications/Infrastructure/Model/NotificationConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "NotificationsPersistenceModelRegistration",
@@ -17972,7 +18014,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Notifications/Infrastructure/Model/WebPushSubscriptionConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ModuleRegistration",

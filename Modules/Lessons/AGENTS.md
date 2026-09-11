@@ -24,3 +24,10 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+## Scalar persistence boundary
+
+PersistenceModel uses Users.Domain.Contracts for UserId. Its foreign User Cascade
+relationship is composed by LessonsCrossModuleRelationships in central
+Infrastructure after owned models. Keep local mappings and same-owner relationships
+unchanged; do not restore a Users.Domain dependency to the model.

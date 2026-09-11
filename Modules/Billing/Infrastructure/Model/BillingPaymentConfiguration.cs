@@ -15,11 +15,6 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
         ConfigurePaymentDetails(builder);
         ConfigureIndexes(builder);
 
-        builder.HasOne<Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasOne<BillingSubscription>()
             .WithMany()
             .HasForeignKey(e => e.BillingSubscriptionId)

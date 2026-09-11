@@ -71,5 +71,11 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         CyclesCrossModuleRelationships.Configure(modelBuilder);
         BodyMetricsCrossModuleRelationships.Configure(modelBuilder);
         WearablesCrossModuleRelationships.Configure(modelBuilder);
+        ContentReportsCrossModuleRelationships.Configure(modelBuilder);
+        LessonsCrossModuleRelationships.Configure(modelBuilder);
+        GamificationCrossModuleRelationships.Configure(modelBuilder);
+        NotificationsCrossModuleRelationships.Configure(modelBuilder);
+        FastingCrossModuleRelationships.Configure(modelBuilder);
+        BillingCrossModuleRelationships.Configure(modelBuilder);
     }
 }
