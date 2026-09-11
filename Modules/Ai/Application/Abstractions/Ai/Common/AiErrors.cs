@@ -3,6 +3,15 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public static class AiErrors {
+    public static Error RecognitionNotFound() => new(
+        "Ai.RecognitionNotFound", "Recognition task was not found.", Kind: ErrorKind.NotFound);
+
+    public static Error RecognitionConflict() => new(
+        "Ai.RecognitionConflict", "Task identifier is already in use.", Kind: ErrorKind.Conflict);
+
+    public static Error RecognitionQueueFull() => new(
+        "Ai.RecognitionQueueFull", "Two recognition tasks are already pending.", Kind: ErrorKind.RateLimited);
+
     public static Error ImageNotFound(Guid id) => new(
         "Ai.ImageNotFound",
         $"Image asset with ID {id} was not found.",

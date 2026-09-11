@@ -64,6 +64,7 @@ public sealed class UserDataLifecycleGuardrailTests {
         string[] cascadeRelationships = [
             "AiQuotaPeriod(UserId):Cascade",
             "AiUsage(UserId):Cascade",
+            "FoodRecognitionJob(UserId):Cascade",
             "BillingPayment(UserId):Cascade",
             "BillingSubscription(UserId):Cascade",
             "ContentReport(UserId):Cascade",

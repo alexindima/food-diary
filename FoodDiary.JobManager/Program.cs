@@ -26,6 +26,7 @@ using System.Diagnostics.CodeAnalysis;
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplicationRuntime();
+builder.Services.AddAiModule();
 builder.Services.AddDietologistModule();
 builder.Services.AddFastingModule();
 builder.Services.AddFavoritesModule();
@@ -39,7 +40,7 @@ builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsModule();
 builder.Services.AddRecentItemsModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
+builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddBillingIntegrations(builder.Configuration)
     .AddAdminMailInboxIntegration(builder.Configuration)
@@ -64,6 +65,7 @@ builder.Services.AddHangfire((_, config) => {
 builder.Services.AddHangfireServer();
 builder.Services.AddSingleton<IRecurringJobRegistrationVerifier, HangfireRecurringJobRegistrationVerifier>();
 builder.Services.AddHostedService<RecurringJobsHostedService>();
+builder.Services.AddHostedService<FoodRecognitionWorker>();
 
 IHost app = builder.Build();
 

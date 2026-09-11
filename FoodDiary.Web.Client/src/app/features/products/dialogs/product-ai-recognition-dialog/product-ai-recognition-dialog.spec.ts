@@ -23,6 +23,7 @@ const CONFIDENCE = 0.95;
 let fixture: ComponentFixture<ProductAiRecognitionDialogComponent>;
 let component: ProductAiRecognitionDialogComponent;
 let productAiRecognitionFacade: {
+    resumeRecognition: ReturnType<typeof vi.fn>;
     analyzeFoodImage: ReturnType<typeof vi.fn>;
     calculateNutrition: ReturnType<typeof vi.fn>;
     deleteAsset: ReturnType<typeof vi.fn>;
@@ -32,6 +33,7 @@ let logger: { warn: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     productAiRecognitionFacade = {
+        resumeRecognition: vi.fn(),
         analyzeFoodImage: vi.fn(),
         calculateNutrition: vi.fn(),
         deleteAsset: vi.fn().mockReturnValue(of(null)),
@@ -179,23 +181,40 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
 });
 
 describe('ProductAiRecognitionDialogComponent close', () => {
-    it('deletes uploaded image asset and closes with null', () => {
+    it('preserves the uploaded image for background processing and closes', () => {
         component['onImageChanged'](createImageSelection());
 
         component['close']();
 
-        expect(productAiRecognitionFacade.deleteAsset).toHaveBeenCalledWith('asset-1');
+        expect(productAiRecognitionFacade.deleteAsset).not.toHaveBeenCalled();
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });
 
-    it('logs cleanup errors without blocking close', () => {
-        productAiRecognitionFacade.deleteAsset.mockReturnValueOnce(throwError(() => new Error('Delete failed')));
-        component['onImageChanged'](createImageSelection());
-
-        component['close']();
-
-        expect(logger.warn).toHaveBeenCalledWith('Failed to delete AI product image asset', expect.any(Error));
-        expect(dialogRef.close).toHaveBeenCalledWith(null);
+    it('recovers saved nutrition without repeating recognition or nutrition calls', () => {
+        productAiRecognitionFacade.resumeRecognition.mockReturnValue(
+            of({
+                items: [createVisionItem()],
+                recognition: { id: 'job-1', nutrition: createNutrition(), errorCode: null },
+            }),
+        );
+        component['onResumeRecognition']({
+            id: 'job-1',
+            imageAssetId: 'asset-1',
+            imageUrl: 'https://example.test/image.jpg',
+            description: 'apple',
+            status: 'Succeeded',
+            createdOnUtc: '2026-09-11T00:00:00Z',
+            updatedOnUtc: '2026-09-11T00:00:00Z',
+            vision: null,
+            nutrition: null,
+            errorCode: null,
+            nutritionErrorCode: null,
+        });
+        expect(productAiRecognitionFacade.resumeRecognition).toHaveBeenCalledWith('job-1');
+        expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(productAiRecognitionFacade.calculateNutrition).not.toHaveBeenCalled();
+        expect(component['nutrition']()).toEqual(createNutrition());
+        expect(component['selection']()?.assetId).toBe('asset-1');
     });
 });
 

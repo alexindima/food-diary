@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3791,
-    "symbols": 3731,
-    "interfaceImplementationLinks": 252,
-    "dependencyInjectionRegistrations": 158,
+    "sourceFiles": 3813,
+    "symbols": 3753,
+    "interfaceImplementationLinks": 254,
+    "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1931,
+      "class": 1944,
       "enum": 63,
-      "interface": 453,
-      "record": 1163,
+      "interface": 455,
+      "record": 1170,
       "record struct": 121
     },
     "roles": {
-      "Command": 163,
-      "CommandHandler": 159,
-      "Configuration": 90,
-      "Controller": 99,
+      "Command": 164,
+      "CommandHandler": 160,
+      "Configuration": 91,
+      "Controller": 100,
       "Entity": 94,
       "Event": 19,
       "Factory": 11,
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 68,
-      "Other": 1490,
-      "Query": 181,
-      "QueryHandler": 134,
+      "Other": 1501,
+      "Query": 183,
+      "QueryHandler": 136,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
       "Repository": 104,
-      "Request": 138,
-      "Response": 202,
+      "Request": 139,
+      "Response": 203,
       "Service": 299,
-      "Validator": 217,
+      "Validator": 218,
       "ValueObject": 115,
       "WriteRepository": 46
     }
@@ -857,7 +857,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 73
+      "line": 75
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -949,6 +949,13 @@
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/FastingTelemetryCleanupOptions.cs",
       "line": 2
+    },
+    {
+      "name": "FoodRecognitionWorker",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/FoodRecognitionWorker.cs",
+      "line": 4
     },
     {
       "name": "HangfireRecurringJobRegistrationVerifier",
@@ -4325,6 +4332,13 @@
       "line": 2
     },
     {
+      "name": "FoodRecognitionJobUpdate",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/FoodRecognitionJobUpdate.cs",
+      "line": 2
+    },
+    {
       "name": "IAiAdministrationReadService",
       "kind": "interface",
       "role": "Service",
@@ -4402,6 +4416,20 @@
       "line": 5
     },
     {
+      "name": "IFoodRecognitionJobStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs",
+      "line": 5
+    },
+    {
+      "name": "IFoodRecognitionProcessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs",
+      "line": 2
+    },
+    {
       "name": "IOpenAiFoodClient",
       "kind": "interface",
       "role": "Other",
@@ -4448,6 +4476,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodRecognitionJobModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodRecognitionJobModel.cs",
       "line": 2
     },
     {
@@ -4535,6 +4570,27 @@
       "line": 4
     },
     {
+      "name": "StartFoodRecognitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "StartFoodRecognitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "StartFoodRecognitionCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
+      "line": 4
+    },
+    {
       "name": "AiUserContext",
       "kind": "record",
       "role": "Other",
@@ -4563,6 +4619,20 @@
       "line": 9
     },
     {
+      "name": "GetFoodRecognitionQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetFoodRecognitionQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
+      "line": 7
+    },
+    {
       "name": "GetUserAiUsageSummaryQuery",
       "kind": "record",
       "role": "Query",
@@ -4582,6 +4652,20 @@
       "role": "Validator",
       "path": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "ListFoodRecognitionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ListFoodRecognitionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "AiAdministrationReadService",
@@ -4610,6 +4694,13 @@
       "role": "Other",
       "path": "Modules/Ai/Application/Services/ApplicationAiTelemetry.cs",
       "line": 5
+    },
+    {
+      "name": "FoodRecognitionProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
+      "line": 11
     },
     {
       "name": "OpenAiFoodService",
@@ -4689,6 +4780,13 @@
       "line": 2
     },
     {
+      "name": "FoodRecognitionJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Model/Ai/FoodRecognitionJob.cs",
+      "line": 4
+    },
+    {
       "name": "AiPersistenceModelRegistration",
       "kind": "class",
       "role": "Other",
@@ -4722,6 +4820,13 @@
       "role": "Configuration",
       "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiUsageConfiguration.cs",
       "line": 7
+    },
+    {
+      "name": "FoodRecognitionJobConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/FoodRecognitionJobConfiguration.cs",
+      "line": 9
     },
     {
       "name": "ModuleRegistration",
@@ -4759,11 +4864,18 @@
       "line": 8
     },
     {
+      "name": "FoodRecognitionJobStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
+      "line": 11
+    },
+    {
       "name": "AiUserDataPurgeParticipant",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "OpenAiOptions",
@@ -4798,7 +4910,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Presentation/Extensions/AiPresentationServiceCollectionExtensions.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "AiFoodController",
@@ -4815,6 +4927,13 @@
       "line": 14
     },
     {
+      "name": "FoodRecognitionController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "line": 22
+    },
+    {
       "name": "AiHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -4826,6 +4945,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Presentation/Features/Ai/Mappings/AiHttpResponseMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "FoodRecognitionHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
       "line": 7
     },
     {
@@ -4857,6 +4983,13 @@
       "line": 2
     },
     {
+      "name": "StartFoodRecognitionHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs",
+      "line": 2
+    },
+    {
       "name": "FoodNutritionHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -4868,6 +5001,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionItemHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodRecognitionJobHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
       "line": 2
     },
     {
@@ -4883,6 +5023,20 @@
       "role": "Response",
       "path": "Modules/Ai/Presentation/Features/Ai/Responses/UserAiUsageHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "FoodRecognitionHub",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Hubs/FoodRecognitionHub.cs",
+      "line": 7
+    },
+    {
+      "name": "FoodRecognitionNotifier",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Services/FoodRecognitionNotifier.cs",
+      "line": 9
     },
     {
       "name": "BillingErrors",
@@ -26944,6 +27098,20 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IFoodRecognitionJobStore",
+      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs",
+      "implementation": "FoodRecognitionJobStore",
+      "implementationPath": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IFoodRecognitionProcessor",
+      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs",
+      "implementation": "FoodRecognitionProcessor",
+      "implementationPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IGamificationReadService",
       "interfacePath": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
       "implementation": "GamificationReadService",
@@ -28035,7 +28203,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 65
+      "line": 66
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -28157,32 +28325,39 @@
       "line": 15
     },
     {
+      "service": "IFoodRecognitionProcessor",
+      "implementation": "FoodRecognitionProcessor",
+      "lifetime": "Scoped",
+      "path": "Modules/Ai/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
       "service": "IAiUserContextService",
       "implementation": "AiUserContextService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 16
+      "line": 17
     },
     {
       "service": "IAiAdministrationReadService",
       "implementation": "AiAdministrationReadService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IAiPromptAdministrationService",
       "implementation": "AiPromptAdministrationService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 19
     },
     {
       "service": "IUserAiUsageSummaryReadService",
       "implementation": "UserAiUsageSummaryReadService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 20
     },
     {
       "service": "IBillingOverviewReadService",

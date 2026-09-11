@@ -4,8 +4,11 @@
     [subtitle]="'MEAL_MANAGE.PHOTO_AI_DIALOG.SUBTITLE' | translate"
 >
     <div class="photo-ai-dialog fd-stack fd-gap-lg">
+        <div [hidden]="isEditMode()">
+            <fd-food-recognition-history (recognitionSelected)="onResumeRecognition($event)" />
+        </div>
         <fd-meal-photo-upload-panel
-            [initialSelection]="initialSelection"
+            [initialSelection]="initialSelection()"
             [statusKey]="statusKey()"
             [isLoading]="isLoading()"
             [isNutritionLoading]="isNutritionLoading()"
@@ -61,7 +64,7 @@
             <fd-ui-button
                 variant="primary"
                 fill="solid"
-                [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
+                [disabled]="!canAddToMeal()"
                 [disabledReason]="!nutrition() ? ('DISABLED_HINTS.SELECT_RECOGNITION' | translate) : null"
                 (click)="addToMeal()"
             >

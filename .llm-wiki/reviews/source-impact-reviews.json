@@ -22,26 +22,14 @@
       "pageSha256": "eaac3733a7811ffabb1a5249aafa3cb7f3f6e9f476b14ad0d231f371c4653e9d",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "ea1fe5a5840b8e60766310ff0864cd5213f423559671988c6be84521c3a6b885"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "69a4bd947e2e2dd9ba2194eb343aef18c0b33c08f9b3014d90eeb2d7f1450b0f"
-        },
-        {
           "path": "docs/README.md",
-          "sha256": "e06894c16cbe8ac81eb4630259fce77bcd52f73e6d9d154a9815423d6be7912e"
+          "sha256": "133aafccafe90493d99498aad3bb7771eb551badfbf060af996c6926c8dbe128"
         }
       ],
-      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
+      "reason": "Reviewed docs/README.md: the only documentation-index addition links the durable recognition runbook. Canonical entrypoints and the navigation/authority summary remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:03:28.1255944Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:09:01.1199278Z"
     },
     {
       "pageId": "module.frontend",
@@ -99,13 +87,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c15fde43bfc38ef678702614ee792b6c2d76d852bc0ed51cd4e3dd2c4ec64c55"
+          "sha256": "687dab10083512e74f634b767b175eacc8320ef99b3e2a266e833e8abb102974"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed the Ai model ImageAsset FK edge, JobManager Ai application registration and narrow processor port, and explicit test references. The worker owns no HTTP transport, the Ai store mutates only Ai technical records, and all 1204 architecture tests pass; the layer overview remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:32.9176549Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:09:05.2153731Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -143,18 +131,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
-        },
-        {
           "path": "docs/README.md",
-          "sha256": "e06894c16cbe8ac81eb4630259fce77bcd52f73e6d9d154a9815423d6be7912e"
+          "sha256": "133aafccafe90493d99498aad3bb7771eb551badfbf060af996c6926c8dbe128"
         }
       ],
-      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
+      "reason": "Reviewed the new recognition runbook and docs index entry. Operational facts remain in docs/backend/AI_RECOGNITION_JOBS.md; compiled Wiki remains navigation and does not change source authority or update policy.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:03:29.0125355Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:09:02.6528811Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -211,14 +195,18 @@
       "pageSha256": "45f240d45bcf663e9be82c91096f8f6328b896356cc41475ef898b25b39ca7e8",
       "sources": [
         {
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "58af4aeafb78783e88a3ab1e172b28d016f475ad80c92aa76fcf48ca189cfa99"
+        },
+        {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "30bbfd6447318a71a1f6485bce765163f5ce40d488a919ccb3f35f4ecea238b3"
+          "sha256": "a72847b5225855e566e2a8c8c0b8b8b261d81c41f23044a5da5b38a2b64a8eae"
         }
       ],
-      "reason": "Optional SurfaceStyle request and defaulted response are additive. Updated OpenAPI and payload key snapshots; 19 API tests passed including legacy omitted field preservation and invalid value validation.",
+      "reason": "Reviewed the full OpenAPI snapshot: 257 additive lines introduce recognition start/list/get and their schemas. Existing synchronous routes and payloads remain unchanged. All 20 focused Swagger and recognition authorization tests pass; the documented compatibility workflow still applies.",
       "baseRef": "HEAD",
-      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
-      "reviewedAtUtc": "2026-09-10T22:21:22.5817461Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:09:06.6347824Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -227,13 +215,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "43ffe8d47fbae29333716275d8609ac3bc531e8382a6f5dbc38da62b7ceb96fe"
+          "sha256": "6e8adf57e1d6bf0f105c4fd45ad302812f1b0f6f8621d5912c8cfb110ebe88dc"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "687dab10083512e74f634b767b175eacc8320ef99b3e2a266e833e8abb102974"
         }
       ],
-      "reason": "Reviewed invocation-local architecture lookup optimization and UTF-8 path ordering; architecture old/new full outputs are byte-identical and dependency enforcement/removal-candidate semantics are unchanged. Read-only guard regression now covers fresh warm-cache processes, stale native status and actual exit code 7, while preserving mutation rejection and source isolation. Full content hashing and snapshot reuse boundaries remain intact.",
+      "reason": "Reviewed each changed matrix edge against current project references and the Ai-owned queue/image retention design. All 1204 architecture tests pass, including persistence capability and image lifecycle guards. No project removals or application module cycles were introduced; health-review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T02:57:51.0447199Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:09:09.0189461Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -242,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "9bfeaa6592df002de731cc9e1e519bc462a0ecd5727d7c0b1c4f746ba73391bb"
+          "sha256": "67b49c0d5a79e207aed0edb86e227fdc034271d6a04f3d44bab757af08932a12"
         }
       ],
-      "reason": "Reviewed UserModel and HTTP response mapping, appearance command handler and login/bootstrap/profile consumers. SurfaceStyle defaults normal and omitted PATCH fields preserve the stored value; API and Users tests passed.",
+      "reason": "Reviewed regenerated contract records against IFoodRecognitionJobStore, IFoodRecognitionProcessor, command/query handlers, DI registrations and HTTP mappings. Existing synchronous contracts are retained; actual processor and API tests pass. The consumer-review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
-      "reviewedAtUtc": "2026-09-10T22:21:24.3060445Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:38.9403428Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -513,13 +505,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "2077bdbb627ed4ec9b474ea3c31ecbc927ffcd71fb60cdb37497d6ff8f44423d"
+          "sha256": "38e28a68c061e5a48dcf1a0a683a8c5af50e14ecf38e35fa2c502e0c07c226d9"
         }
       ],
-      "reason": "SurfaceStyleCode validates three normalized values; aggregate rejects invalid values atomically. Additive varchar(16) normal-default migration with Designer and snapshot; 37 PostgreSQL integration tests and 285 domain tests passed; EF reports no pending model changes.",
+      "reason": "Reviewed FoodRecognitionJob mapping, typed owner/image IDs, primary key, indexes and ClientNoAction/Cascade relationships. PostgreSQL tests prove admission and claim concurrency, terminal fencing, retention, and no pending model changes. Generated data inventory additions do not alter the domain-review workflow.",
       "baseRef": "HEAD",
-      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
-      "reviewedAtUtc": "2026-09-10T22:21:21.9213541Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:41.8029890Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -787,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4fc7c66f318a54052da65ffab1c8d5a2e0942109d6bd4edeaf668aeb9157a490"
+          "sha256": "5df92806614f40556794c51df5923dd5f68d5033dcf199d89d54844fb4a68767"
         }
       ],
-      "reason": "Only the requested account appearance preference is added to the existing User record and authenticated response. No credentials, health payloads, providers, logs or permission boundaries are changed. Local cache is replaced from the account profile, with legacy accounts resetting to normal.",
+      "reason": "Reviewed persisted photo references, descriptions and AI results: owner-scoped GETs, consent checks, seven-day terminal retention and user purge are explicit. SignalR sends IDs only; browser stores user-scoped pending IDs and a request hash. Existing provider sharing is unchanged and logs carry no result body. Privacy workflow semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
-      "reviewedAtUtc": "2026-09-10T22:21:25.0477977Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:49.6837877Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -832,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "af3b342eaf78742c92e338412696ca85563b93eca77c09009b2a72b36c428085"
+          "sha256": "b1d4a352c41d6d89c05fb77ceb91e71cf79260467dc35b6c9171b9db961a3cf0"
         }
       ],
-      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
+      "reason": "Reviewed generated hotspots as navigation leads. Actual tests cover PostgreSQL concurrency and expiry, mocked provider ordering, browser recovery and account switches; no coverage claim is inferred from static references. Quality-index additions leave this workflow accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
-      "reviewedAtUtc": "2026-09-11T08:30:20.9814162Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:51.4760267Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -907,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d2e6a51b3e6985e1c8089278c63f54bb1a3dd669fc4c91fb0e0f5e102527aae3"
+          "sha256": "dd96302019bc652ffc739b476cfac33fd115f57571d5e30dced3d021ba2e7290"
         }
       ],
-      "reason": "No new services, jobs, external clients or retry policies. Deploy additive migration before updated API and frontend; do not drop the column for application rollback. No production deployment or migration executed.",
+      "reason": "Reviewed worker and notifier lifecycle: durable claim commits before AI, provider work is outside DB retries, abandoned claims expire without replay, and late updates are fenced. HTTP polling recovers missed hints. Deployment order and rollback/draining are documented. Regenerated runtime inventory preserves the workflow limitations.",
       "baseRef": "HEAD",
-      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
-      "reviewedAtUtc": "2026-09-10T22:21:23.2708229Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:53.8611148Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -922,13 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "af3b342eaf78742c92e338412696ca85563b93eca77c09009b2a72b36c428085"
+          "sha256": "b1d4a352c41d6d89c05fb77ceb91e71cf79260467dc35b6c9171b9db961a3cf0"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "dd96302019bc652ffc739b476cfac33fd115f57571d5e30dced3d021ba2e7290"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "5df92806614f40556794c51df5923dd5f68d5033dcf199d89d54844fb4a68767"
         }
       ],
-      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
+      "reason": "Reviewed owner-scoped store reads, authenticated hub, Premium start authorization, consent gates and bounded per-user admission. Twenty HTTP tests and PostgreSQL ownership checks pass; telemetry sanitization remains unchanged. Generated security leads are not claimed as a full security audit, matching the workflow.",
       "baseRef": "HEAD",
-      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
-      "reviewedAtUtc": "2026-09-11T08:30:21.9208772Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:55.1909386Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1061,17 +1061,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "26a08cde038c99a4a2bdaef1cd39b85ef707ded1eee230633250eb9040109ce9"
+          "sha256": "f0fd2b5fb7de7489945cc279dd70c64319f6d52f6400ba8b2dfc956737951db6"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "6ead12959a58fb2d98a9004974c11708758980948c5cb52437f038cb6e3cfd10"
+          "sha256": "4e88cd21552c772a60c63d020ecdda46fd1d11ca94db2b45161b242ed63b27df"
         }
       ],
-      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
+      "reason": "Traced photo recognition through AiFoodService, facades, meal/product dialogs, StartFoodRecognition handler, store, processor and existing AI commands. Generated frontend links were verified in current source; the tracing workflow and its static-evidence limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
-      "reviewedAtUtc": "2026-09-11T08:30:22.6833621Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:56.5564888Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1163,28 +1163,28 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "26a08cde038c99a4a2bdaef1cd39b85ef707ded1eee230633250eb9040109ce9"
+          "sha256": "f0fd2b5fb7de7489945cc279dd70c64319f6d52f6400ba8b2dfc956737951db6"
         }
       ],
-      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
+      "reason": "Reviewed recognitionSelected event consumers, controlled image selection, optional recognition response metadata, loading/reset behavior and both locales. Frontend build, scoped ESLint, i18n and 35 focused tests pass. Existing contract-review guidance remains applicable; static index references are not treated as rendered coverage.",
       "baseRef": "HEAD",
-      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
-      "reviewedAtUtc": "2026-09-11T08:30:20.1350891Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:47.1557080Z"
     },
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "c8db2cfcca522f98221db0a31eaf2dba5b57c48f38ce72fe56f3dfd218b9c1e7",
+      "pageSha256": "e5c1c45cba2de6a789ce3cf71d779111b5c3925c6bdc3157e319c4bfac9cc3eb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "aa8a7b42aa1888a3a131da4101d8750656c65818d0cf0562cd0d5ca9a840d906"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "64958943fda2db29f99f93fc8b38861b9a899d4a73b6d16bf56eca9034600aa8"
         }
       ],
-      "reason": "Reviewed current sources: backend exact trace scope filtering and module HTTP mapping evidence, preserved compact MCP graph/semantic contracts, CI guardrail selection and empty-plan warning. Updated trace/test-plan/code-graph guides; contract, privacy, runtime and impact query semantics remain unchanged.",
+      "reason": "Reviewed repository-catalog additions for the new Ai slices, worker, SignalR hub and frontend service/history. Navigation ranking and SQLite query tooling are unchanged, and source paths were verified directly. Existing context-query guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:15:08.3743253Z"
+      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
+      "reviewedAtUtc": "2026-09-11T20:11:52.5774927Z"
     },
     {
       "pageId": "workflow.review-diff",

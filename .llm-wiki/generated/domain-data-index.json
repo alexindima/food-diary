@@ -5,9 +5,9 @@
     "entities": 83,
     "valueObjects": 99,
     "invariants": 505,
-    "persistenceMappings": 86,
-    "indexes": 157,
-    "relationships": 98
+    "persistenceMappings": 87,
+    "indexes": 160,
+    "relationships": 100
   },
   "domainTypes": [
     {
@@ -5836,6 +5836,29 @@
       ],
       "relationships": [],
       "path": "Modules/Cycles/Infrastructure/Model/Configurations/FertilitySignalConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "FoodRecognitionJob",
+      "table": "FoodRecognitionJobs",
+      "indexes": [
+        "x => new { x.Status, x.CreatedOnUtc })",
+        "x => new { x.UserId, x.CreatedOnUtc })",
+        "x => x.UpdatedOnUtc)"
+      ],
+      "relationships": [
+        {
+          "kind": "HasOne",
+          "target": "User",
+          "expression": ").WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade)"
+        },
+        {
+          "kind": "HasOne",
+          "target": "ImageAsset",
+          "expression": ").WithMany().HasForeignKey(x => x.ImageAssetId).OnDelete(DeleteBehavior.ClientNoAction)"
+        }
+      ],
+      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/FoodRecognitionJobConfiguration.cs"
     },
     {
       "area": "FoodDiary",

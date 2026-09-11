@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1351,
+    "productionProjectEdges": 1353,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -12,8 +12,8 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 61,
-    "componentsWithoutDirectSpecs": 140,
-    "criticalSymbolsWithoutTestReferences": 18,
+    "componentsWithoutDirectSpecs": 141,
+    "criticalSymbolsWithoutTestReferences": 22,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -4652,6 +4652,21 @@
       "specPath": null
     },
     {
+      "class": "FoodRecognitionHistoryComponent",
+      "selector": "fd-food-recognition-history",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "recognitionSelected",
+          "type": "FoodRecognitionJob"
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "NutritionEditorMessagesComponent",
       "selector": "fd-nutrition-editor-messages",
       "feature": "shared",
@@ -5022,10 +5037,40 @@
       "coveredThrough": []
     },
     {
+      "name": "FoodRecognitionController",
+      "role": "Controller",
+      "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "line": 22,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "MailInboxExportController",
       "role": "Controller",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
       "line": 14,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetFoodRecognitionQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ListFoodRecognitionsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
+      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5126,6 +5171,16 @@
       "role": "Validator",
       "path": "Modules/Recipes/Application/Common/Validators/RecipeIngredientInputValidator.cs",
       "line": 5,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "StartFoodRecognitionCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
+      "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

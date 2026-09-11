@@ -1,5 +1,6 @@
 <fd-ui-dialog [title]="'PRODUCT_AI_DIALOG.TITLE' | translate" [closeAriaLabel]="'COMMON.CLOSE' | translate">
     <div class="product-ai-dialog fd-stack fd-gap-lg">
+        <fd-food-recognition-history (recognitionSelected)="onResumeRecognition($event)" />
         <div class="product-ai-dialog__upload">
             <fd-image-upload-field
                 appearance="preview"
@@ -8,7 +9,8 @@
                 [description]="'PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION' | translate"
                 [cropEnabled]="false"
                 [resizeMaxDimension]="1536"
-                [deleteOnClear]="true"
+                [deleteOnClear]="false"
+                [value]="selection()"
                 (imageChanged)="onImageChanged($event)"
             />
 

@@ -6824,5 +6824,16 @@
         "ERROR_LOAD": "Failed to load invitation details.",
         "ERROR_ACCEPT": "Failed to accept the invitation.",
         "ERROR_DECLINE": "Failed to decline the invitation."
+    },
+    "AI_RECOGNITION": {
+        "SHOW_RECENT": "Recent recognitions",
+        "STATUS": {
+            "Failed": "Interrupted or failed",
+            "Succeeded": "Ready",
+            "Queued": "Queued",
+            "Running": "Recognizing"
+        },
+        "EMPTY": "No recent recognitions",
+        "BACKGROUND_HINT": "Recognition continues if you close this window. Recent results are available for 7 days."
     }
 }

@@ -1,0 +1,14 @@
+<div class="fd-stack fd-gap-sm">
+    <p class="fd-ui-helper-text">{{ 'AI_RECOGNITION.BACKGROUND_HINT' | translate }}</p>
+    <fd-ui-button type="button" fill="outline" (click)="load()">
+        {{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
+    </fd-ui-button>
+    @if (loaded() && jobs().length === 0) {
+        <p class="fd-ui-helper-text">{{ 'AI_RECOGNITION.EMPTY' | translate }}</p>
+    }
+    @for (job of jobs(); track job.id) {
+        <fd-ui-button type="button" fill="outline" (click)="recognitionSelected.emit(job)">
+            {{ job.createdOnUtc | date: 'short' }} · {{ `AI_RECOGNITION.STATUS.${job.status}` | translate }}
+        </fd-ui-button>
+    }
+</div>

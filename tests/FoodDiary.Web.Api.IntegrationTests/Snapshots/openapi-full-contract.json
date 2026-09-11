@@ -3516,6 +3516,163 @@
       ]
     },
     {
+      "Path": "/api/v{version}/ai/food/recognitions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/FoodRecognitionJobHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/FoodRecognitionJobHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/FoodRecognitionJobHttpResponse"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/StartFoodRecognitionHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/StartFoodRecognitionHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/StartFoodRecognitionHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "202",
+            "400",
+            "401",
+            "403",
+            "409",
+            "413",
+            "429",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "202",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/FoodRecognitionJobHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "202",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/FoodRecognitionJobHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "202",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/FoodRecognitionJobHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/ai/food/recognitions/{id}",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/FoodRecognitionJobHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/FoodRecognitionJobHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/FoodRecognitionJobHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/ai/food/text",
       "Operations": [
         {
@@ -24024,6 +24181,81 @@
       ]
     },
     {
+      "Name": "FoodRecognitionJobHttpResponse",
+      "Properties": [
+        {
+          "Name": "createdOnUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "description",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "errorCode",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageAssetId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "nutrition",
+          "Required": false,
+          "Reference": "#/components/schemas/FoodNutritionHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "nutritionErrorCode",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "updatedOnUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "vision",
+          "Required": false,
+          "Reference": "#/components/schemas/FoodVisionHttpResponse",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "FoodTextHttpRequest",
       "Properties": [
         {
@@ -28186,6 +28418,31 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "StartFoodRecognitionHttpRequest",
+      "Properties": [
+        {
+          "Name": "description",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "imageAssetId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
         }
       ]
     },

@@ -20,6 +20,7 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void PersistenceSaveChangesAsyncUsage_StaysInsideCurrentExplicitAllowlist() {
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] allowedFiles = [
+            ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "FoodRecognitionJobStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Admin", "Infrastructure", "Integrations", "MailInbox", "BugAcknowledgementReceipts.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "AiQuotaRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Persistence", "EfBillingTransactionRunner.cs"),
@@ -55,6 +56,7 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void InfrastructureManualTransactionUsage_StaysInsideCurrentExplicitAllowlist() {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string[] allowedFiles = [
+            ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "FoodRecognitionJobStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "AiQuotaRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Persistence", "EfBillingTransactionRunner.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
@@ -92,6 +94,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string identityLoginEvents = ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Persistence", "Users", "UserLoginEventRepository.cs");
         string[] allowedFiles = [
+            ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "FoodRecognitionJobStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Persistence", "NotificationRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Fasting", "Infrastructure", "Persistence", "FastingTelemetryEventRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingAttributionEventRepository.cs"),

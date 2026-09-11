@@ -22,6 +22,8 @@ This directory contains long-form repository documentation. Keep root-level mark
 
 ## Backend Operations And Governance
 
+- `backend/AI_RECOGNITION_JOBS.md` - durable photo recognition, recovery, paid-call semantics, and rollout.
+
 - `backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md`
 - `backend/MODULE_EXTRACTION_READINESS.md`
 - `backend/BACKEND_API_CONTRACT_GOVERNANCE.md`

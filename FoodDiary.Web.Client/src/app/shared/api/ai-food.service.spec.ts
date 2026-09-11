@@ -1,11 +1,13 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { of } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import type { FoodNutritionRequest, FoodTextRequest, FoodVisionRequest } from '../models/ai.data';
 import { AiFoodService } from './ai-food.service';
+import { FoodRecognitionService } from './food-recognition.service';
 
 const BASE_URL = environment.apiUrls.ai;
 const VISION_ITEM_COUNT = 2;
@@ -23,7 +25,12 @@ let httpMock: HttpTestingController;
 
 beforeEach(() => {
     TestBed.configureTestingModule({
-        providers: [AiFoodService, provideHttpClient(), provideHttpClientTesting()],
+        providers: [
+            AiFoodService,
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            { provide: FoodRecognitionService, useValue: { start: vi.fn() } },
+        ],
     });
 
     service = TestBed.inject(AiFoodService);
@@ -41,7 +48,7 @@ describe('AiFoodService', () => {
 });
 
 describe('AiFoodService analysis', () => {
-    it('should analyze food image (POST /api/v1/ai/food/vision)', () => {
+    it('should delegate photo recognition to durable jobs', () => {
         const request: FoodVisionRequest = {
             imageAssetId: 'asset-123',
             description: 'A bowl of salad',
@@ -54,17 +61,15 @@ describe('AiFoodService analysis', () => {
             notes: `Detected ${VISION_ITEM_COUNT} items`,
         };
 
+        const recognition = TestBed.inject(FoodRecognitionService);
+        const recognitionStart = vi.spyOn(recognition, 'start').mockReturnValue(of(response));
         service.analyzeFoodImage(request).subscribe(result => {
             expect(result.items.length).toBe(VISION_ITEM_COUNT);
             expect(result.items[0].nameEn).toBe('Lettuce');
             expect(result.notes).toBe(`Detected ${VISION_ITEM_COUNT} items`);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/food/vision`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual(request);
-        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
-        req.flush(response);
+        expect(recognitionStart).toHaveBeenCalledWith(request);
     });
 
     it('should calculate nutrition (POST /api/v1/ai/food/nutrition)', () => {

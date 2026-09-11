@@ -16,6 +16,7 @@ public static class ModuleRegistration {
         services.AddScoped<IAiUsageReadRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
         services.AddScoped<IAiUsageWriteRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();
+        services.AddScoped<IFoodRecognitionJobStore, FoodRecognitionJobStore>();
         services.AddScoped<IAiPromptTemplateRepository, AiPromptTemplateRepository>();
         services.AddScoped<IAiPromptTemplateReadRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
         services.AddScoped<IAiPromptTemplateReadModelRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());

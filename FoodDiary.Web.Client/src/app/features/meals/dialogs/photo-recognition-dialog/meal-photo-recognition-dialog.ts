@@ -1,14 +1,15 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpStatusCode } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, of } from 'rxjs';
+import { catchError, of, type Subscription } from 'rxjs';
 
+import { FoodRecognitionHistoryComponent } from '../../../../components/shared/food-recognition-history/food-recognition-history';
 import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
@@ -22,6 +23,7 @@ import {
 import { createClientId } from '../../../../shared/lib/client-id.utils';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../models/meal.data';
 import { MealPhotoEditListComponent } from './meal-photo-edit-list/meal-photo-edit-list';
@@ -75,6 +77,7 @@ const CARD_ROW_GAP_PERCENT = 30;
     styleUrls: ['./meal-photo-recognition-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        FoodRecognitionHistoryComponent,
         TranslatePipe,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
@@ -89,10 +92,14 @@ const CARD_ROW_GAP_PERCENT = 30;
 export class MealPhotoRecognitionDialogComponent {
     private readonly dialogData = inject<PhotoAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly aiFoodFacade = inject(AiFoodFacade);
+    private readonly destroyRef = inject(DestroyRef);
+    private analysisSubscription: Subscription | null = null;
+    private nutritionSubscription: Subscription | null = null;
     private readonly dialogRef = inject(FdUiDialogRef<MealPhotoRecognitionDialogComponent, MealAiSessionManageDto | null>, {
         optional: true,
     });
 
+    protected readonly canAddToMeal = computed(() => this.nutrition() !== null && !this.isLoading() && !this.isNutritionLoading());
     protected readonly isLoading = signal(false);
     protected readonly errorKey = signal<string | null>(null);
     protected readonly results = signal<FoodVisionItem[]>([]);
@@ -102,13 +109,12 @@ export class MealPhotoRecognitionDialogComponent {
     protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
     protected readonly nutritionErrorKey = signal<string | null>(null);
     protected readonly annotationsVisible = signal(true);
-    protected readonly initialSelection = this.dialogData.initialSelection ?? null;
+    protected readonly initialSelection = signal(this.dialogData.initialSelection ?? null);
     protected readonly isEditMode = signal(this.dialogData.mode === 'edit');
     protected readonly isEditing = signal(false);
     protected readonly editItems = signal<EditableAiItem[]>([]);
     private readonly reviewItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
-    private shouldSkipNextImageChange = Boolean(this.dialogData.initialSession);
     protected readonly unitOptions = UNIT_OPTIONS;
     protected readonly resolutionOptions = RESOLUTION_OPTIONS;
     protected readonly resultViews = computed<RecognizedItemView[]>(() =>
@@ -168,6 +174,10 @@ export class MealPhotoRecognitionDialogComponent {
     });
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.analysisSubscription?.unsubscribe();
+            this.nutritionSubscription?.unsubscribe();
+        });
         const session = this.dialogData.initialSession;
         if (session !== null && session !== undefined) {
             this.applyInitialSession(session);
@@ -194,12 +204,9 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     protected onImageChanged(selection: ImageSelection | null): void {
-        if (this.shouldSkipNextImageChange) {
-            this.shouldSkipNextImageChange = false;
-            this.selection.set(selection);
-            return;
-        }
-
+        this.analysisSubscription?.unsubscribe();
+        this.nutritionSubscription?.unsubscribe();
+        this.isLoading.set(false);
         this.selection.set(selection);
         this.errorKey.set(null);
         this.results.set([]);
@@ -345,10 +352,25 @@ export class MealPhotoRecognitionDialogComponent {
         return (value ?? '').trim().toLowerCase();
     }
 
-    private runAnalysis(assetId: string): void {
+    protected onResumeRecognition(job: FoodRecognitionJob): void {
+        const selection = { assetId: job.imageAssetId, url: job.imageUrl };
+        this.selection.set(selection);
+        this.runAnalysis(job.imageAssetId, job.id);
+    }
+
+    private runAnalysis(assetId: string, jobId?: string): void {
+        this.analysisSubscription?.unsubscribe();
+        this.nutritionSubscription?.unsubscribe();
         this.isLoading.set(true);
-        this.aiFoodFacade
-            .analyzeFoodImage({ imageAssetId: assetId })
+        this.isNutritionLoading.set(false);
+        this.isEditing.set(false);
+        this.errorKey.set(null);
+        this.results.set([]);
+        this.nutrition.set(null);
+        this.nutritionErrorKey.set(null);
+        this.analysisSubscription = (
+            jobId === undefined ? this.aiFoodFacade.analyzeFoodImage({ imageAssetId: assetId }) : this.aiFoodFacade.resumeRecognition(jobId)
+        )
             .pipe(
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
@@ -371,7 +393,16 @@ export class MealPhotoRecognitionDialogComponent {
                 const items = response.items;
                 this.results.set(items);
                 this.reviewItems.set(buildAiEditableItems(items, null, () => this.createEditId()));
-                if (items.length > 0) {
+                if (response.recognition !== undefined) {
+                    this.nutrition.set(response.recognition.nutrition);
+                    this.nutritionErrorKey.set(
+                        response.recognition.errorCode === null
+                            ? null
+                            : response.recognition.errorCode === 'Ai.QuotaExceeded'
+                              ? 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA'
+                              : 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
+                    );
+                } else if (items.length > 0) {
                     this.runNutrition(items);
                 }
             });
@@ -382,7 +413,8 @@ export class MealPhotoRecognitionDialogComponent {
         this.nutrition.set(null);
         this.nutritionErrorKey.set(null);
 
-        this.aiFoodFacade
+        this.nutritionSubscription?.unsubscribe();
+        this.nutritionSubscription = this.aiFoodFacade
             .calculateNutrition({ items })
             .pipe(
                 catchError((err: unknown) => {

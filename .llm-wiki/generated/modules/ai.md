@@ -42,17 +42,17 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
-- Public contract files: 32
+- Public contract files: 36
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 32
-- Interfaces: 13
-- DTO/read-model/projection types: 9
+- Public contract types: 36
+- Interfaces: 15
+- DTO/read-model/projection types: 10
 - Enums: 1
-- Exported repository-shaped contracts: 8
+- Exported repository-shaped contracts: 9
 - Contracts referencing domain entities: 3
 - `class AiErrors`
 - `enum AiQuotaReservationStatus`
@@ -67,6 +67,8 @@ No literal attribute-routed controller was associated with this module.
 - `interface IAiUsageReadRepository`
 - `interface IAiUsageRepository`
 - `interface IAiUsageWriteRepository`
+- `interface IFoodRecognitionJobStore`
+- `interface IFoodRecognitionProcessor`
 - `interface IOpenAiFoodClient`
 - `interface IOpenAiFoodService`
 - `record AiPromptRevisionReadModel`
@@ -81,10 +83,8 @@ No literal attribute-routed controller was associated with this module.
 - `record AiUsageUserSummary`
 - `record FoodNutritionItemModel`
 - `record FoodNutritionModel`
-- `record FoodVisionItemModel`
-- `record FoodVisionModel`
-- `record OpenAiFoodClientResponse`
-- ... 2 more type(s)
+- `record FoodRecognitionJobModel`
+- ... 6 more type(s)
 
 ## Focused Tests
 
@@ -92,8 +92,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptAdministrationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/AiIdConversionTests.cs`

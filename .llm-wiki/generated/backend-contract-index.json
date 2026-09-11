@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1142,
+    "contracts": 1149,
     "ambiguousContracts": 0,
-    "consumerEdges": 8147,
-    "productionConsumerEdges": 4825,
-    "testConsumerEdges": 3322,
-    "consumedContracts": 1142,
+    "consumerEdges": 8191,
+    "productionConsumerEdges": 4860,
+    "testConsumerEdges": 3331,
+    "consumedContracts": 1149,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -4108,6 +4108,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "FoodTextHttpRequest",
       "roles": [
         "Request"
@@ -5446,6 +5463,23 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetFoodRecognitionQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10240,6 +10274,40 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IFoodRecognitionProcessor",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15315,6 +15383,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "ListFoodRecognitionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "LoginCommand",
       "roles": [
         "Command"
@@ -17657,6 +17742,40 @@
       ],
       "definitionPaths": [
         "Modules/Fasting/Presentation/Features/Fasting/Requests/StartFastingHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "StartFoodRecognitionCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -23340,6 +23459,19 @@
         "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AnalyzeFoodImageCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/AiHttpMappings.cs",
       "isTest": false,
       "referenceCount": 2
@@ -23356,6 +23488,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 12
+    },
+    {
+      "contract": "AnalyzeFoodImageCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "AnalyzeFoodImageCommand",
@@ -24887,6 +25032,19 @@
         "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CalculateFoodNutritionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/AiHttpMappings.cs",
       "isTest": false,
       "referenceCount": 2
@@ -24903,6 +25061,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 8
+    },
+    {
+      "contract": "CalculateFoodNutritionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "CalculateFoodNutritionCommand",
@@ -34728,6 +34899,19 @@
         "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -34811,6 +34995,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "FoodTextHttpRequest",
       "roles": [
         "Request"
@@ -34939,6 +35149,19 @@
       "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/AiHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "FoodVisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Responses/FoodVisionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "FoodVisionHttpResponse",
@@ -39775,6 +39998,32 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetFoodRecognitionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFoodRecognitionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "GetGamificationQuery",
@@ -49652,6 +49901,19 @@
         "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -49720,6 +49982,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IAiUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IApiVersionInfo",
@@ -53578,6 +53853,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55503,6 +55791,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -69937,6 +70238,162 @@
       "referenceCount": 1
     },
     {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Services/FoodRecognitionNotifier.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 8
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IFoodRecognitionProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/FoodRecognitionWorker.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "IGamificationReadService",
       "roles": [
         "Service"
@@ -70660,6 +71117,19 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -70921,6 +71391,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -84049,7 +84532,33 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -85635,7 +86144,33 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -92746,6 +93281,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Features/Ai/AiFoodController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -92760,6 +93308,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Features/Ai/AiUsageController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -93828,6 +94389,19 @@
       "consumerPath": "Shared/FoodDiary.Mediator/IMediator.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 8
     },
     {
       "contract": "ISender",
@@ -107688,6 +108262,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "ListFoodRecognitionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ListFoodRecognitionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "LoginCommand",
       "roles": [
         "Command"
@@ -118019,6 +118619,97 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "StartFoodRecognitionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

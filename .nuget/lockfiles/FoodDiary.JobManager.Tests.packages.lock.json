@@ -1377,6 +1377,7 @@
           "FoodDiary.Email.MailRelay": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Admin.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Infrastructure": "[1.0.0, )",
@@ -1528,6 +1529,7 @@
         "dependencies": {
           "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"

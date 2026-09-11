@@ -13,6 +13,7 @@ public static class DependencyInjection {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
+        services.AddScoped<IFoodRecognitionProcessor, FoodRecognitionProcessor>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IAiAdministrationReadService, AiAdministrationReadService>();
         services.AddScoped<IAiPromptAdministrationService, AiPromptAdministrationService>();

@@ -2,6 +2,7 @@ import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import { AiFoodService } from '../../../shared/api/ai-food.service';
+import { FoodRecognitionService } from '../../../shared/api/food-recognition.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import type { FoodNutritionRequest, FoodNutritionResponse, FoodVisionRequest, FoodVisionResponse } from '../../../shared/models/ai.data';
 
@@ -9,6 +10,11 @@ import type { FoodNutritionRequest, FoodNutritionResponse, FoodVisionRequest, Fo
 export class ProductAiRecognitionFacade {
     private readonly aiFoodService = inject(AiFoodService);
     private readonly imageUploadService = inject(ImageUploadService);
+    private readonly recognition = inject(FoodRecognitionService);
+
+    public resumeRecognition(id: string): Observable<FoodVisionResponse> {
+        return this.recognition.resume(id);
+    }
 
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
         return this.aiFoodService.analyzeFoodImage(request);

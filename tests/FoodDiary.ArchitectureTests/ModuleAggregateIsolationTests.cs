@@ -41,7 +41,7 @@ public sealed class ModuleAggregateIsolationTests {
         using FoodDiaryDbContext context = CreateContext();
         Microsoft.EntityFrameworkCore.Metadata.IForeignKey[] imageLinks = [.. context.Model.GetEntityTypes().SelectMany(entity => entity.GetForeignKeys())
             .Where(key => string.Equals(key.PrincipalEntityType.ClrType.Name, "ImageAsset", StringComparison.Ordinal))];
-        Assert.Equal(6, imageLinks.Length);
+        Assert.Equal(7, imageLinks.Length);
         Assert.All(imageLinks, key => Assert.Equal(DeleteBehavior.ClientNoAction, key.DeleteBehavior));
     }
 

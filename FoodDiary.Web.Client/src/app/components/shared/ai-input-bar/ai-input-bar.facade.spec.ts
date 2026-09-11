@@ -1,10 +1,10 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
-import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
+import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
 import { AiInputBarFacade } from './ai-input-bar.facade';
 
 describe('AiInputBarFacade', () => {
@@ -42,6 +42,23 @@ describe('AiInputBarFacade', () => {
         expect(facade.text.nutrition()).toBe(nutrition);
         expect(facade.text.analyzing()).toBe(false);
         expect(facade.text.nutritionLoading()).toBe(false);
+    });
+
+    it('ignores a pending photo result after the user clears that channel', () => {
+        const pending = new Subject<FoodVisionResponse>();
+        aiFoodFacade.analyzeFoodImage.mockReturnValueOnce(pending);
+        facade.analyzePhoto('asset-1');
+        facade.clear(facade.photo);
+        pending.next({ items: [item] });
+        expect(facade.photo.results()).toEqual([]);
+        expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
+    });
+
+    it('uses saved background nutrition without another calculation', () => {
+        aiFoodFacade.analyzeFoodImage.mockReturnValueOnce(of({ items: [item], recognition: { id: 'job-1', nutrition, errorCode: null } }));
+        facade.analyzePhoto('asset-1');
+        expect(facade.photo.nutrition()).toBe(nutrition);
+        expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
     });
 
     it('maps authorization and quota failures to channel-specific errors', () => {

@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1636,
-    "symbols": 646,
+    "typescriptFiles": 1640,
+    "symbols": 648,
     "routes": 96,
     "features": 43,
-    "specs": 568,
+    "specs": 569,
     "localeFiles": 5,
     "roles": {
-      "Component": 439,
+      "Component": 440,
       "Directive": 12,
       "Facade": 60,
       "Other": 17,
       "Pipe": 4,
-      "Service": 114
+      "Service": 115
     }
   },
   "features": [
@@ -2628,6 +2628,13 @@
       "line": 11
     },
     {
+      "name": "FoodRecognitionHistoryComponent",
+      "role": "Component",
+      "selector": "fd-food-recognition-history",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
+      "line": 17
+    },
+    {
       "name": "HeaderActionsOverflowComponent",
       "role": "Component",
       "selector": "fd-header-actions-overflow",
@@ -4046,7 +4053,7 @@
       "role": "Component",
       "selector": "fd-meal-photo-recognition-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "line": 89
+      "line": 92
     },
     {
       "name": "MealPhotoResultActionsComponent",
@@ -4382,7 +4389,7 @@
       "role": "Component",
       "selector": "fd-product-ai-recognition-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.ts",
-      "line": 74
+      "line": 76
     },
     {
       "name": "ProductAiRecognitionResultComponent",
@@ -4438,7 +4445,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/product-ai-recognition.facade.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProductManageFacade",
@@ -5481,7 +5488,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "ExportService",
@@ -5489,6 +5496,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/export.service.ts",
       "line": 12
+    },
+    {
+      "name": "FoodRecognitionService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
+      "line": 35
     },
     {
       "name": "ImageUploadService",
@@ -5607,7 +5621,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/lib/ai-food.facade.ts",
-      "line": 14
+      "line": 16
     },
     {
       "name": "AutosaveQueue",
@@ -6356,8 +6370,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3433,
-      "russianProperties": 3433,
+      "englishProperties": 3442,
+      "russianProperties": 3442,
       "countsMatch": true
     },
     {

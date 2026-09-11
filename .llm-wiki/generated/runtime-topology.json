@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "5c2cc838b6015ef17b222a4fa2f30ada69040c7786d0ebfbc7258d376640d705",
-    "sourceFileCount": 3792
+    "sourceFingerprint": "2a027683408029ecf36b55a9fa2bf270a38599f2467463d6e0cdf8fd5acb9c3d",
+    "sourceFileCount": 3814
   },
   "summary": {
     "composeServices": 17,
-    "hostedServices": 12,
+    "hostedServices": 14,
     "httpClients": 15,
     "webhooks": 22,
     "recurringJobRegistrations": 16,
@@ -482,6 +482,26 @@
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "retry-or-resilience",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "class-window"
+    },
+    {
+      "name": "FoodRecognitionNotifier",
+      "baseType": "BackgroundService",
+      "path": "Modules/Ai/Presentation/Services/FoodRecognitionNotifier.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "class-window"
+    },
+    {
+      "name": "FoodRecognitionWorker",
+      "baseType": "BackgroundService",
+      "path": "FoodDiary.JobManager/Services/FoodRecognitionWorker.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "class-window"

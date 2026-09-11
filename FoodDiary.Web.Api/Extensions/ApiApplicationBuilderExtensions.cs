@@ -46,7 +46,8 @@ public static class ApiApplicationBuilderExtensions {
             return app
                 .MapPresentationApi()
                 .MapIdentityPresentationHub(ApiCompositionConstants.CorsPolicyName)
-                .MapNotificationsPresentationHub(ApiCompositionConstants.CorsPolicyName);
+                .MapNotificationsPresentationHub(ApiCompositionConstants.CorsPolicyName)
+                .MapAiPresentationHub(ApiCompositionConstants.CorsPolicyName);
         }
 
         private void MapOperationalEndpoints() {

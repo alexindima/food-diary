@@ -12,16 +12,16 @@ import type {
     FoodVisionResponse,
     UserAiUsageResponse,
 } from '../models/ai.data';
+import { FoodRecognitionService } from './food-recognition.service';
 
 @Service()
 export class AiFoodService {
     private readonly baseUrl = environment.apiUrls.ai;
     private readonly http = inject(HttpClient);
+    private readonly recognition = inject(FoodRecognitionService);
 
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
-        return this.http
-            .post<FoodVisionResponse>(`${this.baseUrl}/food/vision`, request, this.createIdempotencyOptions())
-            .pipe(catchError((error: unknown) => rethrowApiError('Food image analysis error', error)));
+        return this.recognition.start(request);
     }
 
     public parseFoodText(request: FoodTextRequest): Observable<FoodVisionResponse> {

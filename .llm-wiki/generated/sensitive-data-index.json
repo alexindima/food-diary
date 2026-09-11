@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1410,
+    "candidateFields": 1422,
     "credential": 152,
     "identity": 156,
-    "health": 670,
+    "health": 674,
     "financial": 124,
-    "privateContent": 308,
-    "boundaryFiles": 168,
+    "privateContent": 316,
+    "boundaryFiles": 170,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -2224,6 +2224,20 @@
     },
     {
       "category": "health",
+      "name": "NutritionJson",
+      "type": "string?",
+      "path": "Modules/Ai/Infrastructure/Model/Ai/FoodRecognitionJob.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "NutritionErrorCode",
+      "type": "string?",
+      "path": "Modules/Ai/Infrastructure/Model/Ai/FoodRecognitionJob.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
       "name": "Calories",
       "type": "decimal",
       "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionHttpResponse.cs",
@@ -2234,6 +2248,20 @@
       "name": "Calories",
       "type": "decimal",
       "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionItemHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "Nutrition",
+      "type": "FoodNutritionHttpResponse?",
+      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "NutritionErrorCode",
+      "type": "string?",
+      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
       "line": 7
     },
     {
@@ -7798,7 +7826,28 @@
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodRecognitionJobModel.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodRecognitionJobModel.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs",
       "line": 7
     },
     {
@@ -7832,9 +7881,44 @@
     {
       "category": "privateContent",
       "name": "ImageAssetId",
+      "type": "ImageAssetId",
+      "path": "Modules/Ai/Infrastructure/Model/Ai/FoodRecognitionJob.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Ai/Infrastructure/Model/Ai/FoodRecognitionJob.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
       "type": "Guid",
       "path": "Modules/Ai/Presentation/Features/Ai/Requests/FoodVisionHttpRequest.cs",
       "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
+      "line": 4
     },
     {
       "category": "privateContent",
@@ -10057,6 +10141,13 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionHttpResponse.cs",
       "categories": [
         "health"
@@ -10069,6 +10160,14 @@
         "health"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 4
     },
     {
       "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",

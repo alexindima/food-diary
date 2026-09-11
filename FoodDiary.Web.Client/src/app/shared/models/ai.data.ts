@@ -12,6 +12,7 @@ export type FoodVisionItem = {
 export type FoodVisionResponse = {
     items: FoodVisionItem[];
     notes?: string | null;
+    recognition?: { id: string; nutrition: FoodNutritionResponse | null; errorCode: string | null };
 };
 
 export type FoodVisionRequest = {

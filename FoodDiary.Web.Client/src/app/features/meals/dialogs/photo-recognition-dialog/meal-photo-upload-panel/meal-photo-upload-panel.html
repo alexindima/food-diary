@@ -6,8 +6,9 @@
         [recommendedSize]="'MEAL_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED' | translate"
         [cropEnabled]="false"
         [resizeMaxDimension]="1536"
-        [deleteOnClear]="true"
+        [deleteOnClear]="false"
         [initialSelection]="initialSelection()"
+        [value]="selection()"
         (imageChanged)="imageChanged.emit($event)"
     />
 

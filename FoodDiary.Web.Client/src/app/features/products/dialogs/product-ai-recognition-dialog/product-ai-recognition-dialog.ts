@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { disabled as disabledRule, form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -7,11 +7,12 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import { catchError, of } from 'rxjs';
+import { catchError, of, type Subscription } from 'rxjs';
 
+import { FoodRecognitionHistoryComponent } from '../../../../components/shared/food-recognition-history/food-recognition-history';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field';
-import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
 import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action/product-ai-recognition-action';
@@ -60,6 +61,7 @@ type PhotoAnnotation = {
     styleUrls: ['./product-ai-recognition-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        FoodRecognitionHistoryComponent,
         FormField,
         TranslatePipe,
         FdUiDialogComponent,
@@ -77,7 +79,9 @@ export class ProductAiRecognitionDialogComponent {
         optional: true,
     });
     private readonly productAiRecognitionFacade = inject(ProductAiRecognitionFacade);
-    private readonly logger = inject(FrontendLoggerService);
+    private readonly destroyRef = inject(DestroyRef);
+    private analysisSubscription: Subscription | null = null;
+    private nutritionSubscription: Subscription | null = null;
     protected readonly isLoading = signal(false);
     protected readonly isNutritionLoading = signal(false);
     protected readonly hasAnalyzed = signal(false);
@@ -134,6 +138,10 @@ export class ProductAiRecognitionDialogComponent {
         );
     });
     protected onImageChanged(selection: ImageSelection | null): void {
+        this.analysisSubscription?.unsubscribe();
+        this.nutritionSubscription?.unsubscribe();
+        this.isLoading.set(false);
+        this.isNutritionLoading.set(false);
         this.selection.set(selection);
         this.errorKey.set(null);
         this.nutritionErrorKey.set(null);
@@ -191,17 +199,33 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     protected close(): void {
-        this.cleanupAsset();
         this.dialogRef?.close(null);
     }
 
-    private runAnalysis(assetId: string): void {
+    protected onResumeRecognition(job: FoodRecognitionJob): void {
+        const selection = { assetId: job.imageAssetId, url: job.imageUrl };
+        this.selection.set(selection);
+        this.descriptionModel.set({ description: job.description ?? '' });
+        this.runAnalysis(job.imageAssetId, job.id);
+    }
+
+    private runAnalysis(assetId: string, jobId?: string): void {
+        this.analysisSubscription?.unsubscribe();
+        this.nutritionSubscription?.unsubscribe();
         this.isLoading.set(true);
-        this.productAiRecognitionFacade
-            .analyzeFoodImage({
-                imageAssetId: assetId,
-                description: this.getDescription(),
-            })
+        this.isNutritionLoading.set(false);
+        this.results.set([]);
+        this.nutritionErrorKey.set(null);
+        this.errorKey.set(null);
+        this.nutrition.set(null);
+        this.analysisSubscription = (
+            jobId === undefined
+                ? this.productAiRecognitionFacade.analyzeFoodImage({
+                      imageAssetId: assetId,
+                      description: this.getDescription(),
+                  })
+                : this.productAiRecognitionFacade.resumeRecognition(jobId)
+        )
             .pipe(
                 catchError((err: unknown) => {
                     this.errorKey.set(mapAiRecognitionErrorKey(err));
@@ -216,7 +240,14 @@ export class ProductAiRecognitionDialogComponent {
                 }
                 const items = response.items;
                 this.results.set(items);
-                if (items.length > 0) {
+                if (response.recognition !== undefined) {
+                    const nutrition = response.recognition.nutrition;
+                    this.nutrition.set(nutrition);
+                    if (nutrition !== null) {
+                        this.resultFormModel.set(buildProductAiRecognitionModelFromNutrition(items, nutrition));
+                    }
+                    this.nutritionErrorKey.set(response.recognition.errorCode === null ? null : 'PRODUCT_AI_DIALOG.NUTRITION_ERROR');
+                } else if (items.length > 0) {
                     this.runNutrition(items);
                 }
             });
@@ -226,7 +257,8 @@ export class ProductAiRecognitionDialogComponent {
         this.isNutritionLoading.set(true);
         this.nutritionErrorKey.set(null);
         const normalizedItems = normalizeItemsForNutrition(items);
-        this.productAiRecognitionFacade
+        this.nutritionSubscription?.unsubscribe();
+        this.nutritionSubscription = this.productAiRecognitionFacade
             .calculateNutrition({ items: normalizedItems })
             .pipe(
                 catchError((err: unknown) => {
@@ -249,16 +281,10 @@ export class ProductAiRecognitionDialogComponent {
         return value.length > 0 ? value : null;
     }
 
-    private cleanupAsset(): void {
-        const assetId = this.selection()?.assetId;
-        if (assetId === undefined || assetId === null || assetId.length === 0) {
-            return;
-        }
-
-        this.productAiRecognitionFacade.deleteAsset(assetId).subscribe({
-            error: (err: unknown) => {
-                this.logger.warn('Failed to delete AI product image asset', err);
-            },
+    public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.analysisSubscription?.unsubscribe();
+            this.nutritionSubscription?.unsubscribe();
         });
     }
 }

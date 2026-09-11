@@ -110,8 +110,11 @@
       "module": "Ai",
       "capabilities": [
         "entity:AiUsage",
+        "entity:FoodRecognitionJob",
         "tracked:AiUsage",
-        "write:AiUsage"
+        "tracked:FoodRecognitionJob",
+        "write:AiUsage",
+        "write:FoodRecognitionJob"
       ],
       "reason": "Ai owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
@@ -1152,6 +1155,19 @@
         "tracked:MarketingAttributionEvent"
       ],
       "reason": "Owner-only acquisition reporting over no-tracking event roots, with calendar aggregation and filtered journal pagination. Scanner conservatively marks composed IQueryable aliases as potentially tracked; only aggregate and event read models are materialized. No writes or context escapes."
+    },
+    "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "context:ConfigureAwait",
+        "context:Database",
+        "context:SaveChangesAsync",
+        "entity:FoodRecognitionJob",
+        "tracked:FoodRecognitionJob",
+        "write:FoodRecognitionJob"
+      ],
+      "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. No foreign aggregate writes.",
+      "technicalSourceSha256": "28144107ee829b8558bfdf59be89df941a16810d2c9501006182df15584a8404"
     }
   }
 }

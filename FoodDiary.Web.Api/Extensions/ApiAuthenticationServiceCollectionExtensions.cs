@@ -82,7 +82,8 @@ public static class ApiAuthenticationServiceCollectionExtensions {
         PathString path = context.HttpContext.Request.Path;
         if (!string.IsNullOrWhiteSpace(accessToken) &&
             (path.StartsWithSegments("/hubs/email-verification", StringComparison.Ordinal) ||
-             path.StartsWithSegments("/hubs/notifications", StringComparison.Ordinal))) {
+             path.StartsWithSegments("/hubs/notifications", StringComparison.Ordinal) ||
+             path.StartsWithSegments("/hubs/food-recognition", StringComparison.Ordinal))) {
             context.Token = accessToken;
         }
     }

@@ -1,7 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { DestroyRef, inject, Injectable, signal, type WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, type Observable, of } from 'rxjs';
+import { catchError, type Observable, of, type Subscription } from 'rxjs';
 
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
@@ -11,6 +11,8 @@ import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '
 export class AiInputBarFacade {
     private readonly aiFoodFacade = inject(AiFoodFacade);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly analysisSubscriptions = new Map<AiInputBarChannelState, Subscription>();
+    private readonly nutritionSubscriptions = new Map<AiInputBarChannelState, Subscription>();
 
     public readonly text = createChannelState();
     public readonly photo = createChannelState();
@@ -60,6 +62,8 @@ export class AiInputBarFacade {
     }
 
     public clear(state: AiInputBarChannelState): void {
+        this.analysisSubscriptions.get(state)?.unsubscribe();
+        this.nutritionSubscriptions.get(state)?.unsubscribe();
         state.analyzing.set(false);
         state.results.set([]);
         state.nutritionLoading.set(false);
@@ -97,12 +101,15 @@ export class AiInputBarFacade {
         errorKeys: AnalysisErrorKeys,
         onItems: (items: FoodVisionItem[]) => void,
     ): void {
+        this.analysisSubscriptions.get(state)?.unsubscribe();
+        this.nutritionSubscriptions.get(state)?.unsubscribe();
+        state.nutritionLoading.set(false);
         state.analyzing.set(true);
         state.results.set([]);
         state.nutrition.set(null);
         state.errorKey.set(null);
         state.nutritionErrorKey.set(null);
-        request$
+        const subscription = request$
             .pipe(
                 catchError((error: unknown) => {
                     const status = getNumberProperty(error, 'status');
@@ -121,11 +128,17 @@ export class AiInputBarFacade {
                 state.analyzing.set(false);
                 if (response !== null) {
                     state.results.set(response.items);
-                    if (response.items.length > 0) {
+                    if (response.recognition !== undefined) {
+                        state.nutrition.set(response.recognition.nutrition);
+                        state.nutritionErrorKey.set(
+                            response.recognition.errorCode === null ? null : 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
+                        );
+                    } else if (response.items.length > 0) {
                         onItems(response.items);
                     }
                 }
             });
+        this.analysisSubscriptions.set(state, subscription);
     }
 
     private runNutrition(state: AiInputBarChannelState, items: FoodVisionItem[], errorKeys: NutritionErrorKeys): void {
@@ -133,10 +146,11 @@ export class AiInputBarFacade {
             this.setEmptyItemsError(state);
             return;
         }
+        this.nutritionSubscriptions.get(state)?.unsubscribe();
         state.nutritionLoading.set(true);
         state.nutrition.set(null);
         state.nutritionErrorKey.set(null);
-        this.aiFoodFacade
+        const subscription = this.aiFoodFacade
             .calculateNutrition({ items })
             .pipe(
                 catchError((error: unknown) => {
@@ -152,6 +166,7 @@ export class AiInputBarFacade {
                     state.nutrition.set(response);
                 }
             });
+        this.nutritionSubscriptions.set(state, subscription);
     }
 }
 

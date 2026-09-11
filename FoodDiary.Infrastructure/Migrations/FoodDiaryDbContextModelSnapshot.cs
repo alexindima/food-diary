@@ -5385,6 +5385,77 @@ namespace FoodDiary.Infrastructure.Migrations {
 
                 b.Navigation("WeightGoals");
             });
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.FoodRecognitionJob", b => {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
+
+                b.Property<DateTime>("CreatedOnUtc")
+                    .HasColumnType("timestamp with time zone");
+
+                b.Property<string>("Description")
+                    .HasMaxLength(2048)
+                    .HasColumnType("character varying(2048)");
+
+                b.Property<string>("ErrorCode")
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)");
+
+                b.Property<Guid>("ImageAssetId")
+                    .HasColumnType("uuid");
+
+                b.Property<string>("ImageUrl")
+                    .IsRequired()
+                    .HasMaxLength(2048)
+                    .HasColumnType("character varying(2048)");
+
+                b.Property<string>("NutritionErrorCode")
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)");
+
+                b.Property<string>("NutritionJson")
+                    .HasColumnType("text");
+
+                b.Property<string>("Status")
+                    .IsRequired()
+                    .HasMaxLength(16)
+                    .HasColumnType("character varying(16)");
+
+                b.Property<DateTime>("UpdatedOnUtc")
+                    .HasColumnType("timestamp with time zone");
+
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uuid");
+
+                b.Property<string>("VisionJson")
+                    .HasColumnType("text");
+
+                b.HasKey("Id");
+
+                b.HasIndex("ImageAssetId");
+
+                b.HasIndex("UpdatedOnUtc");
+
+                b.HasIndex("Status", "CreatedOnUtc");
+
+                b.HasIndex("UserId", "CreatedOnUtc");
+
+                b.ToTable("FoodRecognitionJobs", (string)null);
+            });
+
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.FoodRecognitionJob", b => {
+                b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
+                    .WithMany()
+                    .HasForeignKey("ImageAssetId")
+                    .OnDelete(DeleteBehavior.ClientNoAction)
+                    .IsRequired();
+
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 #pragma warning restore 612, 618
         }
     }

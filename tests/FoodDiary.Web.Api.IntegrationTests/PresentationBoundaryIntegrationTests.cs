@@ -48,6 +48,28 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static readonly Guid MissingProductId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
+    [Theory]
+    [InlineData("GET", "/api/v1/ai/food/recognitions")]
+    [InlineData("GET", "/api/v1/ai/food/recognitions/11111111-1111-1111-1111-111111111111")]
+    [InlineData("POST", "/api/v1/ai/food/recognitions")]
+    [InlineData("POST", "/hubs/food-recognition/negotiate?negotiateVersion=1")]
+    public async Task FoodRecognition_AnonymousRequestsRequireAuthentication(string method, string path) {
+        HttpClient client = testAuthFactory.CreateClient();
+        using var request = new HttpRequestMessage(new HttpMethod(method), path);
+        HttpResponseMessage response = await client.SendAsync(request);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task FoodRecognition_StartRequiresPremiumBeforeEnqueue() {
+        HttpClient client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/ai/food/recognitions",
+            new StartFoodRecognitionHttpRequest(Guid.NewGuid(), Guid.NewGuid()));
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
     [Fact]
     public async Task UsersInfo_WithAuthenticatedPrincipalMissingUserIdClaim_ReturnsUnauthorized() {
         HttpClient client = testAuthFactory.CreateClient();
