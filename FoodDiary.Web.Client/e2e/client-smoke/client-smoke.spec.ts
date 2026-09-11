@@ -452,8 +452,9 @@ test.describe('authenticated feature smoke', () => {
 
         await expect(page).toHaveURL(/\/products$/);
         await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Create', exact: true })).toBeVisible();
         await page.getByRole('button', { name: 'More actions' }).click();
-        await expect(page.getByRole('menuitem', { name: 'Create' })).toBeVisible();
+        await expect(page.getByRole('menuitem', { name: 'Create' })).toHaveCount(0);
         await expect(page.getByRole('menuitem', { name: 'Filters' })).toBeVisible();
     });
 
