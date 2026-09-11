@@ -3,6 +3,7 @@
         class="shopping-list__header"
         [title]="'SHOPPING_LIST.TITLE' | translate"
         [subtitle]="'SHOPPING_LIST.SUBTITLE' | translate"
+        [compactActions]="true"
     >
         @if (isMobileView()) {
             <div class="shopping-list__mobile-toolbar">
@@ -41,6 +42,17 @@
                 />
             </div>
         } @else {
+            <fd-ui-button
+                appearance="brand-action"
+                variant="primary"
+                fill="solid"
+                icon="add"
+                [disabled]="isLoading()"
+                [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (click)="createNewList()"
+            >
+                {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
+            </fd-ui-button>
             <fd-ui-button
                 data-tour-id="shopping-list-tour-help"
                 appearance="toolbar"
@@ -96,22 +108,28 @@
                     </fd-ui-button>
                 </section>
             } @else {
+                @if (!isMobileView()) {
+                    <div class="shopping-list__navigation">
+                        <fd-shopping-list-manage-controls
+                            data-tour-id="shopping-list-manage"
+                            [listSelectField]="listSelectForm.id"
+                            [lists]="lists()"
+                            [isLoading]="isLoading()"
+                            [canDeleteList]="canDeleteList()"
+                            [renameRequestedListId]="renameRequestedListId()"
+                            (createList)="createNewList()"
+                            (clearListById)="clearListById($event)"
+                            (deleteListById)="deleteListById($event)"
+                            (renameListById)="renameListById($event.listId, $event.name)"
+                            (renameRequestHandled)="clearRenameRequest($event)"
+                        />
+                    </div>
+                }
                 <section class="shopping-list__summary" data-tour-id="shopping-list-summary">
-                    <div class="shopping-list__summary-icon fd-center">
-                        <fd-ui-icon name="shopping_cart" size="lg" />
-                    </div>
-                    <div class="shopping-list__summary-main">
-                        <h2 class="shopping-list__summary-title fd-ui-card-title">{{ list()?.name }}</h2>
-                        <div class="shopping-list__summary-meta fd-ui-caption">{{ checkedItemsCount() }} / {{ totalItemsCount() }}</div>
-                    </div>
-                    <div class="shopping-list__summary-stats">
-                        <div class="shopping-list__summary-stat">
-                            <span class="shopping-list__summary-value fd-ui-stat-value">{{ remainingItemsCount() }}</span>
-                            <span class="shopping-list__summary-label fd-ui-stat-label">{{
-                                'SHOPPING_LIST.REMAINING_ITEMS' | translate
-                            }}</span>
-                        </div>
-                    </div>
+                    <h2 class="shopping-list__summary-title fd-ui-card-title">{{ list()?.name }}</h2>
+                    <span class="shopping-list__summary-meta fd-ui-caption">
+                        {{ 'SHOPPING_LIST.REMAINING_ITEMS' | translate }}: {{ remainingItemsCount() }} / {{ totalItemsCount() }}
+                    </span>
                 </section>
 
                 <div class="shopping-list__workspace">
@@ -124,23 +142,6 @@
                         (itemRemove)="removeItem($event)"
                         (itemCheckedChange)="toggleItemChecked($event.itemId, $event.checked)"
                     />
-                    @if (!isMobileView()) {
-                        <aside class="shopping-list__sidebar">
-                            <fd-shopping-list-manage-controls
-                                data-tour-id="shopping-list-manage"
-                                [listSelectField]="listSelectForm.id"
-                                [lists]="lists()"
-                                [isLoading]="isLoading()"
-                                [canDeleteList]="canDeleteList()"
-                                [renameRequestedListId]="renameRequestedListId()"
-                                (createList)="createNewList()"
-                                (clearListById)="clearListById($event)"
-                                (deleteListById)="deleteListById($event)"
-                                (renameListById)="renameListById($event.listId, $event.name)"
-                                (renameRequestHandled)="clearRenameRequest($event)"
-                            />
-                        </aside>
-                    }
                 </div>
             }
         }

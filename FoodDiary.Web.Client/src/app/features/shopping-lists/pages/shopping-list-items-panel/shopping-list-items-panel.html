@@ -60,10 +60,6 @@
 
     <section class="shopping-list__items-surface">
         @if (itemViewModels().length > 0) {
-            <div class="shopping-list__items-head">
-                <div class="shopping-list__items-title fd-ui-card-title">{{ 'SHOPPING_LIST.TITLE' | translate }}</div>
-                <div class="shopping-list__items-count fd-ui-pill fd-ui-pill--compact">{{ itemViewModels().length }}</div>
-            </div>
             <div class="shopping-list__items">
                 @for (item of itemViewModels(); track item.id) {
                     <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">

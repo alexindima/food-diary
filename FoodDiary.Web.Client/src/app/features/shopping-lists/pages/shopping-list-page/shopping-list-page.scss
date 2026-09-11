@@ -38,16 +38,11 @@
     }
 
     &__summary {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        align-items: center;
-        gap: var(--fd-space-md);
-        margin-bottom: var(--fd-space-md);
-        padding: var(--fd-space-md);
-        border: var(--fd-border-default);
-        border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-media-card-raised);
-        box-shadow: var(--fd-shadow-lg);
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: var(--fd-space-xs) var(--fd-space-md);
     }
 
     &__no-lists {
@@ -59,8 +54,8 @@
         padding: var(--fd-space-xl);
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-media-card-raised);
-        box-shadow: var(--fd-shadow-lg);
+        background: var(--fd-bg-surface-raised);
+        box-shadow: var(--fd-shadow-none);
         text-align: center;
     }
 
@@ -83,79 +78,24 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__summary-icon {
-        width: var(--fd-size-control-xl);
-        height: var(--fd-size-control-xl);
-        border-radius: var(--fd-radius-md);
-        background: var(--fd-bg-accent-soft);
-        color: var(--fd-color-primary-500);
-        flex-shrink: 0;
-    }
-
-    &__summary-main {
-        min-width: 0;
-    }
-
     &__summary-title {
+        min-width: 0;
         margin: 0;
+        overflow-wrap: anywhere;
         color: var(--fd-color-text);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     &__summary-meta {
-        margin-top: var(--fd-space-micro);
         color: var(--fd-color-text-muted);
     }
 
-    &__summary-stats {
-        display: flex;
-        align-items: center;
-        gap: var(--fd-space-sm);
-    }
-
-    &__summary-stat {
-        min-width: 76px;
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-md);
-        background: var(--fd-bg-surface-raised-blend);
-        border: var(--fd-border-muted);
-        text-align: right;
-    }
-
-    &__summary-value {
-        display: block;
-        color: var(--fd-color-text);
-        line-height: 1;
-    }
-
-    &__summary-label {
-        display: block;
-        margin-top: var(--fd-space-micro);
-        color: var(--fd-color-text-muted);
-    }
-
-    &__workspace {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
-        align-items: start;
-        gap: var(--fd-space-md);
-    }
-
+    &__workspace,
     &__items-panel {
         min-width: 0;
     }
 
-    &__sidebar {
-        position: sticky;
-        top: var(--fd-space-md);
+    &__navigation {
         min-width: 0;
-        padding: var(--fd-space-md);
-        border: var(--fd-border-default);
-        border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-media-card-raised);
-        box-shadow: var(--fd-shadow-sm);
     }
 
     &__header-actions {
@@ -193,6 +133,7 @@
 
     &__list-cards {
         display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
         gap: var(--fd-space-xs);
     }
 
@@ -367,20 +308,13 @@
 
     &__panel {
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        align-items: start;
-        gap: var(--fd-space-sm);
+        gap: var(--fd-space-md);
+        min-width: 0;
     }
 
     &__add-form {
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
         gap: var(--fd-space-sm);
-        padding: var(--fd-space-md);
-        border: var(--fd-border-default);
-        border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-skeleton-card);
-        box-shadow: var(--fd-shadow-lg);
 
         fd-ui-input,
         fd-ui-select {
@@ -442,27 +376,6 @@
 
     &__items-surface {
         min-width: 0;
-        padding: var(--fd-space-md);
-        border: var(--fd-border-default);
-        border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-media-card-raised);
-        box-shadow: var(--fd-shadow-lg);
-    }
-
-    &__items-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-sm);
-        margin-bottom: var(--fd-space-sm);
-    }
-
-    &__items-title {
-        color: var(--fd-color-text);
-    }
-
-    &__items-count {
-        flex-shrink: 0;
     }
 
     &__items {
@@ -571,33 +484,6 @@
         text-align: center;
     }
 
-    @media #{variables.$media-desktop} {
-        &__workspace {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        &__sidebar {
-            position: static;
-        }
-
-        &__header-actions {
-            grid-template-columns: minmax(260px, 1fr);
-        }
-
-        &__manage-fields {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        &__manage-actions {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        &__delete-button,
-        &__clear-button {
-            width: 100%;
-        }
-    }
-
     @media #{variables.$media-tablet} {
         --fd-layout-page-vertical-padding: 0;
 
@@ -610,27 +496,11 @@
         }
 
         &__header-actions--mobile {
-            padding: var(--fd-space-sm) var(--fd-space-md);
+            padding: var(--fd-space-sm) 0;
         }
 
         &__list-card {
             min-height: var(--fd-size-control-lg);
-        }
-
-        &__summary {
-            grid-template-columns: auto minmax(0, 1fr);
-            margin: 0 var(--fd-space-md) var(--fd-space-sm);
-            padding: var(--fd-space-sm);
-            box-shadow: var(--fd-shadow-sm);
-        }
-
-        &__summary-stats {
-            grid-column: 1 / -1;
-        }
-
-        &__summary-stat {
-            width: 100%;
-            text-align: left;
         }
 
         &__no-lists {
@@ -655,15 +525,6 @@
 
         &__add-details {
             grid-template-columns: 1fr;
-        }
-
-        &__add-form,
-        &__items-surface {
-            border-radius: 0;
-            border-left: none;
-            border-right: none;
-            box-shadow: var(--fd-shadow-none);
-            padding: var(--fd-space-sm) var(--fd-space-md);
         }
 
         &__items {
