@@ -116,3 +116,18 @@ describe('premium access view mapper', () => {
         expect(getPremiumProviderLabel('custom')).toBe('custom');
     });
 });
+
+describe('premium account entitlement', () => {
+    it('presents entitlement without a billing subscription as active access', () => {
+        const result = buildPremiumOverviewCardViewModel(
+            { ...overview, subscriptionStatus: null, plan: null, manageBillingAvailable: false },
+            true,
+            true,
+            null,
+        );
+        expect(result.badges).toEqual({ planLabelKey: null, statusLabelKey: 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' });
+        expect(result.hintKey).toBe('PREMIUM_PAGE.OVERVIEW.ACCESS_HINT');
+        expect(result.showStartTrial).toBe(false);
+        expect(result.showManageBilling).toBe(false);
+    });
+});

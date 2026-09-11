@@ -13,6 +13,7 @@
                     variant="primary"
                     fill="solid"
                     icon="add"
+                    data-fd-overflow-primary
                     [fdUiHint]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
                     [ariaLabel]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
                     (click)="onAddRecipeClickAsync()"
@@ -28,16 +29,7 @@
                     [class.recipe-list__filter-button--active]="hasActiveFilters()"
                     (click)="openFilters()"
                 />
-                <fd-ui-button
-                    class="recipe-list__icon-button"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="search"
-                    [fdUiHint]="'RECIPE_LIST.SEARCH_LABEL' | translate"
-                    [ariaLabel]="'RECIPE_LIST.SEARCH_LABEL' | translate"
-                    (click)="toggleMobileSearch()"
-                />
+
                 <fd-ui-button
                     class="recipe-list__icon-button"
                     data-tour-id="recipe-list-tour-help"
@@ -58,6 +50,7 @@
                     variant="primary"
                     fill="solid"
                     icon="add"
+                    data-fd-overflow-primary
                     [ariaLabel]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
                     (click)="onAddRecipeClickAsync()"
                 >
@@ -106,11 +99,7 @@
                 </form>
             </div>
         } @else {
-            <div
-                class="recipe-list__mobile-search"
-                data-tour-id="recipe-list-search"
-                [class.recipe-list__mobile-search--open]="isMobileSearchVisible()"
-            >
+            <div class="recipe-list__mobile-search recipe-list__mobile-search--open" data-tour-id="recipe-list-search">
                 <form class="recipe-list__search-form recipe-list__search-form--mobile" [formRoot]="searchForm">
                     <fd-ui-input
                         class="recipe-list__search-input"

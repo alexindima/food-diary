@@ -102,3 +102,8 @@
         }
     }
 }
+
+.statistics__nutrition-group:not([hidden]) {
+    display: grid;
+    gap: var(--fd-space-md);
+}

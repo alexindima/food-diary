@@ -40,7 +40,7 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
     const trackedIndexes = getTrackedIndexes(statistics);
     const averageCalories = average(trackedIndexes.map(index => statistics?.calories[index] ?? 0));
     const nutrients = buildNutrients(statistics, user, trackedIndexes);
-    const calorieDifferencePercent = getDifferencePercent(averageCalories, calorieGoal);
+    const calorieDifferencePercent = trackedIndexes.length > 0 ? getDifferencePercent(averageCalories, calorieGoal) : null;
 
     const days = buildDays(statistics, formatDate);
 
@@ -55,7 +55,7 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
             nutrients,
         },
         days,
-        insights: buildInsights(nutrients, calorieDifferencePercent),
+        insights: trackedIndexes.length > 0 ? buildInsights(nutrients, calorieDifferencePercent) : [],
         balance: nutrients,
         mealStructure: buildMealStructure(statistics),
         stability: buildDietStability(days, calorieGoal, quantizationDays),

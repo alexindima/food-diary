@@ -11,8 +11,8 @@
             (valueChange)="changeVisibleDays($event)"
         />
 
-        <div class="nutrition-trend__content">
-            <div class="nutrition-trend__chart">
+        <div class="nutrition-trend__content" [class.nutrition-trend__content--empty]="!hasChartData()">
+            <div class="nutrition-trend__chart" [hidden]="!hasChartData()">
                 <fd-ui-bar-chart
                     class="nutrition-trend__bar-chart"
                     layout="stacked"

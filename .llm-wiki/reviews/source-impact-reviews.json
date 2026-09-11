@@ -832,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8b8c2ec498674a8931f5f11ed145e8a81144e2af337d2c6c86ab784e7414e3cb"
+          "sha256": "af3b342eaf78742c92e338412696ca85563b93eca77c09009b2a72b36c428085"
         }
       ],
-      "reason": "Executed 2674 main frontend tests, 41 focused UI-kit tests, 159 Users application tests, 285 domain tests, 37 PostgreSQL integration tests, 19 HTTP tests and 1204 architecture tests. Browser checks cover 18 combinations, mobile, reduced transparency and profile restoration; not claiming full npm verify.",
+      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
-      "reviewedAtUtc": "2026-09-10T22:21:20.2938108Z"
+      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
+      "reviewedAtUtc": "2026-09-11T08:30:20.9814162Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -922,21 +922,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8b8c2ec498674a8931f5f11ed145e8a81144e2af337d2c6c86ab784e7414e3cb"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d2e6a51b3e6985e1c8089278c63f54bb1a3dd669fc4c91fb0e0f5e102527aae3"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4fc7c66f318a54052da65ffab1c8d5a2e0942109d6bd4edeaf668aeb9157a490"
+          "sha256": "af3b342eaf78742c92e338412696ca85563b93eca77c09009b2a72b36c428085"
         }
       ],
-      "reason": "Existing authenticated current-user appearance endpoint and authorization remain unchanged. Only enumerated material codes are accepted; no new provider sharing or executable input. This is scoped change review, not a repository security audit.",
+      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
-      "reviewedAtUtc": "2026-09-10T22:21:21.2144264Z"
+      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
+      "reviewedAtUtc": "2026-09-11T08:30:21.9208772Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1069,13 +1061,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8c12a763892757544e423701d3c86ad4eded39960b90343b41352747d912a6b2"
+          "sha256": "26a08cde038c99a4a2bdaef1cd39b85ef707ded1eee230633250eb9040109ce9"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "6ead12959a58fb2d98a9004974c11708758980948c5cb52437f038cb6e3cfd10"
         }
       ],
-      "reason": "Shopping-list visual changes preserve page-to-panel and facade/API consumer chains; regenerated frontend contract index reflects template line movement. Trace workflow and documented commands remain valid.",
+      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "e0b7a4863c2de9ed6ad491c238b9c06f1ce71334",
-      "reviewedAtUtc": "2026-09-11T07:43:52.7411605Z"
+      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
+      "reviewedAtUtc": "2026-09-11T08:30:22.6833621Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1167,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8c12a763892757544e423701d3c86ad4eded39960b90343b41352747d912a6b2"
+          "sha256": "26a08cde038c99a4a2bdaef1cd39b85ef707ded1eee230633250eb9040109ce9"
         }
       ],
-      "reason": "Reviewed shopping-list page template relocation and compactActions binding against existing component contracts; inputs, outputs, routes and API calls remain unchanged. Frontend contract query workflow remains accurate.",
+      "reason": "Reviewed the frontend-contract-review, quality-risk, security-review and trace-feature workflows against regenerated frontend and quality indexes. This change adjusts main-app presentation and existing action bindings, adds empty-state and entitlement display guards, and updates focused specs. Component consumer tracing and risk workflows remain accurate; no backend route, authorization or provider contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "e0b7a4863c2de9ed6ad491c238b9c06f1ce71334",
-      "reviewedAtUtc": "2026-09-11T07:43:50.9837942Z"
+      "gitHead": "d8d6c4e88335d62c9c2b9bdc126cf10dc0656ed8",
+      "reviewedAtUtc": "2026-09-11T08:30:20.1350891Z"
     },
     {
       "pageId": "workflow.query-context",

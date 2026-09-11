@@ -1,4 +1,4 @@
-<main class="recommendations-page fd-stack fd-gap-xl" fdPageContainer>
+<div class="recommendations-page fd-stack fd-gap-xl" fdPageContainer>
     <fd-page-header [title]="'RECOMMENDATIONS.TITLE' | translate" [subtitle]="'RECOMMENDATIONS.SUBTITLE' | translate">
         <fd-ui-button
             data-tour-id="recommendations-tour-help"
@@ -115,7 +115,7 @@
                                         }
                                     </span>
                                     <span class="recommendations-page__date fd-ui-caption">
-                                        {{ recommendation.createdAtUtc | localizedDate: 'medium' }}
+                                        {{ recommendation.createdAtUtc | localizedDate: 'mediumDate' }}
                                     </span>
                                 </div>
                                 <span class="recommendations-page__status fd-ui-pill fd-ui-pill--compact fd-ui-caption">
@@ -138,4 +138,4 @@
             </section>
         }
     </fd-page-body>
-</main>
+</div>

@@ -62,6 +62,10 @@ export class FastingRedesignPreviewComponent {
     public readonly alertDismissRequested = output<string>();
 
     protected readonly isActive = computed(() => this.session()?.endedAtUtc === null);
+    protected readonly isPastTarget = computed(() => {
+        const target = this.targetAt();
+        return this.isActive() && this.session()?.planType !== 'Cyclic' && target !== null && this.now().getTime() > target.getTime();
+    });
     protected readonly progress = computed(() => Math.min(COMPLETE_PROGRESS, Math.max(0, this.progressPercent())));
     protected readonly primaryAlert = computed(() => this.alerts()[0] ?? null);
     protected readonly personalSummary = computed(() => {
@@ -82,7 +86,7 @@ export class FastingRedesignPreviewComponent {
     });
     protected readonly stageView = computed(() => {
         const session = this.session();
-        if (session?.endedAtUtc !== null || this.isEatingPhase()) {
+        if (session?.endedAtUtc !== null || this.isEatingPhase() || this.isPastTarget()) {
             return null;
         }
 

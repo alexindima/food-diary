@@ -17,6 +17,7 @@ type HeaderOverflowAction = {
     readonly disabled: boolean;
     readonly disabledReason: string | null;
     readonly target: HTMLElement;
+    readonly primary: boolean;
 };
 
 const ACTION_SELECTOR = 'button, a[href], [role="button"]';
@@ -48,6 +49,8 @@ export class HeaderActionsOverflowComponent {
 
     protected readonly actions = signal<readonly HeaderOverflowAction[]>([]);
     protected readonly hasOverflow = computed(() => this.actions().length > 1);
+    protected readonly primaryAction = computed(() => this.actions().find(action => action.primary));
+    protected readonly menuActions = computed(() => this.actions().filter(action => action !== this.primaryAction()));
 
     public constructor() {
         afterNextRender(() => {
@@ -59,7 +62,7 @@ export class HeaderActionsOverflowComponent {
             this.refreshActions();
             observer.observe(container, {
                 attributes: true,
-                attributeFilter: ['aria-disabled', 'aria-label', 'class', 'disabled', 'hidden'],
+                attributeFilter: ['data-fd-overflow-primary', 'aria-disabled', 'aria-label', 'class', 'disabled', 'hidden'],
                 childList: true,
                 subtree: true,
             });
@@ -97,6 +100,7 @@ export class HeaderActionsOverflowComponent {
             disabled: this.isDisabled(target),
             disabledReason: this.getDisabledReason(target),
             target,
+            primary: target.closest('[data-fd-overflow-primary]') !== null,
         };
     }
 

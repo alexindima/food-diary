@@ -1,11 +1,11 @@
-<section class="fasting-redesign">
+<section class="fasting-redesign" [class.fasting-redesign--past-target]="isPastTarget()">
     <div class="fasting-redesign__hero" data-tour-id="fasting-timer">
         <div class="fasting-redesign__timer-column">
             <fd-ui-progress-ring
                 class="fasting-redesign__ring"
                 [value]="progress()"
                 [ariaLabel]="'FASTING.TITLE' | translate"
-                [style.--fd-progress-ring-color]="'var(--fd-color-primary-400)'"
+                [style.--fd-progress-ring-color]="isPastTarget() ? 'var(--fd-color-orange-500)' : 'var(--fd-color-primary-400)'"
                 [style.--fd-progress-ring-track-color]="'var(--fd-color-border-summary-track)'"
                 [style.--fd-progress-ring-stroke-width]="6"
             >
@@ -30,6 +30,17 @@
                         {{ phaseLabelKey() | translate }}
                     </span>
                     <strong>{{ flowView().key | translate: flowView().params }}</strong>
+                </div>
+                <p class="fasting-redesign__target-notice fd-ui-body-sm" role="status" [hidden]="!isPastTarget()">
+                    {{ 'FASTING.REDESIGN.PAST_TARGET' | translate }}
+                </p>
+                <div class="fasting-redesign__actions">
+                    <fd-ui-button size="lg" (click)="manageRequested.emit()">
+                        {{ managementLabelKey() | translate }}
+                    </fd-ui-button>
+                    <fd-ui-button variant="secondary" fill="text" size="sm" (click)="checkInRequested.emit()">
+                        {{ 'FASTING.REDESIGN.CHECK_IN' | translate }}
+                    </fd-ui-button>
                 </div>
                 <div class="fasting-redesign__timeline-labels">
                     <span
@@ -74,7 +85,7 @@
                         </div>
                     </div>
                 } @else {
-                    <p class="fasting-redesign__support">{{ 'FASTING.REDESIGN.SUPPORT' | translate }}</p>
+                    <p class="fasting-redesign__support" [hidden]="isPastTarget()">{{ 'FASTING.REDESIGN.SUPPORT' | translate }}</p>
                 }
                 @if (activeSession.notes; as sessionNote) {
                     <div class="fasting-redesign__session-note">
@@ -85,14 +96,6 @@
                         >
                     </div>
                 }
-                <div class="fasting-redesign__actions">
-                    <fd-ui-button size="lg" (click)="manageRequested.emit()">
-                        {{ managementLabelKey() | translate }}
-                    </fd-ui-button>
-                    <fd-ui-button variant="secondary" fill="text" size="sm" (click)="checkInRequested.emit()">
-                        {{ 'FASTING.REDESIGN.CHECK_IN' | translate }}
-                    </fd-ui-button>
-                </div>
             } @else {
                 <div class="fasting-redesign__idle-copy">
                     <span class="fasting-redesign__idle-icon"><fd-ui-icon name="schedule" /></span>

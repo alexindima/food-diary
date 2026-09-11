@@ -102,12 +102,12 @@
     }
 
     @media #{variables.$media-tablet} {
-        grid-template-columns: 1fr;
+        grid-template-columns: auto minmax(0, 1fr);
         gap: var(--fd-space-md);
         padding: var(--fd-space-sm) 0 0;
 
         &__ring {
-            --fd-progress-ring-size: min(180px, 100%);
+            --fd-progress-ring-size: 112px;
         }
 
         &__elapsed {
@@ -115,11 +115,12 @@
         }
 
         &__summary {
-            align-items: center;
-            text-align: center;
+            align-items: flex-start;
+            text-align: left;
         }
 
         &__stage {
+            display: none;
             text-align: left;
         }
     }

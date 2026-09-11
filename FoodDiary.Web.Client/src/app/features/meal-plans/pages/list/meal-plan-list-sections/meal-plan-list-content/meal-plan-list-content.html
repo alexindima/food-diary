@@ -5,7 +5,12 @@
 } @else if (plans().length === 0) {
     <div class="meal-plans-list__empty fd-stack fd-align-center fd-gap-sm">
         <fd-ui-icon name="restaurant_menu" size="xl" />
-        <span>{{ 'MEAL_PLANS.EMPTY' | translate }}</span>
+        <span>{{ (filtered() ? 'MEAL_PLANS.EMPTY_FILTERED' : 'MEAL_PLANS.EMPTY') | translate }}</span>
+        @if (filtered()) {
+            <fd-ui-button variant="secondary" fill="outline" (click)="filterReset.emit()">{{
+                'MEAL_PLANS.RESET_FILTER' | translate
+            }}</fd-ui-button>
+        }
     </div>
 } @else {
     <div class="meal-plans-list__grid fd-grid fd-gap-lg">

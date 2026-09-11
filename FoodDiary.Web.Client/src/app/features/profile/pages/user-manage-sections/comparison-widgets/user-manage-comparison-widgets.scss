@@ -303,3 +303,17 @@
         }
     }
 }
+
+@media #{variables.$media-mobile} {
+    .profile-comparison__summary-layout {
+        gap: var(--fd-space-sm);
+    }
+    .profile-comparison__avatar-control {
+        width: var(--fd-size-control-xl);
+        height: var(--fd-size-control-xl);
+        flex-basis: var(--fd-size-control-xl);
+    }
+    .profile-comparison__completion {
+        gap: var(--fd-space-xs);
+    }
+}

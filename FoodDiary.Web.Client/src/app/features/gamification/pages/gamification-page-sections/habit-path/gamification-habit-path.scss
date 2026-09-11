@@ -310,7 +310,7 @@
         text-align: center;
         border: var(--fd-border-muted);
         border-radius: var(--fd-radius-md);
-        opacity: 0.62;
+        opacity: 1;
     }
 
     &__badge-title {
@@ -435,5 +435,25 @@
             grid-column: 2;
             justify-items: start;
         }
+    }
+}
+
+@media #{variables.$media-mobile} {
+    .habit-path__health-ring {
+        --fd-progress-ring-size: 88px;
+    }
+    .habit-path__streak {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-sm);
+    }
+    .habit-path__streak-value {
+        font-size: var(--fd-text-title-md-size);
+    }
+    .habit-path__next {
+        background: var(--fd-bg-surface-raised);
+        padding: var(--fd-space-sm);
+        border-radius: var(--fd-radius-md);
     }
 }

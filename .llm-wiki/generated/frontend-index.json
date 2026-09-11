@@ -2632,7 +2632,7 @@
       "role": "Component",
       "selector": "fd-header-actions-overflow",
       "path": "FoodDiary.Web.Client/src/app/components/shared/header-actions-overflow/header-actions-overflow.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "ImageUploadFieldComponent",
@@ -2646,7 +2646,7 @@
       "role": "Component",
       "selector": "fd-meal-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-card/meal-card.ts",
-      "line": 47
+      "line": 51
     },
     {
       "name": "MealDetailsFieldsComponent",
@@ -3906,7 +3906,7 @@
       "role": "Component",
       "selector": "fd-meal-plan-list-content",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "MealPlanListFiltersComponent",
@@ -4816,7 +4816,7 @@
       "role": "Component",
       "selector": "fd-recipe-manage",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "line": 68
+      "line": 66
     },
     {
       "name": "RecipeNutritionEditorComponent",
@@ -6356,8 +6356,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3425,
-      "russianProperties": 3425,
+      "englishProperties": 3433,
+      "russianProperties": 3433,
       "countsMatch": true
     },
     {

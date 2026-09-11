@@ -118,28 +118,12 @@
                     }
 
                     <div class="dashboard__column fd-grid">
-                        <fd-dashboard-fasting-block
-                            [shouldRender]="shouldRenderFastingWidget()"
-                            [state]="blockStates.fasting"
-                            [isEditingLayout]="layout.isEditingLayout()"
-                            [session]="fastingCurrentSession()"
-                            (blockClick)="openFastingPage()"
-                        />
-
                         <fd-dashboard-summary-block
                             [shouldRender]="layout.shouldRenderBlock('summary')"
                             [state]="blockStates.summary"
                             [isEditingLayout]="layout.isEditingLayout()"
                             [data]="dashboardSummaryData()"
                             (blockToggle)="layout.toggleBlock('summary')"
-                        />
-
-                        <fd-nutrition-weekly-trend-card
-                            [points]="weeklyCalories()"
-                            [dailyGoal]="snapshot()?.dailyGoal ?? 0"
-                            [insight]="nutritionInsight()"
-                            [isToday]="isTodaySelected()"
-                            (details)="openGoalsAsync()"
                         />
 
                         <fd-dashboard-meals-block
@@ -154,6 +138,22 @@
                             (add)="addMealAsync($event)"
                             (aiMealCreateRequested)="onAiMealCreateRequested($event)"
                             (open)="openMeal($event)"
+                        />
+
+                        <fd-dashboard-fasting-block
+                            [shouldRender]="shouldRenderFastingWidget()"
+                            [state]="blockStates.fasting"
+                            [isEditingLayout]="layout.isEditingLayout()"
+                            [session]="fastingCurrentSession()"
+                            (blockClick)="openFastingPage()"
+                        />
+
+                        <fd-nutrition-weekly-trend-card
+                            [points]="weeklyCalories()"
+                            [dailyGoal]="snapshot()?.dailyGoal ?? 0"
+                            [insight]="nutritionInsight()"
+                            [isToday]="isTodaySelected()"
+                            (details)="openGoalsAsync()"
                         />
                     </div>
 

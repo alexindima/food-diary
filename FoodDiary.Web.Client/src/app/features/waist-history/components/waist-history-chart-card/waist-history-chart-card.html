@@ -1,4 +1,8 @@
-<fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
+<fd-ui-card
+    class="waist-history-page__card waist-history-page__card--chart"
+    [class.waist-history-page__card--empty]="!hasPoints() && !isLoading()"
+    [title]="'WAIST_HISTORY.CHART_TITLE' | translate"
+>
     <ng-content select="[chartControls]" />
 
     <div class="waist-history-page__chart-viewport">

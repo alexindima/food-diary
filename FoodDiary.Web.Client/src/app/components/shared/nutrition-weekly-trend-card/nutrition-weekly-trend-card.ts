@@ -138,6 +138,7 @@ export class NutritionWeeklyTrendCardComponent {
             showDetails: insight.kind !== 'empty',
         };
     });
+    protected readonly hasChartData = computed(() => this.visibleSourcePoints().some(point => point.calories > 0));
     private readonly visibleSourcePoints = computed(() => this.points().slice(-this.visibleDays()));
     protected readonly maxCalories = computed(() => {
         const maxStack = Math.max(0, ...this.visibleSourcePoints().map(point => this.calculateStackCalories(point)));

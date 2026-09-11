@@ -26,6 +26,21 @@ const USER: User = {
 };
 
 describe('statistics dashboard card mapper', () => {
+    it('does not interpret missing records as a calorie reduction', () => {
+        const result = buildStatisticsDashboardCardsView({
+            statistics: null,
+            user: USER,
+            weightPoints: [],
+            waistPoints: [],
+            quantizationDays: 1,
+            periodDays: 7,
+            formatDate: date => date.toISOString(),
+        });
+        expect(result.overview.trackedDays).toBe(0);
+        expect(result.overview.calorieChangePercent).toBeNull();
+        expect(result.insights).toEqual([]);
+    });
+
     it('maps tracked days, real goals, missing days, nutrients, and body change', () => {
         const statistics: MappedStatistics = {
             date: [new Date('2026-08-02T00:00:00Z'), new Date('2026-08-03T00:00:00Z')],

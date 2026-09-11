@@ -63,13 +63,14 @@
         </strong>
     </fd-ui-accent-surface>
 
+    @if (product().barcode) {
     <fd-ui-accent-surface
         class="product-detail__surface product-detail__surface--summary fd-ui-summary-surface"
-        [hidden]="!product().barcode"
     >
         <span class="product-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
             'PRODUCT_DETAIL.SUMMARY.BARCODE' | translate
         }}</span>
         <strong class="product-detail__surface-value fd-ui-summary-surface__value fd-ui-card-title"> {{ product().barcode }} </strong>
     </fd-ui-accent-surface>
+    }
 </div>

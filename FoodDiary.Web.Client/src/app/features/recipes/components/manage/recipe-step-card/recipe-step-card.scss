@@ -113,3 +113,9 @@
         width: 100%;
     }
 }
+
+@media #{variables.$media-mobile} {
+    .recipe-step-card__image {
+        max-width: 144px;
+    }
+}

@@ -386,3 +386,39 @@
         }
     }
 }
+
+@media #{variables.$media-mobile} {
+    .academy-progress__lesson {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: var(--fd-space-sm);
+    }
+    .academy-progress__icon {
+        width: var(--fd-size-control-lg);
+        height: var(--fd-size-control-lg);
+        font-size: var(--fd-size-icon-lg);
+    }
+    .academy-progress__content {
+        min-width: 0;
+    }
+    .academy-progress__content p {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .academy-progress__summary {
+        padding-block: var(--fd-space-sm);
+        gap: var(--fd-space-xxs);
+    }
+    .academy-progress__summary strong {
+        font-size: var(--fd-text-title-md-size);
+    }
+    .lessons-list__recommendation {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+    .lessons-list__recommendation .lessons-list__recommendation-actions {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: center;
+    }
+}

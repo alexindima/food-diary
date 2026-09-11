@@ -22,13 +22,15 @@
     }
 }
 
-.fd-header-actions-overflow__trigger {
+.fd-header-actions-overflow__trigger,
+.fd-header-actions-overflow__primary {
     display: none;
 }
 
 @media #{variables.$media-tablet} {
     :host(:where(.fd-header-actions-overflow--has-overflow)) {
-        width: var(--fd-size-control-touch);
+        gap: var(--fd-space-xs);
+        width: auto;
         min-width: var(--fd-size-control-touch);
 
         .fd-header-actions-overflow__actions {
@@ -41,7 +43,8 @@
             pointer-events: none;
         }
 
-        .fd-header-actions-overflow__trigger {
+        .fd-header-actions-overflow__trigger,
+        .fd-header-actions-overflow__primary {
             display: inline-flex;
         }
     }

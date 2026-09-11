@@ -350,3 +350,15 @@ function createItemCollageMeal(): MealCardItem {
         ],
     };
 }
+
+describe('MealCardComponent item description', () => {
+    it('summarizes manual and recognized food names', async () => {
+        const { component, fixture } = await setupMealCardAsync();
+        fixture.componentRef.setInput('meal', {
+            ...MOCK_MEAL,
+            items: [{ product: { name: 'Rice' } }],
+            aiSessions: [{ items: [{ nameEn: 'Chicken', nameLocal: 'Курица' }] }],
+        });
+        expect(component['description']()).toBe('Rice, Курица');
+    });
+});

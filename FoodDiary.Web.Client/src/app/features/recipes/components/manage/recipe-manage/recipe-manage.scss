@@ -106,3 +106,20 @@
         }
     }
 }
+
+.recipe-manage__import-card {
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-bg-surface);
+}
+.recipe-manage__import-card > summary {
+    cursor: pointer;
+}
+.recipe-manage__import-card[open] > summary {
+    margin-bottom: var(--fd-space-md);
+}
+.recipe-manage__import-card > summary:focus-visible {
+    outline: var(--fd-outline-focus);
+    outline-offset: var(--fd-outline-offset);
+}

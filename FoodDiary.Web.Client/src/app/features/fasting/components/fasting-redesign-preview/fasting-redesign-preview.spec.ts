@@ -64,6 +64,14 @@ describe('FastingRedesignPreviewComponent', () => {
         fixture.componentRef.setInput('selectedDurationHours', INTERMITTENT_HOURS);
     });
 
+    it('flags an overdue active session without presenting a further fasting stage', () => {
+        fixture.componentRef.setInput('session', createSession({ startedAtUtc: '2026-08-01T15:00:00Z' }));
+        expect(component['isPastTarget']()).toBe(true);
+        expect(component['stageView']()).toBeNull();
+        fixture.componentRef.setInput('session', createSession({ endedAtUtc: '2026-08-11T16:00:00Z' }));
+        expect(component['isPastTarget']()).toBe(false);
+    });
+
     it('describes an intermittent fast and its upcoming eating window', () => {
         fixture.componentRef.setInput('session', createSession());
 

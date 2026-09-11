@@ -64,6 +64,12 @@ export class WeeklyCheckInPageComponent {
     protected readonly remainingInsightCount = computed(() =>
         Math.max((this.review()?.insights.length ?? 0) - WeeklyCheckInPageComponent.SUMMARY_INSIGHT_LIMIT, 0),
     );
+    protected readonly weightChange = computed(() => {
+        const week = this.thisWeek();
+        const start = week?.weightStart ?? null;
+        const end = week?.weightEnd ?? null;
+        return start === null || end === null ? null : end - start;
+    });
     protected readonly weeklyGoal = this.facade.weeklyGoal;
     protected readonly selectedWeekGoal = this.facade.selectedWeekGoal;
     protected readonly isGoalLoading = this.facade.isGoalLoading;

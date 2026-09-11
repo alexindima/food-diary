@@ -95,12 +95,11 @@ export class SidebarComponent {
     protected readonly isMobileSheetOpen = computed(() => this.mobileSheet() !== null);
     protected readonly isMobileViewport = signal(this.getIsMobileViewport());
     protected readonly currentPath = signal(this.getCurrentPath());
-    protected readonly isDashboardRoute = computed(() => {
-        const path = this.currentPath();
-        return path === '/' || path === '/dashboard';
-    });
     protected readonly isMobileProgressVisible = computed(
-        () => this.isAuthenticated() && this.isMobileViewport() && !this.isDashboardRoute(),
+        () =>
+            this.isAuthenticated() &&
+            this.isMobileViewport() &&
+            ['/meals', '/products', '/recipes', '/explore'].includes(this.currentPath()),
     );
     protected readonly pendingRoute = signal<string | null>(null);
     protected readonly dailyConsumedKcal = this.sidebarFacade.dailyConsumedKcal;

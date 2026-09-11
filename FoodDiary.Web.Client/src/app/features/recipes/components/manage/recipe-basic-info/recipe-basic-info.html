@@ -10,19 +10,6 @@
     [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate"
 >
     <div class="recipe-basic-info__hero fd-grid fd-gap-lg">
-        <div class="recipe-basic-info__image">
-            <fd-image-upload-field
-                appearance="compact"
-                recommendedSize="512 x 512"
-                acceptedTypes="image/png,image/jpeg,image/webp"
-                [formField]="recipeForm.imageUrl"
-                [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
-                [maxSizeMb]="10"
-                [cropEnabled]="true"
-                [cropSize]="512"
-                [cropAspectRatio]="1"
-            />
-        </div>
         <div class="recipe-basic-info__hero-field fd-stack fd-gap-xs">
             <fd-ui-input
                 size="lg"
@@ -48,6 +35,19 @@
                 [step]="1"
                 [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
                 [error]="errors.cookTime"
+            />
+        </div>
+        <div class="recipe-basic-info__image">
+            <fd-image-upload-field
+                appearance="compact"
+                recommendedSize="512 x 512"
+                acceptedTypes="image/png,image/jpeg,image/webp"
+                [formField]="recipeForm.imageUrl"
+                [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
+                [maxSizeMb]="10"
+                [cropEnabled]="true"
+                [cropSize]="512"
+                [cropAspectRatio]="1"
             />
         </div>
     </div>

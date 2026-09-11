@@ -13,6 +13,7 @@
                     variant="primary"
                     fill="solid"
                     icon="add"
+                    data-fd-overflow-primary
                     [fdUiHint]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
                     [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
                     (click)="onAddProductClick()"
@@ -28,16 +29,7 @@
                     [class.product-list__filter-button--active]="hasActiveFilters()"
                     (click)="openFilters()"
                 />
-                <fd-ui-button
-                    class="product-list__icon-button"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="search"
-                    [fdUiHint]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                    [ariaLabel]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                    (click)="toggleMobileSearch()"
-                />
+
                 <fd-ui-button
                     class="product-list__icon-button"
                     data-tour-id="product-list-tour-help"
@@ -58,6 +50,7 @@
                     variant="primary"
                     fill="solid"
                     icon="add"
+                    data-fd-overflow-primary
                     [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
                     (click)="onAddProductClick()"
                 >
@@ -117,11 +110,7 @@
                 </form>
             </div>
         } @else {
-            <div
-                class="product-list__mobile-search"
-                data-tour-id="product-list-search"
-                [class.product-list__mobile-search--open]="isMobileSearchVisible()"
-            >
+            <div class="product-list__mobile-search product-list__mobile-search--open" data-tour-id="product-list-search">
                 <form class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
                     <div class="product-list__search-control">
                         <fd-ui-input

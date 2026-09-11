@@ -474,3 +474,21 @@
         }
     }
 }
+
+@media #{variables.$media-mobile} {
+    .cycle-tracking__day-header {
+        flex-wrap: wrap;
+    }
+    .cycle-tracking__day-identity {
+        flex-basis: 100%;
+    }
+    .cycle-tracking__day-date {
+        font-size: var(--fd-text-body-size);
+    }
+    .cycle-tracking__day-actions {
+        flex-wrap: wrap;
+    }
+    .cycle-tracking__empty {
+        padding-block: var(--fd-space-md);
+    }
+}

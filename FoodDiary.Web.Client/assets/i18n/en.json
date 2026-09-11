@@ -986,7 +986,8 @@
             "NUTRITION_DESCRIPTION": "Review calories, macros, warnings, and save actions before submitting.",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
-        }
+        },
+        "OPTIONAL_MEDIA": "Photo and comment (optional)"
     },
     "QUICK_MEAL": {
         "TITLE": "Meal draft",
@@ -5141,7 +5142,7 @@
         "CUSTOM_RANGE_PLACEHOLDER": "Select dates",
         "CUSTOM_RANGE_FROM_LABEL": "From",
         "CUSTOM_RANGE_TO_LABEL": "To",
-        "NO_DATA_FOR_CHART": "Add an entry to see progress.",
+        "NO_DATA_FOR_CHART": "No measurements for this period. Choose another period or add a measurement.",
         "DATE_LABEL": "Date",
         "DATE_PLACEHOLDER": "Select a date",
         "CIRCUMFERENCE_LABEL": "Waist circumference ({{unit}})",
@@ -5565,7 +5566,8 @@
             "DAY_4": "Thu",
             "DAY_5": "Fri",
             "DAY_6": "Sat",
-            "DAY_7": "Sun"
+            "DAY_7": "Sun",
+            "PAST_TARGET": "The planned end time has passed. Check whether this session should be ended."
         },
         "LOADING": "Loading fasting data...",
         "TOUR": {
@@ -5967,7 +5969,9 @@
             "CLOSED_EMPTY_COPY": "No goal was set for this period.",
             "CLOSED_ACTION": "Period ended",
             "CLOSED_ACTION_HINT": "Goals can only be set for the current or next week.",
-            "SAVE_ERROR": "We couldn't save the goal. Please try again."
+            "SAVE_ERROR": "We couldn't save the goal. Please try again.",
+            "CREATE_CURRENT": "Set this week’s goal",
+            "CREATE_NEXT": "Set next week’s goal"
         },
         "OPEN_REPORT": "Open detailed report",
         "MORE_INSIGHTS": "+ {{count}} more",
@@ -6279,7 +6283,8 @@
             "CHECKOUT_HINT": "Choose a plan below to start Premium through the payment form.",
             "CHECKOUT_UNAVAILABLE_HINT": "Premium checkout is temporarily unavailable.",
             "START_TRIAL_ACTION": "Start 7-day trial",
-            "MANAGE_ACTION": "Manage subscription"
+            "MANAGE_ACTION": "Manage subscription",
+            "ACCESS_HINT": "Premium features are available for your account."
         },
         "STATUS": {
             "ACTIVE": "Active",
@@ -6288,7 +6293,8 @@
             "CANCELED": "Canceled",
             "UNPAID": "Unpaid",
             "INCOMPLETE": "Incomplete",
-            "NONE": "Free plan"
+            "NONE": "Free plan",
+            "ACCESS_ACTIVE": "Access active"
         },
         "PLANS": {
             "TITLE": "Choose a plan",
@@ -6440,7 +6446,9 @@
             "DAYS_DESCRIPTION": "Inspect each day of the plan and the recipes assigned to it.",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this plan."
-        }
+        },
+        "EMPTY_FILTERED": "No plans match this diet type.",
+        "RESET_FILTER": "Show all plans"
     },
     "TDEE_CARD": {
         "TITLE": "Energy expenditure",

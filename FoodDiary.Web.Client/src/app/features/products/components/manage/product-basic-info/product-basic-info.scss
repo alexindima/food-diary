@@ -59,9 +59,16 @@
 
     .product-manage__image {
         width: 100%;
-        max-width: 240px;
+        max-width: 144px;
         height: auto;
         aspect-ratio: 1 / 1;
-        justify-self: center;
+        justify-self: start;
+    }
+}
+
+@media #{variables.$media-mobile} {
+    .product-manage__image {
+        grid-row: auto;
+        grid-column: auto;
     }
 }

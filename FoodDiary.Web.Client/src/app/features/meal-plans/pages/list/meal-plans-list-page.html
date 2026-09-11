@@ -22,6 +22,8 @@
             data-tour-id="meal-plans-list"
             [isLoading]="facade.isLoading()"
             [plans]="planCards()"
+            [filtered]="facade.dietTypeFilter() !== null"
+            (filterReset)="filterByDiet(null)"
             (planOpen)="openPlan($event)"
         />
     </fd-page-body>

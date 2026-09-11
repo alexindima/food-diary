@@ -1,14 +1,16 @@
 .explore-controls {
+    align-items: end;
+    gap: var(--fd-space-sm);
     margin-bottom: var(--fd-space-lg);
 }
 
 .explore-search {
     flex: 1;
-    min-width: 200px;
+    min-width: min(100%, 240px);
 }
 
 .explore-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     margin-bottom: var(--fd-space-lg);
 }
 

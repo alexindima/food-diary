@@ -8,6 +8,18 @@
         (back)="onCancelAsync()"
     >
         <fd-ui-button
+            appearance="toolbar"
+            variant="primary"
+            icon="save"
+            data-fd-overflow-primary
+            [ariaLabel]="(meal() !== null ? 'MEAL_MANAGE.SAVE_BUTTON' : 'MEAL_MANAGE.ADD_BUTTON') | translate"
+            [fdUiHint]="(meal() !== null ? 'MEAL_MANAGE.SAVE_BUTTON' : 'MEAL_MANAGE.ADD_BUTTON') | translate"
+            [disabled]="isSubmitDisabled()"
+            [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
+            [loading]="isSubmitting()"
+            (click)="manageForm.requestSubmit()"
+        />
+        <fd-ui-button
             data-tour-id="meal-manage-tour-help"
             appearance="toolbar"
             variant="secondary"
@@ -20,17 +32,10 @@
     </fd-page-header>
 
     <fd-page-body>
-        <form class="meal-manage__form fd-stack fd-gap-lg" [formRoot]="mealSignalForm" [attr.aria-busy]="isSubmitting()">
+        <form #manageForm class="meal-manage__form fd-stack fd-gap-lg" [formRoot]="mealSignalForm" [attr.aria-busy]="isSubmitting()">
             @let generalErrors = generalFieldErrors();
             <div class="meal-manage__grid fd-grid fd-gap-xl">
                 <div class="meal-manage__column meal-manage__column--primary fd-stack fd-gap-lg">
-                    <fd-meal-general-info
-                        data-tour-id="meal-manage-general"
-                        [mealForm]="mealSignalForm"
-                        [mealTypeSelectOptions]="mealTypeSelectOptions"
-                        [generalErrors]="generalErrors"
-                    />
-
                     <fd-meal-items-section
                         data-tour-id="meal-manage-items"
                         [items]="itemListItems()"
@@ -46,6 +51,13 @@
                         (openItemSelect)="onItemSourceClick($event)"
                         (editSession)="onEditAiSession($event)"
                         (deleteSession)="onDeleteAiSession($event)"
+                    />
+
+                    <fd-meal-general-info
+                        data-tour-id="meal-manage-general"
+                        [mealForm]="mealSignalForm"
+                        [mealTypeSelectOptions]="mealTypeSelectOptions"
+                        [generalErrors]="generalErrors"
                     />
 
                     <fd-meal-satiety-card

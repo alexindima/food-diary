@@ -1,4 +1,8 @@
-<fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
+<fd-ui-card
+    class="weight-history-page__card weight-history-page__card--chart"
+    [class.weight-history-page__card--empty]="!hasPoints() && !isLoading()"
+    [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate"
+>
     <ng-content select="[chartControls]" />
 
     <div class="weight-history-page__chart-viewport">

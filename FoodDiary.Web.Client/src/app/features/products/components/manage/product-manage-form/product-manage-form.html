@@ -8,6 +8,18 @@
         (back)="onCancelAsync()"
     >
         <fd-ui-button
+            appearance="toolbar"
+            variant="primary"
+            icon="save"
+            data-fd-overflow-primary
+            [ariaLabel]="manageHeaderState().submitLabelKey | translate"
+            [fdUiHint]="manageHeaderState().submitLabelKey | translate"
+            [disabled]="productForm().invalid() || isSubmitting() || isDeleting()"
+            [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
+            [loading]="isSubmitting()"
+            (click)="manageForm.requestSubmit()"
+        />
+        <fd-ui-button
             class="product-manage__tour-action"
             data-tour-id="product-manage-tour-help"
             appearance="toolbar"
@@ -21,7 +33,12 @@
     </fd-page-header>
 
     <fd-page-body>
-        <form class="product-manage__form fd-stack fd-gap-lg" [formRoot]="productForm" [attr.aria-busy]="isSubmitting() || isDeleting()">
+        <form
+            #manageForm
+            class="product-manage__form fd-stack fd-gap-lg"
+            [formRoot]="productForm"
+            [attr.aria-busy]="isSubmitting() || isDeleting()"
+        >
             <div class="product-manage__grid fd-grid fd-gap-xl">
                 <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
                     <fd-product-basic-info

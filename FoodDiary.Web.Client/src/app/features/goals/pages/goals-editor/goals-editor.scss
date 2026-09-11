@@ -471,3 +471,53 @@
         justify-content: flex-start;
     }
 }
+
+@media #{variables.$media-tablet} {
+    .goals-editor-summary {
+        gap: var(--fd-space-sm);
+    }
+    .goals-editor-summary__calories {
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: space-between;
+        padding-bottom: var(--fd-space-sm);
+    }
+    .goals-editor-summary__value {
+        font-size: var(--fd-text-title-md-size);
+    }
+    .goals-editor-summary__macros {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--fd-space-xs);
+    }
+    .goals-editor-summary__macro {
+        padding: 0 var(--fd-space-xs);
+    }
+    .goals-editor-summary__macro strong {
+        font-size: var(--fd-text-body-size);
+    }
+    .goals-editor-summary__macro-label {
+        font-size: var(--fd-text-caption-size);
+        gap: var(--fd-space-xxs);
+    }
+}
+
+@media #{variables.$media-tablet} {
+    .goals-editor-summary__calories {
+        display: grid;
+        grid-template-columns: 1fr auto;
+    }
+    .goals-editor-summary__calories .goals-editor-card__title {
+        grid-column: 1;
+    }
+    .goals-editor-summary__calories .goals-editor-card__label {
+        display: none;
+    }
+    .goals-editor-summary__value {
+        grid-column: 2;
+        grid-row: 1;
+        white-space: nowrap;
+    }
+    .goals-editor-summary__calories .goals-editor-card__hint {
+        grid-column: 1 / -1;
+    }
+}

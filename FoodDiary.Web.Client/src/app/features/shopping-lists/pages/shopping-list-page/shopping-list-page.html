@@ -23,6 +23,7 @@
                     variant="primary"
                     fill="solid"
                     icon="add"
+                    data-fd-overflow-primary
                     [fdUiHint]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
                     [ariaLabel]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
                     [disabled]="isLoading()"
@@ -47,6 +48,7 @@
                 variant="primary"
                 fill="solid"
                 icon="add"
+                data-fd-overflow-primary
                 [disabled]="isLoading()"
                 [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                 (click)="createNewList()"

@@ -182,3 +182,7 @@
         }
     }
 }
+
+.nutrition-trend__content--empty {
+    grid-template-columns: minmax(0, 1fr);
+}

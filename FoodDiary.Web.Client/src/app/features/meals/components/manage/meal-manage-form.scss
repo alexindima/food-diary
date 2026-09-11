@@ -415,3 +415,21 @@
 .meal-manage__nutrition-toggle {
     width: 100%;
 }
+
+.meal-manage__hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+}
+.meal-manage__optional > summary {
+    cursor: pointer;
+    padding-block: var(--fd-space-sm);
+}
+.meal-manage__optional > summary:focus-visible {
+    outline: var(--fd-outline-focus);
+    outline-offset: var(--fd-outline-offset);
+}
+.meal-manage__optional .meal-manage__image {
+    width: 144px;
+    height: 144px;
+    margin-bottom: var(--fd-space-md);
+}

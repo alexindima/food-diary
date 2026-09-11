@@ -20,16 +20,21 @@ export function buildPremiumOverviewCardViewModel(
         copyState: buildPremiumOverviewCopyState(overview, isPremium),
         badges: buildPremiumOverviewBadges(overview, isPremium),
         currentPeriodEndLabel,
-        hintKey: getPremiumOverviewHintKey(showManageBilling, showStartTrial, checkoutAvailable),
+        hintKey:
+            isPremium && !showManageBilling
+                ? 'PREMIUM_PAGE.OVERVIEW.ACCESS_HINT'
+                : getPremiumOverviewHintKey(showManageBilling, showStartTrial, checkoutAvailable),
         showManageBilling,
         showStartTrial,
     };
 }
 
 export function buildPremiumOverviewBadges(overview: BillingOverview | null, isPremium: boolean): PremiumOverviewBadgesViewModel {
+    const plan = overview?.plan ?? null;
+    const status = overview?.subscriptionStatus ?? null;
     return {
-        planLabelKey: isPremium && overview?.plan !== null && overview?.plan !== undefined ? getPremiumPlanLabelKey(overview.plan) : null,
-        statusLabelKey: getPremiumStatusLabelKey(overview?.subscriptionStatus ?? null),
+        planLabelKey: isPremium && plan !== null ? getPremiumPlanLabelKey(plan) : null,
+        statusLabelKey: isPremium && status === null ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : getPremiumStatusLabelKey(status),
     };
 }
 

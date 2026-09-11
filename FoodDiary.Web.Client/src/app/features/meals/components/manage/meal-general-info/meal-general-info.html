@@ -6,13 +6,6 @@
     [title]="'MEAL_MANAGE.GENERAL_GROUP_TITLE' | translate"
 >
     <div class="meal-manage__hero fd-grid fd-gap-lg">
-        <div class="meal-manage__image">
-            <fd-image-upload-field
-                appearance="compact"
-                [formField]="mealForm().imageUrl"
-                [description]="'MEAL_MANAGE.IMAGE_DESCRIPTION' | translate"
-            />
-        </div>
         <div class="meal-manage__hero-fields fd-stack fd-gap-lg">
             <div class="meal-manage__field-row fd-grid fd-gap-lg">
                 <div class="meal-manage__field fd-stack fd-gap-xs">
@@ -44,13 +37,23 @@
             </div>
         </div>
     </div>
-    <div class="meal-manage__field meal-manage__field--full fd-stack fd-gap-xs">
-        <fd-ui-textarea
-            size="lg"
-            [formField]="mealForm().comment"
-            [label]="'MEAL_MANAGE.COMMENT' | translate"
-            [placeholder]="'MEAL_MANAGE.COMMENT_PLACEHOLDER' | translate"
-            [rows]="3"
-        />
-    </div>
+    <details class="meal-manage__optional">
+        <summary class="fd-ui-body-sm">{{ 'MEAL_MANAGE.OPTIONAL_MEDIA' | translate }}</summary>
+        <div class="meal-manage__image">
+            <fd-image-upload-field
+                appearance="compact"
+                [formField]="mealForm().imageUrl"
+                [description]="'MEAL_MANAGE.IMAGE_DESCRIPTION' | translate"
+            />
+        </div>
+        <div class="meal-manage__field meal-manage__field--full fd-stack fd-gap-xs">
+            <fd-ui-textarea
+                size="lg"
+                [formField]="mealForm().comment"
+                [label]="'MEAL_MANAGE.COMMENT' | translate"
+                [placeholder]="'MEAL_MANAGE.COMMENT_PLACEHOLDER' | translate"
+                [rows]="3"
+            />
+        </div>
+    </details>
 </fd-ui-card>

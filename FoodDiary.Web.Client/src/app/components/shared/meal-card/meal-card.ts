@@ -32,7 +32,11 @@ export type MealCardItem = {
         product?: { imageUrl?: string | null; name?: string | null } | null;
         recipe?: { imageUrl?: string | null; name?: string | null } | null;
     } | null> | null;
-    aiSessions?: Array<{ imageUrl?: string | null; notes?: string | null; items?: unknown[] | null } | null> | null;
+    aiSessions?: Array<{
+        imageUrl?: string | null;
+        notes?: string | null;
+        items?: Array<{ nameEn?: string; nameLocal?: string | null }> | null;
+    } | null> | null;
 };
 
 const COLLAGE_IMAGE_LIMIT = 4;
@@ -117,7 +121,23 @@ export class MealCardComponent {
         const aiCount = meal.aiSessions?.reduce((total, session) => total + (session?.items?.length ?? 0), 0) ?? 0;
         return manualCount + aiCount;
     });
-    protected readonly description = computed(() => `${this.translateService.instant('MEAL_CARD.ITEM_COUNT')}: ${this.itemCount()}`);
+    protected readonly description = computed(() => {
+        const names =
+            this.meal().items?.flatMap(item => {
+                const name = item?.product?.name?.trim() ?? item?.recipe?.name?.trim();
+                return name !== undefined && name.length > 0 ? [name] : [];
+            }) ?? [];
+        const recognizedNames =
+            this.meal().aiSessions?.flatMap(
+                session =>
+                    session?.items?.flatMap(item => {
+                        const name = item.nameLocal?.trim() ?? item.nameEn?.trim();
+                        return name !== undefined && name.length > 0 ? [name] : [];
+                    }) ?? [],
+            ) ?? [];
+        names.push(...recognizedNames);
+        return names.length > 0 ? names.join(', ') : `${this.translateService.instant('MEAL_CARD.ITEM_COUNT')}: ${this.itemCount()}`;
+    });
     protected readonly mealTime = computed(() => {
         const format = this.showDate() ? 'd MMM, HH:mm' : 'HH:mm';
         return formatDate(this.meal().date, format, resolveAppLocale(this.translateService.getCurrentLang()));

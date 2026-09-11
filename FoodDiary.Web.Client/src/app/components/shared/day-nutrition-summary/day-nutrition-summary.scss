@@ -181,7 +181,7 @@
             gap: var(--fd-space-lg);
         }
         &__ring {
-            width: min(100%, 260px);
+            width: min(100%, 180px);
         }
     }
 
@@ -221,5 +221,26 @@
 
     to {
         clip-path: inset(0);
+    }
+}
+
+@media #{variables.$media-mobile} {
+    .day-summary__nutrients {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--fd-space-md);
+    }
+    .day-summary__nutrient-header {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--fd-space-xxs);
+    }
+    .day-summary__nutrient-percent {
+        display: none;
+    }
+    .day-summary__nutrient-label {
+        font-size: var(--fd-text-body-sm-size);
+        gap: var(--fd-space-xs);
+    }
+    .day-summary__track {
+        --fd-progress-height: var(--fd-space-xs);
     }
 }

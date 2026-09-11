@@ -32,7 +32,6 @@
                 @if (calorieChangePercent !== null) {
                     <div
                         class="statistics-overview-card__comparison fd-stack fd-gap-xxs"
-                        [class.statistics-overview-card__comparison--positive]="calorieChangePercent < 0"
                     >
                         <strong class="fd-ui-metric-md">
                             {{ calorieChangePercent > 0 ? '+' : '' }}{{ calorieChangePercent | number: '1.0-0' }}%

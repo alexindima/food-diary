@@ -86,9 +86,16 @@
 
         &__image {
             width: 100%;
-            max-width: 240px;
+            max-width: 144px;
             height: auto;
-            justify-self: center;
+            justify-self: start;
         }
+    }
+}
+
+@media #{variables.$media-mobile} {
+    .recipe-basic-info__image {
+        grid-row: auto;
+        grid-column: auto;
     }
 }

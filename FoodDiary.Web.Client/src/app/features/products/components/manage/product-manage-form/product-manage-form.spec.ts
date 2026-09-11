@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
@@ -545,6 +546,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     await TestBed.configureTestingModule({
         imports: [ProductManageFormComponent],
         providers: [
+            provideRouter([]),
             provideTranslateTesting(),
             {
                 provide: ProductService,

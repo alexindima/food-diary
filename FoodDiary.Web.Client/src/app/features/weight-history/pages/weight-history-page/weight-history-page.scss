@@ -462,11 +462,11 @@
 
     @media #{variables.$media-phablet} {
         &__summary {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         &__goal-stats {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: var(--fd-space-md);
         }
 
@@ -486,5 +486,14 @@
         &__chart-viewport {
             min-height: 260px;
         }
+    }
+}
+
+.weight-history-page__card--empty {
+    min-height: 0;
+
+    .weight-history-page__chart-viewport {
+        min-height: 0;
+        padding-block: var(--fd-space-xl);
     }
 }

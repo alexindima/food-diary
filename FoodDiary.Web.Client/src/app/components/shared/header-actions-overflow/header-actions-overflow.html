@@ -3,6 +3,20 @@
 </div>
 
 @if (hasOverflow()) {
+    @if (primaryAction(); as action) {
+        <fd-ui-button
+            class="fd-header-actions-overflow__primary"
+            appearance="toolbar"
+            variant="primary"
+            fill="solid"
+            [icon]="action.icon ?? undefined"
+            [ariaLabel]="action.label"
+            [fdUiHint]="action.label"
+            [disabled]="action.disabled"
+            [disabledReason]="action.disabledReason"
+            (click)="activateAction(action)"
+        />
+    }
     <fd-ui-button
         class="fd-header-actions-overflow__trigger"
         appearance="toolbar"
@@ -15,7 +29,7 @@
     />
 
     <fd-ui-menu #actionsMenu="fdUiMenu">
-        @for (action of actions(); track action.id) {
+        @for (action of menuActions(); track action.id) {
             <fd-ui-menu-item [disabled]="action.disabled" [disabledReason]="action.disabledReason" (itemClick)="activateAction(action)">
                 @if (action.icon) {
                     <fd-ui-icon [name]="action.icon" />

@@ -11,7 +11,12 @@ import { HeaderActionsOverflowComponent } from './header-actions-overflow';
     imports: [HeaderActionsOverflowComponent],
     template: `
         <fd-header-actions-overflow>
-            <button type="button" aria-label="First action" (click)="firstClicks.set(firstClicks() + 1)">
+            <button
+                type="button"
+                aria-label="First action"
+                [attr.data-fd-overflow-primary]="primary() ? true : null"
+                (click)="firstClicks.set(firstClicks() + 1)"
+            >
                 <span class="fd-ui-icon__glyph">edit</span>
             </button>
 
@@ -24,6 +29,7 @@ import { HeaderActionsOverflowComponent } from './header-actions-overflow';
     `,
 })
 class TestHostComponent {
+    public readonly primary = signal(false);
     public readonly showSecond = signal(false);
     public readonly firstClicks = signal(0);
     public readonly secondClicks = signal(0);
@@ -81,6 +87,21 @@ describe('HeaderActionsOverflowComponent', () => {
         const items = getMenuItems();
         expect(items).toHaveLength(2);
         expect(items.map(item => item.textContent.trim())).toEqual(['editFirst action', 'deleteSecond action']);
+    });
+
+    it('keeps the primary action directly available and excludes it from the menu', async () => {
+        component.primary.set(true);
+        component.showSecond.set(true);
+        await settleAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const primary = host.querySelector<HTMLButtonElement>('.fd-header-actions-overflow__primary button');
+        expect(primary).not.toBeNull();
+        primary?.click();
+        await settleAsync();
+        expect(component.firstClicks()).toBe(1);
+        getOverflowTrigger()?.click();
+        await settleAsync();
+        expect(getMenuItems().map(item => item.textContent.trim())).toEqual(['deleteSecond action']);
     });
 
     it('proxies menu item clicks to the original action', async () => {

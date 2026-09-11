@@ -3,11 +3,11 @@
   "summary": {
     "components": 444,
     "componentsWithoutDirectSpecs": 140,
-    "inputs": 1352,
-    "outputs": 420,
+    "inputs": 1353,
+    "outputs": 421,
     "apiCalls": 244,
     "templatesWithTranslations": 300,
-    "translationKeys": 1721,
+    "translationKeys": 1722,
     "consumerEdges": 1062,
     "consumedComponents": 285,
     "unconsumedComponents": 158
@@ -7049,9 +7049,18 @@
           "name": "plans",
           "type": "MealPlanCardViewModel[]",
           "required": true
+        },
+        {
+          "name": "filtered",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
+        {
+          "name": "filterReset",
+          "type": ""
+        },
         {
           "name": "planOpen",
           "type": "string"
@@ -17717,6 +17726,7 @@
         "FASTING.REDESIGN.NOW",
         "FASTING.REDESIGN.OBSERVATIONS_TITLE",
         "FASTING.REDESIGN.OPEN_SESSION_DETAILS",
+        "FASTING.REDESIGN.PAST_TARGET",
         "FASTING.REDESIGN.RECENT_TITLE",
         "FASTING.REDESIGN.REMAINING",
         "FASTING.REDESIGN.RHYTHM_NOTE",
@@ -18076,8 +18086,8 @@
         "GENERAL.UNITS.KCAL",
         "MEAL_PLANS.CURATED",
         "MEAL_PLANS.DAYS",
-        "MEAL_PLANS.EMPTY",
-        "MEAL_PLANS.RECIPES"
+        "MEAL_PLANS.RECIPES",
+        "MEAL_PLANS.RESET_FILTER"
       ]
     },
     {
@@ -18147,7 +18157,8 @@
         "MEAL_MANAGE.GENERAL_GROUP_TITLE",
         "MEAL_MANAGE.IMAGE_DESCRIPTION",
         "MEAL_MANAGE.MEAL_TYPE_LABEL",
-        "MEAL_MANAGE.MEAL_TYPE_PLACEHOLDER"
+        "MEAL_MANAGE.MEAL_TYPE_PLACEHOLDER",
+        "MEAL_MANAGE.OPTIONAL_MEDIA"
       ]
     },
     {
@@ -18176,6 +18187,7 @@
       "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html",
       "keys": [
+        "DISABLED_HINTS.FORM_INVALID",
         "MEAL_MANAGE.SUBTITLE",
         "MEAL_MANAGE.TOUR.START_TOUR",
         "PRODUCT_MANAGE.CANCEL_BUTTON"
@@ -19476,8 +19488,7 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/product-card/product-card.html",
       "keys": [
-        "PRODUCT_CARD.ADD_TO_MEAL",
-        "PRODUCT_CARD.NO_BARCODE"
+        "PRODUCT_CARD.ADD_TO_MEAL"
       ]
     },
     {
@@ -23346,10 +23357,12 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/header-actions-overflow/header-actions-overflow.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
         "variant"
@@ -24407,6 +24420,19 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "meal-plans",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-filters/meal-plan-list-filters.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -24489,12 +24515,15 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
+        "loading",
         "variant"
       ],
       "outputsHandled": []
@@ -24749,7 +24778,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html",
-      "occurrences": 9,
+      "occurrences": 8,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -24810,7 +24839,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.html",
-      "occurrences": 4,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -25258,7 +25287,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.html",
-      "occurrences": 4,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -25345,7 +25374,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html",
-      "occurrences": 8,
+      "occurrences": 7,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -26333,20 +26362,6 @@
         "density",
         "headerAlign",
         "title",
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "recipes",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "appearance",
-        "density",
         "tone"
       ],
       "outputsHandled": []
@@ -32851,10 +32866,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "filtered",
         "isLoading",
         "plans"
       ],
       "outputsHandled": [
+        "filterReset",
         "planOpen"
       ]
     },

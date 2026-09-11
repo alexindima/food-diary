@@ -58,7 +58,8 @@
     }
 
     &__content {
-        max-width: 90ch;
+        max-width: 72ch;
+        margin-inline: auto;
         padding: var(--fd-space-xl);
         color: var(--fd-color-text);
         font-size: var(--fd-text-body-lg-size);
@@ -89,7 +90,7 @@
 
         &__content {
             font-size: var(--fd-text-body-size);
-            line-height: var(--fd-text-body-line-height);
+            line-height: 1.7;
         }
 
         &__actions {

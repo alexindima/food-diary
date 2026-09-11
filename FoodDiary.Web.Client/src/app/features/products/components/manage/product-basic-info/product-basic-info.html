@@ -11,17 +11,6 @@
     [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate"
 >
     <div class="product-manage__hero fd-grid fd-gap-lg">
-        <div class="product-manage__image fd-row">
-            <fd-image-upload-field
-                appearance="compact"
-                recommendedSize="512 x 512"
-                [formField]="form().imageUrl"
-                [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
-                [cropEnabled]="true"
-                [cropSize]="512"
-                [cropAspectRatio]="1"
-            />
-        </div>
         <div class="product-manage__hero-field fd-stack fd-gap-xs">
             <fd-ui-autocomplete
                 size="lg"
@@ -61,6 +50,17 @@
                 [maximumLength]="barcodeMaxLength"
                 [suffixButtonAriaLabel]="'PRODUCT_MANAGE.SCAN_BARCODE' | translate"
                 (suffixButtonClicked)="openBarcodeScanner.emit()"
+            />
+        </div>
+        <div class="product-manage__image fd-row">
+            <fd-image-upload-field
+                appearance="compact"
+                recommendedSize="512 x 512"
+                [formField]="form().imageUrl"
+                [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
+                [cropEnabled]="true"
+                [cropSize]="512"
+                [cropAspectRatio]="1"
             />
         </div>
     </div>

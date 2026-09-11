@@ -28,10 +28,7 @@ describe('ProductDetailSummaryComponent', () => {
 
     it('keeps barcode section hidden when product has no barcode', () => {
         const { fixture } = setupComponent(createProduct({ barcode: null }));
-        const element = fixture.nativeElement as HTMLElement;
-        const barcodeSurface = element.querySelector('.product-detail__surface--summary[hidden]');
-
-        expect(barcodeSurface).not.toBeNull();
+        expect(getText(fixture)).not.toContain('PRODUCT_DETAIL.SUMMARY.BARCODE');
     });
 });
 

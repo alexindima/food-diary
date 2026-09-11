@@ -144,7 +144,7 @@
                             (isSelectedWeekPast()
                                 ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION'
                                 : selectedWeekGoal() === null
-                                  ? 'WEEKLY_CHECK_IN.GOAL.CREATE'
+                                  ? 'WEEKLY_CHECK_IN.GOAL.CREATE_CURRENT'
                                   : 'WEEKLY_CHECK_IN.GOAL.EDIT'
                             ) | translate
                         }}
@@ -203,7 +203,7 @@
                             (isGoalPeriodClosed()
                                 ? 'WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION'
                                 : weeklyGoal() === null
-                                  ? 'WEEKLY_CHECK_IN.GOAL.CREATE'
+                                  ? 'WEEKLY_CHECK_IN.GOAL.CREATE_NEXT'
                                   : 'WEEKLY_CHECK_IN.GOAL.EDIT'
                             ) | translate
                         }}
@@ -220,14 +220,16 @@
                 <div class="check-in__metric">
                     <fd-ui-icon name="local_fire_department" />
                     <strong
-                        >{{ thisWeek()?.avgDailyCalories | number: '1.0-0' }} <small>{{ 'GENERAL.UNITS.KCAL' | translate }}</small></strong
+                        >{{ review.daysLogged > 0 ? (thisWeek()?.avgDailyCalories | number: '1.0-0') : '—' }}
+                        <small>{{ 'GENERAL.UNITS.KCAL' | translate }}</small></strong
                     >
                     <span>{{ 'WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE' | translate }}</span>
                 </div>
                 <div class="check-in__metric">
                     <fd-ui-icon name="fitness_center" />
                     <strong
-                        >{{ thisWeek()?.avgProteins | number: '1.0-1' }} <small>{{ 'GENERAL.UNITS.G' | translate }}</small></strong
+                        >{{ review.daysLogged > 0 ? (thisWeek()?.avgProteins | number: '1.0-1') : '—' }}
+                        <small>{{ 'GENERAL.UNITS.G' | translate }}</small></strong
                     >
                     <span>{{ 'WEEKLY_CHECK_IN.METRICS.PROTEIN' | translate }}</span>
                 </div>
@@ -235,9 +237,9 @@
                     <fd-ui-icon name="monitor_weight" />
                     <strong
                         >{{
-                            (thisWeek()?.weightEnd ?? 0) - (thisWeek()?.weightStart ?? thisWeek()?.weightEnd ?? 0)
-                                | measurementValue: 'weight' : measurements.system()
-                                | number: '1.1-1'
+                            weightChange() === null
+                                ? '—'
+                                : (weightChange() | measurementValue: 'weight' : measurements.system() | number: '1.1-1')
                         }}
                         <small>{{ 'weight' | measurementUnit: measurements.system() | translate }}</small></strong
                     >

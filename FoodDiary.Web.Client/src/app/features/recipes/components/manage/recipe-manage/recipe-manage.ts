@@ -6,7 +6,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
@@ -49,7 +48,6 @@ import { RECIPE_MANAGE_TOUR } from './recipe-manage-tour';
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiCardComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
         FormRoot,

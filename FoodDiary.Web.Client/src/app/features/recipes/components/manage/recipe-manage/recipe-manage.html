@@ -8,6 +8,18 @@
         (back)="onCancelAsync()"
     >
         <fd-ui-button
+            appearance="toolbar"
+            variant="primary"
+            icon="save"
+            data-fd-overflow-primary
+            [ariaLabel]="manageHeaderState().submitLabelKey | translate"
+            [fdUiHint]="manageHeaderState().submitLabelKey | translate"
+            [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting()"
+            [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
+            [loading]="isSubmitting()"
+            (click)="manageForm.requestSubmit()"
+        />
+        <fd-ui-button
             data-tour-id="recipe-manage-tour-help"
             appearance="toolbar"
             variant="secondary"
@@ -21,6 +33,7 @@
 
     <fd-page-body>
         <form
+            #manageForm
             class="recipe-manage__form fd-stack fd-gap-lg"
             [formRoot]="recipeSignalForm"
             [attr.aria-busy]="isSubmitting()"
@@ -35,12 +48,10 @@
             <div class="recipe-manage__grid fd-grid fd-gap-lg">
                 <div class="recipe-manage__column recipe-manage__column--primary fd-stack">
                     @if (isImportPanelVisible()) {
-                        <fd-ui-card class="recipe-manage__import-card" appearance="entry" tone="editor-gradient" density="relaxed">
+                        <details class="recipe-manage__import-card">
+                            <summary class="fd-ui-card-title">{{ 'RECIPE_MANAGE.IMPORT.TITLE' | translate }}</summary>
                             <div class="recipe-manage__import fd-stack fd-gap-md">
                                 <div class="recipe-manage__import-header fd-stack fd-gap-xxs">
-                                    <h2 class="recipe-manage__import-title fd-ui-card-title">
-                                        {{ 'RECIPE_MANAGE.IMPORT.TITLE' | translate }}
-                                    </h2>
                                     <p class="recipe-manage__import-subtitle fd-ui-body-sm">
                                         {{ 'RECIPE_MANAGE.IMPORT.SUBTITLE' | translate }}
                                     </p>
@@ -85,7 +96,7 @@
                                     </fd-ui-button>
                                 </div>
                             </div>
-                        </fd-ui-card>
+                        </details>
                     }
 
                     <fd-recipe-basic-info data-tour-id="recipe-manage-basic-info" [form]="recipeSignalForm" />

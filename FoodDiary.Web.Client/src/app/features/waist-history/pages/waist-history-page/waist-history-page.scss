@@ -446,7 +446,7 @@
 
     @media #{variables.$media-phablet} {
         &__goal-stats {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: var(--fd-space-md);
         }
         &__goal-stat {
@@ -476,7 +476,7 @@
 
     @media #{variables.$media-phablet} {
         &__summary {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         &__card--chart {
@@ -488,5 +488,14 @@
             --fd-line-chart-height: 260px;
             min-height: 260px;
         }
+    }
+}
+
+.waist-history-page__card--empty {
+    min-height: 0;
+
+    .waist-history-page__chart-viewport {
+        min-height: 0;
+        padding-block: var(--fd-space-xl);
     }
 }

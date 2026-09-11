@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -349,7 +350,7 @@ async function setupComponentAsync(overrides: Partial<RecipeManageFacadeMock> = 
 
     await TestBed.configureTestingModule({
         imports: [RecipeManageComponent],
-        providers: [provideTranslateTesting()],
+        providers: [provideRouter([]), provideTranslateTesting()],
     })
         .overrideComponent(RecipeManageComponent, {
             remove: { providers: [RecipeManageFacade] },
