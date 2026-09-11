@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -31,10 +30,5 @@ internal sealed class HydrationEntryConfiguration : IEntityTypeConfiguration<Hyd
 
         builder.HasIndex(e => new { e.UserId, e.Timestamp })
             .HasDatabaseName("IX_HydrationEntries_User_Timestamp");
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

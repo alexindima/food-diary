@@ -3,43 +3,8 @@
     "version": "0.0.0",
     "type": "module",
     "overrides": {
-        "@hono/node-server": "2.0.12",
-        "@angular-devkit/build-angular": {
-            "@babel/core": "7.29.7",
-            "http-proxy-middleware": "3.0.7",
-            "webpack-dev-server": "5.2.6"
-        },
-        "@angular/build": {
-            "@babel/core": "7.29.7"
-        },
-        "@microsoft/signalr": {
-            "ws": "7.5.11"
-        },
-        "hono": "4.13.5",
-        "ip-address": "10.3.1",
-        "js-yaml": "4.3.2",
-        "lighthouse": {
-            "ws": "7.5.11"
-        },
-        "body-parser@1": "1.20.6",
-        "body-parser@2": "2.3.0",
-        "brace-expansion": "5.0.9",
-        "fast-uri": "3.1.7",
         "qs": "6.16.0",
-        "minimatch": "^10.2.4",
-        "immutable": "5.1.9",
-        "postcss": "^8.5.23",
-        "tar": "7.5.22",
-        "tmp": "^0.2.7",
-        "uuid": "^11.1.1",
-        "websocket-driver": "0.7.5",
-        "vite": {
-            "esbuild": "0.28.1"
-        },
-        "webpack-dev-server": "5.2.6",
-        "webpack-dev-server@5.2.6": {
-            "http-proxy-middleware": "2.0.10"
-        }
+        "uuid": "^11.1.1"
     },
     "scripts": {
         "prepare": "cd .. && husky FoodDiary.Web.Client/.husky",

@@ -7,7 +7,7 @@
     "invariants": 505,
     "persistenceMappings": 87,
     "indexes": 160,
-    "relationships": 96
+    "relationships": 92
   },
   "domainTypes": [
     {
@@ -5646,13 +5646,7 @@
       "indexes": [
         "e => new { e.UserId, e.Date })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Exercises/Infrastructure/Model/Configurations/Exercises/ExerciseEntryConfiguration.cs"
     },
     {
@@ -5844,13 +5838,7 @@
       "indexes": [
         "e => new { e.UserId, e.Timestamp })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs"
     },
     {
@@ -6137,13 +6125,7 @@
         "e => new { e.UserId, e.ItemType, e.ItemId })",
         "e => new { e.UserId, e.ItemType, e.LastUsedAtUtc })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems/RecentItemConfiguration.cs"
     },
     {
@@ -6688,13 +6670,7 @@
         "goal => new { goal.ReminderEnabled, goal.WeekStartUtc })",
         "goal => new { goal.UserId, goal.WeekStartUtc }).IsUnique()"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/WeeklyGoals/Infrastructure/Model/Configurations/WeeklyGoalConfiguration.cs"
     },
     {

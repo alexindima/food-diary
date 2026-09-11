@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5091,
+    "productionFiles": 5095,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 819,
@@ -3073,6 +3073,38 @@
       "structuralRiskScore": 0.52
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/ExercisesCrossModuleRelationships.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/HydrationCrossModuleRelationships.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/RecentItemsCrossModuleRelationships.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/WeeklyGoalsCrossModuleRelationships.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -3202,11 +3234,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 60,
+      "nonBlankLines": 64,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.2
+      "structuralRiskScore": 1.28
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -22770,11 +22802,11 @@
     },
     {
       "path": "Modules/Exercises/Infrastructure/Model/Configurations/Exercises/ExerciseEntryConfiguration.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Exercises/Infrastructure/Model/ExercisesPersistenceModelRegistration.cs",
@@ -25986,11 +26018,11 @@
     },
     {
       "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Hydration/Infrastructure/Model/HydrationPersistenceModelRegistration.cs",
@@ -33122,11 +33154,11 @@
     },
     {
       "path": "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems/RecentItemConfiguration.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.46
     },
     {
       "path": "Modules/RecentItems/Infrastructure/Model/RecentItemsPersistenceModelRegistration.cs",
@@ -38178,11 +38210,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Model/Configurations/WeeklyGoalConfiguration.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Model/WeeklyGoalsPersistenceModelRegistration.cs",

@@ -72,13 +72,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "f05041c84487ad9b82dd1749576c4912f57d32e97a8e448f2340afdea4026880"
+          "sha256": "86ec4386442a8d1d67fec393f58fa91b4acc50bf8ed4e8d50359cf51e2869bf3"
         }
       ],
-      "reason": "Reviewed AI-only persistence composition against source: owned mappings remain in AI; four foreign FKs move to shared Infrastructure. Matrix replaces Users/Images Domain edges with ID contracts and adds direct Ai.Domain at composition. Runtime topology and owner write rules remain unchanged.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:49:26.6540378Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:08.1895381Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,13 +87,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "b4ec37b49a162758e62dccf14e553fb1f073e91796ba97040601f31600e0c63b"
+          "sha256": "3a96447e2e82aca1b1d86469b8115592ce329dfddd3d22b790f1a1522a21bcaa"
         }
       ],
-      "reason": "Reviewed AI-only persistence composition against source: owned mappings remain in AI; four foreign FKs move to shared Infrastructure. Matrix replaces Users/Images Domain edges with ID contracts and adds direct Ai.Domain at composition. Runtime topology and owner write rules remain unchanged.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:49:28.4612188Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:11.3099044Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -214,18 +214,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "54486b5ea926118096bb8426933ddfc3ddbc5fc12131e0880373e403708cc101"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "b4ec37b49a162758e62dccf14e553fb1f073e91796ba97040601f31600e0c63b"
+          "sha256": "3a96447e2e82aca1b1d86469b8115592ce329dfddd3d22b790f1a1522a21bcaa"
         }
       ],
-      "reason": "Reviewed AI-only persistence composition against source: owned mappings remain in AI; four foreign FKs move to shared Infrastructure. Matrix replaces Users/Images Domain edges with ID contracts and adds direct Ai.Domain at composition. Runtime topology and owner write rules remain unchanged.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:49:30.0001771Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:15.1231999Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -505,17 +501,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "38a4d8d4a3d66179822e5ee4d7b9cfb9a6851d0a8a43e4bd75773d06c86823d9"
+          "sha256": "5197c6002a5c75b710bb85c5643039c73dde5e787349b4b636b11c5c59923626"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "f05041c84487ad9b82dd1749576c4912f57d32e97a8e448f2340afdea4026880"
+          "sha256": "86ec4386442a8d1d67fec393f58fa91b4acc50bf8ed4e8d50359cf51e2869bf3"
         }
       ],
-      "reason": "Reviewed moved typed FK declarations against their original configurations: three User Cascade links and one ImageAsset ClientNoAction link retain scalar keys and deletion semantics. No entity or scalar mapping changes; model equivalence and PostgreSQL regressions are the validation criteria.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:48:33.2766535Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:17.9127841Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -569,13 +565,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "bc6dfd549d0557afe9ca8ba085aea4d9b87ae97c005bdaf48112f659d8fc82da"
+          "sha256": "ed6382fbacb1657ffd2cd8d321ca1e9585af3a8fdaeb404f05d3be0217917df4"
         }
       ],
-      "reason": "Reviewed committed package.json change c6133896f: only hono and js-yaml override versions changed; Playwright scripts and frontend AGENTS visual guidance are unchanged. Browser, interaction and screenshot instructions remain accurate; no UI changed in this backend coverage task.",
+      "reason": "Reviewed package.json change: only obsolete dependency overrides removed; scripts, browser workflow, UI source and visual-evidence instructions are unchanged. Direct dependency versions are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T00:06:35.8395264Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:33:20.0885234Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -828,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9ddf0fa5390349113796233546e1ac9c81e57bb1a4351d0f7c76e6431bbd65ce"
+          "sha256": "19e504fd1ed1f4a597753de357c12ea89c5232668b2fe24d83f788fdc0ddf297"
         }
       ],
-      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:51:05.4030650Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:20.7034924Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7d46de8a19b35dd4612d13dca1f3a5742aa16e0495c8f47e99f4486ba5a1b936"
+          "sha256": "dc57463449017c3eded8a5cdce8869de2f29c927560e6c26a7e89b8b0b8a485a"
         }
       ],
-      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:51:23.8812140Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:37.6624722Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,17 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9ddf0fa5390349113796233546e1ac9c81e57bb1a4351d0f7c76e6431bbd65ce"
+          "sha256": "19e504fd1ed1f4a597753de357c12ea89c5232668b2fe24d83f788fdc0ddf297"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7d46de8a19b35dd4612d13dca1f3a5742aa16e0495c8f47e99f4486ba5a1b936"
+          "sha256": "dc57463449017c3eded8a5cdce8869de2f29c927560e6c26a7e89b8b0b8a485a"
         }
       ],
-      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:51:33.4091923Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:41.7884085Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1178,13 +1174,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ee53a15182617d6ca4c8f179cba21e3e160b72588787d0cb1ee5e872c64c1749"
+          "sha256": "c6be871efa0097ec68064ca1b32435facb251db239c5033e06efc5615fd438c8"
         }
       ],
-      "reason": "Read the workflow against regenerated navigation indexes for the AI persistence pilot. The change moves four typed FK declarations to composition and narrows assembly dependencies; it introduces no provider, endpoint, auth, logging or worker behavior. Existing caveats about inferred navigation and test references remain accurate; this receipt is not a security audit or execution-coverage claim.",
+      "reason": "Reviewed the already-read page against this bounded extension of the accepted AI pilot. Four owned scalar models replace Users.Domain with Users.Domain.Contracts; typed User Cascade mappings move to shared Infrastructure composition. Queries, runtime topology, authorization and field lifecycle remain unchanged. Exact matrix and compiled assembly tests preserve boundaries; EF equivalence and existing PostgreSQL tests are the verification evidence, not generated test-reference counts.",
       "baseRef": "HEAD",
-      "gitHead": "c15110b05cae930b33eaa5f89021cfc9c16f1c41",
-      "reviewedAtUtc": "2026-09-11T20:51:12.1570838Z"
+      "gitHead": "61a1762d61c3f2fb08c0f15d6505562a4b11caed",
+      "reviewedAtUtc": "2026-09-11T21:25:24.5208077Z"
     },
     {
       "pageId": "workflow.review-diff",

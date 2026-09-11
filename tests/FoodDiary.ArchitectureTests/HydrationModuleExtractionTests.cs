@@ -40,7 +40,7 @@ public sealed class HydrationModuleExtractionTests {
         Assert.DoesNotContain("HydrationEntry", userSource, StringComparison.Ordinal);
 
         string configurationSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "Modules", "Hydration", "Infrastructure", "Model", "Configurations", "HydrationEntryConfiguration.cs"));
+            "FoodDiary.Infrastructure", "Persistence", "Composition", "HydrationCrossModuleRelationships.cs"));
         Assert.Contains(".WithMany()", configurationSource, StringComparison.Ordinal);
         Assert.DoesNotContain("u => u.HydrationEntries", configurationSource, StringComparison.Ordinal);
     }

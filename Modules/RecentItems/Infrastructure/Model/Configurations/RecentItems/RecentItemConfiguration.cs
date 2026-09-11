@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +26,5 @@ internal sealed class RecentItemConfiguration : IEntityTypeConfiguration<RecentI
             .IsUnique();
 
         builder.HasIndex(e => new { e.UserId, e.ItemType, e.LastUsedAtUtc });
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

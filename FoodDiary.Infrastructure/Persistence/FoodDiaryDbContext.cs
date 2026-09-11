@@ -59,5 +59,9 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyMealsPersistenceModel();
         modelBuilder.ApplyRecentItemsPersistenceModel();
         AiCrossModuleRelationships.Configure(modelBuilder);
+        HydrationCrossModuleRelationships.Configure(modelBuilder);
+        RecentItemsCrossModuleRelationships.Configure(modelBuilder);
+        ExercisesCrossModuleRelationships.Configure(modelBuilder);
+        WeeklyGoalsCrossModuleRelationships.Configure(modelBuilder);
     }
 }

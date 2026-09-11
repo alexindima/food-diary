@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3814,
-    "symbols": 3754,
+    "sourceFiles": 3818,
+    "symbols": 3758,
     "interfaceImplementationLinks": 254,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1945,
+      "class": 1949,
       "enum": 63,
       "interface": 455,
       "record": 1170,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 68,
-      "Other": 1502,
+      "Other": 1506,
       "Query": 183,
       "QueryHandler": 136,
       "ReadModelRepository": 30,
@@ -571,6 +571,34 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/AiCrossModuleRelationships.cs",
       "line": 8
+    },
+    {
+      "name": "ExercisesCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/ExercisesCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "HydrationCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/HydrationCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "RecentItemsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/RecentItemsCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "WeeklyGoalsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/WeeklyGoalsCrossModuleRelationships.cs",
+      "line": 6
     },
     {
       "name": "EfUnitOfWork",
@@ -10195,7 +10223,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Exercises/Infrastructure/Model/Configurations/Exercises/ExerciseEntryConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ExercisesPersistenceModelRegistration",
@@ -12953,7 +12981,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "HydrationPersistenceModelRegistration",
@@ -19092,7 +19120,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems/RecentItemConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecentItemsPersistenceModelRegistration",
@@ -23397,7 +23425,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/WeeklyGoals/Infrastructure/Model/Configurations/WeeklyGoalConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WeeklyGoalsPersistenceModelRegistration",

@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 251,
-    "documentationPages": 174
+    "documentationPages": 175
   },
   "dotnet": {
     "projects": [
@@ -3624,7 +3624,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -5098,7 +5098,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -8479,7 +8479,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/RecentItems/Domain/FoodDiary.Modules.RecentItems.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -10795,7 +10795,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj"
         ],
         "packageReferences": [
@@ -14297,6 +14297,7 @@
       "docs/ai/recipes-ownership-inventory.md",
       "docs/ai/remaining-boundaries-batch.md",
       "docs/ai/resource-ownership-extraction.md",
+      "docs/ai/scalar-persistence-boundaries.md",
       "docs/ai/strongly-typed-id-converter-retirement.md",
       "docs/ai/users-administration-reader-ownership.md",
       "docs/ai/users-domain-extraction.md",

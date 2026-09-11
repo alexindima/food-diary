@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Entities.WeeklyGoals;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,9 +18,5 @@ internal sealed class WeeklyGoalConfiguration : IEntityTypeConfiguration<WeeklyG
         builder.Property(goal => goal.LastReminderLocalDate).HasColumnType("date");
         builder.HasIndex(goal => new { goal.UserId, goal.WeekStartUtc }).IsUnique();
         builder.HasIndex(goal => new { goal.ReminderEnabled, goal.WeekStartUtc });
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(goal => goal.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -63,3 +63,7 @@ application/domain/infrastructure suites in one consolidated verification batch.
 ## AI persistence composition refinement
 
 The AI-only pilot in [AI persistence boundary](../ai/ai-persistence-boundary.md) moves its four foreign relationship mappings into shared Infrastructure composition. AI retains its owned model and scalar contracts, with no foreign Domain assembly references. Other module mappings and the shared-database decision remain unchanged.
+
+## Scalar persistence boundary extension
+
+Hydration, RecentItems, Exercises and WeeklyGoals follow the AI pilot: their User foreign keys move to typed shared Infrastructure composition, preserving Cascade and the complete relational model. The models directly consume Users.Domain.Contracts. See [scalar persistence boundaries](../ai/scalar-persistence-boundaries.md).

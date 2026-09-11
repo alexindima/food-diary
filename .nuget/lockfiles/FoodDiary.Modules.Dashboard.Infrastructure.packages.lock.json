@@ -539,7 +539,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.Exercises.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
@@ -628,7 +628,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.Hydration.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
@@ -837,7 +837,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.RecentItems.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
@@ -954,7 +954,7 @@
       "fooddiary.modules.weeklygoals.persistencemodel": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
