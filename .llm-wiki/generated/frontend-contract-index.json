@@ -7,8 +7,8 @@
     "outputs": 420,
     "apiCalls": 244,
     "templatesWithTranslations": 300,
-    "translationKeys": 1719,
-    "consumerEdges": 1061,
+    "translationKeys": 1721,
+    "consumerEdges": 1062,
     "consumedComponents": 285,
     "unconsumedComponents": 158
   },
@@ -17210,6 +17210,8 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.html",
       "keys": [
+        "DASHBOARD.APPEARANCE.SURFACE_DEVICE_HINT",
+        "DASHBOARD.APPEARANCE.SURFACE_LABEL",
         "DASHBOARD.APPEARANCE.THEME_HINT",
         "DASHBOARD.APPEARANCE.THEME_LABEL",
         "DASHBOARD.APPEARANCE.TITLE",
@@ -19579,8 +19581,7 @@
         "SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER",
         "SHOPPING_LIST.EMPTY_COPY",
         "SHOPPING_LIST.EMPTY_TITLE",
-        "SHOPPING_LIST.REMOVE_ITEM",
-        "SHOPPING_LIST.TITLE"
+        "SHOPPING_LIST.REMOVE_ITEM"
       ]
     },
     {
@@ -25428,7 +25429,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
-      "occurrences": 5,
+      "occurrences": 6,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -28781,7 +28782,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
-      "occurrences": 2,
+      "occurrences": 1,
       "inputsUsed": [
         "name",
         "size"
@@ -30877,6 +30878,23 @@
         "options",
         "size",
         "stackOnNarrow"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSegmentedToggleComponent",
+      "selector": "fd-ui-segmented-toggle",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "ariaLabel",
+        "fullWidth",
+        "options",
+        "stackOnNarrow",
+        "wrapOnNarrow"
       ],
       "outputsHandled": []
     },
@@ -33818,6 +33836,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "compactActions",
         "subtitle",
         "title"
       ],

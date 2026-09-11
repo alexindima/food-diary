@@ -211,14 +211,14 @@
       "pageSha256": "45f240d45bcf663e9be82c91096f8f6328b896356cc41475ef898b25b39ca7e8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-          "sha256": "674b02ef489d32a01407ddabf0b30d3838fcbe56cee5175e570e10e6d2b4c0c4"
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "30bbfd6447318a71a1f6485bce765163f5ce40d488a919ccb3f35f4ecea238b3"
         }
       ],
-      "reason": "Reviewed direct named-property lookups against the existing compatibility rules. Real snapshot JSON is identical before and after; request, response, parameter, DTO and behavioral regressions pass, including manual absence/null/false/empty-array checks.",
+      "reason": "Optional SurfaceStyle request and defaulted response are additive. Updated OpenAPI and payload key snapshots; 19 API tests passed including legacy omitted field preservation and invalid value validation.",
       "baseRef": "HEAD",
-      "gitHead": "47bb318212c751c1e3f3591541ad3bf1402b973e",
-      "reviewedAtUtc": "2026-09-09T20:35:51.6407311Z"
+      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
+      "reviewedAtUtc": "2026-09-10T22:21:22.5817461Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -241,14 +241,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "f93fdc774f1083979dd3acecb660a03f21edef6a26bf7af97d8631dc26862ed8"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "9bfeaa6592df002de731cc9e1e519bc462a0ecd5727d7c0b1c4f746ba73391bb"
         }
       ],
-      "reason": "Named imports are now separate typed graph edges, consumed by bounded impact lookup; they do not alter lexical file tokens. Reviewed current source contracts: static navigation evidence only, with existing same-name uncertainty and no runtime/API/privacy authority changes.",
+      "reason": "Reviewed UserModel and HTTP response mapping, appearance command handler and login/bootstrap/profile consumers. SurfaceStyle defaults normal and omitted PATCH fields preserve the stored value; API and Users tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T17:33:34.8292807Z"
+      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
+      "reviewedAtUtc": "2026-09-10T22:21:24.3060445Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -513,13 +513,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "78309dfceb061cf494a3b4d5397ff137e9b1900b0117a973e9bd6ec5761adc4e"
+          "sha256": "2077bdbb627ed4ec9b474ea3c31ecbc927ffcd71fb60cdb37497d6ff8f44423d"
         }
       ],
-      "reason": "Reviewed method-local numeric(18,2) constant and unchanged limit expression; all 42 Billing domain tests passed. No EF schema or mapping changed. Receipt PostgreSQL tests verify duplicate handling, detachment, original exception identity and stack.",
+      "reason": "SurfaceStyleCode validates three normalized values; aggregate rejects invalid values atomically. Additive varchar(16) normal-default migration with Designer and snapshot; 37 PostgreSQL integration tests and 285 domain tests passed; EF reports no pending model changes.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:00:10.6313038Z"
+      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
+      "reviewedAtUtc": "2026-09-10T22:21:21.9213541Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -786,14 +786,14 @@
       "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "f93fdc774f1083979dd3acecb660a03f21edef6a26bf7af97d8631dc26862ed8"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "4fc7c66f318a54052da65ffab1c8d5a2e0942109d6bd4edeaf668aeb9157a490"
         }
       ],
-      "reason": "Named imports are now separate typed graph edges, consumed by bounded impact lookup; they do not alter lexical file tokens. Reviewed current source contracts: static navigation evidence only, with existing same-name uncertainty and no runtime/API/privacy authority changes.",
+      "reason": "Only the requested account appearance preference is added to the existing User record and authenticated response. No credentials, health payloads, providers, logs or permission boundaries are changed. Local cache is replaced from the account profile, with legacy accounts resetting to normal.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T17:33:36.0154505Z"
+      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
+      "reviewedAtUtc": "2026-09-10T22:21:25.0477977Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -832,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eae559cc267ca08c4aaddc58d3ede88527425f9a9be2eb91594e0ec869950975"
+          "sha256": "8b8c2ec498674a8931f5f11ed145e8a81144e2af337d2c6c86ab784e7414e3cb"
         }
       ],
-      "reason": "Reviewed final source changes: named TypeScript imports now contribute static consumer evidence and Node ESM tests are recognized by graph planning. Parser version invalidates older projections. This expands navigation evidence only, not runtime/API/privacy authority or executed coverage; refreshed quality/runtime hashes reflect MCP routing tests.",
+      "reason": "Executed 2674 main frontend tests, 41 focused UI-kit tests, 159 Users application tests, 285 domain tests, 37 PostgreSQL integration tests, 19 HTTP tests and 1204 architecture tests. Browser checks cover 18 combinations, mobile, reduced transparency and profile restoration; not claiming full npm verify.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T17:27:49.2659008Z"
+      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
+      "reviewedAtUtc": "2026-09-10T22:21:20.2938108Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -907,13 +907,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5e4710687cf207a76298a0272682f3e4c4cec8ce3e830908f475004955dc03b7"
+          "sha256": "d2e6a51b3e6985e1c8089278c63f54bb1a3dd669fc4c91fb0e0f5e102527aae3"
         }
       ],
-      "reason": "Reviewed final source changes: named TypeScript imports now contribute static consumer evidence and Node ESM tests are recognized by graph planning. Parser version invalidates older projections. This expands navigation evidence only, not runtime/API/privacy authority or executed coverage; refreshed quality/runtime hashes reflect MCP routing tests.",
+      "reason": "No new services, jobs, external clients or retry policies. Deploy additive migration before updated API and frontend; do not drop the column for application rollback. No production deployment or migration executed.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T17:27:49.9894219Z"
+      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
+      "reviewedAtUtc": "2026-09-10T22:21:23.2708229Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -922,21 +922,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eae559cc267ca08c4aaddc58d3ede88527425f9a9be2eb91594e0ec869950975"
+          "sha256": "8b8c2ec498674a8931f5f11ed145e8a81144e2af337d2c6c86ab784e7414e3cb"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5e4710687cf207a76298a0272682f3e4c4cec8ce3e830908f475004955dc03b7"
+          "sha256": "d2e6a51b3e6985e1c8089278c63f54bb1a3dd669fc4c91fb0e0f5e102527aae3"
         },
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "6204b99aec074ab87a11a07515a6758a9cfa5692aa918766ded610f66d8d382b"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "4fc7c66f318a54052da65ffab1c8d5a2e0942109d6bd4edeaf668aeb9157a490"
         }
       ],
-      "reason": "Reviewed final source changes: named TypeScript imports now contribute static consumer evidence and Node ESM tests are recognized by graph planning. Parser version invalidates older projections. This expands navigation evidence only, not runtime/API/privacy authority or executed coverage; refreshed quality/runtime hashes reflect MCP routing tests.",
+      "reason": "Existing authenticated current-user appearance endpoint and authorization remain unchanged. Only enumerated material codes are accepted; no new provider sharing or executable input. This is scoped change review, not a repository security audit.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T17:27:50.8056675Z"
+      "gitHead": "dbc398ec6f2214c604ba6169c2e256f3eab55cdf",
+      "reviewedAtUtc": "2026-09-10T22:21:21.2144264Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1068,18 +1068,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-          "sha256": "4dfd1eb1a1e07b2fe83f37b3ad644602e18b7404683dce1404bfc5b985688af0"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-          "sha256": "cdde9d4895d99792d19d263458f5bd7459ee230de910e490f504d7eb3f00bba3"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "8c12a763892757544e423701d3c86ad4eded39960b90343b41352747d912a6b2"
         }
       ],
-      "reason": "Reviewed one-hop semantic constructor navigation and bounded compaction against source declarations, OpenFoodFacts provider/repository and Admin client regressions. Generated changes are structural metrics and source fingerprints; runtime/security topology and fast MCP behavior remain unchanged. Source candidates do not prove runtime DI or calls.",
+      "reason": "Shopping-list visual changes preserve page-to-panel and facade/API consumer chains; regenerated frontend contract index reflects template line movement. Trace workflow and documented commands remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T14:58:16.6864127Z"
+      "gitHead": "e0b7a4863c2de9ed6ad491c238b9c06f1ce71334",
+      "reviewedAtUtc": "2026-09-11T07:43:52.7411605Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1167,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f9fe028170da3f8d060dcfdf36a90d2d82acd3737d190028d90fe7763dff9625"
+          "sha256": "8c12a763892757544e423701d3c86ad4eded39960b90343b41352747d912a6b2"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed shopping-list page template relocation and compactActions binding against existing component contracts; inputs, outputs, routes and API calls remain unchanged. Frontend contract query workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:37.9560626Z"
+      "gitHead": "e0b7a4863c2de9ed6ad491c238b9c06f1ce71334",
+      "reviewedAtUtc": "2026-09-11T07:43:50.9837942Z"
     },
     {
       "pageId": "workflow.query-context",

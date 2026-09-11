@@ -121985,7 +121985,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 10
     },
     {
       "contract": "UpdateUserAppearanceCommand",

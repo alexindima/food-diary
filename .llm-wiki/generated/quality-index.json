@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5063,
+    "productionFiles": 5065,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 814,
@@ -447,6 +447,14 @@
       "structuralRiskScore": 106.08
     },
     {
+      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+      "nonBlankLines": 268,
+      "decisionPoints": 67,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 105.86
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
       "nonBlankLines": 621,
       "decisionPoints": 62,
@@ -461,14 +469,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 104.72
-    },
-    {
-      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-      "nonBlankLines": 266,
-      "decisionPoints": 66,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 104.32
     },
     {
       "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -2513,6 +2513,14 @@
       "structuralRiskScore": 2.16
     },
     {
+      "path": "FoodDiary.Analyzers/TheoryDataCollectionExpressionAnalyzer.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.34
+    },
+    {
       "path": "FoodDiary.Analyzers/UseExtensionBlockAnalyzer.cs",
       "nonBlankLines": 32,
       "decisionPoints": 1,
@@ -2826,11 +2834,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-      "nonBlankLines": 266,
-      "decisionPoints": 66,
+      "nonBlankLines": 268,
+      "decisionPoints": 67,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 104.32
+      "structuralRiskScore": 105.86
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs",
@@ -4802,11 +4810,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/design-tokens.stories.ts",
-      "nonBlankLines": 272,
+      "nonBlankLines": 287,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.94
+      "structuralRiskScore": 28.24
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/design-tokens.ts",
@@ -7842,19 +7850,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.ts",
-      "nonBlankLines": 16,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance.facade.ts",
-      "nonBlankLines": 112,
-      "decisionPoints": 9,
+      "nonBlankLines": 146,
+      "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.74
+      "structuralRiskScore": 22.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.ts",
@@ -12674,11 +12682,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "nonBlankLines": 209,
-      "decisionPoints": 16,
+      "nonBlankLines": 212,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.18
+      "structuralRiskScore": 29.74
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/browser-notification-capability.service.ts",
@@ -12802,11 +12810,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/theme/theme.service.ts",
-      "nonBlankLines": 144,
-      "decisionPoints": 25,
+      "nonBlankLines": 171,
+      "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.38
+      "structuralRiskScore": 42.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/tours/localized-tour-definition.service.ts",
@@ -12938,11 +12946,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/theme/app-theme.config.ts",
-      "nonBlankLines": 50,
-      "decisionPoints": 0,
+      "nonBlankLines": 56,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1
+      "structuralRiskScore": 2.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/types/app.data.ts",
@@ -35434,27 +35442,27 @@
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 41,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.28
+      "structuralRiskScore": 7.32
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
       "nonBlankLines": 18,
-      "decisionPoints": 2,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.36
+      "structuralRiskScore": 6.86
     },
     {
       "path": "Modules/Users/Application/Common/CurrentUserAccessPolicy.cs",
@@ -35498,11 +35506,11 @@
     },
     {
       "path": "Modules/Users/Application/Common/UserAppearancePreferencesParser.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 2,
+      "nonBlankLines": 30,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.42
+      "structuralRiskScore": 6.6
     },
     {
       "path": "Modules/Users/Application/Common/UserContextService.cs",
@@ -35538,11 +35546,11 @@
     },
     {
       "path": "Modules/Users/Application/Mappings/UserMappings.cs",
-      "nonBlankLines": 133,
+      "nonBlankLines": 134,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.66
+      "structuralRiskScore": 11.68
     },
     {
       "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
@@ -36186,11 +36194,11 @@
     },
     {
       "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 43,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.84
+      "structuralRiskScore": 0.86
     },
     {
       "path": "Modules/Users/Contracts/Users/Models/UserNotificationPreferencesModel.cs",
@@ -36394,11 +36402,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
-      "nonBlankLines": 302,
-      "decisionPoints": 37,
+      "nonBlankLines": 310,
+      "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 61.54
+      "structuralRiskScore": 64.7
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/User.Tdee.cs",
@@ -36410,11 +36418,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "nonBlankLines": 517,
+      "nonBlankLines": 520,
       "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.34
+      "structuralRiskScore": 67.4
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/UserRole.cs",
@@ -36527,6 +36535,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.84
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/SurfaceStyleCode.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.86
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/ThemeCode.cs",
@@ -36658,19 +36674,19 @@
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/UserPreferenceUpdate.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/UserProfileMediaState.cs",
@@ -36690,11 +36706,11 @@
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "nonBlankLines": 66,
+      "nonBlankLines": 68,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.32
+      "structuralRiskScore": 1.36
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/UserSecurityState.cs",
@@ -36746,11 +36762,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs",
-      "nonBlankLines": 108,
+      "nonBlankLines": 112,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
+      "structuralRiskScore": 2.24
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",
@@ -36906,19 +36922,19 @@
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpMappings.cs",
-      "nonBlankLines": 99,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.98
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
       "nonBlankLines": 100,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2
+    },
+    {
+      "path": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
+      "nonBlankLines": 101,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.02
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Models/DashboardLayoutHttpModel.cs",
@@ -36962,11 +36978,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Requests/UpdateUserAppearanceHttpRequest.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Requests/UpdateUserHttpRequest.cs",
@@ -37002,11 +37018,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 42,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
+      "structuralRiskScore": 0.84
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",

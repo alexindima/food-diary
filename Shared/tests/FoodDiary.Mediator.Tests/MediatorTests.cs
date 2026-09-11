@@ -219,7 +219,7 @@ public sealed partial class MediatorTests {
             next(cancellationToken);
     }
 
-    private interface OpenBehaviorInterface<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    private interface IOpenBehaviorInterface<in TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull;
 
     [ExcludeFromCodeCoverage]

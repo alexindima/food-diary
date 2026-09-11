@@ -58,16 +58,17 @@ public sealed class CorsOptionsSetupTests {
         Assert.True(ApiCorsOptions.HasValidOrigins(new ApiCorsOptions { Origins = [origin] }));
     }
 
-    public static TheoryData<string[]> InvalidOriginSets => new() {
-        { [] },
-        { ["not a uri"] },
-        { ["ftp://fooddiary.club"] },
-        { ["https://user@fooddiary.club"] },
-        { ["https://fooddiary.club/path"] },
-        { ["https://fooddiary.club?source=test"] },
-        { ["https://fooddiary.club#fragment"] },
-        { ["https://fooddiary.club/"] },
-        { [" https://fooddiary.club"] },
-        { ["https://fooddiary.club", "HTTPS://FOODDIARY.CLUB"] },
-    };
+    public static TheoryData<string[]> InvalidOriginSets =>
+    [
+        [],
+        ["not a uri"],
+        ["ftp://fooddiary.club"],
+        ["https://user@fooddiary.club"],
+        ["https://fooddiary.club/path"],
+        ["https://fooddiary.club?source=test"],
+        ["https://fooddiary.club#fragment"],
+        ["https://fooddiary.club/"],
+        [" https://fooddiary.club"],
+        ["https://fooddiary.club", "HTTPS://FOODDIARY.CLUB"],
+    ];
 }

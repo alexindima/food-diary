@@ -3136,14 +3136,14 @@
       "role": "Component",
       "selector": "fd-dashboard-appearance-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "DashboardAppearanceFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance.facade.ts",
-      "line": 24
+      "line": 27
     },
     {
       "name": "DashboardNotificationSettingsDialogComponent",
@@ -5677,14 +5677,14 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "line": 72
+      "line": 73
     },
     {
       "name": "UpdateUserAppearanceDto",
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "line": 121
+      "line": 122
     },
     {
       "name": "BrowserNotificationCapabilityService",
@@ -5782,7 +5782,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/theme/theme.service.ts",
-      "line": 37
+      "line": 40
     },
     {
       "name": "LocalizedTourDefinitionService",
@@ -6356,8 +6356,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3417,
-      "russianProperties": 3417,
+      "englishProperties": 3425,
+      "russianProperties": 3425,
       "countsMatch": true
     },
     {

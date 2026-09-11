@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Protocol;
@@ -11,7 +12,7 @@ internal static class DevelopmentContextEvaluationRunner {
         WriteIndented = true,
     };
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public static async Task RunAsync(
         WikiQueryService queries,
         string corpusPath,
@@ -42,23 +43,25 @@ internal static class DevelopmentContextEvaluationRunner {
                 cancellationToken).ConfigureAwait(false);
             stopwatch.Stop();
 
+            IReadOnlyList<WikiContextSearchCandidate> sqlCandidates = context.SqlContextSearch?.Candidates ?? [];
+
             bool scopeHit = evaluationCase.ExpectedPaths.Any(expected =>
                 context.ExpandedScopePaths.Contains(expected, StringComparer.OrdinalIgnoreCase));
-            bool sqlTopTenHit = context.SqlContextSearch?.Candidates
+            bool sqlTopTenHit = sqlCandidates
                 .Take(10)
                 .Any(candidate => evaluationCase.ExpectedPaths.Contains(
                     candidate.Path,
-                    StringComparer.OrdinalIgnoreCase)) is true;
+                    StringComparer.OrdinalIgnoreCase));
             bool expectedLayersPresent = evaluationCase.ExpectedLayers.All(expected =>
                 context.EffectiveLayers.Contains(expected, StringComparer.OrdinalIgnoreCase));
             bool completeBundle = !context.PartialSuccess &&
                 context.ChangeContext is not null &&
                 context.TestPlan is not null;
             bool focusedChecksPresent = HasFocusedChecks(context.TestPlan);
-            bool explainableRanking = context.SqlContextSearch?.Candidates is { Count: > 0 } rankedCandidates &&
-                rankedCandidates.Take(10).All(candidate => candidate.Reasons.Count > 0);
-            WikiContextSearchCandidate? topCandidate = context.SqlContextSearch?.Candidates is { Count: > 0 } candidates
-                ? candidates[0]
+            bool explainableRanking = sqlCandidates.Count > 0 &&
+                sqlCandidates.Take(10).All(candidate => candidate.Reasons.Count > 0);
+            WikiContextSearchCandidate? topCandidate = sqlCandidates.Count > 0
+                ? sqlCandidates[0]
                 : null;
             bool lowConfidenceTopResult = string.Equals(
                 topCandidate?.Confidence,
@@ -66,10 +69,10 @@ internal static class DevelopmentContextEvaluationRunner {
                 StringComparison.OrdinalIgnoreCase);
             bool ambiguousTopResult = topCandidate?.Ambiguous is true;
             bool preciseRanking = (evaluationCase.MaximumExpectedRank is null ||
-                context.SqlContextSearch?.Candidates.Take(evaluationCase.MaximumExpectedRank.Value)
-                    .Any(candidate => evaluationCase.ExpectedPaths.Contains(candidate.Path, StringComparer.OrdinalIgnoreCase)) is true) &&
-                !(context.SqlContextSearch?.Candidates.Take(3).Any(candidate =>
-                    (evaluationCase.ForbiddenTopPathPrefixes ?? []).Any(prefix => candidate.Path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))) is true);
+                sqlCandidates.Take(evaluationCase.MaximumExpectedRank.Value)
+                    .Any(candidate => evaluationCase.ExpectedPaths.Contains(candidate.Path, StringComparer.OrdinalIgnoreCase))) &&
+                !sqlCandidates.Take(3).Any(candidate =>
+                    (evaluationCase.ForbiddenTopPathPrefixes ?? []).Any(prefix => candidate.Path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)));
             bool namedTestsPresent = (evaluationCase.ExpectedTestPaths ?? []).All(path => HasNamedTest(context.TestPlan, path));
             bool requiredScopePathsPresent = (evaluationCase.RequiredScopePaths ?? []).All(path => context.ExpandedScopePaths.Contains(path, StringComparer.OrdinalIgnoreCase));
             bool contextBundleReady = scopeHit && sqlTopTenHit && expectedLayersPresent &&

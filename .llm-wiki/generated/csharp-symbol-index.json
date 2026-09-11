@@ -8,16 +8,16 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3789,
-    "symbols": 3729,
+    "sourceFiles": 3791,
+    "symbols": 3731,
     "interfaceImplementationLinks": 252,
     "dependencyInjectionRegistrations": 158,
     "kinds": {
-      "class": 1930,
+      "class": 1931,
       "enum": 63,
       "interface": 453,
       "record": 1163,
-      "record struct": 120
+      "record struct": 121
     },
     "roles": {
       "Command": 163,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 68,
-      "Other": 1489,
+      "Other": 1490,
       "Query": 181,
       "QueryHandler": 134,
       "ReadModelRepository": 30,
@@ -42,7 +42,7 @@
       "Response": 202,
       "Service": 299,
       "Validator": 217,
-      "ValueObject": 114,
+      "ValueObject": 115,
       "WriteRepository": 46
     }
   },
@@ -95,6 +95,13 @@
       "role": "Other",
       "path": "FoodDiary.Analyzers/RedundantEmptyRecordParameterListAnalyzer.cs",
       "line": 10
+    },
+    {
+      "name": "TheoryDataCollectionExpressionAnalyzer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Analyzers/TheoryDataCollectionExpressionAnalyzer.cs",
+      "line": 11
     },
     {
       "name": "UseExtensionBlockAnalyzer",
@@ -360,7 +367,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "IWikiCommandExecutor",
@@ -21122,7 +21129,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Application/Common/UserAppearancePreferencesParser.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "UserContextService",
@@ -22012,6 +22019,13 @@
       "role": "ValueObject",
       "path": "Modules/Users/Domain/ValueObjects/ProfileWeightKg.cs",
       "line": 4
+    },
+    {
+      "name": "SurfaceStyleCode",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/SurfaceStyleCode.cs",
+      "line": 2
     },
     {
       "name": "ThemeCode",

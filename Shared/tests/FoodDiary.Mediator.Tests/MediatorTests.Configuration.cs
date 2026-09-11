@@ -33,7 +33,7 @@ public sealed partial class MediatorTests {
 
     [Theory]
     [InlineData(typeof(AbstractBehavior<,>))]
-    [InlineData(typeof(OpenBehaviorInterface<,>))]
+    [InlineData(typeof(IOpenBehaviorInterface<,>))]
     public void AddOpenBehavior_WithNonConcreteType_ThrowsArgumentException(Type behaviorType) {
         var configuration = new MediatorServiceConfiguration();
 

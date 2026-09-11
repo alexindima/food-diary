@@ -20,3 +20,4 @@ FD0013 | Style | Disabled | Require camel case parameter names outside positiona
 FD0014 | Style | Disabled | Require underscore camel case for private instance fields
 FD0015 | Architecture | Disabled | Reject foreign EF writes and tracking acquisition, including method groups, in module adapters
 FD0016 | Architecture | Disabled | Require exact reviewed source fingerprints for technical persistence APIs and method groups
+FD0017 | Style | Disabled | Require collection expressions for xUnit TheoryData<T> initializers
