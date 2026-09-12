@@ -189,7 +189,7 @@
       "id": "dashboard-meals-persistence-read",
       "query": "load dashboard meal data directly from persistence",
       "changeType": "Database",
-      "expectedPaths": ["Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs"]
+      "expectedPaths": ["FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs"]
     },
     {
       "id": "email-outbox-processing",

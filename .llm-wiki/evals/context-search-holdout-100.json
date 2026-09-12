@@ -108,7 +108,7 @@
   },
   "cases": [
     { "id": "holdout100-conv-001", "cohort": "conversational-ru", "query": "где у нас общий помощник который проверяет обязательные значения в домене", "changeType": "Backend", "expectedPaths": ["Shared/FoodDiary.Domain.Primitives/DomainGuard.cs"] },
-    { "id": "holdout100-conv-002", "cohort": "conversational-ru", "query": "найди хранилище аудита изменений админских ролей пользователя", "changeType": "Database", "expectedPaths": ["Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs"] },
+    { "id": "holdout100-conv-002", "cohort": "conversational-ru", "query": "найди хранилище аудита изменений админских ролей пользователя", "changeType": "Database", "expectedPaths": ["FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs"] },
     { "id": "holdout100-conv-003", "cohort": "conversational-ru", "query": "где защищаемся от повторного использования телеграм утверждения", "changeType": "Database", "expectedPaths": ["Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs"] },
     { "id": "holdout100-conv-004", "cohort": "conversational-ru", "query": "чем подставляем локализованный текст уведомления из ресурсов", "changeType": "Backend", "expectedPaths": ["Modules/Notifications/Infrastructure/Resources/NotificationResourceRenderer.cs"] },
     { "id": "holdout100-conv-005", "cohort": "conversational-ru", "query": "покажи поставщика локализованных подписей для пдф отчета дневника", "changeType": "Backend", "expectedPaths": ["Modules/Export/Infrastructure/Resources/DiaryPdfReportResourceTextProvider.cs"] },

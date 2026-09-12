@@ -2347,7 +2347,11 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     const moduleIdentityTermCount = changeType === 'frontend' && !normalizedPath.startsWith('fooddiary.web.client/')
       ? moduleIdentityLeadingTermCount : Number(contextSearchRanking.moduleIdentityAffinityLeadingTermCount ?? moduleIdentityLeadingTermCount);
     const leadingDirectTerms = normalizedDirectTerms.slice(0, moduleIdentityTermCount);
-    if (topLevelModuleIdentity.length >= moduleIdentityMinimumLength && leadingDirectTerms.includes(topLevelModuleIdentity)) {
+    const namedRegistration = !isTest && changeType !== 'frontend'
+      && directTerms.includes('dependency') && directTerms.includes('injection')
+      && /(?:registration|dependencyinjection|servicecollectionextensions)\.cs$/i.test(path)
+      && topLevelModuleIdentity.length >= 3 && normalizedDirectTerms.includes(topLevelModuleIdentity);
+    if (namedRegistration || (topLevelModuleIdentity.length >= moduleIdentityMinimumLength && leadingDirectTerms.includes(topLevelModuleIdentity))) {
       score += Number(contextSearchRanking.moduleIdentityScore ?? 0);
       reasons.push(`exact module identity ${topLevelModuleIdentity}`);
     }

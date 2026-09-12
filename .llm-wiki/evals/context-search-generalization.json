@@ -210,7 +210,7 @@
       "id": "recipe-overview-reader",
       "query": "load compact recipe overview cards from the database",
       "changeType": "Database",
-      "expectedPaths": ["Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs"]
+      "expectedPaths": ["FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs"]
     },
     {
       "id": "product-overview-reader",
@@ -408,7 +408,8 @@
       "id": "api-snapshot-guidance",
       "query": "repository rule says Swagger visible API changes require contract snapshots",
       "changeType": "Any",
-      "expectedPaths": ["AGENTS.md"]
+      "expectedPaths": ["AGENTS.md"],
+      "acceptedPaths": ["FoodDiary.Web.Api/AGENTS.md", "FoodDiary.Presentation.Api/AGENTS.md"]
     },
     {
       "id": "wiki-test-plan-workflow",

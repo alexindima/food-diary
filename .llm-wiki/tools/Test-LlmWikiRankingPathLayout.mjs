@@ -16,6 +16,7 @@ const moved = [
   ['Shared/FoodDiary.Inventory.PersistenceModel/Configurations/StockConfiguration.cs', 'FoodDiary.Infrastructure/Persistence/Configurations/Inventory/StockConfiguration.cs'],
   ['Modules/Inventory/Presentation/Features/Stock/Mappings/StockResponseMappings.cs', 'FoodDiary.Presentation.Api/Features/Stock/Mappings/StockResponseMappings.cs'],
   ['Modules/Inventory/Contracts/Stock/IStockReader.cs', 'FoodDiary.Application.Abstractions/Stock/IStockReader.cs'],
+  ['FoodDiary.ReadModel.Composition/Inventory/StockReader.cs', 'FoodDiary.Infrastructure/Persistence/Inventory/StockReader.cs'],
 ];
 for (const [current, legacy] of moved) {
   assert.deepEqual(rankingPathIdentities(current), [current.toLowerCase(), legacy.toLowerCase()]);
@@ -29,6 +30,9 @@ for (const path of ['Modules/Inventory/tests/Inventory.Tests/Domain/Test.cs', 'M
   assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
 }
 const abstractions = rankingPathIdentities(moved[1][0]);
+for (const path of ['FoodDiary.ReadModel.CompositionExtra/Inventory/StockReader.cs', 'FoodDiary.ReadModel.Composition/tests/StockReader.cs', 'FoodDiary.ReadModel.Composition/Inventory/tests/StockReader.cs', 'FoodDiary.ReadModel.Composition/DependencyInjection.cs']) {
+  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
+}
 for (const path of ['Modules/Inventory/Infrastructure/ProvidersExtra/Client.cs', 'Modules/Inventory/Infrastructure/Persistence/Providers/Client.cs', 'Modules/Inventory/Contracts/Providers/Dto.cs', 'Modules/Inventory/Infrastructure/Providers/tests/ClientTests.cs', 'Modules/Inventory/Infrastructure/Providers/Client.test.ts']) {
   assert.equal(rankingPathIdentities(path).some(alias => alias.startsWith('fooddiary.integrations/')), false);
 }
@@ -36,6 +40,8 @@ assert.equal(abstractions.some(path => path.startsWith('fooddiary.application.in
 assert.equal(abstractions.some(path => path.startsWith('fooddiary.application.abstractions/')), true);
 assert.equal(rankingModuleIdentity(moved[0][0]), rankingModuleIdentity(moved[0][1]));
 assert.equal(rankingModuleIdentity('Modules/InventoryExtras/Application/Handler.cs'), 'inventoryextras');
+assert.equal(rankingModuleIdentity('FoodDiary.ReadModel.Composition/Inventory/StockReader.cs'), 'inventory');
+assert.equal(rankingModuleIdentity('FoodDiary.ReadModel.CompositionExtra/Inventory/StockReader.cs'), 'readmodelcompositionextra');
 const intentPolicy = { domainIntentTerms: ['entity'], apiIntentTerms: ['endpoint'],
   databaseIntentTerms: ['storage'], integrationIntentTerms: ['adapter'], infrastructureIntentTerms: ['implementation', 'persist'],
   infrastructureMinimumMatches: 2, infrastructureExcludedIntentTerms: ['translation'] };

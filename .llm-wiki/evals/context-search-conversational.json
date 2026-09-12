@@ -275,6 +275,9 @@
       "changeType": "Any",
       "expectedPaths": [
         "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts"
+      ],
+      "acceptedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts"
       ]
     },
     {
@@ -284,6 +287,9 @@
       "changeType": "Any",
       "expectedPaths": [
         "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts"
+      ],
+      "acceptedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts"
       ]
     },
     {

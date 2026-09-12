@@ -126,7 +126,7 @@
       "id": "recipe-overview-reader-validation",
       "query": "database reader returns recipe overview details",
       "changeType": "Database",
-      "expectedPaths": ["Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs"]
+      "expectedPaths": ["FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs"]
     },
     {
       "id": "weekly-goals-controller-validation",

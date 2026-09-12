@@ -2,6 +2,10 @@
 // layout. Keep the real path first; aliases only bridge known layer boundaries.
 export function rankingPathIdentities(value) {
   const path = String(value ?? '').replaceAll('\\', '/').toLowerCase();
+  const readComposition = /^fooddiary\.readmodel\.composition\/([^/]+\/.+\.cs)$/.exec(path);
+  if (readComposition && !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)/.test(path)) {
+    return [path, `fooddiary.infrastructure/persistence/${readComposition[1]}`];
+  }
   const sharedTest = /^(?:shared|tooling)\/(tests\/[^/]+\.tests\/.+)$/.exec(path);
   if (sharedTest) return [path, sharedTest[1]];
   const persistenceModel = /^shared\/fooddiary\.([^.\/]+)\.persistencemodel\/(.+)$/.exec(path);
@@ -42,7 +46,8 @@ export function rankingPathIdentities(value) {
 export function rankingModuleIdentity(value) {
   const path = String(value ?? '').replaceAll('\\', '/').toLowerCase();
   const parts = path.split('/');
-  const root = parts[0] === 'modules' && parts.length >= 4 ? parts[1] : parts[0];
+  const root = (parts[0] === 'modules' && parts.length >= 4)
+    || (parts[0] === 'fooddiary.readmodel.composition' && parts.length >= 3) ? parts[1] : parts[0];
   return root.replace(/^fooddiary\.application\./, '').replace(/^fooddiary\./, '')
     .replaceAll(/[^\p{L}\p{N}]/gu, '');
 }

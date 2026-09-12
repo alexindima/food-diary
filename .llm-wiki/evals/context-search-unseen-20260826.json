@@ -127,7 +127,7 @@
       "query": "domain rule for enums cycle flow level",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs"
+        "Modules/Cycles/Domain.Contracts/Enums/CycleFlowLevel.cs"
       ]
     },
     {
@@ -145,7 +145,7 @@
       "query": "storage or provider implementation for dashboard meal projection",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs"
+        "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs"
       ]
     },
     {
@@ -668,7 +668,7 @@
       "query": "domain rule for enums report target type",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/ContentReports/Domain/Enums/ReportTargetType.cs"
+        "Modules/ContentReports/Domain.Contracts/Enums/ReportTargetType.cs"
       ]
     },
     {

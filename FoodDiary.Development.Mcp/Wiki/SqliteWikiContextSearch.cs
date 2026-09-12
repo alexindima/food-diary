@@ -511,10 +511,14 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             int moduleIdentityTermCount = string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
                 !normalizedPath.StartsWith("fooddiary.web.client/", StringComparison.Ordinal)
                 ? policy.ModuleIdentityLeadingTermCount : policy.ModuleIdentityAffinityLeadingTermCount;
-            if (topLevelModuleIdentity.Length >= policy.ModuleIdentityMinimumLength &&
+            bool namedRegistration = !isTest && !string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
+                directTerms.Contains("dependency") && directTerms.Contains("injection") &&
+                new[] { "registration.cs", "dependencyinjection.cs", "servicecollectionextensions.cs" }.Any(suffix => normalizedPath.EndsWith(suffix, StringComparison.Ordinal)) &&
+                topLevelModuleIdentity.Length >= 3 && normalizedDirectTerms.Contains(topLevelModuleIdentity, StringComparer.Ordinal);
+            if (namedRegistration || (topLevelModuleIdentity.Length >= policy.ModuleIdentityMinimumLength &&
                 normalizedDirectTerms.Take(moduleIdentityTermCount).Contains(
                     topLevelModuleIdentity,
-                    StringComparer.Ordinal)) {
+                    StringComparer.Ordinal))) {
                 score += policy.ModuleIdentityScore;
                 reasons.Add($"exact module identity {topLevelModuleIdentity}");
             }
@@ -1278,6 +1282,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
 
     private static string[] GetRankingPathIdentities(string path) {
         string[] rootParts = path.Split('/', 3);
+        if (rootParts.Length == 3 && string.Equals(rootParts[0], "fooddiary.readmodel.composition", StringComparison.Ordinal) &&
+            rootParts[1].Length > 0 && rootParts[2].EndsWith(".cs", StringComparison.Ordinal) && !TestPath.IsMatch(path)) {
+            return [path, $"fooddiary.infrastructure/persistence/{rootParts[1]}/{rootParts[2]}"];
+        }
         if (rootParts.Length == 3 && rootParts[0] is "shared" or "tooling" && string.Equals(rootParts[1], "tests", StringComparison.Ordinal)) {
             string[] testPath = rootParts[2].Split('/', 2);
             if (testPath.Length == 2 && testPath[0].EndsWith(".tests", StringComparison.Ordinal) && testPath[1].Length > 0) {
@@ -1339,7 +1347,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
 
     private static string GetRankingModuleIdentity(string path) {
         string[] parts = path.Split('/');
-        string root = parts.Length >= 4 && string.Equals(parts[0], "modules", StringComparison.Ordinal) ? parts[1] : parts[0];
+        string root = (parts.Length >= 4 && string.Equals(parts[0], "modules", StringComparison.Ordinal)) ||
+            (parts.Length >= 3 && string.Equals(parts[0], "fooddiary.readmodel.composition", StringComparison.Ordinal)) ? parts[1] : parts[0];
         if (root.StartsWith("fooddiary.application.", StringComparison.Ordinal)) {
             root = root["fooddiary.application.".Length..];
         }
