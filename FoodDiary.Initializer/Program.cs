@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -386,7 +387,7 @@ public partial class Program {
             services.AddProductsModule();
             services.AddRecipesModule();
             services.AddRecentItemsModule();
-            services.AddUsersModule();
+            services.AddUsersModule().AddReadModelComposition();
             services.AddBillingModule();
             services.AddMarketingModule();
             services.AddExportInfrastructure().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddDashboardReadServices();

@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Export.Infrastructure;
@@ -35,7 +36,7 @@ builder.Services.AddIdentityModule();
 builder.Services.AddImagesModule();
 builder.Services.AddWeeklyGoalsModule();
 builder.Services.AddNotificationsModule().AddNotificationsInfrastructure(builder.Configuration);
-builder.Services.AddUsersModule();
+builder.Services.AddUsersModule().AddReadModelComposition();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsModule();

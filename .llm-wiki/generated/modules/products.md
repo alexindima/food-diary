@@ -39,15 +39,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
-- Public contract files: 9
+- Public contract files: 11
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 9
-- Interfaces: 6
-- DTO/read-model/projection types: 0
+- Public contract types: 11
+- Interfaces: 7
+- DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 3
@@ -57,9 +57,11 @@ No literal attribute-routed controller was associated with this module.
 - `interface IProductOverviewReadService`
 - `interface IProductReadRepository`
 - `interface IProductRepository`
+- `interface IProductSnapshotReadService`
 - `interface IProductWriteRepository`
 - `record ProductOverviewReadItem`
 - `record ProductQueryFilters`
+- `record ProductSnapshotReadModel`
 
 ## Focused Tests
 
@@ -87,6 +89,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/FoodQualityScoreTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/NutritionContractTests.cs`
 - [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductRepositoryIntegrationTests.cs`
+- [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductSnapshotReadServiceIntegrationTests.cs`
 - [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductHttpMappingsTests.cs`
 - [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductSuggestionsControllerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ProductsModuleExtractionTests.cs`

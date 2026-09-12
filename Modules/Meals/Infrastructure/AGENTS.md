@@ -12,3 +12,5 @@ shared attempt reset and keep provider calls outside the transaction. Undo locks
 owned Meal row before comparing its version. See ADR 0037.
 
 MealItemDisplayReadService owns the existing Dashboard snapshot/fallback and food-quality policy. Keep a single no-tracking batch query, owner filtering and stable ordering. Distinct meal-detail legacy recipe fallbacks retain their existing semantics.
+
+ADR 0038: reviewed cross-module SQL read implementations now live in FoodDiary.ReadModel.Composition, registered explicitly by hosts. Module writes and existing repository aliases stay here; modules never reference the composition assembly. Shared DbContext capabilities remain inventoried. See docs/adr/0038-read-model-composition.md.

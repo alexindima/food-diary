@@ -42,14 +42,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
-- Public contract files: 32
+- Public contract files: 33
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 32
-- Interfaces: 19
+- Public contract types: 33
+- Interfaces: 20
 - DTO/read-model/projection types: 10
 - Enums: 0
 - Exported repository-shaped contracts: 12
@@ -57,6 +57,7 @@ No literal attribute-routed controller was associated with this module.
 - `class FavoriteMealErrors`
 - `class FavoriteProductErrors`
 - `class FavoriteRecipeErrors`
+- `interface IFavoriteMealQuery`
 - `interface IFavoriteMealReadModelRepository`
 - `interface IFavoriteMealReadRepository`
 - `interface IFavoriteMealReadService`
@@ -83,8 +84,7 @@ No literal attribute-routed controller was associated with this module.
 - `record FavoriteProductReadModel`
 - `record FavoriteProductSourceModel`
 - `record FavoriteRecipeModel`
-- `record FavoriteRecipeReadModel`
-- ... 2 more type(s)
+- ... 3 more type(s)
 
 ## Focused Tests
 

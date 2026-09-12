@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
@@ -81,7 +82,7 @@ public sealed class DependencyInjectionTests {
             ["Email:FrontendBaseUrl"] = "not-a-url",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
@@ -103,7 +104,7 @@ public sealed class DependencyInjectionTests {
             ["Email:AllowedFrontendBaseUrls:0"] = "not-a-url",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
@@ -445,7 +446,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
 
         ServiceDescriptor interceptorDescriptor = Assert.Single(
             services,
@@ -502,7 +503,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence().AddDashboardReadServices();
         Assert.Multiple(
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardBodyReadService))),
@@ -577,7 +578,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services
-            .AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence()
+            .AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence()
             .AddBillingModule()
             .AddBodyMetricsModule().AddExercisesModule()
             .AddNotificationsPersistence()
@@ -617,7 +618,7 @@ public sealed class DependencyInjectionTests {
             ["Database:MaxRetryCount"] = "0",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<DatabaseOptions>>().Value);
@@ -640,7 +641,7 @@ public sealed class DependencyInjectionTests {
             ["OutboxProcessing:FinalizationTimeout"] = "00:00:10",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() =>
@@ -665,7 +666,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddSingleton<IPublisher>(new NullPublisher());
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
         using FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();

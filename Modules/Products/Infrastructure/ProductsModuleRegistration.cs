@@ -17,6 +17,7 @@ public static class ProductsModuleRegistration {
     public static IServiceCollection AddProductsPersistence(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ProductsUserDataPurgeParticipant>());
         services.AddScoped<ProductRepository>();
+        services.AddScoped<IProductSnapshotReadService, ProductSnapshotReadService>();
         services.AddScoped<IProductOverviewReadService, ProductOverviewReadService>();
         services.AddScoped<IProductRepository, CachedProductRepository>();
         services.AddScoped<IProductReadRepository>(static provider => provider.GetRequiredService<IProductRepository>());

@@ -23,17 +23,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
+          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "b7e6fef0e857346fa08bce1991b32ed524f3d8bfffe668c994728bf06c501c1b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "28feb60eeb7696b55f20aec340f00171857f5f378afe1a201930e5692d101656"
+          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
         }
       ],
-      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:18.5681169Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:48.3226337Z"
     },
     {
       "pageId": "module.frontend",
@@ -56,48 +60,76 @@
       "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "b7e6fef0e857346fa08bce1991b32ed524f3d8bfffe668c994728bf06c501c1b"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "28feb60eeb7696b55f20aec340f00171857f5f378afe1a201930e5692d101656"
+          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
         }
       ],
-      "reason": "Reviewed current architecture guidance: four aggregate assembly edges were narrowed, within the existing modular monolith. 1274 architecture tests passed, including zero direct foreign Domain references from module Application projects. Mail services and host responsibilities remain unchanged.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:22.3831800Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:48.5720308Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "422075ac3404a2eda205596694b37994963a10d3a768ebf301e89aa8eb3dc442",
+      "pageSha256": "7f0552d1eb7f6521ba9095db702a5d390ab7278fa2328cff28f871a234722d75",
       "sources": [
         {
-          "path": "docs/adr/0027-retire-shared-domain-assemblies.md",
-          "sha256": "5dc389737069284024c2768f1ff4683649666806e91513bb0076712124392cb6"
+          "path": "docs/adr/0038-read-model-composition.md",
+          "sha256": "d69560ec4ae976156043ac8d9cccfabc85b3c6d352c3128e3a417630dde72a0d"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4a3e8054d52370972c00a2b7645444661c42996b9878157b0398d6f5035e41e5"
+          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "7047164191fd33c861f5d074bd3e513249066f8644a7de6252c5522435a32882"
+        },
+        {
+          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
+          "sha256": "cbfe4747c03b61e4a8d3d0219833b33040485863ad40d0a3b7dd321348648d91"
+        },
+        {
+          "path": "Modules/Admin/Infrastructure/AGENTS.md",
+          "sha256": "bc1771ea7346fd08ea42d82c6b888d6539c4ebd957a8820cc975c4bbd906a5d1"
         }
       ],
-      "reason": "Reviewed source ownership against the exact project matrix and amended ADR0027. The backend map and primary-backend page now identify Products FoodQuality and scalar boundaries. Mail service ownership and knowledge precedence remain unchanged.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T14:38:02.4835218Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:48.7236105Z"
     },
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "392102fa284f635352d7abba0f8f998cc678c5678a2cf8c72054ab8e4365ee89",
+      "pageSha256": "cd25d1c6e5c08ab71f8202c4e2269172b397ee34aa2b02c0a2a7462461fccace",
       "sources": [
         {
+          "path": "docs/adr/0038-read-model-composition.md",
+          "sha256": "d69560ec4ae976156043ac8d9cccfabc85b3c6d352c3128e3a417630dde72a0d"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "b7e6fef0e857346fa08bce1991b32ed524f3d8bfffe668c994728bf06c501c1b"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "43d18f38cd9fb509063d2897903c940ecd0267a239a416843365dba9e462430f"
+          "sha256": "e559540801ff0fb0ead93ad8de2d0e1f9207ad390a48a3240b22bbf15ea29487"
         }
       ],
-      "reason": "Reviewed current pages against the scoped matrix change: Fasting and RecipeCommunity Infrastructure replace Users.Domain with owner Users.Contracts and scalar IDs. Existing inward-layer overview, ownership and drift workflow remain accurate; no host, service, graph-cycle or write ownership change. Architecture health check passes and 53 PostgreSQL/provider cases pass. Detailed batch query and consistency tradeoff is recorded in docs/ai/users-related-read-boundaries.md.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:56:09.0202542Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:48.9249294Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -136,13 +168,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
+          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "881c36fec16a735d90853e241ef0f9d8a6ccbf7df677fb5e8c25ac3663a2c907"
         }
       ],
-      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:18.9504142Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:49.1174413Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -219,17 +255,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "0f7ffa3a92d8c0caa3cbd5d0777315b092aa2607be05fd5128376544fa9adc34"
+          "sha256": "2abfa265838b103f35ab852607b94be19339845c0bacb0a2261fca3068a555f2"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "43d18f38cd9fb509063d2897903c940ecd0267a239a416843365dba9e462430f"
+          "sha256": "e559540801ff0fb0ead93ad8de2d0e1f9207ad390a48a3240b22bbf15ea29487"
         }
       ],
-      "reason": "Reviewed current pages against the scoped matrix change: Fasting and RecipeCommunity Infrastructure replace Users.Domain with owner Users.Contracts and scalar IDs. Existing inward-layer overview, ownership and drift workflow remain accurate; no host, service, graph-cycle or write ownership change. Architecture health check passes and 53 PostgreSQL/provider cases pass. Detailed batch query and consistency tradeoff is recorded in docs/ai/users-related-read-boundaries.md.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:56:09.7042379Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:49.3119089Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,13 +274,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "0a502fcf45dec078fb76882a697f361e7ba46072c6acb2b0722b13bf88d2edb0"
+          "sha256": "9b771656f021c52c71a9713318ac93c06ee7af003855111dc356b42ffcf2a893"
         }
       ],
-      "reason": "Reviewed current guidance against five byte-identical type moves, unchanged length limits and owner read-model mapping. Refreshed indexes and 1994 executed tests support compatibility; static reference counts remain navigation evidence.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T15:48:28.6903961Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:49.8218820Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -464,13 +500,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "f471785c5bb353f297c1be6e638de25d2ec397c79360f1c694f04b35341b520a"
+          "sha256": "881c36fec16a735d90853e241ef0f9d8a6ccbf7df677fb5e8c25ac3663a2c907"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:22.7223487Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:50.0844739Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -508,14 +544,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "a66ccedb2b79eaaed4a41f917b45e0accd5196aac7f89e6a8f2926cac3cf8a53"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "7047164191fd33c861f5d074bd3e513249066f8644a7de6252c5522435a32882"
         }
       ],
-      "reason": "Eleven public Cycles enum files retain exact SHA256 hashes and all IDs and aggregates remain with Cycles Domain. Only an unused test helper was removed. 2287 tests passed, including export and EF model compatibility; refreshed indexes remain navigation rather than execution proof.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:25.8436845Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:50.3620449Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -783,13 +819,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e2f16409a01e6dab57fd9d862d02aa396569df138b5a4d862f559c8ebabe3e06"
+          "sha256": "4bc1ef877d6d753c4a3900e0371a2c6f3a17eae2b7ade912e091f761b07c520f"
         }
       ],
-      "reason": "Reviewed workflow guidance against refreshed source indexes. This change relocates three unchanged source types, updates direct project references and Docker source copies; it changes no workflow tool semantics, UI contracts, provider behavior or data lifecycle. Existing guidance remains applicable; behavior and dependency evidence is in role-quality-verification.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T14:38:11.2999726Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:50.7292302Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +864,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "973e6fe635b2c52f473ebf69d805befa50e581bb9b0f860f3ea5dfb3dd2ae685"
+          "sha256": "6ed33e8beee2eedd7fa29acb142d1233a56f4fd82936b17cfa4db6f13903fb9c"
         }
       ],
-      "reason": "Eleven public Cycles enum files retain exact SHA256 hashes and all IDs and aggregates remain with Cycles Domain. Only an unused test helper was removed. 2287 tests passed, including export and EF model compatibility; refreshed indexes remain navigation rather than execution proof.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:26.4887007Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:51.1608642Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +939,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b17cff2bc0e9988653bd77a323b2a437b07564fb9a6c94c33f5c35708fd6147b"
+          "sha256": "007566ed8d81f73cb9af74223583137100bf3be0d0182e91cf7d238bd5b39cf0"
         }
       ],
-      "reason": "Reviewed workflows against refreshed topology and quality indexes. No providers, workers, consent, authorization, password verification or data-lifecycle behavior changed; coordinated host rebuild is documented and 85 HTTP/Swagger cases passed.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:28.4952342Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:51.5053526Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,17 +954,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "973e6fe635b2c52f473ebf69d805befa50e581bb9b0f860f3ea5dfb3dd2ae685"
+          "sha256": "6ed33e8beee2eedd7fa29acb142d1233a56f4fd82936b17cfa4db6f13903fb9c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b17cff2bc0e9988653bd77a323b2a437b07564fb9a6c94c33f5c35708fd6147b"
+          "sha256": "007566ed8d81f73cb9af74223583137100bf3be0d0182e91cf7d238bd5b39cf0"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "4bc1ef877d6d753c4a3900e0371a2c6f3a17eae2b7ade912e091f761b07c520f"
         }
       ],
-      "reason": "Reviewed workflows against refreshed topology and quality indexes. No providers, workers, consent, authorization, password verification or data-lifecycle behavior changed; coordinated host rebuild is documented and 85 HTTP/Swagger cases passed.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:28.9137647Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:52.0462095Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1110,13 +1150,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
+          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
         }
       ],
-      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:19.2553877Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:52.2785487Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1174,17 +1214,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "dd65827cc3ba14338447ab908126e5e406a7c09c99783db589f65cdd770bcc51"
+          "sha256": "0912d5605ebb8e6b18f750fbaefcc43ee42788e65c0ccb3b83c00156882eb413"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
+          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
         }
       ],
-      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:19.7566622Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:52.5926109Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1193,13 +1233,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
+          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
         }
       ],
-      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
+      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T16:19:20.1768015Z"
+      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
+      "reviewedAtUtc": "2026-09-12T17:56:52.8391541Z"
     }
   ]
 }

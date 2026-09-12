@@ -38,7 +38,7 @@ public sealed class ExportModuleExtractionTests {
     public void ExportPdfAdapter_IsOwnedByModuleWithoutCentralInfrastructureDependency() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj");
-        Assert.Equal(["FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts"], references);
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Services", "DiaryPdf");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.Export.cs")));

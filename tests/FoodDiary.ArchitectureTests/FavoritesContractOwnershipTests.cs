@@ -6,7 +6,7 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class FavoritesContractOwnershipTests {
     [Theory]
-    [InlineData("Meal", 8)]
+    [InlineData("Meal", 9)]
     [InlineData("Product", 8)]
     [InlineData("Recipe", 8)]
     public void Contracts_AreOwnedOnce_AndSeparatedFromRepositories(string kind, int ownerFileCount) {

@@ -31,7 +31,6 @@
       "reason": "Meals-owned receipts and owner-filtered row lock for undo. Parameterized SQL locks only the selected owned Meal. No foreign aggregate access; caller transaction owns SaveChanges and commit.",
       "technicalSourceSha256": "e2a1800a079288b26b033ca162ea1438a1e73fb2022d16a05dfdef423f1a41c1"
     },
-
     "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs": {
       "module": "Meals",
       "capabilities": [
@@ -42,7 +41,6 @@
       "reason": "Meals-owned user-serialized transaction with intermediate unit-of-work flush to capture the newly added owned Meal xmin. Commit includes the receipt; shared retry boundary resets tracking and post-commit actions. No external provider calls or foreign aggregate mutations.",
       "technicalSourceSha256": "4a59640ea8f6e9f77c487550c6359edb5c21b3a21e62b487067318328bba381e"
     },
-
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
       "module": "Identity",
       "capabilities": ["context:Database", "entity:TelegramOperation", "tracked:TelegramOperation", "write:TelegramOperation"],
@@ -55,43 +53,14 @@
       "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
       "technicalSourceSha256": "72f1d37964cf802e3d2e70809392c16dad7d7390c737616e089e1bf1ef9c610f"
     },
-    "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs": {
-      "module": "Admin",
-      "capabilities": [
-        "entity:AiUsage",
-        "entity:BillingPayment",
-        "entity:User"
-      ],
-      "reason": "Admin-only aggregate reporting: no-tracking UTC period counts and trends over registration dates, positive completed payments and token counts. Projects no addresses, prompts, bodies or provider metadata; no tracking, writes or context escapes. Explicit owner domain references document read capability under ADR 0029."
-    },
-    "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs": {
-      "module": "Admin",
-      "capabilities": [
-        "entity:BillingPayment",
-        "entity:BillingSubscription",
-        "entity:BillingWebhookEvent",
-        "entity:User",
-        "tracked:BillingWebhookEvent"
-      ],
-      "reason": "Admin billing reporting joins Billing subscriptions/payments/webhook events and Users display data; no aggregate writes."
-    },
     "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs": {
       "module": "Admin",
       "capabilities": [
         "entity:AdminImpersonationSession",
-        "entity:User",
         "tracked:AdminImpersonationSession",
         "write:AdminImpersonationSession"
       ],
-      "reason": "Admin owns impersonation sessions; Users is an existence/status projection for session validation."
-    },
-    "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs": {
-      "module": "Admin",
-      "capabilities": [
-        "entity:User",
-        "entity:UserRoleAuditEvent"
-      ],
-      "reason": "Admin role-audit reporting projects Users-owned audit records and actor display data."
+      "reason": "Admin owns impersonation sessions; Users is an existence/status projection for session validation. Composed reads delegate to an explicit read-only port (ADR 0038)."
     },
     "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs": {
       "module": "Admin",
@@ -332,29 +301,6 @@
       ],
       "reason": "Dashboard composes Hydration and BodyMetrics into a no-tracking body summary."
     },
-    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs": {
-      "module": "Dashboard",
-      "capabilities": [
-        "entity:ImageAsset",
-        "entity:MealAiItem",
-        "entity:MealAiSession"
-      ],
-      "reason": "Dashboard projects meal AI sessions/items and image metadata for the snapshot."
-    },
-    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs": {
-      "module": "Dashboard",
-      "capabilities": [
-        "entity:FavoriteMeal"
-      ],
-      "reason": "Dashboard reads Favorites flags for visible meals."
-    },
-    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs": {
-      "module": "Dashboard",
-      "capabilities": [
-        "entity:Meal"
-      ],
-      "reason": "Dashboard reads Meals for the snapshot; no diary mutation."
-    },
     "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs": {
       "module": "Dietologist",
       "capabilities": [
@@ -505,11 +451,10 @@
       "module": "Favorites",
       "capabilities": [
         "entity:FavoriteMeal",
-        "entity:Meal",
         "tracked:FavoriteMeal",
         "write:FavoriteMeal"
       ],
-      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed. Composed reads delegate to an explicit read-only port (ADR 0038)."
     },
     "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs": {
       "module": "Favorites",
@@ -792,15 +737,6 @@
       ],
       "reason": "MealPlanning-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
-    "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs": {
-      "module": "Meals",
-      "capabilities": [
-        "entity:Meal",
-        "entity:MealItem",
-        "entity:Product"
-      ],
-      "reason": "Meals owns tenant-scoped batch display projection and snapshot fallback; Products is an immediate no-tracking read."
-    },
     "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs": {
       "module": "Meals",
       "capabilities": [
@@ -813,13 +749,11 @@
       "capabilities": [
         "entity:ImageAsset",
         "entity:Meal",
-        "entity:MealItem",
-        "entity:Product",
         "entity:Recipe",
         "tracked:Meal",
         "write:Meal"
       ],
-      "reason": "Meals owns diary writes; Products, Recipes and Images are source/nutrition/usage projections. Foreign tracked-query acquisition is retained pending narrower projections, not permission for foreign mutation."
+      "reason": "Meals owns diary writes; Products, Recipes and Images are source/nutrition/usage projections. Foreign tracked-query acquisition is retained pending narrower projections, not permission for foreign mutation. Composed reads delegate to an explicit read-only port (ADR 0038)."
     },
     "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs": {
       "module": "Meals",
@@ -987,16 +921,6 @@
       "reason": "Owner top-level Serializable transaction with whole-attempt retry and clean tracking/outbox callback reset; no global composition lock.",
       "technicalSourceSha256": "71a2226ead1164faa4306f586229656f3f8570b463dfae5e2cf8c8c3647e7813"
     },
-    "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs": {
-      "module": "Recipes",
-      "capabilities": [
-        "entity:MealItem",
-        "entity:Product",
-        "entity:Recipe",
-        "tracked:Recipe"
-      ],
-      "reason": "Recipes overview projects MealItem usage counters; no Meals writes."
-    },
     "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs": {
       "module": "Recipes",
       "capabilities": [
@@ -1004,14 +928,12 @@
         "context:Database",
         "context:Entry",
         "entity:MealItem",
-        "entity:Product",
         "entity:Recipe",
-        "entity:RecipeIngredientProductSnapshot",
         "tracked:Recipe",
         "write:Recipe"
       ],
-      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation; MealItem is a usage read only. Ingredient product snapshots are transient immutable projections, not mapped entities; SetProductSnapshot never mutates persisted recipe state or grants Product tracking/write access.",
-      "technicalSourceSha256": "5c97db172dc2076092a130f8b659f08e185d58b32e43e6d6bc0320041228ceaf"
+      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation; MealItem is a usage read only. Ingredient product snapshots are transient immutable projections, not mapped entities; SetProductSnapshot never mutates persisted recipe state or grants Product tracking/write access. Product hydration uses owner batch scalar snapshots; transaction and write paths unchanged.",
+      "technicalSourceSha256": "e394c82ca55d859587ec83c6b5ea9d15a58909b9b63e06d8dbaaff84d72595dd"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",
@@ -1198,16 +1120,6 @@
       "reason": "Admin-owned acknowledgement receipts contain only an opaque MailInbox ID. The dedicated background scope saves its receipt after durable MailRelay enqueue; duplicate inserts are detached and verified by existence lookup, other failures propagate. No foreign aggregate writes, raw SQL or message content persistence.",
       "technicalSourceSha256": "20a70ada7ca020b25d12483ec41c4e179991db61d39d2a171672ef0d11573cb9"
     },
-    "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs": {
-      "module": "Admin",
-      "capabilities": [
-        "entity:Meal",
-        "entity:User",
-        "tracked:Meal",
-        "tracked:User"
-      ],
-      "reason": "Admin-only aggregate retention projection. No-tracking reads of account registration and meal creation timestamps; counts distinct users and mature calendar cohorts without returning identities or diary content. No aggregate writes or context escape. Explicit Meals Domain reference follows the existing Admin reporting adapter boundary under ADR 0029. Scanner marks composed IQueryable aliases as potentially tracked; both roots explicitly use AsNoTracking and only aggregates are materialized."
-    },
     "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs": {
       "module": "Marketing",
       "capabilities": [
@@ -1228,6 +1140,114 @@
       ],
       "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. No foreign aggregate writes.",
       "technicalSourceSha256": "28144107ee829b8558bfdf59be89df941a16810d2c9501006182df15584a8404"
+    },
+    "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:BillingPayment",
+        "entity:BillingSubscription",
+        "entity:BillingWebhookEvent",
+        "entity:User"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Admin billing reporting joins Billing subscriptions/payments/webhook events and Users display data; no aggregate writes."
+    },
+    "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:AiUsage",
+        "entity:BillingPayment",
+        "entity:User"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Admin-only aggregate reporting: no-tracking UTC period counts and trends over registration dates, positive completed payments and token counts. Projects no addresses, prompts, bodies or provider metadata; no tracking, writes or context escapes. Explicit owner domain references document read capability under ADR 0029."
+    },
+    "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:Meal",
+        "entity:User"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Admin-only aggregate retention projection. No-tracking reads of account registration and meal creation timestamps; counts distinct users and mature calendar cohorts without returning identities or diary content. No aggregate writes or context escape. Explicit Meals Domain reference follows the existing Admin reporting adapter boundary under ADR 0029. Scanner marks composed IQueryable aliases as potentially tracked; both roots explicitly use AsNoTracking and only aggregates are materialized."
+    },
+    "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:User",
+        "entity:UserRoleAuditEvent"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Admin role-audit reporting projects Users-owned audit records and actor display data."
+    },
+    "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:Meal"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Dashboard reads Meals for the snapshot; no diary mutation."
+    },
+    "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealFavoritesLoader.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:FavoriteMeal"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Dashboard reads Favorites flags for visible meals."
+    },
+    "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionsLoader.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:ImageAsset",
+        "entity:MealAiItem",
+        "entity:MealAiSession"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Dashboard projects meal AI sessions/items and image metadata for the snapshot."
+    },
+    "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Product",
+        "entity:Recipe"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Recipes overview projects MealItem usage counters; no Meals writes."
+    },
+    "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:Meal",
+        "entity:MealItem",
+        "entity:Product"
+      ],
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Meals owns tenant-scoped batch display projection and snapshot fallback; Products is an immediate no-tracking read."
+    },
+    "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:AdminImpersonationSession",
+        "entity:User"
+      ],
+      "reason": "ADR 0038: extracted unchanged no-tracking SQL projection; owner writes stay in the module."
+    },
+    "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:FavoriteMeal",
+        "entity:Meal"
+      ],
+      "reason": "ADR 0038: extracted unchanged no-tracking SQL projection; owner writes stay in the module."
+    },
+    "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Meal",
+        "entity:Product"
+      ],
+      "reason": "ADR 0038: extracted unchanged no-tracking SQL projection; owner writes stay in the module."
+    },
+    "Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs": {
+      "module": "Products",
+      "capabilities": [
+        "entity:Product"
+      ],
+      "reason": "Owner batch scalar snapshots for related-data hydration. No tracking, no visibility filtering or writes; empty input performs no query."
     }
   }
 }

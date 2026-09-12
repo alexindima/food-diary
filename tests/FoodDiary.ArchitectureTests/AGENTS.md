@@ -3,6 +3,13 @@
 `DirectOwnerContractReferenceTests` prevents nine unused contract exports from returning to central Application.Abstractions and checks representative direct consumers. The exact dependency matrix protects every production/test ProjectReference; emitted assembly metadata audits complement, but do not replace, compile-time verification.
 
 ## Scope
+
+ReadModelCompositionBoundaryTests prohibits foreign Domain references in module
+Infrastructure and non-read persistence capabilities in the host-composed query
+assembly. ModuleSourceCatalog and the reviewed inventory include that assembly.
+ADR 0038 moves Admin role-audit SQL implementation there while retaining Admin
+ports and focused provider tests; earlier module adapter ownership rules have
+this exact exception.
 Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Role

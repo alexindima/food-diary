@@ -13,6 +13,8 @@ sources:
   - Shared/FoodDiary.Domain.Primitives/AGENTS.md
   - docs/adr/0027-retire-shared-domain-assemblies.md
   - FoodDiary.Infrastructure/AGENTS.md
+  - FoodDiary.ReadModel.Composition/AGENTS.md
+  - docs/adr/0038-read-model-composition.md
   - Shared/FoodDiary.Integrations.Http/AGENTS.md
   - Shared/FoodDiary.Email.MailRelay/AGENTS.md
   - Modules/Admin/Infrastructure/AGENTS.md
@@ -46,6 +48,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; the narrow Products FoodQuality assembly owns the reusable formula. Products/Recipes mutation uses Serializable transactions with whole-attempt retries under ADR 0035. |
 | Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items and meal-only value types; scalar IDs/enums use Domain.Contracts, external EF relationships use central composition, and shared context/migrations remain central |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
+| Cross-module SQL read projections | `FoodDiary.ReadModel.Composition`, registered by API, JobManager and Initializer through module read ports; no module references this assembly |
 | External providers and service clients | Owner module Infrastructure; MailRelay transport in `Shared/FoodDiary.Email.MailRelay`; provider-neutral HTTP primitives in `Shared/FoodDiary.Integrations.Http` |
 | HTTP and SignalR transport | Owning module Presentation projects; reusable transport primitives in `FoodDiary.Presentation.Api` |
 | Composition, middleware, and hosting | `FoodDiary.Web.Api` |

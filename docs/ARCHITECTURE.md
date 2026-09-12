@@ -9,6 +9,7 @@ The primary product backend is a modular monolith:
 - `FoodDiary.Application.Runtime`
 - independently compiled `FoodDiary.Application.<Feature>` modules
 - `FoodDiary.Infrastructure`
+- `FoodDiary.ReadModel.Composition`: host-registered cross-module SQL read projections
 - owner-module provider adapters plus `Shared/FoodDiary.Integrations.Http` and `Shared/FoodDiary.Email.MailRelay`
 - `FoodDiary.Presentation.Api`
 - `FoodDiary.Web.Api`

@@ -209,6 +209,7 @@ COPY Modules/Hydration/Infrastructure/*.csproj Modules/Hydration/Infrastructure/
 COPY Modules/Hydration/Infrastructure/Model/*.csproj Modules/Hydration/Infrastructure/Model/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/*.csproj Services/MailInbox/FoodDiary.MailInbox.Client/
 COPY Services/MailRelay/FoodDiary.MailRelay.Client/*.csproj Services/MailRelay/FoodDiary.MailRelay.Client/
+COPY FoodDiary.ReadModel.Composition/*.csproj FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.Initializer/*.csproj FoodDiary.Initializer/
 
@@ -434,6 +435,7 @@ COPY Modules/Hydration/Infrastructure/ Modules/Hydration/Infrastructure/
 COPY Modules/Hydration/Infrastructure/Model/ Modules/Hydration/Infrastructure/Model/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/ Services/MailInbox/FoodDiary.MailInbox.Client/
 COPY Services/MailRelay/FoodDiary.MailRelay.Client/ Services/MailRelay/FoodDiary.MailRelay.Client/
+COPY FoodDiary.ReadModel.Composition/ FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.Initializer/ FoodDiary.Initializer/
 

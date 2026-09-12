@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3991,
-    "symbols": 3933,
-    "interfaceImplementationLinks": 264,
+    "sourceFiles": 4002,
+    "symbols": 3943,
+    "interfaceImplementationLinks": 268,
     "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 2044,
+      "class": 2049,
       "enum": 64,
-      "interface": 470,
-      "record": 1234,
+      "interface": 474,
+      "record": 1235,
       "record struct": 121
     },
     "roles": {
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1593,
-      "Query": 187,
+      "Other": 1595,
+      "Query": 193,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
       "Repository": 108,
       "Request": 148,
       "Response": 213,
-      "Service": 312,
+      "Service": 314,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 46
@@ -1011,7 +1011,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 351
+      "line": 352
     },
     {
       "name": "UsdaCsvReader",
@@ -1032,7 +1032,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 75
+      "line": 76
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -1679,6 +1679,132 @@
       "line": 4
     },
     {
+      "name": "AdminBillingRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminDashboardMetricsReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
+      "line": 9
+    },
+    {
+      "name": "AdminImpersonationSessionQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "AdminRetentionReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminUserRoleAuditRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "DashboardFavoriteMealProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardFavoriteMealProjection.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardMealAiSessionProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionProjection.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardMealAiSessionsLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionsLoader.cs",
+      "line": 7
+    },
+    {
+      "name": "DashboardMealFavoritesLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealFavoritesLoader.cs",
+      "line": 6
+    },
+    {
+      "name": "DashboardMealItemsLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealItemsLoader.cs",
+      "line": 7
+    },
+    {
+      "name": "DashboardMealProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardMealsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs",
+      "line": 12
+    },
+    {
+      "name": "FavoriteMealQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
+      "line": 9
+    },
+    {
+      "name": "MealItemDisplayProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
+      "line": 5
+    },
+    {
+      "name": "MealItemDisplayReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "MealProductNutritionQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
+      "line": 9
+    },
+    {
+      "name": "ReadModelCompositionRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "line": 15
+    },
+    {
+      "name": "RecipeOverviewReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
+      "line": 11
+    },
+    {
       "name": "BotInputParser",
       "kind": "class",
       "role": "Other",
@@ -1956,7 +2082,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 46
+      "line": 47
     },
     {
       "name": "ApiTelemetry",
@@ -2236,6 +2362,13 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
+      "line": 2
+    },
+    {
+      "name": "IAdminImpersonationSessionQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs",
       "line": 2
     },
     {
@@ -3709,39 +3842,11 @@
       "line": 7
     },
     {
-      "name": "AdminBillingRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "AdminDashboardMetricsReader",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs",
-      "line": 9
-    },
-    {
       "name": "AdminImpersonationSessionRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "AdminRetentionReader",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs",
-      "line": 8
-    },
-    {
-      "name": "AdminUserRoleAuditRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "AdminUserDataPurgeParticipant",
@@ -8574,55 +8679,6 @@
       "line": 9
     },
     {
-      "name": "DashboardFavoriteMealProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardMealAiSessionProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardMealAiSessionsLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
-      "line": 7
-    },
-    {
-      "name": "DashboardMealFavoritesLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
-      "line": 6
-    },
-    {
-      "name": "DashboardMealItemsLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
-      "line": 7
-    },
-    {
-      "name": "DashboardMealProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardMealsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-      "line": 12
-    },
-    {
       "name": "DashboardReadService",
       "kind": "class",
       "role": "Service",
@@ -12060,6 +12116,13 @@
       "line": 4
     },
     {
+      "name": "IFavoriteMealQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs",
+      "line": 5
+    },
+    {
       "name": "IFavoriteMealReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -12624,7 +12687,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "FavoriteProductRepository",
@@ -17261,6 +17324,13 @@
       "line": 4
     },
     {
+      "name": "IMealProductNutritionQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs",
+      "line": 2
+    },
+    {
       "name": "IMealProductNutritionReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -18045,20 +18115,6 @@
       "line": 7
     },
     {
-      "name": "MealItemDisplayProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
-      "line": 5
-    },
-    {
-      "name": "MealItemDisplayReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs",
-      "line": 9
-    },
-    {
       "name": "MealNutritionStatisticsReadService",
       "kind": "class",
       "role": "Service",
@@ -18077,7 +18133,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "MealsUserDataPurgeParticipant",
@@ -19858,6 +19914,13 @@
       "line": 5
     },
     {
+      "name": "IProductSnapshotReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs",
+      "line": 5
+    },
+    {
       "name": "ProductOverviewReadItem",
       "kind": "record",
       "role": "Other",
@@ -19870,6 +19933,13 @@
       "role": "Other",
       "path": "Modules/Products/Contracts/Products/Models/ProductQueryFilters.cs",
       "line": 4
+    },
+    {
+      "name": "ProductSnapshotReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Contracts/Products/Models/ProductSnapshotReadModel.cs",
+      "line": 6
     },
     {
       "name": "MeasurementUnit",
@@ -20003,6 +20073,13 @@
       "role": "Repository",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs",
       "line": 8
+    },
+    {
+      "name": "ProductSnapshotReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs",
+      "line": 7
     },
     {
       "name": "ProductsUserDataPurgeParticipant",
@@ -21209,18 +21286,11 @@
       "line": 8
     },
     {
-      "name": "RecipeOverviewReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 11
-    },
-    {
       "name": "RecipeRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "RecipesUserDataPurgeParticipant",
@@ -27654,7 +27724,7 @@
       "interface": "IAdminBillingRepository",
       "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
       "implementation": "AdminBillingRepository",
-      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27675,7 +27745,7 @@
       "interface": "IAdminDashboardMetricsReader",
       "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs",
       "implementation": "AdminDashboardMetricsReader",
-      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27700,6 +27770,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IAdminImpersonationSessionQuery",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs",
+      "implementation": "AdminImpersonationSessionQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IAdminImpersonationSessionRepository",
       "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
       "implementation": "AdminImpersonationSessionRepository",
@@ -27710,7 +27787,7 @@
       "interface": "IAdminRetentionReader",
       "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs",
       "implementation": "AdminRetentionReader",
-      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27738,7 +27815,7 @@
       "interface": "IAdminUserRoleAuditRepository",
       "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
       "implementation": "AdminUserRoleAuditRepository",
-      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27948,7 +28025,7 @@
       "interface": "IDashboardMealsReadService",
       "interfacePath": "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs",
       "implementation": "DashboardMealsReadService",
-      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28299,6 +28376,13 @@
       "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs",
       "implementation": "FastingTelemetrySummaryReadService",
       "implementationPath": "Modules/Fasting/Application/Services/FastingTelemetrySummaryReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IFavoriteMealQuery",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs",
+      "implementation": "FavoriteMealQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28676,7 +28760,7 @@
       "interface": "IMealItemDisplayReadService",
       "interfacePath": "Modules/Meals/Contracts/Meals/Common/IMealItemDisplayReadService.cs",
       "implementation": "MealItemDisplayReadService",
-      "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28705,6 +28789,13 @@
       "interfacePath": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanRepository.cs",
       "implementation": "MealPlanRepository",
       "implementationPath": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMealProductNutritionQuery",
+      "interfacePath": "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs",
+      "implementation": "MealProductNutritionQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28897,6 +28988,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IProductSnapshotReadService",
+      "interfacePath": "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs",
+      "implementation": "ProductSnapshotReadService",
+      "implementationPath": "Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IProfileOverviewReadService",
       "interfacePath": "Modules/Users/Application/Common/IProfileOverviewReadService.cs",
       "implementation": "ProfileOverviewReadService",
@@ -28970,7 +29068,7 @@
       "interface": "IRecipeOverviewReadService",
       "interfacePath": "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs",
       "implementation": "RecipeOverviewReadService",
-      "implementationPath": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29519,21 +29617,21 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 393
+      "line": 394
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 394
+      "line": 395
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 66
+      "line": 67
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -29589,7 +29687,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 177
+      "line": 178
     },
     {
       "service": "IAdminAiUsageReadService",
@@ -29827,7 +29925,7 @@
       "implementation": "DashboardReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "line": 21
+      "line": 18
     },
     {
       "service": "IDietologistClientReadService",

@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
@@ -17,7 +18,7 @@ public sealed class TemporalRepositoryBoundaryTests {
         var meal = Meal.Create(user.Id, DateTime.MaxValue);
         context.AddRange(user, meal);
         await context.SaveChangesAsync();
-        var repository = new MealRepository(context);
+        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
 
         IReadOnlyList<Meal> period = await repository.GetByPeriodAsync(
             user.Id,

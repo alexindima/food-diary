@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -91,7 +92,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddProductsModule()
                 .AddRecipesModule()
                 .AddRecentItemsModule()
-                .AddUsersModule()
+                .AddUsersModule().AddReadModelComposition()
                 .AddBillingModule()
                 .AddMarketingModule()
                 .AddModulePresentations()

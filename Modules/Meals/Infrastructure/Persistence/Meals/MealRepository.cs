@@ -4,13 +4,14 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Application.Abstractions.Products.Common;
+using Product = FoodDiary.Application.Abstractions.Products.Models.ProductSnapshotReadModel;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
-public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository {
+public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutritionQuery nutritionQueries, IProductSnapshotReadService products) : IMealRepository {
     private static DateTime StartOfUtcDay(DateTime value) =>
         DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
 
@@ -292,30 +293,12 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<IReadOnlyList<UsdaMealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+    public Task<IReadOnlyList<UsdaMealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
         UserId userId,
         DateTime date,
         int limit,
-        CancellationToken cancellationToken = default) {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
-        DateTime from = StartOfUtcDay(date);
-        DateTime toInclusive = EndOfUtcDay(date);
-
-        return await context.Set<MealItem>()
-            .AsNoTracking()
-            .Where(item =>
-                item.Meal.UserId == userId &&
-                item.Meal.Date >= from &&
-                item.Meal.Date <= toInclusive &&
-                item.ProductId != null)
-            .OrderBy(static item => item.Id)
-            .Take(limit)
-            .Select(item => new UsdaMealProductNutritionReadModel(
-                item.Amount,
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.BaseAmount).Single(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.UsdaFdcId).Single()))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
+        CancellationToken cancellationToken = default) =>
+        nutritionQueries.GetProductNutritionReadModelsAsync(userId, date, limit, cancellationToken);
 
     private async Task<IReadOnlyList<MealProjectionReadModel>> ToMealProjectionReadModelsAsync(
         IReadOnlyCollection<Meal> meals,
@@ -356,11 +339,8 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .Select(static item => item.ProductId!.Value)
             .Distinct()];
 
-        Dictionary<ProductId, Product> legacyProductsById = legacyProductIds.Length == 0
-            ? []
-            : await context.Products.AsNoTracking()
-                .Where(product => ((IEnumerable<ProductId>)legacyProductIds).Contains(product.Id))
-                .ToDictionaryAsync(product => product.Id, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, Product> legacyProductsById = await products.GetByIdsAsync(
+            legacyProductIds, cancellationToken).ConfigureAwait(false);
 
         return [.. meals.Select(meal => ToMealProjectionReadModel(meal, imageUrlsById, legacyRecipesById, legacyProductsById))];
     }

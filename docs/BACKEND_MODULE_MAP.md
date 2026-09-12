@@ -1,5 +1,16 @@
 # Backend Module Map
 
+## Composed SQL reads
+
+`FoodDiary.ReadModel.Composition` implements the reviewed Admin reporting,
+Dashboard meals, Favorites meal-list, Meals product-nutrition/item-display and
+Recipes overview read ports. Hosts register it explicitly; modules do not reference
+it. Module Infrastructure projects have no direct foreign Domain references.
+Products owns batch scalar snapshots used by Meals and Recipes hydration.
+Writes, transactions and authorization orchestration remain in their existing
+owners. The shared DbContext still exposes reviewed cross-module capabilities;
+this does not establish independent databases. See [ADR 0038](adr/0038-read-model-composition.md).
+
 ## Users and Identity application contracts
 
 Users Contracts owns semantic capabilities/models/errors; Users Application/Abstractions

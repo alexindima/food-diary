@@ -242,6 +242,7 @@ COPY Modules/WeeklyCheckIn/Presentation/*.csproj Modules/WeeklyCheckIn/Presentat
 COPY Modules/WeeklyGoals/Presentation/*.csproj Modules/WeeklyGoals/Presentation/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/*.csproj Services/MailInbox/FoodDiary.MailInbox.Client/
 COPY Services/MailRelay/FoodDiary.MailRelay.Client/*.csproj Services/MailRelay/FoodDiary.MailRelay.Client/
+COPY FoodDiary.ReadModel.Composition/*.csproj FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.Presentation.Api/*.csproj FoodDiary.Presentation.Api/
 COPY FoodDiary.Web.Api/*.csproj FoodDiary.Web.Api/
@@ -501,6 +502,7 @@ COPY Modules/WeeklyCheckIn/Presentation/ Modules/WeeklyCheckIn/Presentation/
 COPY Modules/WeeklyGoals/Presentation/ Modules/WeeklyGoals/Presentation/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/ Services/MailInbox/FoodDiary.MailInbox.Client/
 COPY Services/MailRelay/FoodDiary.MailRelay.Client/ Services/MailRelay/FoodDiary.MailRelay.Client/
+COPY FoodDiary.ReadModel.Composition/ FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.Presentation.Api/ FoodDiary.Presentation.Api/
 COPY FoodDiary.Web.Api/ FoodDiary.Web.Api/

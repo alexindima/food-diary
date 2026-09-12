@@ -48,7 +48,7 @@ public sealed class RuntimeModuleBoundaryTests {
 
     [Fact]
     public void DashboardItemComposition_UsesOwnerProjectionWithoutForeignTablesOrSnapshotPolicy() {
-        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "Dashboard", "Infrastructure", "Persistence", "Dashboard", "DashboardMealItemsLoader.cs"));
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition", "Dashboard", "DashboardMealItemsLoader.cs"));
         Assert.Contains("IMealItemDisplayReadService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Snapshot", source, StringComparison.Ordinal);

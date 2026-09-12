@@ -26,7 +26,8 @@ public sealed class PersistenceCapabilityTests {
     [Fact]
     public void ModuleAdapters_UseOnlyReviewedPersistenceCapabilities() {
         (string Path, string Source)[] sources = [.. ModuleSourceCatalog.InfrastructureFiles()
-            .Where(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path).StartsWith($"Modules{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .Where(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path).StartsWith($"Modules{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
+                || Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path).StartsWith($"FoodDiary.ReadModel.Composition{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Model{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Select(path => (Path: Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path).Replace('\\', '/'), Source: File.ReadAllText(path)))];
         IReadOnlyDictionary<string, string[]> actual = PersistenceCapabilityScanner.Scan(
@@ -75,7 +76,9 @@ public sealed class PersistenceCapabilityTests {
 
     private static string WithProjectUsings(string relativePath, string source) {
         string[] segments = relativePath.Split('/');
-        string projectDirectory = ArchitectureTestPaths.FromRoot(segments[0], segments[1], "Infrastructure");
+        string projectDirectory = string.Equals(segments[0], "FoodDiary.ReadModel.Composition", StringComparison.Ordinal)
+            ? ArchitectureTestPaths.FromRoot(segments[0])
+            : ArchitectureTestPaths.FromRoot(segments[0], segments[1], "Infrastructure");
         string project = Directory.GetFiles(projectDirectory, "*.csproj").Single();
         string[] imports = [.. XDocument.Load(project).Descendants("Using").Select(element => {
             Assert.Null(element.Attribute("Alias"));

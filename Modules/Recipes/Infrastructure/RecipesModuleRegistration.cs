@@ -16,7 +16,6 @@ public static class RecipesModuleRegistration {
 
     public static IServiceCollection AddRecipesPersistence(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, RecipesUserDataPurgeParticipant>());
-        services.AddScoped<IRecipeOverviewReadService, RecipeOverviewReadService>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadRepository>(static provider => provider.GetRequiredService<IRecipeRepository>());
         services.AddScoped<IRecipeWriteRepository>(static provider => provider.GetRequiredService<IRecipeRepository>());

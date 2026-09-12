@@ -5,6 +5,7 @@ status: current
 sources:
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
+  - docs/adr/0038-read-model-composition.md
   - docs/architecture/module-dependencies.json
   - docs/architecture/backend-modules.json
   - tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs
@@ -44,6 +45,12 @@ persistence-model composition add explicit edges in the matrix below. ADR 0029
 records the persistence capability checks, narrow Hydration adapter, mandatory
 Dashboard reader and command-specific Initializer composition. A shared context
 does not grant foreign aggregate write ownership.
+
+ADR 0038 places complex cross-module SQL reads in `FoodDiary.ReadModel.Composition`.
+Hosts register this read-only assembly through module ports; modules never reference
+it. Module Infrastructure projects have zero direct foreign Domain references.
+SQL joins and pagination remain in the database; shared persistence remains a
+runtime coupling. Architecture tests forbid tracked reads and writes in composition.
 
 The executable project-reference allowlist is enforced by
 [`ProjectDependencyMatrixTests`](../../tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs).

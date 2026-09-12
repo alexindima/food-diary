@@ -862,7 +862,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Products.Add(product);
         await context.SaveChangesAsync();
 
-        var repository = new RecipeRepository(context);
+        var repository = new RecipeRepository(context, new ProductSnapshotReadService(context));
         var publicRecipe = Recipe.Create(owner.Id, "100% Pancake", servings: 2, description: "Breakfast_Recipe", category: "Breakfast", prepTime: 15);
         publicRecipe.AddStep(stepNumber: 1, instruction: "Mix ingredients");
         publicRecipe.ApplyComputedNutrition(200, 8, 4, 30, 3, 0);
@@ -1058,7 +1058,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverMealRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new MealRepository(context);
+        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
         DateTime now = DateTime.UtcNow;
         var meal = Meal.Create(userId, DateTime.SpecifyKind(now.Date.AddHours(8), DateTimeKind.Unspecified), MealType.Breakfast, "Start");
         meal.AddAiSession(
@@ -1706,7 +1706,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId userId,
         MealId mealId) {
-        var repository = new FavoriteMealRepository(context);
+        var repository = new FavoriteMealRepository(context, new FavoriteMealQuery(context));
         Assert.Empty(await repository.GetByMealIdsAsync(userId, []));
         FavoriteMeal favorite = await repository.AddAsync(FavoriteMeal.Create(userId, mealId, "Dinner meal"));
         await context.SaveChangesAsync();

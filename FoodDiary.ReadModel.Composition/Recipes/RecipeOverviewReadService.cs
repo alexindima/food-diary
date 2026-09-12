@@ -24,8 +24,8 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
 
         IQueryable<Recipe> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        List<RecipeOverviewReadRow> rows = await ProjectRows(query
+        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        List<RecipeOverviewReadRow> rows = await ProjectRows(query.AsNoTracking()
                 .OrderByDescending(r => r.CreatedOnUtc)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize), userId)
@@ -44,7 +44,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
             return new Dictionary<RecipeId, RecipeOverviewReadItem>();
         }
 
-        List<RecipeOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic)
+        List<RecipeOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic).AsNoTracking()
                 .Where(r => recipeIds.Contains(r.Id)), userId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
@@ -72,12 +72,12 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
             category,
             maxPrepTime);
 
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<Recipe> orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
-            ? query.OrderByDescending(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
-            : query.OrderByDescending(r => r.CreatedOnUtc);
+            ? query.AsNoTracking().OrderByDescending(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
+            : query.AsNoTracking().OrderByDescending(r => r.CreatedOnUtc);
 
-        List<RecipeOverviewReadRow> rows = await ProjectRows(orderedQuery
+        List<RecipeOverviewReadRow> rows = await ProjectRows(orderedQuery.AsNoTracking()
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize), currentUserId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -96,7 +96,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
     private static IQueryable<Recipe> ApplyFilters(IQueryable<Recipe> query, RecipeQueryFilters filters) {
         if (!string.IsNullOrWhiteSpace(filters.Search)) {
             string normalized = $"%{EscapeLikePattern(filters.Search.Trim())}%";
-            query = query.Where(r =>
+            query = query.AsNoTracking().Where(r =>
                 EF.Functions.ILike(r.Name, normalized, LikeEscapeCharacter) ||
                 EF.Functions.ILike(r.Category ?? string.Empty, normalized, LikeEscapeCharacter) ||
                 EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
@@ -104,26 +104,26 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
 
         if (!string.IsNullOrWhiteSpace(filters.Category)) {
             string category = $"%{EscapeLikePattern(filters.Category.Trim())}%";
-            query = query.Where(r => EF.Functions.ILike(r.Category ?? string.Empty, category, LikeEscapeCharacter));
+            query = query.AsNoTracking().Where(r => EF.Functions.ILike(r.Category ?? string.Empty, category, LikeEscapeCharacter));
         }
 
         if (filters.MaxTotalTime.HasValue) {
             int maxTotalTime = filters.MaxTotalTime.Value;
-            query = query.Where(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
+            query = query.AsNoTracking().Where(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
         }
 
         if (filters.CaloriesFrom.HasValue) {
-            query = query.Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) >= filters.CaloriesFrom.Value);
+            query = query.AsNoTracking().Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) >= filters.CaloriesFrom.Value);
         }
 
         if (filters.CaloriesTo.HasValue) {
-            query = query.Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) <= filters.CaloriesTo.Value);
+            query = query.AsNoTracking().Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) <= filters.CaloriesTo.Value);
         }
 
         if (filters.HasImage.HasValue) {
             query = filters.HasImage.Value
-                ? query.Where(r => r.ImageUrl != null || r.ImageAssetId != null)
-                : query.Where(r => r.ImageUrl == null && r.ImageAssetId == null);
+                ? query.AsNoTracking().Where(r => r.ImageUrl != null || r.ImageAssetId != null)
+                : query.AsNoTracking().Where(r => r.ImageUrl == null && r.ImageAssetId == null);
         }
 
         return query;
@@ -136,25 +136,25 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
         int? maxPrepTime) {
         if (!string.IsNullOrWhiteSpace(search)) {
             string pattern = $"%{EscapeLikePattern(search.Trim())}%";
-            query = query.Where(r =>
+            query = query.AsNoTracking().Where(r =>
                 EF.Functions.ILike(r.Name, pattern, LikeEscapeCharacter) ||
                 (r.Category != null && EF.Functions.ILike(r.Category, pattern, LikeEscapeCharacter)) ||
                 (r.Description != null && EF.Functions.ILike(r.Description, pattern, LikeEscapeCharacter)));
         }
 
         if (!string.IsNullOrWhiteSpace(category)) {
-            query = query.Where(r => r.Category != null && EF.Functions.ILike(r.Category, category, LikeEscapeCharacter));
+            query = query.AsNoTracking().Where(r => r.Category != null && EF.Functions.ILike(r.Category, category, LikeEscapeCharacter));
         }
 
         if (maxPrepTime.HasValue) {
-            query = query.Where(r => r.PrepTime <= maxPrepTime.Value);
+            query = query.AsNoTracking().Where(r => r.PrepTime <= maxPrepTime.Value);
         }
 
         return query;
     }
 
     private IQueryable<RecipeOverviewReadRow> ProjectRows(IQueryable<Recipe> query, UserId currentUserId) =>
-        query.Select(recipe => new RecipeOverviewReadRow(
+        query.AsNoTracking().Select(recipe => new RecipeOverviewReadRow(
             recipe.Id, recipe.UserId, recipe.Name, recipe.Description, recipe.Comment,
             recipe.Category, recipe.ImageUrl, recipe.ImageAssetId, recipe.PrepTime, recipe.CookTime,
             recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs,

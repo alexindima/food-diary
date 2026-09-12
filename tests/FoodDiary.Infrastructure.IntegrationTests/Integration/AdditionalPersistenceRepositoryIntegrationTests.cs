@@ -435,7 +435,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         DateTime started = new(2030, 1, 2, 12, 0, 0, DateTimeKind.Utc);
-        var sessionRepository = new AdminImpersonationSessionRepository(context);
+        var sessionRepository = new AdminImpersonationSessionRepository(context, new AdminImpersonationSessionQuery(context));
         await sessionRepository.AddAsync(AdminImpersonationSession.Start(
             actor.Id,
             target.Id,

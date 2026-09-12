@@ -30,7 +30,8 @@ internal static class ModuleSourceCatalog {
     public static IEnumerable<string> InfrastructureRoots() =>
         ApplicationRoots.Values.Select(root => Path.Combine(Path.GetDirectoryName(root)!, "Infrastructure"))
             .Where(Directory.Exists)
-            .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure"));
+            .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure"))
+            .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition"));
 
     public static IEnumerable<string> InfrastructureFiles() =>
         InfrastructureRoots().SelectMany(RequiredFiles)

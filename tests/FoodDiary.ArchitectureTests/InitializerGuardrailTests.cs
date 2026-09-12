@@ -63,6 +63,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Modules.WeeklyGoals.Infrastructure",
             "FoodDiary.Outbox.Abstractions",
             "FoodDiary.Outbox.Management.Contracts",
+            "FoodDiary.ReadModel.Composition",
         ];
         string[] expectedPackageReferences = [
             "Microsoft.EntityFrameworkCore",

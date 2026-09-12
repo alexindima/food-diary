@@ -14,7 +14,6 @@ public static class MealsModuleRegistration {
 
     public static IServiceCollection AddMealsPersistence(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, MealsUserDataPurgeParticipant>());
-        services.AddScoped<IMealItemDisplayReadService, MealItemDisplayReadService>();
         services.AddScoped<IMealDailyCalorieReadService, MealDailyCalorieReadService>();
         services.AddScoped<IMealNutritionStatisticsReadService, MealNutritionStatisticsReadService>();
         services.AddScoped<IMealRepository, MealRepository>();

@@ -373,6 +373,7 @@
   <Folder Name="/Platform/">
     <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <Project Path="FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+    <Project Path="FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />
   </Folder>
   <Folder Name="/Hosts/">
     <Project Path="FoodDiary.Initializer/FoodDiary.Initializer.csproj" />

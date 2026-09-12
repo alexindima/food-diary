@@ -220,6 +220,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Dashboard contracts: `Modules/Dashboard/Contracts/AGENTS.md`
 - Dashboard infrastructure: `Modules/Dashboard/Infrastructure/AGENTS.md`
 - Dashboard tests: `Modules/Dashboard/tests/AGENTS.md`
+- Read model composition: `FoodDiary.ReadModel.Composition/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
 - Initializer: `FoodDiary.Initializer/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1201,
+    "contracts": 1208,
     "ambiguousContracts": 0,
-    "consumerEdges": 8491,
-    "productionConsumerEdges": 5075,
-    "testConsumerEdges": 3416,
-    "consumedContracts": 1201,
+    "consumerEdges": 8514,
+    "productionConsumerEdges": 5093,
+    "testConsumerEdges": 3421,
+    "consumedContracts": 1208,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -669,6 +669,23 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminImpersonationSessionQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "class"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4278,6 +4295,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "FavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "class"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "FavoriteProductHttpResponse",
       "roles": [
         "Response"
@@ -7848,6 +7882,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IAdminImpersonationSessionQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IAdminImpersonationSessionReadRepository",
       "roles": [
         "ReadRepository"
@@ -10313,6 +10364,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IFavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IFavoriteMealReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -11792,6 +11860,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IMealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IMealProductNutritionReadRepository",
       "roles": [
         "ReadRepository"
@@ -12998,6 +13083,23 @@
       ],
       "definitionPaths": [
         "Modules/Products/Application/Common/IProductSearchSuggestionProvider.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IProductSnapshotReadService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16807,6 +16909,23 @@
       ],
       "definitionPaths": [
         "Modules/MealPlanning/Presentation/Features/MealPlans/Responses/MealPlanSummaryHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "MealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "class"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -22463,6 +22582,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "AdminImpersonationSessionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminImpersonationSessionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AdditionalPersistenceRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "AdminImpersonationStartHttpRequest",
       "roles": [
         "Request"
@@ -25409,7 +25554,7 @@
         "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -36033,6 +36178,32 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "FavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "FavoriteProductHttpResponse",
@@ -48848,6 +49019,19 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminBillingReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
       "isTest": false,
       "referenceCount": 1
@@ -48875,19 +49059,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminDashboardOverviewReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminBillingReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -49017,9 +49188,9 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IAdminBillingRepository",
@@ -49030,9 +49201,9 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IAdminBillingRepository",
@@ -49277,33 +49448,33 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminDashboardMetricsReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminDashboardMetricsReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminDashboardOverviewReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminDashboardMetricsReader",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminDashboardMetricsReader",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -49501,6 +49672,58 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ExchangeAdminImpersonationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IAdminImpersonationSessionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationSessionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationSessionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationSessionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "IAdminImpersonationSessionReadRepository",
@@ -49849,33 +50072,33 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminRetentionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminRetentionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminRetentionReader",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminRetentionReader",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50317,6 +50540,19 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminUserRoleAuditReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
       "isTest": false,
       "referenceCount": 1
@@ -50331,19 +50567,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminAuditReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminUserRoleAuditReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50408,9 +50631,9 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IAdminUserRoleAuditRepository",
@@ -50421,9 +50644,9 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IAdminUserRoleAuditRepository",
@@ -63694,6 +63917,32 @@
         "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -63721,32 +63970,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -70927,6 +71150,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "IFavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "IFavoriteMealReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -78007,7 +78269,7 @@
         "Modules/Meals/Contracts/Meals/Common/IMealItemDisplayReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealItemsLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78020,7 +78282,7 @@
         "Modules/Meals/Contracts/Meals/Common/IMealItemDisplayReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78033,7 +78295,7 @@
         "Modules/Meals/Contracts/Meals/Common/IMealItemDisplayReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78046,7 +78308,7 @@
         "Modules/Meals/Contracts/Meals/Common/IMealItemDisplayReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78659,6 +78921,58 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealProductNutritionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -86513,6 +86827,58 @@
       "referenceCount": 2
     },
     {
+      "contract": "IProductSnapshotReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IProductSnapshotReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IProductSnapshotReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IProductSnapshotReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "IProductWriteRepository",
       "roles": [
         "WriteRepository"
@@ -91851,6 +92217,32 @@
         "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeOverviewReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeOverviewReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -91904,32 +92296,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Services/RecentRecipeReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecipeOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecipeOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115356,6 +115722,58 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 10
+    },
+    {
+      "contract": "MealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealProductNutritionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/TemporalRepositoryBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

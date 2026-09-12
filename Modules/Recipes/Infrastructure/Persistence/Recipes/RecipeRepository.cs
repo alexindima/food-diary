@@ -1,4 +1,6 @@
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -7,7 +9,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
-public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
+public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapshotReadService productSnapshots) : IRecipeRepository {
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         await context.Recipes.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
         return recipe;
@@ -79,12 +81,12 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
         ProductId[] ids = [.. ingredients.Where(ingredient => ingredient.ProductId.HasValue)
             .Select(ingredient => ingredient.ProductId!.Value).Distinct()];
         if (ids.Length == 0) { return; }
-        Dictionary<ProductId, RecipeIngredientProductSnapshot> products = await context.Products.AsNoTracking()
-            .Where(product => Enumerable.Contains(ids, product.Id))
-            .Select(product => new RecipeIngredientProductSnapshot(product.Id, product.Name, product.BaseUnit,
-                product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase,
-                product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase, product.Visibility, product.Category))
-            .ToDictionaryAsync(product => product.Id, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, ProductSnapshotReadModel> snapshots = await productSnapshots.GetByIdsAsync(
+            ids, cancellationToken).ConfigureAwait(false);
+        var products = snapshots.ToDictionary(pair => pair.Key,
+            pair => new RecipeIngredientProductSnapshot(pair.Value.Id, pair.Value.Name, pair.Value.BaseUnit,
+                pair.Value.BaseAmount, pair.Value.CaloriesPerBase, pair.Value.ProteinsPerBase, pair.Value.FatsPerBase,
+                pair.Value.CarbsPerBase, pair.Value.FiberPerBase, pair.Value.AlcoholPerBase, pair.Value.Visibility, pair.Value.Category));
         foreach (RecipeIngredient ingredient in ingredients) {
             ingredient.SetProductSnapshot(ingredient.ProductId is { } id ? products.GetValueOrDefault(id) : null);
         }

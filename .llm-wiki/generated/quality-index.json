@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5279,
+    "productionFiles": 5290,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 842,
@@ -383,7 +383,7 @@
       "structuralRiskScore": 112.28
     },
     {
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
       "nonBlankLines": 258,
       "decisionPoints": 71,
       "criticalSymbols": 0,
@@ -439,7 +439,7 @@
       "structuralRiskScore": 108
     },
     {
-      "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
+      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
       "nonBlankLines": 363,
       "decisionPoints": 67,
       "criticalSymbols": 0,
@@ -631,14 +631,6 @@
       "structuralRiskScore": 90.14
     },
     {
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 434,
-      "decisionPoints": 54,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 89.68
-    },
-    {
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
       "nonBlankLines": 506,
       "decisionPoints": 53,
@@ -701,6 +693,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 85.38
+    },
+    {
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
+      "nonBlankLines": 415,
+      "decisionPoints": 51,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 84.8
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
@@ -3578,11 +3578,11 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 366,
+      "nonBlankLines": 367,
       "decisionPoints": 44,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 73.32
+      "structuralRiskScore": 73.34
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -3610,11 +3610,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 69,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.86
+      "structuralRiskScore": 2.88
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -4361,6 +4361,158 @@
       "structuralRiskScore": 0.06
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
+      "nonBlankLines": 258,
+      "decisionPoints": 71,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 111.66
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 16,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 24.84
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
+      "nonBlankLines": 58,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.66
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.64
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/AssemblyInfo.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardFavoriteMealProjection.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionProjection.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionsLoader.cs",
+      "nonBlankLines": 74,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.48
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealFavoritesLoader.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.84
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealItemsLoader.cs",
+      "nonBlankLines": 41,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.82
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.5
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs",
+      "nonBlankLines": 120,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.9
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.64
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.84
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
+      "nonBlankLines": 104,
+      "decisionPoints": 26,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 41.08
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.18
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.64
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
+      "nonBlankLines": 363,
+      "decisionPoints": 67,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 107.76
+    },
+    {
       "path": "FoodDiary.Telegram.Bot/BotInputParser.cs",
       "nonBlankLines": 19,
       "decisionPoints": 4,
@@ -4682,11 +4834,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 178,
+      "nonBlankLines": 179,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.56
+      "structuralRiskScore": 6.58
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -13641,6 +13793,14 @@
       "structuralRiskScore": 0.1
     },
     {
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -15218,11 +15378,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
@@ -15329,44 +15489,12 @@
       "structuralRiskScore": 0.54
     },
     {
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
-      "nonBlankLines": 258,
-      "decisionPoints": 71,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 111.66
-    },
-    {
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 16,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.84
-    },
-    {
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
-      "nonBlankLines": 62,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.74
-    },
-    {
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.64
-    },
-    {
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs",
@@ -20954,11 +21082,11 @@
     },
     {
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
@@ -20967,62 +21095,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 18.24
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
-      "nonBlankLines": 74,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.48
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-      "nonBlankLines": 120,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.9
     },
     {
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
@@ -25025,6 +25097,14 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
       "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
@@ -25674,11 +25754,11 @@
     },
     {
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
-      "nonBlankLines": 112,
+      "nonBlankLines": 92,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.24
+      "structuralRiskScore": 13.84
     },
     {
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
@@ -31041,6 +31121,14 @@
       "structuralRiskScore": 0.32
     },
     {
+      "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionQuery.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealProductNutritionReadRepository.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -31882,11 +31970,11 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiItemConfiguration.cs",
@@ -31953,22 +32041,6 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.84
-    },
-    {
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs",
-      "nonBlankLines": 104,
-      "decisionPoints": 26,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.08
-    },
-    {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
       "nonBlankLines": 107,
       "decisionPoints": 8,
@@ -31986,11 +32058,11 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 434,
-      "decisionPoints": 54,
+      "nonBlankLines": 415,
+      "decisionPoints": 51,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 89.68
+      "structuralRiskScore": 84.8
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs",
@@ -34057,6 +34129,14 @@
       "structuralRiskScore": 0.34
     },
     {
+      "path": "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
       "nonBlankLines": 32,
       "decisionPoints": 0,
@@ -34066,6 +34146,14 @@
     },
     {
       "path": "Modules/Products/Contracts/Products/Models/ProductQueryFilters.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Products/Contracts/Products/Models/ProductSnapshotReadModel.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -34233,6 +34321,14 @@
       "structuralRiskScore": 19.66
     },
     {
+      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.88
+    },
+    {
       "path": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
       "nonBlankLines": 22,
       "decisionPoints": 2,
@@ -34242,11 +34338,11 @@
     },
     {
       "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.54
     },
     {
       "path": "Modules/Products/Infrastructure/Properties/AssemblyInfo.cs",
@@ -35657,20 +35753,12 @@
       "structuralRiskScore": 9.84
     },
     {
-      "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "nonBlankLines": 363,
-      "decisionPoints": 67,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 107.76
-    },
-    {
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs",
-      "nonBlankLines": 135,
+      "nonBlankLines": 137,
       "decisionPoints": 24,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.7
+      "structuralRiskScore": 38.74
     },
     {
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
@@ -35682,11 +35770,11 @@
     },
     {
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Recipes/Infrastructure/Services/RecipeAccessService.cs",

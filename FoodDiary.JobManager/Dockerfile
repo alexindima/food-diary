@@ -201,6 +201,7 @@ COPY Modules/Export/Application/*.csproj Modules/Export/Application/
 COPY Modules/Export/Infrastructure/*.csproj Modules/Export/Infrastructure/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/*.csproj Services/MailInbox/FoodDiary.MailInbox.Client/
 COPY Services/MailRelay/FoodDiary.MailRelay.Client/*.csproj Services/MailRelay/FoodDiary.MailRelay.Client/
+COPY FoodDiary.ReadModel.Composition/*.csproj FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.JobManager/*.csproj FoodDiary.JobManager/
 
@@ -416,6 +417,7 @@ COPY Modules/Export/Application/ Modules/Export/Application/
 COPY Modules/Export/Infrastructure/ Modules/Export/Infrastructure/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/ Services/MailInbox/FoodDiary.MailInbox.Client/
 COPY Services/MailRelay/FoodDiary.MailRelay.Client/ Services/MailRelay/FoodDiary.MailRelay.Client/
+COPY FoodDiary.ReadModel.Composition/ FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.JobManager/ FoodDiary.JobManager/
 

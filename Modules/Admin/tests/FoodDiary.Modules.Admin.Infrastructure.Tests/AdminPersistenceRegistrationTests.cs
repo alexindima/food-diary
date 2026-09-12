@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;
@@ -9,10 +10,10 @@ namespace FoodDiary.Modules.Admin.Infrastructure.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class AdminPersistenceRegistrationTests {
     [Fact]
-    public void AddAdminPersistence_RoleAuditAliasesShareOneModuleOwnedInstancePerScope() {
+    public void AddAdminPersistence_RoleAuditAliasesShareOneComposedInstancePerScope() {
         var services = new ServiceCollection();
         services.AddDbContext<FoodDiaryDbContext>();
-        Assert.Same(services, services.AddAdminPersistence());
+        Assert.Same(services, services.AddAdminPersistence().AddReadModelComposition());
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         using IServiceScope first = provider.CreateScope();
         using IServiceScope second = provider.CreateScope();
@@ -22,6 +23,6 @@ public sealed class AdminPersistenceRegistrationTests {
             () => Assert.IsType<AdminUserRoleAuditRepository>(repository),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IAdminUserRoleAuditReadRepository>()),
             () => Assert.NotSame(repository, second.ServiceProvider.GetRequiredService<IAdminUserRoleAuditRepository>()),
-            () => Assert.Same(typeof(AdminModuleRegistration).Assembly, repository.GetType().Assembly));
+            () => Assert.Same(typeof(ReadModelCompositionRegistration).Assembly, repository.GetType().Assembly));
     }
 }

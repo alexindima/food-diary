@@ -18,26 +18,26 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             select new { subscription, user };
 
         if (!string.IsNullOrWhiteSpace(filter.Provider)) {
-            query = query.Where(item => item.subscription.Provider == filter.Provider);
+            query = query.AsNoTracking().Where(item => item.subscription.Provider == filter.Provider);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Status)) {
-            query = query.Where(item => item.subscription.Status == filter.Status);
+            query = query.AsNoTracking().Where(item => item.subscription.Status == filter.Status);
         }
 
         if (filter.FromUtc.HasValue) {
-            query = query.Where(item => item.subscription.CreatedOnUtc >= filter.FromUtc.Value);
+            query = query.AsNoTracking().Where(item => item.subscription.CreatedOnUtc >= filter.FromUtc.Value);
         }
 
         if (filter.ToUtc.HasValue) {
-            query = query.Where(item => item.subscription.CreatedOnUtc <= filter.ToUtc.Value);
+            query = query.AsNoTracking().Where(item => item.subscription.CreatedOnUtc <= filter.ToUtc.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
             string term = BuildSearchPattern(filter.Search);
             bool hasId = Guid.TryParse(filter.Search.Trim(), out Guid recordId);
             var userId = new UserId(recordId);
-            query = query.Where(item =>
+            query = query.AsNoTracking().Where(item =>
                 (hasId && (item.subscription.Id == recordId || item.user.Id == userId)) ||
                 (item.user.Email != null && EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter)) ||
                 EF.Functions.ILike(item.subscription.ExternalCustomerId, term, LikeEscapeCharacter) ||
@@ -45,8 +45,8 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 EF.Functions.ILike(item.subscription.ExternalPaymentMethodId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        List<AdminBillingSubscriptionReadModel> items = await query
+        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        List<AdminBillingSubscriptionReadModel> items = await query.AsNoTracking()
             .OrderByDescending(item => item.subscription.CreatedOnUtc).ThenByDescending(item => item.subscription.Id)
             .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
@@ -82,33 +82,33 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             join user in context.Users.AsNoTracking() on payment.UserId equals user.Id
             select new { payment, user };
         if (!string.IsNullOrWhiteSpace(filter.Provider)) {
-            query = query.Where(item => item.payment.Provider == filter.Provider);
+            query = query.AsNoTracking().Where(item => item.payment.Provider == filter.Provider);
         }
         if (!string.IsNullOrWhiteSpace(filter.Status)) {
-            query = query.Where(item => item.payment.Status == filter.Status);
+            query = query.AsNoTracking().Where(item => item.payment.Status == filter.Status);
         }
         if (!string.IsNullOrWhiteSpace(filter.Kind)) {
-            query = query.Where(item => item.payment.Kind == filter.Kind);
+            query = query.AsNoTracking().Where(item => item.payment.Kind == filter.Kind);
         }
         if (filter.FromUtc.HasValue) {
-            query = query.Where(item => item.payment.CreatedOnUtc >= filter.FromUtc.Value);
+            query = query.AsNoTracking().Where(item => item.payment.CreatedOnUtc >= filter.FromUtc.Value);
         }
         if (filter.ToUtc.HasValue) {
-            query = query.Where(item => item.payment.CreatedOnUtc <= filter.ToUtc.Value);
+            query = query.AsNoTracking().Where(item => item.payment.CreatedOnUtc <= filter.ToUtc.Value);
         }
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
             string term = BuildSearchPattern(filter.Search);
             bool hasId = Guid.TryParse(filter.Search.Trim(), out Guid recordId);
             var userId = new UserId(recordId);
-            query = query.Where(item =>
+            query = query.AsNoTracking().Where(item =>
                 (hasId && (item.payment.Id == recordId || item.payment.BillingSubscriptionId == recordId || item.user.Id == userId)) ||
                 (item.user.Email != null && EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter)) ||
                 EF.Functions.ILike(item.payment.ExternalPaymentId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalCustomerId ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter));
         }
-        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        List<AdminBillingPaymentReadModel> items = await query
+        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        List<AdminBillingPaymentReadModel> items = await query.AsNoTracking()
             .OrderByDescending(item => item.payment.CreatedOnUtc).ThenByDescending(item => item.payment.Id)
             .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
@@ -146,33 +146,33 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         IQueryable<BillingWebhookEvent> query = context.BillingWebhookEvents.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(filter.Provider)) {
-            query = query.Where(webhookEvent => webhookEvent.Provider == filter.Provider);
+            query = query.AsNoTracking().Where(webhookEvent => webhookEvent.Provider == filter.Provider);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Status)) {
-            query = query.Where(webhookEvent => webhookEvent.Status == filter.Status);
+            query = query.AsNoTracking().Where(webhookEvent => webhookEvent.Status == filter.Status);
         }
 
         if (filter.FromUtc.HasValue) {
-            query = query.Where(webhookEvent => webhookEvent.ReceivedAtUtc >= filter.FromUtc.Value);
+            query = query.AsNoTracking().Where(webhookEvent => webhookEvent.ReceivedAtUtc >= filter.FromUtc.Value);
         }
 
         if (filter.ToUtc.HasValue) {
-            query = query.Where(webhookEvent => webhookEvent.ReceivedAtUtc <= filter.ToUtc.Value);
+            query = query.AsNoTracking().Where(webhookEvent => webhookEvent.ReceivedAtUtc <= filter.ToUtc.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
             string term = BuildSearchPattern(filter.Search);
             bool hasId = Guid.TryParse(filter.Search.Trim(), out Guid recordId);
-            query = query.Where(webhookEvent =>
+            query = query.AsNoTracking().Where(webhookEvent =>
                 (hasId && webhookEvent.Id == recordId) ||
                 EF.Functions.ILike(webhookEvent.EventId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(webhookEvent.EventType, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(webhookEvent.ExternalObjectId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        List<AdminBillingWebhookEventReadModel> items = await query
+        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        List<AdminBillingWebhookEventReadModel> items = await query.AsNoTracking()
             .OrderByDescending(webhookEvent => webhookEvent.ReceivedAtUtc).ThenByDescending(webhookEvent => webhookEvent.Id)
             .Skip(GetSkipCount(filter))
             .Take(filter.Limit)

@@ -38,7 +38,7 @@ public sealed class AdminModuleExtractionTests {
 
     [Fact]
     public void RoleAuditReadProjection_LivesWithAdminWithoutMovingUsersDomain() {
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs")));
         string donor = File.ReadAllText(ArchitectureTestPaths.FromRoot("tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs"));
