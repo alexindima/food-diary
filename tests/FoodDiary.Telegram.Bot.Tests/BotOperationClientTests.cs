@@ -45,7 +45,8 @@ public sealed class BotOperationClientTests {
     }
 
     private static BotOperationClient CreateClient(HttpClient http) => new(http, Options.Create(new TelegramBotOptions {
-        ApiBaseUrl = "https://api.example.com", ApiSecret = "test-operation-secret",
+        ApiBaseUrl = "https://api.example.com",
+        ApiSecret = "test-operation-secret",
     }));
 
     [ExcludeFromCodeCoverage]

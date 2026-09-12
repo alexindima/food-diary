@@ -65,7 +65,10 @@ public sealed class TelegramOidcProviderTests {
 
     private static TelegramOidcProvider CreateProvider(HttpClient http, ITelegramOidcTokenValidator validator) => new(http,
         MsOptions.Create(new TelegramOidcOptions {
-            Enabled = true, ClientId = "123456", ClientSecret = "test-secret", RedirectUri = "https://app.example/auth/telegram/callback",
+            Enabled = true,
+            ClientId = "123456",
+            ClientSecret = "test-secret",
+            RedirectUri = "https://app.example/auth/telegram/callback",
         }), validator);
 
     private sealed class RecordingValidator : ITelegramOidcTokenValidator {

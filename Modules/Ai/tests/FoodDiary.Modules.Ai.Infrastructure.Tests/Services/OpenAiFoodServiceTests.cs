@@ -35,7 +35,9 @@ public sealed class OpenAiFoodServiceTests {
                 ? CreateTokenCountResponse(100) : CreateVisionSuccessResponse();
         }));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
-            ApiKey = "test-key", VisionModel = "vision-primary", VisionFallbackModel = "vision-fallback",
+            ApiKey = "test-key",
+            VisionModel = "vision-primary",
+            VisionFallbackModel = "vision-fallback",
         });
 
         Result<AiProviderTokenBudget> budget = await client.GetAnalyzeFoodImageTokenBudgetAsync(dataUrl, "en", description: null, VisionPrompt, CancellationToken.None);

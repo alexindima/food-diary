@@ -115,7 +115,10 @@ public sealed class TelegramOidcTokenValidatorTests {
 
     private static TelegramOidcTokenValidator CreateValidator(StaticConfiguration configuration) => new(
         MsOptions.Create(new TelegramOidcOptions {
-            Enabled = true, ClientId = "123456", ClientSecret = "test-secret", RedirectUri = "https://app.example/callback",
+            Enabled = true,
+            ClientId = "123456",
+            ClientSecret = "test-secret",
+            RedirectUri = "https://app.example/callback",
         }), new FixedClock(), configuration);
 
     private static List<Claim> Claims() => [

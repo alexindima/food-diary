@@ -474,6 +474,10 @@ type ProfileManageFacadeMock = {
     isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
     isLinkingGoogle: ReturnType<typeof signal<boolean>>;
     isUnlinkingTelegram: ReturnType<typeof signal<boolean>>;
+    backupEmailSentTo: WritableSignal<string | null>;
+    backupEmailResendAt: WritableSignal<number>;
+    isRequestingBackupEmail: WritableSignal<boolean>;
+    requestBackupEmailAsync: ReturnType<typeof vi.fn>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: WritableSignal<WebPushSubscriptionItem[]>;
     dietologistRelationship: WritableSignal<DietologistRelationship | null>;
@@ -703,6 +707,10 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         isRevokingAiConsent: signal(false),
         isLinkingGoogle: signal(false),
         isUnlinkingTelegram: signal(false),
+        backupEmailSentTo: signal<string | null>(null),
+        backupEmailResendAt: signal(0),
+        isRequestingBackupEmail: signal(false),
+        requestBackupEmailAsync: vi.fn().mockResolvedValue(void 0),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
         dietologistRelationship: signal(relationship),

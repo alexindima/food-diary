@@ -26,8 +26,13 @@ public sealed class MealRecognitionReceipt {
             throw new ArgumentOutOfRangeException(nameof(undoWindow));
         }
         return new MealRecognitionReceipt {
-            OperationId = operationId, UserId = userId, RecognitionId = recognitionId, MealId = mealId,
-            MealVersion = mealVersion, MealOccurredAtUtc = occurredAtUtc, SavedAtUtc = savedAtUtc,
+            OperationId = operationId,
+            UserId = userId,
+            RecognitionId = recognitionId,
+            MealId = mealId,
+            MealVersion = mealVersion,
+            MealOccurredAtUtc = occurredAtUtc,
+            SavedAtUtc = savedAtUtc,
             UndoUntilUtc = savedAtUtc.Add(undoWindow),
         };
     }

@@ -10,15 +10,20 @@ public sealed class TelegramBotOptionsTests {
     [InlineData("https://api.example", "https://user:password@diary.example", false)]
     public void EnabledOperations_RequireUsableEndpoints(string apiUrl, string webUrl, bool expected) {
         Assert.Equal(expected, TelegramBotOptions.HasOperationConfiguration(new TelegramBotOptions {
-            OperationsEnabled = true, Token = "123:test", ApiSecret = "test-only-api-secret",
-            ApiBaseUrl = apiUrl, WebAppUrl = webUrl,
+            OperationsEnabled = true,
+            Token = "123:test",
+            ApiSecret = "test-only-api-secret",
+            ApiBaseUrl = apiUrl,
+            WebAppUrl = webUrl,
         }));
     }
 
     [Fact]
     public void EnabledOperations_RejectMissingCredentials() {
         Assert.False(TelegramBotOptions.HasOperationConfiguration(new TelegramBotOptions {
-            OperationsEnabled = true, ApiBaseUrl = "https://api.example", WebAppUrl = "https://diary.example",
+            OperationsEnabled = true,
+            ApiBaseUrl = "https://api.example",
+            WebAppUrl = "https://diary.example",
         }));
         Assert.True(TelegramBotOptions.HasOperationConfiguration(new TelegramBotOptions()));
     }

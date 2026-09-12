@@ -337,7 +337,9 @@ public sealed class BotPhotoPipelineTests {
                 Assert.Equal(HttpMethod.Get, request.Method);
                 reads++;
                 return Json(new {
-                    id = operationId, imageAssetId = imageId, status = "Succeeded",
+                    id = operationId,
+                    imageAssetId = imageId,
+                    status = "Succeeded",
                     nutrition = new { calories = 432.1m, protein = 12m, fat = 13m, carbs = 14m },
                 });
             }

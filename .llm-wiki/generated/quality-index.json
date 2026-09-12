@@ -17226,11 +17226,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
-      "nonBlankLines": 139,
+      "nonBlankLines": 144,
       "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.78
+      "structuralRiskScore": 26.88
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs",
@@ -31914,11 +31914,11 @@
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionReceipt.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 60,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.6
+      "structuralRiskScore": 20.7
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionUndoResult.cs",

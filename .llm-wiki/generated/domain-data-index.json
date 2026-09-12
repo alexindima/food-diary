@@ -3853,7 +3853,7 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A UTC timestamp is required.\", parameterName)",
       "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionReceipt.cs",
-      "line": 59
+      "line": 64
     },
     {
       "area": "FoodDiary",

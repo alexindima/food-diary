@@ -153,47 +153,47 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         var downloader = new TelegramImageDownloader(bot);
         switch (checkpoint.Stage) {
             case "recognition-ready": {
-                BotRecognizedMeal result = await diary.SaveRecognizedMealAsync(token,
-                    checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition ID."),
-                    incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing original message time."), cancellationToken).ConfigureAwait(false);
-                return checkpoint with { Stage = "meal-saved", SavedMeal = result };
-            }
+                    BotRecognizedMeal result = await diary.SaveRecognizedMealAsync(token,
+                        checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition ID."),
+                        incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing original message time."), cancellationToken).ConfigureAwait(false);
+                    return checkpoint with { Stage = "meal-saved", SavedMeal = result };
+                }
             case "received": {
-                byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken).ConfigureAwait(false);
-                BotImageUpload upload = await diary.RequestUploadAsync(token, operationId, checkpoint.UploadAttempt,
-                    incoming.ContentType!, content.Length, cancellationToken).ConfigureAwait(false);
-                return checkpoint with { Stage = "upload", Upload = upload, ImageAssetId = upload.AssetId };
-            }
+                    byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken).ConfigureAwait(false);
+                    BotImageUpload upload = await diary.RequestUploadAsync(token, operationId, checkpoint.UploadAttempt,
+                        incoming.ContentType!, content.Length, cancellationToken).ConfigureAwait(false);
+                    return checkpoint with { Stage = "upload", Upload = upload, ImageAssetId = upload.AssetId };
+                }
             case "upload": {
-                BotImageUpload upload = checkpoint.Upload ?? throw new InvalidDataException("Missing upload checkpoint.");
-                if (upload.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime) {
-                    return new BotPhotoCheckpoint(UploadAttempt: checked(checkpoint.UploadAttempt + 1));
+                    BotImageUpload upload = checkpoint.Upload ?? throw new InvalidDataException("Missing upload checkpoint.");
+                    if (upload.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime) {
+                        return new BotPhotoCheckpoint(UploadAttempt: checked(checkpoint.UploadAttempt + 1));
+                    }
+                    byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken).ConfigureAwait(false);
+                    await diary.UploadAsync(upload, incoming.ContentType!, content, cancellationToken).ConfigureAwait(false);
+                    await diary.ConfirmUploadAsync(token, upload.AssetId, cancellationToken).ConfigureAwait(false);
+                    return checkpoint with { Stage = "image-ready", Upload = null };
                 }
-                byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken).ConfigureAwait(false);
-                await diary.UploadAsync(upload, incoming.ContentType!, content, cancellationToken).ConfigureAwait(false);
-                await diary.ConfirmUploadAsync(token, upload.AssetId, cancellationToken).ConfigureAwait(false);
-                return checkpoint with { Stage = "image-ready", Upload = null };
-            }
             case "image-ready": {
-                Guid imageId = checkpoint.ImageAssetId ?? throw new InvalidDataException("Missing image checkpoint.");
-                BotRecognitionJob job = await diary.StartRecognitionAsync(token, operationId, imageId, incoming.Caption, cancellationToken).ConfigureAwait(false);
-                if (job.Id != operationId || job.ImageAssetId != imageId) {
-                    throw new InvalidDataException("Recognition identity mismatch.");
+                    Guid imageId = checkpoint.ImageAssetId ?? throw new InvalidDataException("Missing image checkpoint.");
+                    BotRecognitionJob job = await diary.StartRecognitionAsync(token, operationId, imageId, incoming.Caption, cancellationToken).ConfigureAwait(false);
+                    if (job.Id != operationId || job.ImageAssetId != imageId) {
+                        throw new InvalidDataException("Recognition identity mismatch.");
+                    }
+                    return checkpoint with { Stage = "recognizing", RecognitionId = job.Id };
                 }
-                return checkpoint with { Stage = "recognizing", RecognitionId = job.Id };
-            }
             case "recognizing": {
-                Guid jobId = checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition checkpoint.");
-                BotRecognitionJob job = await diary.GetRecognitionAsync(token, jobId, cancellationToken).ConfigureAwait(false);
-                if (job.Id != jobId || job.ImageAssetId != checkpoint.ImageAssetId) {
-                    throw new InvalidDataException("Recognition identity mismatch.");
+                    Guid jobId = checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition checkpoint.");
+                    BotRecognitionJob job = await diary.GetRecognitionAsync(token, jobId, cancellationToken).ConfigureAwait(false);
+                    if (job.Id != jobId || job.ImageAssetId != checkpoint.ImageAssetId) {
+                        throw new InvalidDataException("Recognition identity mismatch.");
+                    }
+                    return job.Status switch {
+                        "Succeeded" when job.NutritionErrorCode is null => checkpoint with { Stage = "recognition-ready", Nutrition = job.Nutrition },
+                        "Succeeded" or "Failed" => checkpoint with { Stage = "failed", ErrorCode = job.ErrorCode ?? job.NutritionErrorCode ?? "RecognitionFailed" },
+                        _ => checkpoint,
+                    };
                 }
-                return job.Status switch {
-                    "Succeeded" when job.NutritionErrorCode is null => checkpoint with { Stage = "recognition-ready", Nutrition = job.Nutrition },
-                    "Succeeded" or "Failed" => checkpoint with { Stage = "failed", ErrorCode = job.ErrorCode ?? job.NutritionErrorCode ?? "RecognitionFailed" },
-                    _ => checkpoint,
-                };
-            }
             default:
                 return checkpoint;
         }

@@ -105,8 +105,12 @@ public sealed class ImageAssetContentServiceTests {
                 Asset.Confirm();
             }
             Service = new ImageAssetContentService(new Repository(Asset), Storage, Microsoft.Extensions.Options.Options.Create(new S3Options {
-                Bucket = "published", StagingBucket = "staging", Region = "us-east-1",
-                AccessKeyId = "test", SecretAccessKey = "test", MaxUploadSizeBytes = 10,
+                Bucket = "published",
+                StagingBucket = "staging",
+                Region = "us-east-1",
+                AccessKeyId = "test",
+                SecretAccessKey = "test",
+                MaxUploadSizeBytes = 10,
             }));
         }
     }

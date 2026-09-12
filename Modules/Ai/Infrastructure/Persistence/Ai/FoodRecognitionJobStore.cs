@@ -38,8 +38,13 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
             return Result.Failure<FoodRecognitionJobModel>(AiErrors.RecognitionQueueFull());
         }
         context.Set<FoodRecognitionJob>().Add(new FoodRecognitionJob {
-            Id = job.Id, UserId = userId, ImageAssetId = new ImageAssetId(job.ImageAssetId), ImageUrl = job.ImageUrl,
-            Description = job.Description, CreatedOnUtc = job.CreatedOnUtc, UpdatedOnUtc = job.UpdatedOnUtc,
+            Id = job.Id,
+            UserId = userId,
+            ImageAssetId = new ImageAssetId(job.ImageAssetId),
+            ImageUrl = job.ImageUrl,
+            Description = job.Description,
+            CreatedOnUtc = job.CreatedOnUtc,
+            UpdatedOnUtc = job.UpdatedOnUtc,
         });
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return Result.Success(job);
