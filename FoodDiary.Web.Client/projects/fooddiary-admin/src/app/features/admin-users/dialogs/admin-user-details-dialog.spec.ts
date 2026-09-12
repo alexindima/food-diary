@@ -152,7 +152,14 @@ async function createContextAsync(configure?: (usersFacade: UsersFacadeMock) => 
 
 describe('AdminUserDetailsDialogComponent', () => {
     it('renders a Telegram-only account without email or names', async () => {
-        const telegramUser: AdminUser = { ...baseUser, email: null, firstName: '', lastName: '', hasPassword: false, isEmailConfirmed: false };
+        const telegramUser: AdminUser = {
+            ...baseUser,
+            email: null,
+            firstName: '',
+            lastName: '',
+            hasPassword: false,
+            isEmailConfirmed: false,
+        };
         const { component, fixture } = await createContextAsync(usersFacade => {
             usersFacade.getUser.mockReturnValueOnce(of(telegramUser));
         }, telegramUser);

@@ -95,10 +95,12 @@ FRONTEND_PID=$!
 run_backend_checks >"$BACKEND_LOG" 2>&1 &
 BACKEND_PID=$!
 
-wait "$FRONTEND_PID"
-FRONTEND_STATUS=$?
-wait "$BACKEND_PID"
-BACKEND_STATUS=$?
+# Husky invokes this script with errexit. Collect both failures before the EXIT
+# cleanup removes assemblies that the other check may still be using.
+FRONTEND_STATUS=0
+wait "$FRONTEND_PID" || FRONTEND_STATUS=$?
+BACKEND_STATUS=0
+wait "$BACKEND_PID" || BACKEND_STATUS=$?
 
 if [ "$FRONTEND_STATUS" -eq 0 ] && [ "$BACKEND_STATUS" -eq 0 ]; then
   hook_step_done

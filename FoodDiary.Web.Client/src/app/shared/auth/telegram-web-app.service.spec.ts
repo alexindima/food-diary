@@ -22,7 +22,9 @@ describe('TelegramWebAppService', () => {
         TestBed.configureTestingModule({ providers: [{ provide: BrowserWindowService, useValue: browser }] });
         service = TestBed.inject(TelegramWebAppService);
         document = TestBed.inject(DOCUMENT);
-        document.head.querySelectorAll('script[src*="telegram-web-app"]').forEach(script => { script.remove(); });
+        document.head.querySelectorAll('script[src*="telegram-web-app"]').forEach(script => {
+            script.remove();
+        });
     });
 
     it('does not load the provider script for ordinary website visits', async () => {

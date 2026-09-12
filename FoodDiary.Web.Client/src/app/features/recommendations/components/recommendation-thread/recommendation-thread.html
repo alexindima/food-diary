@@ -11,7 +11,9 @@
                 @for (comment of comments(); track comment.id) {
                     <article class="recommendation-thread__message fd-stack fd-gap-xxs">
                         <div class="fd-row fd-justify-between fd-gap-sm">
-                            <strong class="fd-ui-body-sm">{{ authorName(comment) ?? ('RECOMMENDATIONS.DISCUSSION.UNNAMED_AUTHOR' | translate) }}</strong>
+                            <strong class="fd-ui-body-sm">{{
+                                authorName(comment) ?? ('RECOMMENDATIONS.DISCUSSION.UNNAMED_AUTHOR' | translate)
+                            }}</strong>
                             <span class="fd-ui-caption">{{ comment.createdAtUtc | localizedDate: 'short' }}</span>
                         </div>
                         <p class="fd-ui-body-sm">{{ comment.text }}</p>
