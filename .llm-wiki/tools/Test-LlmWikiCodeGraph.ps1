@@ -192,7 +192,7 @@ if (@($symbol.symbols | Where-Object path -eq "$recipesSourcePrefix/Services/Rec
 $consumers = & $manager consumers -Query IRecipeOverviewReadService -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 foreach ($requiredConsumer in @(
     "$recipesSourcePrefix/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs"
-    'Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs'
+    'FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs'
 )) {
     if ($requiredConsumer -notin @($consumers.consumers.path)) { throw "Code graph omitted expected consumer: $requiredConsumer" }
 }

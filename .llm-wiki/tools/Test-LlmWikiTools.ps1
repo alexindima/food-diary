@@ -190,7 +190,7 @@ Assert-Wiki (@($billing.implementationFiles | Where-Object {
 Assert-Wiki (@($billing.tests | ForEach-Object { if ($_.PSObject.Properties['path']) { [string]$_.path } } | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing focused tests are missing from context.'
 
 $frontendContext = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
-    -Query 'AI dashboard' `
+    -Query 'AI photo dashboard' `
     -ChangeType Frontend `
     -ScopePath 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar' `
     -Format Json | ConvertFrom-Json
@@ -977,7 +977,7 @@ Assert-Wiki (@($frontendTrace.traces[0].upstreamConsumers.name) -contains 'AiPho
 Assert-Wiki (@($frontendTrace.traces[0].upstreamConsumers.name) -contains 'AiInputBarComponent') 'Frontend trace omitted the second-level component consumer.'
 Assert-Wiki (@($frontendTrace.traces[0].tests) -contains 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.spec.ts') 'Frontend trace omitted the direct consumer test.'
 Assert-Wiki (@($frontendTrace.traces[0].routes.path) -contains 'dashboard') 'Frontend trace omitted a consuming application route.'
-Assert-Wiki (@($frontendTrace.traces[0].apiCalls.publicMethod) -contains 'analyzeFoodImage') 'Frontend trace omitted the downstream AI HTTP call.'
+Assert-Wiki (@($frontendTrace.traces[0].apiCalls.publicMethod) -contains 'calculateNutrition') 'Frontend trace omitted the downstream AI HTTP call.'
 $photoPreviewPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
     -ChangedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts' `
     -Format Json | ConvertFrom-Json
