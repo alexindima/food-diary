@@ -8930,11 +8930,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.ts",
-      "nonBlankLines": 176,
+      "nonBlankLines": 179,
       "decisionPoints": 23,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.02
+      "structuralRiskScore": 38.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
