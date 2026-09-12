@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1208,
     "ambiguousContracts": 0,
-    "consumerEdges": 8514,
-    "productionConsumerEdges": 5093,
+    "consumerEdges": 8522,
+    "productionConsumerEdges": 5101,
     "testConsumerEdges": 3421,
     "consumedContracts": 1208,
     "unconsumedContracts": 0
@@ -20861,7 +20861,7 @@
         "Modules/Identity/Application/Authentication/Commands/AcquireTelegramOperation/AcquireTelegramOperationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -26750,7 +26750,20 @@
         "Modules/Identity/Application/Authentication/Commands/CheckpointTelegramOperation/CheckpointTelegramOperationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CheckpointTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -27205,7 +27218,7 @@
         "Modules/Identity/Application/Authentication/Commands/CompleteTelegramBackupEmail/CompleteTelegramBackupEmailCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -29350,7 +29363,7 @@
         "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealFromRecognitionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealsController.cs",
+      "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -35109,9 +35122,22 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/ExchangeTelegramOidcHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ExchangeTelegramOidcHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/ExchangeTelegramOidcHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ExchangeTelegramOidcHttpRequest",
@@ -35124,7 +35150,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ExerciseEntryHttpResponse",
@@ -41674,7 +41700,7 @@
         "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -46185,7 +46211,7 @@
         "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97027,6 +97053,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -97119,6 +97158,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Presentation/Features/ShoppingLists/ShoppingListsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -112939,7 +112991,7 @@
         "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -112965,7 +113017,7 @@
         "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -118620,7 +118672,7 @@
         "Modules/Meals/Presentation/Features/Meals/Responses/RecognizedMealCreationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealsController.cs",
+      "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -118646,7 +118698,7 @@
         "Modules/Meals/Presentation/Features/Meals/Responses/RecognizedMealUndoHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealsController.cs",
+      "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -119803,7 +119855,7 @@
         "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -119819,6 +119871,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramOperationsControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "RegisterTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "RegisterTelegramOperationHttpRequest",
@@ -120895,7 +120960,7 @@
         "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -123677,7 +123742,7 @@
         "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -123690,7 +123755,20 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartTelegramBackupEmailHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -123716,9 +123794,9 @@
         "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "StatisticsSummaryHttpResponse",
@@ -124017,7 +124095,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "TelegramAuthHttpRequest",
@@ -124068,6 +124146,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramBackupEmailHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBackupEmailHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -124431,9 +124522,22 @@
         "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOidcStartHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcStartHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOidcStartHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 2
     },
     {
       "contract": "TelegramOidcStartHttpResponse",
@@ -124782,7 +124886,7 @@
         "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },

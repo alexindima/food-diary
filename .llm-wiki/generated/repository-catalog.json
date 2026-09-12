@@ -13074,6 +13074,7 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
+          "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
           "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj",
           "Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
           "Modules/Billing/Application/FoodDiary.Application.Billing.csproj",

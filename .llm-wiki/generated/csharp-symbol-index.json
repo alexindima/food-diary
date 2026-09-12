@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4002,
-    "symbols": 3943,
+    "sourceFiles": 4005,
+    "symbols": 3946,
     "interfaceImplementationLinks": 268,
     "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 2049,
+      "class": 2052,
       "enum": 64,
       "interface": 474,
       "record": 1235,
@@ -23,7 +23,7 @@
       "Command": 178,
       "CommandHandler": 174,
       "Configuration": 95,
-      "Controller": 102,
+      "Controller": 104,
       "Entity": 98,
       "Event": 19,
       "Factory": 11,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1595,
+      "Other": 1596,
       "Query": 193,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -5400,7 +5400,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
-      "line": 22
+      "line": 20
     },
     {
       "name": "AiHttpMappings",
@@ -5421,7 +5421,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "FoodVisionItemHttpModel",
@@ -15070,6 +15070,13 @@
       "line": 23
     },
     {
+      "name": "AuthTelegramBackupEmailController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
+      "line": 28
+    },
+    {
       "name": "AuthTelegramController",
       "kind": "class",
       "role": "Controller",
@@ -15081,7 +15088,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
-      "line": 30
+      "line": 28
     },
     {
       "name": "AuthHttpMappings",
@@ -15102,7 +15109,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
-      "line": 10
+      "line": 16
+    },
+    {
+      "name": "TelegramOperationHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
+      "line": 8
     },
     {
       "name": "AdminSsoExchangeHttpRequest",
@@ -15319,7 +15333,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
-      "line": 33
+      "line": 30
     },
     {
       "name": "AuthenticationCookieResultFilter",
@@ -18183,6 +18197,13 @@
       "role": "Other",
       "path": "Modules/Meals/Presentation/Features/Meals/Mappings/RecognizedMealUndoHttpMappings.cs",
       "line": 6
+    },
+    {
+      "name": "MealRecognitionsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
+      "line": 16
     },
     {
       "name": "MealsController",

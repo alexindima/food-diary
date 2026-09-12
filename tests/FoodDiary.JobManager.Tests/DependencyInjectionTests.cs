@@ -1,4 +1,5 @@
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using System.Diagnostics.Metrics;
@@ -142,6 +143,8 @@ public sealed class DependencyInjectionTests {
         var services = new ServiceCollection();
 
         services.AddApplicationRuntime();
+        services.AddAiModule();
+        services.AddReadModelComposition();
         services.AddUsersModule();
         services.AddBillingModule();
         services.AddDietologistModule();

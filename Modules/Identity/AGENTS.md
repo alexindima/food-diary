@@ -1,5 +1,11 @@
 # Identity logical module
 
+Telegram HTTP transport is split between legacy authentication, onboarding,
+browser backup-email proof and bot operations controllers, with unchanged route
+prefixes. Build application requests in HTTP mappings. Anonymous onboarding
+methods are explicitly reviewed in ControllerConventionsTests; bot operations
+remain protected by RequireTelegramBotSecret despite AllowAnonymous.
+
 Identity owns authentication, account recovery, external login, token issuance,
 login auditing, initial-admin bootstrap, and application email-template use cases.
 Authentication and Email remain logical areas inside one application assembly.

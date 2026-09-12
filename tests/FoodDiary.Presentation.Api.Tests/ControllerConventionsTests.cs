@@ -80,6 +80,9 @@ public sealed class ControllerConventionsTests {
             ["AuthSessionController"] = "api/v{version:apiVersion}/auth",
             ["AuthSessionLifecycleController"] = "api/v{version:apiVersion}/auth",
             ["AuthTelegramController"] = "api/v{version:apiVersion}/auth/telegram",
+            ["AuthTelegramBackupEmailController"] = "api/v{version:apiVersion}/auth/telegram",
+            ["AuthTelegramOnboardingController"] = "api/v{version:apiVersion}/auth/telegram",
+            ["TelegramOperationsController"] = "api/v{version:apiVersion}/auth/telegram/bot/operations",
         };
 
         Type[] authControllers = [.. GetFeatureControllerTypes()
@@ -183,9 +186,15 @@ public sealed class ControllerConventionsTests {
             "AuthTelegramController.TelegramBotAuth",
             "AuthTelegramController.TelegramLoginWidget",
             "AuthTelegramController.TelegramVerify",
+            "AuthTelegramOnboardingController.Begin",
+            "AuthTelegramOnboardingController.Complete",
+            "AuthTelegramOnboardingController.Configuration",
+            "AuthTelegramOnboardingController.ExchangeOidc",
+            "AuthTelegramOnboardingController.StartOidc",
             "BillingWebhookController",
             "LogsController",
             "MarketingAttributionController.Create",
+            "TelegramOperationsController",
             "VersionController",
         ];
         string[] actual = [.. GetControllerSyntaxTrees()

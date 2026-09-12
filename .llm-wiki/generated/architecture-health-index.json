@@ -5189,16 +5189,6 @@
       "coveredThrough": []
     },
     {
-      "name": "AuthTelegramOnboardingController",
-      "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
-      "line": 30,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "BugReportJournalController",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
@@ -5212,7 +5202,7 @@
       "name": "FoodRecognitionController",
       "role": "Controller",
       "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
-      "line": 22,
+      "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5223,6 +5213,16 @@
       "role": "Controller",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
       "line": 14,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "MealRecognitionsController",
+      "role": "Controller",
+      "path": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
+      "line": 16,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

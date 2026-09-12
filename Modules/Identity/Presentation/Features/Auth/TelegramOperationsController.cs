@@ -1,7 +1,4 @@
-using FoodDiary.Application.Identity.Authentication.Commands.AcquireTelegramOperation;
-using FoodDiary.Application.Identity.Authentication.Commands.CheckpointTelegramOperation;
-using FoodDiary.Application.Identity.Authentication.Commands.RegisterTelegramOperation;
-using FoodDiary.Application.Identity.Authentication.Queries.ListReadyTelegramOperations;
+using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
@@ -34,22 +31,21 @@ public sealed class TelegramOperationsController(ISender mediator) : BaseApiCont
     [HttpPost]
     [ProducesResponseType<TelegramOperationRegisteredHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Register([FromBody] RegisterTelegramOperationHttpRequest request) =>
-        HandleOk(new RegisterTelegramOperationCommand(request.UpdateId, request.TelegramUserId, request.Payload),
+        HandleOk(request.ToCommand(),
             static id => new TelegramOperationRegisteredHttpResponse(id));
 
     [HttpGet("ready")]
     [ProducesResponseType<IReadOnlyList<Guid>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> ListReady() => HandleOk(new ListReadyTelegramOperationsQuery(), static ids => ids);
+    public Task<IActionResult> ListReady() => HandleOk(TelegramOperationHttpMappings.ToReadyQuery(), static ids => ids);
 
     [HttpPost("{operationId:guid}/lease")]
     [ProducesResponseType<TelegramOperationLeaseHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> Acquire(Guid operationId) => HandleOk(new AcquireTelegramOperationCommand(operationId),
+    public Task<IActionResult> Acquire(Guid operationId) => HandleOk(operationId.ToAcquireCommand(),
         static lease => new TelegramOperationLeaseHttpResponse(lease.OperationId, lease.LeaseId, lease.UserId, lease.SecurityVersion,
             lease.Payload, lease.Checkpoint, lease.LeaseExpiresAtUtc, lease.CreatedAtUtc));
 
     [HttpPost("{operationId:guid}/checkpoint")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> Checkpoint(Guid operationId, [FromBody] CheckpointTelegramOperationHttpRequest request) =>
-        HandleNoContent(new CheckpointTelegramOperationCommand(operationId, request.LeaseId, request.Checkpoint,
-            request.Completed, request.NextAttemptAtUtc));
+        HandleNoContent(request.ToCommand(operationId));
 }

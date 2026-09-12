@@ -1,5 +1,9 @@
 # Meals logical module
 
+MealRecognitionsController owns recognition creation and undo endpoints under
+the existing meals route. Keep ordinary CRUD in MealsController and preserve
+the shared authorized-controller contract and endpoint request limits.
+
 Meals owns Meal, MealItem, MealAiSession, MealAiItem, their IDs, meal-only states,
 nutrition event and AI item/session enums under `Modules/Meals/Domain`, with stable
 CLR namespaces. User has no inverse Meals collection; Meal.User remains a one-way

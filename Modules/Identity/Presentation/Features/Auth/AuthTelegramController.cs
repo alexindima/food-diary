@@ -30,7 +30,7 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     public Task<IActionResult> RequestBackupEmail([FromCurrentUser] Guid userId, [FromBody] TelegramBackupEmailHttpRequest request) =>
-        HandleNoContent(new FoodDiary.Application.Identity.Authentication.Commands.RequestTelegramBackupEmail.RequestTelegramBackupEmailCommand(userId, request.Email, request.InitData));
+        HandleNoContent(request.ToBackupEmailCommand(userId));
 
     [Authorize]
     [HttpPost("unlink")]
@@ -40,7 +40,7 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> UnlinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
-        HandleNoContent(new FoodDiary.Application.Identity.Authentication.Commands.UnlinkTelegram.UnlinkTelegramCommand(userId, request.InitData));
+        HandleNoContent(request.ToUnlinkCommand(userId));
 
     [AllowAnonymous]
     [HttpPost("verify")]

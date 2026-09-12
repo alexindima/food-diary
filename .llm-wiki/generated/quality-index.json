@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5290,
+    "productionFiles": 5293,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 842,
-    "criticalSymbolsWithTestReferences": 806,
+    "criticalSymbols": 844,
+    "criticalSymbolsWithTestReferences": 808,
     "criticalSymbolsWithoutTestReferences": 36,
     "debtMarkers": 11
   },
@@ -17298,11 +17298,11 @@
     },
     {
       "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.88
+      "structuralRiskScore": 7.82
     },
     {
       "path": "Modules/Ai/Presentation/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -17322,11 +17322,11 @@
     },
     {
       "path": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Ai/Presentation/Features/Ai/Models/FoodVisionItemHttpModel.cs",
@@ -28497,6 +28497,14 @@
       "structuralRiskScore": 4.84
     },
     {
+      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.78
+    },
+    {
       "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs",
       "nonBlankLines": 82,
       "decisionPoints": 0,
@@ -28506,11 +28514,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
-      "nonBlankLines": 86,
+      "nonBlankLines": 70,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.72
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.4
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
@@ -28530,11 +28538,19 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.78
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/AdminSsoExchangeHttpRequest.cs",
@@ -28778,11 +28794,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
-      "nonBlankLines": 50,
+      "nonBlankLines": 46,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3
+      "structuralRiskScore": 2.92
     },
     {
       "path": "Modules/Identity/Presentation/Filters/AuthenticationCookieResultFilter.cs",
@@ -32121,12 +32137,20 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.66
+    },
+    {
       "path": "Modules/Meals/Presentation/Features/Meals/MealsController.cs",
-      "nonBlankLines": 85,
+      "nonBlankLines": 67,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.7
+      "structuralRiskScore": 3.34
     },
     {
       "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealFromRecognitionHttpRequest.cs",
@@ -45645,6 +45669,18 @@
       "coveredThrough": []
     },
     {
+      "name": "AuthTelegramBackupEmailController",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
+      "line": 28,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "AuthTelegramController",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs",
@@ -45662,10 +45698,12 @@
       "name": "AuthTelegramOnboardingController",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
-      "line": 30,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "line": 28,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -46009,7 +46047,7 @@
       "name": "FoodRecognitionController",
       "role": "Controller",
       "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
-      "line": 22,
+      "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -46240,6 +46278,16 @@
       "coveredThrough": []
     },
     {
+      "name": "MealRecognitionsController",
+      "role": "Controller",
+      "path": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
+      "line": 16,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "MealsController",
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Features/Meals/MealsController.cs",
@@ -46457,10 +46505,11 @@
       "name": "TelegramOperationsController",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
-      "line": 33,
-      "testReferenceCount": 1,
+      "line": 30,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramOperationsControllerTests.cs"
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramOperationsControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

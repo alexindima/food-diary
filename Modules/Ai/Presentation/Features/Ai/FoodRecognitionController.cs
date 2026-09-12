@@ -1,5 +1,3 @@
-using FoodDiary.Application.Ai.Queries.GetFoodRecognition;
-using FoodDiary.Application.Ai.Queries.ListFoodRecognitions;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
@@ -27,7 +25,6 @@ public sealed class FoodRecognitionController(ISender mediator) : AuthorizedCont
     [RejectOversizedRequest(PresentationRequestLimits.AiPayloadBytes)]
     [ProducesResponseType<FoodRecognitionJobHttpResponse>(StatusCodes.Status202Accepted)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
@@ -38,11 +35,11 @@ public sealed class FoodRecognitionController(ISender mediator) : AuthorizedCont
     [ProducesResponseType<FoodRecognitionJobHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Get([FromCurrentUser] Guid userId, Guid id) =>
-        HandleOk(new GetFoodRecognitionQuery(userId, id), static job => job.ToHttpResponse());
+        HandleOk(id.ToRecognitionQuery(userId), static job => job.ToHttpResponse());
 
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<FoodRecognitionJobHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> List([FromCurrentUser] Guid userId) =>
-        HandleOk(new ListFoodRecognitionsQuery(userId),
+        HandleOk(userId.ToRecognitionListQuery(),
             static jobs => (IReadOnlyList<FoodRecognitionJobHttpResponse>)[.. jobs.Select(job => job.ToHttpResponse())]);
 }
