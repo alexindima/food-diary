@@ -22,6 +22,7 @@ COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/*.csproj Modules/Billing/Application/
 COPY Modules/Billing/Application/Abstractions/*.csproj Modules/Billing/Application/Abstractions/
 COPY Modules/Billing/Domain/*.csproj Modules/Billing/Domain/
+COPY Modules/Billing/Domain.Contracts/*.csproj Modules/Billing/Domain.Contracts/
 COPY Modules/Billing/Infrastructure/*.csproj Modules/Billing/Infrastructure/
 COPY Modules/Billing/Infrastructure/Model/*.csproj Modules/Billing/Infrastructure/Model/
 COPY Modules/Marketing/Application/*.csproj Modules/Marketing/Application/
@@ -90,6 +91,7 @@ COPY Modules/Cycles/Application/*.csproj Modules/Cycles/Application/
 COPY Modules/Cycles/Contracts/*.csproj Modules/Cycles/Contracts/
 COPY Modules/Cycles/Application/Abstractions/*.csproj Modules/Cycles/Application/Abstractions/
 COPY Modules/Cycles/Domain/*.csproj Modules/Cycles/Domain/
+COPY Modules/Cycles/Domain.Contracts/*.csproj Modules/Cycles/Domain.Contracts/
 COPY Modules/Cycles/Infrastructure/*.csproj Modules/Cycles/Infrastructure/
 COPY Modules/Cycles/Infrastructure/Model/*.csproj Modules/Cycles/Infrastructure/Model/
 COPY Modules/Dashboard/Application/*.csproj Modules/Dashboard/Application/
@@ -127,6 +129,7 @@ COPY Modules/Recipes/Domain/*.csproj Modules/Recipes/Domain/
 COPY Modules/Products/Contracts/*.csproj Modules/Products/Contracts/
 COPY Modules/Products/Domain.Contracts/*.csproj Modules/Products/Domain.Contracts/
 COPY Modules/Products/Domain/*.csproj Modules/Products/Domain/
+COPY Modules/Products/FoodQuality/*.csproj Modules/Products/FoodQuality/
 COPY Modules/Recipes/Infrastructure/*.csproj Modules/Recipes/Infrastructure/
 COPY Modules/Products/Infrastructure/*.csproj Modules/Products/Infrastructure/
 COPY Modules/Recipes/Infrastructure/Model/*.csproj Modules/Recipes/Infrastructure/Model/
@@ -182,6 +185,7 @@ COPY Modules/ContentReports/Application/*.csproj Modules/ContentReports/Applicat
 COPY Modules/ContentReports/Application/Abstractions/*.csproj Modules/ContentReports/Application/Abstractions/
 COPY Modules/ContentReports/Contracts/*.csproj Modules/ContentReports/Contracts/
 COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
+COPY Modules/ContentReports/Domain.Contracts/*.csproj Modules/ContentReports/Domain.Contracts/
 COPY Modules/ContentReports/Infrastructure/*.csproj Modules/ContentReports/Infrastructure/
 COPY Modules/ContentReports/Infrastructure/Model/*.csproj Modules/ContentReports/Infrastructure/Model/
 COPY Modules/Gamification/Application/*.csproj Modules/Gamification/Application/
@@ -192,6 +196,7 @@ COPY Modules/Marketing/Contracts/*.csproj Modules/Marketing/Contracts/
 COPY Modules/Admin/Contracts/*.csproj Modules/Admin/Contracts/
 COPY Modules/Gamification/Application/Abstractions/*.csproj Modules/Gamification/Application/Abstractions/
 COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
+COPY Modules/Gamification/Domain.Contracts/*.csproj Modules/Gamification/Domain.Contracts/
 COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/*.csproj Modules/Gamification/Infrastructure/Model/
 COPY Modules/Export/Application/*.csproj Modules/Export/Application/
@@ -234,6 +239,7 @@ COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/ Modules/Billing/Application/
 COPY Modules/Billing/Application/Abstractions/ Modules/Billing/Application/Abstractions/
 COPY Modules/Billing/Domain/ Modules/Billing/Domain/
+COPY Modules/Billing/Domain.Contracts/ Modules/Billing/Domain.Contracts/
 COPY Modules/Billing/Infrastructure/ Modules/Billing/Infrastructure/
 COPY Modules/Billing/Infrastructure/Model/ Modules/Billing/Infrastructure/Model/
 COPY Modules/Marketing/ Modules/Marketing/
@@ -306,6 +312,7 @@ COPY Modules/Cycles/Application/ Modules/Cycles/Application/
 COPY Modules/Cycles/Contracts/ Modules/Cycles/Contracts/
 COPY Modules/Cycles/Application/Abstractions/ Modules/Cycles/Application/Abstractions/
 COPY Modules/Cycles/Domain/ Modules/Cycles/Domain/
+COPY Modules/Cycles/Domain.Contracts/ Modules/Cycles/Domain.Contracts/
 COPY Modules/Cycles/Infrastructure/ Modules/Cycles/Infrastructure/
 COPY Modules/Cycles/Infrastructure/Model/ Modules/Cycles/Infrastructure/Model/
 COPY Modules/Dashboard/Application/ Modules/Dashboard/Application/
@@ -343,6 +350,7 @@ COPY Modules/Recipes/Domain/ Modules/Recipes/Domain/
 COPY Modules/Products/Contracts/ Modules/Products/Contracts/
 COPY Modules/Products/Domain.Contracts/ Modules/Products/Domain.Contracts/
 COPY Modules/Products/Domain/ Modules/Products/Domain/
+COPY Modules/Products/FoodQuality/ Modules/Products/FoodQuality/
 COPY Modules/Recipes/Infrastructure/ Modules/Recipes/Infrastructure/
 COPY Modules/Products/Infrastructure/ Modules/Products/Infrastructure/
 COPY Modules/Recipes/Infrastructure/Model/ Modules/Recipes/Infrastructure/Model/
@@ -400,6 +408,7 @@ COPY Modules/ContentReports/Application/ Modules/ContentReports/Application/
 COPY Modules/ContentReports/Application/Abstractions/ Modules/ContentReports/Application/Abstractions/
 COPY Modules/ContentReports/Contracts/ Modules/ContentReports/Contracts/
 COPY Modules/ContentReports/Domain/ Modules/ContentReports/Domain/
+COPY Modules/ContentReports/Domain.Contracts/ Modules/ContentReports/Domain.Contracts/
 COPY Modules/ContentReports/Infrastructure/ Modules/ContentReports/Infrastructure/
 COPY Modules/ContentReports/Infrastructure/Model/ Modules/ContentReports/Infrastructure/Model/
 COPY Modules/Gamification/ Modules/Gamification/
@@ -411,6 +420,7 @@ COPY Modules/Marketing/Contracts/ Modules/Marketing/Contracts/
 COPY Modules/Admin/Contracts/ Modules/Admin/Contracts/
 COPY Modules/Gamification/Application/Abstractions/ Modules/Gamification/Application/Abstractions/
 COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
+COPY Modules/Gamification/Domain.Contracts/ Modules/Gamification/Domain.Contracts/
 COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/ Modules/Gamification/Infrastructure/Model/
 COPY Modules/Export/Application/ Modules/Export/Application/

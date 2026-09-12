@@ -20,6 +20,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
         var user = User.Create("feature-profiles@example.com", "hash");
         user.UpdatePersonalInfo(birthDate: new DateTime(1990, 3, 1, 0, 0, 0, DateTimeKind.Utc), gender: "M", weight: 80, height: 180);
         user.AcceptAiConsent();
+        user.SetTimeZone("Asia/Tbilisi");
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2050,
             ProteinTarget: null,
@@ -60,6 +61,8 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
             () => Assert.Equal(user.DailyCalorieTarget, tdee.DailyCalorieTarget),
             () => Assert.Equal(user.DailyCalorieTarget, weeklyCheckIn.DailyCalorieTarget),
             () => Assert.Equal(user.Email, dashboard.Email),
+            () => Assert.Equal("Asia/Tbilisi", dashboard.TimeZoneId),
+            () => Assert.Equal(2050, dashboard.GetCalorieTargetForDate(new DateOnly(2026, 9, 12))),
             () => Assert.Equal(user.DashboardLayoutJson, dashboard.DashboardLayoutJson),
             () => Assert.Equal(user.DailyCalorieTarget, dashboard.CalorieSchedule.GetTargetForDate(DateTime.UtcNow)),
             () => Assert.Equal(user.DailyCalorieTarget, gamification.CalorieSchedule.GetTargetForDate(DateTime.UtcNow)),
@@ -107,6 +110,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
             Assert.Equal("Authentication.InvalidToken", (await service.EnsureCanAccessAsync(excluded.Id))?.Code);
             Assert.True((await service.GetDashboardProfileAsync(excluded.Id)).IsFailure);
             Assert.Null(await service.FindByIdAsync(excluded.Id, CancellationToken.None));
+            Assert.NotNull(excluded.Email);
             Assert.Null(await service.FindByEmailAsync(excluded.Email, CancellationToken.None));
         }
         Assert.Equal(9, active.HydrationGoal);

@@ -36,7 +36,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         if (!string.IsNullOrWhiteSpace(search)) {
             string term = $"%{EscapeLikePattern(search)}%";
             query = query.Where(item =>
-                EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
+                (item.user.Email != null && EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter)) ||
                 EF.Functions.ILike(item.loginEvent.AuthProvider, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.loginEvent.IpAddress ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.loginEvent.BrowserName ?? string.Empty, term, LikeEscapeCharacter) ||

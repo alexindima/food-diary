@@ -66,5 +66,6 @@ internal sealed class UserBillingService(
             user.DeletedAt is not null,
             user.HasRole(RoleNames.Premium),
             user.PremiumTrialStartedAtUtc,
-            user.PremiumTrialEndsAtUtc);
+            user.PremiumTrialEndsAtUtc,
+            user.IsEmailConfirmed);
 }

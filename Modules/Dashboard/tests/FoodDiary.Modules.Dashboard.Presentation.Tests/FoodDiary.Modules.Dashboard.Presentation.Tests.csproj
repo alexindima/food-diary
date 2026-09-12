@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
     <ProjectReference Include="../../../Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
+    <ProjectReference Include="../../../Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />

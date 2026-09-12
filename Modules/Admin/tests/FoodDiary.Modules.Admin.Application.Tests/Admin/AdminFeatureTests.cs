@@ -570,9 +570,9 @@ public partial class AdminFeatureTests {
         public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
         public int UpdateCallCount { get; private set; }
 
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
 
@@ -656,8 +656,8 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository, IUserGoogleIdentityRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(users.FirstOrDefault(user => user.Id == userId));
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
@@ -704,16 +704,16 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubJwtTokenGenerator : IJwtTokenGenerator {
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "access-token";
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc, long securityVersion = 0) => "access-token";
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, JwtImpersonationContext impersonation, long securityVersion = 0) => "impersonation-token";
+        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "access-token";
+        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc, long securityVersion = 0) => "access-token";
+        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, JwtImpersonationContext impersonation, long securityVersion = 0) => "impersonation-token";
         public string GenerateRefreshToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             bool rememberMe = false,
             Guid? refreshSessionId = null) => "refresh-token";
-        public (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
+        public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
     }
 
     [ExcludeFromCodeCoverage]
@@ -786,8 +786,8 @@ public partial class AdminFeatureTests {
                 [.. recentUsers.Select(user => user.ToAdminReadModel().ToAdminModel())]);
         }
 
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>

@@ -3,7 +3,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin.Responses;
 public sealed record AdminBillingPaymentHttpResponse(
     Guid Id,
     Guid UserId,
-    string UserEmail,
+    string? UserEmail,
     Guid? BillingSubscriptionId,
     string Provider,
     string ExternalPaymentId,

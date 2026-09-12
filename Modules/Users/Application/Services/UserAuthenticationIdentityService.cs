@@ -27,7 +27,7 @@ internal sealed class UserAuthenticationIdentityService(
         User? user = await userLookupRepository
             .GetByEmailIncludingDeletedAsync(email, cancellationToken)
             .ConfigureAwait(false);
-        if (user is null || !passwordHasher.Verify(password, user.Password)) {
+        if (user?.HasPassword != true || !passwordHasher.Verify(password, user.Password)) {
             return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
         }
 
@@ -86,10 +86,15 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime authenticatedAtUtc,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByTelegramUserIdAsync(telegramUserId, cancellationToken)
+            .GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken)
             .ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.TelegramNotLinked);
+        }
+
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<UserAuthenticationPrincipalModel>(accessError);
         }
 
         user.RecordAuthenticationActivity(authenticatedAtUtc);
@@ -131,7 +136,7 @@ internal sealed class UserAuthenticationIdentityService(
         User? user = await userLookupRepository
             .GetByEmailIncludingDeletedAsync(email, cancellationToken)
             .ConfigureAwait(false);
-        if (user is not { IsActive: true, DeletedAt: null }) {
+        if (user is not { IsActive: true, DeletedAt: null, Email: not null }) {
             return new UserPasswordResetIssueModel(UserPasswordResetIssueStatus.NotEligible);
         }
 
@@ -188,7 +193,7 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         User user = userResult.Value;
-        if (!string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)) {
+        if (user.Email is not null && !string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure<UserModel>(Errors.Authentication.GoogleAccountEmailMismatch);
         }
 
@@ -211,6 +216,15 @@ internal sealed class UserAuthenticationIdentityService(
             return Result.Failure<UserModel>(Errors.Authentication.GoogleIdentityAlreadyLinked);
         }
 
+        if (user.Email is null) {
+            User? emailOwner = await userLookupRepository
+                .GetByEmailIncludingDeletedAsync(email, cancellationToken)
+                .ConfigureAwait(false);
+            if (emailOwner is not null && emailOwner.Id != user.Id) {
+                return Result.Failure<UserModel>(UserErrors.EmailAlreadyExists);
+            }
+            user.AddVerifiedEmail(email);
+        }
         user.LinkGoogleIdentity(issuer, subject);
         await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         return Result.Success(user.ToModel());
@@ -228,6 +242,9 @@ internal sealed class UserAuthenticationIdentityService(
         User user = userResult.Value;
         if (user.TelegramUserId == telegramUserId) {
             return Result.Success(user.ToModel());
+        }
+        if (user.TelegramUserId.HasValue) {
+            return Result.Failure<UserModel>(UserErrors.TelegramIdentityDifferent);
         }
 
         User? identityOwner = await userLookupRepository
@@ -324,6 +341,9 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         User user = userResult.Value;
+        if (user.Email is null) {
+            return Result.Failure<UserEmailVerificationDeliveryModel?>(UserErrors.EmailRequired);
+        }
         if (user.IsEmailConfirmed) {
             return Result.Success<UserEmailVerificationDeliveryModel?>(value: null);
         }

@@ -22,14 +22,18 @@
       "pageSha256": "eaac3733a7811ffabb1a5249aafa3cb7f3f6e9f476b14ad0d231f371c4653e9d",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "133aafccafe90493d99498aad3bb7771eb551badfbf060af996c6926c8dbe128"
+          "path": "AGENTS.md",
+          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "28feb60eeb7696b55f20aec340f00171857f5f378afe1a201930e5692d101656"
         }
       ],
-      "reason": "Reviewed docs/README.md: the only documentation-index addition links the durable recognition runbook. Canonical entrypoints and the navigation/authority summary remain accurate.",
+      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:09:01.1199278Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:18.5681169Z"
     },
     {
       "pageId": "module.frontend",
@@ -52,33 +56,33 @@
       "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
       "sources": [
         {
-          "path": "docs/backend/BUG_TRIAGE.md",
-          "sha256": "7ecf66f99bd1de95fd22b84044f7e80df370bd5603da1f13ace253cf9b3b6b90"
-        },
-        {
-          "path": "docs/backend/OUTGOING_MAIL.md",
-          "sha256": "90b69d106926c662916478310562d2459b3e3710b980b6ca8149652e8e718c63"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "28feb60eeb7696b55f20aec340f00171857f5f378afe1a201930e5692d101656"
         }
       ],
-      "reason": "Updated OUTGOING_MAIL rollout: StartAtUtc is optional; missing date scans retained historical mail from UnixEpoch. Internal sender suppression and receipt/relay deduplication remain unchanged; 11 focused tests pass.",
+      "reason": "Reviewed current architecture guidance: four aggregate assembly edges were narrowed, within the existing modular monolith. 1274 architecture tests passed, including zero direct foreign Domain references from module Application projects. Mail services and host responsibilities remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T18:00:56.8042906Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:22.3831800Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "19b4a19aacfe2c095a6a1dd83977162a2d3cc4f203f30f546a8eeb8ffffa5673",
+      "pageSha256": "422075ac3404a2eda205596694b37994963a10d3a768ebf301e89aa8eb3dc442",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "9fb990d8fa4d47292161e5b0f4bec2b8d726508b77f8277a4ecdfb11eaf778a6"
+          "path": "docs/adr/0027-retire-shared-domain-assemblies.md",
+          "sha256": "5dc389737069284024c2768f1ff4683649666806e91513bb0076712124392cb6"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "4a3e8054d52370972c00a2b7645444661c42996b9878157b0398d6f5035e41e5"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Reviewed source ownership against the exact project matrix and amended ADR0027. The backend map and primary-backend page now identify Products FoodQuality and scalar boundaries. Mail service ownership and knowledge precedence remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:26.8174660Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T14:38:02.4835218Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,13 +91,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "896e1541baaa27adc49b56820b7e618884326fe3e76c13c1eb5bd47bb45a8698"
+          "sha256": "43d18f38cd9fb509063d2897903c940ecd0267a239a416843365dba9e462430f"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Reviewed current pages against the scoped matrix change: Fasting and RecipeCommunity Infrastructure replace Users.Domain with owner Users.Contracts and scalar IDs. Existing inward-layer overview, ownership and drift workflow remain accurate; no host, service, graph-cycle or write ownership change. Architecture health check passes and 53 PostgreSQL/provider cases pass. Detailed batch query and consistency tradeoff is recorded in docs/ai/users-related-read-boundaries.md.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:27.3675442Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:56:09.0202542Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -131,14 +135,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "133aafccafe90493d99498aad3bb7771eb551badfbf060af996c6926c8dbe128"
+          "path": "AGENTS.md",
+          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
         }
       ],
-      "reason": "Reviewed the new recognition runbook and docs index entry. Operational facts remain in docs/backend/AI_RECOGNITION_JOBS.md; compiled Wiki remains navigation and does not change source authority or update policy.",
+      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:09:02.6528811Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:18.9504142Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -214,14 +218,18 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "0f7ffa3a92d8c0caa3cbd5d0777315b092aa2607be05fd5128376544fa9adc34"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "896e1541baaa27adc49b56820b7e618884326fe3e76c13c1eb5bd47bb45a8698"
+          "sha256": "43d18f38cd9fb509063d2897903c940ecd0267a239a416843365dba9e462430f"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Reviewed current pages against the scoped matrix change: Fasting and RecipeCommunity Infrastructure replace Users.Domain with owner Users.Contracts and scalar IDs. Existing inward-layer overview, ownership and drift workflow remain accurate; no host, service, graph-cycle or write ownership change. Architecture health check passes and 53 PostgreSQL/provider cases pass. Detailed batch query and consistency tradeoff is recorded in docs/ai/users-related-read-boundaries.md.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:28.5771195Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:56:09.7042379Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "549028435f33e8ed29317cd6354bd29cff724a4588c108b3e4a64fbf02679157"
+          "sha256": "0a502fcf45dec078fb76882a697f361e7ba46072c6acb2b0722b13bf88d2edb0"
         }
       ],
-      "reason": "Reviewed current Images owner content capability and AI handler/provider transport against source: ownership and confirmation precede bounded storage reads; no arbitrary URL fetch, image logging, job payload, HTTP contract, schema, or cross-module write changes. New direct references point to owned Images Domain and consumer Service.Contracts and are in the exact matrix. Existing Wiki boundary and runtime guidance remains accurate; transient transport and restart requirements are documented in docs/ai/food-recognition-image-transport.md. Offline suites passed Images 99, AI application 69, AI provider 95 and focused architecture 57; these are execution results, not name-reference coverage or a live provider verification.",
+      "reason": "Reviewed current guidance against five byte-identical type moves, unchanged length limits and owner read-model mapping. Refreshed indexes and 1994 executed tests support compatibility; static reference counts remain navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "fdf2762197688d25de62f16f345ac5e395871338",
-      "reviewedAtUtc": "2026-09-11T23:00:47.4520079Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T15:48:28.6903961Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -467,17 +475,17 @@
     {
       "pageId": "workflow-dependency-rollout",
       "pagePath": ".llm-wiki/workflows/dependency-rollout.md",
-      "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
+      "pageSha256": "341deb4134a3a4273351e8355b742538fe42cfb63d52d5e1d6302b72b129889a",
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "af591c69a74cc7e7bb30891fbb176eea3e539906ebf13185f847d7a575c9c78c"
+          "sha256": "20af6be8aa714bd8bd95f04f0a9eae7a8e29adae1a32f6b80f46a3b6e640ab74"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed workflow guidance against refreshed source indexes. This change relocates three unchanged source types, updates direct project references and Docker source copies; it changes no workflow tool semantics, UI contracts, provider behavior or data lifecycle. Existing guidance remains applicable; behavior and dependency evidence is in role-quality-verification.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:36.36188Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T14:38:09.8168262Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -501,17 +509,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "4151fb10225cac32cb97d88a8bf58e5e23264cb0e8a2c5c8790423788281668a"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "9fb990d8fa4d47292161e5b0f4bec2b8d726508b77f8277a4ecdfb11eaf778a6"
+          "sha256": "a66ccedb2b79eaaed4a41f917b45e0accd5196aac7f89e6a8f2926cac3cf8a53"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Eleven public Cycles enum files retain exact SHA256 hashes and all IDs and aggregates remain with Cycles Domain. Only an unused test helper was removed. 2287 tests passed, including export and EF model compatibility; refreshed indexes remain navigation rather than execution proof.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:29.5453024Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:25.8436845Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -779,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5df92806614f40556794c51df5923dd5f68d5033dcf199d89d54844fb4a68767"
+          "sha256": "e2f16409a01e6dab57fd9d862d02aa396569df138b5a4d862f559c8ebabe3e06"
         }
       ],
-      "reason": "Reviewed persisted photo references, descriptions and AI results: owner-scoped GETs, consent checks, seven-day terminal retention and user purge are explicit. SignalR sends IDs only; browser stores user-scoped pending IDs and a request hash. Existing provider sharing is unchanged and logs carry no result body. Privacy workflow semantics remain unchanged.",
+      "reason": "Reviewed workflow guidance against refreshed source indexes. This change relocates three unchanged source types, updates direct project references and Docker source copies; it changes no workflow tool semantics, UI contracts, provider behavior or data lifecycle. Existing guidance remains applicable; behavior and dependency evidence is in role-quality-verification.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:49.6837877Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T14:38:11.2999726Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9036198383419e5cd16591883ff0c27dbd50f315323daa9f147cba33ac716a15"
+          "sha256": "973e6fe635b2c52f473ebf69d805befa50e581bb9b0f860f3ea5dfb3dd2ae685"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Eleven public Cycles enum files retain exact SHA256 hashes and all IDs and aggregates remain with Cycles Domain. Only an unused test helper was removed. 2287 tests passed, including export and EF model compatibility; refreshed indexes remain navigation rather than execution proof.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:30.3691281Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:26.4887007Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "36013782459b5fb3ec9c05d16e108c336867de347c59af128680e13aa90f855b"
+          "sha256": "b17cff2bc0e9988653bd77a323b2a437b07564fb9a6c94c33f5c35708fd6147b"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Reviewed workflows against refreshed topology and quality indexes. No providers, workers, consent, authorization, password verification or data-lifecycle behavior changed; coordinated host rebuild is documented and 85 HTTP/Swagger cases passed.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:31.5438816Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:28.4952342Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,17 +918,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9036198383419e5cd16591883ff0c27dbd50f315323daa9f147cba33ac716a15"
+          "sha256": "973e6fe635b2c52f473ebf69d805befa50e581bb9b0f860f3ea5dfb3dd2ae685"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "36013782459b5fb3ec9c05d16e108c336867de347c59af128680e13aa90f855b"
+          "sha256": "b17cff2bc0e9988653bd77a323b2a437b07564fb9a6c94c33f5c35708fd6147b"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Reviewed workflows against refreshed topology and quality indexes. No providers, workers, consent, authorization, password verification or data-lifecycle behavior changed; coordinated host rebuild is documented and 85 HTTP/Swagger cases passed.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:32.2629507Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:28.9137647Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1057,17 +1061,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f0fd2b5fb7de7489945cc279dd70c64319f6d52f6400ba8b2dfc956737951db6"
+          "sha256": "623ddf15036311763520ea40dcefc667bbe4d1c0bbb7c0931e922627e3f022a9"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4e88cd21552c772a60c63d020ecdda46fd1d11ca94db2b45161b242ed63b27df"
+          "sha256": "3647c12ef2e1dec32d64554af93931116a0576b1aa3f3f7af4f808cf04f147f0"
         }
       ],
-      "reason": "Traced photo recognition through AiFoodService, facades, meal/product dialogs, StartFoodRecognition handler, store, processor and existing AI commands. Generated frontend links were verified in current source; the tracing workflow and its static-evidence limitations remain accurate.",
+      "reason": "Reviewed current workflows and regenerated source indexes. This change adds no frontend, HTTP shape, provider, worker, privacy or authentication behavior; 80 HTTP/Swagger cases passed. Their tracing and risk-review instructions remain applicable unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:56.5564888Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T15:48:33.2772474Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1105,18 +1109,14 @@
       "pageSha256": "5a76c906b2df2376fbdf59ad6c1f5eead5e7056deda2e4eaa69a24f00491cca0",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
-        },
-        {
           "path": "AGENTS.md",
-          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
+          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:11.3818829Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:19.2553877Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1159,13 +1159,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f0fd2b5fb7de7489945cc279dd70c64319f6d52f6400ba8b2dfc956737951db6"
+          "sha256": "623ddf15036311763520ea40dcefc667bbe4d1c0bbb7c0931e922627e3f022a9"
         }
       ],
-      "reason": "Reviewed recognitionSelected event consumers, controlled image selection, optional recognition response metadata, loading/reset behavior and both locales. Frontend build, scoped ESLint, i18n and 35 focused tests pass. Existing contract-review guidance remains applicable; static index references are not treated as rendered coverage.",
+      "reason": "Reviewed current workflows and regenerated source indexes. This change adds no frontend, HTTP shape, provider, worker, privacy or authentication behavior; 80 HTTP/Swagger cases passed. Their tracing and risk-review instructions remain applicable unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:11:47.1557080Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T15:48:33.7236833Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1174,13 +1174,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "47515eb1cf44176216d4eb84dccde874f750fd08b8ef55e60025beaff5359eaa"
+          "sha256": "dd65827cc3ba14338447ab908126e5e406a7c09c99783db589f65cdd770bcc51"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
         }
       ],
-      "reason": "Reviewed Fasting and Billing adoption of ADR 0031: six typed User Cascade FKs move to central composition, same-owner relationships and Billing SetNull remain local. No query, transaction, payment execution, webhook, API, schema, credential, logging or retention changes. Fifteen compiled model guards and relational snapshot equivalence pass in 33 focused architecture tests; 3 PostgreSQL Fasting/Billing persistence scenarios pass. Existing four-module uncommitted batch is preserved. Scoped guides and scalar-persistence-boundaries.md explain ownership and compatibility.",
+      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
       "baseRef": "HEAD",
-      "gitHead": "05e3b57dac1933461f982eb873bb938427385200",
-      "reviewedAtUtc": "2026-09-11T23:32:30.9881464Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:19.7566622Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1188,14 +1192,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7681a5a62b98792fd79fb5332b30b12f07309762d71256148308b781e7386c83"
+          "path": "AGENTS.md",
+          "sha256": "0184e7e861d0c8c5bad7b3a15a4b8b17e1e9fb4c06f80dfff20f4134f2446561"
         }
       ],
-      "reason": "Reviewed no-match trace branch, batch/frontend query normalization, PowerShell test navigation and strict retrieval eval contracts. Trace/test-plan/evals documentation updated. Dispatch, review routing, contract ownership and runtime/privacy query semantics are unchanged; generated index deltas reflect tool code.",
+      "reason": "Reviewed these pages against the new Cycles scalar guide and module-map entry. Navigation, source authority, query and change-policy workflows remain unchanged; new ownership is documented in application-domain-boundaries.md.",
       "baseRef": "HEAD",
-      "gitHead": "26a9274bf95a849c9f0278f95246a48bc2a6059f",
-      "reviewedAtUtc": "2026-09-10T08:36:18.4677542Z"
+      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
+      "reviewedAtUtc": "2026-09-12T16:19:20.1768015Z"
     }
   ]
 }

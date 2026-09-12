@@ -3,9 +3,10 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class RetiredDomainAssemblyTests {
     [Theory]
+    [InlineData(typeof(FoodDiary.Domain.Enums.RoleNames), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/Enums", "FoodDiary.Domain.Enums")]
     [InlineData(typeof(FoodDiary.Domain.Enums.MeasurementUnit), "FoodDiary.Modules.Products.Domain.Contracts", "Modules/Products/Domain.Contracts/Enums", "FoodDiary.Domain.Enums")]
-    [InlineData(typeof(FoodDiary.Domain.ValueObjects.FoodQualityScore), "FoodDiary.Modules.Products.Domain", "Modules/Products/Domain/ValueObjects", "FoodDiary.Domain.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Domain.ValueObjects.FoodQualityGrade), "FoodDiary.Modules.Products.Domain", "Modules/Products/Domain/ValueObjects", "FoodDiary.Domain.ValueObjects")]
+    [InlineData(typeof(FoodDiary.Domain.ValueObjects.FoodQualityScore), "FoodDiary.Modules.Products.FoodQuality", "Modules/Products/FoodQuality/ValueObjects", "FoodDiary.Domain.ValueObjects")]
+    [InlineData(typeof(FoodDiary.Domain.ValueObjects.FoodQualityGrade), "FoodDiary.Modules.Products.FoodQuality", "Modules/Products/FoodQuality/ValueObjects", "FoodDiary.Domain.ValueObjects")]
     [InlineData(typeof(FoodDiary.Domain.ValueObjects.HealthAreaScore), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Domain.ValueObjects")]
     [InlineData(typeof(FoodDiary.Domain.ValueObjects.HealthAreaGrade), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Domain.ValueObjects")]
     [InlineData(typeof(FoodDiary.Domain.ValueObjects.HealthAreaScores), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Domain.ValueObjects")]

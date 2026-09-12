@@ -164,3 +164,17 @@ Images, Cycles, BodyMetrics and Wearables also use scalar persistence boundaries
 ContentReports, Lessons, Gamification and Notifications also use central typed relationship composers for five User Cascade FKs. Their thirteen-model guardrail includes these four PersistenceModel assemblies; keep all owned mappings and same-owner relationships local.
 
 Fasting and Billing extend the scalar boundary to fifteen models. Their six User Cascade FKs are configured in central typed composers. Preserve Billing payment-to-subscription SetNull and all same-owner Fasting mappings locally.
+
+Admin and Identity extend the scalar boundary to seventeen models. Central AdminCrossModuleRelationships preserves both impersonation Restrict FKs; IdentityCrossModuleRelationships preserves login-event and refresh-session Cascade FKs.
+
+RecipeCommunity extends the scalar model guard to eighteen assemblies. RecipeCommunityCrossModuleRelationships owns its three existing User/Recipe Cascade FKs. Keep the absent RecipeLike-to-Recipe FK unchanged; central Infrastructure references RecipeCommunity.Domain explicitly.
+
+Dietologist extends scalar model protection to nineteen assemblies. Its ten User FKs are configured by DietologistCrossModuleRelationships, preserving seven Cascade, two Restrict and one optional SetNull relationship. Existing Dietologist.Domain reference suffices.
+
+Users extends scalar model protection to twenty assemblies. UsersCrossModuleRelationships owns its optional profile-image ClientNoAction FK. Existing Users.Domain and Images.Domain references suffice; preserve ADR 0032 and caller-owned profile unlinking before image purge.
+
+Favorites and MealPlanning extend scalar model protection to twenty-two assemblies. Central typed composers preserve six Favorites Cascade FKs and four MealPlanning relationships: optional MealPlan User Cascade, MealPlanMeal Recipe Restrict, ShoppingList User Cascade, and optional ShoppingListItem Product SetNull. Same-owner mappings, indexes, converters and source provenance stay local. Central Infrastructure references Products.Domain explicitly; no schema or API change is intended.
+
+Products extends the scalar persistence boundary to twenty-three models. Its three foreign FKs live in central ProductsCrossModuleRelationships: optional ImageAsset ClientNoAction, optional UsdaFood SetNull and the unchanged conventional User relationship. The owner model uses ID-only Images.Contracts and Users.Domain.Contracts; UsdaFdcId needs no foreign contract. Central Infrastructure references Usda.Domain directly. Preserve indexes, converters, xmin and ADR 0032 image integrity; no schema or API change is intended.
+
+Recipes and Meals extend scalar persistence protection to twenty-five models. Their ten foreign FKs live in RecipesCrossModuleRelationships and MealsCrossModuleRelationships; all optionality and delete policies remain unchanged, including four image ClientNoAction mappings. Owned nested Recipe Restrict and Meal/Ai cascades stay local. Recognition receipts retain their User Cascade FK and deliberately have no Meal FK. The models consume direct ID contracts; existing central Domain references suffice. No module PersistenceModel retains a foreign Domain project reference.

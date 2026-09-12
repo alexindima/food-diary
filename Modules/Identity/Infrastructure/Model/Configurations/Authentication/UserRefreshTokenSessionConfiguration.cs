@@ -44,10 +44,5 @@ internal sealed class UserRefreshTokenSessionConfiguration : IEntityTypeConfigur
         builder.HasIndex(e => e.UserId);
         builder.HasIndex(e => e.RevokedAtUtc);
         builder.HasIndex(e => e.LastRotatedAtUtc);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

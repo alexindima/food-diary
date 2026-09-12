@@ -1,10 +1,11 @@
 @let itemView = item();
+@let title = itemView.title ?? ('ATTENTION.UNNAMED_CLIENT' | translate);
 
 <fd-ui-card
     class="dietologist-clients__card"
     role="button"
     tabindex="0"
-    [attr.aria-label]="itemView.title"
+    [attr.aria-label]="title"
     (click)="openClient()"
     (keydown.enter)="openClient()"
     (keydown.space)="$event.preventDefault(); openClient()"
@@ -15,13 +16,13 @@
             [class.dietologist-clients__avatar--image]="!!itemView.client.profileImage"
         >
             @if (itemView.client.profileImage) {
-                <img width="64" height="64" [ngSrc]="itemView.client.profileImage" [alt]="itemView.title" />
+                <img width="64" height="64" [ngSrc]="itemView.client.profileImage" [alt]="title" />
             } @else {
                 <span>{{ itemView.initials }}</span>
             }
         </div>
         <div class="dietologist-clients__info fd-stack fd-gap-xxs">
-            <span class="dietologist-clients__name fd-ui-action-text">{{ itemView.title }}</span>
+            <span class="dietologist-clients__name fd-ui-action-text">{{ title }}</span>
             <span class="dietologist-clients__email fd-ui-caption">{{ itemView.client.email }}</span>
             @if (itemView.client.permissions.shareProfile) {
                 <div class="dietologist-clients__meta fd-row fd-wrap fd-gap-xs">

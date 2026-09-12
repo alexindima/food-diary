@@ -40,4 +40,9 @@ public sealed class TestEmailSender : IEmailSender {
         _passwordResetMessages.Clear();
         _emailVerificationMessages.Clear();
     }
+
+    public string GetRequiredEmailVerificationToken(string email) =>
+        _emailVerificationMessages.TryGetValue(email, out EmailVerificationMessage? message)
+            ? message.Token
+            : throw new InvalidOperationException("Email verification was not captured.");
 }

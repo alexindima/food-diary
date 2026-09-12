@@ -8,7 +8,10 @@ internal static class BotUriHelper {
             return false;
         }
 
-        if (!Uri.TryCreate(rawBaseUrl.Trim(), UriKind.Absolute, out Uri? parsed)) {
+        if (!Uri.TryCreate(rawBaseUrl.Trim(), UriKind.Absolute, out Uri? parsed) ||
+            (!string.Equals(parsed.Scheme, Uri.UriSchemeHttp, StringComparison.Ordinal) &&
+             !string.Equals(parsed.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal)) ||
+            parsed.UserInfo.Length != 0 || parsed.Query.Length != 0 || parsed.Fragment.Length != 0) {
             return false;
         }
 

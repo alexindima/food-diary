@@ -30,8 +30,8 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
         if (!string.IsNullOrWhiteSpace(search)) {
             string term = $"%{EscapeLikePattern(search)}%";
             query = query.Where(item =>
-                EF.Functions.ILike(item.actor.Email, term, LikeEscapeCharacter) ||
-                EF.Functions.ILike(item.target.Email, term, LikeEscapeCharacter) ||
+                (item.actor.Email != null && EF.Functions.ILike(item.actor.Email, term, LikeEscapeCharacter)) ||
+                (item.target.Email != null && EF.Functions.ILike(item.target.Email, term, LikeEscapeCharacter)) ||
                 EF.Functions.ILike(item.session.Reason, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.session.ActorIpAddress ?? string.Empty, term, LikeEscapeCharacter));
         }

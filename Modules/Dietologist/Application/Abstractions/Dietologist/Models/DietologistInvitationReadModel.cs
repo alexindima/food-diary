@@ -7,7 +7,7 @@ public sealed record DietologistInvitationReadModel(
     Guid ClientUserId,
     Guid? DietologistUserId,
     string DietologistEmail,
-    string ClientEmail,
+    string? ClientEmail,
     string? ClientFirstName,
     string? ClientLastName,
     string? ClientProfileImage,

@@ -1,6 +1,4 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -26,10 +24,6 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
 
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId);
-
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
         builder.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
         builder.HasIndex(e => e.Name)
@@ -48,10 +42,5 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
         builder.Metadata.FindNavigation(nameof(Recipe.NestedRecipeUsages))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasOne<ImageAsset>()
-            .WithMany()
-            .HasForeignKey(e => e.ImageAssetId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

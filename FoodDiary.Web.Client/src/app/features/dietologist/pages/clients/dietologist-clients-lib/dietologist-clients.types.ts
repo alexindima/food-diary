@@ -2,7 +2,7 @@ import type { ClientSummary } from '../../../../../shared/models/dietologist.dat
 
 export type ClientCardViewModel = {
     client: ClientSummary;
-    title: string;
+    title: string | null;
     initials: string;
     connectedDateLabel: string;
 };

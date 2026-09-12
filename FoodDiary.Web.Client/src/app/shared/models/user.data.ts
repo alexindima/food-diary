@@ -11,9 +11,11 @@ export type DashboardLayoutSettings = {
 
 export type User = {
     id: string;
-    email: string;
+    email: string | null;
     hasPassword: boolean;
     hasGoogleIdentity?: boolean;
+    hasTelegramIdentity?: boolean;
+    timeZoneId?: string | null;
     mustChangePassword?: boolean;
     username?: string;
     firstName?: string;
@@ -53,6 +55,7 @@ export type User = {
 };
 
 export type UpdateUserFormValues = {
+    timeZoneId?: string | null;
     username: string | null;
     firstName: string | null;
     lastName: string | null;
@@ -72,6 +75,7 @@ export type UpdateUserFormValues = {
 };
 
 export class UpdateUserDto {
+    public timeZoneId?: string;
     public username?: string;
     public firstName?: string;
     public lastName?: string;
@@ -93,6 +97,7 @@ export class UpdateUserDto {
     public isActive?: boolean;
 
     public constructor(formValues: Partial<UpdateUserFormValues>) {
+        this.timeZoneId = normalizeString(formValues.timeZoneId);
         this.username = normalizeString(formValues.username);
         this.firstName = normalizeString(formValues.firstName);
         this.lastName = normalizeString(formValues.lastName);

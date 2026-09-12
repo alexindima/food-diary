@@ -1,9 +1,9 @@
 # Cycles Domain Guidelines
 
-- Own Cycles aggregates, entities, enums, and strongly typed IDs while preserving legacy CLR namespaces and EF identity.
+- Own Cycles aggregates, entities, and strongly typed IDs while preserving legacy CLR namespaces and EF identity.
 - Reference Users Domain.Contracts for UserId and shared Primitives for generic guards.
 - Do not reference Application, Infrastructure, EF Core, or transport.
-- Own BleedingType, CycleSymptomCategory, and OvulationTestResult in Enums with their existing FoodDiary.Domain.Enums namespaces, names, and numeric values. Consumer projects reference this owner directly; central Domain must not reference Cycles Domain.
+- Consume cycle enums through Cycles Domain.Contracts. Preserve their namespaces, names and numeric values; aggregate and ID ownership remains here.
 
 User ownership: reference Users Domain.Contracts for UserId and shared user values. Keep foreign keys scalar; foreign aggregate CLR navigations are prohibited. PersistenceModel preserves the relational constraints with typed HasOne<T>() mappings.
 

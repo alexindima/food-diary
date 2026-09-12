@@ -21,12 +21,12 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
         Result<UserAuthenticationPrincipalModel> password = await CreateUserAuthenticationIdentityService(
                 new StubUserRepository(passwordUser))
-            .AuthenticatePasswordAsync(passwordUser.Email, "secret", IdentityCoverageNow, CancellationToken.None);
+            .AuthenticatePasswordAsync(Assert.IsType<string>(passwordUser.Email), "secret", IdentityCoverageNow, CancellationToken.None);
         Result<UserAuthenticationPrincipalModel> google = await CreateUserAuthenticationIdentityService(
                 new StubUserRepository(googleUser))
             .AuthenticateGoogleAsync(
                 new UserGoogleAuthenticationModel(
-                    GoogleIssuer, GoogleSubject, googleUser.Email, FirstName: null, LastName: null, Locale: null),
+                    GoogleIssuer, GoogleSubject, Assert.IsType<string>(googleUser.Email), FirstName: null, LastName: null, Locale: null),
                 IdentityCoverageNow,
                 CancellationToken.None);
         Result<UserAuthenticationPrincipalModel> principal = await CreateUserAuthenticationIdentityService(

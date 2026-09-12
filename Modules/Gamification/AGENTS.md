@@ -30,3 +30,12 @@ PersistenceModel uses Users.Domain.Contracts for UserId. Its foreign User Cascad
 relationship is composed by GamificationCrossModuleRelationships in central
 Infrastructure after owned models. Keep local mappings and same-owner relationships
 unchanged; do not restore a Users.Domain dependency to the model.
+
+Application consumes scalar Users types through Users.Domain.Contracts and semantic
+capabilities through Users.Contracts. Do not reference the aggregate-bearing
+Users.Domain assembly for these types.
+
+Scalar types AchievementMetric belong to Domain.Contracts.
+Reference that owner directly without acquiring aggregate capabilities.
+
+AchievementDefinitionLimits owns shared length limits. AchievementDefinition retains constant aliases for compatibility; Admin validators consume the narrow limits directly.

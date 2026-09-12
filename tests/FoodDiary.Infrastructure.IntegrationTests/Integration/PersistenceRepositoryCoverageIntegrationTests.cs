@@ -929,6 +929,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task AssertUserLookupRepositoryAsync(UserRepository repository, User active, User deleted) {
+        Assert.NotNull(active.Email);
+        Assert.NotNull(deleted.Email);
         Assert.NotNull(await repository.GetByEmailAsync(active.Email));
         Assert.NotNull(await repository.GetByEmailIncludingDeletedAsync(deleted.Email));
         Assert.NotNull(await repository.GetByGoogleIdentityIncludingDeletedAsync("https://accounts.google.com", "active-google-subject"));
@@ -1735,7 +1737,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         UserId userId,
         FastingPlanId planId,
         DateTime now) {
-        var occurrenceRepository = new FastingOccurrenceRepository(context);
+        var occurrenceRepository = new FastingOccurrenceRepository(context, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
         var active = FastingOccurrence.Create(planId, userId, FastingOccurrenceKind.FastingWindow, now.AddHours(-4), 1, targetHours: 16);
         var scheduled = FastingOccurrence.Schedule(planId, userId, FastingOccurrenceKind.EatingWindow, now.AddHours(20), 2, targetHours: 8);
         await occurrenceRepository.AddAsync(active);

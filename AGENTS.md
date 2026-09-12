@@ -119,6 +119,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Products contracts: `Modules/Products/Contracts/AGENTS.md`
 - Products domain contracts: `Modules/Products/Domain.Contracts/AGENTS.md`
 - Products domain: `Modules/Products/Domain/AGENTS.md`
+- Products food quality: `Modules/Products/FoodQuality/AGENTS.md`
 - Products infrastructure: `Modules/Products/Infrastructure/AGENTS.md`
 - Products persistence model: `Modules/Products/Infrastructure/Model/AGENTS.md`
 - Products tests: `Modules/Products/tests/AGENTS.md`
@@ -393,3 +394,11 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
   `{{resolve:secretsmanager:secret-id:SecretString:json-key}}` with
   `asm-exec` so the secret resolves at runtime without entering context.
 <!-- END AWS Agent Toolkit rules -->
+
+- Billing scalar domain contracts: `Modules/Billing/Domain.Contracts/AGENTS.md`
+
+- ContentReports scalar domain contracts: `Modules/ContentReports/Domain.Contracts/AGENTS.md`
+
+- Gamification scalar domain contracts: `Modules/Gamification/Domain.Contracts/AGENTS.md`
+
+- Cycles scalar domain contracts: `Modules/Cycles/Domain.Contracts/AGENTS.md`

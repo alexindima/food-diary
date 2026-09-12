@@ -2,7 +2,7 @@ namespace FoodDiary.Application.Dietologist.Models;
 
 public sealed record ClientSummaryModel(
     Guid UserId,
-    string Email,
+    string? Email,
     string? FirstName,
     string? LastName,
     string? ProfileImage,

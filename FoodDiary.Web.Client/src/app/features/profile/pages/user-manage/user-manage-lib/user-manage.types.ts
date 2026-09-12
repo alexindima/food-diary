@@ -6,6 +6,7 @@ import type { AppThemeName } from '../../../../../theme/app-theme.config';
 import type { BillingOverview } from '../../../../premium/models/billing.models';
 
 export type UserFormValues = {
+    timeZoneId: string | null;
     username: string | null;
     firstName: string | null;
     lastName: string | null;
@@ -22,7 +23,10 @@ export type UserFormValues = {
 };
 
 export type UserManageAccountFormPatch = Partial<
-    Pick<UserFormValues, 'username' | 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'language' | 'theme' | 'uiStyle' | 'profileImage'>
+    Pick<
+        UserFormValues,
+        'username' | 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'language' | 'theme' | 'uiStyle' | 'profileImage' | 'timeZoneId'
+    >
 >;
 
 export type UserManageBodyFormPatch = Partial<Pick<UserFormValues, 'heightCm' | 'activityLevel'>>;

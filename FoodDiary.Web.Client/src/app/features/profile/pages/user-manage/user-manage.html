@@ -36,13 +36,19 @@
                     [currentWaist]="currentWaist()"
                     (userFormPatch)="onUserFormPatch($event)"
                 >
+                    <fd-user-manage-backup-email profileSecurity />
                     <fd-user-manage-security-card
                         profileSecurity
                         data-tour-id="user-manage-security"
                         [email]="accountEmail()"
                         [hasGoogleIdentity]="hasGoogleIdentity()"
+                        [hasTelegramIdentity]="hasTelegramIdentity()"
+                        [canUnlinkTelegram]="canUnlinkTelegram()"
+                        [isUnlinkingTelegram]="isUnlinkingTelegram()"
                         [isLinkingGoogle]="isLinkingGoogle()"
                         [passwordActionState]="passwordActionState()"
+                        [canUsePassword]="canUsePassword()"
+                        (telegramUnlink)="unlinkTelegram()"
                         (googleCredential)="linkGoogle($event)"
                         (passwordChange)="openChangePasswordDialog()"
                     />

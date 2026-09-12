@@ -12,6 +12,7 @@ type AuthServiceMock = {
     getToken: ReturnType<typeof vi.fn>;
     isAuthenticated: ReturnType<typeof signal>;
     isEmailConfirmed: ReturnType<typeof signal>;
+    requiresEmailVerification: () => boolean;
     mustChangePassword: ReturnType<typeof signal>;
     ensureSessionReadyAsync: ReturnType<typeof vi.fn>;
 };
@@ -43,6 +44,7 @@ describe('authGuard', () => {
             getToken: vi.fn(),
             isAuthenticated,
             isEmailConfirmed,
+            requiresEmailVerification: (): boolean => !isEmailConfirmed(),
             mustChangePassword,
             ensureSessionReadyAsync: vi.fn(),
         };

@@ -48,7 +48,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, Assert.IsType<string>(user.Email), "Alex", "User", "en")),
             new StubDateTimeProvider(),
             tokenService);
 
@@ -68,7 +68,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, Assert.IsType<string>(user.Email), "Alex", "User", "en")),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService());
 
@@ -127,7 +127,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, Assert.IsType<string>(user.Email), "Alex", "User", "en")),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService());
 
@@ -143,7 +143,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var repository = new StubUserRepository(user);
         var handler = new LinkGoogleCommandHandler(
             CreateUserAuthenticationIdentityService(repository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, Assert.IsType<string>(user.Email), "Alex", "User", "en")));
 
         Result<UserModel> result =
             await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
@@ -177,7 +177,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var repository = new StubUserRepository(user, identityOwner);
         var handler = new LinkGoogleCommandHandler(
             CreateUserAuthenticationIdentityService(repository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, Assert.IsType<string>(user.Email), "Alex", "User", "en")));
 
         Result<UserModel> result =
             await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
@@ -194,7 +194,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var repository = new StubUserRepository(user);
         var handler = new LinkGoogleCommandHandler(
             CreateUserAuthenticationIdentityService(repository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, Assert.IsType<string>(user.Email), "Alex", "User", "en")));
 
         Result<UserModel> result =
             await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);
@@ -209,7 +209,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var repository = new StubUserRepository(user);
         var handler = new LinkGoogleCommandHandler(
             CreateUserAuthenticationIdentityService(repository),
-            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, Assert.IsType<string>(user.Email), "Alex", "User", "en")));
 
         Result<UserModel> result =
             await handler.Handle(new LinkGoogleCommand(user.Id.Value, "credential"), CancellationToken.None);

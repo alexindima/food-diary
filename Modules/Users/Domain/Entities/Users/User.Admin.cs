@@ -11,8 +11,7 @@ public sealed partial class User {
             return;
         }
 
-        ApplySecurityState(securityState.AsEmailConfirmed(update.IsEmailConfirmed.Value));
-        SetModified();
+        SetEmailConfirmed(update.IsEmailConfirmed.Value);
     }
 
     public void UpdateAdminPreferences(UserAdminPreferenceUpdate update) {

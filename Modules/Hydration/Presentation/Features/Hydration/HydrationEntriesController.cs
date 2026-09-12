@@ -46,4 +46,12 @@ public sealed class HydrationEntriesController(ISender mediator, TimeProvider ti
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
         HandleNoContent(id.ToDeleteCommand(userId));
+
+    [HttpPost("operations/{operationId:guid}")]
+    [ProducesResponseType<HydrationOperationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> CreateFromOperation(Guid operationId, [FromCurrentUser] Guid userId,
+        [FromBody] CreateHydrationFromOperationHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, operationId), static value => value.ToHttpResponse());
 }

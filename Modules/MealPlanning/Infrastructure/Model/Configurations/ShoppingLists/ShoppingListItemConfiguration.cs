@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -40,12 +39,6 @@ internal sealed class ShoppingListItemConfiguration : IEntityTypeConfiguration<S
 
         builder.Property(e => e.SortOrder)
             .HasDefaultValue(0);
-
-        builder.HasOne<Product>()
-            .WithMany()
-            .HasForeignKey(e => e.ProductId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasMany(e => e.Sources)
             .WithOne(s => s.ShoppingListItem)

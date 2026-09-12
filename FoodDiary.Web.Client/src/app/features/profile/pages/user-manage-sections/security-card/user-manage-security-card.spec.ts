@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../../../environments/environment';
@@ -50,16 +51,25 @@ describe('UserManageSecurityCardComponent', () => {
         const emitted = vi.fn();
         fixture.componentInstance.passwordChange.subscribe(emitted);
 
-        const button = (fixture.nativeElement as HTMLElement).querySelector('button');
+        const button = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button')).find(candidate =>
+            candidate.textContent.includes('USER_MANAGE.CHANGE_PASSWORD'),
+        );
         button?.click();
 
         expect(emitted).toHaveBeenCalledOnce();
     });
 
+    it('does not offer password setup before a confirmed email exists', async () => {
+        const fixture = await createFixtureAsync(false);
+        fixture.componentRef.setInput('canUsePassword', false);
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-user-manage-password-method button')).toBeNull();
+    });
+
     async function createFixtureAsync(hasGoogleIdentity: boolean): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
         await TestBed.configureTestingModule({
             imports: [UserManageSecurityCardComponent],
-            providers: [provideTranslateTesting(), { provide: GoogleIdentityService, useValue: googleIdentityService }],
+            providers: [provideTranslateTesting(), provideRouter([]), { provide: GoogleIdentityService, useValue: googleIdentityService }],
         }).compileComponents();
 
         const fixture = TestBed.createComponent(UserManageSecurityCardComponent);

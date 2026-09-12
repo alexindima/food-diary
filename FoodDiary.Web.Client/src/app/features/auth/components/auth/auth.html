@@ -10,6 +10,9 @@
     </p>
 
     <div class="auth__content fd-stack fd-gap-md">
+        @if (!hideTelegram()) {
+            <fd-telegram-entry-button (selected)="openTelegram()" />
+        }
         @if (authMode === 'login') {
             @if (showPasswordReset()) {
                 <fd-auth-password-reset-form

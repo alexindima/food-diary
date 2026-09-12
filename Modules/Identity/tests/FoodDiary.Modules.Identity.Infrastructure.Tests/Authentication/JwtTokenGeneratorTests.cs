@@ -12,12 +12,31 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Authentication;
 [ExcludeFromCodeCoverage]
 public sealed class JwtTokenGeneratorTests {
     [Fact]
+    public void TelegramOnlyTokens_OmitEmailAndPreserveRefreshIdentity() {
+        var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
+        var userId = UserId.New();
+        var sessionId = Guid.NewGuid();
+
+        string access = generator.GenerateAccessToken(userId, email: null, ["Premium"]);
+        string refresh = generator.GenerateRefreshToken(userId, email: null, [], refreshSessionId: sessionId);
+        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(refresh);
+
+        Assert.DoesNotContain(new JwtSecurityTokenHandler().ReadJwtToken(access).Claims,
+            claim => string.Equals(claim.Type, ClaimTypes.Email, StringComparison.Ordinal));
+        Assert.NotNull(validated);
+        Assert.Equal(userId, validated.Value.userId);
+        Assert.Null(validated.Value.email);
+        Assert.Equal(sessionId, validated.Value.refreshSessionId);
+        Assert.Null(generator.ValidateToken(access));
+    }
+
+    [Fact]
     public void ValidateToken_WithAccessToken_ReturnsNull() {
         var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
         var userId = UserId.New();
 
         string token = generator.GenerateAccessToken(userId, "user@example.com", ["Admin"]);
-        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
+        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
 
         Assert.Null(validated);
     }
@@ -26,7 +45,7 @@ public sealed class JwtTokenGeneratorTests {
     public void ValidateToken_WithInvalidToken_ReturnsNull() {
         var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
 
-        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken("not-a-jwt-token");
+        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken("not-a-jwt-token");
 
         Assert.Null(validated);
     }
@@ -86,7 +105,7 @@ public sealed class JwtTokenGeneratorTests {
 
         string token = generator.GenerateRefreshToken(userId, "remember@example.com", [], rememberMe: true);
         JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
+        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
 
         Assert.Equal(now.AddDays(90), jwt.ValidTo);
         Assert.NotNull(validated);

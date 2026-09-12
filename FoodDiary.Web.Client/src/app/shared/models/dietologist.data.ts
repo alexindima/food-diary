@@ -11,7 +11,7 @@ export type DietologistPermissions = {
 
 export type ClientSummary = {
     userId: string;
-    email: string;
+    email: string | null;
     firstName: string | null;
     lastName: string | null;
     profileImage: string | null;
@@ -25,7 +25,7 @@ export type ClientSummary = {
 
 export type DietologistClientGoals = {
     id: string;
-    email: string;
+    email: string | null;
     dailyCalorieTarget?: number | null;
     proteinTarget?: number | null;
     fatTarget?: number | null;
@@ -59,7 +59,7 @@ export type RecommendationComment = {
     authorUserId: string;
     authorFirstName: string | null;
     authorLastName: string | null;
-    authorEmail: string;
+    authorEmail: string | null;
     text: string;
     createdAtUtc: string;
 };
@@ -119,7 +119,7 @@ export type BulkRecommendationResult = {
 export type AttentionSignal = {
     id: string;
     clientUserId: string;
-    clientDisplayName: string;
+    clientDisplayName: string | null;
     type: 'DiaryInactivity' | 'CalorieTargetDeviation' | 'MaterialWeightChange';
     severity: 'High' | 'Medium' | 'Low';
     reason: 'NoRecentDiaryEntries' | 'InsufficientDiaryData' | 'SustainedCalorieTargetDeviation' | 'MaterialWeightChange';
@@ -138,7 +138,7 @@ export type AttentionSignalSettings = {
 export type DietologistRelationship = {
     invitationId: string;
     status: string;
-    email: string;
+    email: string | null;
     firstName: string | null;
     lastName: string | null;
     dietologistUserId: string | null;
@@ -151,7 +151,7 @@ export type DietologistRelationship = {
 export type DietologistInvitationForCurrentUser = {
     invitationId: string;
     clientUserId: string;
-    clientEmail: string;
+    clientEmail: string | null;
     clientFirstName: string | null;
     clientLastName: string | null;
     status: string;

@@ -8,6 +8,7 @@
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Gamification.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />
+    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Gamification.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />

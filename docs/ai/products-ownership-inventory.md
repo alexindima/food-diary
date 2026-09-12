@@ -2,6 +2,10 @@
 
 Source audit base: `47d0dd4d3698a4729d3cb117ea74824793698096`.
 
+Current scoring ownership is superseded by the 2026-09-12 amendment to ADR 0027:
+FoodQualityScore and FoodQualityGrade live in Products/FoodQuality; MeasurementUnit
+lives in Products Domain.Contracts. See [role and quality boundaries](role-quality-boundaries.md).
+
 | Responsibility | Physical owner and compatibility boundary |
 | --- | --- |
 | 52 application source files: Create/Update/Delete/Duplicate, GetById/GetProducts/Overview/Recent/Suggestions, validation, mappings, image resolution and USDA linking | `Modules/Products/Application`; preserve `FoodDiary.Application.Products` assembly name and CLR namespaces |

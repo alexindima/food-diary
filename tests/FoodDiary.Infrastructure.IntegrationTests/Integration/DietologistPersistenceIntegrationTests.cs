@@ -76,6 +76,7 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
         await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
         FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        Assert.NotNull(dietologist.Email);
         var invitation = DietologistInvitation.Create(
             client.Id, dietologist.Email, "token-hash", DateTime.UtcNow.AddDays(1), DietologistPermissions.AllEnabled);
         context.DietologistInvitations.Add(invitation);

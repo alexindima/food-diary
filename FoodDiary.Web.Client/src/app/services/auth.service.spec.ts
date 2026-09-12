@@ -235,6 +235,31 @@ describe('login', () => {
         req.flush(responseUnconfirmed);
 
         expect(service.isEmailConfirmed()).toBe(false);
+        expect(service.requiresEmailVerification()).toBe(true);
+    });
+});
+
+describe('Telegram-only session policy', () => {
+    it('allows a session without pretending its email was verified, including restoration', () => {
+        const token = createFakeJwt({ nameid: 'telegram-user', fd_email_optional: 'true' });
+        service.login(loginRequest).subscribe();
+        httpMock.expectOne(`${authBaseUrl}/login`).flush({
+            ...loginAuthResponse,
+            accessToken: token,
+            user: { ...loginAuthResponse.user, id: 'telegram-user', email: null, isEmailConfirmed: false, hasTelegramIdentity: true },
+        });
+
+        expect(service.isEmailConfirmed()).toBe(false);
+        expect(service.requiresEmailVerification()).toBe(false);
+        service.initializeAuth();
+        expect(service.requiresEmailVerification()).toBe(false);
+
+        service.login(loginRequest).subscribe();
+        httpMock.expectOne(`${authBaseUrl}/login`).flush({
+            ...loginAuthResponse,
+            user: { ...loginAuthResponse.user, isEmailConfirmed: false },
+        });
+        expect(service.requiresEmailVerification()).toBe(true);
     });
 });
 

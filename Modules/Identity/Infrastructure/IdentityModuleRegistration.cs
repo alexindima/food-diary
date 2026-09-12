@@ -7,12 +7,17 @@ using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.Infrastructure;
 
 public static class IdentityModuleRegistration {
     public static IServiceCollection AddIdentityPersistence(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, IdentityUserDataPurgeParticipant>());
+        services.AddDataProtection();
         services.AddScoped<ITelegramAssertionReplayGuard, TelegramAssertionReplayGuard>();
+        services.AddScoped<ITelegramLoginTicketStore, TelegramLoginTicketStore>();
+        services.AddScoped<ITelegramOperationStore, TelegramOperationStore>();
         services.AddScoped<IUserLoginEventRepository, UserLoginEventRepository>();
         services.AddScoped<IUserLoginEventReadRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());
         services.AddScoped<IUserLoginEventWriteRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());

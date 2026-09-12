@@ -257,14 +257,14 @@ public class AuthenticationTokenServiceTests {
     [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator : IJwtTokenGenerator {
         public UserId LastAccessUserId { get; private set; }
-        public string LastAccessEmail { get; private set; } = string.Empty;
+        public string? LastAccessEmail { get; private set; }
         public IReadOnlyCollection<string> LastAccessRoles { get; private set; } = [];
         public DateTime? LastAccessExpiresAtUtc { get; private set; }
         public Guid? LastAccessRefreshSessionId { get; private set; }
         public bool LastRefreshRememberMe { get; private set; }
         public Guid? LastRefreshSessionId { get; private set; }
 
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) {
+        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, long securityVersion = 0) {
             LastAccessUserId = userId;
             LastAccessEmail = email;
             LastAccessRoles = roles.ToArray();
@@ -274,7 +274,7 @@ public class AuthenticationTokenServiceTests {
 
         public string GenerateAccessToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             DateTime? expiresAtUtc,
             long securityVersion = 0) {
@@ -287,7 +287,7 @@ public class AuthenticationTokenServiceTests {
 
         public string GenerateAccessToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             DateTime? expiresAtUtc,
             long securityVersion,
@@ -302,7 +302,7 @@ public class AuthenticationTokenServiceTests {
 
         public string GenerateAccessToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             JwtImpersonationContext impersonation,
             long securityVersion = 0) {
@@ -314,7 +314,7 @@ public class AuthenticationTokenServiceTests {
 
         public string GenerateRefreshToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             bool rememberMe = false,
             Guid? refreshSessionId = null) {
@@ -323,7 +323,7 @@ public class AuthenticationTokenServiceTests {
             return "refresh-token";
         }
 
-        public (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
+        public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
     }
 
     [ExcludeFromCodeCoverage]

@@ -16,7 +16,7 @@ export const authGuard: CanActivateFn = async (_route, state) => {
             await navigationService.navigateToRequiredPasswordChangeAsync();
             return false;
         }
-        if (!authService.isEmailConfirmed()) {
+        if (authService.requiresEmailVerification()) {
             await navigationService.navigateToEmailVerificationPendingAsync();
             return false;
         }

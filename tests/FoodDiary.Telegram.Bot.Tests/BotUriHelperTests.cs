@@ -16,6 +16,10 @@ public sealed class BotUriHelperTests {
     [InlineData(null)]
     [InlineData("")]
     [InlineData("not-url")]
+    [InlineData("file:///tmp/data")]
+    [InlineData("https://user:password@api.example.com")]
+    [InlineData("https://api.example.com?secret=value")]
+    [InlineData("https://api.example.com#fragment")]
     public void TryCreateApiBaseUri_WithInvalidUrl_ReturnsFalse(string? input) {
         bool ok = BotUriHelper.TryCreateApiBaseUri(input, out Uri? uri);
 

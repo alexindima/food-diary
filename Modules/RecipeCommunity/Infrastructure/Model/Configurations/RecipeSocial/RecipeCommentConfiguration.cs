@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -23,15 +22,5 @@ internal sealed class RecipeCommentConfiguration : IEntityTypeConfiguration<Reci
         builder.Property(e => e.Text).HasMaxLength(2000).IsRequired();
 
         builder.HasIndex(e => new { e.RecipeId, e.CreatedOnUtc });
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne<Recipe>()
-            .WithMany()
-            .HasForeignKey(e => e.RecipeId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

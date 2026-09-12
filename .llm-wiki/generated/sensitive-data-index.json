@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1422,
-    "credential": 152,
-    "identity": 156,
-    "health": 674,
+    "candidateFields": 1452,
+    "credential": 155,
+    "identity": 173,
+    "health": 683,
     "financial": 124,
-    "privateContent": 316,
-    "boundaryFiles": 170,
+    "privateContent": 317,
+    "boundaryFiles": 192,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -68,6 +68,20 @@
     },
     {
       "category": "credential",
+      "name": "AccessToken",
+      "type": "string",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "line": 162
+    },
+    {
+      "category": "credential",
+      "name": "Token",
+      "type": "require",
+      "path": "FoodDiary.Telegram.Bot/Program.cs",
+      "line": 18
+    },
+    {
+      "category": "credential",
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
@@ -85,7 +99,7 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 263
+      "line": 353
     },
     {
       "category": "credential",
@@ -481,6 +495,13 @@
     },
     {
       "category": "credential",
+      "name": "ClientSecret",
+      "type": "string",
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramOidcOptions.cs",
+      "line": 8
+    },
+    {
+      "category": "credential",
       "name": "Token",
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
@@ -666,7 +687,7 @@
       "name": "PasswordResetSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
-      "line": 91
+      "line": 105
     },
     {
       "category": "credential",
@@ -722,21 +743,21 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 358
+      "line": 375
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 364
+      "line": 381
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 366
+      "line": 383
     },
     {
       "category": "credential",
@@ -1955,6 +1976,41 @@
       "type": "MarketingAttributionCleanup,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
       "line": 34
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "AverageCaloriesPerCalendarDay",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatisticsDay.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "decimal",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "NutritionErrorCode",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionJob.cs",
+      "line": 3
     },
     {
       "category": "health",
@@ -4891,6 +4947,13 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Statistics/Application/Models/DiaryStatisticsDayModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
       "name": "Nutrition",
       "type": "IReadOnlyList<AggregatedStatisticsModel>",
       "path": "Modules/Statistics/Application/Models/StatisticsSummaryModel.cs",
@@ -4944,6 +5007,27 @@
       "type": "double",
       "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
       "line": 18
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/DiaryStatisticsDayHttpResponse.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/DiaryStatisticsSummaryHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "AverageCaloriesPerCalendarDay",
+      "type": "double",
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/DiaryStatisticsSummaryHttpResponse.cs",
+      "line": 5
     },
     {
       "category": "health",
@@ -5839,98 +5923,98 @@
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 223
+      "line": 240
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 225
+      "line": 242
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 227
+      "line": 244
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 240
+      "line": 257
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 242
+      "line": 259
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 244
+      "line": 261
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 246
+      "line": 263
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 248
+      "line": 265
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 283
+      "line": 300
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 295
+      "line": 312
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 297
+      "line": 314
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 299
+      "line": 316
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 307
+      "line": 324
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 309
+      "line": 326
     },
     {
       "category": "health",
@@ -6676,29 +6760,36 @@
     },
     {
       "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotIncomingOperation.cs",
+      "line": 3
+    },
+    {
+      "category": "identity",
       "name": "UserEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "UserEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ActorEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "TargetEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
       "line": 8
     },
@@ -6768,21 +6859,21 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Models/AdminAiUsageUserModel.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "TargetEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Models/AdminImpersonationStartModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "UserEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Models/AdminUserLoginEventModel.cs",
       "line": 6
     },
@@ -6803,7 +6894,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
       "line": 8
     },
@@ -6859,35 +6950,35 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageUserHttpResponse.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "UserEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "UserEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ActorEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "TargetEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
       "line": 8
     },
@@ -6908,14 +6999,14 @@
     {
       "category": "identity",
       "name": "TargetEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationStartHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
       "line": 5
     },
@@ -6936,7 +7027,7 @@
     {
       "category": "identity",
       "name": "UserEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginEventHttpResponse.cs",
       "line": 6
     },
@@ -6964,7 +7055,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageUserSummary.cs",
       "line": 7
     },
@@ -6985,7 +7076,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
       "line": 7
     },
@@ -7006,7 +7097,7 @@
     {
       "category": "identity",
       "name": "ClientEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
       "line": 10
     },
@@ -7020,7 +7111,7 @@
     {
       "category": "identity",
       "name": "AuthorEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/RecommendationCommentReadModel.cs",
       "line": 9
     },
@@ -7034,21 +7125,21 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Application/Models/ClientSummaryModel.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Application/Models/DietologistInfoModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ClientEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Application/Models/DietologistInvitationForCurrentUserModel.cs",
       "line": 6
     },
@@ -7062,14 +7153,14 @@
     {
       "category": "identity",
       "name": "ClientEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Application/Models/InvitationModel.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "AuthorEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Application/Models/RecommendationCommentModel.cs",
       "line": 9
     },
@@ -7097,7 +7188,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Presentation.Contracts/Responses/DietologistRelationshipHttpResponse.cs",
       "line": 6
     },
@@ -7111,35 +7202,35 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/ClientSummaryHttpResponse.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/DietologistInfoHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ClientEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/DietologistInvitationForCurrentUserHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ClientEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/InvitationHttpResponse.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "AuthorEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Dietologist/Presentation/Features/Dietologist/Responses/RecommendationCommentHttpResponse.cs",
       "line": 9
     },
@@ -7148,6 +7239,13 @@
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
       "line": 6
     },
     {
@@ -7202,7 +7300,7 @@
     {
       "category": "identity",
       "name": "UserEmail",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
       "line": 6
     },
@@ -7250,9 +7348,23 @@
     },
     {
       "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommand.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommand.cs",
       "line": 6
     },
     {
@@ -7264,10 +7376,38 @@
     },
     {
       "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
       "name": "TelegramUserId",
       "type": "long",
       "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
+      "line": 34
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
+      "line": 63
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
+      "line": 84
     },
     {
       "category": "identity",
@@ -7299,6 +7439,13 @@
     },
     {
       "category": "identity",
+      "name": "ITelegramOperationPolicy",
+      "type": "ITelegramIdentityPolicy,",
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs",
@@ -7313,6 +7460,13 @@
     },
     {
       "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs",
+      "line": 3
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/RequestPasswordResetHttpRequest.cs",
@@ -7324,6 +7478,34 @@
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/RestoreAccountHttpRequest.cs",
       "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "EmailAddress",
+      "type": "Required,",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBackupEmailHttpRequest.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "EmailAddress",
+      "type": "Required,",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBackupEmailHttpRequest.cs",
+      "line": 7
     },
     {
       "category": "identity",
@@ -7398,7 +7580,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistRelationshipModel.cs",
       "line": 6
     },
@@ -7426,7 +7608,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
       "line": 8
     },
@@ -7454,28 +7636,28 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Contracts/Users/Models/UserAuthenticationPrincipalModel.cs",
       "line": 7
     },
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Contracts/Users/Models/UserBillingProfileModel.cs",
       "line": 7
     },
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Contracts/Users/Models/UserDashboardProfileModel.cs",
       "line": 7
     },
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Contracts/Users/Models/UserDietologistProfileModel.cs",
       "line": 5
     },
@@ -7503,7 +7685,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
       "line": 8
     },
@@ -7537,6 +7719,13 @@
     },
     {
       "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Users/Contracts/Users/Models/UserTelegramRegistrationModel.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
       "name": "EmailConfirmationSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
@@ -7545,7 +7734,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 18
     },
@@ -7586,17 +7775,31 @@
     },
     {
       "category": "identity",
+      "name": "TelegramOidcIssuer",
+      "type": "string?",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 71
+    },
+    {
+      "category": "identity",
+      "name": "TelegramOidcSubject",
+      "type": "string?",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 72
+    },
+    {
+      "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 360
+      "line": 377
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 362
+      "line": 379
     },
     {
       "category": "identity",
@@ -7629,7 +7832,7 @@
     {
       "category": "identity",
       "name": "Email",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
       "line": 7
     },
@@ -7758,6 +7961,13 @@
       "type": "string",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
       "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionJob.cs",
+      "line": 3
     },
     {
       "category": "privateContent",
@@ -9934,7 +10144,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 301
+      "line": 318
     },
     {
       "category": "privateContent",
@@ -9975,6 +10185,56 @@
   "boundaryFiles": [
     {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatisticsDay.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotIncomingOperation.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionJob.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Program.cs",
       "categories": [
         "credential"
       ],
@@ -10554,6 +10814,34 @@
       "fieldCount": 2
     },
     {
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommand.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommand.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommand.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "categories": [
         "identity"
@@ -10561,7 +10849,42 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramAuthOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramOidcOptions.cs",
       "categories": [
         "credential"
       ],
@@ -10605,6 +10928,13 @@
       "fieldCount": 2
     },
     {
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/RequestPasswordResetHttpRequest.cs",
       "categories": [
         "identity"
@@ -10615,6 +10945,20 @@
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/RestoreAccountHttpRequest.cs",
       "categories": [
         "credential",
+        "identity"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBackupEmailHttpRequest.cs",
+      "categories": [
         "identity"
       ],
       "fieldCount": 2
@@ -10847,6 +11191,20 @@
       "fieldCount": 5
     },
     {
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/DiaryStatisticsDayHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/DiaryStatisticsSummaryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 2
+    },
+    {
       "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
       "categories": [
         "health"
@@ -10864,6 +11222,13 @@
       "path": "Modules/Usda/Presentation/Features/Usda/Responses/UsdaFoodPortionHttpResponse.cs",
       "categories": [
         "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Models/UserTelegramRegistrationModel.cs",
+      "categories": [
+        "identity"
       ],
       "fieldCount": 1
     },

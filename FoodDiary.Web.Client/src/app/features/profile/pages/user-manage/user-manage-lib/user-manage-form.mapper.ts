@@ -24,6 +24,7 @@ export type UserManageSelectOptions = {
 
 export function createUserManageFormModel(): UserFormValues {
     return {
+        timeZoneId: null,
         email: '',
         username: null,
         firstName: null,
@@ -74,6 +75,7 @@ export function buildUserManageSelectOptions(translate: (key: string) => string)
 
 export function mapUserToForm(user: User): Partial<UserFormValues> {
     return {
+        timeZoneId: user.timeZoneId ?? null,
         email: user.email,
         username: toNullable(user.username),
         firstName: toNullable(user.firstName),

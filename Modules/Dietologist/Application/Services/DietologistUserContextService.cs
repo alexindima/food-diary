@@ -16,9 +16,12 @@ internal sealed class DietologistUserContextService(
         UserId userId,
         CancellationToken cancellationToken) {
         Result<UserDietologistProfileModel> profileResult = await profileReadService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
-        return profileResult.IsFailure
-            ? Result.Failure<string>(profileResult.Error)
-            : Result.Success(profileResult.Value.Email);
+        if (profileResult.IsFailure) {
+            return Result.Failure<string>(profileResult.Error);
+        }
+        return profileResult.Value.Email is { } email
+            ? Result.Success(email)
+            : Result.Failure<string>(UserErrors.EmailRequired);
     }
 
     public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {

@@ -150,7 +150,8 @@ public partial class BillingFeatureTests {
             user.DeletedAt is not null,
             user.HasRole(RoleNames.Premium),
             user.PremiumTrialStartedAtUtc,
-            user.PremiumTrialEndsAtUtc);
+            user.PremiumTrialEndsAtUtc,
+            user.IsEmailConfirmed);
 
     private static BillingSubscription CreateSubscriptionSnapshot(
         User user,
@@ -420,7 +421,8 @@ public partial class BillingFeatureTests {
                 user.DeletedAt is not null,
                 user.HasRole(RoleNames.Premium),
                 user.PremiumTrialStartedAtUtc,
-                user.PremiumTrialEndsAtUtc);
+                user.PremiumTrialEndsAtUtc,
+                user.IsEmailConfirmed);
     }
 
     [ExcludeFromCodeCoverage]

@@ -17,6 +17,12 @@
       "fooddiary.domain.primitives": {
         "type": "Project"
       },
+      "fooddiary.modules.contentreports.domain.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.users.domain.contracts": {
         "type": "Project",
         "dependencies": {

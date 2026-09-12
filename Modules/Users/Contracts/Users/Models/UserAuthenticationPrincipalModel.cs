@@ -4,7 +4,7 @@ namespace FoodDiary.Application.Abstractions.Users.Models;
 
 public sealed record UserAuthenticationPrincipalModel(
     UserId UserId,
-    string Email,
+    string? Email,
     IReadOnlyCollection<string> Roles,
     DateTime? AccessTokenCapUtc,
     UserModel User,

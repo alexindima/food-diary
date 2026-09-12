@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Entities.Admin;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -32,15 +31,5 @@ internal sealed class AdminImpersonationSessionConfiguration : IEntityTypeConfig
         builder.HasIndex(e => e.ActorUserId);
         builder.HasIndex(e => e.TargetUserId);
         builder.HasIndex(e => e.StartedAtUtc);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.ActorUserId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.TargetUserId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

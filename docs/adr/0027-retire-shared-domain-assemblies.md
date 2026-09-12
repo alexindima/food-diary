@@ -2,6 +2,17 @@
 
 Status: Accepted 2026-09-02
 
+## Amendment 2026-09-12: narrow owner assemblies
+
+The approved follow-up moves FoodQualityScore and FoodQualityGrade from Products
+Domain into `Modules/Products/FoodQuality`. Products retains ownership of the
+unchanged formula and its ProductType input. The new assembly references only
+Products Domain.Contracts and shared Domain.Primitives. This supersedes the
+whole Products Domain scoring dependency accepted below; it does not restore a
+shared Nutrition domain, duplicate the formula or put calculations in contracts.
+Users RoleNames similarly moves to Users Domain.Contracts, preserving all constants.
+See [role and quality boundaries](../ai/role-quality-boundaries.md).
+
 ## Context
 
 After aggregate extraction, FoodDiary.Domain contains only shared value contracts and three length constants. The subsequently extracted FoodDiary.Nutrition.Domain holds a food-quality formula, its grade and measurement units. The user explicitly selected retirement of both production assemblies and accepted concrete Products Domain dependencies for the shared formula. This supersedes the separate Nutrition-library decision in [the earlier extraction record](../ai/nutrition-domain-extraction.md); that design was a deliberate intermediate boundary, not a runtime defect.

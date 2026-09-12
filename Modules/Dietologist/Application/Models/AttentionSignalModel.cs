@@ -3,7 +3,7 @@ namespace FoodDiary.Application.Dietologist.Models;
 public sealed record AttentionSignalModel(
     string Id,
     Guid ClientUserId,
-    string ClientDisplayName,
+    string? ClientDisplayName,
     string Type,
     string Severity,
     string Reason,

@@ -10,6 +10,7 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { EmailVerificationComponent } from './email-verification';
 
 let authServiceMock: {
+    onLogoutAsync: ReturnType<typeof vi.fn>;
     isAuthenticated: ReturnType<typeof vi.fn>;
     verifyEmail: ReturnType<typeof vi.fn>;
 };
@@ -20,6 +21,7 @@ let navigationServiceMock: {
 
 beforeEach(() => {
     authServiceMock = {
+        onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         isAuthenticated: vi.fn().mockReturnValue(true),
         verifyEmail: vi.fn().mockReturnValue(of(true)),
     };
@@ -30,6 +32,19 @@ beforeEach(() => {
 });
 
 describe('EmailVerificationComponent', () => {
+    it('requires a fresh sign-in after backup email confirmation revokes sessions', () => {
+        const component = createComponent({ userId: 'user-1', token: 'telegram-backup.ticket' });
+        expect(component['state']()).toBe('success');
+        component['onContinue']();
+        expect(authServiceMock.onLogoutAsync).toHaveBeenCalledWith(true);
+        expect(navigationServiceMock.navigateToHomeAsync).not.toHaveBeenCalled();
+    });
+
+    it('explains how to recover an expired or already-used backup link', () => {
+        authServiceMock.verifyEmail.mockReturnValue(throwError(() => new Error('expired')));
+        const component = createComponent({ userId: 'user-1', token: 'telegram-backup.ticket' });
+        expect(component['errorMessage']()).toBe('USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR');
+    });
     it('should verify email when token is present', () => {
         const component = createComponent({ userId: 'user-1', token: 'token-1' });
 

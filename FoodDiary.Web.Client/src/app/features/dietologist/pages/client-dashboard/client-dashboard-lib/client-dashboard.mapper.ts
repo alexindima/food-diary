@@ -68,7 +68,7 @@ export type ClientRecommendationView = {
     statusKey: string;
 };
 
-export function getClientDashboardTitle(client: ClientSummary): string {
+export function getClientDashboardTitle(client: ClientSummary): string | null {
     const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
     return fullName.length > 0 ? fullName : client.email;
 }
@@ -89,7 +89,7 @@ export function buildClientProfileDetails(client: ClientSummary | null, system: 
     }
 
     return [
-        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.EMAIL', value: client.email },
+        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.EMAIL', value: client.email ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.HEIGHT', value: formatHeight(client.heightCm, system) ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.GENDER', value: client.gender ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.ACTIVITY', value: client.activityLevel ?? '-' },

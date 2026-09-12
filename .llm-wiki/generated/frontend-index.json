@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1640,
-    "symbols": 648,
-    "routes": 96,
+    "typescriptFiles": 1656,
+    "symbols": 657,
+    "routes": 98,
     "features": 43,
-    "specs": 569,
+    "specs": 574,
     "localeFiles": 5,
     "roles": {
-      "Component": 440,
+      "Component": 445,
       "Directive": 12,
-      "Facade": 60,
+      "Facade": 61,
       "Other": 17,
       "Pipe": 4,
-      "Service": 115
+      "Service": 118
     }
   },
   "features": [
@@ -364,9 +364,15 @@
         "EmailVerificationRealtimeService",
         "MobileLoginComponent",
         "PasswordResetComponent",
-        "RequiredPasswordChangeComponent"
+        "RequiredPasswordChangeComponent",
+        "TelegramAuthComponent",
+        "TelegramAuthFacade",
+        "TelegramAuthService",
+        "TelegramEntryButtonComponent"
       ],
       "routes": [
+        "auth/telegram",
+        "auth/telegram/callback",
         "change-password-required",
         "mobile",
         "mobile/login",
@@ -388,6 +394,8 @@
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/dialogs/auth-dialog/auth-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/lib/email-verification-realtime.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/auth/lib/telegram-auth.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/auth/lib/telegram-time-zone-options.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.spec.ts",
@@ -983,6 +991,7 @@
         "ProfileManageFacade",
         "ProfileMeasurementsService",
         "UpdateSuccessDialogComponent",
+        "UserManageBackupEmailComponent",
         "UserManageBillingCardComponent",
         "UserManageBillingSummaryComponent",
         "UserManageComparisonWidgetsComponent",
@@ -993,8 +1002,10 @@
         "UserManageDietologistSummaryComponent",
         "UserManageNotificationsCardComponent",
         "UserManageNotificationsFacade",
+        "UserManagePasswordMethodComponent",
         "UserManagePrivacyCardComponent",
-        "UserManageSecurityCardComponent"
+        "UserManageSecurityCardComponent",
+        "UserManageTelegramConnectionComponent"
       ],
       "routes": [
         ""
@@ -1013,6 +1024,7 @@
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-billing.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-date.mapper.spec.ts",
@@ -2845,6 +2857,13 @@
       "line": 18
     },
     {
+      "name": "TelegramAuthService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/auth/api/telegram-auth.service.ts",
+      "line": 10
+    },
+    {
       "name": "AuthGoogleSectionComponent",
       "role": "Component",
       "selector": "fd-auth-google-section",
@@ -2905,7 +2924,14 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 47
+      "line": 55
+    },
+    {
+      "name": "TelegramEntryButtonComponent",
+      "role": "Component",
+      "selector": "fd-telegram-entry-button",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
+      "line": 15
     },
     {
       "name": "AuthDialogComponent",
@@ -2920,6 +2946,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/auth/lib/email-verification-realtime.service.ts",
       "line": 13
+    },
+    {
+      "name": "TelegramAuthFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/auth/lib/telegram-auth.facade.ts",
+      "line": 14
     },
     {
       "name": "EmailVerificationPendingComponent",
@@ -2955,6 +2988,13 @@
       "selector": "fd-required-password-change",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.ts",
       "line": 27
+    },
+    {
+      "name": "TelegramAuthComponent",
+      "role": "Component",
+      "selector": "fd-telegram-auth",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
+      "line": 29
     },
     {
       "name": "CyclesService",
@@ -4536,7 +4576,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "line": 29
+      "line": 35
     },
     {
       "name": "UserManageBillingCardComponent",
@@ -4602,11 +4642,32 @@
       "line": 12
     },
     {
+      "name": "UserManageBackupEmailComponent",
+      "role": "Component",
+      "selector": "fd-user-manage-backup-email",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.ts",
+      "line": 19
+    },
+    {
+      "name": "UserManagePasswordMethodComponent",
+      "role": "Component",
+      "selector": "fd-user-manage-password-method",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-password-method.ts",
+      "line": 15
+    },
+    {
       "name": "UserManageSecurityCardComponent",
       "role": "Component",
       "selector": "fd-user-manage-security-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
-      "line": 21
+      "line": 30
+    },
+    {
+      "name": "UserManageTelegramConnectionComponent",
+      "role": "Component",
+      "selector": "fd-user-manage-telegram-connection",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.ts",
+      "line": 14
     },
     {
       "name": "UserManageNotificationsFacade",
@@ -4620,7 +4681,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 106
+      "line": 108
     },
     {
       "name": "DietologistPromoComponent",
@@ -5397,7 +5458,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 30
+      "line": 29
     },
     {
       "name": "GlobalErrorHandler",
@@ -5575,6 +5636,20 @@
       "line": 5
     },
     {
+      "name": "TelegramBackupEmailFlowService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-backup-email-flow.service.ts",
+      "line": 24
+    },
+    {
+      "name": "TelegramWebAppService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-web-app.service.ts",
+      "line": 9
+    },
+    {
       "name": "AppBootstrapService",
       "role": "Service",
       "selector": null,
@@ -5691,14 +5766,14 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "line": 73
+      "line": 76
     },
     {
       "name": "UpdateUserAppearanceDto",
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "line": 122
+      "line": 127
     },
     {
       "name": "BrowserNotificationCapabilityService",
@@ -6175,34 +6250,44 @@
       "line": 187
     },
     {
-      "path": "mobile",
+      "path": "auth/telegram",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
       "line": 7
     },
     {
-      "path": "mobile/login",
+      "path": "auth/telegram/callback",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
       "line": 12
     },
     {
-      "path": "verify-pending",
+      "path": "mobile",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
       "line": 17
     },
     {
+      "path": "mobile/login",
+      "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
+      "line": 22
+    },
+    {
+      "path": "verify-pending",
+      "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
+      "line": 27
+    },
+    {
       "path": "verify-email",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 23
+      "line": 33
     },
     {
       "path": "change-password-required",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 28
+      "line": 38
     },
     {
       "path": "reset-password",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 35
+      "line": 45
     },
     {
       "path": "",
@@ -6370,16 +6455,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3442,
-      "russianProperties": 3442,
+      "englishProperties": 3465,
+      "russianProperties": 3465,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 895,
-      "russianProperties": 895,
+      "englishProperties": 919,
+      "russianProperties": 919,
       "countsMatch": true
     },
     {

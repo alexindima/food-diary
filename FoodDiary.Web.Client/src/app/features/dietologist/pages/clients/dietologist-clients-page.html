@@ -77,7 +77,7 @@
                     @for (signal of attentionSignals(); track signal.id) {
                         <article class="fd-stack fd-gap-xs">
                             <div class="fd-row fd-justify-between fd-gap-sm">
-                                <strong>{{ signal.clientDisplayName }}</strong>
+                                <strong>{{ signal.clientDisplayName ?? ('ATTENTION.UNNAMED_CLIENT' | translate) }}</strong>
                                 <span>{{ `ATTENTION.SEVERITY.${signal.severity}` | translate }}</span>
                             </div>
                             <p class="fd-ui-body-sm">{{ `ATTENTION.REASON.${signal.reason}` | translate }}</p>

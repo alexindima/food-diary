@@ -1,0 +1,252 @@
+# Standalone file: never combine with docker-compose.yml or the production .env.
+name: fooddiary-telegram-test
+
+x-runtime: &runtime
+  env_file:
+    - ${FD_TEST_ENV_FILE:?Set FD_TEST_ENV_FILE to the isolated runtime configuration}
+  environment: &runtime-environment
+    DOTNET_ENVIRONMENT: TelegramTest
+    ASPNETCORE_ENVIRONMENT: TelegramTest
+    AllowedHosts: "localhost;127.0.0.1;[::1];api;telegram-test.fooddiary.club"
+    ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=fooddiary_telegram_test;Username=fooddiary_test;Password=${FD_TEST_DB_PASSWORD:?Set FD_TEST_DB_PASSWORD}
+    ConnectionStrings__Redis: redis:6379,abortConnect=false
+    DataProtection__ApplicationName: FoodDiary.TelegramTest
+    DataProtection__KeyRingPath: /var/lib/fooddiary/data-protection-keys
+    GoogleAuth__ClientId: ""
+    MailRelayClient__BaseUrl: http://mail-relay:5088
+    MailRelayClient__ApiKey: ${FD_TEST_MAIL_KEY:?Set FD_TEST_MAIL_KEY}
+    MailRelayClient__AllowInsecureHttp: "true"
+    MailInboxClient__BaseUrl: http://127.0.0.1:5098
+    MailInboxClient__AllowInsecureLoopback: "true"
+    WebPush__Enabled: "false"
+    BillingRenewal__Enabled: "false"
+    FastingNotifications__Enabled: "false"
+    WeeklyGoalReminder__Enabled: "false"
+  networks:
+    - test
+
+services:
+  mail-postgres:
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    environment:
+      POSTGRES_DB: fooddiary_mail_test
+      POSTGRES_USER: fooddiary_mail_test
+      POSTGRES_PASSWORD: ${FD_TEST_MAIL_DB_PASSWORD:?Set FD_TEST_MAIL_DB_PASSWORD}
+    volumes:
+      - mail-database:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U fooddiary_mail_test -d fooddiary_mail_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [test]
+
+  mailpit:
+    image: axllent/mailpit@sha256:98b916bd3c8d61f7633a52d3ea2f58d00620cb01ca57ab59edde68c347a95365
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_DISABLE_VERSION_CHECK: "true"
+      MP_ALLOWED_HOSTS: localhost,127.0.0.1,mailpit
+    volumes:
+      - captured-mail:/data
+    ports:
+      - "127.0.0.1:15425:8025"
+    networks: [test]
+
+  mail-db-init:
+    image: fooddiary-telegram-test-mail-initializer:local
+    build:
+      context: .
+      dockerfile: Services/MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
+    command: [update]
+    environment:
+      DOTNET_ENVIRONMENT: TelegramTest
+      ConnectionStrings__DefaultConnection: Host=mail-postgres;Port=5432;Database=fooddiary_mail_test;Username=fooddiary_mail_test;Password=${FD_TEST_MAIL_DB_PASSWORD:?Set FD_TEST_MAIL_DB_PASSWORD}
+    depends_on:
+      mail-postgres:
+        condition: service_healthy
+    networks: [test]
+    profiles: [app]
+
+  mail-relay:
+    image: fooddiary-telegram-test-mail:local
+    build:
+      context: .
+      dockerfile: Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
+    environment:
+      DOTNET_ENVIRONMENT: TelegramTest
+      ASPNETCORE_ENVIRONMENT: TelegramTest
+      ConnectionStrings__DefaultConnection: Host=mail-postgres;Port=5432;Database=fooddiary_mail_test;Username=fooddiary_mail_test;Password=${FD_TEST_MAIL_DB_PASSWORD:?Set FD_TEST_MAIL_DB_PASSWORD}
+      MailRelay__RequireApiKey: "true"
+      MailRelay__ApiKey: ${FD_TEST_MAIL_KEY:?Set FD_TEST_MAIL_KEY}
+      MailRelayBroker__Backend: PostgresPolling
+      MailRelayDelivery__Mode: SmtpSubmission
+      RelaySmtp__Host: mailpit
+      RelaySmtp__Port: "1025"
+      RelaySmtp__UseSsl: "false"
+      MailRelayDkim__Enabled: "false"
+    depends_on:
+      mail-db-init:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+    networks: [test]
+    profiles: [app]
+
+  postgres:
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    environment:
+      POSTGRES_DB: fooddiary_telegram_test
+      POSTGRES_USER: fooddiary_test
+      POSTGRES_PASSWORD: ${FD_TEST_DB_PASSWORD:?Set FD_TEST_DB_PASSWORD}
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U fooddiary_test -d fooddiary_telegram_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - test
+
+  redis:
+    image: redis:7-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2
+    command: [redis-server, --appendonly, "yes"]
+    volumes:
+      - cache:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - test
+
+  minio:
+    image: quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
+    command: [server, /data]
+    environment:
+      MINIO_ROOT_USER: ${FD_TEST_S3_USER:?Set FD_TEST_S3_USER}
+      MINIO_ROOT_PASSWORD: ${FD_TEST_S3_PASSWORD:?Set FD_TEST_S3_PASSWORD}
+      MINIO_BROWSER: "off"
+    volumes:
+      - images:/data
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:9000/minio/health/live]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - test
+
+  storage-init:
+    image: quay.io/minio/mc@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727
+    environment:
+      MC_HOST_test: http://${FD_TEST_S3_USER:?Set FD_TEST_S3_USER}:${FD_TEST_S3_PASSWORD:?Set FD_TEST_S3_PASSWORD}@minio:9000
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - >-
+        mc mb --ignore-existing test/fooddiary-test-staging &&
+        mc mb --ignore-existing test/fooddiary-test-images &&
+        mc anonymous set private test/fooddiary-test-staging &&
+        mc anonymous set-json /policy/images-read.json test/fooddiary-test-images
+    volumes:
+      - ./scripts/telegram-test/images-read.json:/policy/images-read.json:ro
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - test
+
+  db-init:
+    <<: *runtime
+    image: fooddiary-telegram-test-initializer:local
+    build:
+      context: .
+      dockerfile: FoodDiary.Initializer/Dockerfile
+    command: [update]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: [app]
+
+  api:
+    <<: *runtime
+    image: fooddiary-telegram-test-api:local
+    build:
+      context: .
+      dockerfile: FoodDiary.Web.Api/Dockerfile
+    ports:
+      - "127.0.0.1:15300:5000"
+    volumes:
+      - protection-keys:/var/lib/fooddiary/data-protection-keys
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD-SHELL, "wget -qO- http://127.0.0.1:5000/health/ready >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    profiles: [app]
+
+  job-manager:
+    <<: *runtime
+    image: fooddiary-telegram-test-jobs:local
+    build:
+      context: .
+      dockerfile: FoodDiary.JobManager/Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+    profiles: [app]
+
+  client:
+    image: fooddiary-telegram-test-client:local
+    volumes:
+      - ./FoodDiary.Web.Client/nginx.telegram-test.conf:/etc/nginx/conf.d/default.conf:ro
+    build:
+      context: FoodDiary.Web.Client
+      dockerfile: Dockerfile.telegram-test
+      args:
+        TELEGRAM_TEST_BOT_USERNAME: ${FD_TEST_BOT_USERNAME:-fooddiary_telegram_test_bot}
+    ports:
+      - "127.0.0.1:15420:80"
+    depends_on:
+      api:
+        condition: service_started
+      storage-init:
+        condition: service_completed_successfully
+    networks:
+      - test
+    profiles: [app]
+
+  telegram-bot:
+    image: fooddiary-telegram-test-bot:local
+    env_file:
+      - ${FD_TEST_ENV_FILE:?Set FD_TEST_ENV_FILE to the isolated runtime configuration}
+    environment:
+      DOTNET_ENVIRONMENT: TelegramTest
+      TelegramBot__ApiBaseUrl: http://api:5000
+    build:
+      context: .
+      dockerfile: FoodDiary.Telegram.Bot/Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - test
+    profiles: [telegram]
+
+networks:
+  test:
+
+volumes:
+  database:
+  cache:
+  protection-keys:
+  images:
+  mail-database:
+  captured-mail:

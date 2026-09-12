@@ -1,5 +1,7 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
@@ -11,7 +13,7 @@ using System.Linq.Expressions;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
-public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingOccurrenceRepository {
+public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUserFastingReminderReadService users) : IFastingOccurrenceRepository {
     private static readonly Expression<Func<FastingOccurrence, FastingOccurrenceReadModel>> ReadModelProjection =
         occurrence => new FastingOccurrenceReadModel(
             occurrence.Id,
@@ -52,15 +54,22 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
             occurrence.CheckInNotes);
 
     public async Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken cancellationToken = default) {
-        return await context.FastingOccurrences
+        List<FastingOccurrence> occurrences = await context.FastingOccurrences
             .AsNoTracking()
             .Include(occurrence => occurrence.Plan)
             .Where(occurrence => occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderBy(occurrence => occurrence.StartedAtUtc)
-            .Join(context.Users.AsNoTracking(), occurrence => occurrence.UserId, user => user.Id,
-                (occurrence, user) => new FastingActiveOccurrenceModel(
-                    occurrence, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
+        if (occurrences.Count == 0) {
+            return [];
+        }
+
+        IReadOnlyDictionary<UserId, UserFastingReminderModel> settings = await users.GetReminderSettingsAsync(
+            occurrences.Select(occurrence => occurrence.UserId).Distinct().ToArray(), cancellationToken).ConfigureAwait(false);
+        return occurrences.Where(occurrence => settings.ContainsKey(occurrence.UserId))
+            .Select(occurrence => new FastingActiveOccurrenceModel(occurrence,
+                settings[occurrence.UserId].ReminderHours, settings[occurrence.UserId].FollowUpReminderHours))
+            .ToArray();
     }
 
     public async Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {

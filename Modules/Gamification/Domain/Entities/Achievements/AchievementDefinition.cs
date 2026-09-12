@@ -5,11 +5,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Achievements;
 
 public sealed class AchievementDefinition : Entity<AchievementDefinitionId> {
-    public const int KeyMaxLength = 100;
-    public const int CategoryMaxLength = 50;
-    public const int TitleMaxLength = 160;
-    public const int DescriptionMaxLength = 500;
-    public const int IconMaxLength = 50;
+    public const int KeyMaxLength = AchievementDefinitionLimits.KeyMaxLength;
+    public const int CategoryMaxLength = AchievementDefinitionLimits.CategoryMaxLength;
+    public const int TitleMaxLength = AchievementDefinitionLimits.TitleMaxLength;
+    public const int DescriptionMaxLength = AchievementDefinitionLimits.DescriptionMaxLength;
+    public const int IconMaxLength = AchievementDefinitionLimits.IconMaxLength;
 
     public string Key { get; private set; } = string.Empty;
     public string Category { get; private set; } = string.Empty;

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Dashboard.Common;
@@ -29,8 +30,11 @@ public sealed class SendDashboardTestEmailCommandHandler(
             return Result.Failure(userResult.Error);
         }
 
+        if (userResult.Value.Email is not { } email) {
+            return Result.Failure(UserErrors.EmailRequired);
+        }
         try {
-            await emailSender.SendTestEmailAsync(new TestEmailMessage(userResult.Value.Email, userResult.Value.Language), cancellationToken).ConfigureAwait(false);
+            await emailSender.SendTestEmailAsync(new TestEmailMessage(email, userResult.Value.Language), cancellationToken).ConfigureAwait(false);
             return Result.Success();
         } catch (Exception ex) {
             logger.LogWarning(ex, "Dashboard test email dispatch failed for user {UserId}.", command.UserId);

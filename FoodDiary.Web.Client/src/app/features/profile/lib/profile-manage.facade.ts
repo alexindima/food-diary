@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { filter, finalize, firstValueFrom, switchMap, tap } from 'rxjs';
@@ -11,6 +12,8 @@ import {
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../shared/api/user.service';
+import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
+import { TelegramWebAppService } from '../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { UpdateUserDto, User } from '../../../shared/models/user.data';
@@ -19,11 +22,14 @@ import {
     NotificationService,
     type WebPushSubscriptionItem,
 } from '../../../shared/notifications/notification.service';
+import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { ProfileMeasurementsService } from '../api/profile-measurements.service';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog';
+
+const BACKUP_EMAIL_RESEND_MS = 60_000;
 
 @Injectable()
 export class ProfileManageFacade {
@@ -37,6 +43,9 @@ export class ProfileManageFacade {
     private readonly notificationService = inject(NotificationService);
     private readonly themeService = inject(ThemeService);
     private readonly profileMeasurementsService = inject(ProfileMeasurementsService);
+    private readonly telegram = inject(TelegramWebAppService);
+    private readonly browser = inject(BrowserWindowService);
+    private readonly backupEmailFlow = inject(TelegramBackupEmailFlowService);
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
@@ -45,6 +54,35 @@ export class ProfileManageFacade {
     public readonly profileSavedVersion = signal(0);
     public readonly isRevokingAiConsent = signal(false);
     public readonly isLinkingGoogle = signal(false);
+    public readonly isUnlinkingTelegram = signal(false);
+    public readonly isRequestingBackupEmail = signal(false);
+    public readonly backupEmailSentTo = signal<string | null>(null);
+    public readonly backupEmailResendAt = signal(0);
+
+    public async requestBackupEmailAsync(email: string): Promise<void> {
+        const user = this.user();
+        if (user?.hasTelegramIdentity !== true || user.email !== null || this.isRequestingBackupEmail()) {
+            return;
+        }
+        this.isRequestingBackupEmail.set(true);
+        this.clearGlobalError();
+        try {
+            await this.telegram.initializeAsync();
+            const initData = this.browser.getTelegramInitData();
+            if (initData === null || initData.length === 0) {
+                await this.backupEmailFlow.startAsync(email.trim());
+                return;
+            }
+            await firstValueFrom(this.authService.requestTelegramBackupEmail(email.trim(), initData));
+            this.backupEmailSentTo.set(email.trim());
+            this.backupEmailResendAt.set(Date.now() + BACKUP_EMAIL_RESEND_MS);
+            this.backupEmailFlow.markSent(email.trim());
+        } catch {
+            this.setGlobalError('USER_MANAGE.BACKUP_EMAIL_ERROR');
+        } finally {
+            this.isRequestingBackupEmail.set(false);
+        }
+    }
     public readonly isUpdatingNotifications = signal(false);
     public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
     public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
@@ -57,6 +95,11 @@ export class ProfileManageFacade {
     public constructor() {}
 
     public initialize(): void {
+        const pendingEmail = this.backupEmailFlow.read();
+        if (pendingEmail !== null && pendingEmail.sentAt !== null) {
+            this.backupEmailSentTo.set(pendingEmail.email);
+            this.backupEmailResendAt.set(pendingEmail.sentAt + BACKUP_EMAIL_RESEND_MS);
+        }
         this.loadUser();
         this.loadLatestMeasurements();
     }
@@ -89,6 +132,11 @@ export class ProfileManageFacade {
     }
 
     public openChangePasswordDialog(): void {
+        const user = this.user();
+        if (user !== null && !user.hasPassword && (user.email === null || !user.isEmailConfirmed)) {
+            this.setGlobalError('USER_MANAGE.BACKUP_EMAIL_PASSWORD_REQUIRED');
+            return;
+        }
         this.dialogService
             .open(ChangePasswordDialogComponent, {
                 preset: 'form',
@@ -209,6 +257,53 @@ export class ProfileManageFacade {
             });
     }
 
+    public async unlinkTelegramAsync(): Promise<void> {
+        const user = this.user();
+        if (user?.hasTelegramIdentity !== true || this.isUnlinkingTelegram()) {
+            return;
+        }
+        if (!this.hasBackupLogin(user)) {
+            this.setGlobalError('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
+            return;
+        }
+        this.isUnlinkingTelegram.set(true);
+        try {
+            const confirmed = await firstValueFrom(
+                this.dialogService
+                    .open(FdUiConfirmDialogComponent, {
+                        preset: 'confirm',
+                        data: {
+                            title: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
+                            message: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK_CONFIRM'),
+                            confirmLabel: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
+                            cancelLabel: this.translateService.instant('COMMON.CANCEL'),
+                        },
+                    })
+                    .afterClosed(),
+            );
+            if (confirmed !== true) {
+                return;
+            }
+            await this.telegram.initializeAsync();
+            const initData = this.browser.getTelegramInitData();
+            if (initData === null || initData.length === 0) {
+                this.setGlobalError('USER_MANAGE.TELEGRAM_REOPEN');
+                return;
+            }
+            await firstValueFrom(this.authService.unlinkTelegram(initData));
+            this.user.set({ ...user, hasTelegramIdentity: false });
+            await this.authService.onLogoutAsync(true);
+        } catch {
+            this.setGlobalError('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+        } finally {
+            this.isUnlinkingTelegram.set(false);
+        }
+    }
+
+    private hasBackupLogin(user: User): boolean {
+        return user.hasGoogleIdentity === true || (user.hasPassword && user.isEmailConfirmed && user.email !== null);
+    }
+
     public async updateNotificationPreferencesAsync(preferences: {
         pushNotificationsEnabled?: boolean;
         fastingPushNotificationsEnabled?: boolean;
@@ -260,6 +355,10 @@ export class ProfileManageFacade {
                 this.webPushSubscriptions.set(overview.webPushSubscriptions);
                 this.dietologistRelationship.set(overview.dietologistRelationship);
                 this.clearGlobalError();
+                if (this.backupEmailFlow.read()?.failed === true) {
+                    this.setGlobalError('USER_MANAGE.BACKUP_EMAIL_ERROR');
+                    this.backupEmailFlow.clear();
+                }
                 void this.localizationService.applyLanguagePreferenceAsync(overview.user.language ?? null);
                 this.themeService.syncWithUserPreferences(overview.user.theme, overview.user.uiStyle, overview.user.surfaceStyle);
             },
@@ -311,7 +410,12 @@ export class ProfileManageFacade {
     }
 
     private openPasswordSuccessDialog(): void {
-        this.dialogService.open(PasswordSuccessDialogComponent, { size: 'sm' }).afterClosed().subscribe();
+        this.dialogService
+            .open(PasswordSuccessDialogComponent, { size: 'sm' })
+            .afterClosed()
+            .subscribe(() => {
+                void this.authService.onLogoutAsync(true);
+            });
     }
 
     private setGlobalError(errorKey: string): void {

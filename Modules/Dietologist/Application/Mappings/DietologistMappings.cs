@@ -67,7 +67,7 @@ public static class DietologistMappings {
         new(
             invitation.InvitationId,
             invitation.DietologistUserId!.Value,
-            invitation.DietologistUserEmail!,
+            invitation.DietologistUserEmail,
             invitation.DietologistFirstName,
             invitation.DietologistLastName,
             invitation.Permissions.ToModel(),

@@ -18,6 +18,8 @@ public static class MealsModuleRegistration {
         services.AddScoped<IMealDailyCalorieReadService, MealDailyCalorieReadService>();
         services.AddScoped<IMealNutritionStatisticsReadService, MealNutritionStatisticsReadService>();
         services.AddScoped<IMealRepository, MealRepository>();
+        services.AddScoped<IMealRecognitionTransactionRunner, EfMealRecognitionTransactionRunner>();
+        services.AddScoped<IMealRecognitionReceiptRepository, MealRecognitionReceiptRepository>();
         services.AddScoped<IMealReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
         services.AddScoped<IMealProjectionReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
         services.AddScoped<IMealActivityReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());

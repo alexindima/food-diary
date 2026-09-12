@@ -109,3 +109,17 @@ Hydration, RecentItems, Exercises and WeeklyGoals use the same scalar persistenc
 Images, Cycles, BodyMetrics and Wearables also use scalar persistence boundaries. Their six User Cascade FKs live in typed central composers; preserve owned mappings, user isolation and schema. Central Infrastructure references Wearables.Domain directly for its two entity mappings.
 
 ScalarPersistenceBoundaryTests now covers thirteen models, including ContentReports, Lessons, Gamification and Notifications. Preserve their five User Cascade FKs centrally and enforce snapshot equivalence through ModuleAggregateIsolationTests.
+
+ScalarPersistenceBoundaryTests includes RecipeCommunity. Billing/Fasting folder ownership checks allow only their exact central CrossModuleRelationships files as composition exceptions; do not broaden this to arbitrary Infrastructure implementations.
+
+Favorites and MealPlanning extend scalar model protection to twenty-two assemblies. Central typed composers preserve six Favorites Cascade FKs and four MealPlanning relationships: optional MealPlan User Cascade, MealPlanMeal Recipe Restrict, ShoppingList User Cascade, and optional ShoppingListItem Product SetNull. Same-owner mappings, indexes, converters and source provenance stay local. Central Infrastructure references Products.Domain explicitly; no schema or API change is intended.
+
+Products extends the scalar persistence boundary to twenty-three models. Its three foreign FKs live in central ProductsCrossModuleRelationships: optional ImageAsset ClientNoAction, optional UsdaFood SetNull and the unchanged conventional User relationship. The owner model uses ID-only Images.Contracts and Users.Domain.Contracts; UsdaFdcId needs no foreign contract. Central Infrastructure references Usda.Domain directly. Preserve indexes, converters, xmin and ADR 0032 image integrity; no schema or API change is intended.
+
+Recipes and Meals extend scalar persistence protection to twenty-five models. Their ten foreign FKs live in RecipesCrossModuleRelationships and MealsCrossModuleRelationships; all optionality and delete policies remain unchanged, including four image ClientNoAction mappings. Owned nested Recipe Restrict and Meal/Ai cascades stay local. Recognition receipts retain their User Cascade FK and deliberately have no Meal FK. The models consume direct ID contracts; existing central Domain references suffice. No module PersistenceModel retains a foreign Domain project reference.
+
+RoleAndQualityBoundaryTests protects the narrow Products FoodQuality dependency set and prevents the seven Application-to-foreign-Domain links from returning. RetiredDomainAssemblyTests verifies the sole RoleNames and quality type owners. Constants require source/project checks because const inlining hides references in compiled consumers.
+
+AdminScalarBoundaryTests protects the narrow Billing, ContentReports and Gamification scalar owners, their exact exported types, and the removed Admin/ContentReports aggregate dependencies.
+
+ApplicationDomainBoundaryTests prevents foreign aggregate Domain project references from all module Application projects. Cycle scalar ownership tests protect the eleven dependency-free exported enums and aggregate-free consumer Contracts.

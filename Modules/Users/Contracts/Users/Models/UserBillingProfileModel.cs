@@ -4,9 +4,10 @@ namespace FoodDiary.Application.Abstractions.Users.Models;
 
 public sealed record UserBillingProfileModel(
     UserId UserId,
-    string Email,
+    string? Email,
     bool IsActive,
     bool IsDeleted,
     bool HasPaidPremium,
     DateTime? PremiumTrialStartedAtUtc,
-    DateTime? PremiumTrialEndsAtUtc);
+    DateTime? PremiumTrialEndsAtUtc,
+    bool IsEmailConfirmed = false);

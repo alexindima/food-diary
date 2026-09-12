@@ -34,3 +34,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Dietologist PersistenceModel consumes Users.Domain.Contracts for scalar IDs. Central DietologistCrossModuleRelationships owns its ten User FKs: seven Cascade, two ClientTask Restrict, one optional invitation DietologistUserId SetNull. Preserve IsRequired(false), local Recommendation relationships, xmin and indexes. Do not move permissions, access checks or audit behavior into composition.

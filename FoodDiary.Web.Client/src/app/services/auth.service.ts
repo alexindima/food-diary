@@ -9,7 +9,6 @@ import type {
     PasswordResetRequest,
     RegisterRequest,
     RestoreAccountRequest,
-    TelegramAuthRequest,
 } from '../shared/auth/auth.data';
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
@@ -48,6 +47,9 @@ export class AuthService extends ApiService {
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
+    public readonly requiresEmailVerification = computed(
+        () => !this.isEmailConfirmed() && !this.jwtDecoder.isEmailOptional(this.authTokenSignal()),
+    );
     public readonly mustChangePassword = this.mustChangePasswordSignal.asReadonly();
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
     public readonly isPremium = computed(() => this.hasRole('Premium'));
@@ -84,8 +86,6 @@ export class AuthService extends ApiService {
             const stored = this.tokenStorage.loadEmailConfirmed();
             this.emailConfirmedSignal.set(stored ?? true);
         }
-
-        this.linkTelegramIfAvailable();
     }
 
     private restoreUserIdFromToken(token: string): void {
@@ -192,6 +192,22 @@ export class AuthService extends ApiService {
         );
     }
 
+    public unlinkTelegram(initData: string): Observable<void> {
+        return this.post<void>('telegram/unlink', { initData });
+    }
+
+    public requestTelegramBackupEmail(email: string, initData: string): Observable<void> {
+        return this.post<void>('telegram/backup-email', { email, initData });
+    }
+
+    public startTelegramBackupEmail(email: string): Observable<{ authorizationUrl: string }> {
+        return this.post<{ authorizationUrl: string }>('telegram/backup-email/oidc/start', { email });
+    }
+
+    public completeTelegramBackupEmail(code: string, state: string): Observable<void> {
+        return this.post<void>('telegram/backup-email/oidc/complete', { code, state });
+    }
+
     public requestPasswordReset(data: PasswordResetRequest): Observable<void> {
         return this.post<void>('password-reset/request', {
             email: data.email,
@@ -287,7 +303,10 @@ export class AuthService extends ApiService {
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
         this.sessionEvents.notifyAuthenticated();
         this.applyAuthenticatedSession(authResponse, rememberMe);
-        this.linkTelegramIfAvailable();
+    }
+
+    public acceptExternalAuthentication(response: AuthResponse): void {
+        this.onLogin(response, false);
     }
 
     private applyAuthenticatedSession(authResponse: AuthResponse, rememberMe?: boolean): void {
@@ -358,27 +377,6 @@ export class AuthService extends ApiService {
         this.tokenStorage.clearUserId();
         this.tokenStorage.clearEmailConfirmed();
         this.tokenStorage.clearMustChangePassword();
-    }
-
-    private linkTelegramIfAvailable(): void {
-        const initData = this.getTelegramInitData();
-        if (initData === null || initData.length === 0) {
-            return;
-        }
-
-        const request: TelegramAuthRequest = { initData };
-        this.post<unknown>('telegram/link', request)
-            .pipe(
-                catchError((error: unknown) => {
-                    this.logger.warn('Telegram link failed', error);
-                    return of(null);
-                }),
-            )
-            .subscribe();
-    }
-
-    private getTelegramInitData(): string | null {
-        return this.browserWindow.getTelegramInitData();
     }
 
     private hasRole(role: string): boolean {

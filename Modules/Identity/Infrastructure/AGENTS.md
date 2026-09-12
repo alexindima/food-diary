@@ -11,6 +11,12 @@ docs/ai/auth-storage-provider-ownership.md.
 
 Register adapters through `AddIdentityPersistence`. Do not make central Infrastructure reference this adapter assembly; composition roots reference it explicitly.
 
+Identity registers its `IUserDataPurgeParticipant` through `AddIdentityPersistence`.
+It deletes the removed user's Telegram operation journal inside the Users cleanup
+coordinator's transaction, including terminal deduplication metadata. It does not
+save or commit, reassign operations, or access another module's tables. The direct
+Users.Contracts reference supplies this existing lifecycle extension point.
+
 `TelegramAssertionReplayGuard` is scoped and uses the shared context and configured
 TimeProvider. Keep SHA256/UTF-8 fingerprinting, the two SQL statements, expiry
 cleanup and ON CONFLICT behavior unchanged during physical relocation. The guard

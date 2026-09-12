@@ -9,10 +9,19 @@ import { GoogleIdentityService } from '../../../../../shared/auth/google-identit
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { ActiveSessionsFacade } from '../../../lib/active-sessions.facade';
 import type { PasswordActionState } from '../../user-manage/user-manage-lib/user-manage.types';
+import { UserManagePasswordMethodComponent } from './user-manage-password-method';
+import { UserManageTelegramConnectionComponent } from './user-manage-telegram-connection';
 
 @Component({
     selector: 'fd-user-manage-security-card',
-    imports: [DatePipe, TranslatePipe, FdUiButtonComponent, FdUiIconComponent],
+    imports: [
+        DatePipe,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiIconComponent,
+        UserManageTelegramConnectionComponent,
+        UserManagePasswordMethodComponent,
+    ],
     templateUrl: './user-manage-security-card.html',
     styleUrl: '../../user-manage/user-manage.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,8 +36,13 @@ export class UserManageSecurityCardComponent {
 
     public readonly email = input.required<string>();
     public readonly hasGoogleIdentity = input.required<boolean>();
+    public readonly hasTelegramIdentity = input(false);
+    public readonly canUnlinkTelegram = input(false);
+    public readonly isUnlinkingTelegram = input(false);
+    public readonly telegramUnlink = output();
     public readonly isLinkingGoogle = input.required<boolean>();
     public readonly passwordActionState = input.required<PasswordActionState>();
+    public readonly canUsePassword = input(true);
     public readonly googleCredential = output<string>();
     public readonly passwordChange = output();
     protected readonly isGoogleReady = signal(false);

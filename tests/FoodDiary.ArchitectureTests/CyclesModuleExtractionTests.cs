@@ -6,10 +6,10 @@ public sealed class CyclesModuleExtractionTests {
     [InlineData(typeof(FoodDiary.Domain.Enums.BleedingType))]
     [InlineData(typeof(FoodDiary.Domain.Enums.CycleSymptomCategory))]
     [InlineData(typeof(FoodDiary.Domain.Enums.OvulationTestResult))]
-    public void CycleEnums_AreOwnedOnlyByCyclesDomain(Type enumType) {
-        Assert.Equal("FoodDiary.Modules.Cycles.Domain", enumType.Assembly.GetName().Name);
+    public void CycleEnums_AreOwnedOnlyByCyclesDomainContracts(Type enumType) {
+        Assert.Equal("FoodDiary.Modules.Cycles.Domain.Contracts", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Cycles", "Domain", "Enums", $"{enumType.Name}.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Cycles", "Domain.Contracts", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
     }
@@ -26,7 +26,7 @@ public sealed class CyclesModuleExtractionTests {
     public void ExtractedCyclesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Cycles.Domain.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]

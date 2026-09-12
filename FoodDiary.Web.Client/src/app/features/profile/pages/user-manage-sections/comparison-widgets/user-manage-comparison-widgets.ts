@@ -67,6 +67,15 @@ export class UserManageComparisonWidgetsComponent {
     public readonly currentWaist = input.required<number | null>();
 
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
+    protected readonly timeZoneOptions = computed<Array<FdUiSelectOption<string | null>>>(() => {
+        const selected = this.userForm().timeZoneId().value();
+        const available = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : [];
+        const zones = new Set(['UTC', ...available]);
+        if (selected !== null && selected.length > 0) {
+            zones.add(selected);
+        }
+        return [...zones].sort().map(value => ({ label: value, value }));
+    });
 
     protected readonly measurementSystem = this.measurements.system;
 

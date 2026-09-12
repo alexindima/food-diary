@@ -323,7 +323,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.False(await likeRepository.ExistsByUserAndRecipeAsync(user.Id, recipe.Id));
         Assert.Equal(0, await likeRepository.CountByRecipeAsync(recipe.Id));
 
-        var commentRepository = new RecipeCommentRepository(context);
+        var commentRepository = new RecipeCommentRepository(context, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
         RecipeComment comment = await commentRepository.AddAsync(RecipeComment.Create(user.Id, recipe.Id, "First comment"));
         await context.SaveChangesAsync();
         comment.UpdateText("Updated comment");

@@ -20,6 +20,12 @@ import {
 const EXPECTED_METRIC_TILE_COUNT = 4;
 
 describe('client dashboard mapper', () => {
+    it('handles a Telegram-only profile without name or email', () => {
+        const client = createClient({ firstName: null, lastName: null, email: null });
+        expect(getClientDashboardTitle(client)).toBeNull();
+        expect(buildClientProfileDetails(client).find(detail => detail.labelKey.endsWith('.EMAIL'))?.value).toBe('-');
+    });
+
     it('resolves title from full name or email fallback', () => {
         expect(getClientDashboardTitle(createClient({ firstName: 'Alex', lastName: 'Ivanov' }))).toBe('Alex Ivanov');
         expect(getClientDashboardTitle(createClient({ firstName: null, lastName: null, email: 'client@example.com' }))).toBe(

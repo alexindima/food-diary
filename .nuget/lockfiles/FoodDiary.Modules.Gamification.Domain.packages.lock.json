@@ -17,6 +17,9 @@
       "fooddiary.domain.primitives": {
         "type": "Project"
       },
+      "fooddiary.modules.gamification.domain.contracts": {
+        "type": "Project"
+      },
       "fooddiary.modules.users.domain.contracts": {
         "type": "Project",
         "dependencies": {

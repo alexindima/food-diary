@@ -45,13 +45,67 @@ public sealed partial class User {
 
     public void LinkTelegram(long telegramUserId) {
         EnsureNotDeleted();
+        if (telegramUserId <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(telegramUserId));
+        }
+        if (TelegramUserId == telegramUserId) {
+            return;
+        }
+        if (TelegramUserId.HasValue) {
+            throw new InvalidOperationException("Disconnect the current Telegram identity before linking another one.");
+        }
         ApplyAccountState(GetAccountState().WithTelegram(telegramUserId));
+        AdvanceSecurityVersion();
+        SetModified();
+    }
+
+    public void BindTelegramOidcIdentity(string issuer, string subject) {
+        EnsureNotDeleted();
+        if (!TelegramUserId.HasValue) {
+            throw new InvalidOperationException("Link Telegram before binding its OIDC identity.");
+        }
+        string validatedIssuer = DomainGuard.RequiredText(issuer, 200, nameof(issuer));
+        string validatedSubject = DomainGuard.RequiredText(subject, 255, nameof(subject));
+        if (TelegramOidcIssuer is not null || TelegramOidcSubject is not null) {
+            if (!string.Equals(TelegramOidcIssuer, validatedIssuer, StringComparison.Ordinal) ||
+                !string.Equals(TelegramOidcSubject, validatedSubject, StringComparison.Ordinal)) {
+                throw new InvalidOperationException("The Telegram OIDC identity does not match the linked identity.");
+            }
+            return;
+        }
+        TelegramOidcIssuer = validatedIssuer;
+        TelegramOidcSubject = validatedSubject;
         SetModified();
     }
 
     public void UnlinkTelegram() {
         EnsureNotDeleted();
+        if (!TelegramUserId.HasValue) {
+            return;
+        }
+        bool hasPasswordLogin = HasPassword && Email is not null && IsEmailConfirmed;
+        bool hasGoogleLogin = GoogleIssuer is not null && GoogleSubject is not null;
+        if (!hasPasswordLogin && !hasGoogleLogin) {
+            throw new InvalidOperationException("Add another sign-in method before disconnecting Telegram.");
+        }
         ApplyAccountState(GetAccountState().WithTelegram(null));
+        TelegramOidcIssuer = null;
+        TelegramOidcSubject = null;
+        AdvanceSecurityVersion();
+        SetModified();
+    }
+
+    public void SetTimeZone(string timeZoneId) {
+        EnsureNotDeleted();
+        string normalized = DomainGuard.RequiredText(timeZoneId, 100, nameof(timeZoneId));
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(normalized);
+        if (!string.Equals(zone.Id, "UTC", StringComparison.Ordinal) && !zone.HasIanaId) {
+            throw new ArgumentException("An IANA time zone is required.", nameof(timeZoneId));
+        }
+        if (string.Equals(TimeZoneId, zone.Id, StringComparison.Ordinal)) {
+            return;
+        }
+        TimeZoneId = zone.Id;
         SetModified();
     }
 

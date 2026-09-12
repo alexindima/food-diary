@@ -1,6 +1,6 @@
 export type AdminUser = {
     id: string;
-    email: string;
+    email: string | null;
     hasPassword?: boolean;
     mustChangePassword?: boolean;
     username?: string | null;
@@ -87,7 +87,7 @@ export type AdminUserSetPassword = {
 export type AdminImpersonationStart = {
     code: string;
     targetUserId: string;
-    targetEmail: string;
+    targetEmail: string | null;
     actorUserId: string;
     reason: string;
 };
@@ -95,9 +95,9 @@ export type AdminImpersonationStart = {
 export type AdminImpersonationSession = {
     id: string;
     actorUserId: string;
-    actorEmail: string;
+    actorEmail: string | null;
     targetUserId: string;
-    targetEmail: string;
+    targetEmail: string | null;
     reason: string;
     actorIpAddress?: string | null;
     actorUserAgent?: string | null;
@@ -107,7 +107,7 @@ export type AdminImpersonationSession = {
 export type AdminUserLoginEvent = {
     id: string;
     userId: string;
-    userEmail: string;
+    userEmail: string | null;
     authProvider: string;
     maskedIpAddress?: string | null;
     userAgent?: string | null;

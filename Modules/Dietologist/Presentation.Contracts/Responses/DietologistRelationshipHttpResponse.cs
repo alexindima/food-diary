@@ -3,7 +3,7 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 public sealed record DietologistRelationshipHttpResponse(
     Guid InvitationId,
     string Status,
-    string Email,
+    string? Email,
     string? FirstName,
     string? LastName,
     Guid? DietologistUserId,

@@ -22,14 +22,5 @@ internal sealed class ClientTaskConfiguration : IEntityTypeConfiguration<ClientT
         builder.HasIndex(task => new { task.ClientUserId, task.CreatedOnUtc });
         builder.HasIndex(task => new { task.DietologistUserId, task.ClientUserId });
         builder.HasIndex(task => new { task.Status, task.DueAtUtc, task.DueReminderSentAtUtc });
-
-        builder.HasOne<FoodDiary.Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(task => task.DietologistUserId)
-            .OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne<FoodDiary.Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(task => task.ClientUserId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

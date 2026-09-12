@@ -2,6 +2,59 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs": {
+      "module": "Identity",
+      "capabilities": ["entity:TelegramOperation", "tracked:TelegramOperation", "write:TelegramOperation"],
+      "reason": "Deletes only Identity-owned Telegram operations for the purged user inside the Users-owned purge transaction. No foreign aggregate access, SaveChanges or transaction ownership; rollback and survivor isolation are covered by UserCleanupServiceIntegrationTests."
+    },
+    "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs": {
+      "module": "Hydration",
+      "capabilities": ["entity:HydrationEntry"],
+      "reason": "Owner-filtered, no-tracking sum over an explicit UTC half-open interval. Narrow DbSet injection; no writes or context escapes."
+    },
+    "Modules/Hydration/Infrastructure/Persistence/HydrationOperationReceiptRepository.cs": {
+      "module": "Hydration",
+      "capabilities": ["entity:HydrationOperationReceipt", "tracked:HydrationOperationReceipt", "write:HydrationOperationReceipt"],
+      "reason": "Hydration-owned permanent operation receipts. Narrow DbSet injection, owner-filtered read and tracked add only; caller retains SaveChanges and transaction ownership. No foreign aggregate access."
+    },
+    "Modules/Meals/Infrastructure/Persistence/Meals/MealRecognitionReceiptRepository.cs": {
+      "module": "Meals",
+      "capabilities": [
+        "context:Database",
+        "context:Entry",
+        "entity:Meal",
+        "entity:MealRecognitionReceipt",
+        "tracked:Meal",
+        "tracked:MealRecognitionReceipt",
+        "write:MealRecognitionReceipt"
+      ],
+      "reason": "Meals-owned receipts and owner-filtered row lock for undo. Parameterized SQL locks only the selected owned Meal. No foreign aggregate access; caller transaction owns SaveChanges and commit.",
+      "technicalSourceSha256": "e2a1800a079288b26b033ca162ea1438a1e73fb2022d16a05dfdef423f1a41c1"
+    },
+
+    "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs": {
+      "module": "Meals",
+      "capabilities": [
+        "context:Database",
+        "context:ChangeTracker",
+        "entity:Meal"
+      ],
+      "reason": "Meals-owned user-serialized transaction with intermediate unit-of-work flush to capture the newly added owned Meal xmin. Commit includes the receipt; shared retry boundary resets tracking and post-commit actions. No external provider calls or foreign aggregate mutations.",
+      "technicalSourceSha256": "4a59640ea8f6e9f77c487550c6359edb5c21b3a21e62b487067318328bba381e"
+    },
+
+    "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
+      "module": "Identity",
+      "capabilities": ["context:Database", "entity:TelegramOperation", "tracked:TelegramOperation", "write:TelegramOperation"],
+      "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
+      "technicalSourceSha256": "7d7adbb4ab584fd5e0dc6aef39d4a19bb307185dbd43468408009314393f6f2e"
+    },
+    "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
+      "module": "Identity",
+      "capabilities": ["context:Database", "entity:TelegramLoginTicket", "tracked:TelegramLoginTicket", "write:TelegramLoginTicket"],
+      "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
+      "technicalSourceSha256": "72f1d37964cf802e3d2e70809392c16dad7d7390c737616e089e1bf1ef9c610f"
+    },
     "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs": {
       "module": "Admin",
       "capabilities": [
@@ -413,7 +466,6 @@
       "capabilities": [
         "entity:FastingOccurrence",
         "entity:FastingPlan",
-        "entity:User",
         "tracked:FastingOccurrence",
         "write:FastingOccurrence"
       ],
@@ -546,9 +598,11 @@
       "module": "Hydration",
       "capabilities": [
         "entity:HydrationEntry",
-        "tracked:HydrationEntry"
+        "entity:HydrationOperationReceipt",
+        "tracked:HydrationEntry",
+        "tracked:HydrationOperationReceipt"
       ],
-      "reason": "Hydration composition obtains only the owner set from the shared scoped context and passes it to the repository."
+      "reason": "Hydration composition obtains only its entry and operation receipt sets from the shared scoped context and passes each narrow set to its repository."
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs": {
       "module": "Hydration",
@@ -911,7 +965,6 @@
       "module": "RecipeCommunity",
       "capabilities": [
         "entity:RecipeComment",
-        "entity:User",
         "tracked:RecipeComment",
         "write:RecipeComment"
       ],
@@ -1041,6 +1094,13 @@
         "entity:User"
       ],
       "reason": "Persisted no-tracking projections for consumer profiles and account access, role existence and pure static BMR/TDEE calculation; no aggregate loading or saving."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:User"
+      ],
+      "reason": "No-tracking batch projections of requested users' comment author names and fasting reminder hours, preserving all account states. No foreign entity access, aggregate materialization, tracking or saves."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs": {
       "module": "Users",

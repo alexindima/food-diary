@@ -3,7 +3,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin.Responses;
 public sealed record AdminUserLoginEventHttpResponse(
     Guid Id,
     Guid UserId,
-    string UserEmail,
+    string? UserEmail,
     string AuthProvider,
     string? MaskedIpAddress,
     string? UserAgent,

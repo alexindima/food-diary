@@ -42,10 +42,5 @@ internal sealed class UserLoginEventConfiguration : IEntityTypeConfiguration<Use
         builder.HasIndex(e => e.DeviceType);
         builder.HasIndex(e => e.BrowserName);
         builder.HasIndex(e => e.OperatingSystem);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

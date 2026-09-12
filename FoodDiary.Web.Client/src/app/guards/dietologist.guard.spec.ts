@@ -62,6 +62,7 @@ function setupGuard(): {
     authServiceMock: {
         isAuthenticated: ReturnType<typeof signal<boolean>>;
         isEmailConfirmed: ReturnType<typeof signal<boolean>>;
+        requiresEmailVerification: () => boolean;
         isDietologist: ReturnType<typeof signal<boolean>>;
     };
     navigationServiceMock: {
@@ -79,9 +80,11 @@ function setupGuard(): {
 } {
     const urlTreeStub = {};
     const urlTree = urlTreeStub as UrlTree;
+    const emailConfirmed = signal(true);
     const authServiceMock = {
         isAuthenticated: signal(false),
-        isEmailConfirmed: signal(true),
+        isEmailConfirmed: emailConfirmed,
+        requiresEmailVerification: (): boolean => !emailConfirmed(),
         isDietologist: signal(false),
     };
     const navigationServiceMock = {

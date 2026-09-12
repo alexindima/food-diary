@@ -14,6 +14,7 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddScoped<IFoodRecognitionProcessor, FoodRecognitionProcessor>();
+        services.AddScoped<IFoodRecognitionResultReader, FoodRecognitionResultReader>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IAiAdministrationReadService, AiAdministrationReadService>();
         services.AddScoped<IAiPromptAdministrationService, AiPromptAdministrationService>();

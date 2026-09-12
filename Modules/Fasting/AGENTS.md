@@ -27,3 +27,7 @@ Rules for `Modules/Fasting/`.
 
 - Keep Fasting-owned application, domain, and infrastructure adapter tests under `tests/FoodDiary.Modules.Fasting.*.Tests` in this module.
 - Keep shared DbContext, migration, HTTP, host, JobManager, architecture, and cross-module scenarios in their central test projects.
+
+Application consumes scalar Users types through Users.Domain.Contracts and semantic
+capabilities through Users.Contracts. Do not reference the aggregate-bearing
+Users.Domain assembly for these types.

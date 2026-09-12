@@ -231,6 +231,31 @@
         }
     },
     "AUTH": {
+        "TELEGRAM": {
+            "TITLE": "Your diary in Telegram",
+            "CONNECTED": "Connected. Use Telegram to sign in or open your diary in the bot.",
+            "CONNECT_HINT": "Connect Telegram to use the same diary in the bot.",
+            "SUBTITLE": "Use one Food Diary account on the website and in the bot.",
+            "CONTINUE": "Continue with Telegram",
+            "SIGN_IN": "Open my diary",
+            "CREATE": "Create a new diary",
+            "EXISTING": "Connect an existing account",
+            "EXISTING_HINT": "Sign in to your existing Food Diary account. You will confirm the Telegram connection next.",
+            "NEW_HINT": "New to Food Diary? Create a diary without email or a password. You can add a recovery method in settings later.",
+            "LINK_CONFIRM": "Connect Telegram to this Food Diary account?",
+            "CURRENT_ACCOUNT": "Your signed-in account",
+            "LINK": "Connect Telegram",
+            "TIME_ZONE": "Time zone",
+            "TIME_ZONE_SEARCH": "Search city, region or UTC offset",
+            "TIME_ZONE_HINT": "Your device time zone is selected automatically. You can choose another. UTC offsets are shown for today and may change with daylight saving time.",
+            "START_OVER": "Start over",
+            "ERROR": "We could not complete this action. Start again, or sign in to the account already connected to Telegram.",
+            "EXPIRED": "This sign-in attempt has expired or was already used. Start again.",
+            "CANCELLED": "Telegram sign-in was cancelled. You can try again.",
+            "UNAVAILABLE": "Telegram sign-in is currently unavailable. You can use your other sign-in methods.",
+            "OTHER_METHODS": "Use another sign-in method",
+            "BACK_TO_CHOICE": "Back to account selection"
+        },
         "LOGIN": {
             "TITLE": "Login",
             "SUBTITLE": "Sign in to continue.",

@@ -1,5 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -25,18 +23,9 @@ internal sealed class MealConfiguration : IEntityTypeConfiguration<Meal> {
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId);
         builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
 
         builder.HasIndex(e => new { e.UserId, e.Date, e.CreatedOnUtc });
-
-        builder.HasOne<ImageAsset>()
-            .WithMany()
-            .HasForeignKey(e => e.ImageAssetId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.HasMany(e => e.AiSessions)
             .WithOne(s => s.Meal)

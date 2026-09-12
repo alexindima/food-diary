@@ -25,6 +25,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
+import { TelegramEntryButtonComponent } from '../telegram-entry-button/telegram-entry-button';
 import { buildAdminUnauthorizedUrl, normalizeAdminReturnUrl } from './auth-lib/auth-admin-return-url.utils';
 import { startSecondsCountdown } from './auth-lib/auth-countdown.utils';
 import { AuthFlowFacade, type AuthLoginResult, type AuthRegisterResult } from './auth-lib/auth-flow.facade';
@@ -42,10 +43,18 @@ import { AuthRegisterFormComponent } from './auth-register-form/auth-register-fo
     styleUrls: ['./auth.scss'],
     providers: [AuthFormManager, AuthGoogleManager],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiTabsComponent, AuthLoginFormComponent, AuthPasswordResetFormComponent, AuthRegisterFormComponent],
+    imports: [
+        TranslatePipe,
+        FdUiTabsComponent,
+        AuthLoginFormComponent,
+        AuthPasswordResetFormComponent,
+        AuthRegisterFormComponent,
+        TelegramEntryButtonComponent,
+    ],
 })
 export class AuthComponent {
     public readonly useRouting = input(true);
+    public readonly hideTelegram = input(false);
     public readonly initialMode = input<'login' | 'register'>('login');
     public readonly initialReturnUrl = input<string | null>(null);
     public readonly initialAdminReturnUrl = input<string | null>(null);
@@ -173,6 +182,11 @@ export class AuthComponent {
     protected changeAuthMode(value: string): void {
         const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
         void this.onTabChangeAsync(mode);
+    }
+
+    protected openTelegram(): void {
+        this.dialogRef?.close();
+        void this.router?.navigate(['/auth/telegram'], { preserveFragment: true });
     }
 
     protected async onTabChangeAsync(mode: 'login' | 'register'): Promise<void> {
@@ -397,7 +411,7 @@ export class AuthComponent {
             return;
         }
 
-        if (!this.authService.isEmailConfirmed()) {
+        if (this.authService.requiresEmailVerification()) {
             await this.navigationService.navigateToEmailVerificationPendingAsync({ autoResend: true });
             return;
         }

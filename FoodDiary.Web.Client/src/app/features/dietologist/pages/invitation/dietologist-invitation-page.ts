@@ -49,7 +49,7 @@ export class DietologistInvitationPageComponent {
 
         return {
             invitation,
-            displayName: displayName.length > 0 ? displayName : invitation.clientEmail,
+            displayName: displayName.length > 0 ? displayName : invitation.clientEmail ?? this.translateService.instant('ATTENTION.UNNAMED_CLIENT'),
             expiresDateLabel: this.formatMediumDate(invitation.expiresAtUtc),
         };
     });

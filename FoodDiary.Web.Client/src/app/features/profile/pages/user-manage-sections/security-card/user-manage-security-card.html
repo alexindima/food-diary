@@ -1,4 +1,10 @@
 <div class="user-manage__security fd-stack fd-gap-sm">
+    <fd-user-manage-telegram-connection
+        [hasTelegramIdentity]="hasTelegramIdentity()"
+        [canUnlinkTelegram]="canUnlinkTelegram()"
+        [isUnlinkingTelegram]="isUnlinkingTelegram()"
+        (telegramUnlink)="telegramUnlink.emit()"
+    />
     <div class="user-manage__login-method fd-row fd-gap-sm">
         <div class="user-manage__google-mark" aria-hidden="true">G</div>
         <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
@@ -27,7 +33,7 @@
                     [class.user-manage__google-button--busy]="isLinkingGoogle()"
                 ></div>
                 @if (isGoogleUnavailable()) {
-                    <span class="user-manage__connection-status user-manage__connection-status--unavailable" role="status">
+                    <span class="user-manage__connection-status" role="status">
                         {{ 'USER_MANAGE.GOOGLE_UNAVAILABLE' | translate }}
                     </span>
                 } @else if (!isGoogleReady()) {
@@ -39,20 +45,11 @@
         </div>
     </div>
 
-    <div class="user-manage__login-method fd-row fd-gap-sm">
-        <fd-ui-icon class="user-manage__login-method-icon" name="lock" />
-        <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
-            <div class="user-manage__login-method-title">{{ 'USER_MANAGE.PASSWORD_METHOD_TITLE' | translate }}</div>
-            <div class="user-manage__login-method-description fd-ui-body-sm">
-                {{ passwordActionState().descriptionKey | translate }}
-            </div>
-        </div>
-        <div class="user-manage__login-method-action">
-            <fd-ui-button type="button" size="sm" variant="secondary" fill="outline" (click)="passwordChange.emit()">
-                {{ passwordActionState().buttonLabelKey | translate }}
-            </fd-ui-button>
-        </div>
-    </div>
+    <fd-user-manage-password-method
+        [available]="canUsePassword()"
+        [actionState]="passwordActionState()"
+        (passwordChange)="passwordChange.emit()"
+    />
 </div>
 
 <section class="user-manage__sessions fd-stack fd-gap-sm" aria-labelledby="active-sessions-title">

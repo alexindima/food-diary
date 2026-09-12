@@ -16,7 +16,7 @@ export const dietologistGuard: CanActivateFn = async (_route, state) => {
         return false;
     }
 
-    if (!authService.isEmailConfirmed()) {
+    if (authService.requiresEmailVerification()) {
         await navigationService.navigateToEmailVerificationPendingAsync();
         return false;
     }

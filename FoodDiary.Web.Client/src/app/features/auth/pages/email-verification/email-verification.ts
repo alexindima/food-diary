@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,12 +28,17 @@ export class EmailVerificationComponent {
     protected readonly isBusy = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly emailToken = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
+    protected readonly isBackupEmail = computed(() => this.emailToken().token?.startsWith('telegram-backup.') === true);
 
     public constructor() {
         this.resolveAndVerify();
     }
 
     protected onContinue(): void {
+        if (this.isBackupEmail()) {
+            void this.authService.onLogoutAsync(true);
+            return;
+        }
         if (this.authService.isAuthenticated()) {
             void this.navigationService.navigateToHomeAsync();
         } else {
@@ -85,7 +90,11 @@ export class EmailVerificationComponent {
                 error: () => {
                     this.isBusy.set(false);
                     this.state.set('error');
-                    this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_GENERIC'));
+                    this.errorMessage.set(
+                        this.translateService.instant(
+                            this.isBackupEmail() ? 'USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR' : 'AUTH.VERIFY.ERROR_GENERIC',
+                        ),
+                    );
                 },
             });
     }

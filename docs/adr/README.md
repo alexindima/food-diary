@@ -56,3 +56,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0035: Runtime boundaries and owner projections](0035-runtime-boundaries-and-owner-projections.md)
 
 - [0036: Independent bug triage service](0036-independent-bug-triage-service.md)
+
+- [0037: Telegram client identity and operation boundaries](0037-telegram-client-identity-and-operation-boundaries.md)

@@ -15,7 +15,7 @@ public sealed class LogoutCommandHandler(
             return Result.Success();
         }
 
-        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validationResult =
+        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validationResult =
             jwtTokenGenerator.ValidateToken(command.RefreshToken);
         if (validationResult?.refreshSessionId is not Guid sessionId) {
             return Result.Success();

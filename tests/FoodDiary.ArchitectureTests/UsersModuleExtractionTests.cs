@@ -14,7 +14,7 @@ public sealed class UsersModuleExtractionTests {
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"));
         string root = ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain.Contracts");
-        Assert.Equal(["Enums/ActivityLevel.cs", "ValueObjects/DesiredWaistCm.cs", "ValueObjects/DesiredWeightKg.cs", "ValueObjects/Ids/UserId.cs", "ValueObjects/LanguageCode.cs"],
+        Assert.Equal(["Enums/ActivityLevel.cs", "Enums/RoleNames.cs", "ValueObjects/DesiredWaistCm.cs", "ValueObjects/DesiredWeightKg.cs", "ValueObjects/Ids/UserId.cs", "ValueObjects/LanguageCode.cs"],
             SourceScanner.SourceFiles(root).Select(path => Path.GetRelativePath(root, path).Replace('\\', '/')), StringComparer.Ordinal);
     }
 

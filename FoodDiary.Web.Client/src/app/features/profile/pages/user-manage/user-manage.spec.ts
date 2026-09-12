@@ -473,6 +473,7 @@ type ProfileManageFacadeMock = {
     profileSavedVersion: ReturnType<typeof signal<number>>;
     isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
     isLinkingGoogle: ReturnType<typeof signal<boolean>>;
+    isUnlinkingTelegram: ReturnType<typeof signal<boolean>>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: WritableSignal<WebPushSubscriptionItem[]>;
     dietologistRelationship: WritableSignal<DietologistRelationship | null>;
@@ -701,6 +702,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         profileSavedVersion: signal(0),
         isRevokingAiConsent: signal(false),
         isLinkingGoogle: signal(false),
+        isUnlinkingTelegram: signal(false),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
         dietologistRelationship: signal(relationship),

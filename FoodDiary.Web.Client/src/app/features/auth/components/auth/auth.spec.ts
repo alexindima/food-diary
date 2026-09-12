@@ -48,6 +48,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
     const authServiceSpy = {
         isAuthenticated: vi.fn().mockReturnValue(false),
         isEmailConfirmed: vi.fn().mockReturnValue(true),
+        requiresEmailVerification: vi.fn().mockReturnValue(false),
         isAdmin: vi.fn().mockReturnValue(false),
         startAdminSso: vi.fn(),
     };
@@ -108,6 +109,13 @@ beforeEach(() => {
 });
 
 describe('AuthComponent tabs', () => {
+    it('preserves Mini App launch data when opening Telegram authentication', () => {
+        const { component, routerSpy, dialogRefSpy } = createComponent();
+        component['openTelegram']();
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/telegram'], { preserveFragment: true });
+        expect(dialogRefSpy.close).toHaveBeenCalledOnce();
+    });
+
     it('should reset transient auth state and navigate when mode changes', async () => {
         const { component, routerSpy } = createComponent();
         component['loginModel'].update(value => ({ ...value, email: 'user@example.com' }));

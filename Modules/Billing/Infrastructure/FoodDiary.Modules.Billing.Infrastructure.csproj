@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Application.Billing.csproj" />
+    <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />

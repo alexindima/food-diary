@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Abstractions.Users.Models;
 [ExcludeFromCodeCoverage]
 public sealed record UserModel(
     Guid Id,
-    string Email,
+    string? Email,
     bool HasPassword,
     string? Username,
     string? FirstName,
@@ -42,4 +42,6 @@ public sealed record UserModel(
     DateTime? AiConsentAcceptedAt,
     bool MustChangePassword = false,
     bool HasGoogleIdentity = false,
-    string SurfaceStyle = "normal");
+    string SurfaceStyle = "normal",
+    bool HasTelegramIdentity = false,
+    string? TimeZoneId = null);

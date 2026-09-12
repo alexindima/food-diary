@@ -48,7 +48,9 @@ public static class UserHttpResponseMappings {
                 model.AiConsentAcceptedAt,
                 model.MustChangePassword,
                 model.HasGoogleIdentity,
-                model.SurfaceStyle
+                model.SurfaceStyle,
+                model.HasTelegramIdentity,
+                model.TimeZoneId
             );
         }
     }

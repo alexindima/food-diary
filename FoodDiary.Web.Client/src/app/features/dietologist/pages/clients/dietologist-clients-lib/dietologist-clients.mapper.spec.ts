@@ -4,6 +4,13 @@ import { buildClientCardViewModels, formatClientConnectedDate, getClientInitials
 import { createClient, VALID_CLIENT_ACCEPTED_AT_UTC } from './dietologist-clients.test-data';
 
 describe('dietologist clients mapper', () => {
+    it('handles a Telegram-only profile without inventing an email', () => {
+        const client = createClient({ firstName: null, lastName: null, email: null });
+        expect(getClientTitle(client)).toBeNull();
+        expect(getClientInitials(client)).toBe('?');
+        expect(buildClientCardViewModels([client], 'ru')[0].client.email).toBeNull();
+    });
+
     it('builds client titles from full name or email fallback', () => {
         expect(getClientTitle(createClient({ firstName: 'Alex', lastName: 'Ivanov' }))).toBe('Alex Ivanov');
         expect(getClientTitle(createClient({ firstName: null, lastName: null, email: 'client@example.com' }))).toBe('client@example.com');

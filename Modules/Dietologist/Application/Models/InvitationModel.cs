@@ -2,7 +2,7 @@ namespace FoodDiary.Application.Dietologist.Models;
 
 public sealed record InvitationModel(
     Guid InvitationId,
-    string ClientEmail,
+    string? ClientEmail,
     string? ClientFirstName,
     string? ClientLastName,
     string Status,

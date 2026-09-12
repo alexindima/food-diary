@@ -5,7 +5,7 @@ import type { DietologistFormValues } from './user-manage.types';
 export function mapDietologistRelationshipToForm(relationship: DietologistRelationship | null): DietologistFormValues {
     if (relationship !== null) {
         return {
-            email: relationship.email,
+            email: relationship.email ?? '',
             ...relationship.permissions,
         };
     }

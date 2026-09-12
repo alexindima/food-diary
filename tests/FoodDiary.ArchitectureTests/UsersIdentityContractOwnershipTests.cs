@@ -6,11 +6,21 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
-    [InlineData("Modules/Users/Contracts", 65)]
+    [InlineData("Modules/Users/Contracts", 71)]
     [InlineData("Modules/Users/Application/Abstractions", 7)]
-    [InlineData("Modules/Identity/Application/Abstractions", 46)]
+    [InlineData("Modules/Identity/Application/Abstractions", 55)]
     public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot, int count) {
         Assert.Equal(count, SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(relativeRoot)).Count());
+    }
+
+    [Theory]
+    [InlineData("Modules/Users/Contracts/Users/Common/IUserTelegramAccountService.cs")]
+    [InlineData("Modules/Users/Contracts/Users/Models/UserTelegramRegistrationModel.cs")]
+    [InlineData("Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs")]
+    [InlineData("Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs")]
+    [InlineData("Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs")]
+    public void TelegramCapabilities_StayWithTheirDeclaredOwner(string path) {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(path)));
     }
 
     [Theory]

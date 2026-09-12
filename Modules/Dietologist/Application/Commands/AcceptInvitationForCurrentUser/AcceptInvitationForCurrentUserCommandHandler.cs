@@ -81,7 +81,6 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
     }
 
     private static string ResolveDietologistDisplayName(UserDietologistProfileModel user) {
-        string fullName = $"{user.FirstName} {user.LastName}".Trim();
-        return string.IsNullOrWhiteSpace(fullName) ? user.Email : fullName;
+        return DietologistProfileDisplayName.Resolve(user);
     }
 }

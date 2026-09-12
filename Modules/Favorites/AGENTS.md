@@ -34,3 +34,5 @@ AsNoTracking can silently detach the owned Favorite row. PostgreSQL coverage mus
 verify identity reuse, persisted updates and absence of foreign tracked entities.
 
 Stable favorite IDs live in Domain.Contracts. Favorites Domain references Meals Domain.Contracts for MealId; this does not expose Meals aggregates.
+
+Favorites and MealPlanning extend scalar model protection to twenty-two assemblies. Central typed composers preserve six Favorites Cascade FKs and four MealPlanning relationships: optional MealPlan User Cascade, MealPlanMeal Recipe Restrict, ShoppingList User Cascade, and optional ShoppingListItem Product SetNull. Same-owner mappings, indexes, converters and source provenance stay local. Central Infrastructure references Products.Domain explicitly; no schema or API change is intended.

@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -30,11 +29,6 @@ internal sealed class RecipeIngredientConfiguration : IEntityTypeConfiguration<R
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Ignore(e => e.ProductSnapshot);
-
-        builder.HasOne<Product>()
-            .WithMany()
-            .HasForeignKey(e => e.ProductId)
-            .IsRequired(false);
 
         builder.HasOne(e => e.NestedRecipe)
             .WithMany(r => r.NestedRecipeUsages)

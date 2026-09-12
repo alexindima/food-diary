@@ -13,6 +13,34 @@ namespace FoodDiary.Application.Tests.Users;
 
 [ExcludeFromCodeCoverage]
 public sealed class UpdateUserCommandHandlerTests {
+    [Theory]
+    [InlineData("Asia/Tbilisi", true)]
+    [InlineData("America/New_York", true)]
+    [InlineData("UTC", true)]
+    [InlineData(null, true)]
+    [InlineData("", false)]
+    [InlineData("not/a-zone", false)]
+    [InlineData("Pacific Standard Time", false)]
+    public async Task Handle_TimeZoneIsValidatedBeforeOtherProfileChanges(string? timeZoneId, bool valid) {
+        var user = User.Create("timezone@example.com", "hash");
+        user.SetTimeZone("Europe/Paris");
+        var handler = new UpdateUserCommandHandler(CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+        UpdateUserCommand command = CreateCommand(user.Id.Value) with { TimeZoneId = timeZoneId, FirstName = "Updated" };
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.Equal(valid, result.IsSuccess);
+        if (valid) {
+            Assert.Equal(timeZoneId ?? "Europe/Paris", result.Value.TimeZoneId);
+            Assert.Equal("Updated", user.FirstName);
+        } else {
+            Assert.Equal("Validation.Invalid", result.Error.Code);
+            Assert.Equal("Europe/Paris", user.TimeZoneId);
+            Assert.Null(user.FirstName);
+        }
+    }
+
     [Fact]
     public async Task Handle_WithDashboardLayout_SerializesInApplicationLayer() {
         var user = User.Create("user@example.com", "hash");

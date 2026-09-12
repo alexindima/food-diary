@@ -65,7 +65,7 @@ export class RecommendationThreadComponent {
             });
     }
 
-    protected authorName(comment: RecommendationComment): string {
+    protected authorName(comment: RecommendationComment): string | null {
         const name = `${comment.authorFirstName ?? ''} ${comment.authorLastName ?? ''}`.trim();
         return name.length > 0 ? name : comment.authorEmail;
     }

@@ -40,6 +40,13 @@ const USER: User = {
 const EXPECTED_HEIGHT = 180;
 
 describe('user manage form mapper', () => {
+    it('preserves the selected time zone in the profile update without inventing one for legacy users', () => {
+        const form = { ...createUserManageFormModel(), ...mapUserToForm({ ...USER, timeZoneId: 'Asia/Tbilisi' }) };
+        expect(buildUserUpdateDto(form).timeZoneId).toBe('Asia/Tbilisi');
+        const legacy = { ...createUserManageFormModel(), ...mapUserToForm(USER) };
+        expect(legacy.timeZoneId).toBeNull();
+        expect(buildUserUpdateDto(legacy).timeZoneId).toBeUndefined();
+    });
     it('should create user form with empty defaults', () => {
         const model = createUserManageFormModel();
 
@@ -59,6 +66,7 @@ describe('user manage form mapper', () => {
 
     it('should normalize legacy user values into form patch', () => {
         expect(mapUserToForm(USER)).toEqual({
+            timeZoneId: null,
             email: USER.email,
             username: USER.username,
             firstName: USER.firstName,

@@ -1,4 +1,5 @@
 using FoodDiary.Infrastructure.Persistence.Composition;
+using FoodDiary.Infrastructure.Persistence.Authentication;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.MealPlanning.Infrastructure.Model;
 using FoodDiary.Infrastructure.Persistence.Audit;
@@ -23,6 +24,8 @@ namespace FoodDiary.Infrastructure.Persistence;
 
 public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : DbContext(options) {
     internal DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
+    internal DbSet<TelegramLoginTicket> TelegramLoginTickets => Set<TelegramLoginTicket>();
+    internal DbSet<TelegramOperation> TelegramOperations => Set<TelegramOperation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasPostgresExtension("pg_trgm");
@@ -77,5 +80,15 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         NotificationsCrossModuleRelationships.Configure(modelBuilder);
         FastingCrossModuleRelationships.Configure(modelBuilder);
         BillingCrossModuleRelationships.Configure(modelBuilder);
+        AdminCrossModuleRelationships.Configure(modelBuilder);
+        IdentityCrossModuleRelationships.Configure(modelBuilder);
+        RecipeCommunityCrossModuleRelationships.Configure(modelBuilder);
+        DietologistCrossModuleRelationships.Configure(modelBuilder);
+        UsersCrossModuleRelationships.Configure(modelBuilder);
+        FavoritesCrossModuleRelationships.Configure(modelBuilder);
+        MealPlanningCrossModuleRelationships.Configure(modelBuilder);
+        ProductsCrossModuleRelationships.Configure(modelBuilder);
+        RecipesCrossModuleRelationships.Configure(modelBuilder);
+        MealsCrossModuleRelationships.Configure(modelBuilder);
     }
 }

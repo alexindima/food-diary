@@ -4,7 +4,7 @@ namespace FoodDiary.Presentation.Api.Features.Users.Responses;
 
 public sealed record UserHttpResponse(
     Guid Id,
-    string Email,
+    string? Email,
     bool HasPassword,
     string? Username,
     string? FirstName,
@@ -41,4 +41,6 @@ public sealed record UserHttpResponse(
     DateTime? AiConsentAcceptedAt,
     bool MustChangePassword,
     bool HasGoogleIdentity,
-    string SurfaceStyle = "normal");
+    string SurfaceStyle = "normal",
+    bool HasTelegramIdentity = false,
+    string? TimeZoneId = null);

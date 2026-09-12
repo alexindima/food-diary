@@ -51,6 +51,7 @@ import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/co
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card';
 import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card';
+import { UserManageBackupEmailComponent } from '../user-manage-sections/security-card/user-manage-backup-email';
 import { UserManageSecurityCardComponent } from '../user-manage-sections/security-card/user-manage-security-card';
 import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './user-manage-lib/user-manage.config';
 import type {
@@ -96,6 +97,7 @@ type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
         UserManageNotificationsCardComponent,
         UserManagePrivacyCardComponent,
         UserManageSecurityCardComponent,
+        UserManageBackupEmailComponent,
         UserManageComparisonWidgetsComponent,
     ],
     templateUrl: './user-manage.html',
@@ -168,7 +170,20 @@ export class UserManageComponent {
     });
     protected readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
     protected readonly hasGoogleIdentity = computed(() => this.facade.user()?.hasGoogleIdentity ?? false);
+    protected readonly hasTelegramIdentity = computed(() => this.facade.user()?.hasTelegramIdentity ?? false);
+    protected readonly canUnlinkTelegram = computed(() => {
+        const user = this.facade.user();
+        return user !== null && (user.hasGoogleIdentity === true || (user.hasPassword && user.isEmailConfirmed && user.email !== null));
+    });
+    protected readonly isUnlinkingTelegram = this.facade.isUnlinkingTelegram;
+
+    protected unlinkTelegram(): void {
+        void this.facade.unlinkTelegramAsync();
+    }
     protected readonly accountEmail = computed(() => this.facade.user()?.email ?? '');
+    protected readonly canUsePassword = computed(
+        () => this.hasPassword() || (Boolean(this.facade.user()?.email) && this.facade.user()?.isEmailConfirmed === true),
+    );
     protected readonly isLinkingGoogle = this.facade.isLinkingGoogle;
     protected readonly passwordActionState = computed<PasswordActionState>(() => {
         const hasPassword = this.hasPassword();
@@ -616,6 +631,7 @@ export class UserManageComponent {
             birthDate: userFormFields.birthDate().value(),
             gender: userFormFields.gender().value(),
             language: userFormFields.language().value(),
+            timeZoneId: userFormFields.timeZoneId().value(),
             theme: userFormFields.theme().value(),
             uiStyle: userFormFields.uiStyle().value(),
             heightCm: userFormFields.heightCm().value(),
@@ -701,6 +717,7 @@ export class UserManageComponent {
             'birthDate',
             'gender',
             'language',
+            'timeZoneId',
             'theme',
             'uiStyle',
             'heightCm',

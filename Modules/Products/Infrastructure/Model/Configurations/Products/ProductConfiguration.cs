@@ -1,7 +1,4 @@
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -28,22 +25,6 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
 
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
-        builder.HasOne<ImageAsset>()
-            .WithMany()
-            .HasForeignKey(e => e.ImageAssetId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.ClientNoAction);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId);
-
-        builder.HasOne<UsdaFood>()
-            .WithMany()
-            .HasForeignKey(e => e.UsdaFdcId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
-
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
         builder.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
         builder.HasIndex(e => e.Name)

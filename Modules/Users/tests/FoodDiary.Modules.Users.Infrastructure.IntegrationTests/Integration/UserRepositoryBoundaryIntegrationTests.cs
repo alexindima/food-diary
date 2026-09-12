@@ -30,10 +30,12 @@ public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixtu
         context.ChangeTracker.Clear();
         var repository = new UserRepository(context);
 
+        Assert.NotNull(active.Email);
         Assert.Equal(active.Id, (await repository.GetByEmailAsync(active.Email))?.Id);
         Assert.Equal(active.Id, (await repository.GetByIdAsync(active.Id))?.Id);
         Assert.Equal(active.Id, (await repository.GetByTelegramUserIdAsync(1001))?.Id);
         foreach (User excluded in new[] { inactive, deleted }) {
+            Assert.NotNull(excluded.Email);
             Assert.Null(await repository.GetByEmailAsync(excluded.Email));
             Assert.Null(await repository.GetByIdAsync(excluded.Id));
             Assert.Null(await repository.GetByTelegramUserIdAsync(excluded.TelegramUserId!.Value));
@@ -63,6 +65,7 @@ public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixtu
         context.ChangeTracker.Clear();
         var repository = new UserRepository(context);
 
+        Assert.NotNull(user.Email);
         User? byEmail = await repository.GetByEmailAsync(user.Email);
         Assert.NotNull(byEmail);
         Assert.Empty(byEmail.WeightGoals);

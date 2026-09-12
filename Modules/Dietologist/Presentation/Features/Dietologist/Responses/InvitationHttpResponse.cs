@@ -2,7 +2,7 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 
 public sealed record InvitationHttpResponse(
     Guid InvitationId,
-    string ClientEmail,
+    string? ClientEmail,
     string? ClientFirstName,
     string? ClientLastName,
     string Status,

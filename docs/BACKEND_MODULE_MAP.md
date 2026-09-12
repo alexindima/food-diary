@@ -26,7 +26,8 @@ Use this file when deciding where backend code belongs.
 
 | Concern | Project | Put Here | Do Not Put Here |
 | --- | --- | --- | --- |
-| Food quality scoring | `Modules/Products/Domain` | FoodQualityScore and FoodQualityGrade; common formula consumed across modules | Contract-only projects, replacement shared scoring assemblies |
+| Food quality scoring | `Modules/Products/FoodQuality` | FoodQualityScore and FoodQualityGrade; Products-owned common formula with only scalar contract dependencies | Aggregates, persistence, providers, copies of the formula |
+| Role names | `Modules/Users/Domain.Contracts` | Existing RoleNames constants shared by authorization use cases | Role entities, membership mutation |
 | Product identity and units | `Modules/Products/Domain.Contracts` | ProductId, ProductType, MeasurementUnit | Aggregate dependencies and calculations |
 | Nutrient health scoring | `Modules/Usda/Domain` | HealthAreaScore, HealthAreaGrade, HealthAreaScores | Reverse Products dependencies |
 | Domain model | Owning `Modules/<Feature>/Domain` | Entities, value objects, aggregate behavior, domain events | EF Core, HTTP, external SDKs, central shared domain buckets |
@@ -326,3 +327,10 @@ See [ADR 0033](adr/0033-retry-safe-outbox-and-consumer-contracts.md) for retry-s
 ## BugTriage
 
 Independent bug-report processing service under `Services/BugTriage/`. Application owns report lifecycle and ports; Infrastructure owns PostgreSQL, the MailInbox.Client adapter and polling; Presentation owns the processor API; WebApi is composition-only. No primary module references it. See `docs/backend/BUG_TRIAGE.md`.
+
+Admin scalar boundaries: Billing, ContentReports and Gamification expose narrow
+Domain.Contracts for shared constants/enums; see [ownership details](ai/admin-scalar-boundaries.md).
+
+Application aggregate boundaries: all module Application projects use narrow foreign
+contracts instead of foreign Domain projects. Cycles public enums belong to
+Cycles.Domain.Contracts; see [details](ai/application-domain-boundaries.md).

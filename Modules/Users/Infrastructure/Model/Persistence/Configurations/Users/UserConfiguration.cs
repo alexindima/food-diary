@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +25,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
+        builder.Property(e => e.Email).IsRequired(false);
+        builder.Property(e => e.TimeZoneId).HasMaxLength(100);
         builder.HasIndex(e => e.Email).IsUnique();
         builder.HasIndex(e => new { e.GoogleIssuer, e.GoogleSubject })
             .IsUnique()
@@ -55,6 +56,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasColumnType("bigint");
         builder.HasIndex(e => e.TelegramUserId)
             .IsUnique();
+        builder.Property(e => e.TelegramOidcIssuer).HasMaxLength(200);
+        builder.Property(e => e.TelegramOidcSubject).HasMaxLength(255);
+        builder.HasIndex(e => new { e.TelegramOidcIssuer, e.TelegramOidcSubject })
+            .IsUnique()
+            .HasFilter("\"TelegramOidcIssuer\" IS NOT NULL AND \"TelegramOidcSubject\" IS NOT NULL");
     }
 
     private static void ConfigurePreferences(EntityTypeBuilder<User> builder) {
@@ -106,12 +112,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .WithOne()
             .HasForeignKey(goal => goal.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne<ImageAsset>()
-            .WithMany()
-            .HasForeignKey(e => e.ProfileImageAssetId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 
     private static void ConfigureNavigationAccess(EntityTypeBuilder<User> builder) {

@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
@@ -41,6 +42,9 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         UserBillingProfileModel user = userResult.Value;
+        if (string.IsNullOrWhiteSpace(user.Email) || !user.IsEmailConfirmed) {
+            return Result.Failure<BillingCheckoutSessionModel>(UserErrors.EmailRequired);
+        }
         BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user.HasPaidPremium || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);

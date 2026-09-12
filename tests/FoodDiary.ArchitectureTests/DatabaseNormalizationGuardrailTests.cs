@@ -6,6 +6,14 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DatabaseNormalizationGuardrailTests {
+    // ADR 0037: immutable operation outcomes depend on the whole owner/operation key.
+    // These receipts are not link tables and survive deletion of the recorded entry.
+    private static readonly HashSet<string> AllowedCompositeKeyFacts = new(StringComparer.Ordinal) {
+        "HydrationOperationReceipt.AmountMl",
+        "HydrationOperationReceipt.EntryId",
+        "HydrationOperationReceipt.TimestampUtc",
+    };
+
     private static readonly HashSet<string> AllowedDocumentColumns = new(StringComparer.Ordinal) {
         "BillingPayment.ProviderMetadataJson",
         "BillingSubscription.ProviderMetadataJson",
@@ -132,7 +140,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
                 return entity.GetProperties()
                     .Where(property => !keyProperties.Contains(property))
                     .Where(IsPersistedApplicationColumn)
-                    .Select(property => FormatProperty(entity, property));
+                    .Select(property => FormatProperty(entity, property))
+                    .Where(column => !AllowedCompositeKeyFacts.Contains(column));
             })
             .Order(StringComparer.Ordinal)];
 

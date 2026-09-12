@@ -331,8 +331,8 @@ public sealed class RefreshTokenCommandHandlerTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user)
         : IUserRepository, IUserGoogleIdentityRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<User?> GetByEmailAsync(string? email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<User?> GetByEmailIncludingDeletedAsync(string? email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(
             string issuer,
             string subject,
@@ -353,14 +353,14 @@ public sealed class RefreshTokenCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeJwtTokenGenerator(UserId userId, string email) : IJwtTokenGenerator {
-        public (UserId, string, string, DateTime?, long)? AccessCall { get; private set; }
+    private sealed class FakeJwtTokenGenerator(UserId userId, string? email) : IJwtTokenGenerator {
+        public (UserId, string?, string, DateTime?, long)? AccessCall { get; private set; }
         public Guid RefreshSessionId { get; } = Guid.Parse("f48a7411-0e37-4b0f-8094-c6b7c8bdb931");
 
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "unused-access-token";
+        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "unused-access-token";
         public string GenerateAccessToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             DateTime? expiresAtUtc,
             long securityVersion = 0) {
@@ -369,17 +369,17 @@ public sealed class RefreshTokenCommandHandlerTests {
         }
         public string GenerateAccessToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             JwtImpersonationContext impersonation,
             long securityVersion = 0) => "unused-impersonation-access-token";
         public string GenerateRefreshToken(
             UserId userId,
-            string email,
+            string? email,
             IReadOnlyCollection<string> roles,
             bool rememberMe = false,
             Guid? refreshSessionId = null) => "unused-refresh-token";
-        public (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) =>
+        public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) =>
             token switch {
                 "current-refresh-token" => (userId, email, false, RefreshSessionId),
                 "remember-refresh-token" => (userId, email, true, RefreshSessionId),

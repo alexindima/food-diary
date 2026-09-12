@@ -11,3 +11,7 @@ Rules for `Modules/BodyMetrics/Application/`.
 - Preserve calculation, date normalization, authorization, and user-scoping semantics.
 - Preserve the legacy `FoodDiary.Application.BodyMetrics` assembly name and CLR namespaces.
 - Keep persistence implementations and HTTP transport outside this project.
+
+Application consumes scalar Users types through Users.Domain.Contracts and semantic
+capabilities through Users.Contracts. Do not reference the aggregate-bearing
+Users.Domain assembly for these types.

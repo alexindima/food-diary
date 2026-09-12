@@ -51,7 +51,9 @@
     "Recipes": [
       "Images"
     ],
-    "Statistics": [],
+    "Statistics": [
+      "Hydration"
+    ],
     "Tdee": [
       "Exercises"
     ],
@@ -88,6 +90,7 @@
       "Users"
     ],
     "Meals": [
+      "Ai",
       "Favorites",
       "Images",
       "Products",
@@ -189,6 +192,7 @@
     "Statistics": [
       "BodyMetrics",
       "Dashboard",
+      "Hydration",
       "Users"
     ],
     "Tdee": [

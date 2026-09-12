@@ -1,6 +1,6 @@
 # Billing Domain Guidelines
 
-- Own `BillingSubscription`, `BillingPayment`, `BillingWebhookEvent`, provider names and payment kinds.
+- Own `BillingSubscription`, `BillingPayment`, `BillingWebhookEvent` and payment kinds. Provider names and their pure support predicate belong to Billing Domain.Contracts.
 - Preserve existing CLR namespaces and EF identity.
 - Keep provider SDK, EF, HTTP and secret concerns out of this project.
 

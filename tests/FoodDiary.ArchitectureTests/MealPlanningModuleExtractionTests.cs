@@ -35,7 +35,7 @@ public sealed class MealPlanningModuleExtractionTests {
     public void ExtractedMealPlanningAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
+        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }
@@ -113,9 +113,10 @@ public sealed class MealPlanningModuleExtractionTests {
     public void ShoppingListUserRelationship_IsOneWayAndExplicitlyMapped() {
         string userSource = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain", "Entities", "Users", "User.cs"));
         string mappingSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "Modules", "MealPlanning", "Infrastructure", "Model", "Configurations", "ShoppingLists", "ShoppingListConfiguration.cs"));
+            "FoodDiary.Infrastructure", "Persistence", "Composition", "MealPlanningCrossModuleRelationships.cs"));
 
         Assert.DoesNotContain("ShoppingLists", userSource, StringComparison.Ordinal);
+        Assert.Contains("modelBuilder.Entity<ShoppingList>().HasOne<User>()", mappingSource, StringComparison.Ordinal);
         Assert.Contains(".WithMany()", mappingSource, StringComparison.Ordinal);
         Assert.DoesNotContain(".WithMany(u => u.ShoppingLists)", mappingSource, StringComparison.Ordinal);
         Assert.Contains(".HasForeignKey(e => e.UserId)", mappingSource, StringComparison.Ordinal);

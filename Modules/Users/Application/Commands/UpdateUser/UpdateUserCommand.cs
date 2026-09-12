@@ -25,5 +25,6 @@ public record UpdateUserCommand(
     string? ProfileImage,
     Guid? ProfileImageAssetId,
     DashboardLayoutModel? DashboardLayout,
-    bool? IsActive
+    bool? IsActive,
+    string? TimeZoneId = null
 ) : ICommand<Result<UserModel>>, IUserRequest;

@@ -36,6 +36,7 @@ public sealed class UserDataLifecycleGuardrailTests {
     [Theory]
     [InlineData("Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs", "context.AdminImpersonationSessions")]
     [InlineData("Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs", "context.ClientTasks")]
+    [InlineData("Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs", "context.Set<TelegramOperation>()")]
     public void RestrictedUserRelationships_AreHandledByTheirOwners(string path, string target) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(path));
         Assert.Contains(target, source, StringComparison.Ordinal);
@@ -46,7 +47,7 @@ public sealed class UserDataLifecycleGuardrailTests {
     public void PurgeParticipants_DoNotSaveOrCommitAndCoordinatorDoesNotAcquireForeignTables() {
         string[] participants = [.. ModuleSourceCatalog.InfrastructureFiles()
             .Where(path => path.EndsWith("UserDataPurgeParticipant.cs", StringComparison.Ordinal))];
-        Assert.Equal(12, participants.Length);
+        Assert.Equal(13, participants.Length);
         foreach (string path in participants) {
             string source = File.ReadAllText(path);
             Assert.DoesNotContain("SaveChanges", source, StringComparison.Ordinal);
@@ -79,8 +80,10 @@ public sealed class UserDataLifecycleGuardrailTests {
             "FavoriteProduct(UserId):Cascade",
             "FavoriteRecipe(UserId):Cascade",
             "HydrationEntry(UserId):Cascade",
+            "HydrationOperationReceipt(UserId):Cascade",
             "ImageAsset(UserId):Cascade",
             "Meal(UserId):Cascade",
+            "MealRecognitionReceipt(UserId):Cascade",
             "MealPlan(UserId):Cascade",
             "Notification(UserId):Cascade",
             "RecentItem(UserId):Cascade",

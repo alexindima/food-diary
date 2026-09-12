@@ -111,7 +111,6 @@ public sealed class InviteDietologistCommandHandler(
     }
 
     private static string ResolveClientName(UserDietologistProfileModel user) {
-        string clientName = $"{user.FirstName} {user.LastName}".Trim();
-        return string.IsNullOrWhiteSpace(clientName) ? user.Email : clientName;
+        return DietologistProfileDisplayName.Resolve(user);
     }
 }

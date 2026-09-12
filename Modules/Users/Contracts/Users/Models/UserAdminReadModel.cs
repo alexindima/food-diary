@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Abstractions.Users.Models;
 [ExcludeFromCodeCoverage]
 public sealed record UserAdminReadModel(
     Guid Id,
-    string Email,
+    string? Email,
     bool HasPassword,
     string? Username,
     string? FirstName,

@@ -50,7 +50,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
 
     public string GenerateAccessToken(
         UserId userId,
-        string email,
+        string? email,
         IReadOnlyCollection<string> roles,
         long securityVersion = 0) =>
         GenerateToken(
@@ -65,7 +65,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
 
     public string GenerateAccessToken(
         UserId userId,
-        string email,
+        string? email,
         IReadOnlyCollection<string> roles,
         DateTime? expiresAtUtc,
         long securityVersion,
@@ -83,7 +83,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
 
     public string GenerateAccessToken(
         UserId userId,
-        string email,
+        string? email,
         IReadOnlyCollection<string> roles,
         DateTime? expiresAtUtc,
         long securityVersion = 0) =>
@@ -99,7 +99,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
 
     public string GenerateAccessToken(
         UserId userId,
-        string email,
+        string? email,
         IReadOnlyCollection<string> roles,
         JwtImpersonationContext impersonation,
         long securityVersion = 0) =>
@@ -115,7 +115,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
 
     public string GenerateRefreshToken(
         UserId userId,
-        string email,
+        string? email,
         IReadOnlyCollection<string> roles,
         bool rememberMe = false,
         Guid? refreshSessionId = null) =>
@@ -131,7 +131,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             rememberMe,
             refreshSessionId);
 
-    public (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) {
+    public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) {
         try {
             var tokenHandler = new JwtSecurityTokenHandler();
             tokenHandler.ValidateToken(token, new TokenValidationParameters {
@@ -153,7 +153,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             }
 
             var userIdValue = Guid.Parse(jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.NameIdentifier, StringComparison.Ordinal)).Value);
-            string email = jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.Email, StringComparison.Ordinal)).Value;
+            string? email = jwtToken.Claims.FirstOrDefault(x => string.Equals(x.Type, ClaimTypes.Email, StringComparison.Ordinal))?.Value;
             bool rememberMe = jwtToken.Claims.Any(static x =>
                 string.Equals(x.Type, JwtClaimNames.RememberMe, StringComparison.Ordinal) &&
                 string.Equals(x.Value, "true", StringComparison.OrdinalIgnoreCase));
@@ -171,7 +171,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
 
     private string GenerateToken(
         UserId userId,
-        string email,
+        string? email,
         IReadOnlyCollection<string> roles,
         string tokenUse,
         int expirationMinutes,
@@ -184,10 +184,15 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
 
         var claims = new List<Claim> {
             new(ClaimTypes.NameIdentifier, userId.Value.ToString()),
-            new(ClaimTypes.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtTokenUseClaimNames.ClaimType, tokenUse),
         };
+
+        if (!string.IsNullOrWhiteSpace(email)) {
+            claims.Add(new Claim(ClaimTypes.Email, email));
+        } else {
+            claims.Add(new Claim("fd_email_optional", "true"));
+        }
 
         if (impersonation is not null) {
             claims.Add(new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"));

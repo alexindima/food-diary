@@ -9,7 +9,9 @@
             @if (state() === 'pending') {
                 <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
             } @else if (state() === 'success') {
-                <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.SUCCESS' | translate }}</p>
+                <p class="email-verify__description fd-ui-body-sm">
+                    {{ (isBackupEmail() ? 'USER_MANAGE.BACKUP_EMAIL_VERIFIED' : 'AUTH.VERIFY.SUCCESS') | translate }}
+                </p>
             } @else {
                 <p class="email-verify__description fd-ui-body-sm">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
             }

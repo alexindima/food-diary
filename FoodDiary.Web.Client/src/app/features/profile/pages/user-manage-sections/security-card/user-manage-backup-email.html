@@ -1,0 +1,33 @@
+@if (visible()) {
+    <section class="fd-stack fd-gap-sm" aria-labelledby="backup-email-title">
+        <h3 id="backup-email-title">{{ 'USER_MANAGE.BACKUP_EMAIL_TITLE' | translate }}</h3>
+        @if (accountEmail(); as address) {
+            <p>{{ address }}</p>
+            <p role="status">{{ (confirmed() ? 'USER_MANAGE.EMAIL_CONFIRMED' : 'USER_MANAGE.EMAIL_UNCONFIRMED') | translate }}</p>
+        } @else {
+            <p>{{ 'USER_MANAGE.BACKUP_EMAIL_HINT' | translate }}</p>
+            <fd-ui-input
+                type="email"
+                [label]="'USER_MANAGE.BACKUP_EMAIL_LABEL' | translate"
+                [value]="email()"
+                (valueChange)="setEmail($event)"
+            />
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                [loading]="facade.isRequestingBackupEmail()"
+                [disabled]="!validEmail() || facade.isRequestingBackupEmail() || resendSeconds() > 0"
+                [disabledReason]="'USER_MANAGE.BACKUP_EMAIL_LABEL' | translate"
+                (click)="submit()"
+            >
+                {{ (facade.backupEmailSentTo() ? 'USER_MANAGE.BACKUP_EMAIL_RESEND' : 'USER_MANAGE.BACKUP_EMAIL_SEND') | translate }}
+            </fd-ui-button>
+            @if (resendSeconds() > 0) {
+                <p>{{ 'USER_MANAGE.BACKUP_EMAIL_COOLDOWN' | translate: { seconds: resendSeconds() } }}</p>
+            }
+            @if (facade.backupEmailSentTo(); as address) {
+                <p role="status">{{ 'USER_MANAGE.BACKUP_EMAIL_SENT' | translate: { email: address } }}</p>
+            }
+        }
+    </section>
+}

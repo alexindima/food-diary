@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1356,
+    "productionProjectEdges": 1380,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -11,9 +11,9 @@
     "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 97,
-    "routedStandaloneComponents": 61,
-    "componentsWithoutDirectSpecs": 141,
-    "criticalSymbolsWithoutTestReferences": 22,
+    "routedStandaloneComponents": 62,
+    "componentsWithoutDirectSpecs": 145,
+    "criticalSymbolsWithoutTestReferences": 36,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -34,6 +34,13 @@
       "fanOut": 3,
       "level": "informational",
       "role": "orchestrator"
+    },
+    {
+      "module": "Hydration",
+      "fanIn": 3,
+      "fanOut": 0,
+      "level": "informational",
+      "role": "aggregate-owner"
     },
     {
       "module": "Images",
@@ -69,13 +76,6 @@
       "fanOut": 2,
       "level": "informational",
       "role": "read-composer"
-    },
-    {
-      "module": "Hydration",
-      "fanIn": 2,
-      "fanOut": 0,
-      "level": "informational",
-      "role": "aggregate-owner"
     },
     {
       "module": "Products",
@@ -139,6 +139,13 @@
       "fanOut": 1,
       "level": "informational",
       "role": "aggregate-owner"
+    },
+    {
+      "module": "Statistics",
+      "fanIn": 0,
+      "fanOut": 1,
+      "level": "informational",
+      "role": "read-composer"
     },
     {
       "module": "WeeklyCheckIn",
@@ -223,13 +230,6 @@
       "fanOut": 0,
       "level": "informational",
       "role": "aggregate-owner"
-    },
-    {
-      "module": "Statistics",
-      "fanIn": 0,
-      "fanOut": 0,
-      "level": "informational",
-      "role": "read-composer"
     },
     {
       "module": "Usda",
@@ -1519,6 +1519,31 @@
         }
       ],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "TelegramAuthComponent",
+      "selector": "fd-telegram-auth",
+      "feature": "auth",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "TelegramEntryButtonComponent",
+      "selector": "fd-telegram-entry-button",
+      "feature": "auth",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.html",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "selected",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -4414,6 +4439,63 @@
       "specPath": null
     },
     {
+      "class": "UserManagePasswordMethodComponent",
+      "selector": "fd-user-manage-password-method",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-password-method.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-password-method.html",
+      "inputs": [
+        {
+          "name": "available",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "actionState",
+          "type": "PasswordActionState",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "passwordChange",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "UserManageTelegramConnectionComponent",
+      "selector": "fd-user-manage-telegram-connection",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.html",
+      "inputs": [
+        {
+          "name": "hasTelegramIdentity",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "canUnlinkTelegram",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "isUnlinkingTelegram",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "telegramUnlink",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "DietologistPromoComponent",
       "selector": "fd-dietologist-promo",
       "feature": "public",
@@ -5027,6 +5109,96 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
+      "name": "AcquireTelegramOperationCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/AcquireTelegramOperation/AcquireTelegramOperationCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "CheckpointTelegramOperationCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CheckpointTelegramOperation/CheckpointTelegramOperationCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "CompleteTelegramBackupEmailCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramBackupEmail/CompleteTelegramBackupEmailCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ExchangeTelegramOidcCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
+      "line": 11,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "RegisterTelegramOperationCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "RequestTelegramBackupEmailCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "StartTelegramBackupEmailCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "StartTelegramOidcCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AuthTelegramOnboardingController",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
+      "line": 30,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "BugReportJournalController",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
@@ -5067,6 +5239,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetTelegramConfigurationQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "ListFoodRecognitionsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
@@ -5077,9 +5259,49 @@
       "coveredThrough": []
     },
     {
+      "name": "ListReadyTelegramOperationsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQueryHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "BeginTelegramMiniAppCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "CompleteTelegramAuthenticationCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ExchangeTelegramOidcCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

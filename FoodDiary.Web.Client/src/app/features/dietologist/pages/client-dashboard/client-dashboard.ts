@@ -216,7 +216,7 @@ export class ClientDashboardComponent {
             return '';
         }
 
-        return getClientDashboardTitle(client);
+        return getClientDashboardTitle(client) ?? this.translateService.instant('ATTENTION.UNNAMED_CLIENT');
     });
     protected readonly profileChips = computed(() => {
         const client = this.client();

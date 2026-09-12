@@ -113,7 +113,7 @@ public sealed class TelegramAuthValidatorsTests {
     public void ValidateInitData_WithValidHashButMissingUser_ReturnsInvalidDataFailure() {
         long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
         string dataCheckString = string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}");
-        byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes(BotToken), "WebAppData");
+        byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes("WebAppData"), BotToken);
         string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         TelegramAuthValidator validator = CreateInitDataValidator();
 
@@ -295,6 +295,21 @@ public sealed class TelegramAuthValidatorsTests {
         Assert.Null(result.Value.Username);
     }
 
+    [Fact]
+    public void ValidateInitData_WithReversedKeyDerivation_ReturnsFailure() {
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        const string userJson = "{\"id\":42,\"first_name\":\"Alex\"}";
+        string dataCheckString = string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}\nuser={userJson}");
+        byte[] incorrectKey = HMACSHA256.HashData(Encoding.UTF8.GetBytes(BotToken), Encoding.UTF8.GetBytes("WebAppData"));
+        string hash = Convert.ToHexStringLower(HMACSHA256.HashData(incorrectKey, Encoding.UTF8.GetBytes(dataCheckString)));
+        string initData = string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}&user={Uri.EscapeDataString(userJson)}&hash={hash}");
+
+        Result<TelegramInitData> result = CreateInitDataValidator().ValidateInitData(initData);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
+    }
+
     private static TelegramAuthValidator CreateInitDataValidator(int authTtlSeconds = 3600) {
         return new TelegramAuthValidator(
             MsOptions.Create(new TelegramAuthOptions { BotToken = BotToken, AuthTtlSeconds = authTtlSeconds }),
@@ -317,7 +332,7 @@ public sealed class TelegramAuthValidatorsTests {
             language_code = "en",
         });
         string dataCheckString = string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}\nuser={userJson}");
-        byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes(BotToken), "WebAppData");
+        byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes("WebAppData"), BotToken);
         string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         return string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}&user={Uri.EscapeDataString(userJson)}&hash={hash}");
     }

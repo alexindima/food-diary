@@ -67,7 +67,7 @@ public sealed class IdentityAuthenticationRegistrationTests {
         var userId = UserId.New();
         var sessionId = Guid.NewGuid();
         string refresh = tokens.GenerateRefreshToken(userId, "test@example.com", ["Admin"], rememberMe: true, refreshSessionId: sessionId);
-        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = tokens.ValidateToken(refresh);
+        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validated = tokens.ValidateToken(refresh);
 
         Assert.NotNull(validated);
         Assert.Multiple(

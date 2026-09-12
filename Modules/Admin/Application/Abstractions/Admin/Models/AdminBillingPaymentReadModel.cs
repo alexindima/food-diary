@@ -3,7 +3,7 @@ namespace FoodDiary.Application.Abstractions.Admin.Models;
 public sealed record AdminBillingPaymentReadModel(
     Guid Id,
     Guid UserId,
-    string UserEmail,
+    string? UserEmail,
     Guid? BillingSubscriptionId,
     string Provider,
     string ExternalPaymentId,

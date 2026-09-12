@@ -305,6 +305,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task SetPasswordHandler_ForGoogleOnlyAccount_SetsPassword() {
         var user = User.Create("google@example.com", "hash", hasPassword: false);
+        user.SetEmailConfirmed(isConfirmed: true);
         SetPasswordCommandHandler handler = CreateSetPasswordHandler(
             new SingleUserRepository(user),
             new PassthroughPasswordHasher());
@@ -316,6 +317,18 @@ public partial class UsersFeatureTests {
         ResultAssert.Success(result);
         Assert.True(user.HasPassword);
         Assert.Equal("new-password", user.Password);
+    }
+
+    [Fact]
+    public async Task SetPasswordHandler_ForTelegramOnlyAccount_RequiresVerifiedEmail() {
+        var user = User.CreateTelegram(123, "hash");
+        SetPasswordCommandHandler handler = CreateSetPasswordHandler(
+            new SingleUserRepository(user), new PassthroughPasswordHasher());
+
+        Result result = await handler.Handle(new SetPasswordCommand(user.Id.Value, "new-password"), CancellationToken.None);
+
+        Assert.Equal("User.EmailRequired", result.Error.Code);
+        Assert.False(user.HasPassword);
     }
 
     [Fact]

@@ -76,7 +76,7 @@ public sealed class CreateAdminUserCommandHandler(
         CancellationToken cancellationToken) =>
         command.SendCredentialsEmail
             ? emailSender.SendAccountCreatedAsync(
-                new AccountCreatedMessage(user.Email, temporaryPassword, user.Language, command.ClientOrigin),
+                new AccountCreatedMessage(command.Email.Trim(), temporaryPassword, user.Language, command.ClientOrigin),
                 cancellationToken)
             : Task.CompletedTask;
 }

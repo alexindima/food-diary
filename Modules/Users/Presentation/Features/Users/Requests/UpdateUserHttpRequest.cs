@@ -22,4 +22,5 @@ public sealed record UpdateUserHttpRequest(
     string? ProfileImage,
     Guid? ProfileImageAssetId,
     DashboardLayoutHttpModel? DashboardLayout,
-    bool? IsActive);
+    bool? IsActive,
+    string? TimeZoneId = null);

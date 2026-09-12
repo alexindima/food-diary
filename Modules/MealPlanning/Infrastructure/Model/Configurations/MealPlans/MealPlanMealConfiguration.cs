@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +23,5 @@ internal sealed class MealPlanMealConfiguration : IEntityTypeConfiguration<MealP
         builder.Property(e => e.MealType)
             .HasConversion<string>();
 
-        builder.HasOne<Recipe>()
-            .WithMany()
-            .HasForeignKey(e => e.RecipeId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

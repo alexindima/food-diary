@@ -15,9 +15,5 @@ internal sealed class RecommendationTemplateConfiguration : IEntityTypeConfigura
         builder.Property(template => template.Name).IsRequired().HasMaxLength(120);
         builder.Property(template => template.Text).IsRequired().HasMaxLength(2000);
         builder.HasIndex(template => new { template.DietologistUserId, template.IsArchived, template.Name });
-        builder.HasOne<FoodDiary.Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(template => template.DietologistUserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

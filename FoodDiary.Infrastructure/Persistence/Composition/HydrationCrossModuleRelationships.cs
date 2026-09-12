@@ -10,5 +10,9 @@ internal static class HydrationCrossModuleRelationships {
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<HydrationOperationReceipt>().HasOne<User>()
+            .WithMany()
+            .HasForeignKey(receipt => receipt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

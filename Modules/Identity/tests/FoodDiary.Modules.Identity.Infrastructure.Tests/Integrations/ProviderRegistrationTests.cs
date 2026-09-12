@@ -10,6 +10,24 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderRegistrationTests {
+    [Theory]
+    [InlineData("123", true)]
+    [InlineData("124", false)]
+    public void TelegramOperations_ValidateBoundConfigurationAtStartup(string botId, bool valid) {
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["TelegramClient:OperationsEnabled"] = "true",
+            ["TelegramClient:BotId"] = botId,
+            ["TelegramAuth:BotToken"] = "123:test-token",
+        }).Build();
+        using ServiceProvider provider = new ServiceCollection().AddIdentityProvider(configuration).BuildServiceProvider();
+        IStartupValidator validator = provider.GetRequiredService<IStartupValidator>();
+        if (valid) {
+            validator.Validate();
+        } else {
+            Assert.Throws<OptionsValidationException>(validator.Validate);
+        }
+    }
+
     [Fact]
     public void AddIdentityProvider_RegistersOwnerSingletonsAndPreservesSuppliedClock() {
         var services = new ServiceCollection();

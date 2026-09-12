@@ -39,8 +39,8 @@ public sealed class RecommendationCreatedEventHandler(
 
         string fullName = $"{dietologist.FirstName} {dietologist.LastName}".Trim();
 
-        return string.IsNullOrWhiteSpace(fullName)
-            ? dietologist.Email
+        return string.IsNullOrWhiteSpace(fullName) || dietologist.Email is null
+            ? DietologistProfileDisplayName.Resolve(dietologist)
             : $"{fullName} ({dietologist.Email})";
     }
 }

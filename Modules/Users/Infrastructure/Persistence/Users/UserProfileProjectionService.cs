@@ -32,7 +32,7 @@ public sealed class UserProfileProjectionService(FoodDiaryDbContext context) :
             user.ProteinTarget, user.FatTarget, user.CarbTarget, user.FiberTarget,
             new UserCalorieSchedule(user.DailyCalorieTarget, user.CalorieCyclingEnabled,
                 user.MondayCalories, user.TuesdayCalories, user.WednesdayCalories, user.ThursdayCalories,
-                user.FridayCalories, user.SaturdayCalories, user.SundayCalories)), cancellationToken);
+                user.FridayCalories, user.SaturdayCalories, user.SundayCalories), user.TimeZoneId), cancellationToken);
 
     public Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
         ReadAsync(userId, user => new UserGamificationProfileModel(new UserCalorieSchedule(

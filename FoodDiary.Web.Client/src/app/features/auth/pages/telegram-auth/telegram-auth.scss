@@ -1,0 +1,13 @@
+@use '../auth-page';
+
+.telegram-auth {
+    @include auth-page.shell;
+}
+
+.telegram-auth__card {
+    @include auth-page.card(32rem);
+}
+
+.telegram-auth__brand {
+    @include auth-page.brand;
+}

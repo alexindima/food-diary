@@ -32,6 +32,9 @@ public sealed class SetPasswordCommandHandler(
         if (currentUser.HasPassword) {
             return Result.Failure(UserErrors.PasswordAlreadySet);
         }
+        if (currentUser.Email is null || !currentUser.IsEmailConfirmed) {
+            return Result.Failure(UserErrors.EmailRequired);
+        }
 
         string hashedPassword = passwordHasher.Hash(command.NewPassword);
         currentUser.UpdatePassword(hashedPassword);

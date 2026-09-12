@@ -38,15 +38,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 72
+- Public contract files: 78
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 72
-- Interfaces: 33
-- DTO/read-model/projection types: 33
+- Public contract types: 78
+- Interfaces: 36
+- DTO/read-model/projection types: 36
 - Enums: 2
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 5
@@ -68,19 +68,19 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserAuthenticationRegistrationService`
 - `interface IUserBillingService`
 - `interface IUserCleanupService`
+- `interface IUserCommentAuthorReadService`
 - `interface IUserCredentialVerificationService`
 - `interface IUserCurrentWaistProvider`
 - `interface IUserCurrentWeightProvider`
 - `interface IUserDashboardProfileReadService`
 - `interface IUserDataPurgeParticipant`
 - `interface IUserDietologistProfileReadService`
+- `interface IUserFastingReminderReadService`
 - `interface IUserGamificationProfileReadService`
 - `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
 - `interface IUserLookupRepository`
-- `interface IUserNotificationProfileService`
-- `interface IUserProfileImageService`
-- ... 42 more type(s)
+- ... 48 more type(s)
 
 ## Extraction Readiness
 
@@ -110,12 +110,14 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserCredentialVerificationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserNotificationProfileServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserTelegramAccountServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/ActivityLevelContractTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/MiscDomainInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/TelegramAccountTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserGoalAtomicityTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserHardeningInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserIdInvariantTests.cs`
@@ -128,8 +130,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserSecurityVersionTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserValueObjectsInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/WaistGoalInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/WeightGoalInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/ValueObjects/AdditionalValueObjectsInvariantTestsDesiredTests.cs`
 
 ## Working Rule
 

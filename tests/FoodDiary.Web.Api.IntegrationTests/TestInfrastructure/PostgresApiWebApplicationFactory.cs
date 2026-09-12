@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -78,8 +79,9 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
             services.RemoveAll<TestEmailSender>();
             services.RemoveAll<IPasswordHasher>();
 
-            services.AddDbContext<FoodDiaryDbContext>(options =>
-                options.UseNpgsql(GetRequiredConnectionString()));
+            services.AddDbContext<FoodDiaryDbContext>((provider, options) =>
+                options.UseNpgsql(GetRequiredConnectionString())
+                    .AddInterceptors(provider.GetServices<ISaveChangesInterceptor>()));
             services.AddSingleton<IImageStorageService, TestImageStorageService>();
             services.AddSingleton(EmailSender);
             services.AddSingleton<IEmailSender>(EmailSender);

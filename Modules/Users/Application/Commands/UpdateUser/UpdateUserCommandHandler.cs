@@ -102,6 +102,9 @@ public sealed class UpdateUserCommandHandler(
     }
 
     private static Result<ParsedUserPreferences> ParsePreferences(UpdateUserCommand command) {
+        if (!UserTimeZoneInput.IsValid(command.TimeZoneId)) {
+            return Result.Failure<ParsedUserPreferences>(new Error("Validation.Invalid", "TimeZoneId must be a valid IANA time zone or UTC.", ErrorKind.Validation));
+        }
         Result<ActivityLevel?> activityLevelResult = UserInputParser.ParseOptionalEnum<ActivityLevel>(
             command.ActivityLevel,
             nameof(UpdateUserCommand.ActivityLevel),
@@ -165,6 +168,9 @@ public sealed class UpdateUserCommandHandler(
     }
 
     private static void ApplyUpdates(User user, UpdateUserCommand command, UpdateUserValues values) {
+        if (command.TimeZoneId is not null) {
+            user.SetTimeZone(command.TimeZoneId);
+        }
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             Username: Normalize(command.Username),
             FirstName: Normalize(command.FirstName),

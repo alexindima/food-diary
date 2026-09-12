@@ -39,7 +39,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             var userId = new UserId(recordId);
             query = query.Where(item =>
                 (hasId && (item.subscription.Id == recordId || item.user.Id == userId)) ||
-                EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
+                (item.user.Email != null && EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter)) ||
                 EF.Functions.ILike(item.subscription.ExternalCustomerId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.subscription.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.subscription.ExternalPaymentMethodId ?? string.Empty, term, LikeEscapeCharacter));
@@ -102,7 +102,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             var userId = new UserId(recordId);
             query = query.Where(item =>
                 (hasId && (item.payment.Id == recordId || item.payment.BillingSubscriptionId == recordId || item.user.Id == userId)) ||
-                EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
+                (item.user.Email != null && EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter)) ||
                 EF.Functions.ILike(item.payment.ExternalPaymentId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalCustomerId ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter));

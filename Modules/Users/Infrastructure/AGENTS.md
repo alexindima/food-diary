@@ -22,3 +22,9 @@ state, not an external provider. Do not add SaveChanges/transactions inside the
 adapter: writes and role-audit additions remain part of the caller's unit of work.
 
 UserProfileProjectionService owns persisted no-tracking access checks and AI, Dashboard, Dietologist, Gamification, Hydration, TDEE and WeeklyCheckIn projections. These interfaces must not alias the tracked UserContextService. Preserve active/deleted filters; no credentials or goal collections are materialized for narrow profiles.
+
+UserRelatedDataReadService owns batch comment-author and fasting-reminder reads.
+Both scoped contract aliases share this adapter. Unlike access profiles, these
+related-data projections intentionally retain all account states, matching the
+former joins. Query only requested distinct IDs and scalar columns, no tracking,
+saves, caches or transactions; empty input performs no SQL and cancellation is honored.

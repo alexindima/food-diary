@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +21,5 @@ internal sealed class RecipeLikeConfiguration : IEntityTypeConfiguration<RecipeL
 
         builder.HasIndex(e => new { e.UserId, e.RecipeId }).IsUnique();
         builder.HasIndex(e => e.RecipeId);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

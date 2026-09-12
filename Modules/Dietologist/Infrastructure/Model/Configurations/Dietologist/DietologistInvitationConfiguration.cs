@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -35,17 +34,6 @@ internal sealed class DietologistInvitationConfiguration : IEntityTypeConfigurat
         builder.Property(e => e.Status)
             .HasConversion<string>()
             .HasMaxLength(32);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.ClientUserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.DietologistUserId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasIndex(e => e.ClientUserId);
         builder.HasIndex(e => e.DietologistUserId);

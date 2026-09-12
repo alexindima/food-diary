@@ -27,4 +27,11 @@ public sealed class StatisticsController(ISender mediator) : AuthorizedControlle
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetStatisticsHttpQuery query) =>
         HandleOk(query.ToSummaryQuery(userId), static value => value.ToHttpResponse());
+
+    [HttpGet("diary-summary")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [ProducesResponseType<DiaryStatisticsSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetDiarySummary([FromCurrentUser] Guid userId, [FromQuery] GetDiaryStatisticsHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 }

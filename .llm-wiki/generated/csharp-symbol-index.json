@@ -8,40 +8,40 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3830,
-    "symbols": 3770,
-    "interfaceImplementationLinks": 255,
-    "dependencyInjectionRegistrations": 160,
+    "sourceFiles": 3991,
+    "symbols": 3933,
+    "interfaceImplementationLinks": 264,
+    "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 1960,
-      "enum": 63,
-      "interface": 456,
-      "record": 1170,
+      "class": 2044,
+      "enum": 64,
+      "interface": 470,
+      "record": 1234,
       "record struct": 121
     },
     "roles": {
-      "Command": 164,
-      "CommandHandler": 160,
-      "Configuration": 91,
-      "Controller": 100,
-      "Entity": 94,
+      "Command": 178,
+      "CommandHandler": 174,
+      "Configuration": 95,
+      "Controller": 102,
+      "Entity": 98,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 68,
-      "Other": 1516,
-      "Query": 183,
-      "QueryHandler": 136,
+      "Options": 70,
+      "Other": 1593,
+      "Query": 187,
+      "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
-      "Repository": 104,
-      "Request": 139,
-      "Response": 203,
-      "Service": 301,
-      "Validator": 218,
+      "Repository": 108,
+      "Request": 148,
+      "Response": 213,
+      "Service": 312,
+      "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 46
     }
@@ -566,6 +566,13 @@
       "line": 7
     },
     {
+      "name": "AdminCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/AdminCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
       "name": "AiCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
@@ -601,6 +608,13 @@
       "line": 6
     },
     {
+      "name": "DietologistCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/DietologistCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
       "name": "ExercisesCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
@@ -613,6 +627,13 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/FastingCrossModuleRelationships.cs",
       "line": 6
+    },
+    {
+      "name": "FavoritesCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/FavoritesCrossModuleRelationships.cs",
+      "line": 11
     },
     {
       "name": "GamificationCrossModuleRelationships",
@@ -629,6 +650,13 @@
       "line": 6
     },
     {
+      "name": "IdentityCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/IdentityCrossModuleRelationships.cs",
+      "line": 5
+    },
+    {
       "name": "ImagesCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
@@ -643,6 +671,20 @@
       "line": 6
     },
     {
+      "name": "MealPlanningCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/MealPlanningCrossModuleRelationships.cs",
+      "line": 9
+    },
+    {
+      "name": "MealsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/MealsCrossModuleRelationships.cs",
+      "line": 8
+    },
+    {
       "name": "NotificationsCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
@@ -650,10 +692,38 @@
       "line": 6
     },
     {
+      "name": "ProductsCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/ProductsCrossModuleRelationships.cs",
+      "line": 8
+    },
+    {
       "name": "RecentItemsCrossModuleRelationships",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/RecentItemsCrossModuleRelationships.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeCommunityCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/RecipeCommunityCrossModuleRelationships.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipesCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/RecipesCrossModuleRelationships.cs",
+      "line": 8
+    },
+    {
+      "name": "UsersCrossModuleRelationships",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Composition/UsersCrossModuleRelationships.cs",
       "line": 6
     },
     {
@@ -738,7 +808,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 23
+      "line": 24
     },
     {
       "name": "FoodDiaryDbContext",
@@ -1616,6 +1686,13 @@
       "line": 6
     },
     {
+      "name": "BotMenu",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/BotMenu.cs",
+      "line": 4
+    },
+    {
       "name": "BotUriHelper",
       "kind": "class",
       "role": "Other",
@@ -1623,11 +1700,179 @@
       "line": 4
     },
     {
+      "name": "BoundedImageStream",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Images/BoundedImageStream.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramImageDownloader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Images/TelegramImageDownloader.cs",
+      "line": 5
+    },
+    {
+      "name": "TelegramImageSelection",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Images/TelegramImageSelection.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramImageSelector",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Images/TelegramImageSelector.cs",
+      "line": 4
+    },
+    {
+      "name": "BotDiaryClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "line": 8
+    },
+    {
+      "name": "BotDiaryStatistics",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
+      "line": 2
+    },
+    {
+      "name": "BotDiaryStatisticsDay",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatisticsDay.cs",
+      "line": 2
+    },
+    {
+      "name": "BotHydrationReceipt",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotHydrationReceipt.cs",
+      "line": 2
+    },
+    {
+      "name": "BotImageUpload",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotImageUpload.cs",
+      "line": 2
+    },
+    {
+      "name": "BotIncomingOperation",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotIncomingOperation.cs",
+      "line": 2
+    },
+    {
+      "name": "BotMealActions",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotMealActions.cs",
+      "line": 4
+    },
+    {
+      "name": "BotMealNutrition",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
+      "line": 4
+    },
+    {
+      "name": "BotOperationApiException",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotOperationApiException.cs",
+      "line": 4
+    },
+    {
+      "name": "BotOperationClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
+      "line": 6
+    },
+    {
+      "name": "BotOperationLease",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotOperationLease.cs",
+      "line": 2
+    },
+    {
+      "name": "BotOperationStateReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotOperationStateReader.cs",
+      "line": 4
+    },
+    {
+      "name": "BotPhotoCheckpoint",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
+      "line": 2
+    },
+    {
+      "name": "BotRecognitionAccessException",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionAccessException.cs",
+      "line": 2
+    },
+    {
+      "name": "BotRecognitionFailure",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionFailure.cs",
+      "line": 2
+    },
+    {
+      "name": "BotRecognitionJob",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionJob.cs",
+      "line": 2
+    },
+    {
+      "name": "BotRecognizedMeal",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognizedMeal.cs",
+      "line": 2
+    },
+    {
+      "name": "BotStatisticsFormatter",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotStatisticsFormatter.cs",
+      "line": 4
+    },
+    {
+      "name": "DurableTelegramReceiver",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/DurableTelegramReceiver.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramOperationWorker",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+      "line": 10
+    },
+    {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Program.cs",
-      "line": 33
+      "line": 41
     },
     {
       "name": "TelegramBotOptions",
@@ -1641,7 +1886,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 14
+      "line": 17
     },
     {
       "name": "ApiBuildInfo",
@@ -2656,7 +2901,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Application/Mappings/AdminContentReportMappings.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "AdminEmailTemplateMappings",
@@ -3461,7 +3706,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Admin/Infrastructure/Model/Configurations/Admin/AdminImpersonationSessionConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "AdminBillingRepository",
@@ -4535,6 +4780,13 @@
       "line": 2
     },
     {
+      "name": "IFoodRecognitionResultReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs",
+      "line": 5
+    },
+    {
       "name": "IOpenAiFoodClient",
       "kind": "interface",
       "role": "Other",
@@ -4806,6 +5058,13 @@
       "role": "Other",
       "path": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
       "line": 11
+    },
+    {
+      "name": "FoodRecognitionResultReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
+      "line": 6
     },
     {
       "name": "OpenAiFoodService",
@@ -5365,7 +5624,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -5606,6 +5865,13 @@
       "line": 11
     },
     {
+      "name": "BillingProviderNames",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Billing/Domain.Contracts/Entities/Billing/BillingProviderNames.cs",
+      "line": 2
+    },
+    {
       "name": "BillingDomainGuard",
       "kind": "class",
       "role": "Entity",
@@ -5624,13 +5890,6 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Billing/Domain/Entities/Billing/BillingPaymentKinds.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingProviderNames",
-      "kind": "class",
-      "role": "Entity",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingProviderNames.cs",
       "line": 2
     },
     {
@@ -6747,6 +7006,27 @@
       "line": 6
     },
     {
+      "name": "ReportStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/ContentReports/Domain.Contracts/Enums/ReportStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "ReportTargetType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/ContentReports/Domain.Contracts/Enums/ReportTargetType.cs",
+      "line": 2
+    },
+    {
+      "name": "ContentReportId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/ContentReports/Domain.Contracts/ValueObjects/Ids/ContentReportId.cs",
+      "line": 4
+    },
+    {
       "name": "ContentReport",
       "kind": "class",
       "role": "Entity",
@@ -6759,27 +7039,6 @@
       "role": "Entity",
       "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
       "line": 2
-    },
-    {
-      "name": "ReportStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/ContentReports/Domain/Enums/ReportStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "ReportTargetType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/ContentReports/Domain/Enums/ReportTargetType.cs",
-      "line": 2
-    },
-    {
-      "name": "ContentReportId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/ContentReports/Domain/ValueObjects/Ids/ContentReportId.cs",
-      "line": 4
     },
     {
       "name": "ContentReportConfiguration",
@@ -7342,6 +7601,83 @@
       "line": 6
     },
     {
+      "name": "BleedingType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/BleedingType.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleConfidence",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleConfidence.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleConsentPurpose",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleConsentPurpose.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleFactorType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleFactorType.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleFlowLevel",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleFlowLevel.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleReproductiveState",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleReproductiveState.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleSymptomCategory",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleSymptomCategory.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleTrackingGoal",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleTrackingGoal.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleTrackingMode",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/CycleTrackingMode.cs",
+      "line": 2
+    },
+    {
+      "name": "MenstrualEpisodeStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/MenstrualEpisodeStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "OvulationTestResult",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain.Contracts/Enums/OvulationTestResult.cs",
+      "line": 2
+    },
+    {
       "name": "BleedingEntry",
       "kind": "class",
       "role": "Entity",
@@ -7403,83 +7739,6 @@
       "role": "Entity",
       "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
       "line": 6
-    },
-    {
-      "name": "BleedingType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/BleedingType.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleConfidence",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleConfidence.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleConsentPurpose",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleConsentPurpose.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleFactorType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleFactorType.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleFlowLevel",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleReproductiveState",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleReproductiveState.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleSymptomCategory",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleSymptomCategory.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleTrackingGoal",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleTrackingGoal.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleTrackingMode",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/CycleTrackingMode.cs",
-      "line": 2
-    },
-    {
-      "name": "MenstrualEpisodeStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/MenstrualEpisodeStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "OvulationTestResult",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Cycles/Domain/Enums/OvulationTestResult.cs",
-      "line": 2
     },
     {
       "name": "BleedingEntryId",
@@ -8053,7 +8312,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "SendDashboardTestEmailCommandValidator",
@@ -9113,6 +9372,13 @@
       "line": 6
     },
     {
+      "name": "DietologistProfileDisplayName",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Common/DietologistProfileDisplayName.cs",
+      "line": 4
+    },
+    {
       "name": "IDietologistClientReadService",
       "kind": "interface",
       "role": "Service",
@@ -9698,7 +9964,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/DietologistInvitationConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecommendationBulkDispatchConfiguration",
@@ -9712,14 +9978,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationCommentConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecommendationConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecommendationTemplateConfiguration",
@@ -11609,7 +11875,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "FastingPlanRepository",
@@ -12323,21 +12589,21 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteMealConfiguration.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "FavoriteProductConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteProductConfiguration.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "FavoriteRecipeConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteRecipeConfiguration.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "FavoritesPersistenceModelRegistration",
@@ -12669,6 +12935,20 @@
       "line": 2
     },
     {
+      "name": "AchievementDefinitionLimits",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Gamification/Domain.Contracts/Entities/Achievements/AchievementDefinitionLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "AchievementMetric",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Gamification/Domain.Contracts/Enums/AchievementMetric.cs",
+      "line": 2
+    },
+    {
       "name": "AchievementDefinition",
       "kind": "class",
       "role": "Entity",
@@ -12681,13 +12961,6 @@
       "role": "Entity",
       "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
       "line": 5
-    },
-    {
-      "name": "AchievementMetric",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Gamification/Domain/Enums/AchievementMetric.cs",
-      "line": 2
     },
     {
       "name": "AchievementDefinitionId",
@@ -12851,6 +13124,13 @@
       "line": 5
     },
     {
+      "name": "IHydrationOperationReceiptRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationOperationReceiptRepository.cs",
+      "line": 5
+    },
+    {
       "name": "HydrationEntryReadModel",
       "kind": "record",
       "role": "Other",
@@ -12877,6 +13157,20 @@
       "role": "Validator",
       "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "CreateHydrationFromOperationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationFromOperation/CreateHydrationFromOperationCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateHydrationFromOperationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationFromOperation/CreateHydrationFromOperationCommandHandler.cs",
+      "line": 11
     },
     {
       "name": "DeleteHydrationEntryCommand",
@@ -12949,6 +13243,13 @@
       "line": 6
     },
     {
+      "name": "HydrationOperationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/Models/HydrationOperationModel.cs",
+      "line": 2
+    },
+    {
       "name": "GetHydrationDailyTotalQuery",
       "kind": "record",
       "role": "Query",
@@ -13019,6 +13320,13 @@
       "line": 5
     },
     {
+      "name": "IHydrationIntervalReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Hydration/Contracts/Common/IHydrationIntervalReadService.cs",
+      "line": 4
+    },
+    {
       "name": "HydrationDailyModel",
       "kind": "record",
       "role": "Other",
@@ -13040,6 +13348,13 @@
       "line": 6
     },
     {
+      "name": "HydrationOperationReceipt",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationOperationReceipt.cs",
+      "line": 5
+    },
+    {
       "name": "HydrationEntryId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -13051,6 +13366,13 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "HydrationOperationReceiptConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationOperationReceiptConfiguration.cs",
       "line": 7
     },
     {
@@ -13073,6 +13395,20 @@
       "role": "Repository",
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
       "line": 9
+    },
+    {
+      "name": "HydrationIntervalReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs",
+      "line": 7
+    },
+    {
+      "name": "HydrationOperationReceiptRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationOperationReceiptRepository.cs",
+      "line": 7
     },
     {
       "name": "HydrationUserDataPurgeParticipant",
@@ -13117,10 +13453,24 @@
       "line": 5
     },
     {
+      "name": "HydrationOperationHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationOperationHttpMappings.cs",
+      "line": 7
+    },
+    {
       "name": "CreateHydrationEntryHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "Modules/Hydration/Presentation/Features/Hydration/Requests/CreateHydrationEntryHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "CreateHydrationFromOperationHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Hydration/Presentation/Features/Hydration/Requests/CreateHydrationFromOperationHttpRequest.cs",
       "line": 2
     },
     {
@@ -13149,6 +13499,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "HydrationOperationHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationOperationHttpResponse.cs",
       "line": 2
     },
     {
@@ -13257,6 +13614,20 @@
       "line": 4
     },
     {
+      "name": "ITelegramOidcProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "ITelegramOidcTokenValidator",
+      "kind": "interface",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
+      "line": 4
+    },
+    {
       "name": "JwtImpersonationClaimNames",
       "kind": "class",
       "role": "Other",
@@ -13289,6 +13660,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOidcIdentity",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
       "line": 2
     },
     {
@@ -13383,6 +13761,34 @@
       "line": 2
     },
     {
+      "name": "ITelegramIdentityPolicy",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "ITelegramLoginTicketStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
+      "line": 2
+    },
+    {
+      "name": "ITelegramOperationPolicy",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "ITelegramOperationStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs",
+      "line": 2
+    },
+    {
       "name": "IUserLoginEventReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -13423,6 +13829,20 @@
       "role": "Other",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Common/SecurityTokenGenerator.cs",
       "line": 5
+    },
+    {
+      "name": "TelegramIdentityErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TelegramIdentityErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "TelegramOperationLease",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TelegramOperationLease.cs",
+      "line": 2
     },
     {
       "name": "TestEmailMessage",
@@ -13474,6 +13894,20 @@
       "line": 2
     },
     {
+      "name": "AcquireTelegramOperationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/AcquireTelegramOperation/AcquireTelegramOperationCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "AcquireTelegramOperationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/AcquireTelegramOperation/AcquireTelegramOperationCommandHandler.cs",
+      "line": 7
+    },
+    {
       "name": "AdminSsoExchangeCommand",
       "kind": "record",
       "role": "Command",
@@ -13516,6 +13950,27 @@
       "line": 4
     },
     {
+      "name": "BeginTelegramMiniAppCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "BeginTelegramMiniAppCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "BeginTelegramMiniAppCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommandValidator.cs",
+      "line": 4
+    },
+    {
       "name": "BootstrapInitialAdminCommand",
       "kind": "record",
       "role": "Command",
@@ -13551,6 +14006,55 @@
       "line": 4
     },
     {
+      "name": "CheckpointTelegramOperationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/CheckpointTelegramOperation/CheckpointTelegramOperationCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "CheckpointTelegramOperationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CheckpointTelegramOperation/CheckpointTelegramOperationCommandHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "CompleteTelegramAuthenticationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "CompleteTelegramAuthenticationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "CompleteTelegramAuthenticationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "CompleteTelegramBackupEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramBackupEmail/CompleteTelegramBackupEmailCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "CompleteTelegramBackupEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramBackupEmail/CompleteTelegramBackupEmailCommandHandler.cs",
+      "line": 6
+    },
+    {
       "name": "ConfirmPasswordResetCommand",
       "kind": "record",
       "role": "Command",
@@ -13570,6 +14074,27 @@
       "role": "Validator",
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "ExchangeTelegramOidcCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ExchangeTelegramOidcCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "ExchangeTelegramOidcCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandValidator.cs",
+      "line": 4
     },
     {
       "name": "GoogleLoginCommand",
@@ -13712,6 +14237,20 @@
       "line": 5
     },
     {
+      "name": "RegisterTelegramOperationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RegisterTelegramOperationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommandHandler.cs",
+      "line": 6
+    },
+    {
       "name": "RequestPasswordResetCommand",
       "kind": "record",
       "role": "Command",
@@ -13731,6 +14270,20 @@
       "role": "Validator",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "RequestTelegramBackupEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RequestTelegramBackupEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
+      "line": 6
     },
     {
       "name": "ResendEmailVerificationCommand",
@@ -13803,6 +14356,41 @@
       "line": 7
     },
     {
+      "name": "StartTelegramBackupEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "StartTelegramBackupEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "StartTelegramOidcCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "StartTelegramOidcCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "OidcAttempt",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
+      "line": 23
+    },
+    {
       "name": "TelegramBotAuthCommand",
       "kind": "record",
       "role": "Command",
@@ -13866,6 +14454,20 @@
       "line": 5
     },
     {
+      "name": "UnlinkTelegramCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "UnlinkTelegramCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommandHandler.cs",
+      "line": 10
+    },
+    {
       "name": "VerifyEmailCommand",
       "kind": "record",
       "role": "Command",
@@ -13908,6 +14510,20 @@
       "line": 4
     },
     {
+      "name": "TelegramAuthenticationIntentModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Models/TelegramAuthenticationIntentModel.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOidcStartModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Models/TelegramOidcStartModel.cs",
+      "line": 2
+    },
+    {
       "name": "GetActiveSessionsQuery",
       "kind": "record",
       "role": "Query",
@@ -13920,6 +14536,41 @@
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
       "line": 11
+    },
+    {
+      "name": "GetTelegramConfigurationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetTelegramConfigurationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "TelegramConfigurationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/TelegramConfigurationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ListReadyTelegramOperationsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "ListReadyTelegramOperationsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQueryHandler.cs",
+      "line": 6
     },
     {
       "name": "AuthenticationLoginEventCleanupService",
@@ -13954,6 +14605,41 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/InitialAdminBootstrapService.cs",
+      "line": 9
+    },
+    {
+      "name": "TelegramAuthenticationIntentService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
+      "line": 8
+    },
+    {
+      "name": "TelegramIntentPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
+      "line": 33
+    },
+    {
+      "name": "TelegramBackupEmailOidcService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
+      "line": 12
+    },
+    {
+      "name": "TelegramBackupEmailService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
+      "line": 11
+    },
+    {
+      "name": "TelegramOperationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramOperationService.cs",
       "line": 9
     },
     {
@@ -14045,14 +14731,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "IdentityProviderRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "ConsumedTelegramAssertion",
@@ -14062,10 +14748,38 @@
       "line": 6
     },
     {
+      "name": "TelegramLoginTicket",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Model/Authentication/TelegramLoginTicket.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramOperation",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Model/Authentication/TelegramOperation.cs",
+      "line": 6
+    },
+    {
       "name": "ConsumedTelegramAssertionConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramLoginTicketConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramLoginTicketConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramOperationConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramOperationConfiguration.cs",
       "line": 6
     },
     {
@@ -14104,11 +14818,32 @@
       "line": 7
     },
     {
+      "name": "IdentityUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs",
+      "line": 6
+    },
+    {
       "name": "TelegramAssertionReplayGuard",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
       "line": 7
+    },
+    {
+      "name": "TelegramLoginTicketStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
+      "line": 9
+    },
+    {
+      "name": "TelegramOperationStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
+      "line": 8
     },
     {
       "name": "EmailTemplateProvider",
@@ -14167,6 +14902,20 @@
       "line": 11
     },
     {
+      "name": "TelegramOidcProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
+      "line": 13
+    },
+    {
+      "name": "TelegramOidcTokenValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
+      "line": 14
+    },
+    {
       "name": "GoogleAuthOptions",
       "kind": "class",
       "role": "Options",
@@ -14178,6 +14927,20 @@
       "kind": "class",
       "role": "Options",
       "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramAuthOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramClientOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs",
+      "line": 4
+    },
+    {
+      "name": "TelegramOidcOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramOidcOptions.cs",
       "line": 2
     },
     {
@@ -14251,6 +15014,13 @@
       "line": 24
     },
     {
+      "name": "AuthTelegramOnboardingController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
+      "line": 30
+    },
+    {
       "name": "AuthHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -14265,11 +15035,39 @@
       "line": 6
     },
     {
+      "name": "TelegramOnboardingHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
+      "line": 10
+    },
+    {
       "name": "AdminSsoExchangeHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/AdminSsoExchangeHttpRequest.cs",
       "line": 5
+    },
+    {
+      "name": "CheckpointTelegramOperationHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "CompleteTelegramAuthenticationHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/CompleteTelegramAuthenticationHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "CompleteTelegramLinkHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/CompleteTelegramLinkHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "ConfirmPasswordResetHttpRequest",
@@ -14283,6 +15081,13 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/ExchangeImpersonationHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "ExchangeTelegramOidcHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/ExchangeTelegramOidcHttpRequest.cs",
       "line": 4
     },
     {
@@ -14314,6 +15119,13 @@
       "line": 4
     },
     {
+      "name": "RegisterTelegramOperationHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs",
+      "line": 2
+    },
+    {
       "name": "RequestPasswordResetHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -14335,10 +15147,24 @@
       "line": 4
     },
     {
+      "name": "StartTelegramBackupEmailHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs",
+      "line": 4
+    },
+    {
       "name": "TelegramAuthHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/TelegramAuthHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "name": "TelegramBackupEmailHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBackupEmailHttpRequest.cs",
       "line": 5
     },
     {
@@ -14391,6 +15217,48 @@
       "line": 2
     },
     {
+      "name": "TelegramAuthenticationIntentHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramAuthenticationIntentHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramConfigurationHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramConfigurationHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOidcStartHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOidcStartHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOperationLeaseHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationLeaseHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOperationRegisteredHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationRegisteredHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOperationsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
+      "line": 33
+    },
+    {
       "name": "AuthenticationCookieResultFilter",
       "kind": "class",
       "role": "Other",
@@ -14438,6 +15306,13 @@
       "role": "Other",
       "path": "Modules/Identity/Presentation/Security/TelegramBotSecretAuthorizationFilter.cs",
       "line": 12
+    },
+    {
+      "name": "TelegramBrowserBindingHttpProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/TelegramBrowserBindingHttpProcessor.cs",
+      "line": 5
     },
     {
       "name": "EmailVerificationNotifier",
@@ -16187,7 +17062,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "MealPlanDayConfiguration",
@@ -16201,21 +17076,21 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanMealConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ShoppingListConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ShoppingListItemConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListItemConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ShoppingListItemSourceConfiguration",
@@ -16407,6 +17282,20 @@
       "line": 5
     },
     {
+      "name": "IMealRecognitionReceiptRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealRecognitionReceiptRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IMealRecognitionTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealRecognitionTransactionRunner.cs",
+      "line": 4
+    },
+    {
       "name": "IMealRepository",
       "kind": "interface",
       "role": "Repository",
@@ -16463,6 +17352,20 @@
       "line": 6
     },
     {
+      "name": "CreateMealFromRecognitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateMealFromRecognitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs",
+      "line": 15
+    },
+    {
       "name": "DeleteMealCommand",
       "kind": "record",
       "role": "Command",
@@ -16496,6 +17399,20 @@
       "role": "Validator",
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "UndoRecognizedMealCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Meals/Application/Commands/UndoRecognizedMeal/UndoRecognizedMealCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UndoRecognizedMealCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Meals/Application/Commands/UndoRecognizedMeal/UndoRecognizedMealCommandHandler.cs",
+      "line": 10
     },
     {
       "name": "UpdateMealApplier",
@@ -16657,6 +17574,20 @@
       "role": "Other",
       "path": "Modules/Meals/Application/Models/MealOverviewModel.cs",
       "line": 5
+    },
+    {
+      "name": "RecognizedMealCreationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Application/Models/RecognizedMealCreationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "RecognizedMealUndoModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Application/Models/RecognizedMealUndoModel.cs",
+      "line": 2
     },
     {
       "name": "GetMealByIdQuery",
@@ -17002,6 +17933,20 @@
       "line": 7
     },
     {
+      "name": "MealRecognitionReceipt",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionReceipt.cs",
+      "line": 4
+    },
+    {
+      "name": "MealRecognitionUndoResult",
+      "kind": "enum",
+      "role": "Entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionUndoResult.cs",
+      "line": 2
+    },
+    {
       "name": "MealNutritionAppliedDomainEvent",
       "kind": "record",
       "role": "Event",
@@ -17055,21 +18000,28 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiSessionConfiguration.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "MealConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealConfiguration.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "MealItemConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealItemConfiguration.cs",
-      "line": 9
+      "line": 8
+    },
+    {
+      "name": "MealRecognitionReceiptConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealRecognitionReceiptConfiguration.cs",
+      "line": 7
     },
     {
       "name": "MealsPersistenceModelRegistration",
@@ -17077,6 +18029,13 @@
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/Model/MealsPersistenceModelRegistration.cs",
       "line": 4
+    },
+    {
+      "name": "EfMealRecognitionTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs",
+      "line": 12
     },
     {
       "name": "MealDailyCalorieReadService",
@@ -17105,6 +18064,13 @@
       "role": "Service",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
       "line": 11
+    },
+    {
+      "name": "MealRecognitionReceiptRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRecognitionReceiptRepository.cs",
+      "line": 7
     },
     {
       "name": "MealRepository",
@@ -17149,11 +18115,32 @@
       "line": 9
     },
     {
+      "name": "RecognizedMealCreationHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Meals/Presentation/Features/Meals/Mappings/RecognizedMealCreationHttpMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "RecognizedMealUndoHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Meals/Presentation/Features/Meals/Mappings/RecognizedMealUndoHttpMappings.cs",
+      "line": 6
+    },
+    {
       "name": "MealsController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Features/Meals/MealsController.cs",
       "line": 16
+    },
+    {
+      "name": "CreateMealFromRecognitionHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealFromRecognitionHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "CreateMealHttpRequest",
@@ -17245,6 +18232,20 @@
       "role": "Response",
       "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealOverviewHttpResponse.cs",
       "line": 5
+    },
+    {
+      "name": "RecognizedMealCreationHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Meals/Presentation/Features/Meals/Responses/RecognizedMealCreationHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "RecognizedMealUndoHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Meals/Presentation/Features/Meals/Responses/RecognizedMealUndoHttpResponse.cs",
+      "line": 2
     },
     {
       "name": "MealAiItemModel",
@@ -18899,20 +19900,6 @@
       "line": 8
     },
     {
-      "name": "FoodQualityGrade",
-      "kind": "enum",
-      "role": "ValueObject",
-      "path": "Modules/Products/Domain/ValueObjects/FoodQualityGrade.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodQualityScore",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Products/Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 8
-    },
-    {
       "name": "ProductIdentityState",
       "kind": "record struct",
       "role": "ValueObject",
@@ -18955,6 +19942,20 @@
       "line": 6
     },
     {
+      "name": "FoodQualityGrade",
+      "kind": "enum",
+      "role": "ValueObject",
+      "path": "Modules/Products/FoodQuality/ValueObjects/FoodQualityGrade.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodQualityScore",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/FoodQuality/ValueObjects/FoodQualityScore.cs",
+      "line": 8
+    },
+    {
       "name": "FavoriteProductSourceReadService",
       "kind": "class",
       "role": "Service",
@@ -18966,7 +19967,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs",
-      "line": 12
+      "line": 9
     },
     {
       "name": "ProductsPersistenceModelRegistration",
@@ -19477,14 +20478,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeCommentConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecipeLikeConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeLikeConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecipeCommunityPersistenceModelRegistration",
@@ -19505,7 +20506,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "RecipeLikeRepository",
@@ -20177,21 +21178,21 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeConfiguration.cs",
-      "line": 10
+      "line": 8
     },
     {
       "name": "RecipeIngredientConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeIngredientConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecipeStepConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeStepConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecipesPersistenceModelRegistration",
@@ -20376,6 +21377,20 @@
       "line": 2
     },
     {
+      "name": "LocalStatisticsCalendar",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Common/LocalStatisticsCalendar.cs",
+      "line": 2
+    },
+    {
+      "name": "LocalStatisticsDay",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Common/LocalStatisticsDay.cs",
+      "line": 2
+    },
+    {
       "name": "UtcDateNormalizer",
       "kind": "class",
       "role": "Other",
@@ -20397,11 +21412,39 @@
       "line": 2
     },
     {
+      "name": "DiaryStatisticsDayModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Models/DiaryStatisticsDayModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DiaryStatisticsSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Models/DiaryStatisticsSummaryModel.cs",
+      "line": 2
+    },
+    {
       "name": "StatisticsSummaryModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Statistics/Application/Models/StatisticsSummaryModel.cs",
       "line": 5
+    },
+    {
+      "name": "GetDiaryStatisticsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Statistics/Application/Queries/GetDiaryStatistics/GetDiaryStatisticsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDiaryStatisticsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Statistics/Application/Queries/GetDiaryStatistics/GetDiaryStatisticsQueryHandler.cs",
+      "line": 13
     },
     {
       "name": "GetStatisticsQuery",
@@ -20453,6 +21496,13 @@
       "line": 4
     },
     {
+      "name": "DiaryStatisticsHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Mappings/DiaryStatisticsHttpMappings.cs",
+      "line": 7
+    },
+    {
       "name": "StatisticsHttpQueryMappings",
       "kind": "class",
       "role": "Other",
@@ -20467,6 +21517,13 @@
       "line": 7
     },
     {
+      "name": "GetDiaryStatisticsHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Requests/GetDiaryStatisticsHttpQuery.cs",
+      "line": 4
+    },
+    {
       "name": "GetStatisticsHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -20478,6 +21535,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DiaryStatisticsDayHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/DiaryStatisticsDayHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DiaryStatisticsSummaryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Statistics/Presentation/Features/Statistics/Responses/DiaryStatisticsSummaryHttpResponse.cs",
       "line": 2
     },
     {
@@ -21339,7 +22410,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandValidator.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "UpdateUserAppearanceCommand",
@@ -21424,6 +22495,13 @@
       "role": "Other",
       "path": "Modules/Users/Application/Common/UserPreferenceCodeParser.cs",
       "line": 6
+    },
+    {
+      "name": "UserTimeZoneInput",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/Common/UserTimeZoneInput.cs",
+      "line": 2
     },
     {
       "name": "DependencyInjection",
@@ -21636,6 +22714,13 @@
       "line": 10
     },
     {
+      "name": "UserTelegramAccountService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserTelegramAccountService.cs",
+      "line": 12
+    },
+    {
       "name": "UserIdParser",
       "kind": "class",
       "role": "Other",
@@ -21727,6 +22812,13 @@
       "line": 2
     },
     {
+      "name": "IUserCommentAuthorReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserCommentAuthorReadService.cs",
+      "line": 5
+    },
+    {
       "name": "IUserCredentialVerificationService",
       "kind": "interface",
       "role": "Service",
@@ -21767,6 +22859,13 @@
       "role": "Service",
       "path": "Modules/Users/Contracts/Users/Common/IUserDietologistProfileReadService.cs",
       "line": 6
+    },
+    {
+      "name": "IUserFastingReminderReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserFastingReminderReadService.cs",
+      "line": 5
     },
     {
       "name": "IUserGamificationProfileReadService",
@@ -21822,6 +22921,13 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Users/Contracts/Users/Common/IUserTdeeProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserTelegramAccountService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserTelegramAccountService.cs",
       "line": 6
     },
     {
@@ -21937,6 +23043,13 @@
       "line": 4
     },
     {
+      "name": "UserCommentAuthorModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserCommentAuthorModel.cs",
+      "line": 2
+    },
+    {
       "name": "UserDashboardProfileModel",
       "kind": "record",
       "role": "Other",
@@ -21969,6 +23082,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Users/Contracts/Users/Models/UserEmailVerificationDeliveryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserFastingReminderModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserFastingReminderModel.cs",
       "line": 2
     },
     {
@@ -22056,6 +23176,13 @@
       "line": 2
     },
     {
+      "name": "UserTelegramRegistrationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserTelegramRegistrationModel.cs",
+      "line": 2
+    },
+    {
       "name": "UserWeeklyCheckInProfileModel",
       "kind": "record",
       "role": "Other",
@@ -22095,6 +23222,13 @@
       "kind": "enum",
       "role": "Other",
       "path": "Modules/Users/Domain.Contracts/Enums/ActivityLevel.cs",
+      "line": 2
+    },
+    {
+      "name": "RoleNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Domain.Contracts/Enums/RoleNames.cs",
       "line": 2
     },
     {
@@ -22208,13 +23342,6 @@
       "role": "Event",
       "path": "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs",
       "line": 6
-    },
-    {
-      "name": "RoleNames",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Users/Domain/Enums/RoleNames.cs",
-      "line": 2
     },
     {
       "name": "UserRoleAuditAction",
@@ -22487,7 +23614,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UserRoleAuditEventConfiguration",
@@ -22509,6 +23636,13 @@
       "role": "Other",
       "path": "Modules/Users/Infrastructure/Model/UsersPersistenceModelRegistration.cs",
       "line": 4
+    },
+    {
+      "name": "TelegramIdentityConflictInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/TelegramIdentityConflictInterceptor.cs",
+      "line": 6
     },
     {
       "name": "UserAccessTokenSecurityReader",
@@ -22553,6 +23687,13 @@
       "line": 13
     },
     {
+      "name": "UserRelatedDataReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs",
+      "line": 7
+    },
+    {
       "name": "UserRepository",
       "kind": "class",
       "role": "Repository",
@@ -22578,7 +23719,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "UsersPresentationServiceCollectionExtensions",
@@ -27231,6 +28372,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IFoodRecognitionResultReader",
+      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs",
+      "implementation": "FoodRecognitionResultReader",
+      "implementationPath": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IGamificationReadService",
       "interfacePath": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
       "implementation": "GamificationReadService",
@@ -27263,6 +28411,20 @@
       "interfacePath": "Modules/Hydration/Application/Abstractions/Common/IHydrationGoalService.cs",
       "implementation": "HydrationGoalService",
       "implementationPath": "Modules/Hydration/Application/Services/HydrationGoalService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IHydrationIntervalReadService",
+      "interfacePath": "Modules/Hydration/Contracts/Common/IHydrationIntervalReadService.cs",
+      "implementation": "HydrationIntervalReadService",
+      "implementationPath": "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IHydrationOperationReceiptRepository",
+      "interfacePath": "Modules/Hydration/Application/Abstractions/Common/IHydrationOperationReceiptRepository.cs",
+      "implementation": "HydrationOperationReceiptRepository",
+      "implementationPath": "Modules/Hydration/Infrastructure/Persistence/HydrationOperationReceiptRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27550,6 +28712,13 @@
       "interfacePath": "Modules/Meals/Application/Common/IMealReadService.cs",
       "implementation": "MealReadService",
       "implementationPath": "Modules/Meals/Application/Services/MealReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMealRecognitionReceiptRepository",
+      "interfacePath": "Modules/Meals/Application/Abstractions/Meals/Common/IMealRecognitionReceiptRepository.cs",
+      "implementation": "MealRecognitionReceiptRepository",
+      "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealRecognitionReceiptRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27910,10 +29079,38 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "ITelegramLoginTicketStore",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
+      "implementation": "TelegramLoginTicketStore",
+      "implementationPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "ITelegramLoginWidgetValidator",
       "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
       "implementation": "TelegramLoginWidgetValidator",
       "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "ITelegramOidcProvider",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
+      "implementation": "TelegramOidcProvider",
+      "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "ITelegramOidcTokenValidator",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
+      "implementation": "TelegramOidcTokenValidator",
+      "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "ITelegramOperationStore",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs",
+      "implementation": "TelegramOperationStore",
+      "implementationPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28096,6 +29293,13 @@
       "interfacePath": "Modules/Users/Contracts/Users/Common/IUserRoleMembershipService.cs",
       "implementation": "UserRoleMembershipService",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserTelegramAccountService",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserTelegramAccountService.cs",
+      "implementation": "UserTelegramAccountService",
+      "implementationPath": "Modules/Users/Application/Services/UserTelegramAccountService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28458,32 +29662,39 @@
       "line": 16
     },
     {
+      "service": "IFoodRecognitionResultReader",
+      "implementation": "FoodRecognitionResultReader",
+      "lifetime": "Scoped",
+      "path": "Modules/Ai/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
       "service": "IAiUserContextService",
       "implementation": "AiUserContextService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IAiAdministrationReadService",
       "implementation": "AiAdministrationReadService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 19
     },
     {
       "service": "IAiPromptAdministrationService",
       "implementation": "AiPromptAdministrationService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 20
     },
     {
       "service": "IUserAiUsageSummaryReadService",
       "implementation": "UserAiUsageSummaryReadService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IBillingOverviewReadService",
@@ -28826,35 +30037,35 @@
       "implementation": "InitialAdminBootstrapService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 22
+      "line": 26
     },
     {
       "service": "IEmailSender",
       "implementation": "EmailSender",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 23
+      "line": 27
     },
     {
       "service": "IEmailTemplateAdministrationService",
       "implementation": "EmailTemplateAdministrationService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 24
+      "line": 28
     },
     {
       "service": "IEmailTemplateAdministrationReadService",
       "implementation": "EmailTemplateAdministrationReadService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 25
+      "line": 29
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 15
+      "line": 16
     },
     {
       "service": "IImageAssetAccessService",
@@ -29207,32 +30418,39 @@
       "line": 20
     },
     {
+      "service": "IUserTelegramAccountService",
+      "implementation": "UserTelegramAccountService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 21
+    },
+    {
       "service": "IUserCredentialVerificationService",
       "implementation": "UserCredentialVerificationService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IUserBillingService",
       "implementation": "UserBillingService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IUserNotificationProfileService",
       "implementation": "UserNotificationProfileService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 23
+      "line": 24
     },
     {
       "service": "IProfileOverviewReadService",
       "implementation": "ProfileOverviewReadService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 27
+      "line": 28
     },
     {
       "service": "IWearableReadService",

@@ -11,6 +11,7 @@ public static class IdentityPresentationServiceCollectionExtensions {
     public static IServiceCollection AddIdentityPresentation(this IServiceCollection services) {
         services.AddScoped<AuthenticationCookieResultFilter>();
         services.AddScoped<RefreshTokenCookieService>();
+        services.AddScoped<TelegramBrowserBindingHttpProcessor>();
         services.AddScoped<TelegramBotSecretAuthorizationFilter>();
         services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
         services.Configure<MvcOptions>(options => options.Filters.AddService<AuthenticationCookieResultFilter>());

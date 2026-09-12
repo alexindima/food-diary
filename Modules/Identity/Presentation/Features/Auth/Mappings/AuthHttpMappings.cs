@@ -219,7 +219,7 @@ public static class AuthHttpMappings {
     }
 
     extension(HttpContext httpContext) {
-        private AuthenticationClientContext ToAuthenticationClientContext(string authProvider) {
+        internal AuthenticationClientContext ToAuthenticationClientContext(string authProvider) {
             return new AuthenticationClientContext(
                 authProvider,
                 httpContext.Connection.RemoteIpAddress?.ToString(),

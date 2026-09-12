@@ -1,5 +1,7 @@
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -7,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.RecipeComments;
 
-internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRecipeCommentRepository {
+internal sealed class RecipeCommentRepository(FoodDiaryDbContext context, IUserCommentAuthorReadService users) : IRecipeCommentRepository {
     public async Task<RecipeComment> AddAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
         await context.RecipeComments.AddAsync(comment, cancellationToken).ConfigureAwait(false);
         return comment;
@@ -61,20 +63,22 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
 
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
 
-        List<RecipeCommentReadModel> items = await query
+        var pageItems = await query
             .OrderByDescending(c => c.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Join(context.Users.AsNoTracking(), c => c.UserId, user => user.Id, (c, user) => new RecipeCommentReadModel(
-                c.Id.Value,
-                c.RecipeId.Value,
-                c.UserId.Value,
-                user.Username,
-                user.FirstName,
-                c.Text,
-                c.CreatedOnUtc,
-                c.ModifiedOnUtc))
+            .Select(c => new { c.Id, c.RecipeId, c.UserId, c.Text, c.CreatedOnUtc, c.ModifiedOnUtc })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        if (pageItems.Count == 0) {
+            return ([], total);
+        }
+
+        IReadOnlyDictionary<UserId, UserCommentAuthorModel> authors = await users.GetAuthorsAsync(
+            pageItems.Select(c => c.UserId).Distinct().ToArray(), cancellationToken).ConfigureAwait(false);
+        RecipeCommentReadModel[] items = [.. pageItems.Where(c => authors.ContainsKey(c.UserId))
+            .Select(c => new RecipeCommentReadModel(c.Id.Value, c.RecipeId.Value, c.UserId.Value,
+                authors[c.UserId].Username, authors[c.UserId].FirstName, c.Text, c.CreatedOnUtc, c.ModifiedOnUtc))];
 
         return (items, total);
     }

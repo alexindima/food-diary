@@ -4,7 +4,7 @@ namespace FoodDiary.Application.Dashboard.Models;
 
 public sealed record DashboardUserContextModel(
     Guid Id,
-    string Email,
+    string? Email,
     string? Language,
     string? DashboardLayoutJson,
     double? DesiredWeightKg,

@@ -10,11 +10,108 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Requests.Abstractions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using FoodDiary.Telegram.Bot.Operations;
 
 namespace FoodDiary.Telegram.Bot.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramBotWorkerTests {
+    [Fact]
+    public async Task DurableReceiver_FailedPersistenceDoesNotAcknowledgeFollowingUpdates() {
+        var attempts = new List<int>();
+        bool fail = true;
+        var receiver = new DurableTelegramReceiver(new RecordingTelegramBotClient(), (update, _) => {
+            attempts.Add(update.Id);
+            return update.Id == 11 && fail ? Task.FromException(new HttpRequestException("unavailable")) : Task.CompletedTask;
+        }, TimeProvider.System, NullLogger.Instance);
+        Update[] batch = [new Update { Id = 10 }, new Update { Id = 11 }, new Update { Id = 12 }];
+
+        await Assert.ThrowsAsync<HttpRequestException>(() => receiver.ProcessBatchAsync(batch, CancellationToken.None));
+        Assert.Equal(11, receiver.NextOffset);
+        Assert.Equal(new[] { 10, 11 }, attempts);
+        fail = false;
+        await receiver.ProcessBatchAsync(batch, CancellationToken.None);
+        Assert.Equal(13, receiver.NextOffset);
+        Assert.Equal(new[] { 10, 11, 11, 12 }, attempts);
+    }
+
+    [Fact]
+    public async Task DurableReceiver_DoesNotAdvanceOffsetWhileSaveIsPending() {
+        var saved = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var receiver = new DurableTelegramReceiver(new RecordingTelegramBotClient(), (_, _) => saved.Task,
+            TimeProvider.System, NullLogger.Instance);
+        Task processing = receiver.ProcessBatchAsync([new Update { Id = 10 }], CancellationToken.None);
+        Assert.Null(receiver.NextOffset);
+        saved.SetResult();
+        await processing;
+        Assert.Equal(11, receiver.NextOffset);
+    }
+
+    [Fact]
+    public async Task HandleUpdateAsync_AlbumExplainsRejectionWithoutCallingBackend() {
+        var botClient = new RecordingTelegramBotClient();
+        var http = new RecordingHttpClientFactory();
+        TelegramBotWorker worker = CreateWorker(botClient, http, CreateOptions());
+        Update update = CreateMessageUpdate("caption", telegramUserId: 100);
+        update.Message!.MediaGroupId = "album";
+        update.Message.From!.LanguageCode = "ru";
+
+        await InvokeHandleUpdateAsync(worker, botClient, update);
+
+        object response = Assert.Single(botClient.Requests);
+        Assert.Contains("Отправьте одно фото", GetPropertyValue<string>(response, "Text"), StringComparison.Ordinal);
+        Assert.Empty(http.Requests);
+    }
+
+    [Fact]
+    public async Task HandleUpdateAsync_InlineCallbackWithoutPrivateMessage_DoesNotAccessDiary() {
+        var botClient = new RecordingTelegramBotClient();
+        var http = new RecordingHttpClientFactory();
+        TelegramBotWorker worker = CreateWorker(botClient, http, CreateOptions());
+        Update update = CreateCallbackUpdate("water:250");
+        update.CallbackQuery!.Message = null;
+        update.CallbackQuery.InlineMessageId = "inline-message";
+
+        await InvokeHandleUpdateAsync(worker, botClient, update);
+
+        Assert.Empty(botClient.Requests);
+        Assert.Empty(http.Requests);
+    }
+
+    [Theory]
+    [InlineData(ChatType.Group)]
+    [InlineData(ChatType.Supergroup)]
+    [InlineData(ChatType.Channel)]
+    public async Task HandleUpdateAsync_OutsidePrivateChat_DoesNotAccessDiary(ChatType chatType) {
+        var botClient = new RecordingTelegramBotClient();
+        var http = new RecordingHttpClientFactory();
+        TelegramBotWorker worker = CreateWorker(botClient, http, CreateOptions());
+        Update message = CreateMessageUpdate("/start", telegramUserId: 100);
+        message.Message!.Chat.Type = chatType;
+        Update callback = CreateCallbackUpdate("water:250");
+        callback.CallbackQuery!.Message!.Chat.Type = chatType;
+
+        await InvokeHandleUpdateAsync(worker, botClient, message);
+        await InvokeHandleUpdateAsync(worker, botClient, callback);
+
+        Assert.Empty(botClient.Requests);
+        Assert.Empty(http.Requests);
+    }
+
+    [Fact]
+    public async Task HandleUpdateAsync_CallbackFromAnotherUser_DoesNotAccessDiary() {
+        var botClient = new RecordingTelegramBotClient();
+        var http = new RecordingHttpClientFactory();
+        TelegramBotWorker worker = CreateWorker(botClient, http, CreateOptions());
+        Update update = CreateCallbackUpdate("water:250");
+        update.CallbackQuery!.From.Id = 200;
+
+        await InvokeHandleUpdateAsync(worker, botClient, update);
+
+        Assert.Empty(botClient.Requests);
+        Assert.Empty(http.Requests);
+    }
+
     [Fact]
     public async Task StartAsync_WhenTokenIsMissing_DoesNotCallTelegramApi() {
         var botClient = new RecordingTelegramBotClient();
@@ -219,7 +316,7 @@ public sealed class TelegramBotWorkerTests {
         Assert.Equal("SendMessageRequest", request.GetType().Name);
         Assert.Contains("open the WebApp", GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal);
         Assert.NotNull(GetPropertyValue<object?>(request, "ReplyMarkup"));
-        Assert.Equal("https://api.example.test/api/auth/telegram/bot/auth", httpFactory.Requests.Single().RequestUri?.ToString());
+        Assert.Equal("https://api.example.test/api/v1/auth/telegram/bot/auth", httpFactory.Requests.Single().RequestUri?.ToString());
     }
 
     [Fact]
@@ -271,6 +368,41 @@ public sealed class TelegramBotWorkerTests {
         object request = Assert.Single(botClient.Requests);
         Assert.Equal("Quick actions:", GetPropertyValue<string>(request, "Text"));
         Assert.NotNull(GetPropertyValue<object?>(request, "ReplyMarkup"));
+    }
+
+    [Theory]
+    [InlineData("/help", "Доступные команды")]
+    [InlineData("/water", "Сколько воды добавить?")]
+    [InlineData("/settings", "Настройки аккаунта:")]
+    public async Task HandleUpdateAsync_RussianMenuCommands_AreLocalized(string command, string expected) {
+        var botClient = new RecordingTelegramBotClient();
+        var httpFactory = new RecordingHttpClientFactory();
+        TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions());
+        Update update = CreateMessageUpdate(command, telegramUserId: 100);
+        update.Message!.From!.LanguageCode = "ru";
+
+        await InvokeHandleUpdateAsync(worker, botClient, update);
+
+        object request = Assert.Single(botClient.Requests);
+        Assert.Contains(expected, GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal);
+        Assert.NotNull(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        Assert.Empty(httpFactory.Requests);
+    }
+
+    [Theory]
+    [InlineData("menu:water", "Сколько воды добавить?")]
+    [InlineData("menu:help", "Доступные команды")]
+    public async Task HandleUpdateAsync_MenuCallbacks_SendMenuAndAcknowledge(string data, string expected) {
+        var botClient = new RecordingTelegramBotClient();
+        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
+        Update update = CreateCallbackUpdate(data);
+        update.CallbackQuery!.From.LanguageCode = "ru";
+
+        await InvokeHandleUpdateAsync(worker, botClient, update);
+
+        Assert.Equal(2, botClient.Requests.Count);
+        Assert.Contains(expected, GetPropertyValue<string>(botClient.Requests[0], "Text"), StringComparison.Ordinal);
+        Assert.Equal("AnswerCallbackQueryRequest", botClient.Requests[1].GetType().Name);
     }
 
     [Fact]
@@ -420,13 +552,14 @@ public sealed class TelegramBotWorkerTests {
         TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), new RecordingHttpClientFactory(), CreateOptions(), logger);
         using var cts = new CancellationTokenSource();
 
-        Task handling = InvokeHandleErrorAsync(worker, new ApiRequestException("bad request", 400), cts.Token);
+        Task handling = InvokeHandleErrorAsync(worker, new ApiRequestException("secret-token-in-url", 400), cts.Token);
         Assert.False(handling.IsCompleted);
 
         await cts.CancelAsync();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handling);
         Assert.Contains(logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("Telegram API error", StringComparison.Ordinal));
+        Assert.DoesNotContain(logger.Messages, message => message.Contains("secret-token-in-url", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -506,6 +639,10 @@ public sealed class TelegramBotWorkerTests {
             CallbackQuery = new CallbackQuery {
                 Id = "callback-id",
                 Data = data,
+                Message = new Message {
+                    Id = 10,
+                    Chat = new Chat { Id = 100, Type = ChatType.Private },
+                },
                 From = new User {
                     Id = 100,
                     FirstName = "Alex",

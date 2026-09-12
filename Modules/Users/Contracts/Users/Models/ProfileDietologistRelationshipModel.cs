@@ -3,7 +3,7 @@ namespace FoodDiary.Application.Abstractions.Users.Models;
 public sealed record ProfileDietologistRelationshipModel(
     Guid InvitationId,
     string Status,
-    string Email,
+    string? Email,
     string? FirstName,
     string? LastName,
     Guid? DietologistUserId,

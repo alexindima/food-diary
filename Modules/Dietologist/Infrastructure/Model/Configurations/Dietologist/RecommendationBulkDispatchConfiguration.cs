@@ -23,14 +23,6 @@ internal sealed class RecommendationBulkDispatchConfiguration : IEntityTypeConfi
             dispatch.ClientUserId,
         })
             .IsUnique();
-        builder.HasOne<FoodDiary.Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(dispatch => dispatch.DietologistUserId)
-            .OnDelete(DeleteBehavior.Cascade);
-        builder.HasOne<FoodDiary.Domain.Entities.Users.User>()
-            .WithMany()
-            .HasForeignKey(dispatch => dispatch.ClientUserId)
-            .OnDelete(DeleteBehavior.Cascade);
         builder.HasOne<Recommendation>()
             .WithMany()
             .HasForeignKey(dispatch => dispatch.RecommendationId)

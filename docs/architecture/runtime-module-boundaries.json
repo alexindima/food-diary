@@ -3,6 +3,16 @@
   "description": "Static inventory of consumer-owned ports with foreign implementations. Complements the acyclic Application contract-reference graph; dependency inversion does not remove runtime collaboration. Constructor/method parameter consumers are conservatively discovered. This is not a dynamic call trace or proof that every DI binding is reachable. Transaction modes are reviewed policy, verified by owner/provider integration tests.",
   "consumerOwnedPorts": [
     {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Identity",
+      "implementation": "IdentityUserDataPurgeParticipant",
+      "source": "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs",
+      "consumers": ["Users"],
+      "transaction": "owner-purge-transaction",
+      "reason": "Identity removes its Telegram operation payloads and receipts for the purged owner; Users retains transaction ownership and rollback. See ADR 0037 and UserCleanupServiceIntegrationTests."
+    },
+    {
       "contract": "IBillingMarketingConversionRecorder",
       "contractOwner": "Billing",
       "provider": "Marketing",

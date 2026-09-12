@@ -6,6 +6,6 @@ public sealed record RecommendationCommentModel(
     Guid AuthorUserId,
     string? AuthorFirstName,
     string? AuthorLastName,
-    string AuthorEmail,
+    string? AuthorEmail,
     string Text,
     DateTime CreatedAtUtc);

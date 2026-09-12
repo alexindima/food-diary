@@ -2,6 +2,8 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace FoodDiary.Infrastructure;
 
@@ -10,7 +12,11 @@ public static class UsersModuleRegistration {
         services.AddUsersApplication().AddUsersPersistence();
 
     public static IServiceCollection AddUsersPersistence(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<ISaveChangesInterceptor, TelegramIdentityConflictInterceptor>());
         services.AddScoped<UserProfileProjectionService>();
+        services.AddScoped<UserRelatedDataReadService>();
+        services.AddScoped<IUserFastingReminderReadService>(static provider => provider.GetRequiredService<UserRelatedDataReadService>());
+        services.AddScoped<IUserCommentAuthorReadService>(static provider => provider.GetRequiredService<UserRelatedDataReadService>());
         services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserAiProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserDashboardProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());

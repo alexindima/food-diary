@@ -47,7 +47,7 @@ public sealed class FastingModuleExtractionTests {
     public void ExtractedFastingAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Domain", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain"];
+        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Domain", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }

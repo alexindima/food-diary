@@ -129,6 +129,14 @@
                 />
                 <fd-ui-select
                     size="sm"
+                    [formField]="userForm().timeZoneId"
+                    [label]="'USER_MANAGE.TIME_ZONE' | translate"
+                    [options]="timeZoneOptions()"
+                    (valueChange)="userFormPatch.emit({ timeZoneId: $event })"
+                />
+                <p>{{ 'USER_MANAGE.TIME_ZONE_HINT' | translate }}</p>
+                <fd-ui-select
+                    size="sm"
                     [value]="measurementSystem()"
                     [label]="'USER_MANAGE.COMPARISON.UNIT_SYSTEM' | translate"
                     [options]="[

@@ -314,6 +314,9 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedMealsApplicationDependencies = new(StringComparer.Ordinal) {
+        // ADR 0037: consume the owned recognition result, never the mutable job store.
+        "FoodDiary.Application.Abstractions.Ai.Common",
+        "FoodDiary.Application.Abstractions.Ai.Models",
         "FoodDiary.Application.Abstractions.Usda",
         "FoodDiary.Application.Abstractions.Achievements.Common",
         "FoodDiary.Application.Abstractions.Common",
@@ -537,7 +540,8 @@ public sealed class BusinessModuleBoundaryTests {
     public void FastingInfrastructureImplementations_StayInOwnedFolders() {
         string infrastructureRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure");
         string[] fastingInfrastructureFiles = [.. SourceScanner.SourceFiles(infrastructureRoot)
-            .Where(path => Path.GetFileName(path).StartsWith("Fasting", StringComparison.Ordinal))];
+            .Where(path => Path.GetFileName(path).StartsWith("Fasting", StringComparison.Ordinal))
+            .Where(path => !path.Equals(Path.Combine(infrastructureRoot, "Persistence", "Composition", "FastingCrossModuleRelationships.cs"), StringComparison.OrdinalIgnoreCase))];
         string[] approvedDirectories = [
             Path.Combine(infrastructureRoot, "Persistence", "Tracking"),
             Path.Combine(infrastructureRoot, "Persistence", "Configurations", "Tracking"),
@@ -617,15 +621,18 @@ public sealed class BusinessModuleBoundaryTests {
         string persistenceRoot = Path.Combine(infrastructureRoot, "Persistence");
         string[] billingInfrastructureFiles = [.. SourceScanner.SourceFiles(persistenceRoot)
             .Where(path => Path.GetFileName(path).StartsWith("Billing", StringComparison.Ordinal))
+            .Where(path => !path.Equals(Path.Combine(persistenceRoot, "Composition", "BillingCrossModuleRelationships.cs"), StringComparison.OrdinalIgnoreCase))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Admin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))];
         string[] approvedDirectories = [
             Path.Combine(persistenceRoot, "Billing"),
             Path.Combine(persistenceRoot, "Configurations", "Billing"),
         ];
         string approvedDbContextPartial = Path.Combine(persistenceRoot, "FoodDiaryDbContext.Billing.cs");
+        string approvedRelationshipComposer = Path.Combine(persistenceRoot, "Composition", "BillingCrossModuleRelationships.cs");
 
         string[] violations = [.. billingInfrastructureFiles
             .Where(path => !path.Equals(approvedDbContextPartial, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Equals(approvedRelationshipComposer, StringComparison.OrdinalIgnoreCase))
             .Where(path => !approvedDirectories.Any(directory =>
                 Path.GetDirectoryName(path)?.Equals(directory, StringComparison.OrdinalIgnoreCase) == true))
             .Select(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path))

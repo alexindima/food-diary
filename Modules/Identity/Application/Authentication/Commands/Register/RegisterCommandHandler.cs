@@ -39,7 +39,7 @@ public sealed class RegisterCommandHandler(
             .ConfigureAwait(false);
 
         EmailVerificationMessage message = new(
-            principal.Email,
+            command.Email.Trim(),
             principal.UserId.Value.ToString(),
             emailToken,
             principal.User.Language,

@@ -13,3 +13,5 @@ Do not restore foreign inverse navigations or reference application/persistence.
 Keep User goal collections and UserRole/Role relationships unchanged.
 
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access.
+
+RoleNames belongs to Users Domain.Contracts; role entities and membership invariants remain here.

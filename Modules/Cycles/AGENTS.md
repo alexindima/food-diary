@@ -33,4 +33,6 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 ## Consumer boundary
 
-Own the cycle read DTOs, ICycleReadService and GetCurrentCycleQuery consumed by Dashboard and Export. Keep handlers, repositories and mutation policy in Application. Existing cycle enums remain in Cycles Domain; do not expose aggregate instances through these contracts. See `Contracts/AGENTS.md` and ADR 0033.
+Own the cycle read DTOs, ICycleReadService and GetCurrentCycleQuery consumed by Dashboard and Export. Keep handlers, repositories and mutation policy in Application. The eleven public cycle enums belong to dependency-free Cycles Domain.Contracts; do not expose aggregate instances through these contracts. See `Contracts/AGENTS.md` and ADR 0033.
+
+Consumer Contracts must not reference Cycles Domain. Preserve enum values and wire fields.

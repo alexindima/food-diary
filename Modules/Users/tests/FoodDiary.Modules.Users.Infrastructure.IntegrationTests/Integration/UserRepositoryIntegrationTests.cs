@@ -87,6 +87,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.ChangeTracker.Clear();
         var repository = new UserRepository(context);
 
+        Assert.NotNull(user.Email);
         User? loaded = await repository.GetByEmailAsync(user.Email);
 
         Assert.NotNull(loaded);

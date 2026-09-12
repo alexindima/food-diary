@@ -112,7 +112,9 @@ public static class UserMappings {
             user.MustChangePassword,
             !string.IsNullOrWhiteSpace(user.GoogleIssuer) &&
             !string.IsNullOrWhiteSpace(user.GoogleSubject),
-            user.SurfaceStyle
+            user.SurfaceStyle,
+            user.TelegramUserId.HasValue,
+            user.TimeZoneId
         );
     }
 

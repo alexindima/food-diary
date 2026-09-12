@@ -24,3 +24,7 @@ Rules for `Modules/Billing/Application/`.
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 Transaction callbacks must reload previously captured subscription and inbox entities on every attempt; keep provider calls outside replayable callbacks. See ADR 0032.
+
+Application consumes scalar Users types through Users.Domain.Contracts and semantic
+capabilities through Users.Contracts. Do not reference the aggregate-bearing
+Users.Domain assembly for these types.

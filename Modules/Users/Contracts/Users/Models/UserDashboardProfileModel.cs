@@ -4,7 +4,7 @@ namespace FoodDiary.Application.Abstractions.Users.Models;
 
 public sealed record UserDashboardProfileModel(
     Guid Id,
-    string Email,
+    string? Email,
     string? Language,
     string? DashboardLayoutJson,
     double? DesiredWeightKg,
@@ -15,4 +15,7 @@ public sealed record UserDashboardProfileModel(
     double? FatTarget,
     double? CarbTarget,
     double? FiberTarget,
-    UserCalorieSchedule CalorieSchedule);
+    UserCalorieSchedule CalorieSchedule,
+    string? TimeZoneId = null) {
+    public double? GetCalorieTargetForDate(DateOnly date) => CalorieSchedule.GetTargetForDate(date.ToDateTime(TimeOnly.MinValue));
+}

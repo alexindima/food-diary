@@ -14,7 +14,7 @@ export function buildClientCardViewModels(clients: ClientSummary[], language: st
     }));
 }
 
-export function getClientTitle(client: ClientSummary): string {
+export function getClientTitle(client: ClientSummary): string | null {
     const fullName = `${client.firstName ?? ''} ${client.lastName ?? ''}`.trim();
     return fullName.length > 0 ? fullName : client.email;
 }
@@ -22,7 +22,7 @@ export function getClientTitle(client: ClientSummary): string {
 export function getClientInitials(client: ClientSummary): string {
     const parts = [client.firstName, client.lastName].filter((value): value is string => Boolean(value?.trim()));
     if (parts.length === 0) {
-        return client.email.charAt(0).toUpperCase();
+        return client.email?.charAt(0).toUpperCase() ?? '?';
     }
 
     return parts

@@ -4,6 +4,16 @@ import { requiredPasswordChangeGuard } from './guards/required-password-change.g
 
 export const authRoutes: Routes = [
     {
+        path: 'auth/telegram',
+        loadComponent: async () => import('./pages/telegram-auth/telegram-auth').then(m => m.TelegramAuthComponent),
+        data: { shell: 'public', seo: { titleKey: 'AUTH.TELEGRAM.TITLE', noIndex: true } },
+    },
+    {
+        path: 'auth/telegram/callback',
+        loadComponent: async () => import('./pages/telegram-auth/telegram-auth').then(m => m.TelegramAuthComponent),
+        data: { shell: 'public', seo: { titleKey: 'AUTH.TELEGRAM.TITLE', noIndex: true } },
+    },
+    {
         path: 'mobile',
         redirectTo: 'mobile/login',
         pathMatch: 'full',

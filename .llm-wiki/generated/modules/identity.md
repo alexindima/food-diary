@@ -42,22 +42,23 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: EmailTemplate, UserRefreshTokenSession, UserLoginEvent
-- Public contract files: 46
+- Public contract files: 55
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 46
-- Interfaces: 25
+- Public contract types: 55
+- Interfaces: 31
 - DTO/read-model/projection types: 5
 - Enums: 0
-- Exported repository-shaped contracts: 11
+- Exported repository-shaped contracts: 13
 - Contracts referencing domain entities: 6
 - `class JwtImpersonationClaimNames`
 - `class JwtSecurityClaimNames`
 - `class JwtTokenUseClaimNames`
 - `class SecurityTokenGenerator`
+- `class TelegramIdentityErrors`
 - `interface IAdminSsoService`
 - `interface IAuthenticationLoginEventCleanupService`
 - `interface IAuthenticationLoginEventReadService`
@@ -79,12 +80,11 @@ No literal attribute-routed controller was associated with this module.
 - `interface IRefreshTokenSessionWriteRepository`
 - `interface ITelegramAssertionReplayGuard`
 - `interface ITelegramAuthValidator`
+- `interface ITelegramIdentityPolicy`
+- `interface ITelegramLoginTicketStore`
 - `interface ITelegramLoginWidgetValidator`
-- `interface IUserLoginEventReadRepository`
-- `interface IUserLoginEventRepository`
-- `interface IUserLoginEventWriteRepository`
-- `record AccountCreatedMessage`
-- ... 16 more type(s)
+- `interface ITelegramOidcProvider`
+- ... 25 more type(s)
 
 ## Focused Tests
 
@@ -108,6 +108,11 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RegisterCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOperationServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAgentParserTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAuthenticationRegistrationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/EmailTemplateInvariantTests.cs`
@@ -115,11 +120,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/UserRefreshTokenSessionInvariantTests.cs`
 - [integration] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/ActiveSessionProjectionIntegrationTests.cs`
 - [integration] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/TelegramAssertionReplayGuardIntegrationTests.cs`
-- [integration] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/UserLoginEventRepositoryIntegrationTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs`
 
 ## Working Rule
 

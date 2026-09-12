@@ -47,7 +47,7 @@ export class AdminUserDetailsDialogComponent {
                 title: 'Account',
                 fields: [
                     { label: 'User ID', value: currentUser.id },
-                    { label: 'Email', value: currentUser.email },
+                    { label: 'Email', value: this.text(currentUser.email) },
                     { label: 'Username', value: this.text(currentUser.username) },
                     { label: 'Roles', value: this.text(currentUser.roles.join(', ')) },
                     { label: 'Active', value: this.boolean(currentUser.isActive) },
@@ -195,7 +195,7 @@ export class AdminUserDetailsDialogComponent {
             return initials.toUpperCase();
         }
 
-        const emailInitial = user.email.trim().at(0) ?? '?';
+        const emailInitial = user.email?.trim().at(0) ?? '?';
         return emailInitial.toUpperCase();
     }
 

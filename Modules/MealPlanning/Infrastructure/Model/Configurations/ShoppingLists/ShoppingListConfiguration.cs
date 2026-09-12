@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +22,6 @@ internal sealed class ShoppingListConfiguration : IEntityTypeConfiguration<Shopp
         builder.Property(e => e.Name)
             .IsRequired()
             .HasMaxLength(128);
-
-        builder.HasOne<User>()
-            .WithMany()
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(e => e.Items)
             .WithOne(i => i.ShoppingList)

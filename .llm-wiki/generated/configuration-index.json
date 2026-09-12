@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 62,
+    "optionTypes": 64,
     "configurationFiles": 8,
     "configurationKeys": 270,
     "environmentVariables": 188
@@ -670,10 +670,33 @@
       "properties": [
         "ApiBaseUrl",
         "ApiSecret",
+        "OperationsEnabled",
         "Token",
         "WebAppUrl"
       ],
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs"
+    },
+    {
+      "type": "TelegramClientOptions",
+      "section": "TelegramClient",
+      "properties": [
+        "BotId",
+        "LoginEnabled",
+        "OperationsEnabled",
+        "RegistrationEnabled"
+      ],
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs"
+    },
+    {
+      "type": "TelegramOidcOptions",
+      "section": "TelegramOidc",
+      "properties": [
+        "ClientId",
+        "ClientSecret",
+        "Enabled",
+        "RedirectUri"
+      ],
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramOidcOptions.cs"
     },
     {
       "type": "UsdaApiOptions",

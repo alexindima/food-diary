@@ -616,9 +616,11 @@ public partial class DietologistFeatureTests {
             UserId userId,
             CancellationToken cancellationToken) {
             Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-            return userResult.IsFailure
-                ? Result.Failure<string>(userResult.Error)
-                : Result.Success(userResult.Value.Email);
+            if (userResult.IsFailure) {
+                return Result.Failure<string>(userResult.Error);
+            }
+            Assert.NotNull(userResult.Value.Email);
+            return Result.Success(userResult.Value.Email);
         }
 
         public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {
@@ -714,9 +716,11 @@ public partial class DietologistFeatureTests {
             UserId userId,
             CancellationToken cancellationToken) {
             Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-            return userResult.IsFailure
-                ? Result.Failure<string>(userResult.Error)
-                : Result.Success(userResult.Value.Email);
+            if (userResult.IsFailure) {
+                return Result.Failure<string>(userResult.Error);
+            }
+            Assert.NotNull(userResult.Value.Email);
+            return Result.Success(userResult.Value.Email);
         }
 
         public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {

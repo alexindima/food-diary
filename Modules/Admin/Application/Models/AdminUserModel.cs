@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Admin.Models;
 [ExcludeFromCodeCoverage]
 public sealed record AdminUserModel(
     Guid Id,
-    string Email,
+    string? Email,
     bool HasPassword,
     string? Username,
     string? FirstName,

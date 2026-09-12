@@ -19,6 +19,7 @@
     <ProjectReference Include="../Modules/BodyMetrics/Infrastructure/Model/FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="../Modules/ContentReports/Infrastructure/Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="../Modules/Cycles/Infrastructure/Model/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
@@ -53,12 +54,15 @@
     <ProjectReference Include="../Modules/Notifications/Infrastructure/Model/FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
     <ProjectReference Include="../Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/RecentItems/Domain/FoodDiary.Modules.RecentItems.Domain.csproj" />
     <ProjectReference Include="../Modules/RecentItems/Infrastructure/Model/FoodDiary.Modules.RecentItems.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
     <ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
     <ProjectReference Include="../Modules/Usda/Infrastructure/Model/FoodDiary.Modules.Usda.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />

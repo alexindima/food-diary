@@ -17,6 +17,33 @@ namespace FoodDiary.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task CreateCheckoutSession_WithoutVerifiedEmail_DoesNotCallProvider(bool telegramOnly) {
+        User user = telegramOnly ? User.CreateTelegram(123456, "inaccessible") : User.Create("unverified@example.com", "hash");
+        var gateway = new FakeBillingProviderGateway(BillingProviderNames.Paddle);
+        var subscriptions = new InMemoryBillingSubscriptionRepository();
+        var payments = new RecordingBillingPaymentRepository();
+        var handler = new CreateCheckoutSessionCommandHandler(
+            new FakeUserRepository(user),
+            subscriptions,
+            payments,
+            new FakeBillingProviderGatewayAccessor(gateway),
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
+
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
+            new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("User.EmailRequired", result.Error.Code);
+        Assert.Null(gateway.LastCheckoutRequest);
+        Assert.Empty(subscriptions.Subscriptions);
+        Assert.Empty(payments.Payments);
+    }
+
     [Fact]
     public async Task CreateCheckoutSessionValidator_WithPaddedPlanAndProvider_ReturnsSuccess() {
         TestValidationResult<CreateCheckoutSessionCommand> result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
@@ -36,6 +63,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WithRequestedProvider_CreatesPendingSubscriptionAndCheckoutPayment() {
         var user = User.Create("buyer@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         var userRepository = new FakeUserRepository(user);
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
         var paymentRepository = new RecordingBillingPaymentRepository();
@@ -83,6 +111,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WithExistingInactiveSubscription_UpdatesCheckoutContext() {
         var user = User.Create("existing-checkout@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
@@ -201,6 +230,7 @@ public partial class BillingFeatureTests {
     [InlineData("past_due")]
     public async Task CreateCheckoutSession_WithActivePaidSubscription_ReturnsAlreadyActive(string status) {
         var user = User.Create($"{status}@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
@@ -233,6 +263,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WhenProviderIsMissing_ReturnsProviderNotConfigured() {
         var user = User.Create("missing-provider@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         var handler = new CreateCheckoutSessionCommandHandler(
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(),
@@ -252,6 +283,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WhenProviderFails_ReturnsProviderError() {
         var user = User.Create("checkout-failure@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         var paymentRepository = new RecordingBillingPaymentRepository();
         var handler = new CreateCheckoutSessionCommandHandler(
             new FakeUserRepository(user),
@@ -278,6 +310,7 @@ public partial class BillingFeatureTests {
     [InlineData(true)]
     public async Task CreateCheckoutSession_WhenPendingCheckoutIsRecent_ReturnsCheckoutAlreadyInProgress(bool hasModifiedTimestamp) {
         var user = User.Create("pending-checkout@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         var subscription = BillingSubscription.CreatePending(
             user.Id,
             BillingProviderNames.Paddle,
@@ -310,6 +343,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WhenUnitOfWorkHasPendingChanges_SavesChanges() {
         var user = User.Create("checkout-uow@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.HasPendingChanges.Returns(returnThis: true);
         var gateway = new FakeBillingProviderGateway(

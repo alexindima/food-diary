@@ -24,6 +24,9 @@ using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
+using FoodDiary.Infrastructure.Persistence.Authentication;
+using Microsoft.AspNetCore.DataProtection;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
@@ -99,6 +102,11 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.WaistEntries.Add(waist);
         await context.SaveChangesAsync();
 
+        var telegram = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), TimeProvider.System);
+        await telegram.RegisterAsync(123, 1, deletedUser.Id.Value, 0, "deleted-user-photo", CancellationToken.None);
+        Guid? survivorOperation = await telegram.RegisterAsync(123, 2, survivingUser.Id.Value, 0, "survivor-photo", CancellationToken.None);
+        Assert.NotNull(survivorOperation);
+
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
         UserCleanupService service = CreateService(context, imageObjectDeletionOutbox);
 
@@ -107,6 +115,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(1, removed);
+        Assert.Equal(0, await verificationContext.Database.SqlQuery<int>($"""
+            SELECT count(*)::int AS "Value" FROM "TelegramOperations" WHERE "UserId" = {deletedUser.Id.Value}
+            """).SingleAsync());
+        Assert.Equal(survivorOperation.Value, Assert.Single(await telegram.ListReadyAsync(123, CancellationToken.None)));
         Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
         Assert.False(await verificationContext.Products.AnyAsync());
         Assert.False(await verificationContext.Recipes.AnyAsync());
@@ -223,6 +235,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     public async Task OwnerFailure_RollsBackContentReassignmentAndUserDeletion() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         (User deleted, User survivor) = await SeedReassignScenarioAsync(context);
+        var telegram = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), TimeProvider.System);
+        Guid? operation = await telegram.RegisterAsync(123, 1, deleted.Id.Value, 0, "recoverable-photo", CancellationToken.None);
+        Assert.NotNull(operation);
         UserCleanupService service = CreateService(context, new RecordingImageObjectDeletionOutbox(), new FailingParticipant(context));
 
         int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, survivor.Id.Value);
@@ -232,6 +247,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await context.SaveChangesAsync();
         await using FoodDiaryDbContext verification = CreateVerificationContext(context);
         Assert.True(await verification.Users.AnyAsync(user => user.Id == deleted.Id));
+        Assert.Equal(operation.Value, Assert.Single(await telegram.ListReadyAsync(123, CancellationToken.None)));
+        TelegramOperationLease? lease = await telegram.AcquireAsync(123, operation.Value, CancellationToken.None);
+        Assert.NotNull(lease);
+        Assert.Equal("recoverable-photo", lease.Payload);
         Assert.All(await verification.Products.ToListAsync(), product => Assert.Equal(deleted.Id, product.UserId));
         Assert.All(await verification.Recipes.ToListAsync(), recipe => Assert.Equal(deleted.Id, recipe.UserId));
         Assert.All(await verification.ImageAssets.ToListAsync(), asset => Assert.Equal(deleted.Id, asset.UserId));
@@ -239,7 +258,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingParticipant(FoodDiaryDbContext context) : IUserDataPurgeParticipant {
-        public int Order => 115;
+        public int Order => 140;
         public Task PurgeAsync(FoodDiary.Domain.ValueObjects.Ids.UserId userId, FoodDiary.Domain.ValueObjects.Ids.UserId? reassignTarget, CancellationToken cancellationToken) {
             context.Users.Add(User.Create("uncommitted-purge-work@example.com", "hash"));
             throw new InvalidOperationException("Injected owner cleanup failure.");
@@ -255,6 +274,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         services.AddCyclesModule();
         services.AddDietologistModule();
         services.AddHydrationModule();
+        services.AddIdentityPersistence();
         services.AddImagesInfrastructure();
         services.AddMealPlanningModule();
         services.AddMealsPersistence();
@@ -265,7 +285,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         if (extra is not null) { services.AddSingleton(extra); }
         using ServiceProvider provider = services.BuildServiceProvider();
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
-        Assert.Equal(extra is null ? 12 : 13, participants.Length);
+        Assert.Equal(extra is null ? 13 : 14, participants.Length);
         return new UserCleanupService(context, participants, NullLogger<UserCleanupService>.Instance);
     }
 

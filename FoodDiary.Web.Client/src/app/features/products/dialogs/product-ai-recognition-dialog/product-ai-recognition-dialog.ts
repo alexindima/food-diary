@@ -210,6 +210,11 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private runAnalysis(assetId: string, jobId?: string): void {
+        this.resetAnalysisState();
+        this.subscribeToAnalysis(assetId, jobId);
+    }
+
+    private resetAnalysisState(): void {
         this.analysisSubscription?.unsubscribe();
         this.nutritionSubscription?.unsubscribe();
         this.isLoading.set(true);
@@ -218,6 +223,9 @@ export class ProductAiRecognitionDialogComponent {
         this.nutritionErrorKey.set(null);
         this.errorKey.set(null);
         this.nutrition.set(null);
+    }
+
+    private subscribeToAnalysis(assetId: string, jobId?: string): void {
         this.analysisSubscription = (
             jobId === undefined
                 ? this.productAiRecognitionFacade.analyzeFoodImage({

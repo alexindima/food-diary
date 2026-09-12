@@ -151,6 +151,18 @@ async function createContextAsync(configure?: (usersFacade: UsersFacadeMock) => 
 }
 
 describe('AdminUserDetailsDialogComponent', () => {
+    it('renders a Telegram-only account without email or names', async () => {
+        const telegramUser: AdminUser = { ...baseUser, email: null, firstName: '', lastName: '', hasPassword: false, isEmailConfirmed: false };
+        const { component, fixture } = await createContextAsync(usersFacade => {
+            usersFacade.getUser.mockReturnValueOnce(of(telegramUser));
+        }, telegramUser);
+
+        expect(component['initials']()).toBe('?');
+        expect(component['sections']().flatMap(section => section.fields)).toContainEqual({ label: 'Email', value: '-' });
+        expect(component['hasError']()).toBe(false);
+        expect(host(fixture).textContent).not.toContain('Could not load user details.');
+    });
+
     it('loads user details and activity preview', async () => {
         const { fixture, component, usersFacade } = await createContextAsync();
 

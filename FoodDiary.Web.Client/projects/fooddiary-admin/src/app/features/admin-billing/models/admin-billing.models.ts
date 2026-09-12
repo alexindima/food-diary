@@ -12,7 +12,7 @@ export type AdminBillingFilters = {
 export type AdminBillingSubscription = {
     id: string;
     userId: string;
-    userEmail: string;
+    userEmail: string | null;
     provider: string;
     externalCustomerId: string;
     externalSubscriptionId?: string | null;
@@ -33,7 +33,7 @@ export type AdminBillingSubscription = {
 export type AdminBillingPayment = {
     id: string;
     userId: string;
-    userEmail: string;
+    userEmail: string | null;
     billingSubscriptionId?: string | null;
     provider: string;
     externalPaymentId: string;

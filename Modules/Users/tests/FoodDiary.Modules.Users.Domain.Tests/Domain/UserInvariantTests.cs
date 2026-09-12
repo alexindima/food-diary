@@ -144,6 +144,7 @@ public class UserInvariantTests {
     [Fact]
     public void LinkTelegram_AndUnlinkTelegram_UpdateAccountLinkState() {
         var user = User.Create("test@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
 
         user.LinkTelegram(123456789);
         Assert.Equal(123456789, user.TelegramUserId);

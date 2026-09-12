@@ -20,3 +20,7 @@ MarkNotificationRead intentionally preserves its existing Dietologist.Invitation
 error for missing/foreign notifications. NotificationErrors owns the literal legacy
 code and message, without a reverse Dietologist contract dependency. Preserve this
 wire compatibility until an explicit API change is approved. See docs/ai/feature-error-retirement.md.
+
+Application consumes scalar Users types through Users.Domain.Contracts and semantic
+capabilities through Users.Contracts. Do not reference the aggregate-bearing
+Users.Domain assembly for these types.

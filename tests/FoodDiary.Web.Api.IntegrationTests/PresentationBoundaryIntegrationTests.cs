@@ -35,6 +35,21 @@ public sealed class PresentationBoundaryIntegrationTests(
     ApiWebApplicationFactory apiFactory,
     TestAuthApiWebApplicationFactory testAuthFactory)
     : IClassFixture<ApiWebApplicationFactory>, IClassFixture<TestAuthApiWebApplicationFactory> {
+    [Fact]
+    public async Task TelegramBackupEmail_RequiresAuthenticatedUser() {
+        using HttpClient client = apiFactory.CreateClient();
+        using HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/auth/telegram/backup-email",
+            new { Email = "backup@example.com", InitData = "signed-proof" });
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task TelegramUnlink_RequiresAuthenticatedUserEvenWithInitData() {
+        using HttpClient client = apiFactory.CreateClient();
+        using HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/auth/telegram/unlink", new { InitData = "signed-proof" });
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNameCaseInsensitive = true,
     };
@@ -60,6 +75,19 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task MealRecognitionUndo_RequiresAuthenticatedUserId(bool authenticatedWithoutUserId) {
+        HttpClient client = testAuthFactory.CreateClient();
+        if (authenticatedWithoutUserId) {
+            client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        }
+        HttpResponseMessage response = await client.PostAsync(
+            "/api/v1/meals/recognitions/11111111-1111-1111-1111-111111111111/undo", content: null);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
     [Fact]
     public async Task FoodRecognition_StartRequiresPremiumBeforeEnqueue() {
         HttpClient client = testAuthFactory.CreateClient();
@@ -68,6 +96,20 @@ public sealed class PresentationBoundaryIntegrationTests(
         HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/ai/food/recognitions",
             new StartFoodRecognitionHttpRequest(Guid.NewGuid(), Guid.NewGuid()));
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task HydrationOperation_RequiresAuthenticatedUserId(bool authenticatedWithoutUserId) {
+        HttpClient client = testAuthFactory.CreateClient();
+        if (authenticatedWithoutUserId) {
+            client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        }
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/hydrations/operations/11111111-1111-1111-1111-111111111111",
+            new { TimestampUtc = DateTime.UtcNow, AmountMl = 250 });
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -247,6 +289,20 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.NotNull(payload);
         Assert.Equal("Authentication.TelegramBotNotConfigured", payload.Error);
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
+    }
+
+    [Theory]
+    [InlineData("GET", "/api/v1/auth/telegram/bot/operations/ready")]
+    [InlineData("POST", "/api/v1/auth/telegram/bot/operations")]
+    [InlineData("POST", "/api/v1/auth/telegram/bot/operations/00000000-0000-0000-0000-000000000001/lease")]
+    [InlineData("POST", "/api/v1/auth/telegram/bot/operations/00000000-0000-0000-0000-000000000001/checkpoint")]
+    public async Task TelegramOperations_WithoutConfiguredSecret_RejectsBeforeProcessing(string method, string path) {
+        HttpClient client = apiFactory.CreateClient();
+        using var request = new HttpRequestMessage(new HttpMethod(method), path) { Content = JsonContent.Create(new { }) };
+        HttpResponseMessage response = await client.SendAsync(request);
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal("Authentication.TelegramBotNotConfigured", payload?.Error);
     }
 
     [Fact]

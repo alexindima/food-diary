@@ -2,7 +2,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin.Responses;
 
 public sealed record AdminUserHttpResponse(
     Guid Id,
-    string Email,
+    string? Email,
     bool HasPassword,
     string? Username,
     string? FirstName,

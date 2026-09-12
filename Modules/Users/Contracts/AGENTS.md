@@ -16,3 +16,9 @@ and UserIdParser belong here because they express the shared Users access bounda
 they may use generic shared application contracts and Results.
 
 IUserSessionRevocationService and IUserProfileImageService are consumer-owned semantic capabilities implemented by Identity and Images. Expose revocation, URL resolution and cleanup requests without foreign aggregates or repositories.
+
+IUserFastingReminderReadService and IUserCommentAuthorReadService expose batch
+read-only dictionaries keyed by UserId, containing only reminder hours or author
+names. Missing users are omitted. These preserve existing related-data reads for
+all account states; they do not grant authentication/access or filter inactive
+and soft-deleted accounts. No IQueryable or aggregate escapes these contracts.

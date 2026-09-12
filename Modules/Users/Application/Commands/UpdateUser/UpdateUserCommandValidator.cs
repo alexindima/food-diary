@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using System.Globalization;
 
@@ -6,6 +7,8 @@ namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
 public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand> {
     public UpdateUserCommandValidator() {
+        RuleFor(x => x.TimeZoneId).Must(UserTimeZoneInput.IsValid)
+            .WithErrorCode("Validation.Invalid").WithMessage("TimeZoneId must be a valid IANA time zone or UTC.");
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()

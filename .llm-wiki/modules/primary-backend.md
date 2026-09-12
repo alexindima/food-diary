@@ -43,8 +43,8 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | AI use cases, usage and prompt ownership | `Modules/Ai` application, ports, Domain, persistence model and provider adapters; Users profile contracts and shared context seams |
 | Admin orchestration and impersonation | `Modules/Admin`: application, ports, independent impersonation domain, adapters and explicit persistence model; Identity-owned email templates, Users-owned roles/audit and shared SSO seams retain their owners |
 
-| Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; accepted Users/USDA dependencies and the shared Recipe composition lock remain explicit |
-| Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items, IDs and meal-only value types; one-way Meal.User references Users-owned User/UserId; shared context and migrations remain central |
+| Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; the narrow Products FoodQuality assembly owns the reusable formula. Products/Recipes mutation uses Serializable transactions with whole-attempt retries under ADR 0035. |
+| Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items and meal-only value types; scalar IDs/enums use Domain.Contracts, external EF relationships use central composition, and shared context/migrations remain central |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
 | External providers and service clients | Owner module Infrastructure; MailRelay transport in `Shared/FoodDiary.Email.MailRelay`; provider-neutral HTTP primitives in `Shared/FoodDiary.Integrations.Http` |
 | HTTP and SignalR transport | Owning module Presentation projects; reusable transport primitives in `FoodDiary.Presentation.Api` |
@@ -88,3 +88,9 @@ For a backend feature, inspect in order:
 4. Presentation request, response, mapping, and controller.
 5. Host registration only when composition changes.
 6. Unit, integration, contract snapshot, and architecture tests.
+
+Admin consumes billing provider names, moderation status and achievement metrics from owner Domain.Contracts. ContentReports consumer Contracts uses its scalar owner without referencing aggregate Domain. See docs/ai/admin-scalar-boundaries.md.
+
+Module Application projects have no direct foreign aggregate Domain references.
+Cycles read-model enums belong to dependency-free Cycles Domain.Contracts;
+see docs/ai/application-domain-boundaries.md for scope and transitive limitations.

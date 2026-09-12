@@ -3,7 +3,7 @@ namespace FoodDiary.Application.Abstractions.Authentication.Models;
 public sealed record UserLoginEventReadModel(
     Guid Id,
     Guid UserId,
-    string UserEmail,
+    string? UserEmail,
     string AuthProvider,
     string? IpAddress,
     string? UserAgent,

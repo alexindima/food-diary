@@ -17,7 +17,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         UserAuthenticationIdentityService service = CreateUserAuthenticationIdentityService(repository, hasher);
 
         Result<UserAuthenticationPrincipalModel> result = await service.AuthenticatePasswordAsync(
-            user.Email,
+            Assert.IsType<string>(user.Email),
             password,
             IdentityCoverageNow,
             CancellationToken.None);
@@ -38,7 +38,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             hasher);
 
         Result<UserAuthenticationPrincipalModel> result = await service.AuthenticatePasswordAsync(
-            user.Email,
+            Assert.IsType<string>(user.Email),
             "wrong-password",
             IdentityCoverageNow,
             CancellationToken.None);
@@ -60,7 +60,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             hasher);
 
         Result<UserAuthenticationPrincipalModel> result = await service.RestoreAccountAsync(
-            user.Email,
+            Assert.IsType<string>(user.Email),
             password,
             IdentityCoverageNow,
             CancellationToken.None);

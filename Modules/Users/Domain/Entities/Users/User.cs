@@ -15,7 +15,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     private const long DefaultAiOutputTokenLimit = 1_000_000;
     private const double ComparisonEpsilon = 0.000001d;
 
-    public string Email { get; private set; } = string.Empty;
+    public string? Email { get; private set; }
     public string Password { get; private set; } = string.Empty;
     public bool HasPassword { get; private set; }
     public bool MustChangePassword { get; private set; }
@@ -68,6 +68,9 @@ public sealed partial class User : AggregateRoot<UserId> {
     public int FastingCheckInReminderHours { get; private set; }
     public int FastingCheckInFollowUpReminderHours { get; private set; }
     public long? TelegramUserId { get; private set; }
+    public string? TelegramOidcIssuer { get; private set; }
+    public string? TelegramOidcSubject { get; private set; }
+    public string? TimeZoneId { get; private set; }
     public long AiInputTokenLimit { get; private set; } = DefaultAiInputTokenLimit;
     public long AiOutputTokenLimit { get; private set; } = DefaultAiOutputTokenLimit;
     public DateTime? AiConsentAcceptedAt { get; private set; }
@@ -89,6 +92,20 @@ public sealed partial class User : AggregateRoot<UserId> {
 
     public static User Create(string email, string hashedPassword, bool hasPassword = true) {
         string normalizedEmail = NormalizeRequiredEmail(email);
+        return CreateCore(normalizedEmail, hashedPassword, hasPassword);
+    }
+
+    public static User CreateTelegram(long telegramUserId, string inaccessiblePasswordHash) {
+        if (telegramUserId <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(telegramUserId));
+        }
+
+        User user = CreateCore(normalizedEmail: null, inaccessiblePasswordHash, hasPassword: false);
+        user.ApplyAccountState(user.GetAccountState().WithTelegram(telegramUserId));
+        return user;
+    }
+
+    private static User CreateCore(string? normalizedEmail, string hashedPassword, bool hasPassword) {
         string normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
 
         var user = new User {

@@ -19,6 +19,10 @@ public static class DependencyInjection {
         services.AddScoped<IAuthenticationLoginEventCleanupService, AuthenticationLoginEventCleanupService>();
         services.AddScoped<IAuthenticationLoginEventReadService, AuthenticationLoginEventReadService>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
+        services.AddScoped<TelegramAuthenticationIntentService>();
+        services.AddScoped<TelegramOperationService>();
+        services.AddScoped<TelegramBackupEmailService>();
+        services.AddScoped<TelegramBackupEmailOidcService>();
         services.AddScoped<IInitialAdminBootstrapService, InitialAdminBootstrapService>();
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IEmailTemplateAdministrationService, EmailTemplateAdministrationService>();

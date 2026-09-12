@@ -74,7 +74,21 @@ public sealed partial class User {
 
     public void SetEmailConfirmed(bool isConfirmed) {
         EnsureNotDeleted();
+        if (isConfirmed && Email is null) {
+            throw new InvalidOperationException("An email address is required before confirming it.");
+        }
         ApplySecurityState(GetSecurityState().AsEmailConfirmed(isConfirmed));
+        SetModified();
+    }
+
+    public void AddVerifiedEmail(string email) {
+        EnsureNotDeleted();
+        if (Email is not null) {
+            throw new InvalidOperationException("An email address is already assigned.");
+        }
+        Email = NormalizeRequiredEmail(email);
+        ApplySecurityState(GetSecurityState().AsEmailConfirmed(isConfirmed: true));
+        AdvanceSecurityVersion();
         SetModified();
     }
 

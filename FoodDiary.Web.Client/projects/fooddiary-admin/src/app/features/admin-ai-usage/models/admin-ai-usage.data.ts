@@ -14,7 +14,7 @@ export type AdminAiUsageBreakdown = {
 
 export type AdminAiUsageUser = {
     id: string;
-    email: string;
+    email: string | null;
     totalTokens: number;
     inputTokens: number;
     outputTokens: number;

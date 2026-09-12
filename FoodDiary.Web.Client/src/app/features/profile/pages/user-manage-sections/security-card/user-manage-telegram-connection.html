@@ -1,0 +1,29 @@
+<div class="user-manage__login-method fd-row fd-gap-sm">
+    <fd-ui-icon class="user-manage__login-method-icon" name="send" />
+    <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
+        <div class="user-manage__login-method-title">Telegram</div>
+        <p class="user-manage__login-method-description fd-ui-body-sm">
+            {{ (hasTelegramIdentity() ? 'AUTH.TELEGRAM.CONNECTED' : 'AUTH.TELEGRAM.CONNECT_HINT') | translate }}
+        </p>
+    </div>
+    @if (!hasTelegramIdentity()) {
+        <fd-ui-button type="button" variant="secondary" routerLink="/auth/telegram">{{ 'AUTH.TELEGRAM.LINK' | translate }}</fd-ui-button>
+    } @else {
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            fill="outline"
+            [loading]="isUnlinkingTelegram()"
+            [disabled]="!canUnlinkTelegram() || isUnlinkingTelegram()"
+            [disabledReason]="
+                (isUnlinkingTelegram() ? 'DISABLED_HINTS.OPERATION_BUSY' : 'USER_MANAGE.TELEGRAM_BACKUP_REQUIRED') | translate
+            "
+            (click)="telegramUnlink.emit()"
+        >
+            {{ 'USER_MANAGE.TELEGRAM_UNLINK' | translate }}
+        </fd-ui-button>
+    }
+</div>
+@if (hasTelegramIdentity() && !canUnlinkTelegram()) {
+    <p class="fd-ui-body-sm">{{ 'USER_MANAGE.TELEGRAM_BACKUP_REQUIRED' | translate }}</p>
+}

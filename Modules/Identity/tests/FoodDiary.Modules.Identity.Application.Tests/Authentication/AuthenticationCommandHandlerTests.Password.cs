@@ -53,7 +53,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var sender = new StubEmailSender();
         RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
 
-        Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+        Result result = await handler.Handle(new RequestPasswordResetCommand(Assert.IsType<string>(user.Email)), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Null(sender.LastPasswordReset);
@@ -66,12 +66,12 @@ public sealed partial class AuthenticationCommandHandlerTests {
         RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
 
         Result result = await handler.Handle(
-            new RequestPasswordResetCommand(user.Email, "https://client.test"),
+            new RequestPasswordResetCommand(Assert.IsType<string>(user.Email), "https://client.test"),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.NotNull(user.PasswordResetTokenHash);
-        Assert.Equal(user.Email, sender.LastPasswordReset?.ToEmail);
+        Assert.Equal(Assert.IsType<string>(user.Email), sender.LastPasswordReset?.ToEmail);
         Assert.Equal("https://client.test", sender.LastPasswordReset?.ClientOrigin);
     }
 
@@ -83,7 +83,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubEmailSender(throwOnPasswordReset: true));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None));
+            handler.Handle(new RequestPasswordResetCommand(Assert.IsType<string>(user.Email)), CancellationToken.None));
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var sender = new StubEmailSender();
         RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
 
-        Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+        Result result = await handler.Handle(new RequestPasswordResetCommand(Assert.IsType<string>(user.Email)), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Null(sender.LastPasswordReset);
@@ -107,7 +107,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var sender = new StubEmailSender();
         RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
 
-        Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+        Result result = await handler.Handle(new RequestPasswordResetCommand(Assert.IsType<string>(user.Email)), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Null(sender.LastPasswordReset);
@@ -255,7 +255,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Null(tokenService.LastUser);
         Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
-        Assert.Equal(user.Email, tokenService.LastPrincipal?.Email);
+        Assert.Equal(Assert.IsType<string>(user.Email), tokenService.LastPrincipal?.Email);
     }
 
     [Fact]
@@ -273,7 +273,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var clientContext = new AuthenticationClientContext("password", "203.0.113.11", "test-agent");
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new RestoreAccountCommand(user.Email, "secret", RememberMe: true, ClientContext: clientContext),
+            new RestoreAccountCommand(Assert.IsType<string>(user.Email), "secret", RememberMe: true, ClientContext: clientContext),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -316,7 +316,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new RestoreAccountCommand(user.Email, "secret"),
+            new RestoreAccountCommand(Assert.IsType<string>(user.Email), "secret"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);

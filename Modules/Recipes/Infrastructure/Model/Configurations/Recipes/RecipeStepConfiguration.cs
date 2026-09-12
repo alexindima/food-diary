@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -25,10 +24,5 @@ internal sealed class RecipeStepConfiguration : IEntityTypeConfiguration<RecipeS
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
-        builder.HasOne<ImageAsset>()
-            .WithMany()
-            .HasForeignKey(e => e.ImageAssetId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

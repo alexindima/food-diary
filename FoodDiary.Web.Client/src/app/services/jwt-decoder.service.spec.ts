@@ -13,6 +13,13 @@ beforeEach(() => {
 });
 
 describe('JwtDecoderService decodePayload', () => {
+    it('requires an explicit email-optional claim rather than inferring it from missing email', () => {
+        expect(service.isEmailOptional(encodePayload({ sub: 'telegram-user', fd_email_optional: 'true' }))).toBe(true);
+        expect(service.isEmailOptional(encodePayload({ sub: 'existing-user' }))).toBe(false);
+        expect(service.isEmailOptional(null)).toBe(false);
+        expect(service.isEmailOptional('invalid')).toBe(false);
+    });
+
     it('should decode a valid JWT payload', () => {
         const token = encodePayload({ sub: '123', name: 'test' });
         const result = service.decodePayload(token);

@@ -77,6 +77,10 @@ export class JwtDecoderService {
         return payload?.['fd_impersonation'] === 'true';
     }
 
+    public isEmailOptional(token: string | null): boolean {
+        return token !== null && this.decodePayload(token)?.['fd_email_optional'] === 'true';
+    }
+
     public extractImpersonationReason(token: string | null): string | null {
         if (token === null || token.length === 0) {
             return null;

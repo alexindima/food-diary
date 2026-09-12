@@ -28,7 +28,7 @@ describe('MealPhotoUploadPanelComponent', () => {
         expect(uploadField.appearance()).toBe('preview');
         expect(uploadField.cropEnabled()).toBe(false);
         expect(uploadField.resizeMaxDimension()).toBe(RESIZE_MAX_DIMENSION);
-        expect(uploadField.deleteOnClear()).toBe(true);
+        expect(uploadField.deleteOnClear()).toBe(false);
         expect(uploadField.initialSelection()).toEqual(initialSelection);
         expect(imageChangedSpy).toHaveBeenCalledWith(nextSelection);
     });

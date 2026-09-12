@@ -104,7 +104,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             tokenService);
 
-        Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(Assert.IsType<string>(user.Email), "secret"), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -122,14 +122,14 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var clientContext = new AuthenticationClientContext("password", "203.0.113.10", "test-agent");
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new LoginCommand(user.Email, "secret", RememberMe: true, ClientContext: clientContext),
+            new LoginCommand(Assert.IsType<string>(user.Email), "secret", RememberMe: true, ClientContext: clientContext),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Null(tokenService.LastUser);
         Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
-        Assert.Equal(user.Email, tokenService.LastPrincipal?.Email);
+        Assert.Equal(Assert.IsType<string>(user.Email), tokenService.LastPrincipal?.Email);
         Assert.Same(clientContext, tokenService.LastClientContext);
         Assert.True(tokenService.LastRememberMe);
         Assert.Equal(new StubDateTimeProvider().GetUtcNow().UtcDateTime, user.LastLoginAtUtc);

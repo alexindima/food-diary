@@ -184,7 +184,7 @@ public sealed class GetAttentionSignalsQueryHandler(
         string severity,
         string reason,
         DateTime detectedAtUtc) {
-        string displayName = string.Join(
+        string? displayName = string.Join(
             ' ',
             new[] { client.FirstName, client.LastName }.Where(value => !string.IsNullOrWhiteSpace(value)));
         if (string.IsNullOrWhiteSpace(displayName)) {

@@ -93,7 +93,7 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
         if (!string.IsNullOrWhiteSpace(search)) {
             string term = $"%{EscapeLikePattern(search.Trim())}%";
             filteredQuery = filteredQuery.Where(u =>
-                EF.Functions.ILike(u.Email, term, LikeEscapeCharacter) ||
+                (u.Email != null && EF.Functions.ILike(u.Email, term, LikeEscapeCharacter)) ||
                 EF.Functions.ILike(u.Username ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(u.FirstName ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(u.LastName ?? string.Empty, term, LikeEscapeCharacter));

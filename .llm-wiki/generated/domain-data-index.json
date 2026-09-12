@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 244,
-    "entities": 83,
-    "valueObjects": 99,
-    "invariants": 505,
-    "persistenceMappings": 87,
-    "indexes": 160,
-    "relationships": 75
+    "domainTypes": 230,
+    "entities": 86,
+    "valueObjects": 96,
+    "invariants": 517,
+    "persistenceMappings": 91,
+    "indexes": 167,
+    "relationships": 35
   },
   "domainTypes": [
     {
@@ -341,6 +341,13 @@
     },
     {
       "area": "FoodDiary",
+      "name": "HydrationOperationReceipt",
+      "role": "entity",
+      "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationOperationReceipt.cs",
+      "line": 5
+    },
+    {
+      "area": "FoodDiary",
       "name": "ImageAsset",
       "role": "entity",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
@@ -422,6 +429,20 @@
       "role": "entity",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanRecipeSnapshot.cs",
       "line": 4
+    },
+    {
+      "area": "FoodDiary",
+      "name": "MealRecognitionReceipt",
+      "role": "entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionReceipt.cs",
+      "line": 4
+    },
+    {
+      "area": "FoodDiary",
+      "name": "MealRecognitionUndoResult",
+      "role": "entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionUndoResult.cs",
+      "line": 2
     },
     {
       "area": "FoodDiary",
@@ -691,79 +712,9 @@
     },
     {
       "area": "FoodDiary",
-      "name": "AchievementMetric",
-      "role": "enum",
-      "path": "Modules/Gamification/Domain/Enums/AchievementMetric.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "BleedingType",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/BleedingType.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
       "name": "ClientTaskStatus",
       "role": "enum",
       "path": "Modules/Dietologist/Domain/Enums/ClientTaskStatus.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleConfidence",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleConfidence.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleConsentPurpose",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleConsentPurpose.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleFactorType",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleFactorType.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleFlowLevel",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleReproductiveState",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleReproductiveState.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleSymptomCategory",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleSymptomCategory.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleTrackingGoal",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleTrackingGoal.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleTrackingMode",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/CycleTrackingMode.cs",
       "line": 2
     },
     {
@@ -845,37 +796,9 @@
     },
     {
       "area": "FoodDiary",
-      "name": "MenstrualEpisodeStatus",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/MenstrualEpisodeStatus.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "OvulationTestResult",
-      "role": "enum",
-      "path": "Modules/Cycles/Domain/Enums/OvulationTestResult.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
       "name": "RecentItemType",
       "role": "enum",
       "path": "Modules/RecentItems/Domain/Enums/RecentItemType.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "ReportStatus",
-      "role": "enum",
-      "path": "Modules/ContentReports/Domain/Enums/ReportStatus.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "ReportTargetType",
-      "role": "enum",
-      "path": "Modules/ContentReports/Domain/Enums/ReportTargetType.cs",
       "line": 2
     },
     {
@@ -967,13 +890,6 @@
       "name": "ClientTaskId",
       "role": "value-object",
       "path": "Modules/Dietologist/Domain/ValueObjects/Ids/ClientTaskId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
-      "name": "ContentReportId",
-      "role": "value-object",
-      "path": "Modules/ContentReports/Domain/ValueObjects/Ids/ContentReportId.cs",
       "line": 4
     },
     {
@@ -1087,20 +1003,6 @@
       "role": "value-object",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/FertilitySignalId.cs",
       "line": 4
-    },
-    {
-      "area": "FoodDiary",
-      "name": "FoodQualityGrade",
-      "role": "value-object",
-      "path": "Modules/Products/Domain/ValueObjects/FoodQualityGrade.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "FoodQualityScore",
-      "role": "value-object",
-      "path": "Modules/Products/Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 8
     },
     {
       "area": "FoodDiary",
@@ -3276,6 +3178,20 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(entry)",
+      "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationOperationReceipt.cs",
+      "line": 16
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A hydration operation ID is required.\", nameof(operationId))",
+      "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationOperationReceipt.cs",
+      "line": 18
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Value must be at most {LocaleMaxLength} characters.\")",
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
@@ -3921,6 +3837,27 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A recognition receipt requires valid operation, owner, recognition and meal identities.\", nameof(operationId))",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionReceipt.cs",
+      "line": 21
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(undoWindow))",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionReceipt.cs",
+      "line": 26
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A UTC timestamp is required.\", parameterName)",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealRecognitionReceipt.cs",
+      "line": 59
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/Meals/Domain/ValueObjects/MealAiItemState.cs",
       "line": 80
@@ -4155,20 +4092,6 @@
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
       "line": 584
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(score), \"Score must be between 0 and 100.\")",
-      "path": "Modules/Products/Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 14
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Grade must match the score range.\", nameof(grade))",
-      "path": "Modules/Products/Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 19
     },
     {
       "area": "FoodDiary",
@@ -4571,185 +4494,206 @@
     },
     {
       "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"An email address is required before confirming it.\")",
+      "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
+      "line": 78
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"An email address is already assigned.\")",
+      "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
+      "line": 87
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be in the future.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
-      "line": 101
+      "line": 115
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be earlier than the previous issuance date.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
-      "line": 107
+      "line": 121
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(telegramUserId))",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 100
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Password hash is required.\", nameof(value)) : value",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 118
+      "line": 135
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Token hash is required.\", paramName)",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 123
+      "line": 140
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 128
+      "line": 145
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Date must be in the future (UTC).\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 139
+      "line": 156
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Expiration must be later than issuance.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 145
+      "line": 162
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(birthDate), \"Birth date cannot be in the future.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 156
+      "line": 173
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 187
+      "line": 204
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Deleted user cannot be mutated. Use Restore() first.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 193
+      "line": 210
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 415
+      "line": 432
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 425
+      "line": 442
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 435
+      "line": 452
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 447
+      "line": 464
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 459
+      "line": 476
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 469
+      "line": 486
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 473
+      "line": 490
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Activity level must be one of the supported values.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 479
+      "line": 496
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Gender must be one of the supported codes.\") : gender.Value",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 484
+      "line": 501
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 489
+      "line": 506
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 495
+      "line": 512
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 501
+      "line": 518
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(roles)",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 526
+      "line": 543
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Roles must not contain null elements.\", nameof(roles))",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 529
+      "line": 546
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(duration), \"Premium trial duration must be positive.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 592
+      "line": 609
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Premium trial has already been used.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 596
+      "line": 613
     },
     {
       "area": "FoodDiary",
@@ -4761,23 +4705,65 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(telegramUserId))",
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "line": 49
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Disconnect the current Telegram identity before linking another one.\")",
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "line": 55
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Link Telegram before binding its OIDC identity.\")",
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "line": 65
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"The Telegram OIDC identity does not match the linked identity.\")",
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "line": 72
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Add another sign-in method before disconnecting Telegram.\")",
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "line": 89
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"An IANA time zone is required.\", nameof(timeZoneId))",
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "line": 103
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(surfaceStyle), \"Surface style must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
-      "line": 273
+      "line": 327
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
       "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
-      "line": 286
+      "line": 340
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Reminder hour must be between 1 and 168.\")",
       "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
-      "line": 359
+      "line": 413
     },
     {
       "area": "FoodDiary",
@@ -5288,18 +5274,7 @@
         "e => e.StartedAtUtc)",
         "e => e.TargetUserId)"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Admin/Infrastructure/Model/Configurations/Admin/AdminImpersonationSessionConfiguration.cs"
     },
     {
@@ -5425,18 +5400,7 @@
         "task => new { task.DietologistUserId, task.ClientUserId })",
         "task => new { task.Status, task.DueAtUtc, task.DueReminderSentAtUtc })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/ClientTaskConfiguration.cs"
     },
     {
@@ -5582,18 +5546,7 @@
         "e => new { e.ClientUserId, e.Status })",
         "e => new { e.DietologistEmail, e.Status })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/DietologistInvitationConfiguration.cs"
     },
     {
@@ -5707,18 +5660,7 @@
         "e => e.UserId)",
         "e => new { e.UserId, e.MealId })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "Meal",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteMealConfiguration.cs"
     },
     {
@@ -5729,18 +5671,7 @@
         "e => e.UserId)",
         "e => new { e.UserId, e.ProductId })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "Product",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteProductConfiguration.cs"
     },
     {
@@ -5751,18 +5682,7 @@
         "e => e.UserId)",
         "e => new { e.UserId, e.RecipeId })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "Recipe",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteRecipeConfiguration.cs"
     },
     {
@@ -5796,6 +5716,16 @@
       ],
       "relationships": [],
       "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "HydrationOperationReceipt",
+      "table": "HydrationOperationReceipts",
+      "indexes": [
+        "receipt => receipt.EntryId).IsUnique()"
+      ],
+      "relationships": [],
+      "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationOperationReceiptConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5839,16 +5769,6 @@
       ],
       "relationships": [
         {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "ImageAsset",
-          "expression": ")"
-        },
-        {
           "kind": "HasMany",
           "target": "",
           "expression": "e => e.AiSessions)"
@@ -5871,11 +5791,6 @@
       "indexes": [],
       "relationships": [
         {
-          "kind": "HasOne",
-          "target": "ImageAsset",
-          "expression": ")"
-        },
-        {
           "kind": "HasMany",
           "target": "",
           "expression": "e => e.Items)"
@@ -5893,16 +5808,6 @@
           "kind": "HasOne",
           "target": "",
           "expression": "e => e.Meal)"
-        },
-        {
-          "kind": "HasOne",
-          "target": "FoodDiary.Domain.Entities.Products.Product",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "Recipe",
-          "expression": ")"
         }
       ],
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealItemConfiguration.cs"
@@ -5916,11 +5821,6 @@
         "e => e.IsCurated)"
       ],
       "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
         {
           "kind": "HasMany",
           "target": "",
@@ -5950,14 +5850,18 @@
       "entity": "MealPlanMeal",
       "table": null,
       "indexes": [],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "Recipe",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanMealConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "MealRecognitionReceipt",
+      "table": "MealRecognitionReceipts",
+      "indexes": [
+        "receipt => new { receipt.UserId, receipt.RecognitionId }).IsUnique()"
+      ],
+      "relationships": [],
+      "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealRecognitionReceiptConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6042,23 +5946,7 @@
         "e => new { e.UserId, e.CreatedOnUtc })",
         "e => new { e.Visibility, e.CreatedOnUtc })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "ImageAsset",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "UsdaFood",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs"
     },
     {
@@ -6083,18 +5971,7 @@
         "e => new { e.UserId, e.CreatedOnUtc })",
         "e => new { e.Visibility, e.CreatedOnUtc })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "ImageAsset",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeConfiguration.cs"
     },
     {
@@ -6104,18 +5981,7 @@
       "indexes": [
         "e => new { e.RecipeId, e.CreatedOnUtc })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "Recipe",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeCommentConfiguration.cs"
     },
     {
@@ -6128,11 +5994,6 @@
           "kind": "HasOne",
           "target": "",
           "expression": "e => e.RecipeStep)"
-        },
-        {
-          "kind": "HasOne",
-          "target": "Product",
-          "expression": ")"
         },
         {
           "kind": "HasOne",
@@ -6150,13 +6011,7 @@
         "e => e.RecipeId)",
         "e => new { e.UserId, e.RecipeId }).IsUnique()"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeLikeConfiguration.cs"
     },
     {
@@ -6169,11 +6024,6 @@
           "kind": "HasOne",
           "target": "",
           "expression": "e => e.Recipe)"
-        },
-        {
-          "kind": "HasOne",
-          "target": "ImageAsset",
-          "expression": ")"
         }
       ],
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeStepConfiguration.cs"
@@ -6186,18 +6036,7 @@
         "e => e.ClientUserId)",
         "e => new { e.DietologistUserId, e.ClientUserId })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationConfiguration.cs"
     },
     {
@@ -6208,16 +6047,6 @@
         "dispatch => new {"
       ],
       "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        },
-        {
-          "kind": "HasOne",
-          "target": "FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        },
         {
           "kind": "HasOne",
           "target": "Recommendation",
@@ -6238,11 +6067,6 @@
           "kind": "HasOne",
           "target": "",
           "expression": "e => e.Recommendation)"
-        },
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
         }
       ],
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationCommentConfiguration.cs"
@@ -6254,13 +6078,7 @@
       "indexes": [
         "template => new { template.DietologistUserId, template.IsArchived, template.Name })"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "FoodDiary.Domain.Entities.Users.User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationTemplateConfiguration.cs"
     },
     {
@@ -6280,11 +6098,6 @@
       "indexes": [],
       "relationships": [
         {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        },
-        {
           "kind": "HasMany",
           "target": "",
           "expression": "e => e.Items)"
@@ -6298,11 +6111,6 @@
       "table": null,
       "indexes": [],
       "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "Product",
-          "expression": ")"
-        },
         {
           "kind": "HasMany",
           "target": "",
@@ -6322,6 +6130,28 @@
       ],
       "relationships": [],
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListItemSourceConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "TelegramLoginTicket",
+      "table": "TelegramLoginTickets",
+      "indexes": [
+        "ticket => ticket.ExpiresAtUtc)"
+      ],
+      "relationships": [],
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramLoginTicketConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "TelegramOperation",
+      "table": "TelegramOperations",
+      "indexes": [
+        "item => item.UserId)",
+        "item => new { item.BotId, item.Completed, item.NextAttemptAtUtc })",
+        "item => new { item.BotId, item.UpdateId }).IsUnique()"
+      ],
+      "relationships": [],
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramOperationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6387,7 +6217,8 @@
       "indexes": [
         "e => e.Email).IsUnique()",
         "e => e.TelegramUserId)",
-        "e => new { e.GoogleIssuer, e.GoogleSubject })"
+        "e => new { e.GoogleIssuer, e.GoogleSubject })",
+        "e => new { e.TelegramOidcIssuer, e.TelegramOidcSubject })"
       ],
       "relationships": [
         {
@@ -6399,11 +6230,6 @@
           "kind": "HasMany",
           "target": "",
           "expression": "e => e.WaistGoals)"
-        },
-        {
-          "kind": "HasOne",
-          "target": "ImageAsset",
-          "expression": ")"
         }
       ],
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs"
@@ -6447,13 +6273,7 @@
         "e => e.OperatingSystem)",
         "e => e.UserId)"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs"
     },
     {
@@ -6465,13 +6285,7 @@
         "e => e.RevokedAtUtc)",
         "e => e.UserId)"
       ],
-      "relationships": [
-        {
-          "kind": "HasOne",
-          "target": "User",
-          "expression": ")"
-        }
-      ],
+      "relationships": [],
       "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs"
     },
     {

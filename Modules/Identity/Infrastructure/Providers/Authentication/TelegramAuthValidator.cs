@@ -99,7 +99,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
     }
 
     private bool IsValidHash(string dataCheckString, string hash) {
-        byte[] secretKey = ComputeHmacSha256(_options.BotToken, "WebAppData");
+        byte[] secretKey = ComputeHmacSha256("WebAppData", _options.BotToken);
         string calculatedHash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         return CryptographicOperations.FixedTimeEquals(
             Encoding.UTF8.GetBytes(calculatedHash),

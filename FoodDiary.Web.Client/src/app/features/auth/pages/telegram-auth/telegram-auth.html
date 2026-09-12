@@ -1,0 +1,68 @@
+<section class="telegram-auth">
+    <fd-ui-card class="telegram-auth__card">
+        <div class="fd-stack fd-gap-md">
+            <header class="fd-stack fd-gap-xs">
+                <p class="telegram-auth__brand">Food Diary</p>
+                <h1>{{ 'AUTH.TELEGRAM.TITLE' | translate }}</h1>
+                <p>{{ 'AUTH.TELEGRAM.SUBTITLE' | translate }}</p>
+            </header>
+            @if (facade.errorKey(); as error) {
+                <p role="alert">{{ error | translate }}</p>
+            }
+            @if (!ready() || facade.busy()) {
+                <p role="status">{{ 'COMMON.LOADING' | translate }}</p>
+            } @else if (!facade.configuration()?.loginEnabled) {
+                <p>{{ 'AUTH.TELEGRAM.UNAVAILABLE' | translate }}</p>
+                <fd-ui-button [fullWidth]="true" (click)="openOtherSignIn()">{{ 'AUTH.TELEGRAM.OTHER_METHODS' | translate }}</fd-ui-button>
+            } @else if (showExistingLogin()) {
+                <fd-ui-button variant="ghost" (click)="backToChoice()">{{ 'AUTH.TELEGRAM.BACK_TO_CHOICE' | translate }}</fd-ui-button>
+                <p>{{ 'AUTH.TELEGRAM.EXISTING_HINT' | translate }}</p>
+                <fd-auth initialReturnUrl="/auth/telegram" [useRouting]="false" [hideTelegram]="true" />
+            } @else if (facade.intent(); as intent) {
+                @if (intent.nextAction === 'login') {
+                    <fd-ui-button [fullWidth]="true" (click)="complete('login')">{{ 'AUTH.TELEGRAM.SIGN_IN' | translate }}</fd-ui-button>
+                } @else if (auth.isAuthenticated()) {
+                    <p>{{ 'AUTH.TELEGRAM.LINK_CONFIRM' | translate }}</p>
+                    <strong>{{ targetAccount() ?? ('AUTH.TELEGRAM.CURRENT_ACCOUNT' | translate) }}</strong>
+                    <fd-ui-button
+                        [fullWidth]="true"
+                        [disabled]="!canLink()"
+                        [disabledReason]="!canLink() ? ('COMMON.LOADING' | translate) : null"
+                        (click)="complete('link')"
+                        >{{ 'AUTH.TELEGRAM.LINK' | translate }}</fd-ui-button
+                    >
+                } @else if (intent.nextAction === 'link') {
+                    <fd-ui-button [fullWidth]="true" (click)="chooseExisting()">{{ 'AUTH.TELEGRAM.EXISTING' | translate }}</fd-ui-button>
+                } @else {
+                    <p>{{ 'AUTH.TELEGRAM.NEW_HINT' | translate }}</p>
+                    @if (facade.configuration()?.registrationEnabled) {
+                        <fd-ui-input
+                            [value]="timeZoneSearch()"
+                            [label]="'AUTH.TELEGRAM.TIME_ZONE_SEARCH' | translate"
+                            (valueChange)="timeZoneSearch.set($event?.toString() ?? '')"
+                        />
+                        <fd-ui-select
+                            [formField]="registrationForm.timeZoneId"
+                            [options]="filteredTimeZoneOptions()"
+                            [label]="'AUTH.TELEGRAM.TIME_ZONE' | translate"
+                        />
+                        <p class="fd-ui-caption">{{ 'AUTH.TELEGRAM.TIME_ZONE_HINT' | translate }}</p>
+                        <fd-ui-button
+                            [fullWidth]="true"
+                            [disabled]="registrationForm().invalid()"
+                            [disabledReason]="registrationForm().invalid() ? ('FORM_ERRORS.REQUIRED' | translate) : null"
+                            (click)="complete('register')"
+                            >{{ 'AUTH.TELEGRAM.CREATE' | translate }}</fd-ui-button
+                        >
+                    }
+                    <fd-ui-button variant="secondary" [fullWidth]="true" (click)="chooseExisting()">{{
+                        'AUTH.TELEGRAM.EXISTING' | translate
+                    }}</fd-ui-button>
+                }
+                <fd-ui-button variant="ghost" (click)="restart()">{{ 'AUTH.TELEGRAM.START_OVER' | translate }}</fd-ui-button>
+            } @else {
+                <fd-ui-button [fullWidth]="true" (click)="begin()">{{ 'AUTH.TELEGRAM.CONTINUE' | translate }}</fd-ui-button>
+            }
+        </div>
+    </fd-ui-card>
+</section>
