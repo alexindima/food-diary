@@ -13,6 +13,12 @@ if (-not [bool]$reusedBuild.reused -or [string]$reusedBuild.fingerprint -cne [st
     throw 'In-process SQLite reader did not reuse an identical tooling build.'
 }
 
+# The relationships view returns mapping records, each of which may own several relationships.
+$domainIndex = Get-Content (Join-Path $repositoryRoot '.llm-wiki/generated/domain-data-index.json') -Raw | ConvertFrom-Json
+$relationshipMappingCount = @($domainIndex.persistenceMappings | Where-Object { @($_.relationships).Count -gt 0 }).Count
+if ($relationshipMappingCount -eq 0) { throw 'Domain-data relationship parity requires non-empty source mappings.' }
+$boundedRelationshipMappingCount = [Math]::Min(30, $relationshipMappingCount)
+
 $cases = @(
     [pscustomobject]@{ View = 'all'; Query = 'weight'; Minimum = 3 }
     [pscustomobject]@{ View = 'types'; Query = 'User'; Minimum = 3 }
@@ -20,7 +26,7 @@ $cases = @(
     [pscustomobject]@{ View = 'mappings'; Query = 'User'; Minimum = 3 }
     [pscustomobject]@{ View = 'indexes'; Query = ''; Minimum = 30 }
     [pscustomobject]@{ View = 'indexes'; Query = 'User'; Minimum = 1 }
-    [pscustomobject]@{ View = 'relationships'; Query = ''; Minimum = 30 }
+    [pscustomobject]@{ View = 'relationships'; Query = ''; Minimum = 1; Expected = $boundedRelationshipMappingCount }
     [pscustomobject]@{ View = 'relationships'; Query = 'User'; Minimum = 1 }
     [pscustomobject]@{ View = 'invariants'; Query = 'WeightKg'; Minimum = 2 }
     [pscustomobject]@{ View = 'all'; Query = 'zzzxqv'; Minimum = 0; Expected = 0 }

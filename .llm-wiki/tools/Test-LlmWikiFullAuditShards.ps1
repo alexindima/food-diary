@@ -9,7 +9,8 @@ if ($parseErrors.Count) { throw 'Full audit has syntax errors.' }
 # Frozen from the unsharded audit at 45e8de30e. Updating assertions requires an
 # intentional inventory refresh, never silently dropping coverage during moves.
 $expected = @{
-    Core = @{ count = 333; hash = '7b0fd833649aef95b2e3b2e2d572424a9586f752ec0ecc7fa9c37c0f345381b6' }
+    # The AI trace now checks calculateNutrition, the remaining direct HTTP call in AiFoodService.
+    Core = @{ count = 333; hash = 'b0645935bcec1322271091b78a4a3806ada3f4ffb4b4c1f8214c0963b3324653' }
     Governed = @{ count = 376; hash = '42bf7167f835ab9d6ca667002f60d80f6edcca9b2b93677f406cd84fd0594cc7' }
     Workspace = @{ count = 279; hash = 'ea7979f9f97d186fb115138cb4ab4085dc228f5c58cfb4444367b0643958d005' }
     Orchestration = @{ count = 97; hash = '3aeed905ee4fd448d167168544359a407ba47b4af347add97351f53c411a35e7' }

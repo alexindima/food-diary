@@ -16,7 +16,7 @@ $cases = @(
     @{ Module = 'Meals'; Query = 'meal projection read repository'; ScopePath = 'Modules/Meals/Application'; ChangeType = 'Backend'; ExpectedPath = '^Modules/Meals/Application/' }
     @{ Module = ''; Query = 'autocomplete product search component'; ScopePath = 'FoodDiary.Web.Client/src/app/features/products'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/src/app/features/products/' }
     @{ Module = ''; Query = 'responsive dashboard component layout'; ScopePath = 'FoodDiary.Web.Client/src/app/features/dashboard'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/src/app/features/dashboard/' }
-    @{ Module = ''; Query = 'AI dashboard'; ScopePath = 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'; ChangeType = 'Frontend'; ExpectedPaths = @('^FoodDiary\.Web\.Client/src/app/features/dashboard/', '^FoodDiary\.Web\.Client/src/app/components/shared/ai-input-bar/') }
+    @{ Module = ''; Query = 'AI photo dashboard'; ScopePath = 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'; ChangeType = 'Frontend'; ExpectedPaths = @('^FoodDiary\.Web\.Client/src/app/features/dashboard/', '^FoodDiary\.Web\.Client/src/app/components/shared/ai-input-bar/') }
     @{ Module = ''; Query = 'translation locale'; ScopePath = 'FoodDiary.Web.Client/assets/i18n'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/(?:scripts/check-i18n\.mjs|src/app/shared/i18n/)'; ExpectAbstention = $true }
 )
 $endToEndDurations = [Collections.Generic.List[double]]::new()
