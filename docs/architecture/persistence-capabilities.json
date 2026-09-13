@@ -211,7 +211,7 @@
         "write:MealRecognitionReceipt"
       ],
       "reason": "Meals-owned receipts and owner-filtered row lock for undo. Parameterized SQL locks only the selected owned Meal. No foreign aggregate access; caller transaction owns SaveChanges and commit.",
-      "technicalSourceSha256": "e2a1800a079288b26b033ca162ea1438a1e73fb2022d16a05dfdef423f1a41c1"
+      "technicalSourceSha256": "912d1e5d86b42c625380622f0ce266c445e239b3a635d9aef6ba60209a3132d1"
     },
     "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs": {
       "module": "Meals",
@@ -221,7 +221,7 @@
         "entity:Meal"
       ],
       "reason": "Meals-owned user-serialized transaction with intermediate unit-of-work flush to capture the newly added owned Meal xmin. Commit includes the receipt; shared retry boundary resets tracking and post-commit actions. No external provider calls or foreign aggregate mutations.",
-      "technicalSourceSha256": "4a59640ea8f6e9f77c487550c6359edb5c21b3a21e62b487067318328bba381e"
+      "technicalSourceSha256": "88b95f17c0798a531ec2ad853ccb20f86266e3ac241362aab9a99295fdefc1a8"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
       "module": "Identity",
@@ -527,12 +527,11 @@
       "capabilities": [
         "context:Entry",
         "entity:DietologistInvitation",
-        "entity:User",
         "tracked:DietologistInvitation",
         "write:DietologistInvitation"
       ],
-      "reason": "Dietologist owns invitations; Entry/CurrentValues handles existing detached-instance reconciliation in the caller transaction.",
-      "technicalSourceSha256": "aff032126dfeba20fe5b5ae7b6a5b18a2d299b29ce0ed923cb80685a144da242"
+      "reason": "Owner repository retains writes and delegates joined DTO reads to composition.",
+      "technicalSourceSha256": "166e49d3fb1e7b13a969981db8266cfd9665d2f2f9205a851c4af7ede42f3b6a"
     },
     "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs": {
       "module": "Dietologist",
@@ -547,12 +546,15 @@
       "module": "Dietologist",
       "capabilities": [
         "context:ChangeTracker",
+        "context:Database",
+        "context:Entry",
+        "context:ModuleContexts",
         "entity:AuditEntry",
         "tracked:AuditEntry",
         "write:AuditEntry"
       ],
-      "reason": "Dietologist inspects tracked collaboration changes and appends central AuditEntry records to the same SaveChanges transaction; audit storage is an explicit shared exception.",
-      "technicalSourceSha256": "5c4780fa1a43de308516fd7b7357c72bb40ef232ee6ceb8a94d80952a57f6c66"
+      "reason": "Audits central and registered Dietologist tracker changes into central storage before coordinated owner saves; pending entries are reused across failed persistence attempts.",
+      "technicalSourceSha256": "fa42705fdb131c2ef2c3ea070959717f89e03c15b69f0f9efbc819e803999eff"
     },
     "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs": {
       "module": "Dietologist",
@@ -576,21 +578,19 @@
       "module": "Dietologist",
       "capabilities": [
         "entity:RecommendationComment",
-        "entity:User",
         "tracked:RecommendationComment",
         "write:RecommendationComment"
       ],
-      "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Owner repository retains writes and delegates joined DTO reads to composition."
     },
     "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationRepository.cs": {
       "module": "Dietologist",
       "capabilities": [
         "entity:Recommendation",
-        "entity:User",
         "tracked:Recommendation",
         "write:Recommendation"
       ],
-      "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Owner repository retains writes and delegates joined DTO reads to composition."
     },
     "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationTemplateRepository.cs": {
       "module": "Dietologist",
@@ -943,13 +943,11 @@
     "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs": {
       "module": "Meals",
       "capabilities": [
-        "entity:ImageAsset",
         "entity:Meal",
-        "entity:Recipe",
         "tracked:Meal",
         "write:Meal"
       ],
-      "reason": "Meals owns diary writes; Products, Recipes and Images are source/nutrition/usage projections. Foreign tracked-query acquisition is retained pending narrower projections, not permission for foreign mutation. Composed reads delegate to an explicit read-only port (ADR 0038)."
+      "reason": "Owner meal persistence and projection use scalar source snapshot ports; no direct foreign aggregate reads."
     },
     "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs": {
       "module": "Meals",
@@ -1519,6 +1517,67 @@
         "entity:WeightEntry"
       ],
       "reason": "Dietologist relationship-authorized attention metrics project Users, Meals and BodyMetrics; no foreign mutation."
+    },
+    "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:DietologistInvitation",
+        "entity:User"
+      ],
+      "reason": "Read-only joined Dietologist DTOs; preserves SQL predicates, joins, ordering and limits. Application owns authorization."
+    },
+    "FoodDiary.ReadModel.Composition/Dietologist/RecommendationReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:Recommendation",
+        "entity:User"
+      ],
+      "reason": "Read-only joined Dietologist DTOs; preserves SQL predicates, joins, ordering and limits. Application owns authorization."
+    },
+    "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:RecommendationComment",
+        "entity:User"
+      ],
+      "reason": "Read-only joined Dietologist DTOs; preserves SQL predicates, joins, ordering and limits. Application owns authorization."
+    },
+    "Modules/Dietologist/Infrastructure/ModuleRegistration.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:ClientTask",
+        "entity:Recommendation",
+        "entity:RecommendationBulkDispatch",
+        "entity:RecommendationComment",
+        "entity:RecommendationTemplate",
+        "tracked:ClientTask",
+        "tracked:Recommendation",
+        "tracked:RecommendationBulkDispatch",
+        "tracked:RecommendationComment",
+        "tracked:RecommendationTemplate"
+      ],
+      "reason": "Creates the owner runtime context and supplies only Dietologist sets to repositories.",
+      "technicalSourceSha256": "4fbb9eda6f4c2b3ac518fda05d65e6fadec925c1bb2952366815162ccf306942"
+    },
+    "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:ImageAsset",
+        "entity:Recipe"
+      ],
+      "reason": "Read-only scalar image URLs and recipe legacy fallback snapshots for IDs from already authorized meal graphs."
+    },
+    "Modules/Meals/Infrastructure/MealsModuleRegistration.cs": {
+      "module": "Meals",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database",
+        "entity:Meal",
+        "tracked:Meal"
+      ],
+      "reason": "Compose scoped owner context and narrow meal repositories; rejoin the live shared transaction before queries, including after intermediate recognition flush.",
+      "technicalSourceSha256": "6539a560c6c6d29a25425e7f111ae2a93b9776f592911700853f7dcd03c815f1"
     }
   }
 }

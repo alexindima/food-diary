@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Recommendations;
 
-internal sealed class ClientTaskRepository(FoodDiaryDbContext context) : IClientTaskRepository {
+internal sealed class ClientTaskRepository(DbSet<ClientTask> records) : IClientTaskRepository {
     public async Task<ClientTask> AddAsync(ClientTask task, CancellationToken cancellationToken = default) {
-        await context.ClientTasks.AddAsync(task, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(task, cancellationToken).ConfigureAwait(false);
         return task;
     }
 
@@ -16,7 +16,7 @@ internal sealed class ClientTaskRepository(FoodDiaryDbContext context) : IClient
         ClientTaskId id,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<ClientTask> query = context.ClientTasks;
+        IQueryable<ClientTask> query = records;
         if (!asTracking) {
             query = query.AsNoTracking();
         }
@@ -27,7 +27,7 @@ internal sealed class ClientTaskRepository(FoodDiaryDbContext context) : IClient
     public async Task<IReadOnlyList<ClientTaskReadModel>> GetByClientAsync(
         UserId clientUserId,
         CancellationToken cancellationToken = default) =>
-        await Project(context.ClientTasks.Where(task => task.ClientUserId == clientUserId))
+        await Project(records.Where(task => task.ClientUserId == clientUserId))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
@@ -35,7 +35,7 @@ internal sealed class ClientTaskRepository(FoodDiaryDbContext context) : IClient
         UserId dietologistUserId,
         UserId clientUserId,
         CancellationToken cancellationToken = default) =>
-        await Project(context.ClientTasks.Where(task =>
+        await Project(records.Where(task =>
                 task.DietologistUserId == dietologistUserId &&
                 task.ClientUserId == clientUserId))
             .ToListAsync(cancellationToken)
@@ -46,7 +46,7 @@ internal sealed class ClientTaskRepository(FoodDiaryDbContext context) : IClient
         DateTime dueBeforeUtc,
         int limit,
         CancellationToken cancellationToken = default) =>
-        await context.ClientTasks
+        await records
             .Where(task =>
                 task.Status == Domain.Enums.ClientTaskStatus.Open &&
                 task.DueAtUtc >= utcNow &&

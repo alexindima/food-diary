@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
-using FoodDiary.Infrastructure.Persistence.Recommendations;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,21 +15,21 @@ public sealed class ModuleRegistrationTests {
 
         Assert.Same(services, returned);
         AssertRegistration<IDietologistInvitationRepository, DietologistInvitationRepository>(services);
-        AssertRegistration<IRecommendationRepository, RecommendationRepository>(services);
-        AssertRegistration<IRecommendationCommentRepository, RecommendationCommentRepository>(services);
-        AssertRegistration<IClientTaskRepository, ClientTaskRepository>(services);
-        AssertRegistration<IRecommendationTemplateRepository, RecommendationTemplateRepository>(services);
-        AssertRegistration<IRecommendationBulkDispatchRepository, RecommendationBulkDispatchRepository>(services);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationRepository) && descriptor.ImplementationFactory is not null);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationCommentRepository) && descriptor.ImplementationFactory is not null);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IClientTaskRepository) && descriptor.ImplementationFactory is not null);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationTemplateRepository) && descriptor.ImplementationFactory is not null);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationBulkDispatchRepository) && descriptor.ImplementationFactory is not null);
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IAttentionSignalMetricsReadService));
 
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDietologistInvitationReadRepository));
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDietologistInvitationReadModelRepository));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IDietologistInvitationReadModelRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDietologistInvitationWriteRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationReadRepository));
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationReadModelRepository));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRecommendationReadModelRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationWriteRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationCommentWriteRepository));
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationCommentReadModelRepository));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRecommendationCommentReadModelRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IClientTaskWriteRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IClientTaskReadModelRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IRecommendationTemplateWriteRepository));

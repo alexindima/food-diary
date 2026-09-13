@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Recommendations;
 
-internal sealed class RecommendationTemplateRepository(FoodDiaryDbContext context) : IRecommendationTemplateRepository {
+internal sealed class RecommendationTemplateRepository(DbSet<RecommendationTemplate> records) : IRecommendationTemplateRepository {
     public async Task<RecommendationTemplate> AddAsync(
         RecommendationTemplate template,
         CancellationToken cancellationToken = default) {
-        await context.RecommendationTemplates.AddAsync(template, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(template, cancellationToken).ConfigureAwait(false);
         return template;
     }
 
@@ -18,7 +18,7 @@ internal sealed class RecommendationTemplateRepository(FoodDiaryDbContext contex
         RecommendationTemplateId id,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<RecommendationTemplate> query = context.RecommendationTemplates;
+        IQueryable<RecommendationTemplate> query = records;
         if (!asTracking) {
             query = query.AsNoTracking();
         }
@@ -31,7 +31,7 @@ internal sealed class RecommendationTemplateRepository(FoodDiaryDbContext contex
         string? search,
         bool includeArchived,
         CancellationToken cancellationToken = default) {
-        IQueryable<RecommendationTemplate> query = context.RecommendationTemplates
+        IQueryable<RecommendationTemplate> query = records
             .AsNoTracking()
             .Where(template =>
                 template.DietologistUserId == dietologistUserId &&

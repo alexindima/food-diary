@@ -37,4 +37,17 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 Dietologist PersistenceModel consumes Users.Domain.Contracts for scalar IDs. Central DietologistCrossModuleRelationships owns its ten User FKs: seven Cascade, two ClientTask Restrict, one optional invitation DietologistUserId SetNull. Preserve IsRequired(false), local Recommendation relationships, xmin and indexes. Do not move permissions, access checks or audit behavior into composition.
 
-AttentionSignalMetricsReadService is implemented and registered by ReadModel.Composition. Dietologist retains its port, relationship authorization, permission filtering and signal calculation. The composition adapter preserves batch SQL projections over Users, Meals and BodyMetrics; it never returns aggregates or tracks writes. Audit interception and runtime persistence remain in Dietologist pending coordinated context extraction.
+AttentionSignalMetricsReadService is implemented and registered by ReadModel.Composition. Dietologist retains its port, relationship authorization, permission filtering and signal calculation. The composition adapter preserves batch SQL projections over Users, Meals and BodyMetrics; it never returns aggregates or tracks writes. Audit interception and runtime persistence remain in Dietologist.
+
+Joined invitation, recommendation and comment DTO reads are implemented and registered by ReadModel.Composition through the existing read-model repository ports. Combined repository methods delegate for compatibility; write/read aggregate aliases remain owner-scoped. Do not alias read-model ports back to the combined repositories: this creates a dependency cycle. Keep authorization in Application and persistence/audit in the owner.
+
+DietologistDbContext owns the six collaboration entities at runtime. Repositories
+receive owner sets (the invitation repository uses the typed context for detached
+reconciliation). Central mappings and ten User FKs remain migration-owned.
+CollaborationAuditInterceptor inspects the central tracker plus registered
+Dietologist contexts during the central save, before owner persistence. Pending
+audit entries are reused across retries; successful saves/reset release their
+tracking state. Coordinated saves always invoke central interception, including
+when only an owner changed. Audit and owner writes require a relational provider;
+non-relational coordinated audit is rejected before persistence. User purge remains
+an explicit shared coordination bridge. See ADR 0040 and shared PostgreSQL tests.

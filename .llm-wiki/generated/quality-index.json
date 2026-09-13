@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5339,
+    "productionFiles": 5347,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -447,6 +447,14 @@
       "structuralRiskScore": 107.76
     },
     {
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
+      "nonBlankLines": 446,
+      "decisionPoints": 65,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 106.42
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
       "nonBlankLines": 329,
       "decisionPoints": 65,
@@ -693,14 +701,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 85.38
-    },
-    {
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 415,
-      "decisionPoints": 51,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 84.8
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
@@ -3507,10 +3507,10 @@
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/ModuleContextSaveCoordinator.cs",
       "nonBlankLines": 75,
-      "decisionPoints": 10,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.5
+      "structuralRiskScore": 18
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
@@ -4497,6 +4497,30 @@
       "structuralRiskScore": 12.22
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs",
+      "nonBlankLines": 90,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.8
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.54
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationReadService.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.38
+    },
+    {
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
       "nonBlankLines": 32,
       "decisionPoints": 0,
@@ -4569,12 +4593,20 @@
       "structuralRiskScore": 5.18
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.86
+    },
+    {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 54,
+      "nonBlankLines": 59,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.08
+      "structuralRiskScore": 1.18
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -22842,11 +22874,19 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs",
-      "nonBlankLines": 167,
-      "decisionPoints": 15,
+      "nonBlankLines": 110,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.84
+      "structuralRiskScore": 18.7
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/DietologistDbContext.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs",
@@ -22858,11 +22898,11 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs",
-      "nonBlankLines": 195,
-      "decisionPoints": 15,
+      "nonBlankLines": 212,
+      "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.4
+      "structuralRiskScore": 43.24
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
@@ -22882,19 +22922,19 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationRepository.cs",
-      "nonBlankLines": 83,
-      "decisionPoints": 4,
+      "nonBlankLines": 53,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.66
+      "structuralRiskScore": 5.56
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationTemplateRepository.cs",
@@ -31465,6 +31505,14 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealSourceSnapshotQuery.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
       "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealWriteRepository.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -31479,6 +31527,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Meals/Application/Abstractions/Meals/Models/MealRecipeSourceReadModel.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Meals/Application/AssemblyInfo.cs",
@@ -32258,11 +32314,11 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
+      "nonBlankLines": 46,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 2.42
     },
     {
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiItemConfiguration.cs",
@@ -32314,11 +32370,11 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 60,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.18
+      "structuralRiskScore": 13.2
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealDailyCalorieReadService.cs",
@@ -32330,27 +32386,35 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
-      "nonBlankLines": 107,
-      "decisionPoints": 8,
+      "nonBlankLines": 111,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.14
+      "structuralRiskScore": 15.72
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRecognitionReceiptRepository.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 27,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.94
+      "structuralRiskScore": 5.04
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 415,
-      "decisionPoints": 51,
+      "nonBlankLines": 446,
+      "decisionPoints": 65,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 84.8
+      "structuralRiskScore": 106.42
+    },
+    {
+      "path": "Modules/Meals/Infrastructure/Persistence/MealsDbContext.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs",

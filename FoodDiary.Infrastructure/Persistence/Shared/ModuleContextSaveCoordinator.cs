@@ -63,7 +63,7 @@ internal static class ModuleContextSaveCoordinator {
         context.IsCoordinatingModuleSave = true;
         try {
             foreach (DbContext participant in participants) {
-                if (participant.ChangeTracker.HasChanges()) {
+                if (ReferenceEquals(participant, context) || participant.ChangeTracker.HasChanges()) {
                     await participant.SaveChangesAsync(acceptAllChangesOnSuccess: false, cancellationToken).ConfigureAwait(false);
                 }
             }

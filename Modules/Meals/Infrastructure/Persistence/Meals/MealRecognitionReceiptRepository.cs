@@ -5,17 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
-public sealed class MealRecognitionReceiptRepository(FoodDiaryDbContext context) : IMealRecognitionReceiptRepository {
-    public Task<MealRecognitionReceipt?> FindAsync(UserId userId, Guid operationId, CancellationToken cancellationToken = default) =>
-        context.Set<MealRecognitionReceipt>().SingleOrDefaultAsync(receipt => receipt.UserId == userId && receipt.OperationId == operationId, cancellationToken);
+public sealed class MealRecognitionReceiptRepository(MealsDbContext context, Func<CancellationToken, Task> synchronizeTransactionAsync) : IMealRecognitionReceiptRepository {
+    public async Task<MealRecognitionReceipt?> FindAsync(UserId userId, Guid operationId, CancellationToken cancellationToken = default) {
+        await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        return await context.Set<MealRecognitionReceipt>().SingleOrDefaultAsync(receipt => receipt.UserId == userId && receipt.OperationId == operationId, cancellationToken).ConfigureAwait(false);
+    }
 
-    public Task<MealRecognitionReceipt?> FindByRecognitionAsync(UserId userId, Guid recognitionId, CancellationToken cancellationToken = default) =>
-        context.Set<MealRecognitionReceipt>().SingleOrDefaultAsync(receipt => receipt.UserId == userId && receipt.RecognitionId == recognitionId, cancellationToken);
+    public async Task<MealRecognitionReceipt?> FindByRecognitionAsync(UserId userId, Guid recognitionId, CancellationToken cancellationToken = default) {
+        await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        return await context.Set<MealRecognitionReceipt>().SingleOrDefaultAsync(receipt => receipt.UserId == userId && receipt.RecognitionId == recognitionId, cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task AddAsync(MealRecognitionReceipt receipt, CancellationToken cancellationToken = default) =>
         await context.Set<MealRecognitionReceipt>().AddAsync(receipt, cancellationToken).ConfigureAwait(false);
 
     public async Task<(Meal Meal, uint Version)?> LockMealForUndoAsync(UserId userId, MealId mealId, CancellationToken cancellationToken = default) {
+        await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         if (context.Database.CurrentTransaction is null) {
             throw new InvalidOperationException("Undo requires an open meal recognition transaction.");
         }

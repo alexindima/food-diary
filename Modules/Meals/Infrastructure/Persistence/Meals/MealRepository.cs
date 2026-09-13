@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Application.Abstractions.Products.Common;
 using Product = FoodDiary.Application.Abstractions.Products.Models.ProductSnapshotReadModel;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
-public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutritionQuery nutritionQueries, IProductSnapshotReadService products) : IMealRepository {
+public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQuery nutritionQueries, IProductSnapshotReadService products, IMealSourceSnapshotQuery sourceSnapshots, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IMealRepository {
     private static DateTime StartOfUtcDay(DateTime value) =>
         DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
 
@@ -33,19 +32,28 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
     }
 
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
-        await context.Meals.AddAsync(meal, cancellationToken).ConfigureAwait(false);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        await records.AddAsync(meal, cancellationToken).ConfigureAwait(false);
         return meal;
     }
 
     public async Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
-        context.Meals.Update(meal);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        records.Update(meal);
         await Task.CompletedTask.ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
-        Meal? tracked = await context.Meals.FindAsync([meal.Id], cancellationToken).ConfigureAwait(false);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        Meal? tracked = await records.FindAsync([meal.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
-            context.Meals.Remove(tracked);
+            records.Remove(tracked);
         }
     }
 
@@ -55,7 +63,10 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         bool includeItems = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<Meal> query = context.Meals;
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        IQueryable<Meal> query = records;
 
         if (includeItems) {
             query = IncludeMealGraph(query);
@@ -76,10 +87,13 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         int limit,
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
-        IQueryable<Meal> filteredQuery = context.Meals
+        IQueryable<Meal> filteredQuery = records
             .AsNoTracking()
             .Where(m => m.UserId == userId);
 
@@ -106,10 +120,13 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         int limit,
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
-        IQueryable<Meal> filteredQuery = context.Meals
+        IQueryable<Meal> filteredQuery = records
             .AsNoTracking()
             .Where(m => m.UserId == userId);
 
@@ -135,7 +152,10 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         MealId id,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        Meal? meal = await IncludeMealGraph(context.Meals.AsNoTracking())
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        Meal? meal = await IncludeMealGraph(records.AsNoTracking())
             .Where(m => m.Id == id && m.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
@@ -153,7 +173,10 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         UserId userId,
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
-        IQueryable<Meal> filteredQuery = context.Meals
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        IQueryable<Meal> filteredQuery = records
             .AsNoTracking()
             .Where(m => m.UserId == userId);
 
@@ -215,10 +238,13 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         DateTime from = StartOfUtcDay(dateFrom);
         DateTime toInclusive = EndOfUtcDay(dateTo);
 
-        return await IncludeMealGraph(context.Meals.AsNoTracking())
+        return await IncludeMealGraph(records.AsNoTracking())
             .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
@@ -230,6 +256,9 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         IReadOnlyList<Meal> meals = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
         return await ToMealProjectionReadModelsAsync(meals, cancellationToken).ConfigureAwait(false);
     }
@@ -240,11 +269,14 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         DateTime dateTo,
         int limit,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
         DateTime from = NormalizeUtcInstant(dateFrom);
         DateTime toInclusive = NormalizeUtcInstant(dateTo);
 
-        List<Meal> meals = await IncludeMealGraph(context.Meals.AsNoTracking())
+        List<Meal> meals = await IncludeMealGraph(records.AsNoTracking())
             .Where(meal => meal.UserId == userId && meal.Date >= from && meal.Date <= toInclusive)
             .OrderBy(meal => meal.Date)
             .ThenBy(meal => meal.CreatedOnUtc)
@@ -258,10 +290,13 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         DateTime from = StartOfUtcDay(dateFrom);
         DateTime toInclusive = EndOfUtcDay(dateTo);
 
-        return await context.Meals
+        return await records
             .AsNoTracking()
             .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
             .Select(m => m.Date.Date)
@@ -273,7 +308,10 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
     public async Task<int> GetTotalMealCountAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.Meals
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await records
             .AsNoTracking()
             .CountAsync(m => m.UserId == userId, cancellationToken).ConfigureAwait(false);
     }
@@ -282,10 +320,13 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         DateTime from = StartOfUtcDay(date);
         DateTime toInclusive = EndOfUtcDay(date);
 
-        return await context.Meals
+        return await records
             .AsNoTracking()
             .AsSplitQuery()
             .Include(m => m.Items)
@@ -309,13 +350,8 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
             .Select(static session => session.ImageAssetId!.Value)
             .Distinct()];
 
-        Dictionary<ImageAssetId, string> imageUrlsById = imageAssetIds.Length == 0
-            ? []
-            : await context.ImageAssets
-                .AsNoTracking()
-                .Where(asset => ((IEnumerable<ImageAssetId>)imageAssetIds).Contains(asset.Id))
-                .ToDictionaryAsync(asset => asset.Id, asset => asset.Url, cancellationToken)
-                .ConfigureAwait(false);
+        IReadOnlyDictionary<ImageAssetId, string> imageUrlsById = await sourceSnapshots.GetImageUrlsAsync(
+            imageAssetIds, cancellationToken).ConfigureAwait(false);
 
         RecipeId[] legacyRecipeIds = [.. meals
             .SelectMany(static meal => meal.Items)
@@ -323,13 +359,8 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
             .Select(static item => item.RecipeId!.Value)
             .Distinct()];
 
-        Dictionary<RecipeId, Recipe> legacyRecipesById = legacyRecipeIds.Length == 0
-            ? []
-            : await context.Recipes
-                .AsNoTracking()
-                .Where(recipe => ((IEnumerable<RecipeId>)legacyRecipeIds).Contains(recipe.Id))
-                .ToDictionaryAsync(recipe => recipe.Id, cancellationToken)
-                .ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, MealRecipeSourceReadModel> legacyRecipesById = await sourceSnapshots.GetLegacyRecipesAsync(
+            legacyRecipeIds, cancellationToken).ConfigureAwait(false);
 
         // Product type is not snapshotted, so even complete snapshots need current metadata.
         // One bounded lookup also supplies fallback fields for legacy rows.
@@ -348,7 +379,7 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
     private static MealProjectionReadModel ToMealProjectionReadModel(
         Meal meal,
         IReadOnlyDictionary<ImageAssetId, string> imageUrlsById,
-        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById,
+        IReadOnlyDictionary<RecipeId, MealRecipeSourceReadModel> legacyRecipesById,
         IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
         return new MealProjectionReadModel(
             meal.Id.Value,
@@ -378,7 +409,7 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
 
     private static List<MealItemProjectionReadModel> ToMealItemProjectionReadModels(
         Meal meal,
-        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById,
+        IReadOnlyDictionary<RecipeId, MealRecipeSourceReadModel> legacyRecipesById,
         IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
         return [.. meal.Items
             .OrderBy(static item => item.Id.Value)
@@ -387,10 +418,10 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
 
     private static MealItemProjectionReadModel ToMealItemProjectionReadModel(
         MealItem item,
-        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById,
+        IReadOnlyDictionary<RecipeId, MealRecipeSourceReadModel> legacyRecipesById,
         IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
-        Recipe? legacyRecipe = item.RecipeId is { } recipeId
-            && legacyRecipesById.TryGetValue(recipeId, out Recipe? recipe)
+        MealRecipeSourceReadModel? legacyRecipe = item.RecipeId is { } recipeId
+            && legacyRecipesById.TryGetValue(recipeId, out MealRecipeSourceReadModel? recipe)
                 ? recipe
                 : null;
         Product? legacyProduct = item.ProductId is { } productId
@@ -426,7 +457,7 @@ public sealed class MealRepository(FoodDiaryDbContext context, IMealProductNutri
             item.Origin);
     }
 
-    private static int? GetRecipeServings(MealItem item, Recipe? legacyRecipe) {
+    private static int? GetRecipeServings(MealItem item, MealRecipeSourceReadModel? legacyRecipe) {
         if (item.HasNutritionSnapshot) {
             return 1;
         }

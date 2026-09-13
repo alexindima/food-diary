@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Meals;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Meals.Models;
@@ -25,6 +26,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         var user = User.Create($"projection-{Guid.NewGuid():N}@example.com", "hash");
         var image = FoodDiary.Domain.Entities.Assets.ImageAsset.Create(user.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
         var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Legacy recipe", 2);
+        recipe.SetManualNutrition(600, 20, 30, 50, fiber: null, alcohol: null);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         meal.AddRecipe(recipe.Id, 1);
         meal.AddAiSession(image.Id, AiRecognitionSource.Photo, DateTime.UtcNow, notes: null,
@@ -33,13 +35,43 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        MealProjectionReadModel? result = await new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context)).GetByIdMealProjectionAsync(meal.Id, user.Id);
+        MealProjectionReadModel? result = await new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context)).GetByIdMealProjectionAsync(meal.Id, user.Id);
 
         Assert.NotNull(result);
-        Assert.Equal("Legacy recipe", Assert.Single(result.Items).RecipeName);
+        MealItemProjectionReadModel item = Assert.Single(result.Items);
+        Assert.Multiple(
+            () => Assert.Equal("Legacy recipe", item.RecipeName),
+            () => Assert.Equal(2, item.RecipeServings),
+            () => Assert.Equal(600, item.RecipeTotalCalories),
+            () => Assert.Null(item.RecipeTotalFiber));
         Assert.Equal(image.Url, Assert.Single(result.AiSessions).ImageUrl);
         Assert.Empty(context.ChangeTracker.Entries());
     }
+    [RequiresDockerFact]
+    public async Task Projection_PreservesRecipeSnapshotOverCurrentSourceNutrition() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"snapshot-{Guid.NewGuid():N}@example.com", "hash");
+        var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Current recipe", 4);
+        recipe.SetManualNutrition(1000, 40, 20, 160, 5, 0);
+        var meal = Meal.Create(user.Id, DateTime.UtcNow);
+        meal.AddRecipe(recipe.Id, 1).ApplyRecipeSnapshot("Saved recipe", imageUrl: null, 2, 600, 20, 30, 50, 0, 0);
+        context.AddRange(user, recipe, meal);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
+        MealProjectionReadModel? result = await repository.GetByIdMealProjectionAsync(meal.Id, user.Id);
+
+        Assert.NotNull(result);
+        MealItemProjectionReadModel item = Assert.Single(result.Items);
+        Assert.Multiple(
+            () => Assert.Equal("Saved recipe", item.RecipeName),
+            () => Assert.Equal(1, item.RecipeServings),
+            () => Assert.Equal(300, item.RecipeTotalCalories),
+            () => Assert.Equal(10, item.RecipeTotalProteins));
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
     [RequiresDockerFact]
     public async Task MealUser_ScalarForeignKey_RetainsSoftDeletedMealsAndCascadesOnPurge() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -103,7 +135,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Meals.Add(meal);
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
         MealProjectionReadModel? projection = await repository.GetByIdMealProjectionAsync(meal.Id, user.Id);
 
         Assert.NotNull(projection);
@@ -132,7 +164,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Meals.AddRange(olderMeal, newerMeal, filteredOutMeal);
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         (IReadOnlyList<Meal>? items, int totalItems) = await repository.GetPagedAsync(
             user.Id,
@@ -182,7 +214,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Meals.AddRange(morningMeal, eveningMeal, nextDayMeal);
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         (IReadOnlyList<Meal>? items, int totalItems) = await repository.GetPagedAsync(
             user.Id,
@@ -222,7 +254,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Meals.AddRange(previousLocalDayMeal, firstLocalDayMeal, lastLocalDayMeal, nextLocalDayMeal);
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         (IReadOnlyList<Meal>? items, int totalItems) = await repository.GetPagedAsync(
             user.Id,
@@ -248,7 +280,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         (Meal breakfastWithImage, Meal lunchWithAi, Meal dinnerNoImage) =
             await SeedMealFiltersAsync(context, user.Id);
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         IReadOnlyList<MealId> mealTypeIds = await GetMealIdsAsync(repository, user.Id, new MealQueryFilters(
             DateFrom: null,
@@ -297,7 +329,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             Meal.Create(user.Id, new DateTime(2026, 5, 1, 12, 0, 0, DateTimeKind.Utc)));
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         IReadOnlyList<DateTime> dates = await repository.GetDistinctMealDatesAsync(
             user.Id,
@@ -327,7 +359,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Meals.AddRange(meal, otherDayMeal);
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         IReadOnlyList<Meal> meals = await repository.GetWithItemsAndProductsAsync(
             user.Id,
@@ -365,7 +397,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Meals.AddRange(meal, otherDayMeal);
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         IReadOnlyList<UsdaMealProductNutritionReadModel> items = await repository.GetProductNutritionReadModelsAsync(
             user.Id,
@@ -415,7 +447,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Meals.Add(meal);
         await context.SaveChangesAsync();
 
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
 
         IReadOnlyList<Meal> meals = await repository.GetByPeriodAsync(
             user.Id,

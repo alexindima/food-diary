@@ -147,16 +147,16 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
         context.Recommendations.Add(recommendation);
         await context.SaveChangesAsync();
 
-        var commentRepository = new RecommendationCommentRepository(context);
+        var commentRepository = new RecommendationCommentRepository(context.RecommendationComments, new RecommendationCommentReadService(context));
         RecommendationComment comment = await commentRepository.AddAsync(
             RecommendationComment.Create(recommendation.Id, client.Id, "Comment"));
-        var taskRepository = new ClientTaskRepository(context);
+        var taskRepository = new ClientTaskRepository(context.ClientTasks);
         ClientTask task = await taskRepository.AddAsync(
             ClientTask.Create(dietologist.Id, client.Id, "Task", "Details", UtcNow.AddHours(1)));
-        var templateRepository = new RecommendationTemplateRepository(context);
+        var templateRepository = new RecommendationTemplateRepository(context.RecommendationTemplates);
         RecommendationTemplate template = await templateRepository.AddAsync(
             RecommendationTemplate.Create(dietologist.Id, "Template", "Text"));
-        var dispatchRepository = new RecommendationBulkDispatchRepository(context);
+        var dispatchRepository = new RecommendationBulkDispatchRepository(context.RecommendationBulkDispatches);
         RecommendationBulkDispatch dispatch = await dispatchRepository.AddAsync(
             RecommendationBulkDispatch.Create(dietologist.Id, client.Id, recommendation.Id, "key"));
         await context.SaveChangesAsync();

@@ -25,7 +25,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         context.Meals.AddRange(firstMeal, secondMeal, thirdMeal);
         await context.SaveChangesAsync();
 
-        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
             user.Id,
@@ -54,7 +54,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     [Fact]
     public async Task GetStatisticsAsync_WhenDateRangeIsInvalid_ReturnsValidationFailure() {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
             Domain.ValueObjects.Ids.UserId.New(),
@@ -70,7 +70,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     [Fact]
     public async Task GetStatisticsAsync_AtMaximumInstant_ReturnsSingleBucketWithoutOverflow() {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
             Domain.ValueObjects.Ids.UserId.New(),
@@ -94,7 +94,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         int periodDays,
         int quantizationDays) {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
         var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(

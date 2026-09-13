@@ -475,7 +475,9 @@ public sealed class DependencyInjectionTests {
 
         Assert.Multiple(
             () => Assert.Same(scoped.GetRequiredService<IRecommendationCommentRepository>(), scoped.GetRequiredService<IRecommendationCommentWriteRepository>()),
-            () => Assert.Same(scoped.GetRequiredService<IRecommendationCommentRepository>(), scoped.GetRequiredService<IRecommendationCommentReadModelRepository>()),
+            () => Assert.IsType<RecommendationCommentReadService>(scoped.GetRequiredService<IRecommendationCommentReadModelRepository>()),
+            () => Assert.IsType<RecommendationReadService>(scoped.GetRequiredService<IRecommendationReadModelRepository>()),
+            () => Assert.IsType<DietologistInvitationReadService>(scoped.GetRequiredService<IDietologistInvitationReadModelRepository>()),
             () => Assert.Same(scoped.GetRequiredService<IClientTaskRepository>(), scoped.GetRequiredService<IClientTaskWriteRepository>()),
             () => Assert.Same(scoped.GetRequiredService<IClientTaskRepository>(), scoped.GetRequiredService<IClientTaskReadModelRepository>()),
             () => Assert.Same(scoped.GetRequiredService<IRecommendationTemplateRepository>(), scoped.GetRequiredService<IRecommendationTemplateWriteRepository>()),
@@ -844,7 +846,6 @@ public sealed class DependencyInjectionTests {
             "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationRepository",
             [
                 "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationReadRepository",
-                "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationReadModelRepository",
                 "FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistInvitationWriteRepository",
             ]
         },
@@ -852,7 +853,6 @@ public sealed class DependencyInjectionTests {
             "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationRepository",
             [
                 "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationReadRepository",
-                "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationReadModelRepository",
                 "FoodDiary.Application.Abstractions.Dietologist.Common.IRecommendationWriteRepository",
             ]
         },

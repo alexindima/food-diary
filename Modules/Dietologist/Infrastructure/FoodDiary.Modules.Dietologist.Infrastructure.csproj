@@ -18,6 +18,7 @@
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Dietologist.Contracts.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />

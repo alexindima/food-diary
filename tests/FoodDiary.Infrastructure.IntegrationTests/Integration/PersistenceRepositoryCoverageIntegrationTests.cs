@@ -1,3 +1,6 @@
+using FoodDiary.ReadModel.Composition.Meals;
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
+using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition.Favorites;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -1069,7 +1072,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverMealRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new MealRepository(context, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
         DateTime now = DateTime.UtcNow;
         var meal = Meal.Create(userId, DateTime.SpecifyKind(now.Date.AddHours(8), DateTimeKind.Unspecified), MealType.Breakfast, "Start");
         meal.AddAiSession(
@@ -1555,7 +1558,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId dietologistUserId,
         UserId clientUserId) {
-        var repository = new RecommendationRepository(context);
+        var repository = new RecommendationRepository(context.Recommendations, new RecommendationReadService(context));
         Recommendation recommendation = await repository.AddAsync(Recommendation.Create(dietologistUserId, clientUserId, "More protein"));
         await context.SaveChangesAsync();
         Recommendation? tracked = await repository.GetByIdAsync(recommendation.Id, asTracking: true);
@@ -1576,7 +1579,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId dietologistUserId,
         UserId clientUserId) {
-        var repository = new DietologistInvitationRepository(context);
+        DbContextOptionsBuilder<DietologistDbContext> options = new DbContextOptionsBuilder<DietologistDbContext>().UseNpgsql(context.Database.GetDbConnection());
+        await using var owned = new DietologistDbContext(options.Options);
+        var repository = new DietologistInvitationRepository(owned, new DietologistInvitationReadService(context));
         var invitation = DietologistInvitation.Create(
             clientUserId,
             "dietologist@example.com",
@@ -1585,14 +1590,14 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             DietologistPermissions.AllEnabled);
         invitation.Accept(dietologistUserId);
         await repository.AddAsync(invitation);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
 
         context.ChangeTracker.Clear();
         DietologistInvitation? detached = await repository.GetByIdAsync(invitation.Id);
         Assert.NotNull(detached);
         detached.UpdatePermissions(new DietologistPermissions(ShareMeals: false));
         await repository.UpdateAsync(detached);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
 
         var missingInvitation = DietologistInvitation.Create(
             clientUserId,
@@ -1621,7 +1626,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             "pending_token_hash",
             DateTime.UtcNow.AddDays(7),
             DietologistPermissions.AllEnabled));
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
 
         DietologistInvitationReadModel? pendingReadModel = await repository.GetByClientAndStatusReadModelAsync(
             pendingClient.Id,

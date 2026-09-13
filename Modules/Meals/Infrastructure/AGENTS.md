@@ -1,7 +1,7 @@
 # Meals Infrastructure
 
 Own MealRepository, persistence registration and complete Meals DI. Depend on
-central Infrastructure for the shared context. Central Infrastructure must not
+central Infrastructure for coordinated transactions. MealsDbContext owns the runtime meal graph and recognition receipts. Central Infrastructure must not
 reference this adapter project. Preserve query ordering, access predicates,
 tracking behavior and cancellation.
 
@@ -14,3 +14,7 @@ owned Meal row before comparing its version. See ADR 0037.
 MealItemDisplayReadService owns the existing Dashboard snapshot/fallback and food-quality policy. Keep a single no-tracking batch query, owner filtering and stable ordering. Distinct meal-detail legacy recipe fallbacks retain their existing semantics.
 
 ADR 0038: reviewed cross-module SQL read implementations now live in FoodDiary.ReadModel.Composition, registered explicitly by hosts. Module writes and existing repository aliases stay here; modules never reference the composition assembly. Shared DbContext capabilities remain inventoried. See docs/adr/0038-read-model-composition.md.
+
+MealRepository obtains AI-session image URLs and legacy recipe fallback fields through IMealSourceSnapshotQuery. The host composition implementation returns immutable scalar snapshots and preserves existing source-ID lookup semantics. Keep snapshot precedence and the one-serving rule for snapshotted recipes; do not reintroduce foreign aggregate materialization. Meals owns graph loading and projection policy.
+
+Meals repositories use the owner context or its narrow DbSet. The transaction runner retains the central transaction boundary but captures xmin from the owner tracker. Synchronize the current shared transaction before every owner query, especially after intermediate unit-of-work flushes. Keep migrations and the ordered user-purge bridge central.

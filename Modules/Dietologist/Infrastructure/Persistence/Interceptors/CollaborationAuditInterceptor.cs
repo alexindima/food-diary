@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence.Audit;
@@ -8,6 +9,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace FoodDiary.Infrastructure.Persistence.Interceptors;
 
 internal sealed class CollaborationAuditInterceptor(TimeProvider timeProvider) : SaveChangesInterceptor {
+    private readonly Dictionary<object, AuditEntry> _pendingEntries = new(ReferenceEqualityComparer.Instance);
+
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
         InterceptionResult<int> result) {
@@ -28,18 +31,34 @@ internal sealed class CollaborationAuditInterceptor(TimeProvider timeProvider) :
             return;
         }
 
+        DbContext[] sources = context is FoodDiaryDbContext shared
+            ? [context, .. shared.ModuleContexts.OfType<DietologistDbContext>()]
+            : [context];
+        if (sources.Skip(1).Any(source => source.ChangeTracker.HasChanges()) && !context.Database.IsRelational()) {
+            throw new InvalidOperationException("Atomic collaboration audit requires a relational provider.");
+        }
+        foreach (object entity in _pendingEntries.Where(pair => context.Entry(pair.Value).State != EntityState.Added)
+                     .Select(pair => pair.Key).ToArray()) {
+            _pendingEntries.Remove(entity);
+        }
         DateTime timestamp = timeProvider.GetUtcNow().UtcDateTime;
-        AuditEntry[] entries = [
-            .. context.ChangeTracker.Entries()
-                .Where(entry => entry.Entity is not AuditEntry)
-                .Select(entry => CreateEntry(entry, timestamp))
-                .Where(entry => entry is not null)
-                .Cast<AuditEntry>(),
-        ];
-        if (entries.Length > 0) {
-            context.Set<AuditEntry>().AddRange(entries);
+        foreach (EntityEntry change in sources.SelectMany(source => source.ChangeTracker.Entries()).ToArray()) {
+            AuditEntry? entry = CreateEntry(change, timestamp);
+            if (entry is null) {
+                continue;
+            }
+            if (_pendingEntries.TryGetValue(change.Entity, out AuditEntry? pending) && SameEvent(pending, entry)) {
+                continue;
+            }
+            context.Set<AuditEntry>().Add(entry);
+            _pendingEntries[change.Entity] = entry;
         }
     }
+
+    private static bool SameEvent(AuditEntry left, AuditEntry right) =>
+        left.ActorUserId == right.ActorUserId && left.SubjectClientUserId == right.SubjectClientUserId &&
+        string.Equals(left.Action, right.Action, StringComparison.Ordinal) && string.Equals(left.TargetType, right.TargetType, StringComparison.Ordinal) &&
+        string.Equals(left.TargetId, right.TargetId, StringComparison.Ordinal) && string.Equals(left.Metadata, right.Metadata, StringComparison.Ordinal);
 
     private static AuditEntry? CreateEntry(EntityEntry entry, DateTime timestamp) =>
         entry.Entity switch {

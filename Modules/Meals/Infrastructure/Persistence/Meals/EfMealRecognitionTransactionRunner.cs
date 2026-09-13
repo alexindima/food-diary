@@ -12,6 +12,7 @@ namespace FoodDiary.Infrastructure.Persistence.Meals;
 
 public sealed class EfMealRecognitionTransactionRunner(
     FoodDiaryDbContext context,
+    MealsDbContext meals,
     IUnitOfWork unitOfWork,
     IPostCommitActionQueue? postCommitActionQueue = null) : IMealRecognitionTransactionRunner {
     public async Task<T> ExecuteSerializedAsync<T>(UserId userId, Func<CancellationToken, Task<T>> operation,
@@ -42,7 +43,7 @@ public sealed class EfMealRecognitionTransactionRunner(
         if (context.Database.CurrentTransaction is null) {
             throw new InvalidOperationException("A meal receipt must be captured inside its creation transaction.");
         }
-        EntityEntry<Meal>? entry = context.ChangeTracker.Entries<Meal>()
+        EntityEntry<Meal>? entry = meals.ChangeTracker.Entries<Meal>()
             .SingleOrDefault(candidate => candidate.Entity.Id == mealId && candidate.Entity.UserId == userId);
         if (entry is null || entry.State != EntityState.Added) {
             throw new InvalidOperationException("Only the new owned meal can be flushed for a creation receipt.");

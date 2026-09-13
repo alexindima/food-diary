@@ -189,3 +189,5 @@ Exercises extends the owned runtime contexts to three modules (ADR 0040), sharin
 Cycles is the fourth runtime-context owner (ADR 0040). Its profile and seven child mappings share the existing UoW; central migration/read/purge bridges remain unchanged.
 
 OutboxProcessingEngine and OutboxMessageClaimer accept a DbContext supplied by the owning adapter. They require a clean tracker and no existing transaction. For FoodDiaryDbContext, the clean-entry guard also checks every registered module context. Lease acquisition, retry policy, fencing, finalization and table allowlist remain shared. This technical seam does not change current adapter registrations or authorize a module to process foreign tables.
+
+Coordinated module saves invoke central SaveChanges even when its tracker starts clean, so owner audit interceptors can stage central audit records before owner persistence. Preserve this ordering and atomic rollback; do not copy module SaveChanges interceptors into owner contexts.

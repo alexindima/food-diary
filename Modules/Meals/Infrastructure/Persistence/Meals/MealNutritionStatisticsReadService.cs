@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
@@ -9,13 +10,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
-public sealed class MealNutritionStatisticsReadService(FoodDiaryDbContext context) : IMealNutritionStatisticsReadService {
+public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IMealNutritionStatisticsReadService {
     public async Task<Result<IReadOnlyList<MealNutritionStatisticsBucket>>> GetStatisticsAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
         int quantizationDays,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         if (dateFrom > dateTo) {
             return Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(
                 Errors.Validation.Invalid(nameof(dateFrom), "DateFrom must be earlier than DateTo"));
@@ -42,7 +46,7 @@ public sealed class MealNutritionStatisticsReadService(FoodDiaryDbContext contex
             normalizedTo,
             quantizationDays);
 
-        List<MealNutritionProjection> meals = await context.Meals
+        List<MealNutritionProjection> meals = await records
             .AsNoTracking()
             .Where(meal => meal.UserId == userId && meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
             .Select(meal => new MealNutritionProjection(

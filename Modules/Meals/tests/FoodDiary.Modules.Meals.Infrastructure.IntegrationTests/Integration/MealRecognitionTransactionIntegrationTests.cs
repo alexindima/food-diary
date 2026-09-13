@@ -1,9 +1,13 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.ReadModel.Composition;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Domain.Primitives;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +19,10 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
     [RequiresDockerFact]
     public async Task InvalidTransactionScope_CannotCaptureOrLockMealReceipt() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
-        var receipts = new MealRecognitionReceiptRepository(context);
+        await using ServiceProvider provider = CreateProvider(context);
+        MealsDbContext owned = provider.GetRequiredService<MealsDbContext>();
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+        IMealRecognitionReceiptRepository receipts = provider.GetRequiredService<IMealRecognitionReceiptRepository>();
         var owner = UserId.New();
         var meal = MealId.New();
         await Assert.ThrowsAsync<ArgumentException>(() => runner.ExecuteSerializedAsync(new UserId(Guid.Empty), _ => Task.FromResult(1)));
@@ -24,6 +30,7 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         await Assert.ThrowsAsync<InvalidOperationException>(() => receipts.LockMealForUndoAsync(owner, meal));
         await Assert.ThrowsAsync<InvalidOperationException>(() => runner.ExecuteSerializedAsync(owner, token => runner.FlushCreatedMealAsync(meal, owner, token)));
         Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(owned.ChangeTracker.Entries());
     }
 
     [RequiresDockerFact]
@@ -39,16 +46,24 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
 
         Task<MealId>[] attempts = [.. Enumerable.Range(0, 4).Select(async _ => {
             await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-            var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
-            var receipts = new MealRecognitionReceiptRepository(context);
+            await using ServiceProvider provider = CreateProvider(context);
+            MealsDbContext owned = provider.GetRequiredService<MealsDbContext>();
+            IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+            IMealRecognitionReceiptRepository receipts = provider.GetRequiredService<IMealRecognitionReceiptRepository>();
             return await runner.ExecuteSerializedAsync(user.Id, async cancellationToken => {
                 MealRecognitionReceipt? existing = await receipts.FindAsync(user.Id, operationId, cancellationToken);
                 if (existing is not null) {
                     return existing.MealId;
                 }
                 var meal = Meal.Create(user.Id, now);
-                context.Add(meal);
+                owned.Add(meal);
                 uint version = await runner.FlushCreatedMealAsync(meal.Id, user.Id, cancellationToken);
+                Assert.Equal(5, owned.Model.GetEntityTypes().Count());
+                Assert.Same(context.Database.GetDbConnection(), owned.Database.GetDbConnection());
+                Assert.Empty(context.ChangeTracker.Entries<Meal>());
+                Assert.NotEqual(0u, version);
+                Assert.Null(await receipts.FindAsync(user.Id, operationId, cancellationToken));
+                Assert.Equal(version, (await receipts.LockMealForUndoAsync(user.Id, meal.Id, cancellationToken))!.Value.Version);
                 await receipts.AddAsync(MealRecognitionReceipt.Create(operationId, user.Id, recognitionId, meal.Id,
                     version, now, now, TimeSpan.FromHours(24)), cancellationToken);
                 return meal.Id;
@@ -67,16 +82,19 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         var user = User.Create($"recognition-rollback-{Guid.NewGuid():N}@example.com", "hash");
         context.Add(user);
         await context.SaveChangesAsync();
-        var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
+        await using ServiceProvider provider = CreateProvider(context);
+        MealsDbContext owned = provider.GetRequiredService<MealsDbContext>();
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => runner.ExecuteSerializedAsync<int>(user.Id, async cancellationToken => {
             var meal = Meal.Create(user.Id, DateTime.UtcNow);
-            context.Add(meal);
+            owned.Add(meal);
             await runner.FlushCreatedMealAsync(meal.Id, user.Id, cancellationToken);
             throw new InvalidOperationException("Simulated failure before receipt save.");
         }));
 
         Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(owned.ChangeTracker.Entries());
         Assert.False(await context.Meals.AnyAsync(meal => meal.UserId == user.Id));
         Assert.False(await context.Set<MealRecognitionReceipt>().AnyAsync(receipt => receipt.UserId == user.Id));
     }
@@ -87,17 +105,20 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         var user = User.Create($"recognition-result-{Guid.NewGuid():N}@example.com", "hash");
         context.Add(user);
         await context.SaveChangesAsync();
-        var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
+        await using ServiceProvider provider = CreateProvider(context);
+        MealsDbContext owned = provider.GetRequiredService<MealsDbContext>();
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
 
         Result result = await runner.ExecuteSerializedAsync(user.Id, async cancellationToken => {
             var meal = Meal.Create(user.Id, DateTime.UtcNow);
-            context.Add(meal);
+            owned.Add(meal);
             await runner.FlushCreatedMealAsync(meal.Id, user.Id, cancellationToken);
             return Result.Failure(new Error("Meal.RecognitionConflict", "Recognition already consumed.", ErrorKind.Conflict));
         });
 
         Assert.True(result.IsFailure);
         Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(owned.ChangeTracker.Entries());
         Assert.False(await context.Meals.AnyAsync(meal => meal.UserId == user.Id));
     }
 
@@ -119,8 +140,9 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
             edited.UpdateComment("Corrected in the web diary");
             await editor.SaveChangesAsync();
         }
-        var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
-        var receipts = new MealRecognitionReceiptRepository(context);
+        await using ServiceProvider provider = CreateProvider(context);
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+        IMealRecognitionReceiptRepository receipts = provider.GetRequiredService<IMealRecognitionReceiptRepository>();
 
         await runner.ExecuteSerializedAsync(user.Id, async cancellationToken => {
             MealRecognitionReceipt? persistedReceipt = await receipts.FindAsync(user.Id, receipt.OperationId, cancellationToken);
@@ -142,8 +164,9 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         context.AddRange(user, meal);
         await context.SaveChangesAsync();
         uint version = context.Entry(meal).Property<uint>("xmin").CurrentValue;
-        var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
-        var receipts = new MealRecognitionReceiptRepository(context);
+        await using ServiceProvider provider = CreateProvider(context);
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+        IMealRecognitionReceiptRepository receipts = provider.GetRequiredService<IMealRecognitionReceiptRepository>();
 
         await runner.ExecuteSerializedAsync(user.Id, async cancellationToken => {
             Assert.Null(await receipts.LockMealForUndoAsync(new UserId(Guid.NewGuid()), meal.Id, cancellationToken));
@@ -169,8 +192,9 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         await context.Meals.Where(candidate => candidate.Id == meal.Id).ExecuteDeleteAsync();
-        var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
-        var receipts = new MealRecognitionReceiptRepository(context);
+        await using ServiceProvider provider = CreateProvider(context);
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+        IMealRecognitionReceiptRepository receipts = provider.GetRequiredService<IMealRecognitionReceiptRepository>();
 
         await runner.ExecuteSerializedAsync(user.Id, async cancellationToken => {
             MealRecognitionReceipt? receipt = await receipts.FindByRecognitionAsync(user.Id, id, cancellationToken);
@@ -188,10 +212,60 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         Assert.Equal(MealRecognitionUndoResult.AlreadyUndone, persisted.TryUndo(currentMealVersion: null, now.AddDays(3)));
     }
 
+    [RequiresDockerFact]
+    public async Task CreatedMeal_CanBeUndoneAtomicallyThroughOwnerRepositories() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("recognition-owner-undo@example.com", "hash");
+        context.Add(user);
+        await context.SaveChangesAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        MealsDbContext owned = provider.GetRequiredService<MealsDbContext>();
+        IMealRepository meals = provider.GetRequiredService<IMealRepository>();
+        IMealRecognitionReceiptRepository receipts = provider.GetRequiredService<IMealRecognitionReceiptRepository>();
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+        var operationId = Guid.NewGuid();
+        DateTime now = DateTime.UtcNow;
+        MealId mealId = await runner.ExecuteSerializedAsync(user.Id, async token => {
+            var meal = Meal.Create(user.Id, now);
+            await meals.AddAsync(meal, token);
+            uint version = await runner.FlushCreatedMealAsync(meal.Id, user.Id, token);
+            Assert.NotNull(await meals.GetByIdAsync(meal.Id, user.Id, cancellationToken: token));
+            await receipts.AddAsync(MealRecognitionReceipt.Create(operationId, user.Id, Guid.NewGuid(), meal.Id,
+                version, now, now, TimeSpan.FromHours(24)), token);
+            return meal.Id;
+        });
+        await runner.ExecuteSerializedAsync(user.Id, async token => {
+            MealRecognitionReceipt? receipt = await receipts.FindAsync(user.Id, operationId, token);
+            Assert.NotNull(receipt);
+            (Meal Meal, uint Version)? locked = await receipts.LockMealForUndoAsync(user.Id, mealId, token);
+            Assert.NotNull(locked);
+            receipt.TryUndo(locked.Value.Version, now.AddMinutes(1));
+            Assert.NotNull(receipt.UndoneAtUtc);
+            await meals.DeleteAsync(locked.Value.Meal, token);
+            return true;
+        });
+        owned.ChangeTracker.Clear();
+        Assert.False(await context.Meals.AnyAsync(meal => meal.Id == mealId));
+        Assert.NotNull((await receipts.FindAsync(user.Id, operationId))!.UndoneAtUtc);
+        Assert.Empty(context.ChangeTracker.Entries<Meal>());
+    }
+
+    private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
+        var services = new ServiceCollection();
+        services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = context.Database.GetConnectionString(),
+            ["Database:MaxRetryDelaySeconds"] = "1",
+        }).Build());
+        services.AddSingleton(context);
+        services.AddSingleton<IDomainEventPublisher, NoEvents>();
+        services.AddMealsPersistence();
+        services.AddProductsPersistence();
+        services.AddReadModelComposition();
+        return services.BuildServiceProvider();
+    }
+
     [ExcludeFromCodeCoverage]
-    private sealed class TestUnitOfWork(FoodDiaryDbContext context) : IUnitOfWork {
-        public bool HasPendingChanges => context.ChangeTracker.HasChanges();
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
-            await context.SaveChangesAsync(cancellationToken);
+    private sealed class NoEvents : IDomainEventPublisher {
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

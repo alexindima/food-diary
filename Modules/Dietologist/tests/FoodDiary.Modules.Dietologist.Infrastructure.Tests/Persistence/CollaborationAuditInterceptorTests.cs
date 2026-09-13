@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Shared;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Users;
@@ -120,6 +123,18 @@ public sealed class CollaborationAuditInterceptorTests {
             () => Assert.Contains("dietologist.recommendation.read", actions, StringComparer.Ordinal),
             () => Assert.Contains("dietologist.task.cancelled", actions, StringComparer.Ordinal),
             () => Assert.Contains("dietologist.task.status-changed", actions, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task CoordinatedAudit_WithNonRelationalProvider_RejectsBeforePersistenceAsync() {
+        await using FoodDiaryDbContext context = CreateContext();
+        await using DietologistDbContext owned = context.CreateModuleContext<DietologistDbContext>(static options => new DietologistDbContext(options));
+        owned.Recommendations.Add(Recommendation.Create(UserId.New(), UserId.New(), "Advice"));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => ModuleContextSaveCoordinator.SaveAsync(context, NullLogger.Instance));
+
+        Assert.Empty(await context.AuditEntries.AsNoTracking().ToListAsync());
+        Assert.Empty(await owned.Recommendations.AsNoTracking().ToListAsync());
     }
 
     private static DietologistInvitation CreateInvitation(UserId clientId) =>

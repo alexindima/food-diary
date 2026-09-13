@@ -295,3 +295,21 @@ WearablesDbContext owns WearableConnection and WearableSyncEntry; repositories r
 ## Favorites runtime context
 
 FavoritesDbContext owns all three favorite entities. Composition queries return authorized product/recipe favorite IDs and existing immutable DTOs, preserving SQL visibility predicates, comment masking, ordering and collection limits. Owner entity retrieval performs one additional read by those IDs and UserId; tracking remains entirely local. GetOwnedById keeps its deliberate ability to remove a favorite after the source becomes inaccessible. Shared IUnitOfWork preserves atomic writes and the central User/source Cascade FKs remain unchanged. Real-DI tests verify tracking identity, edits, visibility revocation, removal and missing-source rollback.
+
+## Dietologist runtime context
+
+Dietologist owns a six-entity runtime context. Joined DTO reads remain in host
+composition; repositories use owner sets and the invitation repository retains
+owner-local Entry reconciliation. The central model, ten User FKs, migration
+history and purge orchestration remain unchanged.
+
+The shared save coordinator always runs central interception first, even with a
+clean central tracker. The Dietologist-owned collaboration interceptor reads its
+registered owner tracker and stages central AuditEntry rows in the same transaction.
+Its pending generated entries are reused across failed attempts to avoid duplicate
+audit on retry. Non-relational coordinated audit fails before persistence because
+it cannot guarantee atomic storage across contexts. PostgreSQL tests cover mixed
+saves, owner-only audit, FK rollback, retry and no-op saves; existing synchronous
+and asynchronous audit rule tests remain authoritative.
+
+Meals now uses MealsDbContext for its five runtime entity types. Recognition creation flushes the owner tracker through the shared unit of work and captures xmin; receipt creation and undo remain in the same user-serialized transaction. Owner reads rejoin the live transaction after intermediate saves. Composed foreign snapshots, migrations, and the ordered purge bridge keep their existing ownership.

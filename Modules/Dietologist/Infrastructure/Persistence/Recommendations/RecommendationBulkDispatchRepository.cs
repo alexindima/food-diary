@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Recommendations;
 
-internal sealed class RecommendationBulkDispatchRepository(FoodDiaryDbContext context)
+internal sealed class RecommendationBulkDispatchRepository(DbSet<RecommendationBulkDispatch> records)
     : IRecommendationBulkDispatchRepository {
     public async Task<IReadOnlyList<RecommendationBulkDispatchReadModel>> GetExistingAsync(
         UserId dietologistUserId,
@@ -14,7 +14,7 @@ internal sealed class RecommendationBulkDispatchRepository(FoodDiaryDbContext co
         IReadOnlyCollection<UserId> clientUserIds,
         CancellationToken cancellationToken = default) {
         UserId[] clientIds = [.. clientUserIds];
-        return await context.RecommendationBulkDispatches
+        return await records
             .AsNoTracking()
             .Where(dispatch =>
                 dispatch.DietologistUserId == dietologistUserId &&
@@ -30,7 +30,7 @@ internal sealed class RecommendationBulkDispatchRepository(FoodDiaryDbContext co
     public async Task<RecommendationBulkDispatch> AddAsync(
         RecommendationBulkDispatch dispatch,
         CancellationToken cancellationToken = default) {
-        await context.RecommendationBulkDispatches.AddAsync(dispatch, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(dispatch, cancellationToken).ConfigureAwait(false);
         return dispatch;
     }
 }

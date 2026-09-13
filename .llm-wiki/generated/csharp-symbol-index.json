@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4051,
-    "symbols": 3992,
-    "interfaceImplementationLinks": 273,
+    "sourceFiles": 4059,
+    "symbols": 4000,
+    "interfaceImplementationLinks": 275,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 2091,
+      "class": 2097,
       "enum": 64,
-      "interface": 479,
-      "record": 1237,
+      "interface": 480,
+      "record": 1238,
       "record struct": 121
     },
     "roles": {
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1633,
-      "Query": 199,
+      "Other": 1636,
+      "Query": 201,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
       "Repository": 108,
       "Request": 150,
       "Response": 213,
-      "Service": 315,
+      "Service": 318,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 46
@@ -1791,6 +1791,27 @@
       "line": 8
     },
     {
+      "name": "DietologistInvitationReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs",
+      "line": 10
+    },
+    {
+      "name": "RecommendationCommentReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs",
+      "line": 8
+    },
+    {
+      "name": "RecommendationReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationReadService.cs",
+      "line": 8
+    },
+    {
       "name": "FavoriteMealQuery",
       "kind": "class",
       "role": "Query",
@@ -1854,11 +1875,18 @@
       "line": 9
     },
     {
+      "name": "MealSourceSnapshotQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
+      "line": 8
+    },
+    {
       "name": "ReadModelCompositionRegistration",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 28
+      "line": 29
     },
     {
       "name": "RecipeOverviewReadService",
@@ -10181,14 +10209,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "DietologistInvitationRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs",
-      "line": 10
+      "line": 11
+    },
+    {
+      "name": "DietologistDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dietologist/Infrastructure/Persistence/DietologistDbContext.cs",
+      "line": 6
     },
     {
       "name": "DietologistUserDataPurgeParticipant",
@@ -10202,7 +10237,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ClientTaskRepository",
@@ -17625,6 +17660,13 @@
       "line": 2
     },
     {
+      "name": "IMealSourceSnapshotQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealSourceSnapshotQuery.cs",
+      "line": 5
+    },
+    {
       "name": "IMealWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -17637,6 +17679,13 @@
       "role": "Other",
       "path": "Modules/Meals/Application/Abstractions/Meals/Common/MealErrors.cs",
       "line": 4
+    },
+    {
+      "name": "MealRecipeSourceReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Models/MealRecipeSourceReadModel.cs",
+      "line": 2
     },
     {
       "name": "CreateMealCommand",
@@ -18308,7 +18357,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
-      "line": 10
+      "line": 13
     },
     {
       "name": "MealAiItemConfiguration",
@@ -18371,7 +18420,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "MealRecognitionReceiptRepository",
@@ -18385,7 +18434,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 13
+      "line": 12
+    },
+    {
+      "name": "MealsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Meals/Infrastructure/Persistence/MealsDbContext.cs",
+      "line": 5
     },
     {
       "name": "MealsUserDataPurgeParticipant",
@@ -28529,6 +28585,13 @@
       "interface": "IDietologistInvitationReadService",
       "interfacePath": "Modules/Dietologist/Application/Common/IDietologistInvitationReadService.cs",
       "implementation": "DietologistInvitationReadService",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IDietologistInvitationReadService",
+      "interfacePath": "Modules/Dietologist/Application/Common/IDietologistInvitationReadService.cs",
+      "implementation": "DietologistInvitationReadService",
       "implementationPath": "Modules/Dietologist/Application/Services/DietologistInvitationReadService.cs",
       "confidence": "naming-convention"
     },
@@ -29195,6 +29258,13 @@
       "interfacePath": "Modules/Meals/Application/Abstractions/Meals/Common/IMealRepository.cs",
       "implementation": "MealRepository",
       "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMealSourceSnapshotQuery",
+      "interfacePath": "Modules/Meals/Application/Abstractions/Meals/Common/IMealSourceSnapshotQuery.cs",
+      "implementation": "MealSourceSnapshotQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
       "confidence": "naming-convention"
     },
     {

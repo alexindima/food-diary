@@ -6,12 +6,12 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1455,
+    "candidateFields": 1457,
     "credential": 155,
     "identity": 174,
-    "health": 684,
+    "health": 685,
     "financial": 124,
-    "privateContent": 318,
+    "privateContent": 319,
     "boundaryFiles": 192,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
@@ -4051,6 +4051,13 @@
     },
     {
       "category": "health",
+      "name": "TotalCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Models/MealRecipeSourceReadModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
@@ -4362,7 +4369,7 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
-      "line": 115
+      "line": 119
     },
     {
       "category": "health",
@@ -8836,6 +8843,13 @@
       "type": "ImageAssetId?",
       "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
       "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Models/MealRecipeSourceReadModel.cs",
+      "line": 5
     },
     {
       "category": "privateContent",
