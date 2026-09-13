@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminAudit;
 using FoodDiary.Application.Admin.Queries.GetAdminBugReports;

@@ -31,7 +31,7 @@ public sealed class UserRelatedDataReadIntegrationTests(PostgresDatabaseFixture 
         var capture = new QueryCapture();
         await using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(seed.Database.GetConnectionString()).AddInterceptors(capture).Options);
-        var reader = new UserRelatedDataReadService(context);
+        var reader = new UserRelatedDataReadService(context.Users);
         UserId[] ids = [active.Id, inactive.Id, deleted.Id, active.Id, UserId.New()];
 
         IReadOnlyDictionary<UserId, UserCommentAuthorModel> authors = await reader.GetAuthorsAsync(ids);

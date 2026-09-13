@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
@@ -347,7 +348,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.False(await likeRepository.ExistsByUserAndRecipeAsync(user.Id, recipe.Id));
         Assert.Equal(0, await likeRepository.CountByRecipeAsync(recipe.Id));
 
-        var commentRepository = new RecipeCommentRepository(context.RecipeComments, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
+        var commentRepository = new RecipeCommentRepository(context.RecipeComments, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context.Users));
         RecipeComment comment = await commentRepository.AddAsync(RecipeComment.Create(user.Id, recipe.Id, "First comment"));
         await context.SaveChangesAsync();
         comment.UpdateText("Updated comment");

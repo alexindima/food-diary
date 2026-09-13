@@ -11,7 +11,7 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 public sealed class UserRoleMembershipServiceTests {
     [Fact]
     public async Task EnsureRoleAsync_WithEmptyUserId_ThrowsArgumentException() {
-        var service = new UserRoleMembershipService(context: null!);
+        var service = new UserRoleMembershipService(null!, null!, null!, null!);
 
         ArgumentException ex = await Assert.ThrowsAsync<ArgumentException>(() =>
             service.EnsureRoleAsync(UserId.Empty, RoleNames.Premium, CancellationToken.None));
@@ -21,7 +21,7 @@ public sealed class UserRoleMembershipServiceTests {
 
     [Fact]
     public async Task EnsureRoleAsync_WithBlankRoleName_ThrowsArgumentException() {
-        var service = new UserRoleMembershipService(context: null!);
+        var service = new UserRoleMembershipService(null!, null!, null!, null!);
 
         ArgumentException ex = await Assert.ThrowsAsync<ArgumentException>(() =>
             service.EnsureRoleAsync(UserId.New(), " ", CancellationToken.None));
@@ -37,7 +37,7 @@ public sealed class UserRoleMembershipServiceTests {
         context.Roles.Add(role);
         context.Users.Add(user);
         await context.SaveChangesAsync();
-        var service = new UserRoleMembershipService(context);
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
 
         await service.EnsureRoleAsync(user.Id, $" {RoleNames.Premium} ", CancellationToken.None);
         await context.SaveChangesAsync();
@@ -52,7 +52,7 @@ public sealed class UserRoleMembershipServiceTests {
     [Fact]
     public async Task EnsureRoleAsync_WithInMemoryDatabase_WhenRoleDoesNotExist_DoesNotAddMembership() {
         await using FoodDiaryDbContext context = CreateContext();
-        var service = new UserRoleMembershipService(context);
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
 
         await service.EnsureRoleAsync(UserId.New(), RoleNames.Premium, CancellationToken.None);
 
@@ -68,7 +68,7 @@ public sealed class UserRoleMembershipServiceTests {
         context.Users.Add(user);
         context.UserRoles.Add(new UserRole(user.Id, role.Id));
         await context.SaveChangesAsync();
-        var service = new UserRoleMembershipService(context);
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
 
         await service.EnsureRoleAsync(user.Id, RoleNames.Premium, CancellationToken.None);
 
@@ -85,7 +85,7 @@ public sealed class UserRoleMembershipServiceTests {
         context.Users.Add(user);
         context.UserRoles.Add(new UserRole(user.Id, role.Id));
         await context.SaveChangesAsync();
-        var service = new UserRoleMembershipService(context);
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
 
         await service.RemoveRoleAsync(user.Id, $" {RoleNames.Premium} ", CancellationToken.None);
         await context.SaveChangesAsync();
@@ -100,7 +100,7 @@ public sealed class UserRoleMembershipServiceTests {
         var role = Role.Create(RoleNames.Premium);
         context.Roles.Add(role);
         await context.SaveChangesAsync();
-        var service = new UserRoleMembershipService(context);
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
 
         await service.RemoveRoleAsync(UserId.New(), RoleNames.Premium, CancellationToken.None);
 
@@ -113,7 +113,7 @@ public sealed class UserRoleMembershipServiceTests {
         var existingRole = Role.Create(RoleNames.Admin);
         context.Roles.Add(existingRole);
         await context.SaveChangesAsync();
-        var service = new UserRoleCatalogService(context);
+        var service = new UserRoleCatalogService(context.Roles);
 
         IReadOnlyList<Role> roles = await service.EnsureRolesByNamesAsync([RoleNames.Admin, RoleNames.Premium], CancellationToken.None);
         await context.SaveChangesAsync();

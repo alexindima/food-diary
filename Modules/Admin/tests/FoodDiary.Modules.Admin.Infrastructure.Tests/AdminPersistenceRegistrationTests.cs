@@ -1,5 +1,5 @@
 using FoodDiary.ReadModel.Composition;
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Admin;

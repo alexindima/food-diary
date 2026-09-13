@@ -1,5 +1,5 @@
 using System.Text;
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Export;

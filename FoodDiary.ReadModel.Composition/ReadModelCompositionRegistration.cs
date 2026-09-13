@@ -1,3 +1,5 @@
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.ReadModel.Composition.Users;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.ReadModel.Composition.Ai;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -19,7 +21,7 @@ using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.ReadModel.Composition.MealPlanning;
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -36,6 +38,8 @@ namespace FoodDiary.ReadModel.Composition;
 
 public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
+        services.AddScoped<IUserCurrentWeightProvider, UserCurrentWeightProvider>();
+        services.AddScoped<IUserCurrentWaistProvider, UserCurrentWaistProvider>();
         services.AddScoped<IAiUsageQuery, AiUsageQuery>();
         services.AddScoped<IUserLoginEventQuery, UserLoginEventQuery>();
         services.AddScoped<IImageAssetUsageQuery, ImageAssetUsageQuery>();

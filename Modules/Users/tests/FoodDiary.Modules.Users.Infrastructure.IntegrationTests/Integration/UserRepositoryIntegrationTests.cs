@@ -64,7 +64,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
             new UserRole(activeUser.Id, supportRole.Id));
         await context.SaveChangesAsync();
 
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
 
         User? loaded = await repository.GetByEmailAsync("active@example.com");
 
@@ -85,7 +85,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Users.Add(user);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
 
         Assert.NotNull(user.Email);
         User? loaded = await repository.GetByEmailAsync(user.Email);
@@ -106,7 +106,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Users.Add(user);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
 
         User? loaded = await repository.GetByIdAsync(user.Id);
 
@@ -124,7 +124,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var service = new UserRoleMembershipService(context);
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
 
         await service.EnsureRoleAsync(user.Id, RoleNames.Premium);
         await service.EnsureRoleAsync(user.Id, RoleNames.Premium);
@@ -143,7 +143,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         await context.SaveChangesAsync();
         context.Entry(user).State = EntityState.Detached;
         user.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "detached-user"));
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
 
         await repository.UpdateAsync(user);
 
@@ -159,7 +159,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.UserRoles.Add(new UserRole(user.Id, premiumRole.Id));
         await context.SaveChangesAsync();
 
-        var service = new UserRoleMembershipService(context);
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
 
         await service.RemoveRoleAsync(user.Id, RoleNames.Premium);
         await service.RemoveRoleAsync(user.Id, RoleNames.Premium);

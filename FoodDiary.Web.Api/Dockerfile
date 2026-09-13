@@ -155,7 +155,7 @@ COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/*.csproj Modules/Images/Infrastructure/Model/
 COPY Modules/Ai/Application/Abstractions/*.csproj Modules/Ai/Application/Abstractions/
 COPY Modules/Admin/Application/*.csproj Modules/Admin/Application/
-COPY Modules/Admin/Application/Abstractions/*.csproj Modules/Admin/Application/Abstractions/
+COPY Modules/Admin/Application.Abstractions/*.csproj Modules/Admin/Application.Abstractions/
 COPY Modules/Admin/Domain/*.csproj Modules/Admin/Domain/
 COPY Modules/Admin/Infrastructure/*.csproj Modules/Admin/Infrastructure/
 COPY Modules/Admin/Infrastructure/Model/*.csproj Modules/Admin/Infrastructure/Model/
@@ -438,7 +438,7 @@ COPY Modules/Images/Domain/ Modules/Images/Domain/
 COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/ Modules/Images/Infrastructure/Model/
 COPY Modules/Admin/Application/ Modules/Admin/Application/
-COPY Modules/Admin/Application/Abstractions/ Modules/Admin/Application/Abstractions/
+COPY Modules/Admin/Application.Abstractions/ Modules/Admin/Application.Abstractions/
 COPY Modules/Admin/Domain/ Modules/Admin/Domain/
 COPY Modules/Admin/Infrastructure/ Modules/Admin/Infrastructure/
 COPY Modules/Admin/Infrastructure/Model/ Modules/Admin/Infrastructure/Model/

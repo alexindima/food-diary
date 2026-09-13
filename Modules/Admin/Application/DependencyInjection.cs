@@ -11,14 +11,8 @@ public static class DependencyInjection {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
-        services.AddScoped<IAdminAiUsageReadService, AdminAiUsageReadService>();
-        services.AddScoped<IAdminAuditReadService, AdminAuditReadService>();
-        services.AddScoped<IAdminBillingReadService, AdminBillingReadService>();
-        services.AddScoped<IAdminContentReadService, AdminContentReadService>();
         services.AddScoped<IAdminDashboardReadService, AdminDashboardReadService>();
-        services.AddScoped<IAdminDashboardOverviewReadService, AdminDashboardOverviewReadService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
-        services.AddScoped<IAdminUserLoginReadService, AdminUserLoginReadService>();
         return services;
     }
 }

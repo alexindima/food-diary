@@ -29,7 +29,7 @@
     <ProjectReference Include="../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj" />
     <ProjectReference Include="../../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
-    <ProjectReference Include="../../Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />

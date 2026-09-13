@@ -2,7 +2,7 @@ using FoodDiary.MailInbox.Client.Models;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Export;
 using MimeKit;

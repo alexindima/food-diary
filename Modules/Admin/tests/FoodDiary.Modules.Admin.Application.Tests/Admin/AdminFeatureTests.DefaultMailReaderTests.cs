@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 
 namespace FoodDiary.Application.Tests.Admin;
 

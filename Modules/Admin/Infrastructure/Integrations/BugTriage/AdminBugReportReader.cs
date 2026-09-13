@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Net.Http.Json;
-using FoodDiary.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure.Integrations.BugTriage;

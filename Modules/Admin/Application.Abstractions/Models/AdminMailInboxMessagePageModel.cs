@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.Admin.Application.Abstractions.Models;
+
+public sealed record AdminMailInboxMessagePageModel(IReadOnlyList<AdminMailInboxMessageSummaryModel> Items, long TotalItems, long? UnreadCount = null, long? ReadCount = null);

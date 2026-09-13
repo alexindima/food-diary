@@ -8,11 +8,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context) : IUserAdminReadRepository, IUserAdminReadModelRepository {
+public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<UserRole> userRoles, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserAdminReadRepository, IUserAdminReadModelRepository {
     private const string LikeEscapeCharacter = "\\";
 
     private IQueryable<User> UsersWithRoles() =>
-        context.Users
+        users
             .AsSplitQuery()
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
@@ -20,6 +20,9 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
     public async Task<UserAdminReadModel?> GetByIdIncludingDeletedReadModelAsync(
         UserId id,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         User? user = await UsersWithRoles()
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken)
@@ -33,6 +36,9 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
         int limit,
         bool includeDeleted,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         UserAccountStatusFilter status = includeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
         return await GetPagedAsync(search, page, limit, status, cancellationToken).ConfigureAwait(false);
     }
@@ -43,12 +49,18 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         return await GetFilteredPageAsync(search, page, limit, status, new UserAdministrationFilter(), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedReadModelsAsync(
         string? search, int page, int limit, UserAccountStatusFilter status,
         UserAdministrationFilter filter, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         (IReadOnlyList<User> items, int totalItems) = await GetFilteredPageAsync(search, page, limit, status, filter, cancellationToken).ConfigureAwait(false);
         return ([.. items.Select(ToAdminReadModel)], totalItems);
     }
@@ -58,7 +70,7 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
         UserAdministrationFilter filter, CancellationToken cancellationToken) {
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
-        IQueryable<User> filteredQuery = context.Users.AsNoTracking();
+        IQueryable<User> filteredQuery = users.AsNoTracking();
         if (filter.RegisteredFrom is { } registeredFrom) {
             var start = registeredFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
             filteredQuery = filteredQuery.Where(user => user.CreatedOnUtc >= start);
@@ -128,6 +140,9 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         (IReadOnlyList<User> items, int totalItems) = await GetPagedAsync(
             search,
             page,
@@ -140,7 +155,10 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
 
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
         GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) {
-        var userCounts = await context.Users
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        var userCounts = await users
             .GroupBy(_ => 1)
             .Select(group => new {
                 TotalUsers = group.Count(),
@@ -149,7 +167,7 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
             })
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
-        int premiumUsers = await context.UserRoles
+        int premiumUsers = await userRoles
             .Where(ur => ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
             .Distinct()
@@ -172,6 +190,9 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
 
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)>
         GetAdminDashboardSummaryReadModelsAsync(int recentLimit, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) =
             await GetAdminDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
 

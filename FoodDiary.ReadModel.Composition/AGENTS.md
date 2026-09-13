@@ -40,3 +40,5 @@ RecipeUsageQuery implements IRecipeUsageQuery. Preserve owner/public filtering, 
 Identity UserLoginEventQuery implements the owner query port. Preserve the Users inner join, escaped ILIKE search, all filters before count/paging, descending login time with ID tie-break, half-open paged date range and inclusive summary date range. Return immutable DTOs without tracking; use the caller scoped context and transaction.
 
 AiUsageQuery implements the owner IAiUsageQuery port. Preserve SQL-side usage totals, day/operation/model breakdowns, Users inner join for display, requested-user filtering and [fromUtc, toUtc) bounds. Only immutable no-tracking reads live here; usage writes remain in Ai.
+
+Users current weight/waist providers implement the existing consumer ports with scalar BodyMetrics reads. Preserve user filtering, descending Date then CreatedOnUtc ordering, null for no measurements, cancellation and no tracking. Users goal mutation remains in its application layer.

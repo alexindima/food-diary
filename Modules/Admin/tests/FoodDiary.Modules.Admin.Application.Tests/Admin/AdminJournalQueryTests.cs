@@ -1,9 +1,12 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminAudit;
 using FoodDiary.Application.Admin.Queries.GetAdminBugReports;
@@ -87,13 +90,21 @@ public class AdminJournalQueryTests {
     [InlineData(false)]
     public async Task Revisions_NormalizesKeyAndLocale(bool ai) {
         using var cancellation = new CancellationTokenSource();
-        IAdminContentReadService service = Substitute.For<IAdminContentReadService>();
-        IReadOnlyList<AdminTemplateRevisionModel> revisions = [new(Guid.NewGuid(), "subject", "html", "text", IsActive: true, 2, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))];
-        service.GetTemplateRevisionsAsync("welcome", "en", ai, cancellation.Token).Returns(revisions);
-        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(service).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
+        IEmailTemplateAdministrationReadService email = Substitute.For<IEmailTemplateAdministrationReadService>();
+        IAiAdministrationReadService prompts = Substitute.For<IAiAdministrationReadService>();
+        var id = Guid.NewGuid();
+        email.GetRevisionsAsync("welcome", "en", cancellation.Token).Returns([new EmailTemplateRevisionReadModel(id, "subject", "html", "text", IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
+        prompts.GetPromptRevisionsAsync("welcome", "en", cancellation.Token).Returns([new AiPromptRevisionReadModel(id, "text", 2, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
+        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(email, prompts).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
         ResultAssert.Success(result);
-        Assert.Same(revisions, result.Value);
-        await service.Received(1).GetTemplateRevisionsAsync("welcome", "en", ai, cancellation.Token);
+        Assert.Equal(id, Assert.Single(result.Value).Id);
+        if (ai) {
+            await prompts.Received(1).GetPromptRevisionsAsync("welcome", "en", cancellation.Token);
+            Assert.Empty(email.ReceivedCalls());
+        } else {
+            await email.Received(1).GetRevisionsAsync("welcome", "en", cancellation.Token);
+            Assert.Empty(prompts.ReceivedCalls());
+        }
     }
 
     [Theory]

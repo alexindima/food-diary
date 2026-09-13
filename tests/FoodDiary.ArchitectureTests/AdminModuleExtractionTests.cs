@@ -4,7 +4,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class AdminModuleExtractionTests {
     [Theory]
     [InlineData("Application", "FoodDiary.Modules.Admin.Application.csproj")]
-    [InlineData("Application/Abstractions", "FoodDiary.Modules.Admin.Application.Abstractions.csproj")]
+    [InlineData("Application.Abstractions", "FoodDiary.Modules.Admin.Application.Abstractions.csproj")]
     [InlineData("Domain", "FoodDiary.Modules.Admin.Domain.csproj")]
     [InlineData("Infrastructure", "FoodDiary.Modules.Admin.Infrastructure.csproj")]
     [InlineData("Infrastructure/Model", "FoodDiary.Modules.Admin.PersistenceModel.csproj")]

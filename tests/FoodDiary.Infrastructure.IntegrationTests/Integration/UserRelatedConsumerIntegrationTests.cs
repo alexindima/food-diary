@@ -98,7 +98,7 @@ public sealed class UserRelatedConsumerIntegrationTests(PostgresDatabaseFixture 
         await cancelled.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.GetActiveAsync(cancelled.Token));
         Assert.Empty(users.ReceivedCalls());
-        var comments = new RecipeCommentRepository(context.RecipeComments, new UserRelatedDataReadService(context));
+        var comments = new RecipeCommentRepository(context.RecipeComments, new UserRelatedDataReadService(context.Users));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => comments.GetPagedReadModelsByRecipeAsync(
             RecipeId.New(), 1, 10, cancelled.Token));
     }

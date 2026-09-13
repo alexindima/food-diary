@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;

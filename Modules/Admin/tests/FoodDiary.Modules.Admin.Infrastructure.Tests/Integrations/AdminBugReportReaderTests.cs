@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using FoodDiary.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Infrastructure.Integrations;
 using FoodDiary.Infrastructure.Integrations.BugTriage;
 using Microsoft.Extensions.Configuration;

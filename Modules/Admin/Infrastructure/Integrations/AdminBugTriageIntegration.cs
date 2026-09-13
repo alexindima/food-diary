@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Integrations.BugTriage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

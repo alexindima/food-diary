@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client.Extensions;
 using FoodDiary.MailInbox.Client.Options;
@@ -37,7 +37,7 @@ public static class AdminMailInboxIntegration {
             }).ConfigurePrimaryHttpMessageHandler(static () => new HttpClientHandler { AllowAutoRedirect = false });
             services.AddScoped<FoodDiary.Application.Admin.Services.BugAcknowledgementService>();
             services.AddScoped<IBugAcknowledgementReceipts, BugAcknowledgementReceipts>();
-            services.AddScoped<FoodDiary.Application.Abstractions.Admin.Common.IBugAcknowledgementSource, BugAcknowledgementSource>();
+            services.AddScoped<FoodDiary.Modules.Admin.Application.Abstractions.Common.IBugAcknowledgementSource, BugAcknowledgementSource>();
             services.AddOptions<BugAcknowledgementOptions>().Bind(configuration.GetSection("BugAcknowledgement"))
                 .Validate(x => x.PollInterval >= TimeSpan.FromSeconds(10) && x.PollInterval <= TimeSpan.FromDays(1), "Invalid acknowledgement poll interval.")
                 .ValidateOnStart();

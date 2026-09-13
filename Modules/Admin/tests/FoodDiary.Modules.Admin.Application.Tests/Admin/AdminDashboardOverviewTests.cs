@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminDashboardOverview;
@@ -18,9 +18,9 @@ public sealed class AdminDashboardOverviewTests {
         billing.GetRevenueSummaryAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(new AdminBillingRevenueSummaryReadModel(DateTime.UnixEpoch, DateTime.UnixEpoch, []));
         var error = new Error("dashboard.unavailable", "Unavailable", ErrorKind.Internal);
         dashboard.GetSummaryAsync(1, Arg.Any<CancellationToken>()).Returns(Result.Failure<AdminDashboardSummaryModel>(error));
-        var service = new FoodDiary.Application.Admin.Services.AdminDashboardOverviewReadService(reader, billing, dashboard, new Clock());
+        var service = new GetAdminDashboardOverviewQueryHandler(reader, billing, dashboard, new Clock());
 
-        Result<AdminDashboardOverviewModel> result = await service.GetAsync(fromDate: null, toDate: null, allTime: true, CancellationToken.None);
+        Result<AdminDashboardOverviewModel> result = await service.Handle(new GetAdminDashboardOverviewQuery(AllTime: true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal(error, result.Error);
@@ -36,7 +36,7 @@ public sealed class AdminDashboardOverviewTests {
         billing.GetRevenueSummaryAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(new AdminBillingRevenueSummaryReadModel(DateTime.UnixEpoch, DateTime.UnixEpoch, []));
         dashboard.GetSummaryAsync(1, Arg.Any<CancellationToken>()).Returns(Result.Success(new AdminDashboardSummaryModel(40, 40, 10, 0, 2, [])));
-        var handler = new GetAdminDashboardOverviewQueryHandler(new FoodDiary.Application.Admin.Services.AdminDashboardOverviewReadService(reader, billing, dashboard, new Clock()));
+        var handler = new GetAdminDashboardOverviewQueryHandler(reader, billing, dashboard, new Clock());
         Result<AdminDashboardOverviewModel> result = await handler.Handle(new GetAdminDashboardOverviewQuery(new DateOnly(2026, 9, 1), new DateOnly(2026, 9, 7)), CancellationToken.None);
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 9, 8, 0, 0, 0, DateTimeKind.Utc), result.Value.ToUtc);
@@ -54,7 +54,7 @@ public sealed class AdminDashboardOverviewTests {
     [Fact]
     public async Task Overview_RejectsReversedOrFutureDatesBeforeReadingData() {
         IAdminDashboardMetricsReader reader = Substitute.For<IAdminDashboardMetricsReader>();
-        var handler = new GetAdminDashboardOverviewQueryHandler(new FoodDiary.Application.Admin.Services.AdminDashboardOverviewReadService(reader, Substitute.For<IAdminBillingReadRepository>(), Substitute.For<IAdminDashboardReadService>(), new Clock()));
+        var handler = new GetAdminDashboardOverviewQueryHandler(reader, Substitute.For<IAdminBillingReadRepository>(), Substitute.For<IAdminDashboardReadService>(), new Clock());
         Assert.True((await handler.Handle(new GetAdminDashboardOverviewQuery(new DateOnly(2026, 9, 7), new DateOnly(2026, 9, 1)), CancellationToken.None)).IsFailure);
         Assert.True((await handler.Handle(new GetAdminDashboardOverviewQuery(To: new DateOnly(2026, 9, 9)), CancellationToken.None)).IsFailure);
         Assert.True((await handler.Handle(new GetAdminDashboardOverviewQuery(From: new DateOnly(2026, 9, 1), AllTime: true), CancellationToken.None)).IsFailure);

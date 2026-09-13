@@ -577,7 +577,7 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs", "FavoriteRecipeErrors", "FavoriteRecipe")]
     [InlineData("Modules/Images/Application/Abstractions/Common/ImageErrors.cs", "ImageErrors", "Image")]
     [InlineData("Modules/Lessons/Application/Abstractions/Common/LessonErrors.cs", "LessonErrors", "Lesson")]
-    [InlineData("Modules/Admin/Application/Abstractions/Admin/Common/AdminMailInboxErrors.cs", "AdminMailInboxErrors", "MailInbox")]
+    [InlineData("Modules/Admin/Application.Abstractions/Common/AdminMailInboxErrors.cs", "AdminMailInboxErrors", "MailInbox")]
     [InlineData("Modules/Meals/Application/Abstractions/Meals/Common/MealErrors.cs", "MealErrors", "Meal")]
     [InlineData("Modules/MealPlanning/Application/Abstractions/MealPlans/Common/MealPlanErrors.cs", "MealPlanErrors", "MealPlan")]
     [InlineData("Modules/Products/Contracts/Products/Common/ProductErrors.cs", "ProductErrors", "Product")]
@@ -1682,14 +1682,13 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void AdminContentReadService_UsesAiPromptReadModelsInsteadOfPromptAggregates() {
+    public void AdminContentQueries_UseAiPromptReadModelsInsteadOfPromptAggregates() {
         string root = GetRepositoryRoot();
-        string servicePath = Path.Combine(
-            root,
-            "Modules/Admin/Application",
-            "Services",
-            "AdminContentReadService.cs");
-        string[] serviceFiles = [servicePath];
+        string[] serviceFiles = [
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs"),
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs"),
+        ];
+        Assert.All(serviceFiles, path => Assert.True(File.Exists(path), $"Missing query handler: {path}"));
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Ai"),
@@ -1701,14 +1700,13 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void AdminContentReadService_UsesEmailTemplateReadModelsInsteadOfTemplateAggregates() {
+    public void AdminContentQueries_UseEmailTemplateReadModelsInsteadOfTemplateAggregates() {
         string root = GetRepositoryRoot();
-        string servicePath = Path.Combine(
-            root,
-            "Modules/Admin/Application",
-            "Services",
-            "AdminContentReadService.cs");
-        string[] serviceFiles = [servicePath];
+        string[] serviceFiles = [
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs"),
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs"),
+        ];
+        Assert.All(serviceFiles, path => Assert.True(File.Exists(path), $"Missing query handler: {path}"));
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "EmailTemplate>"),
@@ -1719,14 +1717,13 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void AdminContentReadService_UsesLessonAndReportReadModelsInsteadOfAggregates() {
+    public void AdminContentQueries_UseLessonAndReportReadModelsInsteadOfAggregates() {
         string root = GetRepositoryRoot();
-        string servicePath = Path.Combine(
-            root,
-            "Modules/Admin/Application",
-            "Services",
-            "AdminContentReadService.cs");
-        string[] serviceFiles = [servicePath];
+        string[] serviceFiles = [
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs"),
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs"),
+        ];
+        Assert.All(serviceFiles, path => Assert.True(File.Exists(path), $"Missing query handler: {path}"));
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Content"),

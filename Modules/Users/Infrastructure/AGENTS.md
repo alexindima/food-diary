@@ -30,3 +30,7 @@ former joins. Query only requested distinct IDs and scalar columns, no tracking,
 saves, caches or transactions; empty input performs no SQL and cancellation is honored.
 
 UserCleanupService saves through IUnitOfWork inside its existing per-user transaction, so image-deletion outbox entries tracked in ImagesDbContext commit or roll back with user cleanup. Participants still never save or commit.
+
+Current weight and waist implementations live in host ReadModel.Composition, reading only scalar BodyMetrics values through the existing Users consumer ports. AddUsersPersistence no longer registers these cross-module readers; hosts register AddReadModelComposition. Preserve date/creation ordering and nullable empty results.
+
+UsersDbContext owns User, Role, UserRole, UserRoleAuditEvent, WeightGoal and WaistGoal. Runtime adapters receive only owner sets (and DatabaseFacade for role SQL), synchronizing the live shared transaction before operations. Save through IUnitOfWork. Users saves at priority -100 before the central context and dependent modules, independently of DI resolution order. Its options explicitly include TelegramIdentityConflictInterceptor; provider uniqueness details must remain hidden. UserCleanupService remains the ordered central purge coordinator and profile-image unlink bridge.

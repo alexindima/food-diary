@@ -1,17 +1,9 @@
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Lessons.Services;
-using FoodDiary.Application.Ai.Services;
-using FoodDiary.Application.ContentReports.Services;
-using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
-using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminLessons;
-using FoodDiary.Application.Admin.Services;
-using FoodDiary.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;
@@ -236,7 +228,7 @@ public class AdminLessonFeatureTests {
         var lesson2 = NutritionLesson.Create("Lesson 2", "Content 2", "Summary", "ru",
             LessonCategory.Macronutrients, LessonDifficulty.Advanced, 10);
         var repo = new InMemoryLessonRepository(lesson1, lesson2);
-        GetAdminLessonsQueryHandler handler = new(CreateAdminContentReadService(repo));
+        GetAdminLessonsQueryHandler handler = new(new LessonAdministrationReadService(repo));
 
         Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
@@ -247,7 +239,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task GetAdminLessonsHandler_WhenEmpty_ReturnsEmptyList() {
         var repo = new InMemoryLessonRepository();
-        GetAdminLessonsQueryHandler handler = new(CreateAdminContentReadService(repo));
+        GetAdminLessonsQueryHandler handler = new(new LessonAdministrationReadService(repo));
 
         Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
@@ -545,16 +537,6 @@ public class AdminLessonFeatureTests {
             throw new NotSupportedException();
     }
 
-    private static IAdminContentReadService CreateAdminContentReadService(
-        INutritionLessonReadModelRepository lessonRepository) =>
-        new AdminContentReadService(
-            new LessonAdministrationReadService(lessonRepository),
-            new EmailTemplateAdministrationReadService(Substitute.For<IEmailTemplateReadModelRepository>()),
-            new AiAdministrationReadService(
-                Substitute.For<IAiUsageReadRepository>(),
-                Substitute.For<IAiPromptTemplateReadModelRepository>()),
-            new ContentReportAdministrationReadService(
-                Substitute.For<IContentReportReadModelRepository>()));
     private static LessonAdministrationService CreateLessonAdministrationService() {
         var repository = new InMemoryLessonRepository();
         return new LessonAdministrationService(repository, repository);

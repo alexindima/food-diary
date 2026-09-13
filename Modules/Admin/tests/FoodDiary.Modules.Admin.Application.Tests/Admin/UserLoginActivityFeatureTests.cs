@@ -4,7 +4,6 @@ using FoodDiary.Results;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
-using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Models;
 
@@ -29,7 +28,7 @@ public sealed class UserLoginActivityFeatureTests {
                 new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
         ];
         IUserLoginEventRepository repository = CreatePagedRepository(items, 42, out Func<(int Page, int Limit, string? Search)> getLastPaged);
-        GetAdminUserLoginEventsQueryHandler handler = new(new AdminUserLoginReadService(new AuthenticationLoginEventReadService(repository)));
+        GetAdminUserLoginEventsQueryHandler handler = new(new AuthenticationLoginEventReadService(repository));
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 0, Limit: 500, UserId: null, Search: "chrome"),
@@ -61,7 +60,7 @@ public sealed class UserLoginActivityFeatureTests {
                 new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
         ];
         IUserLoginEventRepository repository = CreatePagedRepository(items, 1, out _);
-        GetAdminUserLoginEventsQueryHandler handler = new(new AdminUserLoginReadService(new AuthenticationLoginEventReadService(repository)));
+        GetAdminUserLoginEventsQueryHandler handler = new(new AuthenticationLoginEventReadService(repository));
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
@@ -88,7 +87,7 @@ public sealed class UserLoginActivityFeatureTests {
                 new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
         ];
         IUserLoginEventRepository repository = CreatePagedRepository(items, 1, out _);
-        GetAdminUserLoginEventsQueryHandler handler = new(new AdminUserLoginReadService(new AuthenticationLoginEventReadService(repository)));
+        GetAdminUserLoginEventsQueryHandler handler = new(new AuthenticationLoginEventReadService(repository));
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
@@ -107,7 +106,7 @@ public sealed class UserLoginActivityFeatureTests {
             new UserLoginDeviceSummaryModel("device:Desktop", 7, lastSeenAtUtc),
         ];
         IUserLoginEventRepository repository = CreateSummaryRepository(summaryItems, out Func<(DateTime? FromUtc, DateTime? ToUtc)> getLastSummary);
-        GetAdminUserLoginSummaryQueryHandler handler = new(new AdminUserLoginReadService(new AuthenticationLoginEventReadService(repository)));
+        GetAdminUserLoginSummaryQueryHandler handler = new(new AuthenticationLoginEventReadService(repository));
 
         Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>> result = await handler.Handle(new GetAdminUserLoginSummaryQuery(fromUtc, toUtc), CancellationToken.None);
 

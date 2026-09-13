@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Admin.Domain.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />

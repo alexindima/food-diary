@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests;
@@ -9,7 +9,7 @@ public sealed class FeatureErrorContractTests {
     public void AdminMailInboxErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Admin.Application.Abstractions", typeof(AdminMailInboxErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.Admin.Common", typeof(AdminMailInboxErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Admin.Application.Abstractions.Common", typeof(AdminMailInboxErrors).Namespace));
     }
 
     [Fact]

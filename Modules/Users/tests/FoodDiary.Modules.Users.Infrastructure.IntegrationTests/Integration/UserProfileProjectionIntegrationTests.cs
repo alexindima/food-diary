@@ -33,7 +33,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
         context.Users.Add(user);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var service = new UserProfileProjectionService(context);
+        var service = new UserProfileProjectionService(context.Users);
 
         UserAiProfileModel ai = Success(await service.GetAiProfileAsync(user.Id, CancellationToken.None));
         UserHydrationProfileModel hydration = Success(await service.GetHydrationProfileAsync(user.Id, CancellationToken.None));
@@ -77,7 +77,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
     public async Task ConsumerProfiles_WhenUserIsMissing_ReturnAccessFailures() {
         var userId = UserId.New();
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var service = new UserProfileProjectionService(context);
+        var service = new UserProfileProjectionService(context.Users);
 
         Result<UserAiProfileModel> ai = await service.GetAiProfileAsync(userId, CancellationToken.None);
         Result<UserDashboardProfileModel> dashboard = await service.GetDashboardProfileAsync(userId, CancellationToken.None);
@@ -102,7 +102,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
         await context.SaveChangesAsync();
         active.UpdateActivity(hydrationGoal: 9);
         active.Deactivate();
-        var service = new UserProfileProjectionService(context);
+        var service = new UserProfileProjectionService(context.Users);
 
         Assert.Null(await service.EnsureCanAccessAsync(active.Id));
         Assert.Equal(2.5, Success(await service.GetHydrationProfileAsync(active.Id)).EffectiveWaterGoal);
@@ -131,7 +131,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(seed.Database.GetConnectionString()).AddInterceptors(capture).Options;
         await using var context = new FoodDiaryDbContext(options);
-        Result<UserHydrationProfileModel> result = await new UserProfileProjectionService(context).GetHydrationProfileAsync(user.Id);
+        Result<UserHydrationProfileModel> result = await new UserProfileProjectionService(context.Users).GetHydrationProfileAsync(user.Id);
 
         Assert.Equal(2.5, Success(result).EffectiveWaterGoal);
         string sql = Assert.Single(capture.Commands);

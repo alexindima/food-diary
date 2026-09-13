@@ -24,7 +24,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.Entry(outside).Property(x => x.LastLoginAtUtc).CurrentValue = date.AddDays(1);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new UserAdministrationReadRepository(context);
+        var repository = new UserAdministrationReadRepository(context.Users, context.UserRoles);
         var filter = new UserAdministrationFilter(LastLoginFrom: new DateOnly(2030, 1, 2), LastLoginTo: new DateOnly(2030, 1, 2));
         (IReadOnlyList<UserAdminReadModel> items, int total) = await repository.GetFilteredPagedReadModelsAsync(search: null, 1, 10, UserAccountStatusFilter.All, filter, CancellationToken.None);
         Assert.Equal(inside.Id.Value, Assert.Single(items).Id);
@@ -49,7 +49,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.Entry(outside).Property(user => user.CreatedOnUtc).CurrentValue = start.AddDays(1);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new UserAdministrationReadRepository(context);
+        var repository = new UserAdministrationReadRepository(context.Users, context.UserRoles);
         var filter = new UserAdministrationFilter(new DateOnly(2026, 8, 1), new DateOnly(2026, 8, 1), RoleNames.Premium, EmailConfirmed: false);
         (IReadOnlyList<UserAdminReadModel> items, int total) = await repository.GetFilteredPagedReadModelsAsync(search: null, page: 2, limit: 1, UserAccountStatusFilter.Active, filter, CancellationToken.None);
         Assert.Equal(2, total);
@@ -77,7 +77,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.UserRoles.Add(new UserRole(newest.Id, premium.Id));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var reader = new UserAdministrationReadRepository(context);
+        var reader = new UserAdministrationReadRepository(context.Users, context.UserRoles);
 
         (IReadOnlyList<UserAdminReadModel> first, int total) = await reader.GetPagedReadModelsAsync(search: null, page: 1, limit: 1, UserAccountStatusFilter.Active);
         UserAdminReadModel firstItem = Assert.Single(first);
@@ -110,7 +110,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.Users.AddRange(literal, wildcardLookalike);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var reader = new UserAdministrationReadRepository(context);
+        var reader = new UserAdministrationReadRepository(context.Users, context.UserRoles);
 
         foreach (string term in new[] { "_", "%", @"\", @"  mix_%\value  " }) {
             (IReadOnlyList<UserAdminReadModel> items, int total) = await reader.GetPagedReadModelsAsync(search: term, page: 1, limit: 10, UserAccountStatusFilter.All);
@@ -138,7 +138,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.UserRoles.AddRange(new UserRole(user.Id, premium.Id), new UserRole(user.Id, support.Id));
         await context.SaveChangesAsync();
         user.UpdatePersonalInfo(firstName: "Unsaved");
-        var reader = new UserAdministrationReadRepository(context);
+        var reader = new UserAdministrationReadRepository(context.Users, context.UserRoles);
 
         UserAdminReadModel? model = await reader.GetByIdIncludingDeletedReadModelAsync(user.Id);
         Assert.NotNull(model);
@@ -195,7 +195,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.UserRoles.AddRange(new UserRole(inactivePremium.Id, premium.Id), new UserRole(deletedPremium.Id, premium.Id));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var reader = new UserAdministrationReadRepository(context);
+        var reader = new UserAdministrationReadRepository(context.Users, context.UserRoles);
 
         (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<UserAdminReadModel> recentUsers) = await reader.GetAdminDashboardSummaryReadModelsAsync(10);
         Assert.Multiple(
@@ -218,7 +218,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
     [RequiresDockerFact]
     public async Task EmptyReads_ReturnZeroAndPropagateCancellationAcrossBothPorts() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var reader = new UserAdministrationReadRepository(context);
+        var reader = new UserAdministrationReadRepository(context.Users, context.UserRoles);
         (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<UserAdminReadModel> recentUsers) = await reader.GetAdminDashboardSummaryReadModelsAsync(10);
         Assert.Multiple(
             () => Assert.Equal(0, totalUsers),
@@ -251,7 +251,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.Users.AddRange(matchingUser, otherUser);
         await context.SaveChangesAsync();
 
-        var repository = new UserAdministrationReadRepository(context);
+        var repository = new UserAdministrationReadRepository(context.Users, context.UserRoles);
 
         (IReadOnlyList<User>? items, int totalItems) = await repository.GetPagedAsync(
             search: "100%real",
@@ -276,7 +276,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        var repository = new UserAdministrationReadRepository(context);
+        var repository = new UserAdministrationReadRepository(context.Users, context.UserRoles);
 
         (IReadOnlyList<User>? items, int totalItems) = await repository.GetPagedAsync(
             search: user.Email,
@@ -304,7 +304,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         context.UserRoles.Add(new UserRole(premiumUser.Id, premiumRole.Id));
         await context.SaveChangesAsync();
 
-        var repository = new UserAdministrationReadRepository(context);
+        var repository = new UserAdministrationReadRepository(context.Users, context.UserRoles);
 
         (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) = await repository.GetAdminDashboardSummaryAsync(recentLimit: 10);
 

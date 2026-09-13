@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users;
 using FoodDiary.Infrastructure.Persistence.Users;
@@ -12,9 +15,16 @@ public static class UsersModuleRegistration {
         services.AddUsersApplication().AddUsersPersistence();
 
     public static IServiceCollection AddUsersPersistence(this IServiceCollection services) {
+        services.AddScoped(provider => {
+            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            return shared.CreateModuleContext<UsersDbContext>(options => new UsersDbContext(
+                new DbContextOptionsBuilder<UsersDbContext>(options).AddInterceptors(new TelegramIdentityConflictInterceptor()).Options), saveOrder: -100);
+        });
         services.TryAddEnumerable(ServiceDescriptor.Scoped<ISaveChangesInterceptor, TelegramIdentityConflictInterceptor>());
-        services.AddScoped<UserProfileProjectionService>();
-        services.AddScoped<UserRelatedDataReadService>();
+        services.AddScoped<UserProfileProjectionService>(provider => new UserProfileProjectionService(
+            provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider)));
+        services.AddScoped<UserRelatedDataReadService>(provider => new UserRelatedDataReadService(
+            provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserFastingReminderReadService>(static provider => provider.GetRequiredService<UserRelatedDataReadService>());
         services.AddScoped<IUserCommentAuthorReadService>(static provider => provider.GetRequiredService<UserRelatedDataReadService>());
         services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
@@ -25,20 +35,33 @@ public static class UsersModuleRegistration {
         services.AddScoped<IUserHydrationProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserTdeeProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserWeeklyCheckInProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
-        services.AddScoped<UserRepository>();
+        services.AddScoped<UserRepository>(provider => new UserRepository(
+            provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().UserRoleAuditEvents, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserGoogleIdentityRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<UserRepository>());
-        services.AddScoped<UserAdministrationReadRepository>();
+        services.AddScoped<UserAdministrationReadRepository>(provider => new UserAdministrationReadRepository(
+            provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().UserRoles, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserAdminReadRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());
         services.AddScoped<IUserAdminReadModelRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());
-        services.AddScoped<IUserAccessTokenSecurityReader, UserAccessTokenSecurityReader>();
-        services.AddScoped<IUserRoleCatalogService, UserRoleCatalogService>();
-        services.AddScoped<IUserRoleMembershipService, UserRoleMembershipService>();
-        services.AddScoped<IUserCurrentWeightProvider, UserCurrentWeightProvider>();
-        services.AddScoped<IUserCurrentWaistProvider, UserCurrentWaistProvider>();
+        services.AddScoped<IUserAccessTokenSecurityReader>(provider => new UserAccessTokenSecurityReader(
+            provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider)));
+        services.AddScoped<IUserRoleCatalogService>(provider => new UserRoleCatalogService(
+            provider.GetRequiredService<UsersDbContext>().Roles, CreateTransactionSynchronizer(provider)));
+        services.AddScoped<IUserRoleMembershipService>(provider => new UserRoleMembershipService(
+            provider.GetRequiredService<UsersDbContext>().Database, provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().Roles, provider.GetRequiredService<UsersDbContext>().UserRoles, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         return services;
+    }
+
+    private static Func<CancellationToken, Task> CreateTransactionSynchronizer(IServiceProvider provider) {
+        FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+        UsersDbContext owned = provider.GetRequiredService<UsersDbContext>();
+        return async cancellationToken => {
+            if (owned.Database.IsRelational()) {
+                await owned.Database.UseTransactionAsync(shared.Database.CurrentTransaction?.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+            }
+        };
     }
 }

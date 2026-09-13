@@ -16,6 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" Condition="'$(MSBuildProjectName)' == 'FoodDiary.Modules.Admin.Application.Abstractions'" />
+    <CompilerVisibleProperty Include="ProjectDir" Condition="'$(MSBuildProjectName)' == 'FoodDiary.Modules.Admin.Application.Abstractions'" />
     <PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" />
     <PackageReference Include="Roslynator.Analyzers" PrivateAssets="all" />
   </ItemGroup>

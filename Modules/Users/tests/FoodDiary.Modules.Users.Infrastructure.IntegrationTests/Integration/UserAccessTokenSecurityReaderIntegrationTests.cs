@@ -1,3 +1,6 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
@@ -18,7 +21,7 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
         var user = User.Create($"security-version-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
-        var repository = new UserAccessTokenSecurityReader(context);
+        var repository = new UserAccessTokenSecurityReader(context.Users);
 
         Assert.True(await repository.IsCurrentAsync(user.Id.Value, securityVersion: 0));
 
@@ -45,7 +48,7 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
         context.Users.AddRange(active, inactive, deleted);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var reader = new UserAccessTokenSecurityReader(context);
+        var reader = new UserAccessTokenSecurityReader(context.Users);
 
         Assert.True(await reader.IsCurrentAsync(active.Id.Value, active.SecurityVersion));
         Assert.False(await reader.IsCurrentAsync(Guid.NewGuid(), 0));
@@ -61,6 +64,7 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         services.AddUsersPersistence();
+        services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.Replace(ServiceDescriptor.Scoped(_ => databaseFixture.CreateDbContext(connectionString)));
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
@@ -70,21 +74,21 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
         IUserAccessTokenSecurityReader reader = scope.ServiceProvider.GetRequiredService<IUserAccessTokenSecurityReader>();
         var user = User.Create("security-tracked@example.com", "hash");
         await repository.AddAsync(user);
-        await context.SaveChangesAsync();
+        await scope.ServiceProvider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
 
         Assert.Same(user, await repository.GetByIdAsync(user.Id));
         user.UpdatePassword("next-hash");
         await repository.UpdateAsync(user);
         Assert.True(await reader.IsCurrentAsync(user.Id.Value, 0));
         Assert.False(await reader.IsCurrentAsync(user.Id.Value, 1));
-        Assert.Same(user, Assert.Single(context.ChangeTracker.Entries<User>()).Entity);
+        Assert.Same(user, Assert.Single(scope.ServiceProvider.GetRequiredService<UsersDbContext>().ChangeTracker.Entries<User>()).Entity);
 
-        await context.SaveChangesAsync();
+        await scope.ServiceProvider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
         Assert.False(await reader.IsCurrentAsync(user.Id.Value, 0));
         Assert.True(await reader.IsCurrentAsync(user.Id.Value, 1));
-        context.ChangeTracker.Clear();
+        scope.ServiceProvider.GetRequiredService<UsersDbContext>().ChangeTracker.Clear();
         Assert.True(await reader.IsCurrentAsync(user.Id.Value, 1));
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(scope.ServiceProvider.GetRequiredService<UsersDbContext>().ChangeTracker.Entries());
     }
 
     [RequiresDockerFact]
@@ -94,7 +98,7 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
         context.Users.Add(user);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var reader = new UserAccessTokenSecurityReader(context);
+        var reader = new UserAccessTokenSecurityReader(context.Users);
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();
 
@@ -103,5 +107,9 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
 
         Assert.True(await reader.IsCurrentAsync(user.Id.Value, user.SecurityVersion));
         Assert.Empty(context.ChangeTracker.Entries());
+    }
+    [ExcludeFromCodeCoverage]
+    private sealed class NoEvents : IDomainEventPublisher {
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

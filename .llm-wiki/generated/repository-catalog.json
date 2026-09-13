@@ -510,6 +510,7 @@
           "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj",
           "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj",
           "Modules/Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj",
+          "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
@@ -10869,6 +10870,8 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj",
+          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [

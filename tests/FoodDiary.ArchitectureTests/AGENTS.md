@@ -28,6 +28,8 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Current Guardrails
 
+- `PhysicalProjectLayoutTests` scans physical `.csproj` paths, including projects not yet in the solution, while pruning build caches and package folders. It rejects new nesting and stale entries in the exact legacy baseline. Move projects to sibling folders and remove resolved baseline entries; do not extend the baseline for new projects.
+
 - PresentationContractBoundaryTests prohibits module-to-foreign-Presentation references. Reusable Presentation.Contracts contain wire DTOs only; Presentation.Mappings depend on narrow contracts and pure mappings, never controllers, handlers, framework/provider packages or persistence. Dashboard public snapshot/query declarations belong to Contracts; see ADR 0039.
 
 - ConsumerAggregateContractTests protects Notifications writer requests and Lessons/Identity administrative result contracts from domain entity types, including transitively available types. It also prevents the migrated consumer applications from using those foreign aggregates; owner repository interfaces retain their aggregate capabilities.

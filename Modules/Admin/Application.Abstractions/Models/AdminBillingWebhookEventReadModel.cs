@@ -1,0 +1,17 @@
+namespace FoodDiary.Modules.Admin.Application.Abstractions.Models;
+
+public sealed record AdminBillingWebhookEventReadModel(
+    Guid Id,
+    string Provider,
+    string EventId,
+    string EventType,
+    string? ExternalObjectId,
+    string Status,
+    DateTime? ProcessedAtUtc,
+    string? PayloadJson,
+    string? ErrorMessage,
+    DateTime CreatedOnUtc,
+    DateTime? ModifiedOnUtc,
+    DateTime? ReceivedAtUtc = null,
+    int AttemptCount = 0,
+    DateTime? NextAttemptAtUtc = null);

@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IUserRoleMembershipService {
+internal sealed class UserRoleMembershipService(Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database, DbSet<User> users, DbSet<Role> roles, DbSet<UserRole> userRoles, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserRoleMembershipService {
     public async Task EnsureRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) {
         EnsureValidInput(userId, roleName);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
 
-        if (!context.Database.IsRelational()) {
+        if (!database.IsRelational()) {
             await EnsureRoleWithTrackedEntitiesAsync(userId, roleName.Trim(), cancellationToken).ConfigureAwait(false);
             return;
         }
@@ -28,14 +31,17 @@ internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IU
             WHERE "Id" = {userId.Value}
               AND EXISTS (SELECT 1 FROM inserted_role)
             """;
-        await context.Database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
+        await database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task RemoveRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) {
         EnsureValidInput(userId, roleName);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
 
         string normalizedRoleName = roleName.Trim();
-        if (!context.Database.IsRelational()) {
+        if (!database.IsRelational()) {
             await RemoveRoleWithTrackedEntitiesAsync(userId, normalizedRoleName, cancellationToken).ConfigureAwait(false);
             return;
         }
@@ -56,28 +62,28 @@ internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IU
             WHERE "Id" = {userId.Value}
               AND EXISTS (SELECT 1 FROM deleted_role)
             """;
-        await context.Database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
+        await database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task EnsureRoleWithTrackedEntitiesAsync(UserId userId, string roleName, CancellationToken cancellationToken) {
-        Role? role = await context.Roles
+        Role? role = await roles
             .FirstOrDefaultAsync(candidate => candidate.Name == roleName, cancellationToken).ConfigureAwait(false);
         if (role is null) {
             return;
         }
 
-        bool alreadyAssigned = await context.UserRoles
+        bool alreadyAssigned = await userRoles
             .AnyAsync(userRole => userRole.UserId == userId && userRole.RoleId == role.Id, cancellationToken).ConfigureAwait(false);
         if (alreadyAssigned) {
             return;
         }
 
-        await context.UserRoles.AddAsync(new UserRole(userId, role.Id), cancellationToken).ConfigureAwait(false);
+        await userRoles.AddAsync(new UserRole(userId, role.Id), cancellationToken).ConfigureAwait(false);
         await AdvanceTrackedUserSecurityVersionAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task RemoveRoleWithTrackedEntitiesAsync(UserId userId, string roleName, CancellationToken cancellationToken) {
-        UserRole? userRole = await context.UserRoles
+        UserRole? userRole = await userRoles
             .FirstOrDefaultAsync(
                 candidate => candidate.UserId == userId && candidate.Role.Name == roleName,
                 cancellationToken).ConfigureAwait(false);
@@ -85,12 +91,12 @@ internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IU
             return;
         }
 
-        context.UserRoles.Remove(userRole);
+        userRoles.Remove(userRole);
         await AdvanceTrackedUserSecurityVersionAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task AdvanceTrackedUserSecurityVersionAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await context.Users
+        User? user = await users
             .FirstOrDefaultAsync(candidate => candidate.Id == userId, cancellationToken).ConfigureAwait(false);
         user?.RecordExternalRoleMembershipChange();
     }

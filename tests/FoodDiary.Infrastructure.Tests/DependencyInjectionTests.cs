@@ -10,7 +10,7 @@ using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Wearables.Infrastructure;
 using Amazon.S3;
 using System.Net;
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Billing.Common;
@@ -1013,22 +1013,22 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Admin.Common.IAdminBillingRepository",
+            "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminBillingRepository",
             [
-                "FoodDiary.Application.Abstractions.Admin.Common.IAdminBillingReadRepository",
+                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminBillingReadRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Admin.Common.IAdminImpersonationSessionRepository",
+            "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminImpersonationSessionRepository",
             [
-                "FoodDiary.Application.Abstractions.Admin.Common.IAdminImpersonationSessionReadRepository",
-                "FoodDiary.Application.Abstractions.Admin.Common.IAdminImpersonationSessionWriteRepository",
+                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminImpersonationSessionReadRepository",
+                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminImpersonationSessionWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Admin.Common.IAdminUserRoleAuditRepository",
+            "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminUserRoleAuditRepository",
             [
-                "FoodDiary.Application.Abstractions.Admin.Common.IAdminUserRoleAuditReadRepository",
+                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminUserRoleAuditReadRepository",
             ]
         },
         {

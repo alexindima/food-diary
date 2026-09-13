@@ -6,11 +6,12 @@ namespace FoodDiary.Infrastructure.Persistence;
 
 public sealed partial class FoodDiaryDbContext {
     private readonly List<DbContext> _moduleContexts = [];
+    private readonly Dictionary<DbContext, int> _moduleSaveOrders = [];
 
     internal bool IsCoordinatingModuleSave { get; set; }
     internal IReadOnlyList<DbContext> ModuleContexts => _moduleContexts;
 
-    public TContext CreateModuleContext<TContext>(Func<DbContextOptions<TContext>, TContext> factory)
+    public TContext CreateModuleContext<TContext>(Func<DbContextOptions<TContext>, TContext> factory, int saveOrder = 100)
         where TContext : DbContext {
         ArgumentNullException.ThrowIfNull(factory);
         var builder = new DbContextOptionsBuilder<TContext>();
@@ -28,8 +29,11 @@ public sealed partial class FoodDiaryDbContext {
         }
         TContext module = factory(builder.Options);
         _moduleContexts.Add(module);
+        _moduleSaveOrders.Add(module, saveOrder);
         return module;
     }
+
+    internal int GetSaveOrder(DbContext participant) => ReferenceEquals(participant, this) ? 0 : _moduleSaveOrders[participant];
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess) {
         EnsureModuleSaveIsCoordinated();

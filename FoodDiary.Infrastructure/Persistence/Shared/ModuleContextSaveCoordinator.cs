@@ -7,7 +7,7 @@ namespace FoodDiary.Infrastructure.Persistence.Shared;
 
 internal static class ModuleContextSaveCoordinator {
     public static async Task SaveAsync(FoodDiaryDbContext context, ILogger logger, CancellationToken cancellationToken = default) {
-        DbContext[] participants = [context, .. context.ModuleContexts];
+        DbContext[] participants = [.. new[] { context }.Cast<DbContext>().Concat(context.ModuleContexts).OrderBy(context.GetSaveOrder)];
         if (!context.Database.IsRelational()) {
             if (participants.Count(participant => participant.ChangeTracker.HasChanges()) > 1) {
                 throw new InvalidOperationException("Atomic saves across contexts require a relational provider.");
@@ -40,7 +40,7 @@ internal static class ModuleContextSaveCoordinator {
         const string savepoint = "module_unit_of_work";
         await transaction.CreateSavepointAsync(savepoint, cancellationToken).ConfigureAwait(false);
         try {
-            foreach (DbContext module in participants.Skip(1)) {
+            foreach (DbContext module in participants.Where(participant => !ReferenceEquals(participant, context))) {
                 await module.Database.UseTransactionAsync(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
             }
             await SaveParticipantsAsync(context, participants, cancellationToken).ConfigureAwait(false);
@@ -53,7 +53,7 @@ internal static class ModuleContextSaveCoordinator {
             }
             throw;
         } finally {
-            foreach (DbContext module in participants.Skip(1)) {
+            foreach (DbContext module in participants.Where(participant => !ReferenceEquals(participant, context))) {
                 await module.Database.UseTransactionAsync(transaction: null, CancellationToken.None).ConfigureAwait(false);
             }
         }

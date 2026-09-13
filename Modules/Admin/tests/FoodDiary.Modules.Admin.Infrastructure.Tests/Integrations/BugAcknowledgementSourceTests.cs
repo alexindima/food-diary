@@ -27,8 +27,8 @@ public sealed class BugAcknowledgementSourceTests {
 
     [Fact]
     public void ReimportedMessageUsesSameIdempotencyKey() {
-        FoodDiary.Application.Abstractions.Admin.Common.BugAcknowledgementCandidate? first = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
-        FoodDiary.Application.Abstractions.Admin.Common.BugAcknowledgementCandidate? second = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
+        FoodDiary.Modules.Admin.Application.Abstractions.Common.BugAcknowledgementCandidate? first = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
+        FoodDiary.Modules.Admin.Application.Abstractions.Common.BugAcknowledgementCandidate? second = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
         Assert.NotNull(first);
         Assert.NotNull(second);
         Assert.Equal(first.IdempotencyKey, second.IdempotencyKey);

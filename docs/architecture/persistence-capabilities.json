@@ -1181,20 +1181,6 @@
       "reason": "Users lifecycle coordinator locks eligibility, invokes ordered owner purge participants, deletes only User/UserRole rows and commits once per account. Owner adapters govern foreign data lifecycle. Reject pending caller state; clear tracking before retry attempts and after failed accounts so rolled-back outbox additions cannot leak into later commits.",
       "technicalSourceSha256": "a23bbb43ad393c26bff7bcc59452ed63c46cc81ef7675885bebdcb0c53262e39"
     },
-    "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs": {
-      "module": "Users",
-      "capabilities": [
-        "entity:WaistEntry"
-      ],
-      "reason": "Users reads the latest BodyMetrics waist value for profile projection; no BodyMetrics mutation."
-    },
-    "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs": {
-      "module": "Users",
-      "capabilities": [
-        "entity:WeightEntry"
-      ],
-      "reason": "Users reads the latest BodyMetrics weight value for profile projection; no BodyMetrics mutation."
-    },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",
       "capabilities": [
@@ -1215,7 +1201,6 @@
     "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs": {
       "module": "Users",
       "capabilities": [
-        "context:Entry",
         "entity:Role",
         "entity:User",
         "entity:UserRoleAuditEvent",
@@ -1225,7 +1210,7 @@
         "write:UserRoleAuditEvent"
       ],
       "reason": "Users owns user/security/role-audit writes and tracked attachment; request unit of work owns commit.",
-      "technicalSourceSha256": "5ce820648bcdc22360c7204122f348bdf4a7ad1c3297da9719f9491751831db8"
+      "technicalSourceSha256": "bd77a0834e35c0c5b73e704671472bc4515277a1ed14178e1a91225d9c1736a1"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs": {
       "module": "Users",
@@ -1240,7 +1225,6 @@
     "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs": {
       "module": "Users",
       "capabilities": [
-        "context:Database",
         "entity:Role",
         "entity:User",
         "entity:UserRole",
@@ -1250,7 +1234,7 @@
         "write:UserRole"
       ],
       "reason": "Users owns atomic role changes and security-version updates; SQL is restricted to UserRoles/Roles/Users.",
-      "technicalSourceSha256": "05ed0ca91646c685f911b5ceea56b03f876bfd10cb9372ce997b83e2b8d3419d"
+      "technicalSourceSha256": "48b61d31ad1184a979a151ddd52dd70063a999db24bd0f4a52c4012940a5ea1c"
     },
     "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs": {
       "module": "Wearables",
@@ -1644,6 +1628,37 @@
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
       "technicalSourceSha256": "9c61d5b5fcc0c0de549d05fa4c34893b83e3149b89850fb655af25c89021b7ee"
+    },
+    "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:WeightEntry"
+      ],
+      "reason": "Host-composed scalar BodyMetrics read for Users goals; preserves owner filtering, date/creation ordering, nullable empty result and cancellation."
+    },
+    "FoodDiary.ReadModel.Composition/Users/UserCurrentWaistProvider.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:WaistEntry"
+      ],
+      "reason": "Host-composed scalar BodyMetrics read for Users goals; preserves owner filtering, date/creation ordering, nullable empty result and cancellation."
+    },
+    "Modules/Users/Infrastructure/UsersModuleRegistration.cs": {
+      "module": "Users",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database",
+        "entity:Role",
+        "entity:User",
+        "entity:UserRole",
+        "entity:UserRoleAuditEvent",
+        "tracked:Role",
+        "tracked:User",
+        "tracked:UserRole",
+        "tracked:UserRoleAuditEvent"
+      ],
+      "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
+      "technicalSourceSha256": "662b3378a74792e63635cf40e5d112279823a61b4e28aa480996dedefbf7e207"
     }
   }
 }

@@ -8,16 +8,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.Admin.Domain.csproj" />
-    <ProjectReference Include="Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Admin.Domain.csproj" />
+    <ProjectReference Include="Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>

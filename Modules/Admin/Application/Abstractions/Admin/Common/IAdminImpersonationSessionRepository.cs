@@ -1,3 +1,0 @@
-namespace FoodDiary.Application.Abstractions.Admin.Common;
-
-public interface IAdminImpersonationSessionRepository : IAdminImpersonationSessionReadRepository, IAdminImpersonationSessionWriteRepository;

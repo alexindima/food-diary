@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5359,
+    "productionFiles": 5348,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -3362,11 +3362,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Modules.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 45,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.34
+      "structuralRiskScore": 8.4
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
@@ -4634,11 +4634,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 71,
+      "nonBlankLines": 75,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.42
+      "structuralRiskScore": 1.5
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -4655,6 +4655,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.4
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Users/UserCurrentWaistProvider.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Telegram.Bot/BotInputParser.cs",
@@ -14593,60 +14609,12 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Admin/Application/Common/IAdminAiUsageReadService.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Admin/Application/Common/IAdminAuditReadService.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "Modules/Admin/Application/Common/IAdminBillingReadService.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
-    },
-    {
-      "path": "Modules/Admin/Application/Common/IAdminContentReadService.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "Modules/Admin/Application/Common/IAdminDashboardOverviewReadService.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
       "path": "Modules/Admin/Application/Common/IAdminDashboardReadService.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Admin/Application/Common/IAdminUserLoginReadService.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Admin/Application/Common/IAdminUserReadService.cs",
@@ -14658,11 +14626,11 @@
     },
     {
       "path": "Modules/Admin/Application/DependencyInjection.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Admin/Application/Internal/Validation/EnumFilterParser.cs",
@@ -14922,11 +14890,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQuery.cs",
@@ -14938,11 +14906,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryHandler.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
+      "nonBlankLines": 41,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 7.32
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryValidator.cs",
@@ -14986,11 +14954,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.46
+      "structuralRiskScore": 2.48
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs",
@@ -15002,11 +14970,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
+      "nonBlankLines": 22,
+      "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.24
+      "structuralRiskScore": 8.44
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQuery.cs",
@@ -15018,11 +14986,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQueryHandler.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
+      "structuralRiskScore": 2.48
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQuery.cs",
@@ -15034,11 +15002,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
+      "structuralRiskScore": 2.48
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQuery.cs",
@@ -15074,11 +15042,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.48
+      "structuralRiskScore": 2.54
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryValidator.cs",
@@ -15098,11 +15066,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQueryHandler.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
+      "nonBlankLines": 38,
+      "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
+      "structuralRiskScore": 19.26
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDashboardSummary/GetAdminDashboardSummaryQuery.cs",
@@ -15130,11 +15098,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQuery.cs",
@@ -15146,11 +15114,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryHandler.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.36
+      "structuralRiskScore": 2.46
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryValidator.cs",
@@ -15170,11 +15138,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQuery.cs",
@@ -15298,11 +15266,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
+      "structuralRiskScore": 3.92
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryValidator.cs",
@@ -15338,11 +15306,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryHandler.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
+      "nonBlankLines": 52,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.38
+      "structuralRiskScore": 6.04
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryValidator.cs",
@@ -15362,11 +15330,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQueryHandler.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQuery.cs",
@@ -15378,11 +15346,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 5.58
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQuery.cs",
@@ -15425,52 +15393,12 @@
       "structuralRiskScore": 2.58
     },
     {
-      "path": "Modules/Admin/Application/Services/AdminAiUsageReadService.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.38
-    },
-    {
-      "path": "Modules/Admin/Application/Services/AdminAuditReadService.cs",
-      "nonBlankLines": 52,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
-    },
-    {
       "path": "Modules/Admin/Application/Services/AdminBillingQueryFilters.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 51,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.92
-    },
-    {
-      "path": "Modules/Admin/Application/Services/AdminBillingReadService.cs",
-      "nonBlankLines": 98,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.96
-    },
-    {
-      "path": "Modules/Admin/Application/Services/AdminContentReadService.cs",
-      "nonBlankLines": 63,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.76
-    },
-    {
-      "path": "Modules/Admin/Application/Services/AdminDashboardOverviewReadService.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.26
+      "structuralRiskScore": 7.02
     },
     {
       "path": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
@@ -15479,14 +15407,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.44
-    },
-    {
-      "path": "Modules/Admin/Application/Services/AdminUserLoginReadService.cs",
-      "nonBlankLines": 66,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.32
     },
     {
       "path": "Modules/Admin/Application/Services/AdminUserReadService.cs",
@@ -39114,19 +39034,19 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 3,
+      "nonBlankLines": 21,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.82
+      "structuralRiskScore": 6.42
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs",
-      "nonBlankLines": 216,
-      "decisionPoints": 22,
+      "nonBlankLines": 237,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 37.32
+      "structuralRiskScore": 48.24
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
@@ -39137,68 +39057,60 @@
       "structuralRiskScore": 23.46
     },
     {
-      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 2,
+      "nonBlankLines": 100,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.22
+      "structuralRiskScore": 20
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 2,
+      "nonBlankLines": 40,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.66
+      "structuralRiskScore": 6.8
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 9,
+      "nonBlankLines": 93,
+      "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.64
+      "structuralRiskScore": 30.36
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
+      "nonBlankLines": 28,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
+      "structuralRiskScore": 5.06
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
-      "nonBlankLines": 90,
-      "decisionPoints": 8,
+      "nonBlankLines": 96,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.8
+      "structuralRiskScore": 16.92
     },
     {
-      "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "nonBlankLines": 41,
+      "path": "Modules/Users/Infrastructure/Persistence/UsersDbContext.cs",
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+      "nonBlankLines": 63,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.76
     },
     {
       "path": "Modules/Users/Presentation.Contracts/Features/Users/Models/DashboardLayoutHttpModel.cs",
@@ -47374,10 +47286,11 @@
       "name": "GetAdminAiPromptsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 1,
+      "line": 9,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47386,7 +47299,7 @@
       "name": "GetAdminAiUsageSummaryQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryHandler.cs",
-      "line": 7,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
@@ -47410,7 +47323,7 @@
       "name": "GetAdminBillingPaymentsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
-      "line": 8,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
@@ -47422,7 +47335,7 @@
       "name": "GetAdminBillingRevenueSummaryQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
-      "line": 7,
+      "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
@@ -47434,7 +47347,7 @@
       "name": "GetAdminBillingSubscriptionsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQueryHandler.cs",
-      "line": 8,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
@@ -47446,7 +47359,7 @@
       "name": "GetAdminBillingWebhookEventsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
-      "line": 8,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
@@ -47470,10 +47383,11 @@
       "name": "GetAdminContentReportsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
-      "line": 12,
-      "testReferenceCount": 1,
+      "line": 13,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47482,7 +47396,7 @@
       "name": "GetAdminDashboardOverviewQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQueryHandler.cs",
-      "line": 7,
+      "line": 10,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminDashboardOverviewTests.cs"
@@ -47506,10 +47420,11 @@
       "name": "GetAdminEmailTemplatesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 1,
+      "line": 9,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47518,7 +47433,7 @@
       "name": "GetAdminImpersonationSessionsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryHandler.cs",
-      "line": 8,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
@@ -47530,10 +47445,11 @@
       "name": "GetAdminLessonsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 1,
+      "line": 9,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47602,10 +47518,12 @@
       "name": "GetAdminTemplateRevisionsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 1,
+      "line": 10,
+      "testReferenceCount": 3,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47614,7 +47532,7 @@
       "name": "GetAdminUserLoginEventsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryHandler.cs",
-      "line": 8,
+      "line": 10,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs"
@@ -47626,7 +47544,7 @@
       "name": "GetAdminUserLoginSummaryQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQueryHandler.cs",
-      "line": 7,
+      "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs"
@@ -47650,7 +47568,7 @@
       "name": "GetAdminUserRoleAuditQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
-      "line": 7,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"

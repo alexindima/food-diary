@@ -11,61 +11,100 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class UserProfileProjectionService(FoodDiaryDbContext context) :
+public sealed class UserProfileProjectionService(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) :
     ICurrentUserAccessService, IUserAiProfileReadService, IUserDashboardProfileReadService,
     IUserDietologistProfileReadService, IUserGamificationProfileReadService,
     IUserHydrationProfileReadService, IUserTdeeProfileReadService, IUserWeeklyCheckInProfileReadService {
-    private IQueryable<User> AccessibleUsers => context.Users.AsNoTracking()
+    private IQueryable<User> AccessibleUsers => users.AsNoTracking()
         .Where(user => user.IsActive && user.DeletedAt == null);
 
-    public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        await AccessibleUsers.AsNoTracking().AnyAsync(user => user.Id == userId, cancellationToken).ConfigureAwait(false)
+    public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await AccessibleUsers.AsNoTracking().AnyAsync(user => user.Id == userId, cancellationToken).ConfigureAwait(false)
             ? null : Errors.Authentication.InvalidToken;
+    }
 
-    public Task<Result<UserAiProfileModel>> GetAiProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        ReadAsync(userId, user => new UserAiProfileModel(user.Id, user.Language,
-            user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null), cancellationToken);
+    public async Task<Result<UserAiProfileModel>> GetAiProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await ReadAsync(userId, user => new UserAiProfileModel(user.Id, user.Language,
+            user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null), cancellationToken).ConfigureAwait(false);
+    }
 
-    public Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        ReadAsync(userId, user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Language,
+    public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await ReadAsync(userId, user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Language,
             user.DashboardLayoutJson, user.DesiredWeightKg, user.DesiredWaistCm, user.HydrationGoal, user.WaterGoal,
             user.ProteinTarget, user.FatTarget, user.CarbTarget, user.FiberTarget,
             new UserCalorieSchedule(user.DailyCalorieTarget, user.CalorieCyclingEnabled,
                 user.MondayCalories, user.TuesdayCalories, user.WednesdayCalories, user.ThursdayCalories,
-                user.FridayCalories, user.SaturdayCalories, user.SundayCalories), user.TimeZoneId), cancellationToken);
+                user.FridayCalories, user.SaturdayCalories, user.SundayCalories), user.TimeZoneId), cancellationToken).ConfigureAwait(false);
+    }
 
-    public Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        ReadAsync(userId, user => new UserGamificationProfileModel(new UserCalorieSchedule(
+    public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await ReadAsync(userId, user => new UserGamificationProfileModel(new UserCalorieSchedule(
             user.DailyCalorieTarget, user.CalorieCyclingEnabled, user.MondayCalories, user.TuesdayCalories,
             user.WednesdayCalories, user.ThursdayCalories, user.FridayCalories, user.SaturdayCalories,
-            user.SundayCalories)), cancellationToken);
+            user.SundayCalories)), cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         UserDietologistProfileModel? profile = await FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         return profile is null ? Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken) : Result.Success(profile);
     }
 
-    public Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) =>
-        DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)).FirstOrDefaultAsync(cancellationToken);
+    public async Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
 
-    public Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) =>
-        DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Email == email)).FirstOrDefaultAsync(cancellationToken);
+    public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Email == email)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
 
     private static IQueryable<UserDietologistProfileModel> DietologistProfiles(IQueryable<User> users) =>
         users.AsNoTracking().Select(user => new UserDietologistProfileModel(user.Id.Value, user.Email, user.FirstName,
             user.LastName, user.Language, user.UserRoles.Any(role => role.Role.Name == RoleNames.Dietologist)));
 
-    public Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        ReadAsync(userId, user => new UserHydrationProfileModel(user.HydrationGoal ?? user.WaterGoal), cancellationToken);
+    public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await ReadAsync(userId, user => new UserHydrationProfileModel(user.HydrationGoal ?? user.WaterGoal), cancellationToken).ConfigureAwait(false);
+    }
 
-    public Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        ReadAsync(userId, user => new UserTdeeProfileModel(
+    public async Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await ReadAsync(userId, user => new UserTdeeProfileModel(
             User.CalculateBmr(user.WeightKg, user.HeightCm, user.BirthDate, user.Gender),
             User.CalculateEstimatedTdee(User.CalculateBmr(user.WeightKg, user.HeightCm, user.BirthDate, user.Gender), user.ActivityLevel),
-            user.WeightKg, user.DesiredWeightKg, user.DailyCalorieTarget), cancellationToken);
+            user.WeightKg, user.DesiredWeightKg, user.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
+    }
 
-    public Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.DailyCalorieTarget), cancellationToken);
+    public async Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
+    }
 
     private async Task<Result<T>> ReadAsync<T>(UserId userId, Expression<Func<User, T>> projection, CancellationToken cancellationToken) where T : class {
         T? profile = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId).Select(projection)

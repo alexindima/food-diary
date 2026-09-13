@@ -8,8 +8,8 @@ worktree before branch `codex/admin-module-extraction` was created.
 | Source responsibility | Destination / retained owner and evidence |
 | --- | --- |
 | 135 production C# files in FoodDiary.Application.Admin: commands, queries, validators, mappings, read orchestration and DI | Modules/Admin/Application; preserve FoodDiary.Application.Admin assembly and CLR namespaces. Other owners' capabilities are consumed unchanged. |
-| AdminBilling ports and six read/filter models | Modules/Admin/Application/Abstractions. AdminBillingRepository performs read-only joins over Billing and Users for administrative reports; it grants no Billing write ownership. |
-| AdminImpersonationSession repository ports and read model | Modules/Admin/Application/Abstractions. StartAdminImpersonationCommandHandler creates the session; AdminAuditReadService reads it. |
+| AdminBilling ports and six read/filter models | Modules/Admin/Application.Abstractions. AdminBillingRepository performs read-only joins over Billing and Users for administrative reports; it grants no Billing write ownership. |
+| AdminImpersonationSession repository ports and read model | Modules/Admin/Application.Abstractions. StartAdminImpersonationCommandHandler creates the session; AdminAuditReadService reads it. |
 | AdminImpersonationSession entity | Modules/Admin/Domain. It uses scalar UserId only. Its EF configuration has two HasOne<User>().WithMany() relationships, no inverse User navigation. No central Domain consumer was found. The dependency remains one-way toward central Domain. |
 | AdminImpersonationSessionConfiguration | Modules/Admin/Infrastructure/Model, explicitly registered by the shared context. Keep CLR namespace, keys, indexes, lengths, timestamp type and Restrict deletion unchanged. |
 | AdminBillingRepository and AdminImpersonationSessionRepository | Modules/Admin/Infrastructure. Preserve SQL, pagination, escaping, tracking, cancellation and scoped interface aliases. |

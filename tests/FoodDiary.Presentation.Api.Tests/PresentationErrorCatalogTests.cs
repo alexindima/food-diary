@@ -69,7 +69,7 @@ public sealed class PresentationErrorCatalogTests {
                 typeof(FoodDiary.Application.Abstractions.FavoriteRecipes.Common.FavoriteRecipeErrors),
                 typeof(FoodDiary.Application.Abstractions.Images.Common.ImageErrors),
                 typeof(FoodDiary.Application.Abstractions.Lessons.Common.LessonErrors),
-                typeof(FoodDiary.Application.Abstractions.Admin.Common.AdminMailInboxErrors),
+                typeof(FoodDiary.Modules.Admin.Application.Abstractions.Common.AdminMailInboxErrors),
                 typeof(FoodDiary.Application.Abstractions.Meals.Common.MealErrors),
                 typeof(FoodDiary.Application.Abstractions.MealPlans.Common.MealPlanErrors),
                 typeof(FoodDiary.Application.Abstractions.Products.Common.ProductErrors),

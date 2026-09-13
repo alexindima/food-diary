@@ -918,9 +918,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         }
         await context.SaveChangesAsync();
 
-        var repository = new UserRepository(context);
-        var administrationReader = new UserAdministrationReadRepository(context);
-        var roleCatalogService = new UserRoleCatalogService(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
+        var administrationReader = new UserAdministrationReadRepository(context.Users, context.UserRoles);
+        var roleCatalogService = new UserRoleCatalogService(context.Roles);
         var added = User.Create($"added-{Guid.NewGuid():N}@example.com", "hash");
         await repository.AddAsync(added);
         await context.SaveChangesAsync();
@@ -1769,7 +1769,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         UserId userId,
         FastingPlanId planId,
         DateTime now) {
-        var occurrenceRepository = new FastingOccurrenceRepository(context.FastingOccurrences, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
+        var occurrenceRepository = new FastingOccurrenceRepository(context.FastingOccurrences, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context.Users));
         var active = FastingOccurrence.Create(planId, userId, FastingOccurrenceKind.FastingWindow, now.AddHours(-4), 1, targetHours: 16);
         var scheduled = FastingOccurrence.Schedule(planId, userId, FastingOccurrenceKind.EatingWindow, now.AddHours(20), 2, targetHours: 8);
         await occurrenceRepository.AddAsync(active);

@@ -538,3 +538,8 @@ dotnet_diagnostic.IDE0130.severity = none
 
 [Modules/Dashboard/Contracts/Queries/**/*.cs]
 dotnet_diagnostic.IDE0130.severity = none
+
+# Admin port project uses its project root namespace and physical folder names.
+[Modules/Admin/Application.Abstractions/**/*.cs]
+dotnet_style_namespace_match_folder = true
+dotnet_diagnostic.IDE0130.severity = error

@@ -1,11 +1,11 @@
-using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
@@ -59,7 +59,7 @@ public partial class AdminFeatureTests {
         var from = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Local);
         var to = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Local);
         var query = new GetAdminBillingRevenueSummaryQuery(from, to);
-        var handler = new GetAdminBillingRevenueSummaryQueryHandler(new AdminBillingReadService(repository));
+        var handler = new GetAdminBillingRevenueSummaryQueryHandler(repository);
 
         Result<AdminBillingRevenueSummaryReadModel> result = await handler.Handle(query, CancellationToken.None);
 
@@ -73,7 +73,7 @@ public partial class AdminFeatureTests {
     public async Task GetAdminBillingRevenueSummaryHandler_WhenRangeIsInvalid_ReturnsValidationFailure() {
         var instant = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
         var handler = new GetAdminBillingRevenueSummaryQueryHandler(
-            new AdminBillingReadService(new RecordingAdminBillingRepository()));
+            new RecordingAdminBillingRepository());
 
         Result<AdminBillingRevenueSummaryReadModel> result = await handler.Handle(
             new GetAdminBillingRevenueSummaryQuery(instant, instant),
@@ -84,15 +84,12 @@ public partial class AdminFeatureTests {
     }
 
     [Fact]
-    public async Task AdminBillingReadService_WhenRangeIsOmitted_UsesCurrentUtcMonth() {
+    public async Task GetAdminBillingRevenueSummaryQueryHandler_WhenRangeIsOmitted_UsesCurrentUtcMonth() {
         var repository = new RecordingAdminBillingRepository();
         var timeProvider = new FixedDateTimeProvider(new DateTime(2026, 8, 8, 12, 0, 0, DateTimeKind.Utc));
-        var service = new AdminBillingReadService(repository, timeProvider);
+        var handler = new GetAdminBillingRevenueSummaryQueryHandler(repository, timeProvider);
 
-        Result<AdminBillingRevenueSummaryReadModel> result = await service.GetRevenueSummaryAsync(
-            fromUtc: null,
-            toUtc: null,
-            CancellationToken.None);
+        Result<AdminBillingRevenueSummaryReadModel> result = await handler.Handle(new GetAdminBillingRevenueSummaryQuery(FromUtc: null, ToUtc: null), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Multiple(
@@ -126,7 +123,7 @@ public partial class AdminFeatureTests {
             DateTime.UtcNow,
             ModifiedOnUtc: null);
         repository.PaymentsResponse = ([payment], 41);
-        var handler = new GetAdminBillingPaymentsQueryHandler(new AdminBillingReadService(repository));
+        var handler = new GetAdminBillingPaymentsQueryHandler(repository);
 
         Result<PagedResponse<AdminBillingPaymentReadModel>> result = await handler.Handle(
             new GetAdminBillingPaymentsQuery(
@@ -158,7 +155,7 @@ public partial class AdminFeatureTests {
     [InlineData(" custom-provider ", "custom-provider")]
     public async Task GetAdminBillingPaymentsHandler_NormalizesProviderFilter(string? provider, string? expectedProvider) {
         var repository = new RecordingAdminBillingRepository();
-        var handler = new GetAdminBillingPaymentsQueryHandler(new AdminBillingReadService(repository));
+        var handler = new GetAdminBillingPaymentsQueryHandler(repository);
 
         Result<PagedResponse<AdminBillingPaymentReadModel>> result = await handler.Handle(
             new GetAdminBillingPaymentsQuery(1, 20, provider, Status: null, Kind: null, Search: null, FromUtc: null, ToUtc: null),
@@ -191,7 +188,7 @@ public partial class AdminFeatureTests {
             DateTime.UtcNow,
             ModifiedOnUtc: null);
         repository.SubscriptionsResponse = ([subscription], 1);
-        var handler = new GetAdminBillingSubscriptionsQueryHandler(new AdminBillingReadService(repository));
+        var handler = new GetAdminBillingSubscriptionsQueryHandler(repository);
 
         Result<PagedResponse<AdminBillingSubscriptionReadModel>> result = await handler.Handle(
             new GetAdminBillingSubscriptionsQuery(1, 20, "yookassa", "Active", Search: null, FromUtc: null, ToUtc: null),
@@ -219,7 +216,7 @@ public partial class AdminFeatureTests {
             DateTime.UtcNow,
             ModifiedOnUtc: null);
         repository.WebhookEventsResponse = ([webhookEvent], 1);
-        var handler = new GetAdminBillingWebhookEventsQueryHandler(new AdminBillingReadService(repository));
+        var handler = new GetAdminBillingWebhookEventsQueryHandler(repository);
 
         Result<PagedResponse<AdminBillingWebhookEventReadModel>> result = await handler.Handle(
             new GetAdminBillingWebhookEventsQuery(1, 20, "paddle", "Processed", "evt_123", FromUtc: null, ToUtc: null),
@@ -248,8 +245,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", isActive: true);
-        GetAdminAiPromptsQueryHandler handler = new(CreateAdminContentReadService(
-            aiPromptTemplateRepository: new InMemoryAiPromptTemplateRepository(template)));
+        GetAdminAiPromptsQueryHandler handler = new(new AiAdministrationReadService(Substitute.For<IAiUsageReadRepository>(), new InMemoryAiPromptTemplateRepository(template)));
 
         Result<IReadOnlyList<AdminAiPromptModel>> result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
 
@@ -291,9 +287,9 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task GetAdminAiUsageSummaryQueryHandler_WithInvertedRange_ReturnsValidationFailure() {
         var repository = new RecordingAiUsageRepository();
-        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
+        var handler = new GetAdminAiUsageSummaryQueryHandler(
             new AiAdministrationReadService(repository, Substitute.For<IAiPromptTemplateReadModelRepository>()),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc))));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 4, 1), new DateOnly(2026, 3, 1)),
@@ -309,9 +305,9 @@ public partial class AdminFeatureTests {
     public async Task GetAdminAiUsageSummaryQueryHandler_UsesDateTimeProviderForDefaultRange() {
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc));
         var aiUsageRepository = new RecordingAiUsageRepository();
-        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
+        var handler = new GetAdminAiUsageSummaryQueryHandler(
             new AiAdministrationReadService(aiUsageRepository, Substitute.For<IAiPromptTemplateReadModelRepository>()),
-            dateTimeProvider));
+            dateTimeProvider);
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(From: null, To: null), CancellationToken.None);
 
@@ -331,11 +327,11 @@ public partial class AdminFeatureTests {
             ByOperation: [new AiUsageBreakdown("vision", 20, 8, 12)],
             ByModel: [new AiUsageBreakdown("gpt-test", 30, 12, 18)],
             ByUser: [new AiUsageUserSummary(userId, "user@example.com", 40, 16, 24)]);
-        var handler = new GetAdminAiUsageSummaryQueryHandler(new AdminAiUsageReadService(
+        var handler = new GetAdminAiUsageSummaryQueryHandler(
             new AiAdministrationReadService(
                 new RecordingAiUsageRepository(summary),
                 Substitute.For<IAiPromptTemplateReadModelRepository>()),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc))));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 3, 1), new DateOnly(2026, 3, 31)),
@@ -477,7 +473,7 @@ public partial class AdminFeatureTests {
             "Incorrect content");
         report.MarkDismissed(UserId.New(), "  resolved  ");
         var repository = new CountingContentReportRepository(0, [report]);
-        GetAdminContentReportsQueryHandler handler = new(CreateAdminContentReadService(contentReportRepository: repository));
+        GetAdminContentReportsQueryHandler handler = new(new ContentReportAdministrationReadService(repository));
 
         Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(new GetAdminContentReportsQuery("dismissed", 0, 0), CancellationToken.None);
 
@@ -494,7 +490,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task GetAdminContentReportsQueryHandler_WithExtremePaging_BoundsLimitAndPreventsOffsetOverflow() {
         var repository = new CountingContentReportRepository(0);
-        GetAdminContentReportsQueryHandler handler = new(CreateAdminContentReadService(contentReportRepository: repository));
+        GetAdminContentReportsQueryHandler handler = new(new ContentReportAdministrationReadService(repository));
 
         Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(
             new GetAdminContentReportsQuery(Status: null, int.MaxValue, int.MaxValue),
@@ -517,8 +513,7 @@ public partial class AdminFeatureTests {
             "<b>Body</b>",
             "Body",
             isActive: true);
-        GetAdminEmailTemplatesQueryHandler handler = new(CreateAdminContentReadService(
-            emailTemplateRepository: new InMemoryEmailTemplateRepository(template)));
+        GetAdminEmailTemplatesQueryHandler handler = new(new EmailTemplateAdministrationReadService(new InMemoryEmailTemplateRepository(template)));
 
         Result<IReadOnlyList<AdminEmailTemplateModel>> result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
 
@@ -545,10 +540,7 @@ public partial class AdminFeatureTests {
         var repository = new RecordingImpersonationSessionRepository {
             PagedResponse = ([session], 45),
         };
-        var handler = new GetAdminImpersonationSessionsQueryHandler(new AdminAuditReadService(
-            Substitute.For<IAdminUserReadService>(),
-            Substitute.For<IAdminUserRoleAuditReadRepository>(),
-            repository));
+        var handler = new GetAdminImpersonationSessionsQueryHandler(repository);
 
         Result<PagedResponse<AdminImpersonationSessionReadModel>> result = await handler.Handle(new GetAdminImpersonationSessionsQuery(0, 999, " target "), CancellationToken.None);
 
@@ -562,10 +554,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
-            new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
-            new RecordingUserRoleAuditRepository(),
-            Substitute.For<IAdminImpersonationSessionReadRepository>()));
+        var handler = new GetAdminUserRoleAuditQueryHandler(new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
+            new RecordingUserRoleAuditRepository());
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.Empty, 10), CancellationToken.None);
 
@@ -575,10 +565,8 @@ public partial class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WhenUserMissing_ReturnsNotFound() {
-        var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
-            new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
-            new RecordingUserRoleAuditRepository(),
-            Substitute.For<IAdminImpersonationSessionReadRepository>()));
+        var handler = new GetAdminUserRoleAuditQueryHandler(new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
+            new RecordingUserRoleAuditRepository());
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.NewGuid(), 10), CancellationToken.None);
 
@@ -599,10 +587,8 @@ public partial class AdminFeatureTests {
             "test",
             DateTime.UtcNow);
         var repository = new RecordingUserRoleAuditRepository([auditEvent]);
-        var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
-            new InMemoryUserRepository(user, [RoleNames.Admin]),
-            repository,
-            Substitute.For<IAdminImpersonationSessionReadRepository>()));
+        var handler = new GetAdminUserRoleAuditQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]),
+            repository);
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 999), CancellationToken.None);
 

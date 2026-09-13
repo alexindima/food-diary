@@ -1,5 +1,5 @@
 using System.Net;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Admin.Commands.CreateAdminUser;

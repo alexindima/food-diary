@@ -6,6 +6,8 @@ Rules for all logical modules under `Modules/`. A module-specific `AGENTS.md` ma
 
 ## Physical boundaries
 
+- Place new .NET projects in sibling directories; do not put a `.csproj` beneath another project's directory. Existing physical nesting is tracked by `PhysicalProjectLayoutTests`; remove its exact legacy entry when relocating a project, and do not add exceptions for new projects.
+
 - Keep module-owned HTTP controllers, request/response DTOs, mappings, and presentation-only processors in the module's `Presentation` project.
 - A module Presentation project may reference the shared `FoodDiary.Presentation.Api` HTTP kernel and its own Application, Contracts, or Domain contracts. Do not reference another module's controller-bearing Presentation assembly; consume its Presentation.Contracts and pure Presentation.Mappings when composing responses.
 - A response type genuinely reused by another module may live in a `Presentation.Contracts` project that depends only on other wire DTO contracts owned by the defining module; do not duplicate the type or introduce a reverse Presentation-project reference merely to reuse its wire shape.
@@ -14,6 +16,14 @@ Rules for all logical modules under `Modules/`. A module-specific `AGENTS.md` ma
 - Every module Presentation assembly must be registered explicitly by the Web API composition root so MVC controller discovery cannot depend on accidental transitive references.
 - Presentation projects must not reference Infrastructure or executable host projects.
 - Module-owned controller and HTTP-mapping tests belong under `Modules/<Module>/tests/` in a Presentation test project that references the owning module Presentation assembly and actual consumed narrow Contracts/Domain.Contracts owners listed in the exact dependency matrix. Keep shared filters, binders, conventions, composite endpoints, and cross-module HTTP tests in the central Presentation test project.
+
+## Application service extraction
+
+- Keep logic specific to one command/query in its existing handler by default, using private methods when helpful. Do not add a service, interface and DI registration solely to keep a handler thin.
+- Extract a service when it owns a cohesive operation reused by multiple production callers, a substantial independent algorithm, an integration boundary or a distinct lifecycle (for example, an application workflow invoked by a background worker).
+- Evaluate reuse per operation, not per class: several unrelated methods each called by one handler do not establish reuse. Tests and DI registrations are not production callers.
+- During review, flag handlers that only forward to a same-module application service with one implementation and one caller per operation. Treat this as a simplification candidate, not an automatic ban on single-consumer services; preserve justified ports, adapters and workflows.
+- When inlining, retain owner contract boundaries, validation, defaults, mapping, cancellation and privacy behavior. Remove the obsolete interface and DI registration and adapt existing behavioral tests.
 
 ## Verification
 

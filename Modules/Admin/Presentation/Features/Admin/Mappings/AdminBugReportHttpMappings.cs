@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminBugReports;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;

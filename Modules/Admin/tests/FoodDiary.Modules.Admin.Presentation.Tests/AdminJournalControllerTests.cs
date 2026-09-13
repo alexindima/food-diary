@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminAudit;

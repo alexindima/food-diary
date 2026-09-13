@@ -10,12 +10,12 @@ using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Identity.Email.Services;
-using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Abstractions.Ai.Common;
@@ -26,7 +26,6 @@ using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Social;
@@ -988,20 +987,6 @@ public partial class AdminFeatureTests {
             return Task.FromResult(MarkReadResult);
         }
     }
-
-    private static IAdminContentReadService CreateAdminContentReadService(
-        INutritionLessonReadModelRepository? lessonRepository = null,
-        IEmailTemplateReadModelRepository? emailTemplateRepository = null,
-        IAiPromptTemplateReadModelRepository? aiPromptTemplateRepository = null,
-        IContentReportReadModelRepository? contentReportRepository = null) =>
-        new AdminContentReadService(
-            new LessonAdministrationReadService(lessonRepository ?? Substitute.For<INutritionLessonReadModelRepository>()),
-            new EmailTemplateAdministrationReadService(emailTemplateRepository ?? Substitute.For<IEmailTemplateReadModelRepository>()),
-            new AiAdministrationReadService(
-                Substitute.For<IAiUsageReadRepository>(),
-                aiPromptTemplateRepository ?? Substitute.For<IAiPromptTemplateReadModelRepository>()),
-            new ContentReportAdministrationReadService(
-                contentReportRepository ?? Substitute.For<IContentReportReadModelRepository>()));
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryEmailTemplateRepository(params EmailTemplate[] templates) : IEmailTemplateRepository {

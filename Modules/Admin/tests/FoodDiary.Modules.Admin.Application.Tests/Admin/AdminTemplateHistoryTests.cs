@@ -1,3 +1,4 @@
+using FoodDiary.Application.Admin.Queries.GetAdminTemplateRevisions;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
@@ -5,9 +6,6 @@ using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Services;
-using FoodDiary.Application.ContentReports.Common;
-using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Identity.Email.Services;
@@ -36,8 +34,8 @@ public sealed class AdminTemplateHistoryTests {
         IAiAdministrationReadService ai = new AiAdministrationReadService(Substitute.For<IAiUsageReadRepository>(), aiRepository);
         var revision = new EmailTemplateRevisionReadModel(Guid.NewGuid(), "subject", "html", "text", IsActive: false, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1));
         emailRepository.GetRevisionsAsync("welcome", "en", cancellation.Token).Returns([revision]);
-        var service = new AdminContentReadService(Substitute.For<ILessonAdministrationReadService>(), email, ai, Substitute.For<IContentReportAdministrationReadService>());
-        AdminTemplateRevisionModel actual = Assert.Single(await service.GetTemplateRevisionsAsync("welcome", "en", isAiPrompt: false, cancellation.Token));
+        var service = new GetAdminTemplateRevisionsQueryHandler(email, ai);
+        AdminTemplateRevisionModel actual = Assert.Single((await service.Handle(new GetAdminTemplateRevisionsQuery("welcome", "en", IsAiPrompt: false), cancellation.Token)).Value);
         Assert.Equal(new AdminTemplateRevisionModel(revision.Id, "subject", "html", "text", IsActive: false, Version: null, revision.SavedOnUtc, revision.ArchivedOnUtc), actual);
         Assert.Empty(aiRepository.ReceivedCalls());
     }
@@ -51,8 +49,8 @@ public sealed class AdminTemplateHistoryTests {
         IAiAdministrationReadService ai = new AiAdministrationReadService(Substitute.For<IAiUsageReadRepository>(), aiRepository);
         var revision = new AiPromptRevisionReadModel(Guid.NewGuid(), "prompt", 3, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1));
         aiRepository.GetRevisionsAsync("welcome", "ru", cancellation.Token).Returns([revision]);
-        var service = new AdminContentReadService(Substitute.For<ILessonAdministrationReadService>(), email, ai, Substitute.For<IContentReportAdministrationReadService>());
-        AdminTemplateRevisionModel actual = Assert.Single(await service.GetTemplateRevisionsAsync("welcome", "ru", isAiPrompt: true, cancellation.Token));
+        var service = new GetAdminTemplateRevisionsQueryHandler(email, ai);
+        AdminTemplateRevisionModel actual = Assert.Single((await service.Handle(new GetAdminTemplateRevisionsQuery("welcome", "ru", IsAiPrompt: true), cancellation.Token)).Value);
         Assert.Equal(new AdminTemplateRevisionModel(revision.Id, Subject: null, HtmlBody: null, "prompt", IsActive: true, 3, revision.SavedOnUtc, revision.ArchivedOnUtc), actual);
         Assert.Empty(emailRepository.ReceivedCalls());
     }

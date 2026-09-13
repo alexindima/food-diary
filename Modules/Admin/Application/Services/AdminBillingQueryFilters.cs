@@ -1,4 +1,5 @@
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Billing;
 
@@ -53,4 +54,9 @@ internal static class AdminBillingQueryFilters {
 
     private static DateTime? NormalizeUtc(DateTime? value) =>
         value?.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc) : value?.ToUniversalTime();
+
+    public static PagedResponse<T> ToPagedResponse<T>(IReadOnlyList<T> items, int page, int limit, int totalItems) {
+        int totalPages = (int)Math.Ceiling(totalItems / (double)limit);
+        return new PagedResponse<T>(items, page, limit, totalPages, totalItems);
+    }
 }

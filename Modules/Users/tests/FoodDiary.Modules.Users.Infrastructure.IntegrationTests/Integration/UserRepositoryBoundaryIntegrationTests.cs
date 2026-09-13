@@ -28,7 +28,7 @@ public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixtu
         context.Users.AddRange(active, inactive, deleted);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
 
         Assert.NotNull(active.Email);
         Assert.Equal(active.Id, (await repository.GetByEmailAsync(active.Email))?.Id);
@@ -63,7 +63,7 @@ public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixtu
         context.Users.Add(user);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
 
         Assert.NotNull(user.Email);
         User? byEmail = await repository.GetByEmailAsync(user.Email);
@@ -89,7 +89,7 @@ public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixtu
     [RequiresDockerFact]
     public async Task AddAndDetachedUpdate_StageChangesWithoutBypassingShadowConcurrency() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
         var user = User.Create("staged-boundary@example.com", "hash");
         Assert.Same(user, await repository.AddAsync(user));
         Assert.Equal(EntityState.Added, context.Entry(user).State);
@@ -122,7 +122,7 @@ public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixtu
         context.Users.Add(user);
         await context.SaveChangesAsync();
         Role premium = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
         var rolledBack = UserRoleAuditEvent.Create(user.Id, premium, UserRoleAuditAction.Added, actorUserId: null, source: "users-test", occurredAtUtc: DateTime.UtcNow);
         await using (IDbContextTransaction transaction = await context.Database.BeginTransactionAsync()) {
             user.UpdatePersonalInfo(firstName: "Rolled back");
@@ -162,7 +162,7 @@ public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixtu
     [RequiresDockerFact]
     public async Task LookupMethods_PropagateCancellationWithoutTracking() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new UserRepository(context);
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();
         CancellationToken token = cancellation.Token;

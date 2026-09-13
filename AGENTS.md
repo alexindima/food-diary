@@ -22,7 +22,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Admin logical module: `Modules/Admin/AGENTS.md`
 - Admin Contracts: `Modules/Admin/Contracts/AGENTS.md`
 - Admin application: `Modules/Admin/Application/AGENTS.md`
-- Admin ports: `Modules/Admin/Application/Abstractions/AGENTS.md`
+- Admin ports: `Modules/Admin/Application.Abstractions/AGENTS.md`
 - Admin domain: `Modules/Admin/Domain/AGENTS.md`
 - Admin infrastructure: `Modules/Admin/Infrastructure/AGENTS.md`
 - Admin persistence model: `Modules/Admin/Infrastructure/Model/AGENTS.md`
@@ -268,6 +268,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Do not repeat an application module name as a root folder inside its own `FoodDiary.Application.<Module>` project. Add feature grouping folders only when a module owns multiple distinct areas, such as `BodyMetrics/WeightEntries` and `BodyMetrics/WaistEntries`.
 - Place every application command and query slice in its own feature folder under `Commands/` or `Queries/`; do not put C# files directly in those folders.
 - Keep .NET shared build settings in root `Directory.Build.props`.
+- Place new .NET projects in sibling directories, never inside another project's directory. `PhysicalProjectLayoutTests` rejects new physical `.csproj` nesting; remove resolved entries from its legacy baseline when relocating existing projects instead of adding new exceptions.
 - Keep nullable enabled in C# projects and align namespaces with folders.
 - Use K&R brace style for C# code (opening brace on the same line).
 - Prefer C# primary constructors where applicable.

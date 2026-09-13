@@ -1,0 +1,26 @@
+using FoodDiary.Modules.Admin.Application.Abstractions.Models;
+
+namespace FoodDiary.Modules.Admin.Application.Abstractions.Common;
+
+public interface IAdminMailInboxReader {
+    Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) =>
+        throw new NotSupportedException("Paged message queries are not implemented.");
+
+    Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(
+        int limit,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetFilteredMessagesAsync(
+        int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) =>
+        recipient is null && category is null && unread is null
+            ? GetMessagesAsync(limit, cancellationToken)
+            : throw new NotSupportedException("Filtered message queries are not implemented.");
+
+    Task<AdminMailInboxMessageDetailsModel?> GetMessageAsync(
+        Guid id,
+        CancellationToken cancellationToken);
+
+    Task<bool> MarkMessageReadAsync(
+        Guid id,
+        CancellationToken cancellationToken);
+}

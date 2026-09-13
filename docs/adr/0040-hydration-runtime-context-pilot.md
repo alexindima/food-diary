@@ -327,3 +327,13 @@ Ai usage reporting now uses the owner IAiUsageQuery port implemented by ReadMode
 ### Ai runtime context
 
 AiDbContext applies the five existing root mappings and owned prompt revisions. Scoped usage and template repositories participate in the common UnitOfWork and synchronize its live transaction. AiQuotaRepository and FoodRecognitionJobStore retain fresh contexts and independent short transactions from copied provider options; their retry strategy, locks, idempotency and commit order remain unchanged. Prompt caching resolves the owner context in its own scope. Central migration mappings and the coordinated user-purge bridge remain unchanged; no schema migration is needed.
+
+### Users measurement-read preparation
+
+Current weight and waist reads moved from Users Infrastructure to host ReadModel.Composition using their unchanged Users consumer ports. They retain scalar BodyMetrics projections, requested-user filtering, date/creation ordering and nullable results. This removes foreign measurement access before Users runtime-context extraction; no schema or HTTP changes are involved.
+
+### Users runtime context
+
+UsersDbContext completes the 29 runtime-context extractions. It maps the six owned user, role, audit and goal types; current measurements remain composed scalar reads. Adapters receive narrow owner sets and synchronize the live shared transaction before queries or role SQL. The shared coordinator uses stable save priorities: Users -100, central 0, other modules 100. This preserves new-user FK inserts even when Identity is resolved first, without coupling the coordinator to the Users implementation. Transaction binding and release exclude the central context by identity rather than array position. Domain-event discovery retains resolution order.
+
+The owner explicitly retains TelegramIdentityConflictInterceptor to translate uniqueness failures without leaking provider details. PostgreSQL regressions cover both resolution orders, rollback after dependent failure, role changes after an intermediate save inside an outer transaction, and Telegram conflict translation. Central migrations, composed reads, cross-module FK configuration and the ordered user-cleanup bridge remain; no schema or HTTP change is intended.

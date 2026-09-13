@@ -67,14 +67,18 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "eb97f06dc4eff8f644735658db0a56dd5502c84208b883cda17e6e1fe72c8b3e"
+        },
+        {
           "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "8100c5375cd46fada8e9892cb2a329b1bc05fcb4fe44e31d2dabb918cda2d348"
+          "sha256": "c5c2188c07eacd494e919740029b70273081208ae0ae6fd0b1ddd30a2e1b8b25"
         }
       ],
-      "reason": "All SQL aggregates and DTO shapes preserved; no HTTP route or snapshot change.",
+      "reason": "Users runtime persistence now uses six owned entity mappings and narrow adapters. Stable save priority keeps new Users before central and Identity writes; PostgreSQL tests prove rollback, transaction rejoining and Telegram conflict translation. Current measurement reads remain in composition. HTTP suite passed without contract or migration changes; ADR 0040 and scoped infrastructure guides document the remaining shared bridges.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:06:24.2710317Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:28:13.9515352Z"
     },
     {
       "pageId": "system.architecture",
@@ -83,13 +87,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "b95a20e824e8ee973f0f9e24b50f1ce673e0acc06e41c2db7b462753d6a3d664"
+          "sha256": "c39bdc3d7a18a154383be789a31d8a3dde8344c6f0db377016d5541c96574422"
         }
       ],
-      "reason": "Ai usage read port and staged context extraction documented.",
+      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:06:25.4545240Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:35:10.4879568Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -207,17 +211,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ac96c1d760a4c6ce87c3dbd19e5db4cdd68f47679c8e58d767663a1c5470c075"
+          "sha256": "136ff5b871be1e2aab7d2fe2631749cb86bbcf862ce90b96ba8a32dcb9d69cae"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "b95a20e824e8ee973f0f9e24b50f1ce673e0acc06e41c2db7b462753d6a3d664"
+          "sha256": "c39bdc3d7a18a154383be789a31d8a3dde8344c6f0db377016d5541c96574422"
         }
       ],
-      "reason": "PostgreSQL regression covers upper date boundary and no tracking; DI and architecture checks run.",
+      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:06:26.5884700Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:35:11.3174521Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -226,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "4595f9f1d089422cbd7cd9a14e496805ac067de0f2f44ce5f021259f90bc009d"
+          "sha256": "454f05431124e01fae16e7e2ce500ea8378a12adf9dc614c1daac93f491d3d75"
         }
       ],
-      "reason": "No route or payload changes; all 200 API integration tests passed.",
+      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:37:31.4216576Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:35:12.5697109Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -497,13 +501,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "64ac074319296da0d8b7c80fb04ecf36d6809e491a84ece6df814cd7c742178b"
+          "sha256": "eb97f06dc4eff8f644735658db0a56dd5502c84208b883cda17e6e1fe72c8b3e"
         }
       ],
-      "reason": "Clean solution build; application 261 infrastructure 17 core DI and UoW 77 and new PostgreSQL 3 passed; broad architecture and shared PostgreSQL regression recorded separately",
+      "reason": "Users runtime persistence now uses six owned entity mappings and narrow adapters. Stable save priority keeps new Users before central and Identity writes; PostgreSQL tests prove rollback, transaction rejoining and Telegram conflict translation. Current measurement reads remain in composition. HTTP suite passed without contract or migration changes; ADR 0040 and scoped infrastructure guides document the remaining shared bridges.",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T13:42:20.2622381Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:28:16.4021905Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -816,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fd17c45a0762fe0a9439a885b1405c9e8bed9a7be768d1cbc8e67c2a7f01e733"
+          "sha256": "0d587f471810d01ae7cc5c32cdcadde70cac76bb3b2875315bf1a772e1419a4b"
         }
       ],
-      "reason": "95 Ai unit tests, 69 DI checks and 20 focused architecture checks passed; full PostgreSQL regression running.",
+      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:37:32.5164628Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:35:13.6858283Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -891,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "65cdd0c746ee78a9f1aa7d108d938bd14feaea329b9e9a14b8f55072fc7dc29e"
+          "sha256": "8ff490eca126221625e74b92a0a4ca3f412e474db55060fea26892f9a79664e6"
         }
       ],
-      "reason": "AiDbContext ownership, scoped saves and independent quota/job lifetimes documented in owner guides and ADR 0040.",
+      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:37:33.3176702Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:35:15.2540139Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -906,17 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fd17c45a0762fe0a9439a885b1405c9e8bed9a7be768d1cbc8e67c2a7f01e733"
+          "sha256": "0d587f471810d01ae7cc5c32cdcadde70cac76bb3b2875315bf1a772e1419a4b"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "65cdd0c746ee78a9f1aa7d108d938bd14feaea329b9e9a14b8f55072fc7dc29e"
+          "sha256": "8ff490eca126221625e74b92a0a4ca3f412e474db55060fea26892f9a79664e6"
         }
       ],
-      "reason": "Quota locks, owner filters, idempotency, retention and provider boundaries unchanged; no live provider calls.",
+      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:37:34.3044737Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:35:16.1992286Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1162,13 +1166,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e3182252493252ad3aa0ffeebd01b69b07e09888a5023b615d4416bd02f33691"
+          "sha256": "86d818b8bf35c3514f16baae2d46170a434f6a5e8299609e589e2e68c57c7d85"
         }
       ],
-      "reason": "Ai usage read port and staged context extraction documented.",
+      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
-      "reviewedAtUtc": "2026-09-13T21:06:33.1629217Z"
+      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
+      "reviewedAtUtc": "2026-09-13T22:35:14.5149283Z"
     },
     {
       "pageId": "workflow.review-diff",
