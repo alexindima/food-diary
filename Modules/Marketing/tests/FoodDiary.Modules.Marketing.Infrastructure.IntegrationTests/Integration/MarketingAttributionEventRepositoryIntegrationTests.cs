@@ -11,7 +11,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
     [RequiresDockerFact]
     public async Task Range_DirectChannelExcludesEveryAttributionSignal() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new MarketingAttributionEventRepository(context);
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
         DateTime start = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         MarketingAttributionEventRecord direct = CreateRecord("page_landing", start, "direct") with {
             UtmSource = null,
@@ -35,7 +35,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
     public async Task GetRangeAsync_SeparatesSummaryFromPagedJournalAndPreviousPeriod() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var start = new DateTime(2030, 7, 9, 0, 0, 0, DateTimeKind.Utc);
-        var repository = new MarketingAttributionEventRepository(context);
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
         await repository.AddAsync(CreateRecord("page_landing", start.AddDays(-1), "previous"));
         await repository.AddAsync(CreateRecord("page_landing", start, "first") with { UtmCampaign = "literal_%" });
         await repository.AddAsync(CreateRecord("page_landing", start.AddHours(1), "second") with { UtmCampaign = "literal_%" });
@@ -69,13 +69,13 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
 
         await using (FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString)) {
             await firstContext.Database.MigrateAsync();
-            var firstRepository = new MarketingAttributionEventRepository(firstContext);
+            var firstRepository = new MarketingAttributionEventRepository(firstContext.MarketingAttributionEvents);
             await firstRepository.AddAsync(record);
             await firstContext.SaveChangesAsync();
         }
 
         await using FoodDiaryDbContext duplicateContext = databaseFixture.CreateDbContext(connectionString);
-        var duplicateRepository = new MarketingAttributionEventRepository(duplicateContext);
+        var duplicateRepository = new MarketingAttributionEventRepository(duplicateContext.MarketingAttributionEvents);
         await duplicateRepository.AddAsync(record);
 
         await Assert.ThrowsAsync<DbUpdateException>(() => duplicateContext.SaveChangesAsync());
@@ -85,7 +85,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
     public async Task DeleteOlderThanAsync_DeletesOnlyExpiredEventsWithinBatch() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var cutoffUtc = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
-        var repository = new MarketingAttributionEventRepository(context);
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
 
         await repository.AddAsync(CreateRecord("page_landing", cutoffUtc.AddDays(-3), "session-oldest"));
         await repository.AddAsync(CreateRecord("signup_completed", cutoffUtc.AddDays(-2), "session-older"));
@@ -112,7 +112,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         var userId = Guid.NewGuid();
         var otherUserId = Guid.NewGuid();
         var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
-        var repository = new MarketingAttributionEventRepository(context);
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
 
         await repository.AddAsync(CreateRecord("signup_completed", now.AddMinutes(-10), "session-old", userId));
         await repository.AddAsync(CreateRecord("premium_started", now, "session-new", userId));
@@ -139,7 +139,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var userId = Guid.NewGuid();
         var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
-        var repository = new MarketingAttributionEventRepository(context);
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
         await repository.AddAsync(CreateRecord("premium_started", now, "session-first", userId));
         await repository.AddAsync(CreateRecord("premium_started", now.AddSeconds(1), "session-second", userId));
 
@@ -150,7 +150,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
     public async Task GetLandingAsync_RequiresMatchingServerObservedIdentity() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
-        var repository = new MarketingAttributionEventRepository(context);
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
         await repository.AddAsync(CreateRecord("page_landing", now, "session-trusted"));
         await context.SaveChangesAsync();
 

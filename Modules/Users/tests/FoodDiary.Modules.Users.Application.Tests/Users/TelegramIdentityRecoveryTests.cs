@@ -10,6 +10,17 @@ namespace FoodDiary.Application.Tests.Users;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIdentityRecoveryTests {
+    [Fact]
+    public void CorruptSystemTimeZone_IsRejectedAfterTrimmingInput() {
+        string? requested = null;
+        bool valid = UserTimeZoneInput.IsValid(" Asia/Tbilisi ", id => {
+            requested = id;
+            throw new InvalidTimeZoneException("Corrupt system rules.");
+        });
+        Assert.False(valid);
+        Assert.Equal("Asia/Tbilisi", requested);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

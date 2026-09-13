@@ -128,3 +128,91 @@ user purge and migration relationships remain unchanged.
 PostgreSQL coverage verifies joint User/Recipe/module saves, nested list updates,
 composed plan reads, user cleanup and rollback of an earlier planning write when
 the unique user/recipe like constraint fails. No relational or HTTP change.
+
+## Lessons follow-up
+
+Lessons is the eighth runtime-context owner. Both NutritionLesson and
+UserLessonProgress remain in one context, preserving their navigation and SQL
+completion-count subquery. NutritionLessonRepository receives only these two
+owned sets; AddLessonsModule registers the context through the existing shared
+connection and save coordinator. The context applies the existing owner mappings
+and preserves the central table names. User relationships remain in the central
+migration model; no relational schema or HTTP contract change is needed.
+
+Shared PostgreSQL coverage protects publication and locale filtering, tracked
+publication changes, joint User/lesson/progress saving, User cascade deletion,
+and rollback of central and module changes when a progress owner does not exist.
+
+## DailyAdvices follow-up
+
+DailyAdvices is the ninth runtime-context owner. Its repository receives only the
+DailyAdvice set and still exposes immutable, no-tracking projections. The shared
+connection factory applies the existing one-entity model with the same table
+name. Locale normalization, ordering, tags and selection weights are unchanged.
+This is read isolation; it does not move initializer seeding or add a write API.
+Central migrations retain schema ownership. PostgreSQL coverage verifies shared
+connection identity, locale normalization and absence of tracked entities in
+both contexts after reading.
+
+## Marketing follow-up
+
+Marketing is the tenth runtime-context owner. MarketingDbContext applies the
+existing attribution mapping, including event ID and per-user conversion unique
+constraints. Its repository and reporting partial receive only the owned set.
+Shared unit-of-work saving keeps central and module writes atomic; PostgreSQL
+coverage verifies rollback of central changes for duplicate events and conversions.
+
+Retention remains immediate ExecuteDelete in bounded, cancellation-aware batches,
+independent of tracked SaveChanges. The existing job schedule, retention period,
+report filters, pagination and data visibility are unchanged. Shared provider tests
+also exercise cutoff preservation and range reporting on the owned context.
+No schema or HTTP contract change is required.
+
+## OpenFoodFacts follow-up
+
+OpenFoodFacts is the eleventh runtime-context owner. Its cache still uses immediate
+parameterized PostgreSQL ON CONFLICT updates; moving them behind SaveChanges
+would change concurrency and persistence behavior. The repository uses its own
+context and a live Func<DbTransaction?> accessor supplied only by registration.
+Before cache reads or writes, UseTransactionAsync synchronizes with the current
+shared transaction, including null after completion. The accessor does not begin,
+commit or roll back transactions. This explicitly handles operations occurring
+before the unit-of-work save coordinator enlists module contexts.
+
+Provider tests cover transactions opened after repository resolution, visibility
+before commit, rollback, and subsequent writes after transaction disposal. Existing
+PostgreSQL cache tests now execute through the owner context and protect parallel
+upserts, deduplication, input validation, wildcard escaping and saturated counters.
+Shared migration ownership, SQL text, ranking and HTTP provider behavior remain
+unchanged. No schema or HTTP contract migration is required.
+
+## USDA follow-up
+
+USDA is the twelfth runtime-context owner. UsdaDbContext applies the five existing
+reference-data mappings. Food/nutrient/portion relationships remain inside the
+model; the repository receives only the four sets used by its queries and remains
+no-tracking/read-only. Search, ordering, nutrient joins, batch projections and
+age/gender reference filtering are unchanged. Central importing, migrations and
+historical schema ownership remain in place; HTTP provider behavior is unchanged.
+
+The existing PostgreSQL repository regression now resolves real module DI and
+reads through the owned context after central seeding. It verifies all projection
+families, missing records, age filtering, shared connection identity and empty
+trackers. A model guard checks the exact five entity types and table names.
+
+## ContentReports follow-up
+
+ContentReports is the thirteenth runtime-context owner. Its write repository
+receives only DbSet<ContentReport>; shared saving and central User cascade mapping
+remain intact. Existing IContentReportReadModelRepository and
+IContentReportTargetReadService ports are implemented by ContentReportReadService
+in ReadModel.Composition, which the hosts already register. No new ports or module
+reference to composition are needed.
+
+The read adapter preserves recipe visibility and comment-parent predicates,
+report filters, total count, ordering and pagination, and the two page-bounded
+queries for recipe titles and comment excerpts. Only immutable administrative
+results and booleans leave the adapter. No authorisation, SQL or API behavior
+changes are intended. PostgreSQL coverage retains moderation/visibility tests and
+adds shared-save, foreign-key rollback and User cascade verification. Host DI
+checks now distinguish the owner writer from the composed read aliases.

@@ -601,9 +601,8 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.ContentReports": "[1.0.0, )",
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.PersistenceModel": "[1.0.0, )",

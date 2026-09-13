@@ -546,6 +546,7 @@ public sealed class DependencyInjectionTests {
         IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
         IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
         IHydrationEntryReadModelRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryReadModelRepository>();
+        Assert.IsType<HydrationOperationReceiptRepository>(scope.ServiceProvider.GetRequiredService<IHydrationOperationReceiptRepository>());
         Assert.IsType<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationIntervalReadService>(
             scope.ServiceProvider.GetRequiredService<FoodDiary.Application.Hydration.Common.IHydrationIntervalReadService>());
         IExerciseEntryRepository exerciseRepository = scope.ServiceProvider.GetRequiredService<IExerciseEntryRepository>();
@@ -685,6 +686,10 @@ public sealed class DependencyInjectionTests {
             .Options;
 
         using var context = new FoodDiaryDbContext(options);
+        Assert.Multiple(
+            () => Assert.Equal("FoodRecognitionJobs", context.FoodRecognitionJobs.EntityType.GetTableName()),
+            () => Assert.Equal("TelegramLoginTickets", context.TelegramLoginTickets.EntityType.GetTableName()),
+            () => Assert.Equal("TelegramOperations", context.TelegramOperations.EntityType.GetTableName()));
         var failures = GetUserOwnedEntityTypes()
             .Select(entityType => ValidateUserForeignKey(context, entityType))
             .Where(message => message is not null)
@@ -762,9 +767,13 @@ public sealed class DependencyInjectionTests {
     public static TheoryData<string, string[]> SplitRepositoryRegistrationCases() => new() {
         {
             "FoodDiary.Modules.ContentReports.Infrastructure.Persistence.ContentReportRepository",
+            ["FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportWriteRepository"]
+        },
+        {
+            "FoodDiary.ReadModel.Composition.ContentReports.ContentReportReadService",
             [
                 "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportReadModelRepository",
-                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportWriteRepository",
+                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportTargetReadService",
             ]
         },
         {

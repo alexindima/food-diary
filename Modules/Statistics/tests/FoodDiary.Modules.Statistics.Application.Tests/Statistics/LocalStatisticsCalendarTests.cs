@@ -4,6 +4,29 @@ namespace FoodDiary.Application.Tests.Statistics;
 
 [ExcludeFromCodeCoverage]
 public sealed class LocalStatisticsCalendarTests {
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1440)]
+    [InlineData(2880)]
+    public void InvalidLocalInterval_EndsAtFirstValidMinute(int invalidMinutes) {
+        var start = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        DateTime boundary = start.AddMinutes(invalidMinutes);
+        DateTime result = LocalStatisticsCalendar.FindFirstValidLocalTime(start, local => local < boundary);
+        Assert.Equal(boundary, result);
+        Assert.Equal(DateTimeKind.Unspecified, result.Kind);
+    }
+
+    [Fact]
+    public void CorruptRules_CannotKeepBoundarySearchRunningIndefinitely() {
+        var start = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        int attempts = 0;
+        Assert.Throws<InvalidTimeZoneException>(() => LocalStatisticsCalendar.FindFirstValidLocalTime(start, _ => {
+            attempts++;
+            return true;
+        }));
+        Assert.Equal(2881, attempts);
+    }
+
     [Fact]
     public void RepeatedMidnight_UsesTheFirstOccurrence() {
         LocalStatisticsDay day = Assert.Single(LocalStatisticsCalendar.GetDays(

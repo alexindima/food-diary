@@ -6,11 +6,11 @@ namespace FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 
 public sealed partial class MarketingAttributionEventRepository {
     public async Task<MarketingAttributionRangeRecord> GetRangeAsync(MarketingAttributionRangeFilter filter, CancellationToken cancellationToken) {
-        IQueryable<MarketingAttributionEvent> events = context.MarketingAttributionEvents.AsNoTracking()
+        IQueryable<MarketingAttributionEvent> events = attributionEvents.AsNoTracking()
             .Where(item => item.OccurredAtUtc >= filter.FromUtc && item.OccurredAtUtc < filter.ToUtc);
         DateTime previousFrom = filter.FromUtc - (filter.ToUtc - filter.FromUtc);
         MarketingAttributionSummaryRecord current = await LoadSummaryAsync(events, cancellationToken).ConfigureAwait(false);
-        MarketingAttributionSummaryRecord previous = await LoadSummaryAsync(context.MarketingAttributionEvents.AsNoTracking()
+        MarketingAttributionSummaryRecord previous = await LoadSummaryAsync(attributionEvents.AsNoTracking()
             .Where(item => item.OccurredAtUtc >= previousFrom && item.OccurredAtUtc < filter.FromUtc), cancellationToken).ConfigureAwait(false);
         List<MarketingAttributionDayRecord> byDay = await events.GroupBy(item => item.OccurredAtUtc.Date).OrderBy(group => group.Key)
             .Select(group => new MarketingAttributionDayRecord(group.Key, group.Count(item => item.EventType == "page_landing"),

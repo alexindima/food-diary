@@ -19,6 +19,17 @@ namespace FoodDiary.Application.Tests.Authentication;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramOnboardingTests {
     [Fact]
+    public void CorruptSystemTimeZone_IsRejected() {
+        string? requested = null;
+        bool valid = CompleteTelegramAuthenticationCommandHandler.IsValidTimeZone("Asia/Tbilisi", id => {
+            requested = id;
+            throw new InvalidTimeZoneException("Corrupt system rules.");
+        });
+        Assert.False(valid);
+        Assert.Equal("Asia/Tbilisi", requested);
+    }
+
+    [Fact]
     public async Task UnavailableAccount_DoesNotCreateAnAuthenticationIntent() {
         _accounts.IsRegisteredAsync(123, Arg.Any<CancellationToken>()).Returns(Result.Failure<bool>(UserErrors.NotFound()));
         Result<TelegramAuthenticationIntentModel> result = await CreateIntents().CreateAsync(123, firstName: null, lastName: null, language: null,

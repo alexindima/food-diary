@@ -21,3 +21,8 @@ Rules for `Modules/OpenFoodFacts/`.
 - Infrastructure tests: `dotnet test Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests.csproj`
 - Provider adapter tests run in the module Infrastructure.Tests project above; retain its non-parallel shared-cache collection.
 - Architecture: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+OpenFoodFacts owns its cache runtime context. Immediate SQL upsert and cache reads
+synchronize with the live shared transaction supplied by registration, including
+transactions opened after repository resolution. Central migrations remain;
+provider calls, ranking and cache counter semantics are unchanged (ADR 0040).

@@ -13,6 +13,23 @@ namespace FoodDiary.Application.Tests.Statistics;
 
 [ExcludeFromCodeCoverage]
 public sealed class DiaryStatisticsQueryTests {
+    [Fact]
+    public async Task CorruptSystemTimeZone_DoesNotQueryNutritionOrHydration() {
+        var owner = new UserId(Guid.NewGuid());
+        IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
+        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
+        IDashboardStatisticsReadService statistics = Substitute.For<IDashboardStatisticsReadService>();
+        IHydrationIntervalReadService hydration = Substitute.For<IHydrationIntervalReadService>();
+        var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, statistics, hydration, new Clock());
+
+        Result<DiaryStatisticsSummaryModel> result = await handler.HandleAsync(new GetDiaryStatisticsQuery(owner.Value, 1),
+            _ => throw new InvalidTimeZoneException("Corrupt system rules."), CancellationToken.None);
+
+        Assert.Equal("Statistics.InvalidTimeZone", result.Error.Code);
+        Assert.Empty(statistics.ReceivedCalls());
+        Assert.Empty(hydration.ReceivedCalls());
+    }
+
     [Theory]
     [InlineData("access", "User.AccessDenied")]
     [InlineData("days", "Statistics.InvalidDays")]

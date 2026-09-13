@@ -17,3 +17,8 @@
 - `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 Contracts owns the externally consumed attribution summary query and immutable models. Admin Presentation references that seam, while Marketing retains handlers, validation, authorization and persistence.
+
+Marketing owns a single-entity runtime context and injects only its attribution
+DbSet into repositories. Shared saves retain event/conversion uniqueness; the
+existing retention job still executes immediate bounded deletion batches.
+Central migrations and reporting behavior are unchanged (ADR 0040).

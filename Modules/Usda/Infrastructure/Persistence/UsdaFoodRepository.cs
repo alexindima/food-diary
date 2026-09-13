@@ -1,17 +1,17 @@
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Domain.Entities.Usda;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Usda.Infrastructure.Persistence;
 
-internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFoodRepository {
+internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNutrient> foodNutrients,
+    DbSet<UsdaFoodPortion> foodPortions, DbSet<DailyReferenceValue> referenceValues) : IUsdaFoodRepository {
     public async Task<IReadOnlyList<UsdaFood>> SearchAsync(
         string query,
         int limit = 20,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoods
+        return await foods
             .AsNoTracking()
             .Where(f => EF.Functions.ILike(f.Description, $"%{query}%"))
             .OrderBy(f => f.Description.Length)
@@ -24,7 +24,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
         string query,
         int limit = 20,
         CancellationToken cancellationToken = default) {
-        return await ProjectReadModels(dbContext.UsdaFoods
+        return await ProjectReadModels(foods
                 .AsNoTracking()
                 .Where(f => EF.Functions.ILike(f.Description, $"%{query}%"))
                 .OrderBy(f => f.Description.Length)
@@ -36,7 +36,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
     public async Task<UsdaFood?> GetByFdcIdAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoods
+        return await foods
             .AsNoTracking()
             .FirstOrDefaultAsync(f => f.FdcId == fdcId, cancellationToken).ConfigureAwait(false);
     }
@@ -44,7 +44,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
     public async Task<UsdaFoodReadModel?> GetByFdcIdReadModelAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        return await ProjectReadModels(dbContext.UsdaFoods
+        return await ProjectReadModels(foods
                 .AsNoTracking()
                 .Where(f => f.FdcId == fdcId))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
@@ -53,7 +53,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
     public async Task<IReadOnlyList<UsdaFoodNutrient>> GetNutrientsAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoodNutrients
+        return await foodNutrients
             .AsNoTracking()
             .Include(n => n.Nutrient)
             .Where(n => n.FdcId == fdcId)
@@ -64,7 +64,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
     public async Task<IReadOnlyList<UsdaNutrientReadModel>> GetNutrientReadModelsAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoodNutrients
+        return await foodNutrients
             .AsNoTracking()
             .Where(n => n.FdcId == fdcId)
             .OrderBy(n => n.Nutrient.Name)
@@ -79,7 +79,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
     public async Task<IReadOnlyList<UsdaFoodPortion>> GetPortionsAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoodPortions
+        return await foodPortions
             .AsNoTracking()
             .Where(p => p.FdcId == fdcId)
             .OrderBy(p => p.PortionDescription)
@@ -89,7 +89,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
     public async Task<IReadOnlyList<UsdaFoodPortionModel>> GetPortionReadModelsAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        return await dbContext.UsdaFoodPortions
+        return await foodPortions
             .AsNoTracking()
             .Where(p => p.FdcId == fdcId)
             .OrderBy(p => p.PortionDescription)
@@ -111,7 +111,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             return new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>();
         }
 
-        List<UsdaFoodNutrient> nutrients = await dbContext.UsdaFoodNutrients
+        List<UsdaFoodNutrient> nutrients = await foodNutrients
             .AsNoTracking()
             .Include(n => n.Nutrient)
             .Where(n => fdcIdList.Contains(n.FdcId))
@@ -133,7 +133,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             return new Dictionary<int, IReadOnlyList<UsdaNutrientReadModel>>();
         }
 
-        List<(int FdcId, UsdaNutrientReadModel Nutrient)> nutrients = await dbContext.UsdaFoodNutrients
+        List<(int FdcId, UsdaNutrientReadModel Nutrient)> nutrients = await foodNutrients
             .AsNoTracking()
             .Where(n => fdcIdList.Contains(n.FdcId))
             .Select(n => new ValueTuple<int, UsdaNutrientReadModel>(
@@ -156,7 +156,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
         string ageGroup = "adult",
         string gender = "all",
         CancellationToken cancellationToken = default) {
-        return await dbContext.DailyReferenceValues
+        return await referenceValues
             .AsNoTracking()
             .Where(d => d.AgeGroup == ageGroup && d.Gender == gender)
             .ToDictionaryAsync(d => d.NutrientId, cancellationToken).ConfigureAwait(false);
@@ -166,7 +166,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
         string ageGroup = "adult",
         string gender = "all",
         CancellationToken cancellationToken = default) {
-        return await dbContext.DailyReferenceValues
+        return await referenceValues
             .AsNoTracking()
             .Where(d => d.AgeGroup == ageGroup && d.Gender == gender)
             .Select(d => new UsdaDailyReferenceValueReadModel(d.NutrientId, d.Value, d.Unit))

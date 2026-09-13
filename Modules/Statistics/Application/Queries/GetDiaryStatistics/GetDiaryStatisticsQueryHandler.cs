@@ -14,7 +14,11 @@ namespace FoodDiary.Application.Statistics.Queries.GetDiaryStatistics;
 public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService accessService, IUserDashboardProfileReadService profiles,
     IDashboardStatisticsReadService statistics, IHydrationIntervalReadService hydration, TimeProvider timeProvider)
     : IQueryHandler<GetDiaryStatisticsQuery, Result<DiaryStatisticsSummaryModel>> {
-    public async Task<Result<DiaryStatisticsSummaryModel>> Handle(GetDiaryStatisticsQuery query, CancellationToken cancellationToken) {
+    public Task<Result<DiaryStatisticsSummaryModel>> Handle(GetDiaryStatisticsQuery query, CancellationToken cancellationToken) =>
+        HandleAsync(query, TimeZoneInfo.FindSystemTimeZoneById, cancellationToken);
+
+    internal async Task<Result<DiaryStatisticsSummaryModel>> HandleAsync(GetDiaryStatisticsQuery query,
+        Func<string, TimeZoneInfo> resolveTimeZone, CancellationToken cancellationToken) {
         Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(query.UserId, accessService, cancellationToken).ConfigureAwait(false);
         if (owner.IsFailure) {
             return Result.Failure<DiaryStatisticsSummaryModel>(owner.Error);
@@ -33,7 +37,7 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
         string zone = profile.TimeZoneId ?? "UTC";
         IReadOnlyList<LocalStatisticsDay> days;
         try {
-            days = LocalStatisticsCalendar.GetDays(timeProvider.GetUtcNow().UtcDateTime, zone, query.Days);
+            days = LocalStatisticsCalendar.GetDays(timeProvider.GetUtcNow().UtcDateTime, zone, query.Days, resolveTimeZone);
         } catch (TimeZoneNotFoundException) {
             return InvalidTimeZone();
         } catch (InvalidTimeZoneException) {

@@ -1,13 +1,13 @@
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Domain.Entities.OpenFoodFacts;
-using FoodDiary.Infrastructure.Persistence;
+using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 
-internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : IOpenFoodFactsProductCacheRepository {
+internal sealed class OpenFoodFactsProductCacheRepository(OpenFoodFactsDbContext context, Func<DbTransaction?> currentTransaction, TimeProvider timeProvider) : IOpenFoodFactsProductCacheRepository {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
@@ -19,6 +19,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
             return [];
         }
 
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         string pattern = $"%{EscapeLikePattern(normalizedQuery)}%";
         return await context.OpenFoodFactsProducts
             .AsNoTracking()
@@ -57,6 +58,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
             return;
         }
 
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         var acceptedBarcodes = new HashSet<string>(StringComparer.Ordinal);
         foreach (OpenFoodFactsProductModel product in candidates) {
@@ -128,6 +130,10 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
                 new NpgsqlParameter<int>("searchHitCount", product.SearchHitCount),
             ],
             cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
+        await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
     }
 
     private static string EscapeLikePattern(string value) {

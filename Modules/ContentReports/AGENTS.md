@@ -17,3 +17,8 @@ Infrastructure after owned models. Keep local mappings and same-owner relationsh
 unchanged; do not restore a Users.Domain dependency to the model.
 
 ContentReportId also belongs to Domain.Contracts, referencing shared Domain.Primitives for IEntityId. Preserve Guid conversion, formatting and Empty semantics.
+
+ContentReports owns a single-entity runtime context and report writes. The host
+composition implements its existing read-model and target-read ports, preserving
+visibility predicates, SQL paging and bounded title/comment excerpts. No module
+references the composition implementation; central migrations remain (ADR 0040).

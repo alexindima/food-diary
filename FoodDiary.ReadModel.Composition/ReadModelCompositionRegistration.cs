@@ -1,3 +1,5 @@
+using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.ReadModel.Composition.MealPlanning;
 using FoodDiary.Application.Abstractions.Admin.Common;
@@ -17,6 +19,9 @@ namespace FoodDiary.ReadModel.Composition;
 
 public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
+        services.AddScoped<ContentReportReadService>();
+        services.AddScoped<IContentReportReadModelRepository>(static provider => provider.GetRequiredService<ContentReportReadService>());
+        services.AddScoped<IContentReportTargetReadService>(static provider => provider.GetRequiredService<ContentReportReadService>());
         services.AddScoped<IMealPlanCompositionReader, MealPlanCompositionReader>();
         services.AddScoped<IAdminDashboardMetricsReader, AdminDashboardMetricsReader>();
         services.AddScoped<IAdminRetentionReader, AdminRetentionReader>();

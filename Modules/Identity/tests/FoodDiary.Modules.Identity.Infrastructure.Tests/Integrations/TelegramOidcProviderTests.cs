@@ -64,6 +64,43 @@ public sealed class TelegramOidcProviderTests {
     }
 
     [Fact]
+    public async Task CancellationDuringTokenValidation_IsPropagated() {
+        using var cancellation = new CancellationTokenSource();
+        using var handler = new RecordingHandler();
+        using var http = new HttpClient(handler);
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var validation = new TaskCompletionSource<Result<TelegramOidcIdentity>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var validator = new RecordingValidator {
+            OnValidate = token => {
+                Assert.Equal(cancellation.Token, token);
+                entered.SetResult();
+                return validation.Task;
+            },
+        };
+        Task<Result<TelegramOidcIdentity>> exchange = CreateProvider(http, validator)
+            .ExchangeAsync("code", Verifier, "nonce", cancellation.Token);
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        Assert.False(exchange.IsCompleted);
+        await cancellation.CancelAsync();
+        validation.SetCanceled(cancellation.Token);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => exchange);
+        Assert.Equal(1, validator.CallCount);
+    }
+
+    [Fact]
+    public async Task UnexpectedValidatorFailure_IsNotMisreportedAsInvalidCredentials() {
+        using var handler = new RecordingHandler();
+        using var http = new HttpClient(handler);
+        var failure = new InvalidDataException("Validator implementation failed.");
+        var validator = new RecordingValidator {
+            OnValidate = _ => Task.FromException<Result<TelegramOidcIdentity>>(failure),
+        };
+        InvalidDataException actual = await Assert.ThrowsAsync<InvalidDataException>(() => CreateProvider(http, validator)
+            .ExchangeAsync("code", Verifier, "nonce", CancellationToken.None));
+        Assert.Same(failure, actual);
+    }
+
+    [Fact]
     public void AuthorizationUrl_UsesPkceAndConfiguredCallback() {
         using var handler = new RecordingHandler();
         using var http = new HttpClient(handler);
@@ -122,6 +159,7 @@ public sealed class TelegramOidcProviderTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingValidator : ITelegramOidcTokenValidator {
+        public Func<CancellationToken, Task<Result<TelegramOidcIdentity>>>? OnValidate { get; init; }
         public TelegramOidcIdentity Identity { get; set; } = new("https://oauth.telegram.org", "subject", 123, FirstName: null, LastName: null, Username: null);
         public int CallCount { get; private set; }
         public string? Token { get; private set; }
@@ -130,7 +168,7 @@ public sealed class TelegramOidcProviderTests {
             CallCount++;
             Token = idToken;
             Nonce = expectedNonce;
-            return Task.FromResult(Result.Success(Identity));
+            return OnValidate?.Invoke(cancellationToken) ?? Task.FromResult(Result.Success(Identity));
         }
     }
 

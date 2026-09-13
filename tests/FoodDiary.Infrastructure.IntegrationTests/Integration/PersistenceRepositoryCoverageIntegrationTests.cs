@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
@@ -256,7 +257,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             LessonDifficulty.Beginner, estimatedReadMinutes: 1);
         lesson.SetPublication(isPublished: false);
         context.Users.Add(user);
-        var repository = new NutritionLessonRepository(context);
+        var repository = new NutritionLessonRepository(context.NutritionLessons, context.UserLessonProgress);
         await repository.AddAsync(lesson);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
@@ -284,7 +285,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var repository = new NutritionLessonRepository(context);
+        var repository = new NutritionLessonRepository(context.NutritionLessons, context.UserLessonProgress);
         var basics = NutritionLesson.Create(
             "Basics",
             "Content",
@@ -519,17 +520,19 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var recipe = Recipe.Create(user.Id, "Reported recipe", servings: 1);
+        var recipe = Recipe.Create(user.Id, "Reported recipe", servings: 1, visibility: Visibility.Public);
         var otherUser = User.Create($"report-private-{Guid.NewGuid():N}@example.com", "hash");
         var privateRecipe = Recipe.Create(otherUser.Id, "Private recipe", servings: 1, visibility: Visibility.Private);
         context.Users.Add(otherUser);
         context.Recipes.AddRange(recipe, privateRecipe);
         await context.SaveChangesAsync();
         var comment = RecipeComment.Create(user.Id, recipe.Id, "Reported comment");
-        context.RecipeComments.Add(comment);
+        var privateComment = RecipeComment.Create(otherUser.Id, privateRecipe.Id, "Private comment");
+        context.RecipeComments.AddRange(comment, privateComment);
         await context.SaveChangesAsync();
 
-        var repository = new ContentReportRepository(context);
+        var repository = new ContentReportRepository(context.ContentReports);
+        var readService = new ContentReportReadService(context);
         Guid targetId = recipe.Id.Value;
         ContentReport report = await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Recipe, targetId, "Spam"));
         ContentReport otherReport = await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Comment, comment.Id.Value, "Abuse"));
@@ -543,27 +546,27 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         bool hasReported = await repository.HasUserReportedAsync(user.Id, ReportTargetType.Recipe, targetId);
         (IReadOnlyList<ContentReportAdminReadModel> pendingReadModels, int pendingReadModelTotal) =
-            await repository.GetPagedAdminReadModelsAsync(ReportStatus.Pending, page: 1, limit: 10);
+            await readService.GetPagedAdminReadModelsAsync(ReportStatus.Pending, page: 1, limit: 10);
         (IReadOnlyList<ContentReportAdminReadModel> allItems, int allTotal) =
-            await repository.GetPagedAdminReadModelsAsync(status: null, page: 1, limit: 1);
-        int dismissedCount = await repository.CountByStatusAsync(ReportStatus.Dismissed);
-        bool recipeExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Recipe, recipe.Id.Value);
-        bool commentExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Comment, comment.Id.Value);
-        bool missingTargetExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Recipe, Guid.NewGuid());
-        bool privateTargetExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Recipe, privateRecipe.Id.Value);
+            await readService.GetPagedAdminReadModelsAsync(status: null, page: 1, limit: 1);
+        int dismissedCount = await readService.CountByStatusAsync(ReportStatus.Dismissed);
+        bool recipeExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Recipe, recipe.Id.Value);
+        bool commentExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Comment, comment.Id.Value);
+        bool missingTargetExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Recipe, Guid.NewGuid());
+        bool privateTargetExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Recipe, privateRecipe.Id.Value);
 
         Assert.True(hasReported);
         Assert.Equal(otherReport.Id.Value, Assert.Single(pendingReadModels).Id);
         Assert.Equal(1, pendingReadModelTotal);
         Assert.Equal("Reported comment", Assert.Single(pendingReadModels).TargetExcerpt);
-        (IReadOnlyList<ContentReportAdminReadModel> filteredReports, int filteredTotal) = await repository.GetPagedAdminReadModelsAsync(
+        (IReadOnlyList<ContentReportAdminReadModel> filteredReports, int filteredTotal) = await readService.GetPagedAdminReadModelsAsync(
             status: null, page: 1, limit: 1, CancellationToken.None,
             new ContentReportAdminFilter(report.CreatedOnUtc, report.CreatedOnUtc.AddDays(1), "Recipe", user.Id.Value, targetId));
         Assert.Equal(1, filteredTotal);
         ContentReportAdminReadModel filteredReport = Assert.Single(filteredReports);
         Assert.Equal("Reported recipe", filteredReport.TargetTitle);
         Assert.Equal(tracked.ReviewedByUserId?.Value, filteredReport.ReviewedByUserId);
-        (IReadOnlyList<ContentReportAdminReadModel> outsidePeriod, int outsideTotal) = await repository.GetPagedAdminReadModelsAsync(
+        (IReadOnlyList<ContentReportAdminReadModel> outsidePeriod, int outsideTotal) = await readService.GetPagedAdminReadModelsAsync(
             status: null, page: 1, limit: 1, CancellationToken.None,
             new ContentReportAdminFilter(ToUtc: report.CreatedOnUtc, TargetId: targetId));
         Assert.Empty(outsidePeriod);
@@ -575,6 +578,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.True(commentExists);
         Assert.False(missingTargetExists);
         Assert.False(privateTargetExists);
+        Assert.True(await readService.IsReportableAsync(otherUser.Id, ReportTargetType.Recipe, recipe.Id.Value));
+        Assert.False(await readService.IsReportableAsync(user.Id, ReportTargetType.Comment, privateComment.Id.Value));
+        Assert.True(await readService.IsReportableAsync(otherUser.Id, ReportTargetType.Comment, privateComment.Id.Value));
 
         await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Recipe, targetId, "Duplicate"));
         await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
@@ -822,7 +828,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.DailyAdvices.Add(DailyAdvice.Create("Ru advice", "ru", tag: "hydration"));
         await context.SaveChangesAsync();
 
-        var repository = new DailyAdviceRepository(context);
+        var repository = new DailyAdviceRepository(context.DailyAdvices);
 
         Assert.Contains(await repository.GetByLocaleReadModelsAsync(" "), advice => string.Equals(advice.Value, "Drink water", StringComparison.Ordinal));
         Assert.Contains(await repository.GetByLocaleReadModelsAsync("RU-ru"), advice => string.Equals(advice.Value, "Ru advice", StringComparison.Ordinal));

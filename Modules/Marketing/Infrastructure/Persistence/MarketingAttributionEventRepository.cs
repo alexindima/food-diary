@@ -1,12 +1,11 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 
-public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbContext context) : IMarketingAttributionEventRepository, IMarketingAttributionRangeReadRepository {
+public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingAttributionEvent> attributionEvents) : IMarketingAttributionEventRepository, IMarketingAttributionRangeReadRepository {
     public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {
         var entity = MarketingAttributionEvent.Create(
             record.EventType,
@@ -24,7 +23,7 @@ public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbConte
             record.BuildVersion,
             record.EventId);
 
-        context.MarketingAttributionEvents.Add(entity);
+        attributionEvents.Add(entity);
         return Task.CompletedTask;
     }
 
@@ -32,7 +31,7 @@ public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbConte
         DateTime olderThanUtc,
         int batchSize,
         CancellationToken cancellationToken = default) {
-        MarketingAttributionEventId[] ids = await context.MarketingAttributionEvents
+        MarketingAttributionEventId[] ids = await attributionEvents
             .AsNoTracking()
             .Where(item => item.OccurredAtUtc < olderThanUtc)
             .OrderBy(item => item.OccurredAtUtc)
@@ -44,13 +43,13 @@ public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbConte
             return 0;
         }
 
-        return await context.MarketingAttributionEvents
+        return await attributionEvents
             .Where(item => Enumerable.Contains(ids, item.Id))
             .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
-        IQueryable<MarketingAttributionEvent> events = context.MarketingAttributionEvents
+        IQueryable<MarketingAttributionEvent> events = attributionEvents
             .AsNoTracking()
             .Where(x => x.OccurredAtUtc >= sinceUtc);
 
@@ -98,7 +97,7 @@ public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbConte
         string sessionId,
         DateTime sinceUtc,
         CancellationToken cancellationToken = default) {
-        return await context.MarketingAttributionEvents
+        return await attributionEvents
             .AsNoTracking()
             .Where(x => x.EventType == "page_landing" &&
                 x.AnonymousId == anonymousId &&
@@ -112,7 +111,7 @@ public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbConte
     }
 
     public async Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
-        return await context.MarketingAttributionEvents
+        return await attributionEvents
             .AsNoTracking()
             .Where(x => x.UserId == userId)
             .OrderByDescending(x => x.OccurredAtUtc)
@@ -135,7 +134,7 @@ public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbConte
     }
 
     public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) {
-        return context.MarketingAttributionEvents
+        return attributionEvents
             .AsNoTracking()
             .AnyAsync(x =>
                 x.UserId == userId &&

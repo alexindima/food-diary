@@ -14,7 +14,10 @@ public sealed class ModuleRegistrationTests {
 
         Assert.Same(services, returned);
         ServiceDescriptor repository = Assert.Single(services, descriptor => descriptor.ServiceType == typeof(INutritionLessonRepository));
-        Assert.Equal(typeof(NutritionLessonRepository), repository.ImplementationType);
+        Assert.NotNull(repository.ImplementationFactory);
+        Assert.Equal(ServiceLifetime.Scoped, repository.Lifetime);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(LessonsDbContext)
+            && descriptor.Lifetime == ServiceLifetime.Scoped);
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(INutritionLessonReadRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(INutritionLessonReadModelRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(INutritionLessonWriteRepository));

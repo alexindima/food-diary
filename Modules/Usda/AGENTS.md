@@ -27,3 +27,7 @@ Products and Meals use Contracts for USDA search/suggestions, product-link and m
 nutrition capabilities. They must not reference USDA Application.Abstractions. The
 existing owner implementations, access checks, SQL projections and provider behavior
 remain unchanged. Contracts imports only Results and scalar Products/Users contracts.
+
+USDA owns a five-entity runtime read context. Its repository receives only owned
+sets for food, nutrient links, portions and reference values; nutrient navigation
+stays within the model. Central import and migrations remain (ADR 0040).

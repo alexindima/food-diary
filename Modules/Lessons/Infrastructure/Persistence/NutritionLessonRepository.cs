@@ -4,18 +4,17 @@ using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 
-public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INutritionLessonRepository {
+public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, DbSet<UserLessonProgress> progressSet) : INutritionLessonRepository {
     private const string LikeEscapeCharacter = "\\";
     public async Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(
         string locale,
         LessonCategory? category = null,
         CancellationToken cancellationToken = default) {
-        IQueryable<NutritionLesson> query = context.Set<NutritionLesson>()
+        IQueryable<NutritionLesson> query = lessonSet
             .AsNoTracking()
             .Where(l => l.Locale == locale && l.IsPublished);
 
@@ -33,7 +32,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
         string locale,
         LessonCategory? category = null,
         CancellationToken cancellationToken = default) {
-        IQueryable<NutritionLesson> query = context.Set<NutritionLesson>()
+        IQueryable<NutritionLesson> query = lessonSet
             .AsNoTracking()
             .Where(l => l.Locale == locale && l.IsPublished);
 
@@ -64,7 +63,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
         int skip,
         int take,
         CancellationToken cancellationToken = default) {
-        IQueryable<NutritionLesson> localeQuery = context.Set<NutritionLesson>()
+        IQueryable<NutritionLesson> localeQuery = lessonSet
             .AsNoTracking()
             .Where(lesson => lesson.Locale == locale && lesson.IsPublished);
         int totalLessonCount = await localeQuery.CountAsync(cancellationToken).ConfigureAwait(false);
@@ -114,13 +113,13 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
         UserId userId,
         string locale,
         CancellationToken cancellationToken = default) =>
-        context.Set<UserLessonProgress>()
+        progressSet
             .AsNoTracking()
             .CountAsync(progress => progress.UserId == userId && progress.Lesson.Locale == locale && progress.Lesson.IsPublished, cancellationToken);
 
     public async Task<IReadOnlyList<NutritionLesson>> GetAllAsync(
         CancellationToken cancellationToken = default) {
-        return await context.Set<NutritionLesson>()
+        return await lessonSet
             .AsNoTracking()
             .OrderBy(l => l.Locale)
             .ThenBy(l => l.Category)
@@ -131,7 +130,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
 
     public async Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
         CancellationToken cancellationToken = default) {
-        return await context.Set<NutritionLesson>()
+        return await lessonSet
             .AsNoTracking()
             .OrderBy(l => l.Locale)
             .ThenBy(l => l.Category)
@@ -148,14 +147,14 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
                 l.EstimatedReadMinutes,
                 l.SortOrder,
                 l.CreatedOnUtc,
-                l.ModifiedOnUtc, l.IsPublished, context.Set<UserLessonProgress>().AsNoTracking().Count(progress => progress.LessonId == l.Id)))
+                l.ModifiedOnUtc, l.IsPublished, progressSet.AsNoTracking().Count(progress => progress.LessonId == l.Id)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<NutritionLesson?> GetByIdAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {
-        return await context.Set<NutritionLesson>()
+        return await lessonSet
             .AsNoTracking()
             .FirstOrDefaultAsync(l => l.Id == id && l.IsPublished, cancellationToken).ConfigureAwait(false);
     }
@@ -163,7 +162,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
     public async Task<LessonDetailReadModel?> GetDetailReadModelByIdAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {
-        return await context.Set<NutritionLesson>()
+        return await lessonSet
             .AsNoTracking()
             .Where(l => l.Id == id && l.IsPublished)
             .Select(l => new LessonDetailReadModel(
@@ -180,14 +179,14 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
     public async Task<NutritionLesson?> GetByIdTrackingAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {
-        return await context.Set<NutritionLesson>()
+        return await lessonSet
             .FirstOrDefaultAsync(l => l.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.Set<UserLessonProgress>()
+        return await progressSet
             .AsNoTracking()
             .Where(p => p.UserId == userId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -196,7 +195,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
     public async Task<IReadOnlyList<Guid>> GetReadLessonIdsAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.Set<UserLessonProgress>()
+        return await progressSet
             .AsNoTracking()
             .Where(p => p.UserId == userId)
             .Select(p => p.LessonId.Value)
@@ -207,7 +206,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
         UserId userId,
         NutritionLessonId lessonId,
         CancellationToken cancellationToken = default) {
-        return await context.Set<UserLessonProgress>()
+        return await progressSet
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken).ConfigureAwait(false);
     }
@@ -216,7 +215,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
         UserId userId,
         NutritionLessonId lessonId,
         CancellationToken cancellationToken = default) {
-        return await context.Set<UserLessonProgress>()
+        return await progressSet
             .AsNoTracking()
             .AnyAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken).ConfigureAwait(false);
     }
@@ -224,20 +223,20 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
     public async Task<UserLessonProgress> AddProgressAsync(
         UserLessonProgress progress,
         CancellationToken cancellationToken = default) {
-        await context.Set<UserLessonProgress>().AddAsync(progress, cancellationToken).ConfigureAwait(false);
+        await progressSet.AddAsync(progress, cancellationToken).ConfigureAwait(false);
         return progress;
     }
 
     public async Task AddAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
-        await context.Set<NutritionLesson>().AddAsync(lesson, cancellationToken).ConfigureAwait(false);
+        await lessonSet.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task AddRangeAsync(
         IReadOnlyCollection<NutritionLesson> lessons,
         CancellationToken cancellationToken = default) {
-        await context.Set<NutritionLesson>().AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
+        await lessonSet.AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
     }
 
     public Task UpdateAsync(
@@ -249,7 +248,7 @@ public sealed class NutritionLessonRepository(FoodDiaryDbContext context) : INut
     public Task DeleteAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
-        context.Set<NutritionLesson>().Remove(lesson);
+        lessonSet.Remove(lesson);
         return Task.CompletedTask;
     }
 

@@ -290,3 +290,31 @@ central migration ownership are retained (ADR 0040).
 RecipeCommunity (two entities) and MealPlanning (six entities) also own runtime
 write contexts. MealPlanning delegates composed recipe/product reads through its port to
 ReadModel.Composition; user purge and migrations remain central. See ADR 0040.
+
+Lessons owns its two-entity runtime `LessonsDbContext`. Its repository receives only
+NutritionLesson and UserLessonProgress sets from that context; publication, locale
+filters and completion-count SQL stay together. Shared unit-of-work saving, central
+migrations and User cascade relationships remain unchanged (ADR 0040).
+
+DailyAdvices owns a single-entity runtime context for its no-tracking advice
+projections. Initializer seeding and historical migrations remain central;
+locale normalization and result ordering are unchanged (ADR 0040).
+
+Marketing owns a single-entity runtime context and injects only its attribution
+DbSet into repositories. Shared saves retain event/conversion uniqueness; the
+existing retention job still executes immediate bounded deletion batches.
+Central migrations and reporting behavior are unchanged (ADR 0040).
+
+OpenFoodFacts owns its cache runtime context. Immediate SQL upsert and cache reads
+synchronize with the live shared transaction supplied by registration, including
+transactions opened after repository resolution. Central migrations remain;
+provider calls, ranking and cache counter semantics are unchanged (ADR 0040).
+
+USDA owns a five-entity runtime read context. Its repository receives only owned
+sets for food, nutrient links, portions and reference values; nutrient navigation
+stays within the model. Central import and migrations remain (ADR 0040).
+
+ContentReports owns a single-entity runtime context and report writes. The host
+composition implements its existing read-model and target-read ports, preserving
+visibility predicates, SQL paging and bounded title/comment excerpts. No module
+references the composition implementation; central migrations remain (ADR 0040).

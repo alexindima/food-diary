@@ -480,6 +480,23 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.contentreports.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.contentreports.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.contentreports.domain": {
         "type": "Project",
         "dependencies": {

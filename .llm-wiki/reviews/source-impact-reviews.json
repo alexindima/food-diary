@@ -23,17 +23,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "60ec940b57466179f190d28e5e370da48d2121e3d558b4baf5d4039e1d44b254"
+          "sha256": "11ec52fb08c5a53607164bf1da3d1bb6e1143ad430454b1cccb364762ae9117f"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4be97a5e9f0b96af450195c1f0e2487084e943687877c5eeb324c6bc4f40c2e1"
+          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
         }
       ],
-      "reason": "ADR 0040 and scoped guides describe owner DbSet and IMealPlanCompositionReader; host composition owns unchanged SQL projections.",
+      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:19.8619705Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:06.2548144Z"
     },
     {
       "pageId": "module.frontend",
@@ -57,17 +57,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "60ec940b57466179f190d28e5e370da48d2121e3d558b4baf5d4039e1d44b254"
+          "sha256": "11ec52fb08c5a53607164bf1da3d1bb6e1143ad430454b1cccb364762ae9117f"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4be97a5e9f0b96af450195c1f0e2487084e943687877c5eeb324c6bc4f40c2e1"
+          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
         }
       ],
-      "reason": "ADR 0040 and scoped guides describe owner DbSet and IMealPlanCompositionReader; host composition owns unchanged SQL projections.",
+      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:20.1354786Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:06.5299874Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -76,17 +76,17 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4be97a5e9f0b96af450195c1f0e2487084e943687877c5eeb324c6bc4f40c2e1"
+          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
         },
         {
           "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "af907a430244611bb151af70c37328fffba3c6497b3d1db8ff49af0d40773f33"
+          "sha256": "4b7371766e185f54526821e3174d12f14090b8c79848024405b82cfaeee26e43"
         }
       ],
-      "reason": "No HTTP payload route or schema changes; selected HTTP and Swagger tests passed.",
+      "reason": "Existing ports SQL predicates paging and HTTP surface preserved",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:20.3658583Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:06.8202628Z"
     },
     {
       "pageId": "system.architecture",
@@ -95,21 +95,21 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "60ec940b57466179f190d28e5e370da48d2121e3d558b4baf5d4039e1d44b254"
+          "sha256": "11ec52fb08c5a53607164bf1da3d1bb6e1143ad430454b1cccb364762ae9117f"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4be97a5e9f0b96af450195c1f0e2487084e943687877c5eeb324c6bc4f40c2e1"
+          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "7b6f646a661643fc7447838341a9824b0ca5c6fb746e09a831cf3a4d6d7950f4"
+          "sha256": "5b6bb317b9a7b3ac967d85143e206f6552b994b6cf193ffcaca02e447230bf5e"
         }
       ],
-      "reason": "ADR 0040 and scoped guides describe owner DbSet and IMealPlanCompositionReader; host composition owns unchanged SQL projections.",
+      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:20.6012832Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:07.0733692Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -231,17 +231,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e8474ab0126d704be19a73ba677d592b39db16d87b0e2594806d060a94cc0fa5"
+          "sha256": "809a5f0411455ef7e0b05a1b0fe58050994036421e32b2a8654c44706369c4e0"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "7b6f646a661643fc7447838341a9824b0ca5c6fb746e09a831cf3a4d6d7950f4"
+          "sha256": "5b6bb317b9a7b3ac967d85143e206f6552b994b6cf193ffcaca02e447230bf5e"
         }
       ],
-      "reason": "Provider and DI tests validate owner and composition registration. Persistence capability inventory preserves snapshot attachment in owner and permits only reads in composition.",
+      "reason": "Shared save rollback cascade moderation DI HTTP and architecture tests verified",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:20.8739665Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:07.3710257Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -250,13 +250,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "570591a11658fb31882ed76fc380be6d911de18d6b2104d43750f9406bbf3812"
+          "sha256": "d67f3890809cee79f3d27f32430c2a455f7742b9255f10b042ae2f4e7b5232a1"
         }
       ],
-      "reason": "No HTTP payload route or schema changes; selected HTTP and Swagger tests passed.",
+      "reason": "Existing ports SQL predicates paging and HTTP surface preserved",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:21.5936133Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:08.0705246Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5bdc84410bff4413fd4d7a9c15374c16c3b98c442cf6fc092f20a2f3c63eab08"
+          "sha256": "3c83d21ba84c5b7f3d984104cc4c6da4cb8c76f55319b6fd50d07bc5c10ee3c0"
         }
       ],
-      "reason": "Provider and DI tests validate owner and composition registration. Persistence capability inventory preserves snapshot attachment in owner and permits only reads in composition.",
+      "reason": "Shared save rollback cascade moderation DI HTTP and architecture tests verified",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:22.1684311Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:08.5669086Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -915,13 +915,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8e1afaf92a203214ee4d3e88ff6c4df6bfddb188e5a58f458dcffd8c141bb960"
+          "sha256": "47a080adcd234e429b88f93b1cdef8c545b80c8935f674bf825b71b110eea498"
         }
       ],
-      "reason": "ADR 0040 and scoped guides describe owner DbSet and IMealPlanCompositionReader; host composition owns unchanged SQL projections.",
+      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:23.0460016Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:09.2576178Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -930,17 +930,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5bdc84410bff4413fd4d7a9c15374c16c3b98c442cf6fc092f20a2f3c63eab08"
+          "sha256": "3c83d21ba84c5b7f3d984104cc4c6da4cb8c76f55319b6fd50d07bc5c10ee3c0"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8e1afaf92a203214ee4d3e88ff6c4df6bfddb188e5a58f458dcffd8c141bb960"
+          "sha256": "47a080adcd234e429b88f93b1cdef8c545b80c8935f674bf825b71b110eea498"
         }
       ],
-      "reason": "Same no-tracking bounded recipe projections and user predicates; no new logging sharing or credentials. Aggregates stay inside MealPlanning.",
+      "reason": "Private recipe and comment visibility preserved and covered by PostgreSQL",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:23.5542991Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:09.7432288Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1186,13 +1186,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "891fcf43e25e435b1318bdfe07195b2a5bb0ab4f4f6968c91c4d79335d3ba9e2"
+          "sha256": "c0bc118f0027aa1f4291b41209db88b4ab72d6a26e9f028f04a679d07a857480"
         }
       ],
-      "reason": "ADR 0040 and scoped guides describe owner DbSet and IMealPlanCompositionReader; host composition owns unchanged SQL projections.",
+      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "148d190f793feec56809a2897457cf2647ca26f4",
-      "reviewedAtUtc": "2026-09-13T07:02:22.5662051Z"
+      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
+      "reviewedAtUtc": "2026-09-13T08:50:08.9509711Z"
     },
     {
       "pageId": "workflow.review-diff",

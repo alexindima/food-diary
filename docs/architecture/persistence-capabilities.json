@@ -2,6 +2,70 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "Modules/ContentReports/Infrastructure/ModuleRegistration.cs": {
+      "module": "ContentReports",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:ContentReport",
+        "tracked:ContentReport"
+      ],
+      "reason": "Registers only owned reports with the shared connection and unit of work; host registers composed readers.",
+      "technicalSourceSha256": "827102c51134a4475010045ab2d257caaaa79d35a367a6b8536cad1f2b47e6d5"
+    },
+    "FoodDiary.ReadModel.Composition/ContentReports/ContentReportReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:ContentReport",
+        "entity:Recipe",
+        "entity:RecipeComment"
+      ],
+      "reason": "Unchanged no-tracking visibility predicates, report paging and bounded target title/excerpt projections; immutable results only."
+    },
+    "Modules/Usda/Infrastructure/ModuleRegistration.cs": {
+      "module": "Usda",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:DailyReferenceValue",
+        "entity:UsdaFood",
+        "entity:UsdaFoodNutrient",
+        "entity:UsdaFoodPortion",
+        "tracked:DailyReferenceValue",
+        "tracked:UsdaFood",
+        "tracked:UsdaFoodNutrient",
+        "tracked:UsdaFoodPortion"
+      ],
+      "reason": "Registers only USDA-owned sets on the shared connection; repository remains no-tracking and read-only. Central import and migrations unchanged.",
+      "technicalSourceSha256": "339897196efd32923e51cba9cbcc09bca4c43284212ebe04d2a0dcec68bd88c9"
+    },
+    "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs": {
+      "module": "OpenFoodFacts",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database"
+      ],
+      "reason": "Registers owned cache context and read-only live accessor to the shared transaction so immediate SQL and reads preserve caller commit/rollback. No transaction ownership transfer.",
+      "technicalSourceSha256": "395e31079ab75450015f896d60bbaca2f9a674bb5556fe216ee4d594b9f4a173"
+    },
+    "Modules/Marketing/Infrastructure/ModuleRegistration.cs": {
+      "module": "Marketing",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:MarketingAttributionEvent",
+        "tracked:MarketingAttributionEvent"
+      ],
+      "reason": "Registers only the owned attribution set with the shared connection and save coordinator; standalone batched retention semantics remain unchanged.",
+      "technicalSourceSha256": "e26ba6c02ccfe6b288b1133399276ddd9c2f0133be42621e61417deca8854e9c"
+    },
+    "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs": {
+      "module": "DailyAdvices",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:DailyAdvice",
+        "tracked:DailyAdvice"
+      ],
+      "reason": "Registers the owned advice set on the existing shared connection; repository remains read-only and no-tracking.",
+      "technicalSourceSha256": "0ece19efce234166da025def8b3769c9272537629cc494b5e7f3a7ea74fb1a25"
+    },
     "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs": {
       "module": "ReadModelComposition",
       "capabilities": [
@@ -312,12 +376,10 @@
       "module": "ContentReports",
       "capabilities": [
         "entity:ContentReport",
-        "entity:Recipe",
-        "entity:RecipeComment",
         "tracked:ContentReport",
         "write:ContentReport"
       ],
-      "reason": "ContentReports owns report writes; Recipe and RecipeComment supply moderation target projections."
+      "reason": "ContentReports-owned report set only; target visibility and administrative composed reads belong to host composition."
     },
     "Modules/Cycles/Infrastructure/ModuleRegistration.cs": {
       "module": "Cycles",
@@ -911,7 +973,7 @@
         "entity:OpenFoodFactsProduct"
       ],
       "reason": "OpenFoodFacts owns its cache; PostgreSQL upsert refreshes only OpenFoodFactsProducts.",
-      "technicalSourceSha256": "00bb1e90280edbb3ac6381937c07818d7aeb04c6101ff26c6d0bc0462154f4d0"
+      "technicalSourceSha256": "b87fa3fb1d3fa80b4a539121e7554baca0b23b01cb42cb081ab16808cd3e549a"
     },
     "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs": {
       "module": "Products",
@@ -1329,6 +1391,18 @@
         "entity:Product"
       ],
       "reason": "Owner batch scalar snapshots for related-data hydration. No tracking, no visibility filtering or writes; empty input performs no query."
+    },
+    "Modules/Lessons/Infrastructure/ModuleRegistration.cs": {
+      "module": "Lessons",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:NutritionLesson",
+        "entity:UserLessonProgress",
+        "tracked:NutritionLesson",
+        "tracked:UserLessonProgress"
+      ],
+      "reason": "Registers two owned Lessons sets on the shared connection and unit-of-work coordinator; no foreign entity access.",
+      "technicalSourceSha256": "5ed54a77b3cbe0cd142d51225248efe1460407f85677233909c50eb37927a42d"
     }
   }
 }

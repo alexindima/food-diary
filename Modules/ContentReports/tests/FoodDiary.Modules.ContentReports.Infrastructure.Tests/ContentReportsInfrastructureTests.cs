@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -22,27 +21,15 @@ public sealed class ContentReportsInfrastructureTests {
         ContentReportRepository repository = scope.ServiceProvider.GetRequiredService<ContentReportRepository>();
 
         Assert.Same(services, returned);
-        Assert.Multiple(
-            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IContentReportReadModelRepository>()),
-            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IContentReportWriteRepository>()),
-            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IContentReportTargetReadService>()));
+        Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IContentReportWriteRepository>());
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IContentReportReadModelRepository));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IContentReportTargetReadService));
     }
 
     [Fact]
-    public async Task IsReportableAsync_WithUnsupportedTargetType_ReturnsFalse() {
-        await using FoodDiaryDbContext context = CreateContext();
-        var repository = new ContentReportRepository(context);
-
-        bool result = await repository.IsReportableAsync(
-            UserId.New(), (ReportTargetType)int.MaxValue, Guid.NewGuid(), CancellationToken.None);
-
-        Assert.False(result);
-    }
-
-    private static FoodDiaryDbContext CreateContext() {
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
-            .Options;
-        return new FoodDiaryDbContext(options);
+    public void ContextContainsOnlyOwnedReportEntity() {
+        using var context = new ContentReportsDbContext(new DbContextOptionsBuilder<ContentReportsDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N")).Options);
+        Assert.Equal(typeof(ContentReport), Assert.Single(context.Model.GetEntityTypes()).ClrType);
     }
 }

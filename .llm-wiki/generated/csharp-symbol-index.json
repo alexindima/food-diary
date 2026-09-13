@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4029,
-    "symbols": 3970,
+    "sourceFiles": 4036,
+    "symbols": 3977,
     "interfaceImplementationLinks": 270,
     "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 2072,
+      "class": 2079,
       "enum": 64,
       "interface": 476,
       "record": 1237,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1618,
+      "Other": 1624,
       "Query": 193,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -40,7 +40,7 @@
       "Repository": 108,
       "Request": 150,
       "Response": 213,
-      "Service": 314,
+      "Service": 315,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 46
@@ -1728,6 +1728,13 @@
       "line": 7
     },
     {
+      "name": "ContentReportReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/ContentReports/ContentReportReadService.cs",
+      "line": 12
+    },
+    {
       "name": "DashboardFavoriteMealProjection",
       "kind": "record",
       "role": "Other",
@@ -1816,7 +1823,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 17
+      "line": 19
     },
     {
       "name": "RecipeOverviewReadService",
@@ -7206,14 +7213,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/ContentReports/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ContentReportRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
-      "line": 12
+      "line": 8
+    },
+    {
+      "name": "ContentReportsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs",
+      "line": 5
     },
     {
       "name": "ContentReportsPresentationServiceCollectionExtensions",
@@ -8340,7 +8354,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DailyAdviceRepository",
@@ -8348,6 +8362,13 @@
       "role": "Repository",
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
       "line": 7
+    },
+    {
+      "name": "DailyAdvicesDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdvicesDbContext.cs",
+      "line": 5
     },
     {
       "name": "IDashboardBodyReadService",
@@ -16208,14 +16229,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
+    },
+    {
+      "name": "LessonsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Infrastructure/Persistence/LessonsDbContext.cs",
+      "line": 5
     },
     {
       "name": "NutritionLessonRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "LessonsPresentationServiceCollectionExtensions",
@@ -16516,14 +16544,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MarketingAttributionEventRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "MarketingAttributionEventRepository",
@@ -16531,6 +16559,13 @@
       "role": "Repository",
       "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs",
       "line": 6
+    },
+    {
+      "name": "MarketingDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Infrastructure/Persistence/MarketingDbContext.cs",
+      "line": 5
     },
     {
       "name": "MarketingPresentationServiceCollectionExtensions",
@@ -19603,7 +19638,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "OpenFoodFactsProviderRegistration",
@@ -19611,6 +19646,13 @@
       "role": "Other",
       "path": "Modules/OpenFoodFacts/Infrastructure/OpenFoodFactsProviderRegistration.cs",
       "line": 11
+    },
+    {
+      "name": "OpenFoodFactsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsDbContext.cs",
+      "line": 6
     },
     {
       "name": "OpenFoodFactsProductCacheRepository",
@@ -22305,14 +22347,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Usda/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
+    },
+    {
+      "name": "UsdaDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Infrastructure/Persistence/UsdaDbContext.cs",
+      "line": 6
     },
     {
       "name": "UsdaFoodRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UsdaApiOptions",

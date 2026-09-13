@@ -624,6 +624,7 @@
           "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.PersistenceModel": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"

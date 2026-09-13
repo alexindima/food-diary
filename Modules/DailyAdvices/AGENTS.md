@@ -20,3 +20,7 @@
 ## Consumer boundary
 
 Own DailyAdviceModel and GetDailyAdviceQuery consumed by Dashboard. Keep generation, persistence and query handlers in Application. See `Contracts/AGENTS.md` and ADR 0033.
+
+DailyAdvices owns a single-entity runtime context for its no-tracking advice
+projections. Initializer seeding and historical migrations remain central;
+locale normalization and result ordering are unchanged (ADR 0040).

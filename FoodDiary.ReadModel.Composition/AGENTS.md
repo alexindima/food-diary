@@ -17,3 +17,8 @@ MealPlanning composition implements IMealPlanCompositionReader. Return only the
 immutable detail model and recipe snapshot dictionary. Preserve inner joins,
 serving fallback and ingredient batching; aggregate mutation/attachment stays in
 the owner repository. Hosts register the adapter through AddReadModelComposition.
+
+ContentReports owns a single-entity runtime context and report writes. The host
+composition implements its existing read-model and target-read ports, preserving
+visibility predicates, SQL paging and bounded title/comment excerpts. No module
+references the composition implementation; central migrations remain (ADR 0040).

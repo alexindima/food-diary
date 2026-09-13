@@ -31,7 +31,7 @@ public sealed class CompleteTelegramAuthenticationCommandHandler(
         if (purpose is null) {
             return Invalid();
         }
-        if (string.Equals(command.Action, "register", StringComparison.Ordinal) && !IsValidTimeZone(command.TimeZoneId)) {
+        if (string.Equals(command.Action, "register", StringComparison.Ordinal) && !IsValidTimeZone(command.TimeZoneId, TimeZoneInfo.FindSystemTimeZoneById)) {
             return Result.Failure<AuthenticationModel>(TelegramIdentityErrors.TimeZoneRequired);
         }
         string? json = await tickets.ConsumeAsync(command.Ticket, purpose, command.BrowserBinding, cancellationToken).ConfigureAwait(false);
@@ -84,12 +84,12 @@ public sealed class CompleteTelegramAuthenticationCommandHandler(
         return Result.Success(new AuthenticationModel(issued.AccessToken, issued.RefreshToken, principal.Value.User));
     }
 
-    private static bool IsValidTimeZone(string? timeZoneId) {
+    internal static bool IsValidTimeZone(string? timeZoneId, Func<string, TimeZoneInfo> resolveTimeZone) {
         if (string.IsNullOrWhiteSpace(timeZoneId) || timeZoneId.Length > 100) {
             return false;
         }
         try {
-            var zone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            TimeZoneInfo zone = resolveTimeZone(timeZoneId);
             return zone.HasIanaId || string.Equals(timeZoneId, "UTC", StringComparison.Ordinal);
         } catch (TimeZoneNotFoundException) {
             return false;

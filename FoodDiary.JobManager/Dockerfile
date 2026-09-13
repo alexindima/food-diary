@@ -58,6 +58,7 @@ COPY Modules/Lessons/Application/Abstractions/*.csproj Modules/Lessons/Applicati
 COPY Modules/Lessons/Application/*.csproj Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/*.csproj Modules/Lessons/Infrastructure/
 COPY Modules/Lessons/Infrastructure/Model/*.csproj Modules/Lessons/Infrastructure/Model/
+COPY Modules/ContentReports/Application/Abstractions/*.csproj Modules/ContentReports/Application/Abstractions/
 COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Domain.Contracts/*.csproj Modules/ContentReports/Domain.Contracts/
 COPY Modules/ContentReports/Contracts/*.csproj Modules/ContentReports/Contracts/
@@ -278,6 +279,7 @@ COPY Modules/Lessons/Application/Abstractions/ Modules/Lessons/Application/Abstr
 COPY Modules/Lessons/Application/ Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/ Modules/Lessons/Infrastructure/
 COPY Modules/Lessons/Infrastructure/Model/ Modules/Lessons/Infrastructure/Model/
+COPY Modules/ContentReports/Application/Abstractions/ Modules/ContentReports/Application/Abstractions/
 COPY Modules/ContentReports/Domain/ Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Domain.Contracts/ Modules/ContentReports/Domain.Contracts/
 COPY Modules/ContentReports/Contracts/ Modules/ContentReports/Contracts/

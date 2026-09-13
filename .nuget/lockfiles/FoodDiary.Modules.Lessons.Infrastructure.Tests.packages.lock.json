@@ -821,6 +821,8 @@
           "FoodDiary.Application.Lessons": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Lessons.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",

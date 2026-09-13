@@ -1,7 +1,9 @@
 namespace FoodDiary.Application.Users.Common;
 
 internal static class UserTimeZoneInput {
-    internal static bool IsValid(string? value) {
+    internal static bool IsValid(string? value) => IsValid(value, TimeZoneInfo.FindSystemTimeZoneById);
+
+    internal static bool IsValid(string? value, Func<string, TimeZoneInfo> resolveTimeZone) {
         if (value is null) {
             return true;
         }
@@ -9,7 +11,7 @@ internal static class UserTimeZoneInput {
             return false;
         }
         try {
-            var zone = TimeZoneInfo.FindSystemTimeZoneById(value.Trim());
+            TimeZoneInfo zone = resolveTimeZone(value.Trim());
             return zone.HasIanaId || string.Equals(zone.Id, "UTC", StringComparison.Ordinal);
         } catch (TimeZoneNotFoundException) {
             return false;

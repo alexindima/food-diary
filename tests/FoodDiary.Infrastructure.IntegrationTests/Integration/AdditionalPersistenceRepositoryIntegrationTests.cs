@@ -1,9 +1,13 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Modules.Usda.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Billing;
@@ -116,7 +120,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     [RequiresDockerFact]
     public async Task OpenFoodFactsRepository_UpsertsSearchesAndEscapesLikePattern() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new OpenFoodFactsProductCacheRepository(context, FixedTime);
+        await using OpenFoodFactsDbContext repositoryContext = context.CreateModuleContext<OpenFoodFactsDbContext>(static options => new OpenFoodFactsDbContext(options));
+        var repository = new OpenFoodFactsProductCacheRepository(repositoryContext, () => context.Database.CurrentTransaction?.GetDbTransaction(), FixedTime);
         var product = new OpenFoodFactsProductModel(
             Barcode: "123",
             Name: "100% Cocoa",
@@ -166,8 +171,10 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
         await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
-        var firstRepository = new OpenFoodFactsProductCacheRepository(firstContext, FixedTime);
-        var secondRepository = new OpenFoodFactsProductCacheRepository(secondContext, FixedTime);
+        await using OpenFoodFactsDbContext firstRepositoryContext = firstContext.CreateModuleContext<OpenFoodFactsDbContext>(static options => new OpenFoodFactsDbContext(options));
+        var firstRepository = new OpenFoodFactsProductCacheRepository(firstRepositoryContext, () => firstContext.Database.CurrentTransaction?.GetDbTransaction(), FixedTime);
+        await using OpenFoodFactsDbContext secondRepositoryContext = secondContext.CreateModuleContext<OpenFoodFactsDbContext>(static options => new OpenFoodFactsDbContext(options));
+        var secondRepository = new OpenFoodFactsProductCacheRepository(secondRepositoryContext, () => secondContext.Database.CurrentTransaction?.GetDbTransaction(), FixedTime);
         var product = new OpenFoodFactsProductModel(
             Barcode: "concurrent-123",
             Name: "Concurrent product",
@@ -195,7 +202,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     [RequiresDockerFact]
     public async Task OpenFoodFactsRepository_UpsertAtMaximumHitCount_SaturatesCounter() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new OpenFoodFactsProductCacheRepository(context, FixedTime);
+        await using OpenFoodFactsDbContext repositoryContext = context.CreateModuleContext<OpenFoodFactsDbContext>(static options => new OpenFoodFactsDbContext(options));
+        var repository = new OpenFoodFactsProductCacheRepository(repositoryContext, () => context.Database.CurrentTransaction?.GetDbTransaction(), FixedTime);
         string barcode = $"saturated-{Guid.NewGuid():N}";
         var product = new OpenFoodFactsProductModel(
             barcode,
@@ -252,7 +260,16 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         });
         await context.SaveChangesAsync();
 
-        var repository = new UsdaFoodRepository(context);
+        context.ChangeTracker.Clear();
+        var services = new ServiceCollection();
+        services.AddSingleton(context);
+        services.AddUsdaModule();
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        UsdaDbContext owned = provider.GetRequiredService<UsdaDbContext>();
+        IUsdaFoodRepository repository = provider.GetRequiredService<IUsdaFoodRepository>();
+        Assert.Same(context.Database.GetDbConnection(), owned.Database.GetDbConnection());
+        Assert.Same(repository, provider.GetRequiredService<IUsdaFoodReadRepository>());
+        Assert.Same(repository, provider.GetRequiredService<IUsdaFoodReadModelRepository>());
 
         IReadOnlyList<UsdaFood> foods = await repository.SearchAsync("apple", limit: 10);
         UsdaFood? food = await repository.GetByFdcIdAsync(1001);
@@ -286,6 +303,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Empty(emptyNutrientReadModelMap);
         Assert.Equal(182, Assert.Single(portionReadModels).GramWeight);
         Assert.Equal(275, referenceValueReadModels[1].Value);
+        Assert.Null(await repository.GetByFdcIdReadModelAsync(int.MaxValue));
+        Assert.Empty(await repository.GetNutrientReadModelsAsync(int.MaxValue));
+        Assert.Empty(await repository.GetDailyReferenceValueReadModelsAsync("child", "all"));
+        Assert.Empty(owned.ChangeTracker.Entries());
+        Assert.Empty(context.ChangeTracker.Entries());
     }
 
     private static void AssertUsdaNutrientReadModels(

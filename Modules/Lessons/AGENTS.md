@@ -33,3 +33,8 @@ PersistenceModel uses Users.Domain.Contracts for UserId. Its foreign User Cascad
 relationship is composed by LessonsCrossModuleRelationships in central
 Infrastructure after owned models. Keep local mappings and same-owner relationships
 unchanged; do not restore a Users.Domain dependency to the model.
+
+Lessons owns its two-entity runtime `LessonsDbContext`. Its repository receives only
+NutritionLesson and UserLessonProgress sets from that context; publication, locale
+filters and completion-count SQL stay together. Shared unit-of-work saving, central
+migrations and User cascade relationships remain unchanged (ADR 0040).

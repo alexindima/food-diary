@@ -11,6 +11,9 @@ public sealed class ModuleRegistrationTests {
         var services = new ServiceCollection();
         services.AddDailyAdvicesModule();
         ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(IDailyAdviceReadModelRepository));
-        Assert.Equal(typeof(DailyAdviceRepository), descriptor.ImplementationType);
+        Assert.NotNull(descriptor.ImplementationFactory);
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        Assert.Contains(services, item => item.ServiceType == typeof(DailyAdvicesDbContext)
+            && item.Lifetime == ServiceLifetime.Scoped);
     }
 }

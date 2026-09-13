@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5317,
+    "productionFiles": 5324,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -4425,6 +4425,14 @@
       "structuralRiskScore": 0.1
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/ContentReports/ContentReportReadService.cs",
+      "nonBlankLines": 77,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.54
+    },
+    {
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardFavoriteMealProjection.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -4522,11 +4530,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
+      "structuralRiskScore": 0.8
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -19394,19 +19402,27 @@
     },
     {
       "path": "Modules/ContentReports/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.34
     },
     {
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
-      "nonBlankLines": 96,
-      "decisionPoints": 14,
+      "nonBlankLines": 27,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.92
+      "structuralRiskScore": 3.54
+    },
+    {
+      "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/ContentReports/Presentation/Extensions/ContentReportsPresentationServiceCollectionExtensions.cs",
@@ -20698,11 +20714,11 @@
     },
     {
       "path": "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
@@ -20711,6 +20727,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.12
+    },
+    {
+      "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdvicesDbContext.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs",
@@ -29818,19 +29842,27 @@
     },
     {
       "path": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Lessons/Infrastructure/Persistence/LessonsDbContext.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
-      "nonBlankLines": 231,
+      "nonBlankLines": 230,
       "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.62
+      "structuralRiskScore": 28.6
     },
     {
       "path": "Modules/Lessons/Presentation/Extensions/LessonsPresentationServiceCollectionExtensions.cs",
@@ -30170,11 +30202,11 @@
     },
     {
       "path": "Modules/Marketing/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs",
@@ -30186,11 +30218,19 @@
     },
     {
       "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
-      "nonBlankLines": 201,
+      "nonBlankLines": 200,
       "decisionPoints": 30,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 49.02
+      "structuralRiskScore": 49
+    },
+    {
+      "path": "Modules/Marketing/Infrastructure/Persistence/MarketingDbContext.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Marketing/Presentation/Extensions/MarketingPresentationServiceCollectionExtensions.cs",
@@ -33770,11 +33810,11 @@
     },
     {
       "path": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.48
     },
     {
       "path": "Modules/OpenFoodFacts/Infrastructure/OpenFoodFactsProviderRegistration.cs",
@@ -33785,12 +33825,20 @@
       "structuralRiskScore": 2.24
     },
     {
+      "path": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsDbContext.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
       "path": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
-      "nonBlankLines": 129,
+      "nonBlankLines": 134,
       "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.08
+      "structuralRiskScore": 31.18
     },
     {
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Options/OpenFoodFactsApiOptions.cs",
@@ -36946,6 +36994,14 @@
     },
     {
       "path": "Modules/Usda/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Modules/Usda/Infrastructure/Persistence/UsdaDbContext.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
