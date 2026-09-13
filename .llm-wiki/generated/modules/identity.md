@@ -42,31 +42,25 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: EmailTemplate, UserRefreshTokenSession, UserLoginEvent
-- Public contract files: 55
+- Public contract files: 40
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 55
-- Interfaces: 31
-- DTO/read-model/projection types: 5
+- Public contract types: 40
+- Interfaces: 26
+- DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 13
 - Contracts referencing domain entities: 5
 - `class JwtImpersonationClaimNames`
 - `class JwtSecurityClaimNames`
 - `class JwtTokenUseClaimNames`
-- `class SecurityTokenGenerator`
 - `class TelegramIdentityErrors`
 - `interface IAdminSsoService`
 - `interface IAuthenticationLoginEventCleanupService`
-- `interface IAuthenticationLoginEventReadService`
 - `interface IAuthenticationTokenService`
-- `interface IEmailSender`
-- `interface IEmailTemplateAdministrationReadService`
-- `interface IEmailTemplateAdministrationService`
-- `interface IEmailTemplateProvider`
 - `interface IEmailTemplateReadModelRepository`
 - `interface IEmailTemplateReadRepository`
 - `interface IEmailTemplateRepository`
@@ -84,7 +78,13 @@ No literal attribute-routed controller was associated with this module.
 - `interface ITelegramLoginTicketStore`
 - `interface ITelegramLoginWidgetValidator`
 - `interface ITelegramOidcProvider`
-- ... 25 more type(s)
+- `interface ITelegramOidcTokenValidator`
+- `interface ITelegramOperationPolicy`
+- `interface ITelegramOperationStore`
+- `interface IUserLoginEventReadRepository`
+- `interface IUserLoginEventRepository`
+- `interface IUserLoginEventWriteRepository`
+- ... 10 more type(s)
 
 ## Focused Tests
 

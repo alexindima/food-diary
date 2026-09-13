@@ -350,3 +350,12 @@ Cycles.Domain.Contracts; see [details](ai/application-domain-boundaries.md).
 ## Reusable HTTP responses
 
 ADR 0039 separates reused wire DTOs into owner `Presentation.Contracts` and pure response transformations into `Presentation.Mappings`. BodyMetrics, Cycles, Dashboard, Fasting, Favorites, Hydration, Meals, Notifications, Tdee and Users own both layers. Existing Dietologist DTO contracts remain. There are no foreign controller-bearing Presentation references; controllers and request mappings stay in Presentation. Dashboard public snapshot models and its client-dashboard query live in Dashboard.Contracts.
+
+## Narrow consumer capabilities
+
+Identity.Contracts owns consumer email/template and login-event APIs and the
+impersonation-only token issuer. BodyMetrics.Contracts owns weight/waist read
+services and immutable results. Products/Recipes/Cycles error factories live in
+existing Contracts; image cleanup and ownership capabilities live in existing
+Images.Service.Contracts. Internal repository/provider ports remain in owner
+Abstractions. See [the boundary extraction](ai/remaining-consumer-boundaries.md).

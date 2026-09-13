@@ -50,12 +50,15 @@ public sealed class ModuleAggregateIsolationTests {
         Assert.Equal([typeof(ImageAssetId)], typeof(ImageAssetId).Assembly.GetExportedTypes());
 
     [Fact]
-    public void ImagesServiceContracts_ExposeOnlyImmutableReads() {
+    public void ImagesServiceContracts_ExposeOnlyAggregateFreeCapabilities() {
         Assembly assembly = typeof(FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel).Assembly;
         Assert.Equal(
             new[] {
+                typeof(FoodDiary.Application.Abstractions.Images.Common.DeleteImageAssetResult),
                 typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetAccessService),
+                typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetCleanupService),
                 typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetContentService),
+                typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetOwnershipService),
                 typeof(FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel),
                 typeof(FoodDiary.Application.Images.Common.ImageAssetIdParser),
                 typeof(FoodDiary.Application.Images.Common.ImageAssetResolution),

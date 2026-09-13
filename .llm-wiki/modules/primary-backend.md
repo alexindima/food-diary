@@ -3,6 +3,7 @@ id: module.primary-backend
 kind: module
 status: current
 sources:
+  - docs/ai/remaining-consumer-boundaries.md
   - docs/adr/0039-presentation-contracts-and-mappings.md
   - FoodDiary.Application.Runtime/AGENTS.md
   - Shared/FoodDiary.Application.Contracts/AGENTS.md
@@ -102,3 +103,8 @@ see docs/ai/application-domain-boundaries.md for scope and transitive limitation
 ## Reusable HTTP contract boundary
 
 ADR 0039 separates owner Presentation.Contracts (wire DTOs) from Presentation.Mappings (pure response transformations). Module Presentation assemblies no longer reference foreign controller assemblies. Mappers consume narrow application/scalar contracts and DTOs; Dashboard public snapshot/query declarations now live in Dashboard.Contracts. The exact project matrix and PresentationContractBoundaryTests enforce these boundaries.
+
+Consumer email/template and login-event APIs are in Identity.Contracts; weight and
+waist reads are in BodyMetrics.Contracts. Admin uses an impersonation-only token
+issuer. Image cleanup/ownership and product/recipe/cycle errors use existing narrow
+owner contracts. See [the extraction](../../docs/ai/remaining-consumer-boundaries.md).

@@ -1,5 +1,8 @@
 # Products Contracts
 
+Own ProductErrors with unchanged error codes, messages and kinds; consumers must
+not reference internal Abstractions merely for error factories.
+
 Stable Product lookup/overview projections and semantic USDA linking capability consumed by other modules. No infrastructure or application implementation dependencies, no aggregate-returning API.
 
 IProductSnapshotReadService returns immutable batch scalar snapshots for related

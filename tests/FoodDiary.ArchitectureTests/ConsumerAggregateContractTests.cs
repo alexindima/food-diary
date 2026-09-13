@@ -11,8 +11,8 @@ public sealed class ConsumerAggregateContractTests {
     [InlineData("Modules/Notifications/Contracts/Common/NotificationRequest.cs")]
     [InlineData("Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs")]
     [InlineData("Modules/Lessons/Contracts/Models/LessonAdminReadModel.cs")]
-    [InlineData("Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs")]
-    [InlineData("Modules/Identity/Application/Abstractions/Admin/Models/EmailTemplateReadModel.cs")]
+    [InlineData("Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationService.cs")]
+    [InlineData("Modules/Identity/Contracts/Admin/Models/EmailTemplateReadModel.cs")]
     public void ConsumerContract_DoesNotExposeDomainEntities(string relativePath) {
         var entityNames = new HashSet<string>(StringComparer.Ordinal);
         foreach (string module in Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"))) {

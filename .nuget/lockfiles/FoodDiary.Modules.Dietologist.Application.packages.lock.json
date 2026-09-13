@@ -80,20 +80,12 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.identity.application.abstractions": {
+      "fooddiary.modules.identity.contracts": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Authentication.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.identity.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.images.contracts": {

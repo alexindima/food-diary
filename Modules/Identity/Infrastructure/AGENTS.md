@@ -1,5 +1,9 @@
 # Identity infrastructure
 
+Register IImpersonationTokenIssuer as a singleton alongside IJwtTokenGenerator.
+Its adapter delegates to the existing impersonation access-token overload; do not
+change claims, expiry, role handling or refresh validation during this extraction.
+
 Own Identity persistence adapters, including `UserLoginEventRepository` and `EmailTemplateProvider`. Preserve login-event search/date/deletion semantics and the provider's singleton lifetime, one-minute cache and locale fallback. Keep `UserRepository` with Users Infrastructure, and shared SSO/Redis storage, mail transport and cleanup with their established owners.
 
 Google and Telegram validators/options now belong to Providers, preserving legacy

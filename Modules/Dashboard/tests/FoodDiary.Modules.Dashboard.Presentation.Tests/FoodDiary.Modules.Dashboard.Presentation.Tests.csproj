@@ -18,7 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+    <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />
+    <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/SubstituteSender.cs" Link="Support/SubstituteSender.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
+    <ProjectReference Include="../../../BodyMetrics/Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../../../Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
     <ProjectReference Include="../../../Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
@@ -26,9 +34,5 @@
     <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../../Tdee/Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
-    <Using Include="NSubstitute" />
-    <Using Include="Xunit" />
-    <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />
-    <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/SubstituteSender.cs" Link="Support/SubstituteSender.cs" />
   </ItemGroup>
 </Project>

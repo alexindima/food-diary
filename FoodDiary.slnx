@@ -22,6 +22,7 @@
     <Project Path="Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/FoodDiary.Modules.Users.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
+    <Project Path="Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
     <Project Path="Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <Project Path="Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <Project Path="Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj" />
@@ -67,6 +68,7 @@
   </Folder>
 
   <Folder Name="/Modules/BodyMetrics/">
+    <Project Path="Modules/BodyMetrics/Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <Project Path="Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <Project Path="Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <Project Path="Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />

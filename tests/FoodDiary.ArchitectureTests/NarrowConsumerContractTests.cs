@@ -6,6 +6,12 @@ public sealed class NarrowConsumerContractTests {
     [InlineData("FoodDiary.Modules.Users.Contracts")]
     [InlineData("FoodDiary.Modules.Lessons.Contracts")]
     [InlineData("FoodDiary.Modules.Notifications.Contracts")]
+    [InlineData("FoodDiary.Modules.Identity.Contracts")]
+    [InlineData("FoodDiary.Modules.BodyMetrics.Contracts")]
+    [InlineData("FoodDiary.Modules.Images.Service.Contracts")]
+    [InlineData("FoodDiary.Modules.Products.Contracts")]
+    [InlineData("FoodDiary.Modules.Recipes.Contracts")]
+    [InlineData("FoodDiary.Modules.Cycles.Contracts")]
     public void ConsumerProject_TransitiveClosureContainsOnlyNarrowContracts(string project) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
         var visited = new HashSet<string>(StringComparer.Ordinal);
@@ -26,20 +32,28 @@ public sealed class NarrowConsumerContractTests {
         }
     }
 
-    [Fact]
-    public void ForeignBusinessModules_DoNotReferenceNotificationInternalPorts() {
+    [Theory]
+    [InlineData("Notifications")]
+    [InlineData("Identity")]
+    [InlineData("BodyMetrics")]
+    [InlineData("Images")]
+    [InlineData("Products")]
+    [InlineData("Recipes")]
+    [InlineData("Cycles")]
+    public void ForeignBusinessModules_DoNotReferenceInternalPorts(string owner) {
         foreach ((string project, string[] references) in ProjectReferenceReader.ReadProductionProjectReferences()) {
             if (!project.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal)
                 && !project.StartsWith("FoodDiary.Application.", StringComparison.Ordinal)) {
                 continue;
             }
 
-            if (project.StartsWith("FoodDiary.Modules.Notifications.", StringComparison.Ordinal)
-                || project is "FoodDiary.Application.Notifications" or "FoodDiary.Application.Runtime") {
+            if (project.StartsWith($"FoodDiary.Modules.{owner}.", StringComparison.Ordinal)
+                || string.Equals(project, $"FoodDiary.Application.{owner}", StringComparison.Ordinal)
+                || project is "FoodDiary.Application.Runtime") {
                 continue;
             }
 
-            Assert.DoesNotContain("FoodDiary.Modules.Notifications.Application.Abstractions", references, StringComparer.Ordinal);
+            Assert.DoesNotContain($"FoodDiary.Modules.{owner}.Application.Abstractions", references, StringComparer.Ordinal);
         }
     }
 }

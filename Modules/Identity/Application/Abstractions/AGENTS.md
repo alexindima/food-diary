@@ -1,10 +1,13 @@
 # Identity application contracts
 
-Own authentication/provider/token/session/login-event contracts and email-template
-administration/provider contracts. Authentication and legacy Admin email-template
-namespaces are preserved; their declaring assembly now belongs to Identity.
-Email-template administration returns EmailTemplateReadModel snapshots; EmailTemplate
-aggregates remain behind Identity's repository ports and owner implementation.
+Public email/template and login-event read capabilities now belong to
+Identity.Contracts. Keep repository, session, generic JWT and provider ports here;
+foreign business modules must consume the narrow Contracts assembly.
+
+Own internal authentication/provider/token/session/login-event and email-template
+repository ports. Preserve legacy namespaces. Consumer template administration
+returns snapshots through Identity.Contracts; EmailTemplate aggregates remain
+behind owner repository ports and implementations.
 
 Users owns credential state and exposes capabilities through Users Contracts.
 Depend one-way on those contracts, Identity Domain, Users Domain.Contracts and

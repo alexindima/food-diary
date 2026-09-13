@@ -256,6 +256,9 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 ## Cross-Repo Rules
 
+- Identity consumer contracts: `Modules/Identity/Contracts/AGENTS.md`
+- BodyMetrics consumer contracts: `Modules/BodyMetrics/Contracts/AGENTS.md`
+
 - Lessons scalar domain contracts: `Modules/Lessons/Domain.Contracts/AGENTS.md`
 - Lessons consumer contracts: `Modules/Lessons/Contracts/AGENTS.md`
 - Notifications consumer contracts: `Modules/Notifications/Contracts/AGENTS.md`

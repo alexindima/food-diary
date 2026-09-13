@@ -8,7 +8,7 @@ public sealed class FeatureErrorContractTests {
     [Fact]
     public void CycleErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
-            () => Assert.Equal("FoodDiary.Modules.Cycles.Application.Abstractions", typeof(CycleErrors).Assembly.GetName().Name),
+            () => Assert.Equal("FoodDiary.Modules.Cycles.Contracts", typeof(CycleErrors).Assembly.GetName().Name),
             () => Assert.Equal("FoodDiary.Application.Abstractions.Cycles.Common", typeof(CycleErrors).Namespace));
     }
 

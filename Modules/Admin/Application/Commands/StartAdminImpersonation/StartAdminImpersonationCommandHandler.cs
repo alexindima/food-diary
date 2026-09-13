@@ -2,7 +2,8 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
@@ -18,7 +19,7 @@ public sealed class StartAdminImpersonationCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,
     IAdminImpersonationSessionWriteRepository sessionRepository,
     IAdminImpersonationHandoffService handoffService,
-    IJwtTokenGenerator jwtTokenGenerator,
+    IImpersonationTokenIssuer impersonationTokenIssuer,
     TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)
     : ICommandHandler<StartAdminImpersonationCommand, Result<AdminImpersonationStartModel>> {
@@ -114,12 +115,8 @@ public sealed class StartAdminImpersonationCommandHandler(
     }
 
     private string GenerateToken(UserAuthenticationPrincipalModel target, UserId actorUserId, string reason) {
-        return jwtTokenGenerator.GenerateAccessToken(
-            target.UserId,
-            target.Email,
-            target.Roles,
-            new JwtImpersonationContext(actorUserId, reason),
-            target.SecurityVersion);
+        return impersonationTokenIssuer.IssueAccessToken(new ImpersonationTokenRequest(
+            target.UserId, target.Email, target.Roles, actorUserId, reason, target.SecurityVersion));
     }
 
     private async Task StartSessionAsync(

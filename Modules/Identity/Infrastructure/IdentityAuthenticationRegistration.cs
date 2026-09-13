@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Services;
@@ -9,6 +10,7 @@ namespace FoodDiary.Infrastructure;
 public static class IdentityAuthenticationRegistration {
     public static IServiceCollection AddIdentityAuthenticationInfrastructure(this IServiceCollection services) {
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddSingleton<IImpersonationTokenIssuer, ImpersonationTokenIssuer>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
         return services;

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5303,
+    "productionFiles": 5306,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -14306,11 +14306,11 @@
     },
     {
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-      "nonBlankLines": 130,
+      "nonBlankLines": 127,
       "decisionPoints": 10,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.6
+      "structuralRiskScore": 19.54
     },
     {
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandValidator.cs",
@@ -18337,14 +18337,6 @@
       "structuralRiskScore": 0.52
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
       "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -18369,28 +18361,12 @@
       "structuralRiskScore": 1.84
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryModel.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
       "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntrySummaryModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
@@ -18407,14 +18383,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.52
-    },
-    {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
@@ -18441,28 +18409,12 @@
       "structuralRiskScore": 1.84
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryModel.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
       "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/BodyMetrics/Application/AssemblyInfo.cs",
@@ -18863,6 +18815,54 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.18
+    },
+    {
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Common/IWaistEntryReadService.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Models/WaistEntryModel.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Models/WaistEntrySummaryModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Common/IWeightEntryReadService.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Models/WeightEntryModel.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Models/WeightEntrySummaryModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
@@ -19425,14 +19425,6 @@
       "structuralRiskScore": 1.68
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Common/CycleErrors.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "Modules/Cycles/Application/Abstractions/Common/ICycleReadModelRepository.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -19887,6 +19879,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 28.62
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Common/CycleErrors.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Cycles/Contracts/Common/ICycleReadService.cs",
@@ -26833,22 +26833,6 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
       "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -26879,22 +26863,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.32
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Models/EmailTemplateReadModel.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Models/EmailTemplateRevisionReadModel.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/AdminSsoCode.cs",
@@ -27017,60 +26985,12 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/AccountCreatedMessage.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailTemplateContent.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailVerificationMessage.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
       "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailSender.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
@@ -27185,22 +27105,6 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/PasswordResetMessage.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/SecurityTokenGenerator.cs",
-      "nonBlankLines": 43,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.86
-    },
-    {
       "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TelegramIdentityErrors.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
@@ -27217,14 +27121,6 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TestEmailMessage.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
       "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -27239,22 +27135,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginDeviceSummaryModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
@@ -28161,6 +28041,142 @@
       "structuralRiskScore": 0.56
     },
     {
+      "path": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationReadService.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationService.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Identity/Contracts/Admin/Models/EmailTemplateReadModel.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Identity/Contracts/Admin/Models/EmailTemplateRevisionReadModel.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/AccountCreatedMessage.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/EmailTemplateContent.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/EmailVerificationMessage.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/IEmailSender.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/IEmailTemplateProvider.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/PasswordResetMessage.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/SecurityTokenGenerator.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.86
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Common/TestEmailMessage.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Models/ImpersonationTokenRequest.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Models/UserLoginDeviceSummaryModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Models/UserLoginEventReadModel.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Services/IImpersonationTokenIssuer.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
       "nonBlankLines": 83,
       "decisionPoints": 7,
@@ -28201,6 +28217,14 @@
       "structuralRiskScore": 8.26
     },
     {
+      "path": "Modules/Identity/Infrastructure/Authentication/ImpersonationTokenIssuer.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
       "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
       "nonBlankLines": 210,
       "decisionPoints": 12,
@@ -28210,11 +28234,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -28913,31 +28937,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Images/Application/Abstractions/Common/DeleteImageAssetResult.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
       "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupBatch.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetOwnershipService.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -29361,6 +29361,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Images/Service.Contracts/Common/DeleteImageAssetResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -29369,12 +29377,28 @@
       "structuralRiskScore": 0.2
     },
     {
+      "path": "Modules/Images/Service.Contracts/Common/IImageAssetCleanupService.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Images/Service.Contracts/Common/ImageAssetIdParser.cs",
@@ -33777,14 +33801,6 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Products/Application/Abstractions/Products/Common/ProductErrors.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs",
       "nonBlankLines": 26,
       "decisionPoints": 0,
@@ -34223,6 +34239,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Products/Contracts/Products/Common/ProductErrors.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
@@ -35145,14 +35169,6 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/RecipeErrors.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
       "path": "Modules/Recipes/Application/AssemblyInfo.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -35631,6 +35647,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.52
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Common/RecipeErrors.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewIngredientReadItem.cs",
@@ -44834,7 +44858,7 @@
       "name": "StartAdminImpersonationCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-      "line": 16,
+      "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",

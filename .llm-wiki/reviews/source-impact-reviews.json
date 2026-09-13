@@ -23,17 +23,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
+          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
+          "sha256": "301d3f0cad3eeb56db623d05ed0e6b4470f1d293f565f3cee98804e22e709938"
         }
       ],
-      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:30.1356055Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:31.8327134Z"
     },
     {
       "pageId": "module.frontend",
@@ -57,13 +57,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
+          "sha256": "301d3f0cad3eeb56db623d05ed0e6b4470f1d293f565f3cee98804e22e709938"
         }
       ],
-      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:30.8626207Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:32.1869742Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -86,18 +86,22 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "ec8cc3324704a7c2e30654b87be1b6710a7567341804910951e1224d31388854"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
+          "sha256": "301d3f0cad3eeb56db623d05ed0e6b4470f1d293f565f3cee98804e22e709938"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3a96f0c01e842b4ca89e149a93ad33746f9097828d0b52ef3fe5a76648661d36"
+          "sha256": "571664ff21a64f4ca3519abf29487833fe0f962f027012d55d2892e5b6ef3505"
         }
       ],
-      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:32.1502892Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:32.5769395Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -136,13 +140,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
+          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
         }
       ],
-      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:32.7729957Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:32.9918130Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -150,14 +154,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "62d3735db5537c13167e0b9350ad7a60880bd302617ea692dd973838d29e35c1"
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "ec8cc3324704a7c2e30654b87be1b6710a7567341804910951e1224d31388854"
         }
       ],
-      "reason": "Admin CSS optimization changed; repository project inventory and build commands remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "40aeff70b24e16921316b223c5ce5a98b798a034",
-      "reviewedAtUtc": "2026-09-07T14:46:36.2634556Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:33.4698717Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -219,17 +223,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "64245c9738e5cbe8e90aada6ae9e7882b95e95767afd929b94082fb6654a83b2"
+          "sha256": "7a1f8cfd6ed9b7c913eb655c557248479c431ee445f204c01d5067d535f64512"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3a96f0c01e842b4ca89e149a93ad33746f9097828d0b52ef3fe5a76648661d36"
+          "sha256": "571664ff21a64f4ca3519abf29487833fe0f962f027012d55d2892e5b6ef3505"
         }
       ],
-      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
+      "reason": "Updated static dependency and ownership assertions retain aggregate isolation checks; generated indexes reflect the current 444-project solution.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:33.7640510Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:33.9825730Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,13 +242,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "3cde462d29dc6194f968329c2a87fa8b4fa607de87da3ded45eeab9593d3b8f1"
+          "sha256": "c41f90db5274f871b16a887057a4329051bdf77f4b71663aa8733b33492efa30"
         }
       ],
-      "reason": "Reviewed relocated values and notification capabilities: namespaces, signatures and serialized shapes are preserved; all 15 Swagger snapshot tests pass. Backend consumer-review procedure remains valid.",
+      "reason": "Public HTTP routes and payloads remain unchanged; contract relocation preserves namespaces and Swagger checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:35.0105889Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:34.9522983Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -723,13 +727,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1f08c57d0f182efd719249d9b37391c3844e8c5d2be2aafebec5b890f13dd799"
+          "sha256": "ec8cc3324704a7c2e30654b87be1b6710a7567341804910951e1224d31388854"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:11.2188579Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:35.8596941Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -783,13 +787,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4d9a17a3af91069c2705f299fda8b9344e6686ebe0634b4dbb2c011b4f217b0d"
+          "sha256": "e34fc85499d0240ddf10e935175551cd025d0e8ae5544b2b7282b8688332f872"
         }
       ],
-      "reason": "Source relocation preserves validation, user IDs, notification payload serialization, caller transactions and delivery behavior. No data sharing, authorization, storage or logging behavior changes; inventory guidance still distinguishes leads from proven findings.",
+      "reason": "Impersonation still uses the same JWT generator, claims and authorization checks through a narrow issuer; no storage, logging or provider data changes.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:37.7805645Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:36.4189677Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -828,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7236f6aae1d4601363a970d54b11cf8cf9c6d4d944acdadfec4034156a2fe977"
+          "sha256": "4bd87912653fda1bcf6e9cd716d31afbe83d28b07d019f397ebeee4db7965197"
         }
       ],
-      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
+      "reason": "Updated static dependency and ownership assertions retain aggregate isolation checks; generated indexes reflect the current 444-project solution.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:38.5545642Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:37.1385980Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -903,13 +907,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6bf7009d60895a749274c68a71f2a751931fc2c267ad72beabddf806c320bfc8"
+          "sha256": "82d6b549b9e5d1d7319fd23d6c0dc18e49a93db04e7cc4cdf6a0442edcb0b747"
         }
       ],
-      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:42.4029939Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:38.3500851Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -918,21 +922,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7236f6aae1d4601363a970d54b11cf8cf9c6d4d944acdadfec4034156a2fe977"
+          "sha256": "4bd87912653fda1bcf6e9cd716d31afbe83d28b07d019f397ebeee4db7965197"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6bf7009d60895a749274c68a71f2a751931fc2c267ad72beabddf806c320bfc8"
+          "sha256": "82d6b549b9e5d1d7319fd23d6c0dc18e49a93db04e7cc4cdf6a0442edcb0b747"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4d9a17a3af91069c2705f299fda8b9344e6686ebe0634b4dbb2c011b4f217b0d"
+          "sha256": "e34fc85499d0240ddf10e935175551cd025d0e8ae5544b2b7282b8688332f872"
         }
       ],
-      "reason": "Source relocation preserves validation, user IDs, notification payload serialization, caller transactions and delivery behavior. No data sharing, authorization, storage or logging behavior changes; inventory guidance still distinguishes leads from proven findings.",
+      "reason": "Impersonation still uses the same JWT generator, claims and authorization checks through a narrow issuer; no storage, logging or provider data changes.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:43.5392753Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:38.9224537Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1114,13 +1118,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
+          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
         }
       ],
-      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:35.6231986Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:35.2886245Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1178,17 +1182,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "1dc03e66dbe430c40bfc0bc5f17626daa8c17350c530d8e449b2ae674e6f9b9a"
+          "sha256": "7b62e5168aa19b197ff6d6161ce6e262fd292c2778f83410261a1b0f52fb5e77"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
+          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
         }
       ],
-      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
+      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:39.6023122Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:37.6194106Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1197,13 +1201,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
+          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
         }
       ],
-      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
+      "reason": "Updated static dependency and ownership assertions retain aggregate isolation checks; generated indexes reflect the current 444-project solution.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:41.3651029Z"
+      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
+      "reviewedAtUtc": "2026-09-13T02:07:38.0077553Z"
     }
   ]
 }

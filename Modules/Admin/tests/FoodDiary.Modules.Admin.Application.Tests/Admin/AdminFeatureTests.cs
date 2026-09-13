@@ -1,3 +1,5 @@
+using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
@@ -14,7 +16,6 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Abstractions.Ai.Common;
@@ -209,7 +210,8 @@ public partial class AdminFeatureTests {
         User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         User target = CreateUserWithRoles("client@example.com", [RoleNames.Premium]);
         var sessionRepository = new RecordingImpersonationSessionRepository();
-        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
+        var issuer = new StubImpersonationTokenIssuer();
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target, sessionRepository, issuer);
 
         Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
@@ -228,6 +230,13 @@ public partial class AdminFeatureTests {
         Assert.Equal(1, sessionRepository.AddCallCount);
         Assert.Equal(target.Id, sessionRepository.LastSession?.TargetUserId);
         Assert.Equal(actor.Id, sessionRepository.LastSession?.ActorUserId);
+        Assert.NotNull(issuer.LastRequest);
+        Assert.Multiple(
+            () => Assert.Equal(target.Id, issuer.LastRequest.SubjectId),
+            () => Assert.Equal(actor.Id, issuer.LastRequest.ActorId),
+            () => Assert.Equal(target.Email, issuer.LastRequest.Email),
+            () => Assert.Equal("Support case with billing issue", issuer.LastRequest.Reason),
+            () => Assert.Equal([RoleNames.Premium], issuer.LastRequest.Roles, StringComparer.Ordinal));
     }
 
     [Fact]
@@ -523,21 +532,23 @@ public partial class AdminFeatureTests {
     private static StartAdminImpersonationCommandHandler CreateStartImpersonationHandler(
         User actor,
         User target,
-        RecordingImpersonationSessionRepository? sessionRepository = null) =>
+        RecordingImpersonationSessionRepository? sessionRepository = null,
+        StubImpersonationTokenIssuer? issuer = null) =>
         CreateStartImpersonationHandler(
             new MultipleUserRepository([actor, target]),
             sessionRepository ?? new RecordingImpersonationSessionRepository(),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)), issuer);
 
     private static StartAdminImpersonationCommandHandler CreateStartImpersonationHandler(
         MultipleUserRepository repository,
         RecordingImpersonationSessionRepository sessionRepository,
-        FixedDateTimeProvider dateTimeProvider) =>
+        FixedDateTimeProvider dateTimeProvider,
+        StubImpersonationTokenIssuer? issuer = null) =>
         new(
             new UserAuthenticationIdentityService(repository, repository, repository, new PrefixPasswordHasher()),
             sessionRepository,
             new StubImpersonationHandoffService(),
-            new StubJwtTokenGenerator(),
+            issuer ?? new StubImpersonationTokenIssuer(),
             dateTimeProvider,
             new NullAuditLogger());
 
@@ -703,17 +714,13 @@ public partial class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubJwtTokenGenerator : IJwtTokenGenerator {
-        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "access-token";
-        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc, long securityVersion = 0) => "access-token";
-        public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, JwtImpersonationContext impersonation, long securityVersion = 0) => "impersonation-token";
-        public string GenerateRefreshToken(
-            UserId userId,
-            string? email,
-            IReadOnlyCollection<string> roles,
-            bool rememberMe = false,
-            Guid? refreshSessionId = null) => "refresh-token";
-        public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
+    private sealed class StubImpersonationTokenIssuer : IImpersonationTokenIssuer {
+        public ImpersonationTokenRequest? LastRequest { get; private set; }
+
+        public string IssueAccessToken(ImpersonationTokenRequest request) {
+            LastRequest = request;
+            return "impersonation-token";
+        }
     }
 
     [ExcludeFromCodeCoverage]

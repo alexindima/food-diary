@@ -8,6 +8,7 @@ Rules for `Modules/Admin/Application/`.
 
 - Own administration commands, queries, orchestration services, validation, and admin-facing models.
 - Consume feature modules through explicit application-level capabilities and models.
+- Consume Identity through Contracts. Request impersonation tokens through IImpersonationTokenIssuer; generic JWT generation/validation stays internal to Identity. Preserve Admin authorization, target-role filtering, audit and handoff behavior.
 - Consume ReportStatus through ContentReports Domain.Contracts.
 - Consume BillingProviderNames through Billing Domain.Contracts and AchievementMetric through Gamification Domain.Contracts; do not reference these aggregate-bearing Domain projects.
 - Keep persistence implementations, provider integrations, authorization transport, and HTTP mappings outside this module.

@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4015,
-    "symbols": 3956,
-    "interfaceImplementationLinks": 268,
+    "sourceFiles": 4018,
+    "symbols": 3959,
+    "interfaceImplementationLinks": 269,
     "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 2061,
+      "class": 2062,
       "enum": 64,
-      "interface": 474,
-      "record": 1236,
+      "interface": 475,
+      "record": 1237,
       "record struct": 121
     },
     "roles": {
@@ -32,13 +32,13 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1605,
+      "Other": 1607,
       "Query": 193,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
       "Repository": 108,
-      "Request": 149,
+      "Request": 150,
       "Response": 213,
       "Service": 314,
       "Validator": 223,
@@ -2810,7 +2810,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "StartAdminImpersonationCommandValidator",
@@ -6292,13 +6292,6 @@
       "line": 5
     },
     {
-      "name": "IWaistEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
-      "line": 5
-    },
-    {
       "name": "IWaistEntryRepository",
       "kind": "interface",
       "role": "Repository",
@@ -6320,24 +6313,10 @@
       "line": 5
     },
     {
-      "name": "WaistEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryModel.cs",
-      "line": 2
-    },
-    {
       "name": "WaistEntryReadModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistEntrySummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntrySummaryModel.cs",
       "line": 2
     },
     {
@@ -6352,13 +6331,6 @@
       "kind": "interface",
       "role": "ReadRepository",
       "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWeightEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
       "line": 5
     },
     {
@@ -6383,24 +6355,10 @@
       "line": 5
     },
     {
-      "name": "WeightEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryModel.cs",
-      "line": 2
-    },
-    {
       "name": "WeightEntryReadModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightEntrySummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
       "line": 2
     },
     {
@@ -6745,6 +6703,48 @@
       "role": "Service",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
       "line": 8
+    },
+    {
+      "name": "IWaistEntryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Common/IWaistEntryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "WaistEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Models/WaistEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistEntrySummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Models/WaistEntrySummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IWeightEntryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Common/IWeightEntryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "WeightEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Models/WeightEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightEntrySummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Models/WeightEntrySummaryModel.cs",
+      "line": 2
     },
     {
       "name": "WaistEntry",
@@ -7230,13 +7230,6 @@
       "line": 5
     },
     {
-      "name": "CycleErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Common/CycleErrors.cs",
-      "line": 4
-    },
-    {
       "name": "ICycleReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -7627,6 +7620,13 @@
       "role": "Service",
       "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
       "line": 13
+    },
+    {
+      "name": "CycleErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Common/CycleErrors.cs",
+      "line": 4
     },
     {
       "name": "ICycleReadService",
@@ -13607,20 +13607,6 @@
       "line": 2
     },
     {
-      "name": "IEmailTemplateAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IEmailTemplateAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
-      "line": 5
-    },
-    {
       "name": "IEmailTemplateReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -13647,20 +13633,6 @@
       "role": "WriteRepository",
       "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
       "line": 4
-    },
-    {
-      "name": "EmailTemplateReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Models/EmailTemplateReadModel.cs",
-      "line": 6
-    },
-    {
-      "name": "EmailTemplateRevisionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Models/EmailTemplateRevisionReadModel.cs",
-      "line": 2
     },
     {
       "name": "AdminSsoCode",
@@ -13768,52 +13740,10 @@
       "line": 2
     },
     {
-      "name": "AccountCreatedMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/AccountCreatedMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "EmailTemplateContent",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailTemplateContent.cs",
-      "line": 2
-    },
-    {
-      "name": "EmailVerificationMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailVerificationMessage.cs",
-      "line": 2
-    },
-    {
       "name": "IAuthenticationLoginEventCleanupService",
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
-      "line": 2
-    },
-    {
-      "name": "IAuthenticationLoginEventReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IEmailSender",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailSender.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailTemplateProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
       "line": 2
     },
     {
@@ -13915,20 +13845,6 @@
       "line": 2
     },
     {
-      "name": "PasswordResetMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/PasswordResetMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "SecurityTokenGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/SecurityTokenGenerator.cs",
-      "line": 5
-    },
-    {
       "name": "TelegramIdentityErrors",
       "kind": "class",
       "role": "Other",
@@ -13943,13 +13859,6 @@
       "line": 2
     },
     {
-      "name": "TestEmailMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TestEmailMessage.cs",
-      "line": 2
-    },
-    {
       "name": "AuthenticationClientContext",
       "kind": "record",
       "role": "Other",
@@ -13961,20 +13870,6 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserLoginDeviceSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginDeviceSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserLoginEventReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
       "line": 2
     },
     {
@@ -14776,6 +14671,125 @@
       "line": 7
     },
     {
+      "name": "IEmailTemplateAdministrationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "IEmailTemplateAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationService.cs",
+      "line": 5
+    },
+    {
+      "name": "EmailTemplateReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Admin/Models/EmailTemplateReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "EmailTemplateRevisionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Admin/Models/EmailTemplateRevisionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AccountCreatedMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/AccountCreatedMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "EmailTemplateContent",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/EmailTemplateContent.cs",
+      "line": 2
+    },
+    {
+      "name": "EmailVerificationMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/EmailVerificationMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "IAuthenticationLoginEventReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Contracts/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "IEmailSender",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/IEmailSender.cs",
+      "line": 2
+    },
+    {
+      "name": "IEmailTemplateProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/IEmailTemplateProvider.cs",
+      "line": 2
+    },
+    {
+      "name": "PasswordResetMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/PasswordResetMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "SecurityTokenGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/SecurityTokenGenerator.cs",
+      "line": 5
+    },
+    {
+      "name": "TestEmailMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/TestEmailMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "ImpersonationTokenRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Contracts/Authentication/Models/ImpersonationTokenRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "UserLoginDeviceSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Models/UserLoginDeviceSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserLoginEventReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Models/UserLoginEventReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IImpersonationTokenIssuer",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Services/IImpersonationTokenIssuer.cs",
+      "line": 4
+    },
+    {
       "name": "EmailTemplate",
       "kind": "class",
       "role": "Entity",
@@ -14811,6 +14825,13 @@
       "line": 6
     },
     {
+      "name": "ImpersonationTokenIssuer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Authentication/ImpersonationTokenIssuer.cs",
+      "line": 6
+    },
+    {
       "name": "JwtTokenGenerator",
       "kind": "class",
       "role": "Other",
@@ -14822,7 +14843,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "IdentityModuleRegistration",
@@ -15434,31 +15455,10 @@
       "line": 6
     },
     {
-      "name": "DeleteImageAssetResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Images/Application/Abstractions/Common/DeleteImageAssetResult.cs",
-      "line": 2
-    },
-    {
       "name": "IImageAssetCleanupBatch",
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupBatch.cs",
-      "line": 4
-    },
-    {
-      "name": "IImageAssetCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs",
-      "line": 4
-    },
-    {
-      "name": "IImageAssetOwnershipService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetOwnershipService.cs",
       "line": 4
     },
     {
@@ -15812,6 +15812,13 @@
       "line": 2
     },
     {
+      "name": "DeleteImageAssetResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/DeleteImageAssetResult.cs",
+      "line": 2
+    },
+    {
       "name": "IImageAssetAccessService",
       "kind": "interface",
       "role": "Service",
@@ -15819,11 +15826,25 @@
       "line": 6
     },
     {
+      "name": "IImageAssetCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Service.Contracts/Common/IImageAssetCleanupService.cs",
+      "line": 4
+    },
+    {
       "name": "IImageAssetContentService",
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs",
       "line": 5
+    },
+    {
+      "name": "IImageAssetOwnershipService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs",
+      "line": 4
     },
     {
       "name": "ImageAssetIdParser",
@@ -19606,13 +19627,6 @@
       "line": 5
     },
     {
-      "name": "ProductErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Products/Application/Abstractions/Products/Common/ProductErrors.cs",
-      "line": 4
-    },
-    {
       "name": "CreateProductCommand",
       "kind": "record",
       "role": "Command",
@@ -19996,6 +20010,13 @@
       "role": "Service",
       "path": "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs",
       "line": 5
+    },
+    {
+      "name": "ProductErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Contracts/Products/Common/ProductErrors.cs",
+      "line": 4
     },
     {
       "name": "ProductOverviewReadItem",
@@ -20775,13 +20796,6 @@
       "line": 4
     },
     {
-      "name": "RecipeErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/RecipeErrors.cs",
-      "line": 4
-    },
-    {
       "name": "CreateRecipeCommand",
       "kind": "record",
       "role": "Command",
@@ -21193,6 +21207,13 @@
       "role": "Service",
       "path": "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs",
       "line": 5
+    },
+    {
+      "name": "RecipeErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Recipes/Common/RecipeErrors.cs",
+      "line": 4
     },
     {
       "name": "RecipeOverviewIngredientReadItem",
@@ -27974,7 +27995,7 @@
     },
     {
       "interface": "IAuthenticationLoginEventReadService",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+      "interfacePath": "Modules/Identity/Contracts/Authentication/Common/IAuthenticationLoginEventReadService.cs",
       "implementation": "AuthenticationLoginEventReadService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
       "confidence": "naming-convention"
@@ -28338,28 +28359,28 @@
     },
     {
       "interface": "IEmailSender",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailSender.cs",
+      "interfacePath": "Modules/Identity/Contracts/Authentication/Common/IEmailSender.cs",
       "implementation": "EmailSender",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateAdministrationReadService",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
+      "interfacePath": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationReadService.cs",
       "implementation": "EmailTemplateAdministrationReadService",
       "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateAdministrationService",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
+      "interfacePath": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationService.cs",
       "implementation": "EmailTemplateAdministrationService",
       "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateProvider",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
+      "interfacePath": "Modules/Identity/Contracts/Authentication/Common/IEmailTemplateProvider.cs",
       "implementation": "EmailTemplateProvider",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
       "confidence": "naming-convention"
@@ -28618,7 +28639,7 @@
     },
     {
       "interface": "IImageAssetCleanupService",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs",
+      "interfacePath": "Modules/Images/Service.Contracts/Common/IImageAssetCleanupService.cs",
       "implementation": "ImageAssetCleanupService",
       "implementationPath": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
       "confidence": "naming-convention"
@@ -28632,7 +28653,7 @@
     },
     {
       "interface": "IImageAssetOwnershipService",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetOwnershipService.cs",
+      "interfacePath": "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs",
       "implementation": "ImageAssetOwnershipService",
       "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs",
       "confidence": "naming-convention"
@@ -28656,6 +28677,13 @@
       "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs",
       "implementation": "ImageObjectDeletionOutboxProcessor",
       "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IImpersonationTokenIssuer",
+      "interfacePath": "Modules/Identity/Contracts/Authentication/Services/IImpersonationTokenIssuer.cs",
+      "implementation": "ImpersonationTokenIssuer",
+      "implementationPath": "Modules/Identity/Infrastructure/Authentication/ImpersonationTokenIssuer.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29493,7 +29521,7 @@
     },
     {
       "interface": "IWaistEntryReadService",
-      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
+      "interfacePath": "Modules/BodyMetrics/Contracts/WaistEntries/Common/IWaistEntryReadService.cs",
       "implementation": "WaistEntryReadService",
       "implementationPath": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
       "confidence": "naming-convention"
@@ -29605,7 +29633,7 @@
     },
     {
       "interface": "IWeightEntryReadService",
-      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+      "interfacePath": "Modules/BodyMetrics/Contracts/WeightEntries/Common/IWeightEntryReadService.cs",
       "implementation": "WeightEntryReadService",
       "implementationPath": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
       "confidence": "naming-convention"

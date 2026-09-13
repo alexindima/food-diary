@@ -9,6 +9,15 @@ public sealed class RetiredDomainAssemblyTests {
     [InlineData(typeof(FoodDiary.Domain.Enums.LessonCategory), "FoodDiary.Modules.Lessons.Domain.Contracts")]
     [InlineData(typeof(FoodDiary.Domain.Enums.LessonDifficulty), "FoodDiary.Modules.Lessons.Domain.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Notifications.Common.INotificationWriter), "FoodDiary.Modules.Notifications.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Authentication.Common.IEmailSender), "FoodDiary.Modules.Identity.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Authentication.Services.IImpersonationTokenIssuer), "FoodDiary.Modules.Identity.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.WeightEntries.Common.IWeightEntryReadService), "FoodDiary.Modules.BodyMetrics.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryReadService), "FoodDiary.Modules.BodyMetrics.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Products.Common.ProductErrors), "FoodDiary.Modules.Products.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Recipes.Common.RecipeErrors), "FoodDiary.Modules.Recipes.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors), "FoodDiary.Modules.Cycles.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetCleanupService), "FoodDiary.Modules.Images.Service.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetOwnershipService), "FoodDiary.Modules.Images.Service.Contracts")]
     public void ConsumerValueAndCapability_HasNarrowAssemblyOwner(Type type, string assembly) {
         Assert.Equal(assembly, type.Assembly.GetName().Name);
     }

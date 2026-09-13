@@ -8,6 +8,7 @@ Rules for `Modules/BodyMetrics/`.
 
 - Own weight and waist entry use cases, application contracts, persistence adapters, and EF entry configurations.
 - Preserve `WeightEntries` and `WaistEntries` as the two cohesive feature groups.
+- External read services and immutable entry/summary results live in BodyMetrics.Contracts, which cannot reference aggregate-bearing Domain or repository ports.
 - WeightEntryErrors and WaistEntryErrors stay in the corresponding owner Abstractions groups. Call them directly; central Errors.WeightEntry/Errors.WaistEntry facades and the central BodyMetrics ports reference are retired. Preserve error codes/messages/kinds and invariant date formatting; see docs/ai/measurement-error-facades.md.
 - Preserve the legacy `FoodDiary.Application.BodyMetrics` assembly name and CLR namespaces.
 - Keep `WeightEntry`, `WaistEntry`, and their IDs in module-owned `Domain` with their legacy CLR namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse measurement navigations.

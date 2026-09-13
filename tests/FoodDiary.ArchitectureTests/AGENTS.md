@@ -1,5 +1,10 @@
 # Architecture Test Guidelines
 
+Narrow consumer closure checks also cover Identity, BodyMetrics, Images service
+contracts and Products/Recipes/Cycles contracts. Foreign business modules cannot
+reference these owners' internal Abstractions. Keep exact exported type ownership
+and public error factory source paths aligned with their narrow contract owners.
+
 NarrowConsumerContractTests checks the complete project-reference closure of
 Users, Lessons and Notifications consumer contracts and rejects foreign business
 module references to Notifications internal ports. RetiredDomainAssemblyTests
