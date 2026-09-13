@@ -15,7 +15,11 @@ public static class AdminModuleRegistration {
 
     public static IServiceCollection AddAdminPersistence(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AdminUserDataPurgeParticipant>());
-        services.AddScoped<IAdminImpersonationSessionRepository, AdminImpersonationSessionRepository>();
+        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+            .CreateModuleContext<AdminDbContext>(static options => new AdminDbContext(options)));
+        services.AddScoped<IAdminImpersonationSessionRepository>(static provider => new AdminImpersonationSessionRepository(
+            provider.GetRequiredService<AdminDbContext>().AdminImpersonationSessions,
+            provider.GetRequiredService<IAdminImpersonationSessionQuery>()));
         services.AddScoped<IAdminImpersonationSessionReadRepository>(static provider => provider.GetRequiredService<IAdminImpersonationSessionRepository>());
         services.AddScoped<IAdminImpersonationSessionWriteRepository>(static provider => provider.GetRequiredService<IAdminImpersonationSessionRepository>());
         services.AddSingleton<IAdminImpersonationHandoffService, AdminImpersonationHandoffService>();

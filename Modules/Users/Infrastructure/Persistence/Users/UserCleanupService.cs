@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,7 +11,7 @@ namespace FoodDiary.Infrastructure.Persistence.Users;
 public sealed class UserCleanupService(
     FoodDiaryDbContext dbContext,
     IEnumerable<IUserDataPurgeParticipant> participants,
-    ILogger<UserCleanupService> logger) : IUserCleanupService {
+    ILogger<UserCleanupService> logger, IUnitOfWork unitOfWork) : IUserCleanupService {
     private readonly IReadOnlyList<IUserDataPurgeParticipant> _participants = ValidateParticipants(participants);
 
     private static IReadOnlyList<IUserDataPurgeParticipant> ValidateParticipants(IEnumerable<IUserDataPurgeParticipant> participants) {
@@ -123,7 +124,7 @@ public sealed class UserCleanupService(
                     await participant.PurgeAsync(userId, reassignTarget, cancellationToken).ConfigureAwait(false);
                 }
                 await DeleteUserRowsAsync(userId, cancellationToken).ConfigureAwait(false);
-                await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 return true;
             }

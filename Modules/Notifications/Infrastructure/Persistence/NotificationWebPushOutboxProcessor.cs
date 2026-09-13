@@ -8,15 +8,16 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Infrastructure.Persistence.Notifications;
 
 internal sealed class NotificationWebPushOutboxProcessor(
-    FoodDiaryDbContext context,
+    DbContext context,
+    DbSet<NotificationWebPushOutboxMessage> messages,
     IWebPushNotificationSender webPushNotificationSender,
     IOptions<OutboxProcessingOptions> options,
     TimeProvider timeProvider,
-    ILogger<NotificationWebPushOutboxProcessor> logger) : INotificationWebPushOutboxProcessor {
+    ILogger<NotificationWebPushOutboxProcessor> logger, Action? ensureCleanEntry = null) : INotificationWebPushOutboxProcessor {
     public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
         OutboxProcessingEngine.ProcessDueAsync(
             context,
-            context.NotificationWebPushOutbox,
+            messages,
             "\"NotificationWebPushOutbox\"",
             "notification_web_push",
             batchSize,
@@ -25,6 +26,6 @@ internal sealed class NotificationWebPushOutboxProcessor(
             (message, token) => webPushNotificationSender.SendAsync(message.Notification, token),
             static message => message.NotificationId.Value,
             logger,
-            context.NotificationWebPushOutbox.Include(message => message.Notification),
-            cancellationToken);
+            messages.Include(message => message.Notification),
+            cancellationToken, ensureCleanEntry: ensureCleanEntry);
 }

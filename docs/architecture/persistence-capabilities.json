@@ -2,6 +2,62 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "Modules/Gamification/Infrastructure/ModuleRegistration.cs": {
+      "module": "Gamification",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database",
+        "entity:AchievementDefinition",
+        "entity:AchievementEvaluationOutboxMessage",
+        "entity:UserAchievement",
+        "tracked:AchievementDefinition",
+        "tracked:AchievementEvaluationOutboxMessage",
+        "tracked:UserAchievement"
+      ],
+      "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
+      "technicalSourceSha256": "df792b5d877bb2207c8851873fab6010b26712543b4ab3d97a1d4d5b305f02c6"
+    },
+    "Modules/Images/Infrastructure/DependencyInjection.cs": {
+      "module": "Images",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:ImageAsset",
+        "entity:ImageObjectDeletionOutboxMessage",
+        "tracked:ImageAsset",
+        "tracked:ImageObjectDeletionOutboxMessage"
+      ],
+      "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
+      "technicalSourceSha256": "2ea3235544aff7973b1d2cd981fe383014cd312d83b60d30867c11ec73cab161"
+    },
+    "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:ImageAsset",
+        "entity:Meal",
+        "entity:MealAiSession",
+        "entity:Product",
+        "entity:Recipe",
+        "entity:RecipeStep",
+        "entity:User"
+      ],
+      "reason": "Preserves all six foreign image-reference predicates and SQL-side oldest-first candidate limit; returns only booleans and scalar IDs."
+    },
+    "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:UserLessonProgress"
+      ],
+      "reason": "Gamification reads Lessons progress for achievement metrics; no Lessons writes."
+    },
+    "Modules/RecentItems/Infrastructure/ModuleRegistration.cs": {
+      "module": "RecentItems",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database"
+      ],
+      "reason": "Owner runtime context shares the central connection; a live transaction accessor preserves immediate SQL and post-commit execution.",
+      "technicalSourceSha256": "28473f8d96c6a0a3588e49a843c77c3309d8f0976f617e3e3af5443399ca78ff"
+    },
     "Modules/ContentReports/Infrastructure/ModuleRegistration.cs": {
       "module": "ContentReports",
       "capabilities": [
@@ -120,17 +176,27 @@
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs": {
       "module": "Identity",
-      "capabilities": ["entity:TelegramOperation", "tracked:TelegramOperation", "write:TelegramOperation"],
+      "capabilities": [
+        "entity:TelegramOperation",
+        "tracked:TelegramOperation",
+        "write:TelegramOperation"
+      ],
       "reason": "Deletes only Identity-owned Telegram operations for the purged user inside the Users-owned purge transaction. No foreign aggregate access, SaveChanges or transaction ownership; rollback and survivor isolation are covered by UserCleanupServiceIntegrationTests."
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs": {
       "module": "Hydration",
-      "capabilities": ["entity:HydrationEntry"],
+      "capabilities": [
+        "entity:HydrationEntry"
+      ],
       "reason": "Owner-filtered, no-tracking sum over an explicit UTC half-open interval. Narrow DbSet injection; no writes or context escapes."
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationOperationReceiptRepository.cs": {
       "module": "Hydration",
-      "capabilities": ["entity:HydrationOperationReceipt", "tracked:HydrationOperationReceipt", "write:HydrationOperationReceipt"],
+      "capabilities": [
+        "entity:HydrationOperationReceipt",
+        "tracked:HydrationOperationReceipt",
+        "write:HydrationOperationReceipt"
+      ],
       "reason": "Hydration-owned permanent operation receipts. Narrow DbSet injection, owner-filtered read and tracked add only; caller retains SaveChanges and transaction ownership. No foreign aggregate access."
     },
     "Modules/Meals/Infrastructure/Persistence/Meals/MealRecognitionReceiptRepository.cs": {
@@ -159,15 +225,35 @@
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
       "module": "Identity",
-      "capabilities": ["context:Database", "entity:TelegramOperation", "tracked:TelegramOperation", "write:TelegramOperation"],
+      "capabilities": [
+        "context:Database",
+        "entity:TelegramOperation",
+        "tracked:TelegramOperation",
+        "write:TelegramOperation"
+      ],
       "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
       "technicalSourceSha256": "7d7adbb4ab584fd5e0dc6aef39d4a19bb307185dbd43468408009314393f6f2e"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
-      "capabilities": ["context:Database", "entity:TelegramLoginTicket", "tracked:TelegramLoginTicket", "write:TelegramLoginTicket"],
+      "capabilities": [
+        "context:Database",
+        "entity:TelegramLoginTicket",
+        "tracked:TelegramLoginTicket",
+        "write:TelegramLoginTicket"
+      ],
       "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
       "technicalSourceSha256": "72f1d37964cf802e3d2e70809392c16dad7d7390c737616e089e1bf1ef9c610f"
+    },
+    "Modules/Admin/Infrastructure/AdminModuleRegistration.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:AdminImpersonationSession",
+        "tracked:AdminImpersonationSession"
+      ],
+      "reason": "Admin composition supplies only the owned session set to its writer; composed reads stay behind the existing query port.",
+      "technicalSourceSha256": "6fb5e6116e1a00f5da8dd53c001e86771fec2eff66286128c09f75977006cc98"
     },
     "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs": {
       "module": "Admin",
@@ -176,7 +262,7 @@
         "tracked:AdminImpersonationSession",
         "write:AdminImpersonationSession"
       ],
-      "reason": "Admin owns impersonation sessions; Users is an existence/status projection for session validation. Composed reads delegate to an explicit read-only port (ADR 0038)."
+      "reason": "Admin writer receives only its owned impersonation session set. Composed reads delegate to an explicit read-only port (ADR 0038); no shared context is available to the repository."
     },
     "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs": {
       "module": "Admin",
@@ -630,7 +716,7 @@
         "write:AchievementDefinition"
       ],
       "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness. Added owner-only no-tracking aggregate of distinct award recipients by achievement key. Reviewed existing SQL insert, tracking lookup and update remain unchanged.",
-      "technicalSourceSha256": "402b020e4d61649b366b416e1957e5551d176562a7cf5f8286b26b098b086683"
+      "technicalSourceSha256": "0fb20ddb6bc9e040206510f9cb4fd30c33ddee2083346d9fd636c30a341b5e89"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs": {
       "module": "Gamification",
@@ -643,7 +729,7 @@
         "write:AchievementEvaluationOutboxMessage"
       ],
       "reason": "Gamification owns evaluation outbox rows; conflict upsert coalesces requests and preserves revisions.",
-      "technicalSourceSha256": "6f6b9a7798c789026c6c091a38ae5e8ad321563791a8e7dfd45440700e0bce94"
+      "technicalSourceSha256": "1bc4016a210fb95b2c42985bf6206e60ac0a6a80287f1b6ba2df3622b8ad6767"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs": {
       "module": "Gamification",
@@ -656,7 +742,7 @@
         "tracked:AchievementEvaluationOutboxMessage"
       ],
       "reason": "Shared EF finalization fences success and failure by Revision and LockedBy. On conflict Gamification discards stale tracking and releases only a changed revision held by the original owner, preserving new request state.",
-      "technicalSourceSha256": "97c93bcc7c1f1d5f029ad724fcc5249a5b0106184f996fb0f81152d6fa73add1"
+      "technicalSourceSha256": "86429277defaa50b9b16567db100e00ffabd7a03ab55391413dff06cef2084e6"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs": {
       "module": "Gamification",
@@ -666,13 +752,6 @@
       ],
       "reason": "Gamification-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
-    "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs": {
-      "module": "Gamification",
-      "capabilities": [
-        "entity:UserLessonProgress"
-      ],
-      "reason": "Gamification reads Lessons progress for achievement metrics; no Lessons writes."
-    },
     "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs": {
       "module": "Gamification",
       "capabilities": [
@@ -681,7 +760,7 @@
         "entity:UserAchievement"
       ],
       "reason": "Gamification grants user achievements with conflict-safe SQL; no Users aggregate access.",
-      "technicalSourceSha256": "4586f3e25298f966a7b3d03b72fdcd532df202be080da3986c873eb70f431971"
+      "technicalSourceSha256": "164bae460b8b8d76f83c19cf66c89bd10e133f989e92ae1cd222979b62c55305"
     },
     "Modules/Hydration/Infrastructure/ModuleRegistration.cs": {
       "module": "Hydration",
@@ -784,16 +863,10 @@
       "module": "Images",
       "capabilities": [
         "entity:ImageAsset",
-        "entity:Meal",
-        "entity:MealAiSession",
-        "entity:Product",
-        "entity:Recipe",
-        "entity:RecipeStep",
-        "entity:User",
         "tracked:ImageAsset",
         "write:ImageAsset"
       ],
-      "reason": "Images owns asset lifecycle; references in Users, Meals, Products, Recipes and recipe steps are usage checks for safe deletion, not foreign aggregate mutation."
+      "reason": "Images repository tracks only its owned assets; usage checks and bounded candidate IDs come from the composed read port. Restrict FKs still fence deletion races."
     },
     "Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs": {
       "module": "Images",
@@ -810,14 +883,6 @@
         "entity:ImageObjectDeletionOutboxMessage",
         "tracked:ImageObjectDeletionOutboxMessage",
         "write:ImageObjectDeletionOutboxMessage"
-      ],
-      "reason": "Images-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
-    },
-    "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs": {
-      "module": "Images",
-      "capabilities": [
-        "entity:ImageObjectDeletionOutboxMessage",
-        "tracked:ImageObjectDeletionOutboxMessage"
       ],
       "reason": "Images-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
@@ -913,12 +978,16 @@
     "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
       "module": "Notifications",
       "capabilities": [
+        "context:CreateModuleContext",
         "entity:Notification",
+        "entity:NotificationWebPushOutboxMessage",
         "entity:WebPushSubscription",
         "tracked:Notification",
+        "tracked:NotificationWebPushOutboxMessage",
         "tracked:WebPushSubscription"
       ],
-      "reason": "Notifications composition resolves only its two owner DbSet instances for narrowed repositories; the shared unit of work retains SaveChanges and transaction ownership."
+      "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
+      "technicalSourceSha256": "076ae4e7f50056e36885f381c391e71853777f49dcd2fb022086b6ac0cd7d742"
     },
     "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
       "module": "Notifications",
@@ -1027,7 +1096,7 @@
         "write:RecentItem"
       ],
       "reason": "RecentItems owns recency upsert/pruning. Tracker inspection merges pending own records; SQL handles conflict-safe usage and bounded retention.",
-      "technicalSourceSha256": "0e1ea87f47aefd60e53da5c3ca4b73f219ce970b0b3ecb21af118c0a43057de4"
+      "technicalSourceSha256": "59001a037919e2e576ff46c74861a09e4d645a1029ff85689df261fd38896760"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs": {
       "module": "RecentItems",
@@ -1125,7 +1194,6 @@
       "capabilities": [
         "context:ChangeTracker",
         "context:Database",
-        "context:SaveChangesAsync",
         "entity:User",
         "entity:UserRole",
         "tracked:User",
@@ -1134,7 +1202,7 @@
         "write:UserRole"
       ],
       "reason": "Users lifecycle coordinator locks eligibility, invokes ordered owner purge participants, deletes only User/UserRole rows and commits once per account. Owner adapters govern foreign data lifecycle. Reject pending caller state; clear tracking before retry attempts and after failed accounts so rolled-back outbox additions cannot leak into later commits.",
-      "technicalSourceSha256": "0e2935bc8ba5f3d378fc6b82ef10d43e728130fd4dbf38afcaceedfa2f7e9b78"
+      "technicalSourceSha256": "a23bbb43ad393c26bff7bcc59452ed63c46cc81ef7675885bebdcb0c53262e39"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs": {
       "module": "Users",
@@ -1255,13 +1323,12 @@
       "module": "Admin",
       "capabilities": [
         "context:Entry",
-        "context:SaveChangesAsync",
         "entity:BugAcknowledgementReceipt",
         "tracked:BugAcknowledgementReceipt",
         "write:BugAcknowledgementReceipt"
       ],
       "reason": "Admin-owned acknowledgement receipts contain only an opaque MailInbox ID. The dedicated background scope saves its receipt after durable MailRelay enqueue; duplicate inserts are detached and verified by existence lookup, other failures propagate. No foreign aggregate writes, raw SQL or message content persistence.",
-      "technicalSourceSha256": "20a70ada7ca020b25d12483ec41c4e179991db61d39d2a171672ef0d11573cb9"
+      "technicalSourceSha256": "6540ff85dc050c62d9d4522da30004f1fcea0d7549359fae745bf09e241cf97a"
     },
     "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs": {
       "module": "Marketing",

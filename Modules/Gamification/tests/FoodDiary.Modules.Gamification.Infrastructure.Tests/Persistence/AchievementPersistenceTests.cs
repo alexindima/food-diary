@@ -35,7 +35,7 @@ public sealed class AchievementPersistenceTests {
             }
             await writer.SaveChangesAsync();
         });
-        var processor = new AchievementEvaluationOutboxProcessor(context, handler,
+        var processor = new AchievementEvaluationOutboxProcessor(context, context.AchievementEvaluationOutbox, handler,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()), TimeProvider.System,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
@@ -117,7 +117,7 @@ public sealed class AchievementPersistenceTests {
         await context.SaveChangesAsync();
         IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
         var processor = new AchievementEvaluationOutboxProcessor(
-            context,
+            context, context.AchievementEvaluationOutbox,
             handler,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -140,7 +140,7 @@ public sealed class AchievementPersistenceTests {
             .ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>())
             .Returns(Task.FromException(new InvalidOperationException("Simulated reconciliation failure.")));
         var processor = new AchievementEvaluationOutboxProcessor(
-            context,
+            context, context.AchievementEvaluationOutbox,
             handler,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -182,7 +182,7 @@ public sealed class AchievementPersistenceTests {
                 }
             });
         var processor = new AchievementEvaluationOutboxProcessor(
-            context,
+            context, context.AchievementEvaluationOutbox,
             handler,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -211,7 +211,7 @@ public sealed class AchievementPersistenceTests {
         context.AchievementDefinitions.AddRange(second, firstB, firstA);
         await context.SaveChangesAsync();
 
-        IReadOnlyList<AchievementDefinition> result = await new AchievementDefinitionStore(context).GetAllAsync();
+        IReadOnlyList<AchievementDefinition> result = await new AchievementDefinitionStore(context, context.AchievementDefinitions, context.UserAchievements).GetAllAsync();
 
         Assert.Equal(["a", "b", "second"], result.Select(static item => item.Key), StringComparer.Ordinal);
     }

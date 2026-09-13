@@ -13,7 +13,7 @@ public sealed class ImageObjectDeletionOutboxTests {
     [Fact]
     public async Task EnqueueAsync_PersistsDueMessage() {
         await using FoodDiaryDbContext context = CreateContext();
-        var outbox = new ImageObjectDeletionOutbox(context, TimeProvider.System);
+        var outbox = new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System);
 
         await outbox.EnqueueAsync("users/test/image.webp", CancellationToken.None);
         await context.SaveChangesAsync();
@@ -31,7 +31,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         await context.SaveChangesAsync();
         var storage = new RecordingImageStorageService();
         var processor = new ImageObjectDeletionOutboxProcessor(
-            context,
+            context, context.ImageObjectDeletionOutbox,
             storage,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -52,7 +52,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         context.ImageObjectDeletionOutbox.Add(ImageObjectDeletionOutboxMessage.Create("users/test/fail.webp", DateTime.UtcNow.AddMinutes(-1)));
         await context.SaveChangesAsync();
         var processor = new ImageObjectDeletionOutboxProcessor(
-            context,
+            context, context.ImageObjectDeletionOutbox,
             new ThrowingImageStorageService(),
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -79,7 +79,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         context.ImageObjectDeletionOutbox.Add(message);
         await context.SaveChangesAsync();
         var processor = new ImageObjectDeletionOutboxProcessor(
-            context,
+            context, context.ImageObjectDeletionOutbox,
             new ThrowingImageStorageService(),
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -100,7 +100,7 @@ public sealed class ImageObjectDeletionOutboxTests {
     public async Task ProcessDueAsync_WhenBatchSizeIsNotPositive_ReturnsZero() {
         await using FoodDiaryDbContext context = CreateContext();
         var processor = new ImageObjectDeletionOutboxProcessor(
-            context,
+            context, context.ImageObjectDeletionOutbox,
             new RecordingImageStorageService(),
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,

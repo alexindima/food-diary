@@ -187,3 +187,5 @@ BodyMetrics is the second module with an owned runtime context (ADR 0040). Weigh
 Exercises extends the owned runtime contexts to three modules (ADR 0040), sharing the same scoped connection and UoW. Central migration/read/purge mappings remain.
 
 Cycles is the fourth runtime-context owner (ADR 0040). Its profile and seven child mappings share the existing UoW; central migration/read/purge bridges remain unchanged.
+
+OutboxProcessingEngine and OutboxMessageClaimer accept a DbContext supplied by the owning adapter. They require a clean tracker and no existing transaction. For FoodDiaryDbContext, the clean-entry guard also checks every registered module context. Lease acquisition, retry policy, fencing, finalization and table allowlist remain shared. This technical seam does not change current adapter registrations or authorize a module to process foreign tables.

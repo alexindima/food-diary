@@ -43,3 +43,9 @@ AchievementDefinitionLimits owns shared length limits. AchievementDefinition ret
 IAchievementEvaluationOutbox is the consumer enqueue capability used by Lessons.
 It belongs to Contracts; processing, repositories and reconciliation remain internal
 Abstractions. Preserve ambient transaction and coalescing behavior in its adapter.
+
+Runtime writes and normal outbox processing use the owner context registered through
+CreateModuleContext. Processors retain a shared-scope clean-entry callback before
+claiming. Replay streams keep the central context for the existing audit/reset
+transaction. User purge and image ownership reassignment retain their shared
+transaction scope; they are not ordinary runtime repository dependencies.

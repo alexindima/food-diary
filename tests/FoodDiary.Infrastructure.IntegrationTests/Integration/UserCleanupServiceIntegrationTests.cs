@@ -1,3 +1,5 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Hydration.Infrastructure;
@@ -6,7 +8,6 @@ using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Application.Abstractions.Users.Common;
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Assets;
@@ -286,7 +287,8 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         using ServiceProvider provider = services.BuildServiceProvider();
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
         Assert.Equal(extra is null ? 13 : 14, participants.Length);
-        return new UserCleanupService(context, participants, NullLogger<UserCleanupService>.Instance);
+        return new UserCleanupService(context, participants, NullLogger<UserCleanupService>.Instance,
+            new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance));
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
@@ -397,4 +399,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             return Task.CompletedTask;
         }
     }
+    [ExcludeFromCodeCoverage]
+    private sealed class NoEvents : IDomainEventPublisher {
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
 }

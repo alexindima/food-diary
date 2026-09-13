@@ -28,3 +28,5 @@ Both scoped contract aliases share this adapter. Unlike access profiles, these
 related-data projections intentionally retain all account states, matching the
 former joins. Query only requested distinct IDs and scalar columns, no tracking,
 saves, caches or transactions; empty input performs no SQL and cancellation is honored.
+
+UserCleanupService saves through IUnitOfWork inside its existing per-user transaction, so image-deletion outbox entries tracked in ImagesDbContext commit or roll back with user cleanup. Participants still never save or commit.

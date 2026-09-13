@@ -8,15 +8,16 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 internal sealed class AchievementEvaluationOutboxProcessor(
-    FoodDiaryDbContext context,
+    DbContext context,
+    DbSet<AchievementEvaluationOutboxMessage> messages,
     IAchievementReconciliationHandler reconciliationHandler,
     IOptions<OutboxProcessingOptions> options,
     TimeProvider timeProvider,
-    ILogger<AchievementEvaluationOutboxProcessor> logger) : IAchievementEvaluationOutboxProcessor {
+    ILogger<AchievementEvaluationOutboxProcessor> logger, Action? ensureCleanEntry = null) : IAchievementEvaluationOutboxProcessor {
     public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
         OutboxProcessingEngine.ProcessDueAsync(
             context,
-            context.AchievementEvaluationOutbox,
+            messages,
             "\"AchievementEvaluationOutbox\"",
             "achievement_evaluation",
             batchSize,
@@ -26,7 +27,8 @@ internal sealed class AchievementEvaluationOutboxProcessor(
             static message => message.UserId.Value,
             logger,
             cancellationToken: cancellationToken,
-            tryReleaseUpdatedRevisionAsync: TryReleaseUpdatedRevisionAsync);
+            tryReleaseUpdatedRevisionAsync: TryReleaseUpdatedRevisionAsync,
+            ensureCleanEntry: ensureCleanEntry);
 
     private async Task<OutboxCompletionResult> TryReleaseUpdatedRevisionAsync(
         AchievementEvaluationOutboxMessage message,
@@ -36,7 +38,7 @@ internal sealed class AchievementEvaluationOutboxProcessor(
         string? claimedBy = context.Entry(message).OriginalValues.GetValue<string?>(nameof(message.LockedBy));
         context.ChangeTracker.Clear();
         if (!context.Database.IsRelational()) {
-            AchievementEvaluationOutboxMessage? current = await context.AchievementEvaluationOutbox
+            AchievementEvaluationOutboxMessage? current = await messages
                 .SingleOrDefaultAsync(candidate => candidate.Id == message.Id, cancellationToken).ConfigureAwait(false);
             if (current is null || current.Revision == claimedRevision ||
                 !string.Equals(current.LockedBy, claimedBy, StringComparison.Ordinal)) {

@@ -8,3 +8,9 @@ ImageAssetContentService reads confirmed, owned assets by ObjectKey from the
 configured published bucket. It never fetches the stored public URL. Keep reads
 bounded by the upload limit and cancellation deadline, and expose only safe
 storage errors. Data URLs are transient provider input, not persisted state.
+
+Runtime writes and normal outbox processing use the owner context registered through
+CreateModuleContext. Processors retain a shared-scope clean-entry callback before
+claiming. Replay streams keep the central context for the existing audit/reset
+transaction. User purge and image ownership reassignment retain their shared
+transaction scope; they are not ordinary runtime repository dependencies.

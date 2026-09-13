@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Images;
 using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Domain.Primitives;
@@ -59,6 +60,7 @@ using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Memory;
 using Npgsql;
 
@@ -1108,7 +1110,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
     private static async Task CoverRecentItemRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
         DateTime baseline = new(2026, 6, 14, 12, 0, 0, DateTimeKind.Utc);
-        var repository = new RecentItemRepository(context, new FixedDateTimeProvider(baseline));
+        await using var repositoryContext = new RecentItemsDbContext(new DbContextOptionsBuilder<RecentItemsDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection()).Options);
+        var repository = new RecentItemRepository(repositoryContext, () => context.Database.CurrentTransaction?.GetDbTransaction(), new FixedDateTimeProvider(baseline));
         var productId = ProductId.New();
         var recipeId = RecipeId.New();
 
@@ -1126,7 +1130,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverImageAssetRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new ImageAssetRepository(context);
+        var repository = new ImageAssetRepository(context.ImageAssets, new ImageAssetUsageQuery(context));
         ImageAsset asset = await repository.AddAsync(ImageAsset.Create(userId, $"images/{Guid.NewGuid():N}.webp", "https://cdn.example.com/image.webp"));
         ImageAsset usedAsset = await repository.AddAsync(ImageAsset.Create(userId, $"images/{Guid.NewGuid():N}.webp", "https://cdn.example.com/used.webp"));
         await context.SaveChangesAsync();

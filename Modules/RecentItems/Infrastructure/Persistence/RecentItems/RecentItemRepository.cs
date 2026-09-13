@@ -3,10 +3,11 @@ using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace FoodDiary.Infrastructure.Persistence.RecentItems;
 
-public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvider dateTimeProvider) : IRecentItemRepository {
+public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTransaction?> currentTransaction, TimeProvider dateTimeProvider) : IRecentItemRepository {
     private const int MaxStoredPerType = 100;
 
     public async Task RegisterUsageAsync(
@@ -49,6 +50,7 @@ public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvide
             return;
         }
 
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         if (distinctProductIds.Count > 0) {
             await UpsertItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken).ConfigureAwait(false);
         }
@@ -130,6 +132,7 @@ public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvide
         UserId userId,
         int limit,
         CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         int sanitizedLimit = Math.Clamp(limit, 1, 100);
 
         return await context.RecentItems
@@ -145,6 +148,7 @@ public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvide
         UserId userId,
         int limit,
         CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         int sanitizedLimit = Math.Clamp(limit, 1, 100);
 
         return await context.RecentItems
@@ -195,4 +199,10 @@ public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvide
                 OFFSET {{MaxStoredPerType}})
             """, cancellationToken).ConfigureAwait(false);
     }
+    private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
+        if (context.Database.IsRelational()) {
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+        }
+    }
+
 }

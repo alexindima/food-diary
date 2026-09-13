@@ -410,3 +410,5 @@ ContentReports owns a single-entity runtime context and report writes. The host
 composition implements its existing read-model and target-read ports, preserving
 visibility predicates, SQL paging and bounded title/comment excerpts. No module
 references the composition implementation; central migrations remain (ADR 0040).
+
+Admin runtime persistence uses AdminDbContext for sessions and acknowledgement receipts; composed reads and transactional user purge retain the shared context (ADR 0040).

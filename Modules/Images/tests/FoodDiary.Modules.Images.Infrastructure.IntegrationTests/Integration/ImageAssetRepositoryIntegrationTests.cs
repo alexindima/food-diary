@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Images;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
@@ -20,7 +21,7 @@ public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture
         context.ImageAssets.Add(asset);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new ImageAssetRepository(context);
+        var repository = new ImageAssetRepository(context.ImageAssets, new ImageAssetUsageQuery(context));
 
         ImageAsset? foreign = await repository.GetOwnedByIdAsync(asset.Id, otherUser.Id, CancellationToken.None);
         ImageAsset? owned = await repository.GetOwnedForUpdateAsync(asset.Id, owner.Id, CancellationToken.None);
@@ -57,7 +58,7 @@ public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture
         context.Meals.Add(meal);
         await context.SaveChangesAsync();
 
-        var repository = new ImageAssetRepository(context);
+        var repository = new ImageAssetRepository(context.ImageAssets, new ImageAssetUsageQuery(context));
 
         bool isReferencedAssetInUse = await repository.IsAssetInUseAsync(referencedAsset.Id, CancellationToken.None);
         IReadOnlyList<ImageAsset> unusedCandidates = await repository.GetUnusedOlderThanAsync(

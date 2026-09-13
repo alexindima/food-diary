@@ -1,3 +1,7 @@
+using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.ReadModel.Composition.Images;
+using FoodDiary.ReadModel.Composition.Gamification;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
@@ -19,6 +23,8 @@ namespace FoodDiary.ReadModel.Composition;
 
 public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
+        services.AddScoped<IImageAssetUsageQuery, ImageAssetUsageQuery>();
+        services.AddScoped<IAchievementMetricReader, AchievementMetricReader>();
         services.AddScoped<ContentReportReadService>();
         services.AddScoped<IContentReportReadModelRepository>(static provider => provider.GetRequiredService<ContentReportReadService>());
         services.AddScoped<IContentReportTargetReadService>(static provider => provider.GetRequiredService<ContentReportReadService>());

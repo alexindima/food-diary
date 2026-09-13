@@ -8,7 +8,7 @@ namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
 internal static class OutboxMessageClaimer {
     public static async Task<OutboxClaimBatch<TMessage>> ClaimDueAsync<TMessage>(
-        FoodDiaryDbContext context,
+        DbContext context,
         DbSet<TMessage> messages,
         string tableName,
         int batchSize,
@@ -53,7 +53,7 @@ internal static class OutboxMessageClaimer {
     }
 
     private static async Task<OutboxClaimBatch<TMessage>> ClaimDueWithRelationalDatabaseAsync<TMessage>(
-        FoodDiaryDbContext context,
+        DbContext context,
         DbSet<TMessage> messages,
         string tableName,
         int batchSize,
@@ -87,7 +87,7 @@ internal static class OutboxMessageClaimer {
     }
 
     private static async Task<int> ExecuteClaimTransactionAsync(
-        FoodDiaryDbContext context,
+        DbContext context,
         string tableName,
         int batchSize,
         DateTime nowUtc,
@@ -152,7 +152,7 @@ internal static class OutboxMessageClaimer {
     }
 
     private static async Task<int> CountReclaimedAsync(
-        FoodDiaryDbContext context,
+        DbContext context,
         string tableName,
         IReadOnlyCollection<Guid> ids,
         CancellationToken cancellationToken) {

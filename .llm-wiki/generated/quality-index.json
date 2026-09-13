@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5324,
+    "productionFiles": 5331,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -3482,11 +3482,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "nonBlankLines": 183,
+      "nonBlankLines": 187,
       "decisionPoints": 22,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.66
+      "structuralRiskScore": 36.74
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs",
@@ -3514,11 +3514,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 8,
+      "nonBlankLines": 46,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.9
+      "structuralRiskScore": 14.42
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -4497,6 +4497,22 @@
       "structuralRiskScore": 0.64
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.26
+    },
+    {
       "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
       "nonBlankLines": 69,
       "decisionPoints": 1,
@@ -4530,11 +4546,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 46,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.8
+      "structuralRiskScore": 0.92
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -15410,11 +15426,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
@@ -15466,11 +15482,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
+      "structuralRiskScore": 1.96
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementSource.cs",
@@ -15522,11 +15538,19 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Admin/Infrastructure/Persistence/AdminDbContext.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs",
@@ -26338,35 +26362,35 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 45,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.9
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
-    },
-    {
-      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 52,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.84
+      "structuralRiskScore": 4.04
     },
     {
-      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "nonBlankLines": 56,
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
+      "nonBlankLines": 49,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.12
+      "structuralRiskScore": 6.98
+    },
+    {
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
+      "nonBlankLines": 58,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.16
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs",
@@ -26377,20 +26401,20 @@
       "structuralRiskScore": 2.18
     },
     {
-      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs",
-      "nonBlankLines": 13,
+      "path": "Modules/Gamification/Infrastructure/Persistence/GamificationDbContext.cs",
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 1,
+      "nonBlankLines": 47,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
+      "structuralRiskScore": 5.44
     },
     {
       "path": "Modules/Gamification/Presentation/Extensions/GamificationPresentationServiceCollectionExtensions.cs",
@@ -29049,6 +29073,14 @@
       "structuralRiskScore": 0.04
     },
     {
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetUsageQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "Modules/Images/Application/Abstractions/Common/IImageAssetWriteRepository.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
@@ -29226,11 +29258,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.78
     },
     {
       "path": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
@@ -29298,11 +29330,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 13,
+      "nonBlankLines": 37,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.68
+      "structuralRiskScore": 3.74
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs",
@@ -29314,19 +29346,27 @@
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.56
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Persistence/ImagesDbContext.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs",
@@ -33378,11 +33418,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 66,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.04
+      "structuralRiskScore": 1.32
     },
     {
       "path": "Modules/Notifications/Infrastructure/Options/WebPushOptions.cs",
@@ -33410,19 +33450,27 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutbox.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.58
+    },
+    {
+      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationsDbContext.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
-    },
-    {
-      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs",
@@ -34818,11 +34866,11 @@
     },
     {
       "path": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
@@ -34834,11 +34882,19 @@
     },
     {
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
-      "nonBlankLines": 171,
-      "decisionPoints": 22,
+      "nonBlankLines": 180,
+      "decisionPoints": 23,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.42
+      "structuralRiskScore": 38.1
+    },
+    {
+      "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItemsDbContext.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs",
@@ -38866,11 +38922,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "nonBlankLines": 122,
+      "nonBlankLines": 123,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.44
+      "structuralRiskScore": 23.46
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
@@ -46944,11 +47000,12 @@
       "role": "Handler",
       "path": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
       "line": 8,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs",
         "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
+        "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedDeliveryContextsIntegrationTests.cs",
         "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -54228,7 +54285,7 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "line": 49,
+      "line": 51,
       "marker": "#pragma warning disable"
     }
   ]

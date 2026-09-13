@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence.Outbox;
@@ -7,15 +8,16 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Infrastructure.Persistence.Images;
 
 internal sealed class ImageObjectDeletionOutboxProcessor(
-    FoodDiaryDbContext context,
+    DbContext context,
+    DbSet<ImageObjectDeletionOutboxMessage> messages,
     IImageStorageService imageStorageService,
     IOptions<OutboxProcessingOptions> options,
     TimeProvider timeProvider,
-    ILogger<ImageObjectDeletionOutboxProcessor> logger) : IImageObjectDeletionOutboxProcessor {
+    ILogger<ImageObjectDeletionOutboxProcessor> logger, Action? ensureCleanEntry = null) : IImageObjectDeletionOutboxProcessor {
     public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
         OutboxProcessingEngine.ProcessDueAsync(
             context,
-            context.ImageObjectDeletionOutbox,
+            messages,
             "\"ImageObjectDeletionOutbox\"",
             "image_object_deletion",
             batchSize,
@@ -24,5 +26,5 @@ internal sealed class ImageObjectDeletionOutboxProcessor(
             (message, token) => imageStorageService.DeleteAsync(message.ObjectKey, message.IsConfirmed, token),
             static message => message.ObjectKey,
             logger,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken, ensureCleanEntry: ensureCleanEntry);
 }

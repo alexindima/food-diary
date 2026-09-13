@@ -17,7 +17,11 @@
     <ProjectReference Include="../Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
+    <ProjectReference Include="../Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
+    <ProjectReference Include="../Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
+    <ProjectReference Include="../Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="../Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />

@@ -22,18 +22,14 @@
       "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "11ec52fb08c5a53607164bf1da3d1bb6e1143ad430454b1cccb364762ae9117f"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
+          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
         }
       ],
-      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
+      "reason": "ADR 0040 documents Admin context shared receipt save and retained transactional purge",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:06.2548144Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T10:17:26.9088639Z"
     },
     {
       "pageId": "module.frontend",
@@ -56,18 +52,14 @@
       "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "11ec52fb08c5a53607164bf1da3d1bb6e1143ad430454b1cccb364762ae9117f"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
+          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
         }
       ],
-      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
+      "reason": "ADR 0040 documents Admin context shared receipt save and retained transactional purge",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:06.5299874Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T10:17:27.9906377Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -76,17 +68,21 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
+          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
         },
         {
-          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "4b7371766e185f54526821e3174d12f14090b8c79848024405b82cfaeee26e43"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "2d77880597d3512a588cba77b514141c2bb49b21fd9004b8b4e8325ef2146b04"
+        },
+        {
+          "path": "Modules/Admin/Infrastructure/AGENTS.md",
+          "sha256": "c98284cc8e859e5090e6a61c128e0b67a7eeef8afb2a404f7a01cafe7f93335e"
         }
       ],
-      "reason": "Existing ports SQL predicates paging and HTTP surface preserved",
+      "reason": "No HTTP or message contract changes; existing callers still pass their central context",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:06.8202628Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T10:49:21.7565159Z"
     },
     {
       "pageId": "system.architecture",
@@ -94,22 +90,18 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "11ec52fb08c5a53607164bf1da3d1bb6e1143ad430454b1cccb364762ae9117f"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a3eb864864a7f8dc62e8dc23b2b014551784fbf96340e4ae4a753f73050a014"
+          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "5b6bb317b9a7b3ac967d85143e206f6552b994b6cf193ffcaca02e447230bf5e"
+          "sha256": "c2052dd49c803f52aabad8280f468ab4194960039c83280d32280db636ba2a2b"
         }
       ],
-      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
+      "reason": "Owner contexts and retained shared seams documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:07.0733692Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T11:22:38.7111422Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -231,17 +223,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "809a5f0411455ef7e0b05a1b0fe58050994036421e32b2a8654c44706369c4e0"
+          "sha256": "6cc9317e9bdb2d9bfc90a50d62b40d0fd244951e29ce5ba97d084736c9ea274d"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "5b6bb317b9a7b3ac967d85143e206f6552b994b6cf193ffcaca02e447230bf5e"
+          "sha256": "c2052dd49c803f52aabad8280f468ab4194960039c83280d32280db636ba2a2b"
         }
       ],
-      "reason": "Shared save rollback cascade moderation DI HTTP and architecture tests verified",
+      "reason": "1788 architecture owner unit HTTP and PostgreSQL tests pass",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:07.3710257Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T11:22:39.2393908Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -250,13 +242,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "d67f3890809cee79f3d27f32430c2a455f7742b9255f10b042ae2f4e7b5232a1"
+          "sha256": "31851d1b95dc3bf4f878d2e86b9437971d90a6cd6690bec74f1b279ced691cbe"
         }
       ],
-      "reason": "Existing ports SQL predicates paging and HTTP surface preserved",
+      "reason": "HTTP and Swagger tests pass with unchanged payloads",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:08.0705246Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T11:22:40.1653367Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -521,13 +513,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "2ca430104010e833b36dc396845a8073c752edd4dba7cd5d8ebd6d986b5d481c"
+          "sha256": "2d77880597d3512a588cba77b514141c2bb49b21fd9004b8b4e8325ef2146b04"
         }
       ],
-      "reason": "Added eight-entity model and shared PostgreSQL tracking/projection/cascade/rollback tests; three passed. Full build is clean; focused architecture and existing owner suites cover the remaining boundary. Other session changes remain outside implementation scope.",
+      "reason": "Dedicated PostgreSQL context completion retry clean-entry and existing lease replay tests cover shared engine",
       "baseRef": "HEAD",
-      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
-      "reviewedAtUtc": "2026-09-13T05:49:57.8924710Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T10:49:23.7801710Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -840,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c83d21ba84c5b7f3d984104cc4c6da4cb8c76f55319b6fd50d07bc5c10ee3c0"
+          "sha256": "4ce53434411a0d83806f5858af9d7609d59cede2988c9960864589f9369c6637"
         }
       ],
-      "reason": "Shared save rollback cascade moderation DI HTTP and architecture tests verified",
+      "reason": "1788 architecture owner unit HTTP and PostgreSQL tests pass",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:08.5669086Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T11:22:40.9660538Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -915,13 +907,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "47a080adcd234e429b88f93b1cdef8c545b80c8935f674bf825b71b110eea498"
+          "sha256": "48c379ce79d9b450b762ceabe0271a77f1835dcb1f71151d1dd6831d16d4e60d"
         }
       ],
-      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
+      "reason": "Owner contexts and retained shared seams documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:09.2576178Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T11:22:42.2510633Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -930,17 +922,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c83d21ba84c5b7f3d984104cc4c6da4cb8c76f55319b6fd50d07bc5c10ee3c0"
+          "sha256": "4ce53434411a0d83806f5858af9d7609d59cede2988c9960864589f9369c6637"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "47a080adcd234e429b88f93b1cdef8c545b80c8935f674bf825b71b110eea498"
+          "sha256": "48c379ce79d9b450b762ceabe0271a77f1835dcb1f71151d1dd6831d16d4e60d"
         }
       ],
-      "reason": "Private recipe and comment visibility preserved and covered by PostgreSQL",
+      "reason": "Ownership checks restrictive image FKs and atomic purge retained and tested",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:09.7432288Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T11:22:43.0363774Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1186,13 +1178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c0bc118f0027aa1f4291b41209db88b4ab72d6a26e9f028f04a679d07a857480"
+          "sha256": "81e906964af0f27ae8464b5c792ef1b3c48f0671e1ef9ff00e52300a5666a2c8"
         }
       ],
-      "reason": "ContentReports owner writes and composed reads documented in ADR 0040",
+      "reason": "Owner contexts and retained shared seams documented in ADR 0040",
       "baseRef": "HEAD",
-      "gitHead": "892d29fabcfefdb44b72d90969e21d9a90e290c1",
-      "reviewedAtUtc": "2026-09-13T08:50:08.9509711Z"
+      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
+      "reviewedAtUtc": "2026-09-13T11:22:41.6567758Z"
     },
     {
       "pageId": "workflow.review-diff",

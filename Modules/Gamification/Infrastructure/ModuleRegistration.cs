@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using FoodDiary.Infrastructure.Options;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Gamification;
@@ -10,14 +14,34 @@ namespace FoodDiary.Modules.Gamification.Infrastructure;
 
 public static class ModuleRegistration {
     public static IServiceCollection AddGamificationModule(this IServiceCollection services) {
+        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+            .CreateModuleContext<GamificationDbContext>(static options => new GamificationDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, AchievementEvaluationOutboxReplayStream>());
         services.AddGamificationApplication();
-        services.AddScoped<IAchievementDefinitionStore, AchievementDefinitionStore>();
-        services.AddScoped<IUserAchievementStore, UserAchievementStore>();
-        services.AddScoped<IAchievementEvaluationOutbox, AchievementEvaluationOutbox>();
+        services.AddScoped<IAchievementDefinitionStore>(static provider => {
+            GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
+            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            return new AchievementDefinitionStore(owned, owned.AchievementDefinitions, owned.UserAchievements, () => shared.Database.CurrentTransaction?.GetDbTransaction());
+        });
+        services.AddScoped<IUserAchievementStore>(static provider => {
+            GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
+            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            return new UserAchievementStore(owned, owned.UserAchievements, () => shared.Database.CurrentTransaction?.GetDbTransaction());
+        });
+        services.AddScoped<IAchievementEvaluationOutbox>(static provider => {
+            GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
+            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            return new AchievementEvaluationOutbox(owned, owned.AchievementEvaluationOutbox, provider.GetRequiredService<TimeProvider>(), () => shared.Database.CurrentTransaction?.GetDbTransaction());
+        });
         services.AddScoped<IMealAchievementEvaluationRequest>(static provider => (AchievementEvaluationOutbox)provider.GetRequiredService<IAchievementEvaluationOutbox>());
-        services.AddScoped<IAchievementMetricReader, AchievementMetricReader>();
-        services.AddScoped<IAchievementEvaluationOutboxProcessor, AchievementEvaluationOutboxProcessor>();
+        services.AddScoped<IAchievementEvaluationOutboxProcessor>(static provider => {
+            GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
+            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            return new AchievementEvaluationOutboxProcessor(owned, owned.AchievementEvaluationOutbox,
+                provider.GetRequiredService<IAchievementReconciliationHandler>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
+                provider.GetRequiredService<TimeProvider>(), provider.GetRequiredService<ILogger<AchievementEvaluationOutboxProcessor>>(),
+                () => OutboxProcessingEngine.EnsureCleanEntry(shared));
+        });
         return services;
     }
 }

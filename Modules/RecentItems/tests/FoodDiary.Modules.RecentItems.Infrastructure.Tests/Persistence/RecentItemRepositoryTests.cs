@@ -12,10 +12,10 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 public sealed class RecentItemRepositoryTests {
     [Fact]
     public async Task RegisterUsageAsync_WithInMemoryProvider_AddsAndUpdatesDistinctItems() {
-        await using FoodDiaryDbContext context = CreateContext();
+        await using RecentItemsDbContext context = CreateContext();
         var usedAtUtc = new DateTime(2026, 8, 19, 10, 0, 0, DateTimeKind.Utc);
         var timeProvider = new MutableTimeProvider(usedAtUtc);
-        var repository = new RecentItemRepository(context, timeProvider);
+        var repository = new RecentItemRepository(context, static () => null, timeProvider);
         var userId = UserId.New();
         var productId = ProductId.New();
         var recipeId = RecipeId.New();
@@ -44,10 +44,10 @@ public sealed class RecentItemRepositoryTests {
 
     [Fact]
     public async Task RegisterUsageAsync_WithInMemoryProvider_TrimsOldestItems() {
-        await using FoodDiaryDbContext context = CreateContext();
+        await using RecentItemsDbContext context = CreateContext();
         var usedAtUtc = new DateTime(2026, 8, 19, 10, 0, 0, DateTimeKind.Utc);
         var timeProvider = new MutableTimeProvider(usedAtUtc.AddHours(1));
-        var repository = new RecentItemRepository(context, timeProvider);
+        var repository = new RecentItemRepository(context, static () => null, timeProvider);
         var userId = UserId.New();
         var oldestItemId = Guid.NewGuid();
         context.RecentItems.Add(RecentItem.Create(userId, RecentItemType.Product, oldestItemId, usedAtUtc));
@@ -76,8 +76,8 @@ public sealed class RecentItemRepositoryTests {
 
     [Fact]
     public async Task RegisterUsageAsync_WithNoItems_DoesNotTrackChanges() {
-        await using FoodDiaryDbContext context = CreateContext();
-        var repository = new RecentItemRepository(context, TimeProvider.System);
+        await using RecentItemsDbContext context = CreateContext();
+        var repository = new RecentItemRepository(context, static () => null, TimeProvider.System);
 
         await repository.RegisterUsageAsync(UserId.New(), [], [], CancellationToken.None);
 
@@ -86,8 +86,8 @@ public sealed class RecentItemRepositoryTests {
 
     [Fact]
     public async Task RegisterUsageAsync_WithEmptyUserId_ThrowsBeforePersistence() {
-        await using FoodDiaryDbContext context = CreateContext();
-        var repository = new RecentItemRepository(context, TimeProvider.System);
+        await using RecentItemsDbContext context = CreateContext();
+        var repository = new RecentItemRepository(context, static () => null, TimeProvider.System);
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
             repository.RegisterUsageAsync(UserId.Empty, [], [], CancellationToken.None));
@@ -95,8 +95,8 @@ public sealed class RecentItemRepositoryTests {
 
     [Fact]
     public async Task RegisterUsageAsync_WithEmptyProductId_ThrowsBeforePersistence() {
-        await using FoodDiaryDbContext context = CreateContext();
-        var repository = new RecentItemRepository(context, TimeProvider.System);
+        await using RecentItemsDbContext context = CreateContext();
+        var repository = new RecentItemRepository(context, static () => null, TimeProvider.System);
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
             repository.RegisterUsageAsync(UserId.New(), [ProductId.Empty], [], CancellationToken.None));
@@ -104,18 +104,18 @@ public sealed class RecentItemRepositoryTests {
 
     [Fact]
     public async Task RegisterUsageAsync_WithEmptyRecipeId_ThrowsBeforePersistence() {
-        await using FoodDiaryDbContext context = CreateContext();
-        var repository = new RecentItemRepository(context, TimeProvider.System);
+        await using RecentItemsDbContext context = CreateContext();
+        var repository = new RecentItemRepository(context, static () => null, TimeProvider.System);
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
             repository.RegisterUsageAsync(UserId.New(), [], [RecipeId.Empty], CancellationToken.None));
     }
 
-    private static FoodDiaryDbContext CreateContext() {
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+    private static RecentItemsDbContext CreateContext() {
+        DbContextOptions<RecentItemsDbContext> options = new DbContextOptionsBuilder<RecentItemsDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
-        return new FoodDiaryDbContext(options);
+        return new RecentItemsDbContext(options);
     }
 
     [ExcludeFromCodeCoverage]

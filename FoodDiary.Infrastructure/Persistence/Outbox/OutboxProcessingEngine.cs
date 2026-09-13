@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,10 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
 public static class OutboxProcessingEngine {
+    public static void EnsureCleanEntry(DbContext context) => SharedTransactionBoundary.EnsureCleanEntry(context);
+
     public static async Task<int> ProcessDueAsync<TMessage>(
-        FoodDiaryDbContext context,
+        DbContext context,
         DbSet<TMessage> messages,
         string tableName,
         string outboxName,
@@ -20,7 +23,8 @@ public static class OutboxProcessingEngine {
         ILogger logger,
         IQueryable<TMessage>? claimedQuery = null,
         CancellationToken cancellationToken = default,
-        Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync = null)
+        Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync = null,
+        Action? ensureCleanEntry = null)
         where TMessage : class, IOutboxMessage {
         if (batchSize <= 0) {
             return 0;
@@ -35,6 +39,7 @@ public static class OutboxProcessingEngine {
             int processed = 0;
             for (int i = 0; i < batchSize; i++) {
                 cancellationToken.ThrowIfCancellationRequested();
+                ensureCleanEntry?.Invoke();
                 DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
                 OutboxClaimBatch<TMessage> claim = await OutboxMessageClaimer
                     .ClaimDueAsync(
@@ -83,7 +88,7 @@ public static class OutboxProcessingEngine {
     }
 
     private static async Task<bool> ProcessClaimedMessageAsync<TMessage>(
-        FoodDiaryDbContext context,
+        DbContext context,
         TMessage message,
         string outboxName,
         OutboxProcessingOptions options,
@@ -156,7 +161,7 @@ public static class OutboxProcessingEngine {
         }
     }
 
-    private static bool ReleaseLostClaim(FoodDiaryDbContext context, string outboxName) {
+    private static bool ReleaseLostClaim(DbContext context, string outboxName) {
         InfrastructureTelemetry.RecordOutboxMessages(outboxName, "claim_lost", 1);
         context.ChangeTracker.Clear();
         return false;

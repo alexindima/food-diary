@@ -216,3 +216,66 @@ results and booleans leave the adapter. No authorisation, SQL or API behavior
 changes are intended. PostgreSQL coverage retains moderation/visibility tests and
 adds shared-save, foreign-key rollback and User cascade verification. Host DI
 checks now distinguish the owner writer from the composed read aliases.
+
+## Admin follow-up
+
+Admin now owns its runtime AdminDbContext for AdminImpersonationSession and
+BugAcknowledgementReceipt. The session writer keeps its narrow entity set and
+existing composed query port. AddAdminPersistence registers the shared-connection
+context for both Web API and JobManager.
+
+Receipt recording still saves immediately after durable enqueue. It uses the
+shared IUnitOfWork so pending session and central changes commit atomically.
+Duplicate receipt failures detach the attempted receipt and verify its existence;
+unexpected persistence failures propagate. No outbound delivery behavior changes.
+The Admin user purge participant deliberately retains the central context so its
+immediate deletion participates in the existing user-purge transaction before
+Restrict user foreign keys are removed. Cross-module reads, mappings and migration
+ownership remain unchanged. PostgreSQL tests cover shared save, purge, receipt
+durability, duplicate recovery and rollback on an invalid session target.
+
+## RecentItems follow-up
+
+RecentItemsDbContext owns the RecentItem runtime model. The existing SQL upsert
+and retention operations still execute immediately; they are not deferred until
+SaveChanges. Like OpenFoodFacts, the repository receives a live caller-transaction
+accessor and synchronizes it before SQL or reads, including transactions started
+after DI resolution and clearing the transaction after completion. SQL predicates,
+conflict handling, saturated counters, timestamps and per-type limits are unchanged.
+PostCommitRecentItemUsageRecorder still queues captured IDs, saves only pending
+tracked changes and runs after commit. Central user purge and migrations remain
+unchanged. Tests cover transaction rollback/commit/reuse, post-commit flush/discard,
+concurrent upserts, retention and the InMemory fallback.
+
+## Outbox engine preparation
+
+The generic processing engine and claimer accept DbContext rather than requiring
+FoodDiaryDbContext. All existing adapters keep their current registrations. The
+clean-entry guard checks local pending changes and an existing transaction for any
+context, and also checks registered module participants when the supplied context
+is FoodDiaryDbContext. Claim SQL, table allowlist, leases, concurrency fencing,
+retry and finalization semantics are unchanged. Dedicated-context PostgreSQL tests
+cover completion, retry, pending changes, nested transactions and the retained
+shared-participant guard. This prerequisite does not yet migrate Notifications,
+Images or Gamification runtime persistence or their replay coordination.
+
+## Notifications, Images and Gamification follow-up
+
+Three runtime contexts now own notification/subscription/web-push outbox state,
+image/deletion-outbox state, and achievement definition/grant/evaluation-outbox
+state. Each shares the central connection and participates in the existing UnitOfWork.
+Normal outbox processors use the owner context and sets, with a callback that
+preserves the shared-scope clean-entry guard before each claim. Lease SQL, fencing,
+retry, revision release and payload delivery remain unchanged.
+
+Gamification SQL stores receive a live caller-transaction accessor, synchronized
+before immediate inserts and reads. The existing Lesson metric port is implemented
+by ReadModel.Composition. Images usage checks and SQL-limited orphan candidate IDs
+also live there; the owner repository loads the bounded candidate assets. This adds
+one bounded read for orphan listing. Restrict image FKs remain the final deletion
+race protection and keep deletion plus outbox insertion atomic.
+
+Replay adapters intentionally keep the central context for audit/reset transactions.
+User purge and image reassignment also keep shared transaction access. User cleanup
+now saves through IUnitOfWork, including image-deletion outbox entries in the owner
+context. Historical migrations and central read model stay unchanged.

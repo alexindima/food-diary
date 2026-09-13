@@ -1,3 +1,4 @@
+using System.Data.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -6,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 internal sealed class AchievementEvaluationOutbox(
-    FoodDiaryDbContext context,
-    TimeProvider timeProvider) : IAchievementEvaluationOutbox, IMealAchievementEvaluationRequest {
+    DbContext context, DbSet<AchievementEvaluationOutboxMessage> messages,
+    TimeProvider timeProvider, Func<DbTransaction?>? currentTransaction = null) : IAchievementEvaluationOutbox, IMealAchievementEvaluationRequest {
     public async Task EnqueueAsync(UserId userId, CancellationToken cancellationToken = default) {
         DateTime requestedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
         if (!context.Database.IsRelational()) {
-            AchievementEvaluationOutboxMessage? existing = await context.AchievementEvaluationOutbox
+            AchievementEvaluationOutboxMessage? existing = await messages
                 .SingleOrDefaultAsync(message => message.UserId == userId, cancellationToken)
                 .ConfigureAwait(false);
             if (existing is null) {
-                await context.AchievementEvaluationOutbox
+                await messages
                     .AddAsync(AchievementEvaluationOutboxMessage.Create(userId, requestedOnUtc), cancellationToken)
                     .ConfigureAwait(false);
             } else {
@@ -25,6 +26,7 @@ internal sealed class AchievementEvaluationOutbox(
             return;
         }
 
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         var message = AchievementEvaluationOutboxMessage.Create(userId, requestedOnUtc);
         await context.Database.ExecuteSqlInterpolatedAsync(
             $"""
@@ -42,5 +44,10 @@ internal sealed class AchievementEvaluationOutbox(
                 "LastError" = NULL
             """,
             cancellationToken).ConfigureAwait(false);
+    }
+    private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
+        if (currentTransaction is not null && context.Database.IsRelational()) {
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+        }
     }
 }

@@ -1,3 +1,6 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.ReadModel.Composition;
+using FoodDiary.ReadModel.Composition.Images;
 using System.Data.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -51,7 +54,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         async Task<Result> MutateAsync(CancellationToken cancellationToken) {
             attempts++;
             context.Products.Add(CreateProduct(user.Id, "one product"));
-            await new ImageObjectDeletionOutbox(context, TimeProvider.System).EnqueueAsync("one-object", isConfirmed: true, cancellationToken);
+            await new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync("one-object", isConfirmed: true, cancellationToken);
             queue.Enqueue("notify", _ => { delivered++; return Task.CompletedTask; });
             return Result.Success();
         }
@@ -90,10 +93,10 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         deleting.ImageAssets.Add(image);
         await deleting.SaveChangesAsync();
         deleting.ChangeTracker.Clear();
-        var repository = new ImageAssetRepository(deleting);
+        var repository = new ImageAssetRepository(deleting.ImageAssets, new ImageAssetUsageQuery(deleting));
         Assert.False(await repository.IsAssetInUseAsync(image.Id));
         await repository.DeleteAsync(image);
-        await new ImageObjectDeletionOutbox(deleting, TimeProvider.System).EnqueueAsync(image.ObjectKey, isConfirmed: true);
+        await new ImageObjectDeletionOutbox(deleting.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(image.ObjectKey, isConfirmed: true);
         await using FoodDiaryDbContext linking = databaseFixture.CreateDbContext(deleting.Database.GetConnectionString()!);
         linking.Products.Add(CreateProduct(user.Id, "linked", image.Id));
         await linking.SaveChangesAsync();
@@ -141,7 +144,9 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseNpgsql(seed.Database.GetConnectionString())
             .AddInterceptors(new RejectImageDeleteInterceptor(first.Id)));
         services.AddImagesInfrastructure();
-        services.AddScoped<IUnitOfWork, TestUnitOfWork>();
+        services.AddReadModelComposition();
+        services.AddSingleton(Substitute.For<IDomainEventPublisher>());
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         await using ServiceProvider provider = services.BuildServiceProvider();
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
@@ -204,9 +209,9 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RejectImageDeleteInterceptor(ImageAssetId failedId) : SaveChangesInterceptor {
-        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
-            InterceptionResult<int> result, CancellationToken cancellationToken = default) {
+    private sealed class RejectImageDeleteInterceptor(ImageAssetId failedId) : DbCommandInterceptor {
+        public override ValueTask<InterceptionResult<DbDataReader>> ReaderExecutingAsync(DbCommand command, CommandEventData eventData,
+            InterceptionResult<DbDataReader> result, CancellationToken cancellationToken = default) {
             if (eventData.Context!.ChangeTracker.Entries<ImageAsset>().Any(entry => entry.Entity.Id == failedId && entry.State == EntityState.Deleted)) {
                 throw new InvalidOperationException("Injected image deletion failure.");
             }

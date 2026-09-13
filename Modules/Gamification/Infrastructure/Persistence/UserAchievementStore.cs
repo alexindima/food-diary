@@ -1,3 +1,4 @@
+using System.Data.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Achievements.Models;
 using FoodDiary.Domain.Entities.Achievements;
@@ -6,11 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
-public sealed class UserAchievementStore(FoodDiaryDbContext context) : IUserAchievementStore {
+public sealed class UserAchievementStore(DbContext context, DbSet<UserAchievement> achievements, Func<DbTransaction?>? currentTransaction = null) : IUserAchievementStore {
     public async Task<IReadOnlyList<UserAchievement>> GetByUserIdAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.UserAchievements
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        return await achievements
             .AsNoTracking()
             .Where(achievement => achievement.UserId == userId)
             .OrderBy(achievement => achievement.EarnedAtUtc)
@@ -22,6 +24,7 @@ public sealed class UserAchievementStore(FoodDiaryDbContext context) : IUserAchi
         UserId userId,
         IReadOnlyCollection<AchievementGrantModel> grants,
         CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         foreach (AchievementGrantModel grant in grants) {
             var achievement = UserAchievement.Create(
                 userId,
@@ -40,5 +43,10 @@ public sealed class UserAchievementStore(FoodDiaryDbContext context) : IUserAchi
         }
 
         return await GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+    }
+    private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
+        if (currentTransaction is not null && context.Database.IsRelational()) {
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+        }
     }
 }

@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4036,
-    "symbols": 3977,
-    "interfaceImplementationLinks": 270,
-    "dependencyInjectionRegistrations": 162,
+    "sourceFiles": 4043,
+    "symbols": 3984,
+    "interfaceImplementationLinks": 271,
+    "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 2079,
+      "class": 2085,
       "enum": 64,
-      "interface": 476,
+      "interface": 477,
       "record": 1237,
       "record struct": 121
     },
@@ -32,8 +32,8 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1624,
-      "Query": 193,
+      "Other": 1629,
+      "Query": 195,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
@@ -934,7 +934,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "OutboxProcessingPolicy",
@@ -1791,6 +1791,20 @@
       "line": 9
     },
     {
+      "name": "AchievementMetricReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
+      "line": 8
+    },
+    {
+      "name": "ImageAssetUsageQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs",
+      "line": 7
+    },
+    {
       "name": "MealPlanCompositionReader",
       "kind": "class",
       "role": "Other",
@@ -1823,7 +1837,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 19
+      "line": 23
     },
     {
       "name": "RecipeOverviewReadService",
@@ -3825,7 +3839,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BugAcknowledgementSource",
@@ -3874,7 +3888,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
-      "line": 6
+      "line": 7
+    },
+    {
+      "name": "AdminDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Persistence/AdminDbContext.cs",
+      "line": 5
     },
     {
       "name": "AdminUserDataPurgeParticipant",
@@ -13184,21 +13205,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 14
     },
     {
       "name": "AchievementDefinitionStore",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AchievementEvaluationOutbox",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AchievementEvaluationOutboxProcessor",
@@ -13215,18 +13236,18 @@
       "line": 6
     },
     {
-      "name": "AchievementMetricReader",
+      "name": "GamificationDbContext",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs",
-      "line": 7
+      "path": "Modules/Gamification/Infrastructure/Persistence/GamificationDbContext.cs",
+      "line": 5
     },
     {
       "name": "UserAchievementStore",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "GamificationPresentationServiceCollectionExtensions",
@@ -15553,6 +15574,13 @@
       "line": 2
     },
     {
+      "name": "IImageAssetUsageQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetUsageQuery.cs",
+      "line": 4
+    },
+    {
       "name": "IImageAssetWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -15697,7 +15725,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 10
+      "line": 14
     },
     {
       "name": "ImageAssetContentService",
@@ -15774,14 +15802,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ImageObjectDeletionOutboxProcessor",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
-      "line": 8
+      "line": 9
+    },
+    {
+      "name": "ImagesDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Persistence/ImagesDbContext.cs",
+      "line": 7
     },
     {
       "name": "ImagesUserDataPurgeParticipant",
@@ -19274,7 +19309,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "line": 13
+      "line": 17
     },
     {
       "name": "WebPushOptions",
@@ -19298,11 +19333,18 @@
       "line": 8
     },
     {
+      "name": "NotificationsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationsDbContext.cs",
+      "line": 7
+    },
+    {
       "name": "NotificationWebPushOutbox",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutbox.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "NotificationWebPushOutboxProcessor",
@@ -20506,7 +20548,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "PostCommitRecentItemUsageRecorder",
@@ -20520,7 +20562,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
-      "line": 8
+      "line": 9
+    },
+    {
+      "name": "RecentItemsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItemsDbContext.cs",
+      "line": 5
     },
     {
       "name": "RecentItemsUserDataPurgeParticipant",
@@ -23964,7 +24013,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "UserCurrentWaistProvider",
@@ -27927,7 +27976,7 @@
       "interface": "IAchievementMetricReader",
       "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs",
       "implementation": "AchievementMetricReader",
-      "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28789,6 +28838,13 @@
       "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetRepository.cs",
       "implementation": "ImageAssetRepository",
       "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IImageAssetUsageQuery",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetUsageQuery.cs",
+      "implementation": "ImageAssetUsageQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs",
       "confidence": "naming-convention"
     },
     {
@@ -30436,49 +30492,28 @@
       "implementation": "ImageAssetOwnershipService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 14
+      "line": 20
     },
     {
       "service": "IImageAssetContentService",
       "implementation": "ImageAssetContentService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 15
+      "line": 21
     },
     {
       "service": "IUserProfileImageService",
       "implementation": "UserProfileImageService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 16
+      "line": 22
     },
     {
       "service": "IImageAssetCleanupBatch",
       "implementation": "ImageAssetCleanupBatch",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IImageAssetRepository",
-      "implementation": "ImageAssetRepository",
-      "lifetime": "Scoped",
-      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IImageObjectDeletionOutbox",
-      "implementation": "ImageObjectDeletionOutbox",
-      "lifetime": "Scoped",
-      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 22
-    },
-    {
-      "service": "IImageObjectDeletionOutboxProcessor",
-      "implementation": "ImageObjectDeletionOutboxProcessor",
-      "lifetime": "Scoped",
-      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 23
+      "line": 24
     },
     {
       "service": "ILessonReadService",

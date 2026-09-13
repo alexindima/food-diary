@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.RecentItems;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
@@ -30,8 +31,10 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
 
         await using FoodDiaryDbContext firstContext = CreateVerificationContext(seedContext);
         await using FoodDiaryDbContext secondContext = CreateVerificationContext(seedContext);
-        var firstRepository = new RecentItemRepository(firstContext, new FixedDateTimeProvider(baseline.AddMinutes(1)));
-        var secondRepository = new RecentItemRepository(secondContext, new FixedDateTimeProvider(baseline.AddMinutes(2)));
+        await using RecentItemsDbContext firstRepositoryContext = firstContext.CreateModuleContext<RecentItemsDbContext>(static options => new RecentItemsDbContext(options));
+        var firstRepository = new RecentItemRepository(firstRepositoryContext, () => firstContext.Database.CurrentTransaction?.GetDbTransaction(), new FixedDateTimeProvider(baseline.AddMinutes(1)));
+        await using RecentItemsDbContext secondRepositoryContext = secondContext.CreateModuleContext<RecentItemsDbContext>(static options => new RecentItemsDbContext(options));
+        var secondRepository = new RecentItemRepository(secondRepositoryContext, () => secondContext.Database.CurrentTransaction?.GetDbTransaction(), new FixedDateTimeProvider(baseline.AddMinutes(2)));
 
         await Task.WhenAll(
             firstRepository.RegisterUsageAsync(user.Id, [existingProductId, newProductId], [], CancellationToken.None),
@@ -73,7 +76,8 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
         await context.SaveChangesAsync();
 
         var newProductId = new ProductId(Guid.NewGuid());
-        var repository = new RecentItemRepository(context, new FixedDateTimeProvider(baseline));
+        await using RecentItemsDbContext repositoryContext = context.CreateModuleContext<RecentItemsDbContext>(static options => new RecentItemsDbContext(options));
+        var repository = new RecentItemRepository(repositoryContext, () => context.Database.CurrentTransaction?.GetDbTransaction(), new FixedDateTimeProvider(baseline));
 
         await repository.RegisterUsageAsync(
             user.Id,

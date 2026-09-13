@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Users;
@@ -17,13 +18,13 @@ public sealed class UserCleanupServiceTests {
         IUserDataPurgeParticipant[] participants = duplicate
             ? [Substitute.For<IUserDataPurgeParticipant>(), Substitute.For<IUserDataPurgeParticipant>()] : [];
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() =>
-            new UserCleanupService(dbContext: null!, participants, NullLogger<UserCleanupService>.Instance));
+            new UserCleanupService(dbContext: null!, participants, NullLogger<UserCleanupService>.Instance, unitOfWork: Substitute.For<IUnitOfWork>()));
         Assert.Contains("unique ordering", error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task CleanupDeletedUsersAsync_WithNonPositiveBatchSize_Throws() {
-        var service = new UserCleanupService(dbContext: null!, participants: [Substitute.For<IUserDataPurgeParticipant>()], logger: NullLogger<UserCleanupService>.Instance);
+        var service = new UserCleanupService(dbContext: null!, participants: [Substitute.For<IUserDataPurgeParticipant>()], logger: NullLogger<UserCleanupService>.Instance, unitOfWork: Substitute.For<IUnitOfWork>());
 
         ArgumentOutOfRangeException ex = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             service.CleanupDeletedUsersAsync(DateTime.UtcNow, 0, reassignUserId: null, CancellationToken.None));
@@ -38,7 +39,7 @@ public sealed class UserCleanupServiceTests {
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
         context.Users.Add(deletedUser);
         await context.SaveChangesAsync();
-        var service = new UserCleanupService(context, [Substitute.For<IUserDataPurgeParticipant>()], NullLogger<UserCleanupService>.Instance);
+        var service = new UserCleanupService(context, [Substitute.For<IUserDataPurgeParticipant>()], NullLogger<UserCleanupService>.Instance, unitOfWork: Substitute.For<IUnitOfWork>());
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),

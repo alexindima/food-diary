@@ -20,7 +20,7 @@ public sealed class NotificationWebPushOutboxTests {
         context.Users.Add(user);
         context.Notifications.Add(notification);
         await context.SaveChangesAsync();
-        var outbox = new NotificationWebPushOutbox(context, TimeProvider.System);
+        var outbox = new NotificationWebPushOutbox(context.NotificationWebPushOutbox, TimeProvider.System);
 
         await outbox.EnqueueAsync(notification.Id, CancellationToken.None);
         await context.SaveChangesAsync();
@@ -39,7 +39,7 @@ public sealed class NotificationWebPushOutboxTests {
         await context.SaveChangesAsync();
         var sender = new RecordingWebPushNotificationSender();
         var processor = new NotificationWebPushOutboxProcessor(
-            context,
+            context, context.NotificationWebPushOutbox,
             sender,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -61,7 +61,7 @@ public sealed class NotificationWebPushOutboxTests {
         context.NotificationWebPushOutbox.Add(NotificationWebPushOutboxMessage.Create(notification.Id, DateTime.UtcNow.AddMinutes(-1)));
         await context.SaveChangesAsync();
         var processor = new NotificationWebPushOutboxProcessor(
-            context,
+            context, context.NotificationWebPushOutbox,
             new ThrowingWebPushNotificationSender(),
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -89,7 +89,7 @@ public sealed class NotificationWebPushOutboxTests {
         context.NotificationWebPushOutbox.Add(message);
         await context.SaveChangesAsync();
         var processor = new NotificationWebPushOutboxProcessor(
-            context,
+            context, context.NotificationWebPushOutbox,
             new ThrowingWebPushNotificationSender(),
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
@@ -111,7 +111,7 @@ public sealed class NotificationWebPushOutboxTests {
     public async Task ProcessDueAsync_WhenBatchSizeIsNotPositive_ReturnsZero() {
         await using FoodDiaryDbContext context = CreateContext();
         var processor = new NotificationWebPushOutboxProcessor(
-            context,
+            context, context.NotificationWebPushOutbox,
             new RecordingWebPushNotificationSender(),
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,

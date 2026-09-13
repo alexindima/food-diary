@@ -1,3 +1,7 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using FoodDiary.Infrastructure.Options;
+using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Outbox;
@@ -21,19 +25,29 @@ public static class ModuleRegistration {
     }
 
     public static IServiceCollection AddNotificationsPersistence(this IServiceCollection services) {
+        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+            .CreateModuleContext<NotificationsDbContext>(static options => new NotificationsDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, WebPushOutboxReplayStream>());
         services.AddScoped<INotificationRepository>(static provider =>
             new NotificationRepository(
-                provider.GetRequiredService<FoodDiaryDbContext>().Notifications,
+                provider.GetRequiredService<NotificationsDbContext>().Notifications,
                 provider.GetRequiredService<TimeProvider>()));
         services.AddScoped<INotificationReadRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationLookupRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationReadModelRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationWriteRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
-        services.AddScoped<INotificationWebPushOutbox, NotificationWebPushOutbox>();
-        services.AddScoped<INotificationWebPushOutboxProcessor, NotificationWebPushOutboxProcessor>();
+        services.AddScoped<INotificationWebPushOutbox>(static provider => new NotificationWebPushOutbox(
+            provider.GetRequiredService<NotificationsDbContext>().NotificationWebPushOutbox, provider.GetRequiredService<TimeProvider>()));
+        services.AddScoped<INotificationWebPushOutboxProcessor>(static provider => {
+            NotificationsDbContext owned = provider.GetRequiredService<NotificationsDbContext>();
+            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            return new NotificationWebPushOutboxProcessor(owned, owned.NotificationWebPushOutbox,
+                provider.GetRequiredService<IWebPushNotificationSender>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
+                provider.GetRequiredService<TimeProvider>(), provider.GetRequiredService<ILogger<NotificationWebPushOutboxProcessor>>(),
+                () => OutboxProcessingEngine.EnsureCleanEntry(shared));
+        });
         services.AddScoped<IWebPushSubscriptionRepository>(static provider =>
-            new WebPushSubscriptionRepository(provider.GetRequiredService<FoodDiaryDbContext>().WebPushSubscriptions));
+            new WebPushSubscriptionRepository(provider.GetRequiredService<NotificationsDbContext>().WebPushSubscriptions));
         services.AddScoped<IWebPushSubscriptionReadRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IWebPushSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IWebPushSubscriptionWriteRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());

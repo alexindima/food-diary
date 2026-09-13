@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Gamification;
 using FoodDiary.Application.Abstractions.Achievements.Models;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.Entities.Content;
@@ -25,8 +26,8 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
 
         await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString);
         await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString);
-        var firstStore = new AchievementDefinitionStore(firstContext);
-        var secondStore = new AchievementDefinitionStore(secondContext);
+        var firstStore = new AchievementDefinitionStore(firstContext, firstContext.AchievementDefinitions, firstContext.UserAchievements);
+        var secondStore = new AchievementDefinitionStore(secondContext, secondContext.AchievementDefinitions, secondContext.UserAchievements);
         AchievementDefinition first = CreateDefinition("concurrent_key");
         AchievementDefinition second = CreateDefinition("concurrent_key");
 
@@ -68,7 +69,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         await using (FoodDiaryDbContext enqueueContext = databaseFixture.CreateDbContext(connectionString)) {
             await enqueueContext.Database.MigrateAsync();
             enqueueContext.Users.Add(user);
-            var outbox = new AchievementEvaluationOutbox(enqueueContext, timeProvider);
+            var outbox = new AchievementEvaluationOutbox(enqueueContext, enqueueContext.AchievementEvaluationOutbox, timeProvider);
             await outbox.EnqueueAsync(user.Id);
             await enqueueContext.SaveChangesAsync();
         }
@@ -76,7 +77,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
         await using FoodDiaryDbContext processContext = databaseFixture.CreateDbContext(connectionString);
         var processor = new AchievementEvaluationOutboxProcessor(
-            processContext,
+            processContext, processContext.AchievementEvaluationOutbox,
             handler,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             timeProvider,
@@ -98,7 +99,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         await context.Database.MigrateAsync();
         context.Users.Add(user);
         await context.SaveChangesAsync();
-        var outbox = new AchievementEvaluationOutbox(context, timeProvider);
+        var outbox = new AchievementEvaluationOutbox(context, context.AchievementEvaluationOutbox, timeProvider);
 
         await outbox.EnqueueAsync(user.Id);
         await outbox.EnqueueAsync(user.Id);
@@ -119,18 +120,18 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
             await setupContext.Database.MigrateAsync();
             setupContext.Users.Add(user);
             await setupContext.SaveChangesAsync();
-            await new AchievementEvaluationOutbox(setupContext, timeProvider).EnqueueAsync(user.Id);
+            await new AchievementEvaluationOutbox(setupContext, setupContext.AchievementEvaluationOutbox, timeProvider).EnqueueAsync(user.Id);
         }
 
         IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
         handler.ReconcileAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(async _ => {
                 await using FoodDiaryDbContext concurrentContext = databaseFixture.CreateDbContext(connectionString);
-                await new AchievementEvaluationOutbox(concurrentContext, timeProvider).EnqueueAsync(user.Id);
+                await new AchievementEvaluationOutbox(concurrentContext, concurrentContext.AchievementEvaluationOutbox, timeProvider).EnqueueAsync(user.Id);
             });
         await using FoodDiaryDbContext processContext = databaseFixture.CreateDbContext(connectionString);
         var processor = new AchievementEvaluationOutboxProcessor(
-            processContext,
+            processContext, processContext.AchievementEvaluationOutbox,
             handler,
             Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             timeProvider,
@@ -151,7 +152,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
     [RequiresDockerFact]
     public async Task ManagedDefinitions_AreSeededAndActiveStoreReflectsUpdates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var store = new AchievementDefinitionStore(context);
+        var store = new AchievementDefinitionStore(context, context.AchievementDefinitions, context.UserAchievements);
 
         IReadOnlyList<AchievementDefinition> seeded = await store.GetActiveAsync();
         AchievementDefinition definition = seeded.Single(item => string.Equals(item.Key, "streak_3", StringComparison.Ordinal));
@@ -215,8 +216,8 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
             DefinitionVersion: 1)];
         await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString);
         await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString);
-        var firstStore = new UserAchievementStore(firstContext);
-        var secondStore = new UserAchievementStore(secondContext);
+        var firstStore = new UserAchievementStore(firstContext, firstContext.UserAchievements);
+        var secondStore = new UserAchievementStore(secondContext, secondContext.UserAchievements);
 
         await Task.WhenAll(
             firstStore.GrantMissingAsync(user.Id, grants),
@@ -231,7 +232,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
             () => Assert.Equal(earnedAtUtc, persisted.EarnedAtUtc),
             () => Assert.Equal(3, persisted.EarnedValue),
             () => Assert.Equal(1, persisted.DefinitionVersion));
-        IReadOnlyDictionary<string, int> counts = await new AchievementDefinitionStore(assertionContext).GetAwardCountsAsync();
+        IReadOnlyDictionary<string, int> counts = await new AchievementDefinitionStore(assertionContext, assertionContext.AchievementDefinitions, assertionContext.UserAchievements).GetAwardCountsAsync();
         Assert.Equal(1, counts["streak-3"]);
         Assert.Single(counts);
     }
