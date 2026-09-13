@@ -232,7 +232,7 @@
         "write:TelegramOperation"
       ],
       "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
-      "technicalSourceSha256": "7d7adbb4ab584fd5e0dc6aef39d4a19bb307185dbd43468408009314393f6f2e"
+      "technicalSourceSha256": "83ea186bb99f9f3f36556698aa13368dc32326b5ce5db6faaf103273bf37b92a"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
@@ -243,7 +243,7 @@
         "write:TelegramLoginTicket"
       ],
       "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
-      "technicalSourceSha256": "72f1d37964cf802e3d2e70809392c16dad7d7390c737616e089e1bf1ef9c610f"
+      "technicalSourceSha256": "d2ecb71464f7a5da7ef632186492262a3227cc29ca3ac16f43e7780a843e6ed3"
     },
     "Modules/Admin/Infrastructure/AdminModuleRegistration.cs": {
       "module": "Admin",
@@ -783,10 +783,17 @@
     "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs": {
       "module": "Identity",
       "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database",
         "entity:EmailTemplate",
-        "tracked:EmailTemplate"
+        "entity:UserLoginEvent",
+        "entity:UserRefreshTokenSession",
+        "tracked:EmailTemplate",
+        "tracked:UserLoginEvent",
+        "tracked:UserRefreshTokenSession"
       ],
-      "reason": "Identity composition resolves only the EmailTemplate set for the narrowed repository constructor; the shared caller retains SaveChanges and transaction ownership."
+      "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
+      "technicalSourceSha256": "bb4fb7321208039696db3b74a248fb5e34d71927345a696d15849638ae710f86"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -806,7 +813,7 @@
         "context:Database"
       ],
       "reason": "Identity replay prevention atomically inserts assertion fingerprints and deletes expired fingerprints in ConsumedTelegramAssertions.",
-      "technicalSourceSha256": "99cd483e0d95d2876a49bf0335890b966f16395e142be11f7af384bca192d4aa"
+      "technicalSourceSha256": "5dcdedf8146946ecb531bb9cc10f78f3eef16f6dd404b2afb4c4eb45b1fee4fc"
     },
     "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs": {
       "module": "Identity",
@@ -820,23 +827,21 @@
       "capabilities": [
         "call:UserRefreshTokenSession.Revoke",
         "call:UserRefreshTokenSession.Rotate",
-        "context:Database",
         "entity:UserRefreshTokenSession",
         "tracked:UserRefreshTokenSession",
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-      "technicalSourceSha256": "96f460f65c242cb80a9cd761e7c4b1cfb5557899f14f75a03a6ea5e0704db5ff"
+      "technicalSourceSha256": "556f9a050a1d047f0c908f5abc628357053c8d3e32aa45950ef1a7dfc14c922e"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",
       "capabilities": [
-        "entity:User",
         "entity:UserLoginEvent",
         "tracked:UserLoginEvent",
         "write:UserLoginEvent"
       ],
-      "reason": "Identity owns login-event reporting/retention; Users supplies reporting display data only."
+      "reason": "Identity retains login-event writes and bounded retention; read methods delegate to the host-composed query port."
     },
     "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs": {
       "module": "Images",
@@ -1038,28 +1043,16 @@
       "reason": "Owner top-level Serializable transaction with whole-attempt retry and clean tracking/outbox callback reset; no global composition lock.",
       "technicalSourceSha256": "eb0eec2bece41241dcbe85f1c1990e5dff14a923b748e64a0605cd8a3273b75f"
     },
-    "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs": {
-      "module": "Products",
-      "capabilities": [
-        "entity:MealItem",
-        "entity:Product",
-        "entity:RecipeIngredient",
-        "tracked:Product"
-      ],
-      "reason": "Products overview joins MealItem and RecipeIngredient usage counters; no foreign writes."
-    },
     "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs": {
       "module": "Products",
       "capabilities": [
         "context:Database",
-        "entity:MealItem",
         "entity:Product",
-        "entity:RecipeIngredient",
         "tracked:Product",
         "write:Product"
       ],
-      "reason": "Products owns catalog writes and row locking; MealItem and RecipeIngredient are usage reads only.",
-      "technicalSourceSha256": "d1370f54604a52d2554907dc8b0a9a008b4705ed6a3f2a2e3daea9ab9d9ee3f3"
+      "reason": "Owner product persistence and parameterized row locking. Cross-module usage count is delegated to the host-composed query in the same scoped transaction.",
+      "technicalSourceSha256": "3a61666f43a98b7a1a359fa0ca4e9654cd5e50d7632443dd48df7ad7b4d214c9"
     },
     "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs": {
       "module": "Products",
@@ -1125,13 +1118,12 @@
         "call:RecipeIngredient.SetProductSnapshot",
         "context:Database",
         "context:Entry",
-        "entity:MealItem",
         "entity:Recipe",
         "tracked:Recipe",
         "write:Recipe"
       ],
-      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation; MealItem is a usage read only. Ingredient product snapshots are transient immutable projections, not mapped entities; SetProductSnapshot never mutates persisted recipe state or grants Product tracking/write access. Product hydration uses owner batch scalar snapshots; transaction and write paths unchanged.",
-      "technicalSourceSha256": "e394c82ca55d859587ec83c6b5ea9d15a58909b9b63e06d8dbaaff84d72595dd"
+      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. Usage counts delegate to IRecipeUsageQuery in host composition. Ingredient product snapshots are transient immutable projections from the owner batch port; no foreign aggregate tracking or writes.",
+      "technicalSourceSha256": "13b2358f26880bc35c7b954891d753117e4643f68c9436eb21b3a218a98abe6a"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",
@@ -1578,6 +1570,60 @@
       ],
       "reason": "Compose scoped owner context and narrow meal repositories; rejoin the live shared transaction before queries, including after intermediate recognition flush.",
       "technicalSourceSha256": "6539a560c6c6d29a25425e7f111ae2a93b9776f592911700853f7dcd03c815f1"
+    },
+    "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Product",
+        "entity:RecipeIngredient"
+      ],
+      "reason": "Read-only product overview SQL with owner/public visibility, private comment masking, paging and correlated meal/recipe usage counts. No aggregate materialization."
+    },
+    "FoodDiary.ReadModel.Composition/Products/ProductUsageQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Product",
+        "entity:RecipeIngredient"
+      ],
+      "reason": "Scalar usage count with unchanged owner/public authorization and correlated meal/recipe counts; scoped shared context participates in caller serializable mutation transaction."
+    },
+    "Modules/Products/Infrastructure/ProductsModuleRegistration.cs": {
+      "module": "Products",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database",
+        "entity:Product",
+        "tracked:Product"
+      ],
+      "reason": "Scoped owner context, repository and snapshot read registration. Rejoin the live shared transaction before owner queries, including after intermediate unit-of-work saves.",
+      "technicalSourceSha256": "441c7f838cb2523093bd2677c093e1f7ffdfd2f3245c068b8712d68cbea814b0"
+    },
+    "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
+      "module": "Recipes",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Recipe"
+      ],
+      "reason": "Read-only recipe usage projection across Meals and nested recipes; preserves visibility and the caller transaction."
+    },
+    "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs": {
+      "module": "Recipes",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database"
+      ],
+      "reason": "Owner runtime context registration and live shared transaction synchronization, including after intermediate UOW saves.",
+      "technicalSourceSha256": "16974c5e08e5002d738de42a091b7094ecffcadd9d1cf9bbbace9139d38fd3c6"
+    },
+    "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
+      "module": "Identity",
+      "capabilities": [
+        "entity:User",
+        "entity:UserLoginEvent"
+      ],
+      "reason": "Read-only login-event and Users display projection with original filters, paging, search escaping and device summary date semantics."
     }
   }
 }

@@ -27,9 +27,10 @@ Identity physically owns EmailTemplate, UserRefreshTokenSession, and UserLoginEv
 through its Domain project, plus their EF model and independent template/session
 adapters. Central FoodDiaryDbContext applies the Identity persistence model; central
 migrations/snapshot remain central. Identity Infrastructure also owns the login-event
-reporting/cleanup repository and cached email-template provider. Their projections
-may read Users data through the shared context; that read does not transfer User
-ownership. Register all adapters with `AddIdentityPersistence`. See
+write/cleanup repository and cached email-template provider. Login-event reporting
+reads Users through the host-composed IUserLoginEventQuery adapter; Identity keeps
+its scoped repository aliases. Register owner adapters with `AddIdentityPersistence`
+and composed reads with `AddReadModelComposition`. See
 `docs/ai/identity-domain-extraction.md`.
 
 Telegram assertion replay persistence belongs to Identity Infrastructure. Its
@@ -46,3 +47,5 @@ bearer validation retain their current owners.
 The same authentication registration owns the singleton `IAdminSsoService`.
 Preserve code encoding, two-minute TTL, validation-before-consumption and GUID
 payload semantics. Do not register the shared store here or override host Redis selection.
+
+IdentityDbContext owns runtime persistence for Identity records and template revisions. Central FoodDiaryDbContext remains the migration/composed-read model and shared transaction coordinator; tracked owner changes save through IUnitOfWork.

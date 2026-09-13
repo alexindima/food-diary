@@ -19,7 +19,7 @@ public sealed class TemporalRepositoryBoundaryTests {
         var meal = Meal.Create(user.Id, DateTime.MaxValue);
         context.AddRange(user, meal);
         await context.SaveChangesAsync();
-        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context.Products), new MealSourceSnapshotQuery(context));
 
         IReadOnlyList<Meal> period = await repository.GetByPeriodAsync(
             user.Id,

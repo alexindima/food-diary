@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Infrastructure.Persistence;
@@ -15,10 +17,13 @@ public static class ProductsModuleRegistration {
         services.AddProductsApplication().AddProductsPersistence();
 
     public static IServiceCollection AddProductsPersistence(this IServiceCollection services) {
+        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+            .CreateModuleContext<ProductsDbContext>(options => new ProductsDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ProductsUserDataPurgeParticipant>());
-        services.AddScoped<ProductRepository>();
-        services.AddScoped<IProductSnapshotReadService, ProductSnapshotReadService>();
-        services.AddScoped<IProductOverviewReadService, ProductOverviewReadService>();
+        services.AddScoped(provider => new ProductRepository(provider.GetRequiredService<ProductsDbContext>(),
+            provider.GetRequiredService<IProductUsageQuery>(), CreateTransactionSynchronizer(provider)));
+        services.AddScoped<IProductSnapshotReadService>(static provider => new ProductSnapshotReadService(
+            provider.GetRequiredService<ProductsDbContext>().Products, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IProductRepository, CachedProductRepository>();
         services.AddScoped<IProductReadRepository>(static provider => provider.GetRequiredService<IProductRepository>());
         services.AddScoped<IProductWriteRepository>(static provider => provider.GetRequiredService<IProductRepository>());
@@ -26,5 +31,15 @@ public static class ProductsModuleRegistration {
         services.AddScoped<IProductLookupService, ProductLookupService>();
         services.AddScoped<IFavoriteProductSourceReadService, FavoriteProductSourceReadService>();
         return services;
+    }
+
+    private static Func<CancellationToken, Task> CreateTransactionSynchronizer(IServiceProvider provider) {
+        FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+        ProductsDbContext owned = provider.GetRequiredService<ProductsDbContext>();
+        return async cancellationToken => {
+            if (owned.Database.IsRelational()) {
+                await owned.Database.UseTransactionAsync(shared.Database.CurrentTransaction?.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+            }
+        };
     }
 }

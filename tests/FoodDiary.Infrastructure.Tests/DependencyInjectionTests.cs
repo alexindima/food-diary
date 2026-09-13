@@ -455,6 +455,21 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public void AddReadModelComposition_RegistersProductOverviewOutsideOwnerPersistence() {
+        var services = new ServiceCollection();
+        services.AddSingleton(Substitute.For<IPublisher>());
+        services.AddInfrastructure(CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+        })).AddProductsPersistence();
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(FoodDiary.Application.Abstractions.Products.Common.IProductOverviewReadService));
+        services.AddReadModelComposition();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        Assert.IsType<FoodDiary.ReadModel.Composition.Products.ProductOverviewReadService>(
+            scope.ServiceProvider.GetRequiredService<FoodDiary.Application.Abstractions.Products.Common.IProductOverviewReadService>());
+    }
+
+    [Fact]
     public void AddInfrastructure_DietologistRepositoryAliasesResolveThroughScopedConcreteInstances() {
         var services = new ServiceCollection();
         services.AddSingleton(Substitute.For<IPublisher>());

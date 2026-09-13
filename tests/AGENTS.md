@@ -94,3 +94,7 @@ security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
 Food-quality calculation, grade and measurement-unit contract tests belong to Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests. Mixed Product/Meal/Recipe consumer compatibility remains in the central application suite. See docs/adr/0027-retire-shared-domain-assemblies.md.
+
+HTTP scenarios that persist multiple module contexts must use PostgresApiWebApplicationFactory. The Products overview/favorites/recent flow also creates a meal and records recent usage, so it belongs to ProductPostgresApiFlowTests; InMemory cannot verify the required atomic multi-context save.
+
+ApiWebApplicationFactory now derives from the PostgreSQL fixture and retains test exception-controller registration. Its tests require Docker: authentication registration writes Users and Identity contexts in one atomic save. Do not restore InMemory for these multi-context flows or weaken shared-save atomicity guards. TestAuthApiWebApplicationFactory uses the same PostgreSQL base with its test authentication handler; admin flows also register users and require shared atomic saves.

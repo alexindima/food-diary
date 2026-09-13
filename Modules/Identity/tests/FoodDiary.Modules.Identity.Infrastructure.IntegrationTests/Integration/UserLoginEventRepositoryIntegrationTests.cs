@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Identity;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
@@ -23,7 +24,7 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
             CreateLoginEvent(user, start.AddHours(2), "Chrome", "Linux", "Desktop"));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new UserLoginEventRepository(context);
+        var repository = new UserLoginEventRepository(context.UserLoginEvents, new UserLoginEventQuery(context));
         (IReadOnlyList<UserLoginEventReadModel> items, int total) = await repository.GetPagedAsync(
             page: 2, limit: 1, user.Id.Value, search: null, CancellationToken.None, new DateTimeOffset(start), new DateTimeOffset(start.AddDays(1)), "password", "Mobile");
         Assert.Equal(2, total);
@@ -43,7 +44,7 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
         context.UserLoginEvents.AddRange(oldest, older, fresh);
         await context.SaveChangesAsync();
 
-        var repository = new UserLoginEventRepository(context);
+        var repository = new UserLoginEventRepository(context.UserLoginEvents, new UserLoginEventQuery(context));
 
         int firstDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc, batchSize: 1);
         int secondDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc, batchSize: 10);
@@ -65,7 +66,7 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
             CreateLoginEvent(otherUser, new DateTime(2030, 3, 28, 13, 0, 0, DateTimeKind.Utc), "Safari", "iOS", "Mobile"));
         await context.SaveChangesAsync();
 
-        var repository = new UserLoginEventRepository(context);
+        var repository = new UserLoginEventRepository(context.UserLoginEvents, new UserLoginEventQuery(context));
 
         (IReadOnlyList<UserLoginEventReadModel>? items, int totalItems) = await repository.GetPagedAsync(
             page: 1,
@@ -96,7 +97,7 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
             CreateLoginEvent(user, new DateTime(2030, 3, 15, 12, 0, 0, DateTimeKind.Utc), "Safari", "iOS", "Mobile"));
         await context.SaveChangesAsync();
 
-        var repository = new UserLoginEventRepository(context);
+        var repository = new UserLoginEventRepository(context.UserLoginEvents, new UserLoginEventQuery(context));
 
         IReadOnlyList<UserLoginDeviceSummaryModel> summary = await repository.GetDeviceSummaryAsync(fromUtc, toUtc);
 
@@ -106,6 +107,30 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
         Assert.Contains(summary, item => string.Equals(item.Key, "browser:Chrome", StringComparison.Ordinal) && item.Count == 2);
         Assert.Contains(summary, item => string.Equals(item.Key, "os:iOS", StringComparison.Ordinal) && item.Count == 1);
         Assert.DoesNotContain(summary, item => item.LastSeenAtUtc < fromUtc || item.LastSeenAtUtc > toUtc);
+    }
+
+    [RequiresDockerFact]
+    public async Task ComposedQuery_PreservesLiteralSearchAndUncommittedVisibilityAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("literal-login@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var query = new UserLoginEventQuery(context);
+        await using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync()) {
+            var repository = new UserLoginEventRepository(context.UserLoginEvents, query);
+            await repository.AddAsync(CreateLoginEvent(user, DateTime.UtcNow, @"Literal%_\", "Linux", "Desktop"));
+            await repository.AddAsync(CreateLoginEvent(user, DateTime.UtcNow, "LiteralXYZ", "Linux", "Desktop"));
+            await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
+            (IReadOnlyList<UserLoginEventReadModel> items, int total) = await repository.GetPagedAsync(
+                page: 1, limit: 10, user.Id.Value, search: @"%_\");
+            Assert.Equal(1, total);
+            Assert.Equal(user.Email, Assert.Single(items).UserEmail);
+            Assert.Empty(context.ChangeTracker.Entries());
+            await transaction.RollbackAsync();
+        }
+        Assert.Empty((await query.GetPagedAsync(page: 1, limit: 10, user.Id.Value, search: null)).Items);
     }
 
     private static UserLoginEvent CreateLoginEvent(

@@ -8,7 +8,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingSecurityIntegrationTests(ApiWebApplicationFactory factory) : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task BillingWebhook_WhenPayloadExceedsProviderLimit_ReturnsPayloadTooLarge() {
         HttpClient client = factory.CreateClient();
         using var content = new ByteArrayContent(new byte[(64 * 1024) + 1]);

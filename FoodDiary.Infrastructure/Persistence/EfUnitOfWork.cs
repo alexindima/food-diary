@@ -20,7 +20,8 @@ internal sealed class EfUnitOfWork(
             domainEventPublisher,
             logger,
             cancellationToken).ConfigureAwait(false);
-        foreach (DbContext module in context.ModuleContexts) {
+        for (int index = 0; index < context.ModuleContexts.Count; index++) {
+            DbContext module = context.ModuleContexts[index];
             await DomainEventDispatcher.DispatchAsync(module, domainEventPublisher, logger, cancellationToken).ConfigureAwait(false);
         }
         if (context.ModuleContexts.Any(module => module.ChangeTracker.HasChanges())) {

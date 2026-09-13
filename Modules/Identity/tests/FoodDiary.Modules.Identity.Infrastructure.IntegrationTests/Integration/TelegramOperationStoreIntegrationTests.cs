@@ -14,7 +14,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
 
     [RequiresDockerFact]
     public async Task InvalidRegistrationOrRetryInput_DoesNotPersistOrLeaseWork() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());
         await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(0, 1, Guid.NewGuid(), 1, "payload", CancellationToken.None));
         await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(123, 1, Guid.NewGuid(), 1, new string('я', 16385), CancellationToken.None));
@@ -25,7 +25,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
 
     [RequiresDockerFact]
     public async Task MissingProtectionKey_PreservesWorkAndAllowsRecoveryAfterKeyRestoration() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var clock = new Clock();
         var originalProtection = new EphemeralDataProtectionProvider();
         var originalStore = new TelegramOperationStore(context, originalProtection, clock);
@@ -54,7 +54,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
 
     [RequiresDockerFact]
     public async Task Registration_DeduplicatesAndRejectsChangedPayloadOrBinding() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());
         var userId = Guid.NewGuid();
         Guid? operation = await store.RegisterAsync(123, 10, userId, 1, "private-photo-reference", CancellationToken.None);
@@ -68,7 +68,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
 
     [RequiresDockerFact]
     public async Task Lease_RecoveryRejectsStaleWriterAndCompletedOperationCannotRestart() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var clock = new Clock();
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), clock);
         Guid? id = await store.RegisterAsync(123, 10, Guid.NewGuid(), 1, "payload", CancellationToken.None);
@@ -92,7 +92,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
 
     [RequiresDockerFact]
     public async Task TerminalCleanup_ErasesOldContentButPreservesDeduplicationAndPendingWork() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());
         var userId = Guid.NewGuid();
         Guid? done = await store.RegisterAsync(123, 10, userId, 1, "original-payload", CancellationToken.None);
@@ -120,7 +120,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
 
     [RequiresDockerFact]
     public async Task ConcurrentWorkers_OnlyOneAcquiresAndCancellationFencesItsWrites() {
-        await using FoodDiaryDbContext setup = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext setup = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         string connection = setup.Database.GetConnectionString()!;
         var protection = new EphemeralDataProtectionProvider();
         var userId = Guid.NewGuid();
@@ -136,7 +136,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
         Assert.False(await store.CheckpointAsync(123, id.Value, lease.LeaseId, "after-disconnect", completed: false, Now, CancellationToken.None));
 
         async Task<TelegramOperationLease?> AcquireAsync() {
-            await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connection);
+            await using IdentityDbContext context = IdentityContextTestFactory.Create(connection);
             await start.Task;
             return await new TelegramOperationStore(context, protection, new Clock()).AcquireAsync(123, id.Value, CancellationToken.None);
         }

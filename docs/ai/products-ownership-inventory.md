@@ -1,60 +1,30 @@
 # Products ownership inventory
 
-Source audit base: `47d0dd4d3698a4729d3cb117ea74824793698096`.
+Current ownership follows ADRs 0031, 0038 and 0040. Code, scoped guides and architecture tests are authoritative; Git retains earlier extraction history.
 
-Current scoring ownership is superseded by the 2026-09-12 amendment to ADR 0027:
-FoodQualityScore and FoodQualityGrade live in Products/FoodQuality; MeasurementUnit
-lives in Products Domain.Contracts. See [role and quality boundaries](role-quality-boundaries.md).
-
-| Responsibility | Physical owner and compatibility boundary |
+| Responsibility | Current owner and boundary |
 | --- | --- |
-| 52 application source files: Create/Update/Delete/Duplicate, GetById/GetProducts/Overview/Recent/Suggestions, validation, mappings, image resolution and USDA linking | `Modules/Products/Application`; preserve `FoodDiary.Application.Products` assembly name and CLR namespaces |
-| Read/write/composite aggregate repositories, mutation transaction runner and ProductErrors | `Modules/Products/Application/Abstractions`; no outward dependency on central Abstractions |
-| IProductLookupService, IProductOverviewReadService, IProductUsdaLinkService, ProductOverviewReadItem, ProductQueryFilters | `Modules/Products/Contracts`; existing projection and semantic mutation API, preserving CLR namespaces. Meals, Recipes, Favorites and MealPlanning consume lookup projections; USDA consumes owner-side linking capability. No foreign aggregate is exported by these contracts. |
-| ProductRepository, CachedProductRepository, ProductOverviewReadService, EfProductMutationTransactionRunner, ProductLookupService | `Modules/Products/Infrastructure`; shared context, five-minute cache/access recheck, scoped aliases, row locks, SQL, transaction/save boundaries and cancellation remain unchanged |
-| ProductConfiguration | `Modules/Products/Infrastructure/Model`; explicit registration from shared context, unchanged xmin, indexes, conversions, FKs, navigation access and delete behavior |
-| Product and product-only value objects | `Modules/Products/Domain`, preserving `FoodDiary.Domain.*` namespaces and invariant behavior. It references Users Domain, residual shared types, USDA Domain and Images Contracts one-way. `ProductType` belongs to Products Domain.Contracts; shared `FoodQualityScore`, `FoodQualityGrade` and `MeasurementUnit` belong to Shared/FoodDiary.Nutrition.Domain. |
-| ProductId and ProductType | `Modules/Products/Domain.Contracts`, referencing only shared primitives. Central Domain has no reverse reference. |
-| Foreign relationships and snapshots | Product retains one-way User and USDA navigations; RecipeIngredient retains a one-way Product navigation. User.Products, Product.MealItems and MealItem.Product are removed. EF preserves the same FKs through unidirectional mappings. MealItem accepts scalar snapshot inputs; complete snapshots remain authoritative and legacy rows are resolved with one bounded product lookup. |
-| RecipeCompositionTransactionLock | Central Infrastructure internal seam, shared with Recipes mutation. Products gets explicit friend access; lock keys and lifetime are not duplicated or changed. |
-| FoodDiaryDbContext, migrations/snapshot, User cleanup, foreign projections, HTTP/auth and host configuration | Existing central/consumer owners; no database, route, payload or authorization change |
-| Provider HTTP, credentials, cache policy and cleanup/outbox | Integrations and catalog owners retain HTTP/options. Products retains suggestion orchestration only. Images retains media deletion/outbox and RecentItems retains usage recording/ordering. |
-| Tests | Products-only application, domain invariant and repository PostgreSQL tests live in three nested module test projects. Mixed cross-module, shared PostgreSQL, HTTP, host and architecture suites remain with their existing owners. Domain.Tests references Products.Domain directly. |
+| Commands, queries, validation and application mapping | `Modules/Products/Application`; preserve the `FoodDiary.Application.Products` assembly identity and existing use-case behavior. |
+| Aggregate repository, mutation transaction and usage-query ports | `Modules/Products/Application/Abstractions`; owner orchestration consumes these ports without acquiring foreign aggregate writes. |
+| Consumer projections, lookup and semantic USDA linking contracts | `Modules/Products/Contracts`; no foreign aggregate-returning API. Product errors also belong here. |
+| Product aggregate and invariants | `Modules/Products/Domain`; foreign links use scalar IDs. Product IDs, product type and measurement unit belong to `Modules/Products/Domain.Contracts`. |
+| Food-quality formula | `Modules/Products/FoodQuality`; consumers reference this narrow owner project directly. |
+| Runtime product persistence | `Modules/Products/Infrastructure/Persistence/ProductsDbContext.cs`; one mapped Product entity, using the existing `ProductsPersistenceModelRegistration`. |
+| Product writes, row locking and cache | `ProductRepository` uses ProductsDbContext; `CachedProductRepository` preserves cache lifetime, access rechecks and mutation invalidation. |
+| Related-data product snapshots | Owner `ProductSnapshotReadService` uses the owner DbSet and returns immutable scalar snapshots for Meals and Recipes; empty input performs no query. |
+| Overview and cross-module usage counts | `FoodDiary.ReadModel.Composition/Products`; host registration supplies `IProductOverviewReadService` and `IProductUsageQuery`. Only no-tracking scalar/DTO reads are allowed. |
+| Shared transaction coordination | Products' `EfProductMutationTransactionRunner` retains the central Serializable transaction and retry/reset boundary; shared IUnitOfWork commits central and owner changes atomically. |
+| Schema, foreign keys and migrations | Central FoodDiaryDbContext remains the complete migration/composition model. Runtime extraction does not change schema, indexes, conversions or database foreign keys. |
+| Ordered user cleanup | `ProductsUserDataPurgeParticipant` retains shared-context bulk operations under the Users cleanup coordinator. |
 
-Compatibility means coordinated rebuilding of consumers and executable hosts. CLR namespaces and the legacy application assembly identity are retained; relocation of ports/adapters does not promise compatibility with old precompiled binaries.
+## Persistence invariants
 
-Required verification is tracked separately from navigation: full solution restore/build, locked restore, owned and donor/consumer suites, full architecture, relevant HTTP/Swagger, EF pending-model comparison and one unfiltered real-PostgreSQL infrastructure suite. No collectors or production access.
+Owner queries synchronize with the live shared transaction, including after an intermediate unit-of-work save. Product update/delete keeps the existing owner/public predicates and parameterized `FOR UPDATE` SQL; xmin remains the concurrency token. Composed usage counting uses the same scoped shared context and therefore participates in the caller transaction.
 
-## Source review and rollout
+Overview queries preserve escaped search, SQL pagination, ordering, correlated Meals/Recipes usage counts and masking of another owner's private comment. ProductRepository delegates usage counting and no longer directly reads Meals or Recipes tables.
 
-`ProductOverviewReadService` retains AsNoTracking, owner/public filtering, escaped
-ILIKE search, normalized pagination, descending creation order, one count query
-and one page projection. Usage counts remain projected rather than materializing
-navigation collections, and another owner's private Comment is redacted.
-ProductConfiguration retains owner/creation and visibility/creation indexes,
-four trigram indexes, xmin concurrency, optional image/USDA SetNull relationships
-with unidirectional User and MealItem relationships. Source equality is evidence of
-preservation; PostgreSQL execution and EF comparison are separate required checks.
+## Verification and delivery
 
-`CachedProductRepository` retains its five-minute cache and access check on every
-cache hit; update reads bypass the cache. Mutations evict the same keys.
-`EfProductMutationTransactionRunner` retains execution-strategy retries, the shared
-Recipe composition advisory lock, one transaction lifetime and conditional unit
-of work saving. Repository methods gain no SaveChanges calls. No new background
-work, provider requests, credentials, configuration, media cleanup or outbox
-ownership is introduced by registration changes.
+`SharedProductsContextIntegrationTests` covers shared saves, xmin, reads after an intermediate flush, rollback/reset and independent-connection row locking. `ProductUsageCompositionIntegrationTests` covers visibility and uncommitted usage counts. Products and Meals PostgreSQL suites protect related-data reads; ProductPostgresApiFlowTests covers API persistence and the composite favorites/meal/recent flow. That multi-context flow requires PostgreSQL rather than InMemory.
 
-API and Initializer compose the full Products facade; JobManager composes only
-Products persistence and retains its existing handler set. Deployments must use
-coordinated host builds containing the new project outputs and corresponding
-Docker COPY paths. Do not mix old compiled port/adapter binaries with new hosts.
-No schema/configuration migration or provider ordering is needed. Rollback means
-rebuilding and redeploying the previous complete host revision; there is no data
-rollback step. After deployment, verify authenticated product reads/mutations,
-private visibility, suggestions and recipe/meal composition through existing
-smoke journeys and normal application error/latency signals. Deployment itself
-is outside this task and was not performed.
-
-The physical boundary implements the existing ownership/abstraction ADRs; it does
-not introduce a new logical module dependency or service boundary. The narrow
-central ID and advisory-lock seams above remain explicit coordinated-build boundaries.
+Run the solution build, architecture and pending-model checks, module tests, affected consumers, relevant HTTP/Swagger checks and unfiltered central PostgreSQL coverage. No collectors or live provider calls are needed. Hosts must be rebuilt together; no schema/configuration migration or deployment is part of this refactor.

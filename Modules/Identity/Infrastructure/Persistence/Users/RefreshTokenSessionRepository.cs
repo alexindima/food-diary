@@ -7,25 +7,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
+public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession> sessions, Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
     public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActiveReadModelsAsync(
-        UserId userId, CancellationToken cancellationToken = default) =>
-        await context.UserRefreshTokenSessions
+        UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await sessions
             .AsNoTracking()
             .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
             .OrderByDescending(session => session.LastRotatedAtUtc)
             .Select(session => new RefreshTokenSessionReadModel(
                 session.Id, session.AuthProvider, session.UserAgent, session.CreatedAtUtc, session.LastRotatedAtUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
 
-    public Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
-        context.UserRefreshTokenSessions
-            .FirstOrDefaultAsync(session => session.Id == id, cancellationToken);
+    public async Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await sessions
+            .FirstOrDefaultAsync(session => session.Id == id, cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task<IReadOnlyList<UserRefreshTokenSession>> GetActiveByUserIdAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.UserRefreshTokenSessions
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await sessions
             .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
             .OrderByDescending(session => session.LastRotatedAtUtc)
             .ToListAsync(cancellationToken)
@@ -33,12 +44,18 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
     }
 
     public async Task AddAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
-        await context.UserRefreshTokenSessions.AddAsync(session, cancellationToken).ConfigureAwait(false);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        await sessions.AddAsync(session, cancellationToken).ConfigureAwait(false);
     }
 
-    public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
-        context.UserRefreshTokenSessions.Update(session);
-        return Task.CompletedTask;
+    public async Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        sessions.Update(session);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     public async Task<bool> TryRotateAsync(
@@ -49,8 +66,11 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
         bool rememberMe,
         DateTime rotatedAtUtc,
         CancellationToken cancellationToken = default) {
-        if (!context.Database.IsRelational()) {
-            UserRefreshTokenSession? session = await context.UserRefreshTokenSessions
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        if (!database.IsRelational()) {
+            UserRefreshTokenSession? session = await sessions
                 .FirstOrDefaultAsync(candidate => candidate.Id == id, cancellationToken).ConfigureAwait(false);
             if (session is null || session.UserId != userId || !session.IsActive ||
                 !string.Equals(session.RefreshTokenHash, expectedRefreshTokenHash, StringComparison.Ordinal)) {
@@ -61,7 +81,7 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
             return true;
         }
 
-        int affected = await context.UserRefreshTokenSessions
+        int affected = await sessions
             .Where(session =>
                 session.Id == id &&
                 session.UserId == userId &&
@@ -83,11 +103,14 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
         UserId userId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
-        List<UserRefreshTokenSession> sessions = await context.UserRefreshTokenSessions
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        List<UserRefreshTokenSession> activeSessions = await sessions
             .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
-        foreach (UserRefreshTokenSession session in sessions) {
+        foreach (UserRefreshTokenSession session in activeSessions) {
             session.Revoke(revokedAtUtc);
         }
     }
@@ -97,15 +120,18 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
         UserId userId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
-        if (!context.Database.IsRelational()) {
-            UserRefreshTokenSession? session = await context.UserRefreshTokenSessions
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        if (!database.IsRelational()) {
+            UserRefreshTokenSession? session = await sessions
                 .FirstOrDefaultAsync(candidate => candidate.Id == id && candidate.UserId == userId, cancellationToken)
                 .ConfigureAwait(false);
             session?.Revoke(revokedAtUtc);
             return;
         }
 
-        await context.UserRefreshTokenSessions
+        await sessions
             .Where(session =>
                 session.Id == id &&
                 session.UserId == userId &&
@@ -125,15 +151,18 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
         Guid currentSessionId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
-        if (!context.Database.IsRelational()) {
-            bool currentSessionIsActive = await context.UserRefreshTokenSessions.AnyAsync(
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        if (!database.IsRelational()) {
+            bool currentSessionIsActive = await sessions.AnyAsync(
                 session => session.Id == currentSessionId && session.UserId == userId && session.RevokedAtUtc == null,
                 cancellationToken).ConfigureAwait(false);
             if (!currentSessionIsActive) {
                 return;
             }
 
-            UserRefreshTokenSession? targetSession = await context.UserRefreshTokenSessions
+            UserRefreshTokenSession? targetSession = await sessions
                 .FirstOrDefaultAsync(
                     session => session.Id == id && session.Id != currentSessionId && session.UserId == userId,
                     cancellationToken)
@@ -142,13 +171,13 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
             return;
         }
 
-        await context.UserRefreshTokenSessions
+        await sessions
             .Where(session =>
                 session.Id == id &&
                 session.Id != currentSessionId &&
                 session.UserId == userId &&
                 session.RevokedAtUtc == null &&
-                context.UserRefreshTokenSessions.Any(currentSession =>
+                sessions.Any(currentSession =>
                     currentSession.Id == currentSessionId &&
                     currentSession.UserId == userId &&
                     currentSession.RevokedAtUtc == null))
@@ -166,15 +195,18 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
         Guid currentSessionId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
-        if (!context.Database.IsRelational()) {
-            bool currentSessionIsActive = await context.UserRefreshTokenSessions.AnyAsync(
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        if (!database.IsRelational()) {
+            bool currentSessionIsActive = await sessions.AnyAsync(
                 session => session.Id == currentSessionId && session.UserId == userId && session.RevokedAtUtc == null,
                 cancellationToken).ConfigureAwait(false);
             if (!currentSessionIsActive) {
                 return;
             }
 
-            List<UserRefreshTokenSession> otherSessions = await context.UserRefreshTokenSessions
+            List<UserRefreshTokenSession> otherSessions = await sessions
                 .Where(session =>
                     session.UserId == userId &&
                     session.Id != currentSessionId &&
@@ -187,12 +219,12 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
             return;
         }
 
-        await context.UserRefreshTokenSessions
+        await sessions
             .Where(session =>
                 session.UserId == userId &&
                 session.Id != currentSessionId &&
                 session.RevokedAtUtc == null &&
-                context.UserRefreshTokenSessions.Any(currentSession =>
+                sessions.Any(currentSession =>
                     currentSession.Id == currentSessionId &&
                     currentSession.UserId == userId &&
                     currentSession.RevokedAtUtc == null))

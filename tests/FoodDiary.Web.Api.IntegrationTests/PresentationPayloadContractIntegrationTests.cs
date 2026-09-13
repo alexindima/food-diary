@@ -29,7 +29,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         WriteIndented = true,
     };
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AdminUsers_WithAdminRole_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = testAuthFactory.CreateClient();
         string registeredEmail = $"admin-users-{Guid.NewGuid():N}@example.com";
@@ -54,7 +54,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("admin-users-list", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task RecipeById_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -134,7 +134,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("recipe-by-id", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Statistics_ForEmptyRange_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -150,7 +150,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("statistics-empty-range", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task ShoppingListCurrent_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -187,7 +187,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("shopping-list-current", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CurrentCycle_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -224,7 +224,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("cycle-current", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DashboardSnapshot_ForNewUser_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -240,7 +240,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("dashboard-snapshot", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UserInfo_AfterRegister_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -256,7 +256,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("user-info", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UserAppearance_SurfaceStyle_IsPersistedAndValidated() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -274,7 +274,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         Assert.Equal("modern", info.RootElement.GetProperty("uiStyle").GetString());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UserOverview_AfterRegister_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -290,7 +290,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("user-overview", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task HydrationDaily_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -320,7 +320,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("hydration-daily", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AiUsageMe_WithAuthenticatedUser_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -336,7 +336,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("ai-usage-me", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DesiredWeight_AfterUpdate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -357,7 +357,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("desired-weight", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DesiredWaist_AfterUpdate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -378,7 +378,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("desired-waist", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task WeightGoalHistory_AfterGoalReplacement_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -409,7 +409,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("weight-goal-history", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task WaistGoalHistory_AfterGoalReplacement_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -440,11 +440,12 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("waist-goal-history", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task ImageUploadUrl_WithValidPayload_MatchesNormalizedPayloadSnapshot() {
-        HttpClient client = testAuthFactory.CreateClient();
-        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
-        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",

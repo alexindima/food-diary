@@ -30,3 +30,11 @@ Dietologist attention metrics implement the owner IAttentionSignalMetricsReadSer
 Dietologist composition directly registers IDietologistInvitationReadModelRepository, IRecommendationReadModelRepository and IRecommendationCommentReadModelRepository. Preserve client inner joins, optional dietologist left joins, status/owner predicates, limits and ordering. These ports return immutable DTOs only; combined owner repositories delegate their compatibility read-model methods to these ports.
 
 Meals source lookup implements IMealSourceSnapshotQuery for IDs derived from an already authorized meal graph. Return image URLs and immutable recipe name/image/serving/nutrition snapshots only. Empty ID collections perform no query. Preserve existing ID filtering and nullable totals; owner MealRepository retains snapshot precedence and legacy serving rules.
+
+Products overview implements IProductOverviewReadService with unchanged SQL paging, search escaping, owner/public visibility, private comment masking and correlated meal/recipe usage counts. Preserve food-quality calculation on immutable projected rows and register the port only in host composition.
+
+ProductUsageQuery implements the owner IProductUsageQuery port. Preserve owner/public filtering, zero for missing or inaccessible products, and correlated Meals/Recipes counts. Use the same scoped shared context so mutation-time reads see uncommitted writes under the caller serializable transaction; never introduce a new transaction or context.
+
+RecipeUsageQuery implements IRecipeUsageQuery. Preserve owner/public filtering, zero for inaccessible or missing recipes, and the sum of meal items and nested recipe usages. Query the same scoped shared context without tracking or a new transaction.
+
+Identity UserLoginEventQuery implements the owner query port. Preserve the Users inner join, escaped ILIKE search, all filters before count/paging, descending login time with ID tie-break, half-open paged date range and inclusive summary date range. Return immutable DTOs without tracking; use the caller scoped context and transaction.

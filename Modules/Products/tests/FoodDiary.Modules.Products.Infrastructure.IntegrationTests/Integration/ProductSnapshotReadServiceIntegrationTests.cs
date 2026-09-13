@@ -20,7 +20,7 @@ public sealed class ProductSnapshotReadServiceIntegrationTests(PostgresDatabaseF
         context.Products.Add(product);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var reader = new ProductSnapshotReadService(context);
+        var reader = new ProductSnapshotReadService(context.Products);
 
         IReadOnlyDictionary<ProductId, ProductSnapshotReadModel> result = await reader.GetByIdsAsync(
             [product.Id, product.Id, ProductId.New()]);
@@ -38,7 +38,7 @@ public sealed class ProductSnapshotReadServiceIntegrationTests(PostgresDatabaseF
     [RequiresDockerFact]
     public async Task GetByIdsAsync_EmptyInputReturnsEmptyAndObservesCancellation() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var reader = new ProductSnapshotReadService(context);
+        var reader = new ProductSnapshotReadService(context.Products);
         Assert.Empty(await reader.GetByIdsAsync([]));
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();

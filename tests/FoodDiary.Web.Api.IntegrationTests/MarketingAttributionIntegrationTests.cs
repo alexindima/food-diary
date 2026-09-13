@@ -10,7 +10,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactory apiFactory)
     : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task AttributionEndpoint_WithValidPayload_ReturnsNoContent() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -33,7 +33,7 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AttributionEndpoint_WithClientSelectedSignupAndUserId_ReturnsBadRequest() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -54,7 +54,7 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AttributionEndpoint_WithoutEventId_ReturnsBadRequest() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -69,7 +69,7 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SignupAttributionEndpoint_WithoutAuthentication_ReturnsUnauthorized() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -87,7 +87,7 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SignupAttributionEndpoint_WithAuthentication_ReturnsNoContent() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage registerResponse = await client.PostAsJsonAsync(

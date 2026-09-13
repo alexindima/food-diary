@@ -67,18 +67,14 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "64ac074319296da0d8b7c80fb04ecf36d6809e491a84ece6df814cd7c742178b"
-        },
-        {
           "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "0ad2550a6f8d51c2d1e64337f80f6058d6fd23d7551526a995eb133593765b55"
+          "sha256": "f24816c406bc36c59f3f820bc289a02cd4296118833db195ab1c76b5541b4eed"
         }
       ],
-      "reason": "No HTTP schemas routes status codes or migrations changed; projection fields and serving semantics preserved",
+      "reason": "16 Swagger tests and Admin login query tests pass; public repository signatures and DTOs unchanged",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:02:22.4372750Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:17:21.8091759Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,13 +83,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "7b328b2600b973ea9df687a886f003b42a28599629da64714f470687e5479d3b"
+          "sha256": "b816e692daf025660425a40fb2cc2d47d0251c40828bca4c0fee5fbe3942dc84"
         }
       ],
-      "reason": "Meals source snapshot ownership and legacy precedence documented in scoped guides",
+      "reason": "Identity and composition guides document query ownership and preserved scoped aliases",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:02:23.0613467Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:17:22.5131118Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -196,17 +192,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "58af4aeafb78783e88a3ab1e172b28d016f475ad80c92aa76fcf48ca189cfa99"
-        },
-        {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "a72847b5225855e566e2a8c8c0b8b8b261d81c41f23044a5da5b38a2b64a8eae"
+          "sha256": "c7914e0d0e31b8e213e33b3cecd28b5cea827e5b09148ef133f222b92bc823f5"
         }
       ],
-      "reason": "Reviewed the full OpenAPI snapshot: 257 additive lines introduce recognition start/list/get and their schemas. Existing synchronous routes and payloads remain unchanged. All 20 focused Swagger and recognition authorization tests pass; the documented compatibility workflow still applies.",
+      "reason": "Routes and payloads unchanged; existing HTTP snapshots retained and PostgreSQL regression executed.",
       "baseRef": "HEAD",
-      "gitHead": "1b2ca97aea5712a9fc7ba0679a28d6c9f281898b",
-      "reviewedAtUtc": "2026-09-11T20:09:06.6347824Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:55:26.7303635Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -215,17 +207,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7c6b285d9474e68d6768ebc874c7643b249dcd692c648c230288df6a67dd99ee"
+          "sha256": "5fefe846eb86b0675345752f207c779a3b8ff5b0fc7b57d2ef92577b64600a80"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "7b328b2600b973ea9df687a886f003b42a28599629da64714f470687e5479d3b"
+          "sha256": "b816e692daf025660425a40fb2cc2d47d0251c40828bca4c0fee5fbe3942dc84"
         }
       ],
-      "reason": "Clean solution and focused test builds; Meals application 197 core DI temporal 70 PostgreSQL 41 passed; architecture run recorded separately",
+      "reason": "Solution build 169 Identity infrastructure and 69 host DI tests passed; real PostgreSQL tests cover paging dates literal search and transaction visibility",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:02:23.9119319Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:17:23.3484061Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "c080c0b08fe9ae5fe02c4a74b6807e7397b1e1ad737f8a78bf1d3683cab619b7"
+          "sha256": "79e14a523faf8ad92644c4b38b8e01dc9f655456009ee59efdcf1de90d0d7954"
         }
       ],
-      "reason": "Persistence-only extraction preserves routes payloads and status codes; API snapshots are unchanged",
+      "reason": "Routes and payloads unchanged; existing HTTP snapshots retained and PostgreSQL regression executed.",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:18:32.7237728Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:55:27.9548308Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -779,13 +771,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d86872d2dd28db7392aae764b596a79eaad1454ac210e9186088d086076bbedf"
+          "sha256": "c59924d39ec2690d41dd867f83923840ac033b62406bbe08e1a3bb52f20ef372"
         }
       ],
-      "reason": "Owner predicates and parameterized undo row locks remain unchanged; no new data sharing",
+      "reason": "Owner/public visibility and private comment masking preserved; no new provider sharing",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:18:33.5265115Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T14:48:03.4911084Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f76c7244bc6d523179eafa92609deb5f05fb3c2f980364a29d2cfbd2727a44f5"
+          "sha256": "ce5ba9cedfea7a98b4dbe821f12e651e7ecdecf8e0224e536037330a590ab856"
         }
       ],
-      "reason": "Solution build and Meals PostgreSQL recognition rollback xmin and undo scenarios pass; architecture suite is running",
+      "reason": "Architecture, Identity unit and PostgreSQL suites passed; event-driven context registration regression added.",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:18:34.5518270Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:55:28.9983780Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "55c6fe12d95df0aaa862bbd884670729f2157f0fb3cab698cd4dc5307ea59302"
+          "sha256": "0f4f1dd2af2e46fde5fedf4ffa41392a67d665f33f2dbe4a98f48d7ba87c9c6c"
         }
       ],
-      "reason": "Meals runtime ownership and transaction synchronization are documented in scoped guidance and ADR 0040",
+      "reason": "Identity owner context and PostgreSQL HTTP fixture guidance updated; shared migrations unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:18:35.3324540Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:55:29.8398772Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +906,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f76c7244bc6d523179eafa92609deb5f05fb3c2f980364a29d2cfbd2727a44f5"
+          "sha256": "ce5ba9cedfea7a98b4dbe821f12e651e7ecdecf8e0224e536037330a590ab856"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "55c6fe12d95df0aaa862bbd884670729f2157f0fb3cab698cd4dc5307ea59302"
+          "sha256": "0f4f1dd2af2e46fde5fedf4ffa41392a67d665f33f2dbe4a98f48d7ba87c9c6c"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d86872d2dd28db7392aae764b596a79eaad1454ac210e9186088d086076bbedf"
+          "sha256": "c59924d39ec2690d41dd867f83923840ac033b62406bbe08e1a3bb52f20ef372"
         }
       ],
-      "reason": "Owner predicates and parameterized undo row locks remain unchanged; no new data sharing",
+      "reason": "Token rotation and Telegram expiry/replay predicates preserved; no secrets or provider changes.",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:18:36.2300889Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:55:30.7184173Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1174,13 +1166,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "1605a6131fbfab95fe129ec8163cba2e1a171126ccbc1de70e37f40889819077"
+          "sha256": "01dbdb84eb0f584e53d662ec97b5fd4d48859997e37e9127db8200c4580e36a4"
         }
       ],
-      "reason": "Meals source snapshot ownership and legacy precedence documented in scoped guides",
+      "reason": "Identity and composition guides document query ownership and preserved scoped aliases",
       "baseRef": "HEAD",
-      "gitHead": "17066e9494a25191b07bb0ba536df28f8cf71d2d",
-      "reviewedAtUtc": "2026-09-13T14:02:28.3480829Z"
+      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
+      "reviewedAtUtc": "2026-09-13T20:17:26.2915109Z"
     },
     {
       "pageId": "workflow.review-diff",

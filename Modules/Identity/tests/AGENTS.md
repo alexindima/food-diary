@@ -31,3 +31,7 @@ and dispose the fixture provider; do not add public/internal-access test seams.
 Verify encoding/payload/token forwarding, exact expiry boundary, cancellation,
 singleton composition and host-selected store replacement. Mixed Admin/Identity
 protocol-isolation tests stay central; never duplicate them in module tests.
+
+Login-event SQL tests use the real host-composed UserLoginEventQuery beside owner writes. Module registration-only tests supply an unused query port; central host DI tests verify actual composition registration.
+
+Telegram PostgreSQL fixtures now use IdentityDbContext over databases migrated by the central fixture. SharedIdentityContextIntegrationTests exercises real DI/UOW, central-plus-owner saves, template revisions, transaction rollback of bulk/Telegram SQL and concurrent refresh rotation. Registration and cache-only InMemory fixtures seed owner contexts explicitly.

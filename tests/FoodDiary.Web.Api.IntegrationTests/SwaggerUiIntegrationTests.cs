@@ -6,7 +6,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class SwaggerUiIntegrationTests(ApiWebApplicationFactory apiFactory)
     : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerUi_InDevelopment_LoadsWithCompatibleContentSecurityPolicy() {
         HttpClient client = apiFactory.CreateClient();
 

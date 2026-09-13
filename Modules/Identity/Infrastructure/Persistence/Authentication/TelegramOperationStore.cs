@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Authentication;
 
-public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProtectionProvider protectionProvider,
-    TimeProvider timeProvider) : ITelegramOperationStore {
+public sealed class TelegramOperationStore(IdentityDbContext context, IDataProtectionProvider protectionProvider,
+    TimeProvider timeProvider, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : ITelegramOperationStore {
     private const int MaximumPayloadBytes = 32768;
     private readonly IDataProtector _protector = protectionProvider.CreateProtector("FoodDiary.Telegram.Operations.v1");
 
@@ -21,6 +21,9 @@ public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProt
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(payload)));
         string encrypted = Protect(id, payload);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         await context.Database.ExecuteSqlInterpolatedAsync($"""
             INSERT INTO "TelegramOperations" ("Id", "BotId", "UpdateId", "UserId", "SecurityVersion", "PayloadHash", "ProtectedPayload", "CreatedAtUtc", "NextAttemptAtUtc", "Completed")
             VALUES ({id}, {botId}, {updateId}, {userId}, {securityVersion}, {hash}, {encrypted}, {now}, {now}, FALSE)
@@ -33,6 +36,9 @@ public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProt
     }
 
     public async Task<IReadOnlyList<Guid>> ListReadyAsync(long botId, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         await ClearCompletedContentAsync(botId, cancellationToken).ConfigureAwait(false);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         return await context.Set<TelegramOperation>().AsNoTracking()
@@ -46,6 +52,9 @@ public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProt
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         DateTime expires = now.AddMinutes(2);
         var leaseId = Guid.NewGuid();
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         int changed = await context.Set<TelegramOperation>()
             .Where(item => item.Id == operationId && item.BotId == botId && !item.Completed && item.NextAttemptAtUtc <= now &&
                 (item.LeaseExpiresAtUtc == null || item.LeaseExpiresAtUtc <= now))
@@ -59,6 +68,9 @@ public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProt
 
     public async Task<TelegramOperationLease?> GetLeaseAsync(long botId, Guid operationId, Guid leaseId, CancellationToken cancellationToken) {
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         TelegramOperation? record = await context.Set<TelegramOperation>().AsNoTracking()
             .SingleOrDefaultAsync(item => item.Id == operationId && item.BotId == botId && item.LeaseId == leaseId &&
                 !item.Completed && item.LeaseExpiresAtUtc > now,
@@ -79,6 +91,9 @@ public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProt
             throw new ArgumentException("Invalid retry time.", nameof(nextAttemptAtUtc));
         }
         string? encrypted = completed ? null : Protect(operationId, checkpoint);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         return await context.Set<TelegramOperation>()
             .Where(item => item.Id == operationId && item.BotId == botId && !item.Completed && item.LeaseId == leaseId && item.LeaseExpiresAtUtc > now)
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.ProtectedCheckpoint, encrypted)
@@ -89,6 +104,9 @@ public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProt
     }
 
     public async Task CancelUserAsync(Guid userId, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         await context.Set<TelegramOperation>().Where(item => item.UserId == userId)
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.Completed, valueExpression: true)
                 .SetProperty(item => item.ProtectedPayload, string.Empty).SetProperty(item => item.ProtectedCheckpoint, (string?)null)
@@ -112,6 +130,9 @@ public sealed class TelegramOperationStore(FoodDiaryDbContext context, IDataProt
     }
 
     public async Task CancelOperationAsync(long botId, Guid operationId, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         await context.Set<TelegramOperation>().Where(item => item.BotId == botId && item.Id == operationId && !item.Completed)
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.Completed, valueExpression: true)
                 .SetProperty(item => item.ProtectedPayload, string.Empty).SetProperty(item => item.ProtectedCheckpoint, (string?)null)

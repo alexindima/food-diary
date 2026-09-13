@@ -5,15 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
-public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates) : IEmailTemplateRepository {
-    public async Task<IReadOnlyList<EmailTemplateRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) =>
-        await emailTemplates.AsNoTracking().Where(template => template.Key == key && template.Locale == locale)
+public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IEmailTemplateRepository {
+    public async Task<IReadOnlyList<EmailTemplateRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await emailTemplates.AsNoTracking().Where(template => template.Key == key && template.Locale == locale)
             .SelectMany(template => template.Revisions).OrderByDescending(revision => revision.ArchivedOnUtc).ThenByDescending(revision => revision.Id).Take(50)
             .Select(revision => new EmailTemplateRevisionReadModel(revision.Id, revision.Subject, revision.HtmlBody,
                 revision.TextBody, revision.IsActive, revision.SavedOnUtc, revision.ArchivedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task<IReadOnlyList<EmailTemplate>> GetAllAsync(CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         return await emailTemplates
             .AsNoTracking()
             .OrderBy(t => t.Key)
@@ -22,6 +29,9 @@ public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates)
     }
 
     public async Task<IReadOnlyList<EmailTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         return await emailTemplates
             .AsNoTracking()
             .OrderBy(t => t.Key)
@@ -40,6 +50,9 @@ public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates)
     }
 
     public async Task<EmailTemplate?> GetByKeyAsync(string key, string locale, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         return await emailTemplates
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken).ConfigureAwait(false);
@@ -53,6 +66,9 @@ public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates)
         string textBody,
         bool isActive,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         EmailTemplate? existing = await emailTemplates
             .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken).ConfigureAwait(false);
 

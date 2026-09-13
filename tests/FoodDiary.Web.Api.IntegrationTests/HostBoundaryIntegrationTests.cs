@@ -6,7 +6,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class HostBoundaryIntegrationTests(ApiWebApplicationFactory apiFactory)
     : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task Request_WithAllowedHost_ReachesApplication() {
         HttpClient client = apiFactory.CreateClient();
         using var request = new HttpRequestMessage(HttpMethod.Get, "/health/live");
@@ -17,7 +17,7 @@ public sealed class HostBoundaryIntegrationTests(ApiWebApplicationFactory apiFac
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Request_WithUnknownHost_IsRejectedBeforeApplication() {
         HttpClient client = apiFactory.CreateClient();
         using var request = new HttpRequestMessage(HttpMethod.Get, "/health/live");

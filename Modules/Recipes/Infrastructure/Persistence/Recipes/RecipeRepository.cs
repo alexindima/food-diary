@@ -9,8 +9,11 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
-public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapshotReadService productSnapshots) : IRecipeRepository {
+public sealed class RecipeRepository(RecipesDbContext context, IProductSnapshotReadService productSnapshots, IRecipeUsageQuery usageQuery, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IRecipeRepository {
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         await context.Recipes.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
         return recipe;
     }
@@ -28,6 +31,9 @@ public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapsho
         bool includeSteps = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         IQueryable<Recipe> query = context.Recipes;
 
         if (!asTracking) {
@@ -53,6 +59,12 @@ public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapsho
         bool includePublic = false,
         bool includeSteps = false,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         if (!context.Database.IsRelational() || context.Database.CurrentTransaction is null) {
             return await GetByIdAsync(
                 id,
@@ -98,6 +110,9 @@ public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapsho
     }
 
     public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         Recipe? tracked = await context.Recipes.FindAsync([recipe.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Recipes.Remove(tracked);
@@ -105,6 +120,9 @@ public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapsho
     }
 
     public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         EntityEntry<Recipe> entry = context.Entry(recipe);
         if (entry.State == EntityState.Detached) {
             Recipe existing = await context.Recipes
@@ -132,6 +150,9 @@ public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapsho
             return new Dictionary<RecipeId, Recipe>();
         }
 
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         IQueryable<Recipe> query = context.Recipes.AsNoTracking();
         query = query.Where(r => recipeIds.Contains(r.Id) && (includePublic
             ? r.UserId == userId || r.Visibility == Visibility.Public
@@ -146,12 +167,6 @@ public sealed class RecipeRepository(FoodDiaryDbContext context, IProductSnapsho
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default) =>
-        await context.Recipes
-            .AsNoTracking()
-            .Where(r => r.Id == id && (includePublic
-                ? r.UserId == userId || r.Visibility == Visibility.Public
-                : r.UserId == userId))
-            .Select(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count)
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        await usageQuery.GetUsageCountAsync(id, userId, includePublic, cancellationToken).ConfigureAwait(false);
 
 }

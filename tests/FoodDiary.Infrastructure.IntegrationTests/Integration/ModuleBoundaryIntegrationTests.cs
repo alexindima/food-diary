@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Recipes;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence.Products;
@@ -34,7 +35,9 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        var repository = new RecipeRepository(context, new ProductSnapshotReadService(context));
+        await using var owned = new RecipesDbContext(new DbContextOptionsBuilder<RecipesDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection()).Options);
+        var repository = new RecipeRepository(owned, new ProductSnapshotReadService(context.Products), new RecipeUsageQuery(context));
         Recipe loaded = Assert.IsType<Recipe>(await repository.GetByIdForUpdateAsync(recipe.Id, user.Id, includeSteps: true));
         RecipeIngredientProductSnapshot snapshot = Assert.IsType<RecipeIngredientProductSnapshot>(Assert.Single(Assert.Single(loaded.Steps).Ingredients).ProductSnapshot);
         Assert.Equal("Apple", snapshot.Name);

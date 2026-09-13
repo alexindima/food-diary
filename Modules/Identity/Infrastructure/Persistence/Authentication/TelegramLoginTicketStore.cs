@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Authentication;
 
 public sealed class TelegramLoginTicketStore(
-    FoodDiaryDbContext context,
+    IdentityDbContext context,
     IDataProtectionProvider protectionProvider,
-    TimeProvider timeProvider) : ITelegramLoginTicketStore {
+    TimeProvider timeProvider, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : ITelegramLoginTicketStore {
     private readonly IDataProtector _protector = protectionProvider.CreateProtector("FoodDiary.Telegram.LoginTickets.v1");
 
     public async Task<string> CreateAsync(
@@ -27,6 +27,9 @@ public sealed class TelegramLoginTicketStore(
         string fingerprint = Hash(ticket);
         string bindingHash = Hash(browserBinding);
         string protectedPayload = _protector.CreateProtector(purpose, bindingHash).Protect(payload);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         await context.Database.ExecuteSqlInterpolatedAsync(
             $"DELETE FROM \"TelegramLoginTickets\" WHERE \"ExpiresAtUtc\" <= {now}", cancellationToken).ConfigureAwait(false);
         await context.Database.ExecuteSqlInterpolatedAsync(
@@ -44,6 +47,9 @@ public sealed class TelegramLoginTicketStore(
         string fingerprint = Hash(ticket);
         string bindingHash = Hash(browserBinding);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         IQueryable<TelegramLoginTicket> query = context.Set<TelegramLoginTicket>().AsNoTracking().Where(item =>
             item.Fingerprint == fingerprint && item.Purpose == purpose &&
             item.BrowserBindingHash == bindingHash && item.ExpiresAtUtc > now);

@@ -20,7 +20,7 @@ public sealed class EmailTemplateProvider(
 
         AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            IdentityDbContext db = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
 
             EmailTemplateContent? template = await db.EmailTemplates
                 .AsNoTracking()

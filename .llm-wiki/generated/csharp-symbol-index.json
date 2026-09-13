@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4059,
-    "symbols": 4000,
-    "interfaceImplementationLinks": 275,
+    "sourceFiles": 4068,
+    "symbols": 4009,
+    "interfaceImplementationLinks": 278,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 2097,
+      "class": 2103,
       "enum": 64,
-      "interface": 480,
+      "interface": 483,
       "record": 1238,
       "record struct": 121
     },
@@ -32,8 +32,8 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1636,
-      "Query": 201,
+      "Other": 1639,
+      "Query": 207,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
@@ -1840,6 +1840,13 @@
       "line": 8
     },
     {
+      "name": "UserLoginEventQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs",
+      "line": 10
+    },
+    {
       "name": "ImageAssetUsageQuery",
       "kind": "class",
       "role": "Query",
@@ -1882,11 +1889,25 @@
       "line": 8
     },
     {
+      "name": "ProductOverviewReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
+      "line": 13
+    },
+    {
+      "name": "ProductUsageQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Products/ProductUsageQuery.cs",
+      "line": 8
+    },
+    {
       "name": "ReadModelCompositionRegistration",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 29
+      "line": 34
     },
     {
       "name": "RecipeOverviewReadService",
@@ -1894,6 +1915,13 @@
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
       "line": 11
+    },
+    {
+      "name": "RecipeUsageQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
+      "line": 8
     },
     {
       "name": "BotInputParser",
@@ -13992,6 +14020,13 @@
       "line": 2
     },
     {
+      "name": "IUserLoginEventQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
+      "line": 2
+    },
+    {
       "name": "IUserLoginEventReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -15025,7 +15060,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 13
+      "line": 16
     },
     {
       "name": "IdentityProviderRegistration",
@@ -15147,6 +15182,13 @@
       "line": 7
     },
     {
+      "name": "IdentityDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs",
+      "line": 7
+    },
+    {
       "name": "RefreshTokenSessionRepository",
       "kind": "class",
       "role": "Repository",
@@ -15158,7 +15200,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "GoogleTokenValidator",
@@ -19872,6 +19914,13 @@
       "line": 5
     },
     {
+      "name": "IProductUsageQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductUsageQuery.cs",
+      "line": 4
+    },
+    {
       "name": "IProductWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -20411,13 +20460,6 @@
       "line": 8
     },
     {
-      "name": "ProductOverviewReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 12
-    },
-    {
       "name": "ProductRepository",
       "kind": "class",
       "role": "Repository",
@@ -20429,7 +20471,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs",
-      "line": 7
+      "line": 8
+    },
+    {
+      "name": "ProductsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Infrastructure/Persistence/ProductsDbContext.cs",
+      "line": 5
     },
     {
       "name": "ProductsUserDataPurgeParticipant",
@@ -20443,7 +20492,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "ProductLookupService",
@@ -21055,6 +21104,13 @@
       "line": 2
     },
     {
+      "name": "IRecipeUsageQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeUsageQuery.cs",
+      "line": 4
+    },
+    {
       "name": "IRecipeWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -21657,6 +21713,13 @@
       "line": 11
     },
     {
+      "name": "RecipesDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Persistence/RecipesDbContext.cs",
+      "line": 5
+    },
+    {
       "name": "RecipesUserDataPurgeParticipant",
       "kind": "class",
       "role": "Other",
@@ -21668,7 +21731,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
-      "line": 12
+      "line": 15
     },
     {
       "name": "RecipeAccessService",
@@ -29425,7 +29488,7 @@
       "interface": "IProductOverviewReadService",
       "interfacePath": "Modules/Products/Contracts/Products/Common/IProductOverviewReadService.cs",
       "implementation": "ProductOverviewReadService",
-      "implementationPath": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29440,6 +29503,13 @@
       "interfacePath": "Modules/Products/Contracts/Products/Common/IProductSnapshotReadService.cs",
       "implementation": "ProductSnapshotReadService",
       "implementationPath": "Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IProductUsageQuery",
+      "interfacePath": "Modules/Products/Application/Abstractions/Products/Common/IProductUsageQuery.cs",
+      "implementation": "ProductUsageQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Products/ProductUsageQuery.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29524,6 +29594,13 @@
       "interfacePath": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeRepository.cs",
       "implementation": "RecipeRepository",
       "implementationPath": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IRecipeUsageQuery",
+      "interfacePath": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeUsageQuery.cs",
+      "implementation": "RecipeUsageQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29797,6 +29874,13 @@
       "interfacePath": "Modules/Users/Application/Common/IUserIdentityMutationService.cs",
       "implementation": "UserIdentityMutationService",
       "implementationPath": "Modules/Users/Application/Services/UserIdentityMutationService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserLoginEventQuery",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
+      "implementation": "UserLoginEventQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs",
       "confidence": "naming-convention"
     },
     {

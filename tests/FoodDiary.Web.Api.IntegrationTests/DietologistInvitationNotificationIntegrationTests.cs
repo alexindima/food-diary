@@ -22,7 +22,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         PropertyNameCaseInsensitive = true,
     };
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task InviteRegisteredDietologist_CreatesInAppNotification() {
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
@@ -47,7 +47,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         Assert.False(string.IsNullOrWhiteSpace(invitationNotification.Title));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DietologistInvitationNotification_CanBeMarkedRead_Individually() {
         AuthenticatedUser firstClient = await CreateAuthenticatedClientAsync("client-a");
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
@@ -68,7 +68,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         Assert.True(readNotification.IsRead);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AcceptCurrentUser_CreatesClientNotification() {
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync("client");
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
@@ -91,7 +91,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         Assert.False(string.IsNullOrWhiteSpace(notification.Title));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeclineCurrentUser_CreatesClientNotification() {
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync("client");
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
@@ -113,7 +113,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         Assert.False(string.IsNullOrWhiteSpace(notification.Title));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateRecommendation_CreatesClientNotification_WithTargetUrl_AndCanBeMarkedRead() {
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync("client");
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
@@ -194,7 +194,16 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
     private void SetDietologistToken(AuthenticatedUser user) {
         using IServiceScope scope = factory.Services.CreateScope();
         IJwtTokenGenerator tokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
-        string token = tokenGenerator.GenerateAccessToken(new UserId(user.UserId), user.Email, [RoleNames.Dietologist]);
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        long securityVersion = dbContext.Users
+            .Where(candidate => candidate.Id == new UserId(user.UserId))
+            .Select(candidate => candidate.SecurityVersion)
+            .Single();
+        string token = tokenGenerator.GenerateAccessToken(
+            new UserId(user.UserId),
+            user.Email,
+            [RoleNames.Dietologist],
+            securityVersion);
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 

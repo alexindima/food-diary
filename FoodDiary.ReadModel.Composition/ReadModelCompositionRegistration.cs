@@ -1,3 +1,8 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.ReadModel.Composition.Identity;
+using FoodDiary.ReadModel.Composition.Recipes;
+using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.ReadModel.Composition.Products;
 using FoodDiary.ReadModel.Composition.Meals;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -29,6 +34,7 @@ namespace FoodDiary.ReadModel.Composition;
 
 public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
+        services.AddScoped<IUserLoginEventQuery, UserLoginEventQuery>();
         services.AddScoped<IImageAssetUsageQuery, ImageAssetUsageQuery>();
         services.AddScoped<IAchievementMetricReader, AchievementMetricReader>();
         services.AddScoped<ContentReportReadService>();
@@ -45,6 +51,9 @@ public static class ReadModelCompositionRegistration {
         services.AddScoped<IFavoriteMealQuery, FavoriteMealQuery>();
         services.AddScoped<IMealProductNutritionQuery, MealProductNutritionQuery>();
         services.AddScoped<IMealItemDisplayReadService, MealItemDisplayReadService>();
+        services.AddScoped<IProductUsageQuery, ProductUsageQuery>();
+        services.AddScoped<IProductOverviewReadService, ProductOverviewReadService>();
+        services.AddScoped<IRecipeUsageQuery, RecipeUsageQuery>();
         services.AddScoped<IRecipeOverviewReadService, RecipeOverviewReadService>();
         services.RemoveAll<IDashboardMealsReadService>();
         services.AddScoped<DashboardMealsReadService>();

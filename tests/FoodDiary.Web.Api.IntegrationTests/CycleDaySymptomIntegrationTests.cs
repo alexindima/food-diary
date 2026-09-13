@@ -12,7 +12,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeleteCycle_WithOwnedProfile_ReturnsNoContentAndClearsCurrentCycle() {
         HttpClient client = factory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -29,7 +29,7 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         Assert.Empty(await currentResponse.Content.ReadAsStringAsync());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeleteCycle_WithoutAuthentication_ReturnsUnauthorized() {
         HttpClient client = factory.CreateClient();
 
@@ -38,7 +38,7 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeleteCycle_WithForeignProfile_ReturnsNotFoundAndPreservesOwnerCycle() {
         HttpClient ownerClient = factory.CreateClient();
         string ownerToken = await RegisterAndGetAccessTokenAsync(ownerClient);
@@ -57,7 +57,7 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         Assert.Equal(cycleProfileId, json.RootElement.GetProperty("id").GetGuid());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UpsertDay_WithClearedSymptomCategory_PreservesOtherDayObservations() {
         HttpClient client = factory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -107,7 +107,7 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         Assert.Equal(36.6, root.GetProperty("fertilitySignal").GetProperty("basalBodyTemperatureCelsius").GetDouble());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UpsertDay_WithClearedFertilitySignal_PreservesOtherDayObservations() {
         HttpClient client = factory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
+using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
@@ -113,6 +114,36 @@ public sealed class EfUnitOfWorkTests {
 
         Assert.Empty(source.DomainEvents);
         await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task SaveChangesAsync_WhenEventHandlerRegistersModule_CompletesSaveAsync() {
+        await using FoodDiaryDbContext context = CreateContext();
+        await using MealPlanningDbContext module = context.CreateModuleContext<MealPlanningDbContext>(static options => new MealPlanningDbContext(options));
+        var source = ShoppingList.Create(UserId.New(), "Before");
+        module.ShoppingLists.Add(source);
+        source.UpdateName("After");
+        HydrationDbContext? registeredModule = null;
+        IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();
+        publisher.PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>()).Returns(_ => {
+            registeredModule = context.CreateModuleContext<HydrationDbContext>(static options => new HydrationDbContext(options));
+            return Task.CompletedTask;
+        });
+        var unitOfWork = new EfUnitOfWork(context, publisher, NullLogger<EfUnitOfWork>.Instance);
+
+        try {
+            await unitOfWork.SaveChangesAsync();
+
+            Assert.NotNull(registeredModule);
+            Assert.False(unitOfWork.HasPendingChanges);
+            Assert.Empty(source.DomainEvents);
+            Assert.Equal("After", (await context.ShoppingLists.AsNoTracking().SingleAsync()).Name);
+            await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
+        } finally {
+            if (registeredModule is not null) {
+                await registeredModule.DisposeAsync();
+            }
+        }
     }
 
     private static FoodDiaryDbContext CreateContext(SaveChangesInterceptor? interceptor = null) {

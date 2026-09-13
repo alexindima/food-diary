@@ -1,10 +1,10 @@
+using FoodDiary.ReadModel.Composition.Products;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Products;
 using System.Diagnostics;
 using System.Globalization;
 

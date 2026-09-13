@@ -11,7 +11,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFactory apiFactory)
     : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task LogsEndpoint_WithValidTelemetryPayload_ReturnsNoContent() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -35,7 +35,7 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task LogsEndpoint_WithUnknownEventName_ReturnsBadRequest() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -50,7 +50,7 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task LogsEndpoint_WithFutureTimestamp_ReturnsBadRequest() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -65,7 +65,7 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task LogsEndpoint_WithPayloadAboveLimit_ReturnsPayloadTooLarge() {
         HttpClient client = apiFactory.CreateClient();
         string payload = $$"""

@@ -22,7 +22,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         PropertyNameCaseInsensitive = true,
     };
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Invite_ThenAcceptCurrentUser_ThenGetCurrentUserInvitation_ReturnsAcceptedStatus() {
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
@@ -77,7 +77,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         Assert.Equal("Accepted", updatedRelationship.Status);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Invite_ThenDeclineCurrentUser_ThenGetCurrentUserInvitation_ReturnsDeclinedStatus() {
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
@@ -108,7 +108,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         Assert.Equal("Declined", invitation.Status);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task PermissionsAndDisconnect_TakeEffectOnNextDietologistApiRequest() {
         await EnsureDietologistRoleAsync();
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();

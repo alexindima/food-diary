@@ -10,7 +10,7 @@ namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 [ExcludeFromCodeCoverage]
 public sealed class RequestObservabilityPipelineIntegrationTests(ApiWebApplicationFactory apiFactory)
     : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task Pipeline_WhenConcurrencyExceptionIsHandled_LogsFinalConflictStatus() {
         var loggerProvider = new RecordingLoggerProvider();
         await using WebApplicationFactory<Program> factory = apiFactory.WithWebHostBuilder(builder => {

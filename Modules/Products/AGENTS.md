@@ -6,7 +6,7 @@ Preserve FoodDiary.Application.Products assembly identity and existing CLR names
 Compatibility requires coordinated host rebuilds, not old binary compatibility.
 
 Product, product value objects and focused invariant tests live in the module Domain with stable CLR namespaces. FoodQualityScore and FoodQualityGrade live in the narrow Products-owned FoodQuality project, referencing only Products Domain.Contracts and shared primitives. ProductId, ProductType and MeasurementUnit live in Domain.Contracts, which references only shared primitives. The central and Nutrition domain assemblies are retired. Product keeps scalar UserId and UsdaFdcId; its model owns the schema-equivalent foreign keys. RecipeIngredient uses an immutable product snapshot; Users-owned User and MealItem expose no Product CLR navigation. Other modules reference Products FoodQuality directly for the existing shared formula; the scoring dependency exposes no Product aggregate.
-Shared context and migrations/snapshot stay central; composition uses Serializable transactions under ADR 0035.
+ProductsDbContext owns runtime Product tracking. Shared transaction coordination and migrations/snapshot stay central; composition uses Serializable transactions under ADR 0035.
 See docs/ai/products-ownership-inventory.md for source evidence.
 
 Hosts call AddProductsModule; JobManager composes AddProductsPersistence only.

@@ -9,7 +9,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicationFactory factory)
     : IClassFixture<TestAuthApiWebApplicationFactory> {
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData("POST", "/api/v1/dietologist/invite")]
     [InlineData("DELETE", "/api/v1/dietologist/relationship")]
     [InlineData("PUT", "/api/v1/dietologist/permissions")]
@@ -33,7 +33,7 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
             () => Assert.Equal("Authentication.ImpersonationActionForbidden", Assert.IsType<ErrorPayload>(error).Error));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UnannotatedAuthorizedMutation_WithImpersonatedUser_ReturnsForbidden() {
         HttpClient client = CreateAuthenticatedClient(impersonated: true);
 
@@ -47,7 +47,7 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
             () => Assert.Equal("Authentication.ImpersonationActionForbidden", Assert.IsType<ErrorPayload>(error).Error));
     }
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData("POST", "/api/v1/exercises")]
     [InlineData("PUT", "/api/v1/exercises/11111111-1111-1111-1111-111111111111")]
     public async Task ExerciseMutation_WithDurationOverDomainLimit_ReturnsBadRequest(string method, string route) {
@@ -75,7 +75,7 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
             () => Assert.Equal("Validation.Invalid", Assert.IsType<ErrorPayload>(error).Error));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UpsertWebPushSubscription_WithUnspecifiedExpiration_ReturnsBadRequest() {
         HttpClient client = CreateAuthenticatedClient();
         var request = new UpsertWebPushSubscriptionHttpRequest(

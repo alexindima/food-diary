@@ -8,7 +8,7 @@ public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
     [InlineData("Modules/Users/Contracts", 71)]
     [InlineData("Modules/Users/Application/Abstractions", 7)]
-    [InlineData("Modules/Identity/Application/Abstractions", 40)]
+    [InlineData("Modules/Identity/Application/Abstractions", 41)]
     [InlineData("Modules/Identity/Contracts", 17)]
     [InlineData("Modules/BodyMetrics/Contracts", 6)]
     public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot, int count) {

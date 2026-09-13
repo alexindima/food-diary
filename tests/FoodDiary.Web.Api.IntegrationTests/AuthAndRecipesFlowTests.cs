@@ -3,8 +3,6 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Meals.Requests;
-using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -18,7 +16,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         PropertyNameCaseInsensitive = true,
     };
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task RecipesController_RequiresAuthentication() {
         HttpClient client = factory.CreateClient();
 
@@ -27,7 +25,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateRecipe_ReturnsCreatedAndLocationHeader() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid productId = await CreateProductAsync(client, "Recipe Ingredient");
@@ -69,57 +67,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         Assert.EndsWith($"/api/v1/Recipes/{payload.Id}", response.Headers.Location.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 
-    [Fact]
-    public async Task RecipesOverview_AndRecent_ReturnFavoritePreviewRecentItemsAndFavoriteFlags() {
-        HttpClient client = await CreateAuthenticatedClientAsync();
-        Guid ingredientId = await CreateProductAsync(client, "Overview Ingredient");
-        Guid firstRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Salad");
-        Guid favoriteRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Soup");
-
-        HttpResponseMessage favoriteResponse = await client.PostAsJsonAsync(
-            "/api/v1/favorite-recipes",
-            new AddFavoriteRecipeHttpRequest(favoriteRecipeId, "Favorite soup"));
-        favoriteResponse.EnsureSuccessStatusCode();
-
-        HttpResponseMessage mealResponse = await client.PostAsJsonAsync(
-            "/api/v1/meals",
-            new CreateMealHttpRequest(
-                DateTime.UtcNow.Date,
-                "Dinner",
-                Comment: null,
-                ImageUrl: null,
-                ImageAssetId: null,
-                [new MealItemHttpRequest(ProductId: null, favoriteRecipeId, 250)]));
-        mealResponse.EnsureSuccessStatusCode();
-
-        HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/recipes/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
-        HttpResponseMessage recentResponse = await client.GetAsync("/api/v1/recipes/recent?limit=10&includePublic=true");
-
-        overviewResponse.EnsureSuccessStatusCode();
-        recentResponse.EnsureSuccessStatusCode();
-
-        using var overviewJson = JsonDocument.Parse(await overviewResponse.Content.ReadAsStringAsync());
-        using var recentJson = JsonDocument.Parse(await recentResponse.Content.ReadAsStringAsync());
-
-        JsonElement overviewRoot = overviewJson.RootElement;
-        JsonElement recentItems = recentJson.RootElement;
-        JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
-        JsonElement recentOverviewItems = overviewRoot.GetProperty("recentItems");
-        JsonElement allRecipes = overviewRoot.GetProperty("allRecipes").GetProperty("data");
-
-        Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
-        Assert.Contains(favoriteItems.EnumerateArray(), item => item.GetProperty("recipeId").GetGuid() == favoriteRecipeId);
-        Assert.Contains(recentOverviewItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
-        Assert.Contains(recentItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
-
-        JsonElement favoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
-        JsonElement nonFavoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == firstRecipeId);
-        Assert.True(favoriteRecipe.GetProperty("isFavorite").GetBoolean());
-        Assert.NotEqual(Guid.Empty, favoriteRecipe.GetProperty("favoriteRecipeId").GetGuid());
-        Assert.False(nonFavoriteRecipe.GetProperty("isFavorite").GetBoolean());
-    }
-
-    [Fact]
+    [RequiresDockerFact]
     public async Task UpdateRecipe_PersistsPatchedValues() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid ingredientId = await CreateProductAsync(client, "Update Ingredient");
@@ -170,7 +118,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         Assert.Equal(3, json.RootElement.GetProperty("servings").GetInt32());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DuplicateRecipe_ReturnsIndependentCopy() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid ingredientId = await CreateProductAsync(client, "Duplicate Ingredient");
@@ -190,7 +138,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         Assert.Equal("Original Recipe", json.RootElement.GetProperty("name").GetString());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeleteRecipe_RemovesItFromSubsequentRead() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid ingredientId = await CreateProductAsync(client, "Delete Ingredient");

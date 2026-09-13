@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
@@ -8,9 +9,9 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Products;
+namespace FoodDiary.ReadModel.Composition.Products;
 
-internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : IProductOverviewReadService {
+public sealed class ProductOverviewReadService(FoodDiaryDbContext context) : IProductOverviewReadService {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<(IReadOnlyList<ProductOverviewReadItem> Items, int TotalItems)> GetPagedAsync(
@@ -25,8 +26,8 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
 
         IQueryable<Product> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        List<ProductOverviewReadRow> rows = await ProjectRows(query
+        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        List<ProductOverviewReadRow> rows = await ProjectRows(query.AsNoTracking()
                 .OrderByDescending(p => p.CreatedOnUtc)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize))
@@ -45,7 +46,7 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
             return new Dictionary<ProductId, ProductOverviewReadItem>();
         }
 
-        List<ProductOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic)
+        List<ProductOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic).AsNoTracking()
                 .Where(p => productIds.Contains(p.Id)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
@@ -62,7 +63,7 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
     private static IQueryable<Product> ApplyFilters(IQueryable<Product> query, ProductQueryFilters filters) {
         if (!string.IsNullOrWhiteSpace(filters.Search)) {
             string normalizedSearch = $"%{EscapeLikePattern(filters.Search.Trim())}%";
-            query = query.Where(p =>
+            query = query.AsNoTracking().Where(p =>
                 EF.Functions.ILike(p.Name, normalizedSearch, LikeEscapeCharacter) ||
                 EF.Functions.ILike(p.Brand ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
                 EF.Functions.ILike(p.Category ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
@@ -70,28 +71,28 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
         }
 
         if (filters.ProductTypes is { Count: > 0 }) {
-            query = query.Where(p => filters.ProductTypes.Contains(p.ProductType));
+            query = query.AsNoTracking().Where(p => filters.ProductTypes.Contains(p.ProductType));
         }
 
         if (filters.CaloriesFrom.HasValue) {
-            query = query.Where(p => p.CaloriesPerBase >= filters.CaloriesFrom.Value);
+            query = query.AsNoTracking().Where(p => p.CaloriesPerBase >= filters.CaloriesFrom.Value);
         }
 
         if (filters.CaloriesTo.HasValue) {
-            query = query.Where(p => p.CaloriesPerBase <= filters.CaloriesTo.Value);
+            query = query.AsNoTracking().Where(p => p.CaloriesPerBase <= filters.CaloriesTo.Value);
         }
 
         if (filters.HasImage.HasValue) {
             query = filters.HasImage.Value
-                ? query.Where(p => p.ImageUrl != null || p.ImageAssetId != null)
-                : query.Where(p => p.ImageUrl == null && p.ImageAssetId == null);
+                ? query.AsNoTracking().Where(p => p.ImageUrl != null || p.ImageAssetId != null)
+                : query.AsNoTracking().Where(p => p.ImageUrl == null && p.ImageAssetId == null);
         }
 
         return query;
     }
 
     private IQueryable<ProductOverviewReadRow> ProjectRows(IQueryable<Product> query) =>
-        query.Select(product => new ProductOverviewReadRow(
+        query.AsNoTracking().Select(product => new ProductOverviewReadRow(
             product.Id,
             product.UserId,
             product.Barcode,

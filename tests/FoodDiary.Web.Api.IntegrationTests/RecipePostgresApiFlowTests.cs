@@ -1,3 +1,5 @@
+using FoodDiary.Presentation.Api.Features.Meals.Requests;
+using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Requests;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Recipes.Common;
@@ -26,6 +28,94 @@ public sealed class RecipePostgresApiFlowTests(PostgresApiWebApplicationFactory 
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNameCaseInsensitive = true,
     };
+
+    [RequiresDockerFact]
+    public async Task RecipesOverview_AndRecent_ReturnFavoritePreviewRecentItemsAndFavoriteFlags() {
+        HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer", await RegisterAndGetAccessTokenAsync(client));
+        Guid ingredientId = (await CreateIngredientProductAsync(client)).Id;
+        Guid firstRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Salad");
+        Guid favoriteRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Soup");
+
+        HttpResponseMessage favoriteResponse = await client.PostAsJsonAsync(
+            "/api/v1/favorite-recipes",
+            new AddFavoriteRecipeHttpRequest(favoriteRecipeId, "Favorite soup"));
+        favoriteResponse.EnsureSuccessStatusCode();
+
+        HttpResponseMessage mealResponse = await client.PostAsJsonAsync(
+            "/api/v1/meals",
+            new CreateMealHttpRequest(
+                DateTime.UtcNow.Date,
+                "Dinner",
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new MealItemHttpRequest(ProductId: null, favoriteRecipeId, 250)]));
+        mealResponse.EnsureSuccessStatusCode();
+
+        HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/recipes/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
+        HttpResponseMessage recentResponse = await client.GetAsync("/api/v1/recipes/recent?limit=10&includePublic=true");
+
+        overviewResponse.EnsureSuccessStatusCode();
+        recentResponse.EnsureSuccessStatusCode();
+
+        using var overviewJson = JsonDocument.Parse(await overviewResponse.Content.ReadAsStringAsync());
+        using var recentJson = JsonDocument.Parse(await recentResponse.Content.ReadAsStringAsync());
+
+        JsonElement overviewRoot = overviewJson.RootElement;
+        JsonElement recentItems = recentJson.RootElement;
+        JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
+        JsonElement recentOverviewItems = overviewRoot.GetProperty("recentItems");
+        JsonElement allRecipes = overviewRoot.GetProperty("allRecipes").GetProperty("data");
+
+        Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
+        Assert.Contains(favoriteItems.EnumerateArray(), item => item.GetProperty("recipeId").GetGuid() == favoriteRecipeId);
+        Assert.Contains(recentOverviewItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
+        Assert.Contains(recentItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
+
+        JsonElement favoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
+        JsonElement nonFavoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == firstRecipeId);
+        Assert.True(favoriteRecipe.GetProperty("isFavorite").GetBoolean());
+        Assert.NotEqual(Guid.Empty, favoriteRecipe.GetProperty("favoriteRecipeId").GetGuid());
+        Assert.False(nonFavoriteRecipe.GetProperty("isFavorite").GetBoolean());
+    }
+
+    private static async Task<Guid> CreateRecipeAsync(HttpClient client, Guid ingredientId, string name) {
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/recipes",
+            new CreateRecipeHttpRequest(
+                name,
+                "Recipe description",
+                "Recipe comment",
+                "Dinner",
+                ImageUrl: null,
+                ImageAssetId: null,
+                10,
+                20,
+                2,
+                "Private",
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                [
+                    new RecipeStepHttpRequest(
+                        "Cook",
+                        "Cook recipe",
+                        [new RecipeIngredientHttpRequest(ingredientId, NestedRecipeId: null, 200)],
+                        ImageUrl: null,
+                        ImageAssetId: null),
+                ])).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        RecipePayload? payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions).ConfigureAwait(false);
+        Assert.NotNull(payload);
+        return payload.Id;
+    }
 
     [RequiresDockerFact]
     public async Task NestedRecipe_CycleAccessDuplicateAndDeletion_PreservePostgresBoundaries() {

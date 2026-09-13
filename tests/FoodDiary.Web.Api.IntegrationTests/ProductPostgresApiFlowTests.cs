@@ -1,3 +1,5 @@
+using FoodDiary.Presentation.Api.Features.Meals.Requests;
+using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
@@ -310,6 +312,95 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
                     FiberPerBase: 1.2,
                     AlcoholPerBase: 0,
                     Visibility: "Private"))];
+    }
+
+    [RequiresDockerFact]
+    public async Task ProductsOverview_AndRecent_ReturnFavoritePreviewRecentItemsAndFavoriteFlags() {
+        HttpClient client = factory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        Guid firstProductId = await CreateProductAsync(client, "Overview Apple");
+        Guid favoriteProductId = await CreateProductAsync(client, "Overview Chicken");
+
+        HttpResponseMessage favoriteResponse = await client.PostAsJsonAsync(
+            "/api/v1/favorite-products",
+            new AddFavoriteProductHttpRequest(favoriteProductId, "Favorite chicken", 155));
+        favoriteResponse.EnsureSuccessStatusCode();
+        using var favoriteJson = JsonDocument.Parse(await favoriteResponse.Content.ReadAsStringAsync());
+        Guid favoriteId = favoriteJson.RootElement.GetProperty("id").GetGuid();
+
+        HttpResponseMessage updateFavoriteResponse = await client.PutAsJsonAsync(
+            $"/api/v1/favorite-products/{favoriteId}",
+            new UpdateFavoriteProductHttpRequest("Favorite chicken", 185));
+        updateFavoriteResponse.EnsureSuccessStatusCode();
+
+        HttpResponseMessage mealResponse = await client.PostAsJsonAsync(
+            "/api/v1/meals",
+            new CreateMealHttpRequest(
+                DateTime.UtcNow.Date,
+                "Lunch",
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new MealItemHttpRequest(favoriteProductId, RecipeId: null, 200)]));
+        mealResponse.EnsureSuccessStatusCode();
+
+        HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/products/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
+        HttpResponseMessage recentResponse = await client.GetAsync("/api/v1/products/recent?limit=10&includePublic=true");
+
+        overviewResponse.EnsureSuccessStatusCode();
+        recentResponse.EnsureSuccessStatusCode();
+
+        using var overviewJson = JsonDocument.Parse(await overviewResponse.Content.ReadAsStringAsync());
+        using var recentJson = JsonDocument.Parse(await recentResponse.Content.ReadAsStringAsync());
+
+        JsonElement overviewRoot = overviewJson.RootElement;
+        JsonElement recentItems = recentJson.RootElement;
+        JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
+        JsonElement recentOverviewItems = overviewRoot.GetProperty("recentItems");
+        JsonElement allProducts = overviewRoot.GetProperty("allProducts").GetProperty("data");
+
+        Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
+        JsonElement favoritePreview = favoriteItems.EnumerateArray().Single(item => item.GetProperty("productId").GetGuid() == favoriteProductId);
+        Assert.Equal(185, favoritePreview.GetProperty("preferredPortionAmount").GetDouble());
+        Assert.Contains(recentOverviewItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteProductId);
+        Assert.Contains(recentItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteProductId);
+
+        JsonElement favoriteProduct = allProducts.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == favoriteProductId);
+        JsonElement nonFavoriteProduct = allProducts.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == firstProductId);
+        Assert.True(favoriteProduct.GetProperty("isFavorite").GetBoolean());
+        Assert.NotEqual(Guid.Empty, favoriteProduct.GetProperty("favoriteProductId").GetGuid());
+        Assert.False(nonFavoriteProduct.GetProperty("isFavorite").GetBoolean());
+    }
+
+    private static async Task<Guid> CreateProductAsync(HttpClient client, string name) {
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/products",
+            new CreateProductHttpRequest(
+                Barcode: null,
+                name,
+                Brand: null,
+                "Unknown",
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                "G",
+                100,
+                100,
+                120,
+                10,
+                5,
+                20,
+                3,
+                0,
+                "Private")).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        ProductPayload? payload = await response.Content.ReadFromJsonAsync<ProductPayload>(JsonOptions).ConfigureAwait(false);
+        Assert.NotNull(payload);
+        return payload.Id;
     }
 
     private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {

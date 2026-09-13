@@ -11,7 +11,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationPreferencesIntegrationTests(TestAuthApiWebApplicationFactory factory)
     : IClassFixture<TestAuthApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task GetAndUpdateNotificationPreferences_UsesDedicatedNotificationsEndpoint() {
         User user = await SeedUserAsync();
         HttpClient client = factory.CreateClient();
@@ -50,7 +50,7 @@ public sealed class NotificationPreferencesIntegrationTests(TestAuthApiWebApplic
         Assert.True(persistedUser.SocialPushNotificationsEnabled);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task GetAndRemoveWebPushSubscriptions_ReturnsActiveDevicesOnly() {
         User user = await SeedUserAsync();
         await SeedSubscriptionAsync(

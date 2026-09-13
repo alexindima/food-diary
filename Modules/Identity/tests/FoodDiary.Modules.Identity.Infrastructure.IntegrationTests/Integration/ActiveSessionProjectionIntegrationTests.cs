@@ -24,7 +24,7 @@ public sealed class ActiveSessionProjectionIntegrationTests(PostgresDatabaseFixt
         context.UserRefreshTokenSessions.AddRange(older, newer, revoked, foreign);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new RefreshTokenSessionRepository(context);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
 
         IReadOnlyList<RefreshTokenSessionReadModel> models = await repository.GetActiveReadModelsAsync(user.Id);
 

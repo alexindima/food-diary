@@ -35,7 +35,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     ApiWebApplicationFactory apiFactory,
     TestAuthApiWebApplicationFactory testAuthFactory)
     : IClassFixture<ApiWebApplicationFactory>, IClassFixture<TestAuthApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task TelegramBackupEmail_RequiresAuthenticatedUser() {
         using HttpClient client = apiFactory.CreateClient();
         using HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/auth/telegram/backup-email",
@@ -43,7 +43,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task TelegramUnlink_RequiresAuthenticatedUserEvenWithInitData() {
         using HttpClient client = apiFactory.CreateClient();
         using HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/auth/telegram/unlink", new { InitData = "signed-proof" });
@@ -63,7 +63,7 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static readonly Guid MissingProductId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData("GET", "/api/v1/ai/food/recognitions")]
     [InlineData("GET", "/api/v1/ai/food/recognitions/11111111-1111-1111-1111-111111111111")]
     [InlineData("POST", "/api/v1/ai/food/recognitions")]
@@ -75,7 +75,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData(false)]
     [InlineData(true)]
     public async Task MealRecognitionUndo_RequiresAuthenticatedUserId(bool authenticatedWithoutUserId) {
@@ -88,7 +88,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task FoodRecognition_StartRequiresPremiumBeforeEnqueue() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -98,7 +98,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData(false)]
     [InlineData(true)]
     public async Task HydrationOperation_RequiresAuthenticatedUserId(bool authenticatedWithoutUserId) {
@@ -112,7 +112,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UsersInfo_WithAuthenticatedPrincipalMissingUserIdClaim_ReturnsUnauthorized() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -126,7 +126,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Register_WithInvalidEmail_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage response = await client.PostAsJsonAsync(
@@ -143,7 +143,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertErrorContractSnapshotAsync("register-invalid-email", payload);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Register_WithDuplicateEmail_ReturnsConflictContract() {
         HttpClient client = apiFactory.CreateClient();
         string email = $"api-tests-{Guid.NewGuid():N}@example.com";
@@ -167,7 +167,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertErrorContractSnapshotAsync("register-duplicate-email", payload);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Login_WhenRateLimitExceeded_ReturnsTooManyRequestsContract() {
         await using WebApplicationFactory<Program> limitedFactory = apiFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
@@ -194,7 +194,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task TestDeliveryRateLimit_IsPartitionedByAuthenticatedUser() {
         await using WebApplicationFactory<Program> limitedFactory = testAuthFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
@@ -221,7 +221,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.False(string.IsNullOrWhiteSpace(payload?.TraceId)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SecretVerificationRateLimit_IsPartitionedByAuthenticatedUser() {
         await using WebApplicationFactory<Program> limitedFactory = testAuthFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
@@ -249,7 +249,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.False(string.IsNullOrWhiteSpace(payload?.TraceId)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task FoodDataRateLimit_IsPartitionedByAuthenticatedUser() {
         await using WebApplicationFactory<Program> limitedFactory = testAuthFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
@@ -276,7 +276,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.False(string.IsNullOrWhiteSpace(payload?.TraceId)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task TelegramBotAuth_WithoutConfiguredSecret_ReturnsInternalServerErrorContractWithTraceId() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -291,7 +291,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
     }
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData("GET", "/api/v1/auth/telegram/bot/operations/ready")]
     [InlineData("POST", "/api/v1/auth/telegram/bot/operations")]
     [InlineData("POST", "/api/v1/auth/telegram/bot/operations/00000000-0000-0000-0000-000000000001/lease")]
@@ -305,7 +305,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Authentication.TelegramBotNotConfigured", payload?.Error);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AdminDashboard_WithAuthenticatedNonAdminUser_ReturnsForbidden() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -322,7 +322,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.False(string.IsNullOrWhiteSpace(payload.TraceId)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AdminDashboard_WithAdminRole_ReturnsOk() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -334,7 +334,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AdminAchievementDefinitions_EnforcesAuthenticationAndAdminRole() {
         HttpClient anonymousClient = testAuthFactory.CreateClient();
         HttpResponseMessage anonymous = await anonymousClient.GetAsync("/api/v1/admin/achievement-definitions");
@@ -358,7 +358,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.False(string.IsNullOrWhiteSpace(forbiddenPayload.TraceId)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AdminAchievementDefinitions_WithNullKey_ReturnsValidationContract() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -388,7 +388,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.Equal("Validation.Invalid", payload?.Error));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AdminUserSetPassword_WithAdminRole_ReplacesUserPassword() {
         HttpClient client = testAuthFactory.CreateClient();
         string email = $"admin-password-{Guid.NewGuid():N}@example.com";
@@ -428,7 +428,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.OK, newLoginResponse.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AdminLessonsImport_WithAdminRole_CreatesLessons() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -472,7 +472,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("NutritionBasics", importedLesson.GetProperty("category").GetString());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task ChangePassword_WithImpersonatedUser_ReturnsForbiddenErrorContract() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -491,7 +491,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
     }
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData("POST", "/api/v1/auth/google/link")]
     [InlineData("PUT", "/api/v1/notifications/push/subscription")]
     [InlineData("DELETE", "/api/v1/notifications/push/subscription")]
@@ -515,7 +515,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Authentication.ImpersonationActionForbidden", payload.Error);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateShoppingList_WithNameOverDomainLimit_ReturnsValidationErrorInsteadOfServerError() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -532,7 +532,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Validation.Invalid", payload.Error);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateShoppingList_WithPayloadAboveRichWriteLimit_ReturnsPayloadTooLarge() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -548,7 +548,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Request.PayloadTooLarge", payload.Error);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task ExportDiary_WithDateThatOverflowsDisplayOffset_ReturnsValidationErrorInsteadOfServerError() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -565,7 +565,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Validation.Invalid", payload.Error);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task BillingWebhook_WithOversizedProvider_IsRejectedAtTransportBoundary() {
         HttpClient client = apiFactory.CreateClient();
         string provider = new('p', BillingWebhookRequestLimits.MaximumProviderLength + 1);
@@ -577,7 +577,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UsdaSearch_WithOversizedSearch_IsRejectedBeforeProviderCall() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -591,7 +591,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task RetrySensitiveWrite_WithoutIdempotencyKey_IsRejectedBeforeHandler() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -605,7 +605,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task GetProductById_WithMissingProduct_ReturnsNotFoundContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -621,7 +621,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertErrorContractSnapshotAsync("products-missing-by-id", payload);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateWeightEntry_WithDuplicateDate_ReturnsConflictContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -644,7 +644,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertErrorContractSnapshotAsync("weight-entry-duplicate-date", payload);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateWaistEntry_WithExactRetry_ReturnsExistingEntry() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -676,7 +676,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertErrorContractSnapshotAsync("waist-entry-duplicate-date", conflictPayload);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateRecipe_WithInvalidBody_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -693,7 +693,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "name", StringComparison.Ordinal));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task ImageUploadUrl_WithInvalidPayload_ReturnsImageValidationContract() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -710,11 +710,12 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Unsupported content type: text/plain.", payload.Message);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeleteImageAsset_AfterUploadUrl_ReturnsNoContent() {
-        HttpClient client = testAuthFactory.CreateClient();
-        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
-        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage uploadResponse = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
@@ -729,7 +730,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeleteImageAsset_WithMissingAsset_ReturnsNotFoundContract() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -744,7 +745,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Image.NotFound", payload.Error);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AiNutrition_WithEmptyItems_ReturnsValidationContract() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -764,7 +765,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "items", StringComparison.Ordinal));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task AiNutrition_WithoutIdempotencyKey_ReturnsRequiredContract() {
         HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
@@ -783,7 +784,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Idempotency.Required", payload.Error);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Statistics_WithInvalidDateRangeQuery_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -801,7 +802,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "dateTo", StringComparison.Ordinal));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Exercises_WithReversedDateRange_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -819,7 +820,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "dateFrom", StringComparison.OrdinalIgnoreCase));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Products_WithOversizedSearch_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -838,7 +839,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "search", StringComparison.OrdinalIgnoreCase));
     }
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData("/api/v1/weight-entries?sort=sideways", "sort")]
     [InlineData("/api/v1/waist-entries?sort=sideways", "sort")]
     [InlineData("/api/v1/lessons?category=unknown", "category")]
@@ -863,7 +864,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, expectedErrorKey, StringComparison.OrdinalIgnoreCase));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UpdateDesiredWeight_WithInvalidValue_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -882,7 +883,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "desiredWeightKg", StringComparison.Ordinal));
     }
 
-    [Theory]
+    [RequiresDockerTheory]
     [InlineData("/api/version")]
     [InlineData("/api/v1/version")]
     public async Task ApiVersion_ReturnsConfiguredBuildMetadata(string requestUri) {
@@ -910,7 +911,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.True(response.Headers.CacheControl.NoStore);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_ContainsExpectedPresentationRoutes() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -928,7 +929,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.True(json.RootElement.TryGetProperty("openapi", out _));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_DeclaresBearerSecurityOnlyForAuthorizedOperations() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -959,7 +960,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(0, anonymousSecurity.GetArrayLength());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_HidesCurrentUserBindingAndDocumentsIdempotencyHeader() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1023,14 +1024,14 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.True(scheduledTestNotification.GetProperty("responses").TryGetProperty("429", out _)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public void Kestrel_DefaultRequestBodyLimit_IsOneMegabyte() {
         KestrelServerOptions options = apiFactory.Services.GetRequiredService<IOptions<KestrelServerOptions>>().Value;
 
         Assert.Equal(1024 * 1024, options.Limits.MaxRequestBodySize);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_ResourceAndSecretLimitedActions_DocumentTooManyRequests() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1056,7 +1057,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         }
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_WearableAuthUrl_DocumentsBoundedRequiredState() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1077,7 +1078,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.True(operation.GetProperty("responses").TryGetProperty("429", out _)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_DocumentsScalarAndOAuthInputBounds() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1125,7 +1126,7 @@ public sealed class PresentationBoundaryIntegrationTests(
                 connectSchema.GetProperty("state").GetProperty("maxLength").GetInt32()));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_DocumentsGroupedQueryValidationConstraints() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1163,7 +1164,7 @@ public sealed class PresentationBoundaryIntegrationTests(
                 weightSortValues));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_AllNumericQueryParameters_DocumentConsistentRanges() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1217,7 +1218,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Empty(violations);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_AllRequestAndSuccessMediaSchemas_HaveCompleteShapes() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1259,7 +1260,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Empty(violations);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_DocumentsRequestArrayAndFileSchemaDetails() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1292,7 +1293,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.True(exportResponse.GetProperty("headers").TryGetProperty("Content-Disposition", out _)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_DocumentsOptionalSuccessResponses() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1324,7 +1325,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         });
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_MatchesFocusedPresentationContractSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
@@ -1335,7 +1336,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertSnapshotAsync("openapi-focused-contract.json", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_MatchesAuthAdminContractSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
@@ -1346,7 +1347,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertSnapshotAsync("openapi-auth-admin-contract.json", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_MatchesFullPresentationContractSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
@@ -1357,7 +1358,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         await AssertSnapshotAsync("openapi-full-contract.json", actual);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task SwaggerJson_AllRequestBodyOperations_DocumentBadRequestAndPayloadTooLarge() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
@@ -1381,7 +1382,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Empty(missingResponses);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task EmailVerificationHub_Negotiate_RequiresAuthentication() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -1398,7 +1399,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.False(string.IsNullOrWhiteSpace(payload.TraceId)));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task EmailVerificationHub_Negotiate_WithAccessTokenQuery_ReturnsConnectionInfo() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -1412,7 +1413,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.False(string.IsNullOrWhiteSpace(payload.ConnectionToken));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UnhandledException_ReturnsStandardErrorContractWithTraceId() {
         HttpClient client = apiFactory.CreateClient();
 

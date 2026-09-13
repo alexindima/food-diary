@@ -21,7 +21,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         UserRefreshTokenSession foreign = CreateSession(UserId.New());
         context.UserRefreshTokenSessions.AddRange(current, target, foreign);
         await context.SaveChangesAsync();
-        var repository = new RefreshTokenSessionRepository(context);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
 
         if (all) {
             await repository.RevokeAllOtherAsync(owner, foreign.Id, Now);
@@ -50,7 +50,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         UserRefreshTokenSession session = CreateSession(owner);
         context.UserRefreshTokenSessions.Add(session);
         await context.SaveChangesAsync();
-        var repository = new RefreshTokenSessionRepository(context);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
 
         await repository.RevokeByIdAsync(Guid.NewGuid(), owner, Now);
         await repository.RevokeByIdAsync(session.Id, UserId.New(), Now);
@@ -66,7 +66,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         UserRefreshTokenSession session = CreateSession(owner);
         context.UserRefreshTokenSessions.Add(session);
         await context.SaveChangesAsync();
-        var repository = new RefreshTokenSessionRepository(context);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
 
         Assert.False(await repository.TryRotateAsync(Guid.NewGuid(), owner, "hash", "new", rememberMe: true, Now));
         Assert.False(await repository.TryRotateAsync(session.Id, UserId.New(), "hash", "new", rememberMe: true, Now));

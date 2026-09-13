@@ -12,7 +12,7 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
 
     [RequiresDockerFact]
     public async Task InvalidParameters_DoNotPersistTickets() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramLoginTicketStore(context, new EphemeralDataProtectionProvider(), new FixedClock());
         await Assert.ThrowsAsync<ArgumentException>(() => store.CreateAsync("login", "browser", "payload", Now, CancellationToken.None));
         await Assert.ThrowsAsync<ArgumentException>(() => store.CreateAsync("login", "browser", new string('я', 4097), Now.AddMinutes(1), CancellationToken.None));
@@ -22,7 +22,7 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
 
     [RequiresDockerFact]
     public async Task WrongProtectionKey_ConsumesUnrecoverableTicketWithoutExposingPayload() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var original = new TelegramLoginTicketStore(context, new EphemeralDataProtectionProvider(), new FixedClock());
         string ticket = await original.CreateAsync("login", "browser", "identity", Now.AddMinutes(5), CancellationToken.None);
         var differentKey = new TelegramLoginTicketStore(context, new EphemeralDataProtectionProvider(), new FixedClock());
@@ -33,7 +33,7 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
 
     [RequiresDockerFact]
     public async Task Ticket_IsEncryptedBoundAndSingleUse() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var protection = new EphemeralDataProtectionProvider();
         var store = new TelegramLoginTicketStore(context, protection, new FixedClock());
         string ticket = await store.CreateAsync("onboarding", "browser-one", "private-identity", Now.AddMinutes(5), CancellationToken.None);
@@ -48,7 +48,7 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
 
     [RequiresDockerFact]
     public async Task ConcurrentConsumers_OnlyOneReceivesPayload() {
-        await using FoodDiaryDbContext setup = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext setup = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         string connectionString = setup.Database.GetConnectionString()!;
         var protection = new EphemeralDataProtectionProvider();
         var store = new TelegramLoginTicketStore(setup, protection, new FixedClock());
@@ -62,7 +62,7 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
         Assert.Equal(3, results.Count(result => result is null));
 
         async Task<string?> ConsumeAsync() {
-            await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
+            await using IdentityDbContext context = IdentityContextTestFactory.Create(connectionString);
             await start.Task.WaitAsync(deadline.Token);
             return await new TelegramLoginTicketStore(context, protection, new FixedClock())
                 .ConsumeAsync(ticket, "login", "browser", deadline.Token);
@@ -71,7 +71,7 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
 
     [RequiresDockerFact]
     public async Task ExpiryBoundary_RejectsTicket() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var protection = new EphemeralDataProtectionProvider();
         var clock = new FixedClock();
         var store = new TelegramLoginTicketStore(context, protection, clock);

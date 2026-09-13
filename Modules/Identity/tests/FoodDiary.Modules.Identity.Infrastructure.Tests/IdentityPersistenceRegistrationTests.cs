@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Infrastructure;
@@ -15,7 +16,8 @@ public sealed class IdentityPersistenceRegistrationTests {
     [Fact]
     public void AddIdentityPersistence_ReadModelRepositorySharesScopedSessionRepository() {
         var services = new ServiceCollection();
-        services.AddDbContext<FoodDiaryDbContext>();
+        services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
+        services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddIdentityPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
@@ -26,6 +28,7 @@ public sealed class IdentityPersistenceRegistrationTests {
     [Fact]
     public void AddIdentityPersistence_LoginEventAliasesShareOneInstancePerScope() {
         var services = new ServiceCollection();
+        services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddSingleton(TimeProvider.System);
         services.AddMemoryCache();
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
@@ -49,9 +52,10 @@ public sealed class IdentityPersistenceRegistrationTests {
     [Fact]
     public void AddIdentityPersistence_TelegramReplayGuardIsScopedAndUsesModuleOwnedModel() {
         var services = new ServiceCollection();
+        services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
         services.AddSingleton(TimeProvider.System);
-        services.AddDbContext<FoodDiaryDbContext>();
+        services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         Assert.Same(services, services.AddIdentityPersistence());
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
         using IServiceScope first = provider.CreateScope();
@@ -69,6 +73,7 @@ public sealed class IdentityPersistenceRegistrationTests {
     [Fact]
     public void AddIdentityPersistence_TemplateProviderRemainsSingletonAcrossScopes() {
         var services = new ServiceCollection();
+        services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddIdentityPersistence();
@@ -88,12 +93,13 @@ public sealed class IdentityPersistenceRegistrationTests {
     public async Task RegisteredTemplateProvider_ReusesCachedTemplateAcrossDatabaseScopes() {
         string databaseName = Guid.NewGuid().ToString("N");
         var services = new ServiceCollection();
+        services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(databaseName));
         services.AddIdentityPersistence();
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         await using (AsyncServiceScope seedScope = provider.CreateAsyncScope()) {
-            FoodDiaryDbContext context = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            IdentityDbContext context = seedScope.ServiceProvider.GetRequiredService<IdentityDbContext>();
             context.EmailTemplates.Add(EmailTemplate.Create("verify_email", "en", "Original", "<p>original</p>", "original", isActive: true));
             await context.SaveChangesAsync();
         }
@@ -103,7 +109,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         Assert.NotNull(first);
         Assert.Equal("Original", first.Subject);
         await using (AsyncServiceScope updateScope = provider.CreateAsyncScope()) {
-            FoodDiaryDbContext context = updateScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            IdentityDbContext context = updateScope.ServiceProvider.GetRequiredService<IdentityDbContext>();
             EmailTemplate stored = await context.EmailTemplates.SingleAsync();
             stored.Update("Changed", "<p>changed</p>", "changed", isActive: true);
             await context.SaveChangesAsync();
@@ -111,5 +117,16 @@ public sealed class IdentityPersistenceRegistrationTests {
 
         EmailTemplateContent? cached = await templates.GetActiveTemplateAsync(" VERIFY_EMAIL ", "en-US");
         Assert.Same(first, cached);
+    }
+    [ExcludeFromCodeCoverage]
+    private sealed class UnusedLoginEventQuery : IUserLoginEventQuery {
+        public Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(
+            int page, int limit, Guid? userId, string? search, CancellationToken cancellationToken = default,
+            DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? provider = null, string? device = null) =>
+            throw new NotSupportedException("Registration fixture does not execute composed SQL reads.");
+
+        public Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(
+            DateTime? fromUtc, DateTime? toUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException("Registration fixture does not execute composed SQL reads.");
     }
 }

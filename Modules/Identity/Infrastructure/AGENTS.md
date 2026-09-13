@@ -21,7 +21,7 @@ coordinator's transaction, including terminal deduplication metadata. It does no
 save or commit, reassign operations, or access another module's tables. The direct
 Users.Contracts reference supplies this existing lifecycle extension point.
 
-`TelegramAssertionReplayGuard` is scoped and uses the shared context and configured
+`TelegramAssertionReplayGuard` is scoped and uses the owner context, shared transaction and configured
 TimeProvider. Keep SHA256/UTF-8 fingerprinting, the two SQL statements, expiry
 cleanup and ON CONFLICT behavior unchanged during physical relocation. The guard
 does not replace signature/age validation in Telegram application/provider flows.
@@ -40,3 +40,7 @@ impersonation adapter is a distinct protocol. Keep shared `IAdminSsoCodeStore`,
 the central in-memory implementation and API Redis override outside this module.
 Preserve 32-byte randomness, 43-character URL-safe codes, two-minute expiry,
 validation before consume, GUID payload parsing and cancellation.
+
+Login-event composed reads implement IUserLoginEventQuery in host read composition. UserLoginEventRepository retains AddAsync and bounded retention and delegates compatible read methods to the query port. Preserve existing scoped repository aliases; hosts register AddReadModelComposition. No authentication validation or token behavior changes.
+
+IdentityDbContext owns six root types plus EmailTemplate owned revisions, using the unchanged Identity model. Registration shares the central connection and synchronizes the live transaction before repository and Telegram operations, including after intermediate UOW saves. Repositories accept narrow owner DbSets; Telegram stores use the typed owner context. Shared IUnitOfWork commits tracked changes atomically with Users. The singleton template provider opens an owner scope and retains its one-minute cache. The user-purge participant remains a reviewed shared-transaction bridge.

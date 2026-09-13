@@ -6,7 +6,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class CorsIntegrationTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task Preflight_FromConfiguredDevelopmentOrigin_ReturnsCorsHeaders() {
         using HttpClient client = factory.CreateClient();
         using HttpRequestMessage request = CreatePreflightRequest("http://localhost:4200");
@@ -23,7 +23,7 @@ public sealed class CorsIntegrationTests(ApiWebApplicationFactory factory)
                 Assert.Single(response.Headers.GetValues("Access-Control-Allow-Credentials"))));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task Preflight_FromUnconfiguredOrigin_DoesNotReturnCorsHeaders() {
         using HttpClient client = factory.CreateClient();
         using HttpRequestMessage request = CreatePreflightRequest("https://untrusted.example");

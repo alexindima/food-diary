@@ -17,7 +17,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         PropertyNameCaseInsensitive = true,
     };
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task MealsController_RequiresAuthentication() {
         HttpClient client = factory.CreateClient();
 
@@ -26,7 +26,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task CreateMeal_ReturnsCreatedAndLocationHeader() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid productId = await CreateProductAsync(client, "Meal Ingredient");
@@ -49,7 +49,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         Assert.EndsWith($"/api/v1/Meals/{payload.Id}", response.Headers.Location.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task MealsOverview_ReturnsFavoritePreviewAndFavoriteFlags() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid productId = await CreateProductAsync(client, "Overview Ingredient");
@@ -79,7 +79,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         Assert.False(nonFavoriteMeal.GetProperty("isFavorite").GetBoolean());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UpdateMeal_PersistsPatchedValues() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid productId = await CreateProductAsync(client, "Update Ingredient");
@@ -109,7 +109,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         Assert.Equal(4, json.RootElement.GetProperty("postMealSatietyLevel").GetInt32());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task RepeatMeal_ReturnsNewMealCopy() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid productId = await CreateProductAsync(client, "Repeat Ingredient");
@@ -132,7 +132,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         Assert.Single(json.RootElement.GetProperty("items").EnumerateArray());
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task DeleteMeal_RemovesItFromSubsequentRead() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         Guid productId = await CreateProductAsync(client, "Delete Ingredient");

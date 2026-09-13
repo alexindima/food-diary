@@ -13,7 +13,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory factory)
     : IClassFixture<TestAuthApiWebApplicationFactory> {
-    [Fact]
+    [RequiresDockerFact]
     public async Task GetCurrent_WhenNoSession_ReturnsNoContent() {
         User user = await SeedUserAsync();
         HttpClient client = CreateAuthenticatedClient(user);
@@ -25,7 +25,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         Assert.Empty(content);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task GetOverview_WithActiveSession_ReturnsCurrentStatsAlertsAndHistory() {
         User user = await SeedUserAsync();
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow.AddDays(-5));
@@ -49,7 +49,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         Assert.NotEmpty(payload.History.Data);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task UpdateCheckIn_PersistsCheckIn_AndCurrentReturnsIt() {
         User user = await SeedUserAsync();
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow.AddHours(-6));
@@ -81,7 +81,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         Assert.Single(dbContext.FastingCheckIns.Where(x => x.UserId == user.Id));
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task GetHistory_ReturnsPagedSessionsWithCheckIns() {
         User user = await SeedUserAsync();
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow.AddDays(-10));
@@ -113,7 +113,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         Assert.Single(payload.Data[0].CheckIns);
     }
 
-    [Fact]
+    [RequiresDockerFact]
     public async Task ReduceDuration_WhenAdjustedTargetAlreadyReached_CompletesSession() {
         User user = await SeedUserAsync();
         DateTime startedAtUtc = DateTime.UtcNow.AddHours(-30);

@@ -13,7 +13,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
 
     [RequiresDockerFact]
     public async Task TelegramAssertionReplayGuard_ConsumesAssertionOnlyOnceAndDeletesExpiredRows() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var guard = new TelegramAssertionReplayGuard(context, FixedTime);
 
         bool first = await guard.TryConsumeAsync("signed-assertion", UtcNow.AddMinutes(5));
@@ -37,7 +37,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
 
     [RequiresDockerFact]
     public async Task TryConsumeAsync_WithConcurrentContexts_OnlyOneAttemptSucceeds() {
-        await using FoodDiaryDbContext setup = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext setup = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         string connectionString = setup.Database.GetConnectionString()!;
         var ready = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -58,7 +58,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
             () => Assert.Equal(UtcNow.AddMinutes(5), stored.ExpiresAtUtc));
 
         async Task<bool> ConsumeAsync(CancellationToken cancellationToken) {
-            await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
+            await using IdentityDbContext context = IdentityContextTestFactory.Create(connectionString);
             var guard = new TelegramAssertionReplayGuard(context, FixedTime);
             if (Interlocked.Increment(ref readyCount) == 4) {
                 ready.SetResult();
@@ -71,7 +71,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
 
     [RequiresDockerFact]
     public async Task TryConsumeAsync_RemovesExpiredAndBoundaryRowsButPreservesUnexpiredRows() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         string expiredFingerprint = new('a', 64);
         string boundaryFingerprint = new('b', 64);
         string unexpiredFingerprint = new('c', 64);
@@ -96,7 +96,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
 
     [RequiresDockerFact]
     public async Task TryConsumeAsync_WithCancelledToken_DoesNotConsumeAssertion() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var guard = new TelegramAssertionReplayGuard(context, FixedTime);
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();

@@ -103,7 +103,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.WaistEntries.Add(waist);
         await context.SaveChangesAsync();
 
-        var telegram = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), TimeProvider.System);
+        await using var identity = new IdentityDbContext(new DbContextOptionsBuilder<IdentityDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection()).Options);
+        var telegram = new TelegramOperationStore(identity, new EphemeralDataProtectionProvider(), TimeProvider.System);
         await telegram.RegisterAsync(123, 1, deletedUser.Id.Value, 0, "deleted-user-photo", CancellationToken.None);
         Guid? survivorOperation = await telegram.RegisterAsync(123, 2, survivingUser.Id.Value, 0, "survivor-photo", CancellationToken.None);
         Assert.NotNull(survivorOperation);
@@ -236,7 +238,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     public async Task OwnerFailure_RollsBackContentReassignmentAndUserDeletion() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         (User deleted, User survivor) = await SeedReassignScenarioAsync(context);
-        var telegram = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), TimeProvider.System);
+        await using var identity = new IdentityDbContext(new DbContextOptionsBuilder<IdentityDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection()).Options);
+        var telegram = new TelegramOperationStore(identity, new EphemeralDataProtectionProvider(), TimeProvider.System);
         Guid? operation = await telegram.RegisterAsync(123, 1, deleted.Id.Value, 0, "recoverable-photo", CancellationToken.None);
         Assert.NotNull(operation);
         UserCleanupService service = CreateService(context, new RecordingImageObjectDeletionOutbox(), new FailingParticipant(context));

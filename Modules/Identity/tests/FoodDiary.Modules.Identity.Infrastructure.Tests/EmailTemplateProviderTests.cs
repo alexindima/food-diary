@@ -50,18 +50,18 @@ public sealed class EmailTemplateProviderTests {
 
     private static ServiceProvider CreateProvider() {
         var services = new ServiceCollection();
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<IdentityDbContext> options = new DbContextOptionsBuilder<IdentityDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
         services.AddMemoryCache();
-        services.AddSingleton(new FoodDiaryDbContext(options));
+        services.AddSingleton(new IdentityDbContext(options));
         return services.BuildServiceProvider();
     }
 
     private static async Task SeedAsync(ServiceProvider provider, params EmailTemplate[] templates) {
         AsyncServiceScope scope = provider.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            IdentityDbContext context = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
             context.EmailTemplates.AddRange(templates);
             await context.SaveChangesAsync().ConfigureAwait(false);
         }

@@ -5,12 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Authentication;
 
-public sealed class TelegramAssertionReplayGuard(FoodDiaryDbContext context, TimeProvider timeProvider)
+public sealed class TelegramAssertionReplayGuard(IdentityDbContext context, TimeProvider timeProvider, Func<CancellationToken, Task>? synchronizeTransactionAsync = null)
     : ITelegramAssertionReplayGuard {
     public async Task<bool> TryConsumeAsync(
         string signedAssertion,
         DateTime expiresAtUtc,
         CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         await context.Database.ExecuteSqlInterpolatedAsync(
                 $"DELETE FROM \"ConsumedTelegramAssertions\" WHERE \"ExpiresAtUtc\" <= {nowUtc}",

@@ -1,3 +1,6 @@
+using FoodDiary.ReadModel.Composition.Identity;
+using FoodDiary.ReadModel.Composition.Recipes;
+using FoodDiary.ReadModel.Composition.Products;
 using FoodDiary.ReadModel.Composition.Meals;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition.Dietologist;
@@ -103,8 +106,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         await using FoodDiaryDbContext rotateContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
         await using FoodDiaryDbContext revokeContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
-        var rotateRepository = new RefreshTokenSessionRepository(rotateContext);
-        var revokeRepository = new RefreshTokenSessionRepository(revokeContext);
+        var rotateRepository = new RefreshTokenSessionRepository(rotateContext.UserRefreshTokenSessions, rotateContext.Database);
+        var revokeRepository = new RefreshTokenSessionRepository(revokeContext.UserRefreshTokenSessions, revokeContext.Database);
 
         Task<bool> rotate = rotateRepository.TryRotateAsync(
             id: session.Id,
@@ -148,7 +151,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Products.Add(product);
         await context.SaveChangesAsync();
 
-        var repository = new ProductRepository(context);
+        await using ProductsDbContext owned = CreateProductsContext(context);
+        var repository = new ProductRepository(owned, new ProductUsageQuery(context));
         using var cache = new MemoryCache(new MemoryCacheOptions());
         var cachedRepository = new CachedProductRepository(repository, cache);
         Assert.NotNull(await cachedRepository.GetByIdAsync(product.Id, reader.Id, includePublic: true));
@@ -157,7 +161,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(tracked);
         tracked.ChangeVisibility(Visibility.Private);
         await cachedRepository.UpdateAsync(tracked);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
 
         Assert.Null(await cachedRepository.GetByIdAsync(product.Id, reader.Id, includePublic: true));
         Assert.NotNull(await cachedRepository.GetByIdAsync(product.Id, owner.Id, includePublic: false));
@@ -876,7 +880,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Products.Add(product);
         await context.SaveChangesAsync();
 
-        var repository = new RecipeRepository(context, new ProductSnapshotReadService(context));
+        await using var owned = new RecipesDbContext(new DbContextOptionsBuilder<RecipesDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection()).Options);
+        var repository = new RecipeRepository(owned, new ProductSnapshotReadService(context.Products), new RecipeUsageQuery(context));
         var publicRecipe = Recipe.Create(owner.Id, "100% Pancake", servings: 2, description: "Breakfast_Recipe", category: "Breakfast", prepTime: 15);
         publicRecipe.AddStep(stepNumber: 1, instruction: "Mix ingredients");
         publicRecipe.ApplyComputedNutrition(200, 8, 4, 30, 3, 0);
@@ -885,14 +891,14 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await repository.AddAsync(publicRecipe);
         await repository.AddAsync(privateRecipe);
         await repository.AddAsync(otherPublic);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
 
         var meal = Meal.Create(owner.Id, DateTime.UtcNow, MealType.Lunch);
         meal.AddRecipe(publicRecipe.Id, servings: 1);
         context.Meals.Add(meal);
         await context.SaveChangesAsync();
 
-        await AssertRecipeRepositoryQueriesAsync(context, repository, owner.Id, publicRecipe, privateRecipe, otherPublic);
+        await AssertRecipeRepositoryQueriesAsync(context, owned, repository, owner.Id, publicRecipe, privateRecipe, otherPublic);
     }
 
     [RequiresDockerFact]
@@ -976,11 +982,18 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
 #pragma warning disable MA0004
+    private static ProductsDbContext CreateProductsContext(FoodDiaryDbContext context) {
+        DbContextOptionsBuilder<ProductsDbContext> options = new DbContextOptionsBuilder<ProductsDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection());
+        return new ProductsDbContext(options.Options);
+    }
+
     private static async Task CoverProductAndCachedProductRepositoriesAsync(
         FoodDiaryDbContext context,
         UserId userId,
         UserId otherUserId) {
-        var repository = new ProductRepository(context);
+        await using ProductsDbContext owned = CreateProductsContext(context);
+        var repository = new ProductRepository(owned, new ProductUsageQuery(context));
         var searchable = Product.Create(
             userId,
             "100% Milk_One",
@@ -1004,7 +1017,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await repository.AddAsync(searchable);
         await repository.AddAsync(privateProduct);
         await repository.AddAsync(otherPublic);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
 
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Breakfast);
         meal.AddProduct(searchable.Id, 200);
@@ -1020,7 +1033,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(tracked);
         tracked.UpdateCoreIdentity(name: "Updated milk");
         await repository.UpdateAsync(tracked);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
 
         IReadOnlyDictionary<ProductId, Product> emptyByIds = await repository.GetByIdsAsync([], userId);
         IReadOnlyDictionary<ProductId, Product> byIds = await repository.GetByIdsAsync([searchable.Id, otherPublic.Id, otherPublic.Id], userId);
@@ -1028,7 +1041,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> usage = await productOverviewReadService.GetByIdsWithUsageAsync([searchable.Id], userId);
 
         await CoverCachedProductRepositoryAsync(repository, searchable.Id, userId);
-        await DeleteExistingProductAsync(context, repository, privateProduct.Id, userId);
+        await DeleteExistingProductAsync(owned, repository, privateProduct.Id, userId);
 
         Assert.Single(searchedItems);
         Assert.Equal(1, searchedTotal);
@@ -1041,7 +1054,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task DeleteExistingProductAsync(
-        FoodDiaryDbContext context,
+        ProductsDbContext context,
         ProductRepository repository,
         ProductId productId,
         UserId userId) {
@@ -1072,7 +1085,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverMealRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context), new MealSourceSnapshotQuery(context));
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context.Products), new MealSourceSnapshotQuery(context));
         DateTime now = DateTime.UtcNow;
         var meal = Meal.Create(userId, DateTime.SpecifyKind(now.Date.AddHours(8), DateTimeKind.Unspecified), MealType.Breakfast, "Start");
         meal.AddAiSession(
@@ -1196,6 +1209,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
     private static async Task AssertRecipeRepositoryQueriesAsync(
         FoodDiaryDbContext context,
+        RecipesDbContext owned,
         RecipeRepository repository,
         UserId ownerId,
         Recipe publicRecipe,
@@ -1208,10 +1222,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(withSteps);
         withSteps.ApplyComputedNutrition(220, 9, 5, 31, 4, 0);
         await repository.UpdateNutritionAsync(withSteps);
-        await context.SaveChangesAsync();
-        context.Entry(withSteps).State = EntityState.Detached;
+        await owned.SaveChangesAsync();
+        owned.Entry(withSteps).State = EntityState.Detached;
         await repository.UpdateNutritionAsync(withSteps);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
         var missingRecipe = Recipe.Create(ownerId, "Missing nutrition", servings: 1);
         await Assert.ThrowsAsync<DbUpdateConcurrencyException>(
             () => repository.UpdateNutritionAsync(missingRecipe));
@@ -1224,7 +1238,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             await recipeOverviewReadService.GetExplorePagedAsync(ownerId, page: 1, limit: 10, search: "Public", category: "Salad", maxPrepTime: 10, sortBy: "popular");
 
         await repository.DeleteAsync(privateRecipe);
-        await context.SaveChangesAsync();
+        await owned.SaveChangesAsync();
         await repository.DeleteAsync(privateRecipe);
 
         Assert.Single(searchedItems);
@@ -1240,7 +1254,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverUserLoginEventRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new UserLoginEventRepository(context);
+        var repository = new UserLoginEventRepository(context.UserLoginEvents, new UserLoginEventQuery(context));
         DateTime now = DateTime.UtcNow;
         await repository.AddAsync(UserLoginEvent.Create(
             userId,
@@ -1279,7 +1293,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverRefreshTokenSessionRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new RefreshTokenSessionRepository(context);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
         DateTime now = DateTime.UtcNow;
         var session = UserRefreshTokenSession.Create(
             Guid.NewGuid(),

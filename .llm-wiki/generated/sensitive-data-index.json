@@ -2049,6 +2049,13 @@
     },
     {
       "category": "health",
+      "name": "CaloriesPerBase",
+      "type": "double",
+      "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
+      "line": 184
+    },
+    {
+      "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -4671,13 +4678,6 @@
       "type": "double",
       "path": "Modules/Products/Domain/ValueObjects/ProductNutrition.cs",
       "line": 7
-    },
-    {
-      "category": "health",
-      "name": "CaloriesPerBase",
-      "type": "double",
-      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 183
     },
     {
       "category": "health",
@@ -8050,6 +8050,27 @@
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
+      "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
+      "line": 178
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
+      "line": 179
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
+      "line": 180
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
       "line": 356
     },
@@ -9585,27 +9606,6 @@
       "type": "ImageAssetId?",
       "path": "Modules/Products/Domain/ValueObjects/ProductMediaState.cs",
       "line": 7
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 177
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 178
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 179
     },
     {
       "category": "privateContent",
