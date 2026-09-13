@@ -125,7 +125,7 @@ public sealed class AiQuotaRepositoryTests {
     }
 
     private static AiQuotaRepository CreateRepository() {
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
         return new AiQuotaRepository(options, new FixedTimeProvider(Now));

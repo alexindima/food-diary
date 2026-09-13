@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Ai;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
@@ -25,7 +26,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         SetCreatedOnUtc(second, from);
         context.AiUsages.AddRange(first, second);
         await context.SaveChangesAsync();
-        var repository = new AiUsageRepository(context);
+        var repository = new AiUsageRepository(context.AiUsages, new AiUsageQuery(context));
         AiUsageSummary result = await repository.GetSummaryForUserAsync(from, from.AddDays(1), included.Id, CancellationToken.None);
         Assert.Equal(5, result.TotalTokens);
         Assert.Equal(5, Assert.Single(result.ByDay).TotalTokens);
@@ -42,22 +43,26 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
 
         var inRangeFirst = AiUsage.Create(user.Id, "vision", "gpt-4.1-mini", 10, 20, 30);
         var inRangeSecond = AiUsage.Create(user.Id, "nutrition", "gpt-4.1", 5, 7, 12);
+        var atExclusiveEnd = AiUsage.Create(user.Id, "vision", "boundary-model", 1000, 2000, 3000);
         var outOfRange = AiUsage.Create(user.Id, "vision", "gpt-4.1-mini", 100, 200, 300);
 
         SetCreatedOnUtc(inRangeFirst, new DateTime(2026, 3, 28, 10, 0, 0, DateTimeKind.Utc));
         SetCreatedOnUtc(inRangeSecond, new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc));
         SetCreatedOnUtc(outOfRange, new DateTime(2026, 3, 27, 23, 59, 0, DateTimeKind.Utc));
 
-        context.AiUsages.AddRange(inRangeFirst, inRangeSecond, outOfRange);
+        SetCreatedOnUtc(atExclusiveEnd, new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc));
+        context.AiUsages.AddRange(inRangeFirst, inRangeSecond, outOfRange, atExclusiveEnd);
         await context.SaveChangesAsync();
 
-        var repository = new AiUsageRepository(context);
+        var repository = new AiUsageRepository(context.AiUsages, new AiUsageQuery(context));
 
+        context.ChangeTracker.Clear();
         AiUsageSummary summary = await repository.GetSummaryAsync(
             new DateTime(2026, 3, 28, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc),
             CancellationToken.None);
 
+        Assert.Empty(context.ChangeTracker.Entries());
         Assert.Equal(42, summary.TotalTokens);
         Assert.Equal(15, summary.InputTokens);
         Assert.Equal(27, summary.OutputTokens);
@@ -77,7 +82,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var repository = new AiUsageRepository(context);
+        var repository = new AiUsageRepository(context.AiUsages, new AiUsageQuery(context));
         await repository.AddAsync(AiUsage.Create(user.Id, "vision", "gpt-test", 1, 2, 3));
 
         AiUsageSummary emptySummary = await repository.GetSummaryAsync(
@@ -99,7 +104,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
     [RequiresDockerFact]
     public async Task AiPromptTemplateRepository_AddsQueriesOrdersAndUpdatesTemplates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new AiPromptTemplateRepository(context);
+        var repository = new AiPromptTemplateRepository(context.AiPromptTemplates);
         AiPromptTemplate nutrition = await repository.AddAsync(AiPromptTemplate.Create("Nutrition", "EN", "Estimate nutrients"));
         await repository.AddAsync(AiPromptTemplate.Create("Vision", "ru", "Analyze image", isActive: false));
         await context.SaveChangesAsync();

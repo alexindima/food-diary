@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FoodDiary.Infrastructure.Persistence.Ai;
 
 public sealed class AiQuotaRepository(
-    DbContextOptions<FoodDiaryDbContext> contextOptions,
+    DbContextOptions<AiDbContext> contextOptions,
     TimeProvider timeProvider) : IAiQuotaRepository {
     public async Task<AiQuotaReservationStatus> ReserveAsync(
         AiQuotaReservationRequest request,
@@ -143,13 +143,13 @@ public sealed class AiQuotaRepository(
     }
 
     private async Task<T> ExecuteInTransactionAsync<T>(
-        Func<FoodDiaryDbContext, CancellationToken, Task<T>> operation,
+        Func<AiDbContext, CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken) {
-        var strategyContext = new FoodDiaryDbContext(contextOptions);
+        var strategyContext = new AiDbContext(contextOptions);
         await using ConfiguredAsyncDisposable configuredStrategyContext = strategyContext.ConfigureAwait(false);
         IExecutionStrategy strategy = strategyContext.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () => {
-            var context = new FoodDiaryDbContext(contextOptions);
+            var context = new AiDbContext(contextOptions);
             await using ConfiguredAsyncDisposable configuredContext = context.ConfigureAwait(false);
             IDbContextTransaction transaction = await context.Database
                 .BeginTransactionAsync(cancellationToken)
@@ -163,7 +163,7 @@ public sealed class AiQuotaRepository(
     }
 
     private async Task ExecuteInTransactionAsync(
-        Func<FoodDiaryDbContext, CancellationToken, Task> operation,
+        Func<AiDbContext, CancellationToken, Task> operation,
         CancellationToken cancellationToken) {
         await ExecuteInTransactionAsync(async (context, token) => {
             await operation(context, token).ConfigureAwait(false);
@@ -190,7 +190,7 @@ public sealed class AiQuotaRepository(
     }
 
     private static async Task EnsurePeriodAsync(
-        FoodDiaryDbContext context,
+        AiDbContext context,
         AiQuotaReservationRequest request,
         DateTime nowUtc,
         CancellationToken cancellationToken) {
@@ -215,7 +215,7 @@ public sealed class AiQuotaRepository(
     }
 
     private static Task<AiQuotaPeriod> GetPeriodForUpdateAsync(
-        FoodDiaryDbContext context,
+        AiDbContext context,
         Guid userId,
         DateTime periodStartUtc,
         CancellationToken cancellationToken) =>
@@ -224,7 +224,7 @@ public sealed class AiQuotaRepository(
             .SingleAsync(cancellationToken);
 
     private static Task<AiQuotaReservation> GetReservationForUpdateAsync(
-        FoodDiaryDbContext context,
+        AiDbContext context,
         string requestId,
         CancellationToken cancellationToken) =>
         context.AiQuotaReservations
@@ -232,7 +232,7 @@ public sealed class AiQuotaRepository(
             .SingleAsync(cancellationToken);
 
     private static async Task ExpirePendingReservationsAsync(
-        FoodDiaryDbContext context,
+        AiDbContext context,
         AiQuotaPeriod period,
         DateTime nowUtc,
         CancellationToken cancellationToken) {

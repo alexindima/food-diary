@@ -318,17 +318,16 @@
         "write:AiUsage"
       ],
       "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
-      "technicalSourceSha256": "9aff053abc9a20c6a120fd011f97f62c8ce786532d67a9f3ca508a7030a4b24a"
+      "technicalSourceSha256": "b52e079f1fef9875ece1a4b5cd91174ab1542f5bfbf26e09ef11fa39817b6670"
     },
     "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs": {
       "module": "Ai",
       "capabilities": [
         "entity:AiUsage",
-        "entity:User",
         "tracked:AiUsage",
         "write:AiUsage"
       ],
-      "reason": "AI owns usage records; Users is a reporting projection only."
+      "reason": "AI stages usage writes through its own DbSet and delegates immutable reporting to host composition."
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
@@ -1328,7 +1327,7 @@
         "write:FoodRecognitionJob"
       ],
       "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. No foreign aggregate writes.",
-      "technicalSourceSha256": "d12e4065c2c6a87067cfe9c267a0f6b8595f6a725cf85610128df2ccc1db8c3f"
+      "technicalSourceSha256": "9c6eae9904311f75397a61392c33dac7a78a4c6c29b03189d60bfee633f78dda"
     },
     "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
       "module": "ReadModelComposition",
@@ -1624,6 +1623,27 @@
         "entity:UserLoginEvent"
       ],
       "reason": "Read-only login-event and Users display projection with original filters, paging, search escaping and device summary date semantics."
+    },
+    "FoodDiary.ReadModel.Composition/Ai/AiUsageQuery.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "entity:AiUsage",
+        "entity:User"
+      ],
+      "reason": "Read-only usage aggregation and Users display join with original owner filtering and half-open date ranges."
+    },
+    "Modules/Ai/Infrastructure/ModuleRegistration.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database",
+        "entity:AiPromptTemplate",
+        "entity:AiUsage",
+        "tracked:AiPromptTemplate",
+        "tracked:AiUsage"
+      ],
+      "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
+      "technicalSourceSha256": "9c61d5b5fcc0c0de549d05fa4c34893b83e3149b89850fb655af25c89021b7ee"
     }
   }
 }

@@ -25,7 +25,7 @@ internal sealed class AiPromptProvider(
 
         string? promptText;
         using (IServiceScope scope = scopeFactory.CreateScope()) {
-            FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            AiDbContext context = scope.ServiceProvider.GetRequiredService<AiDbContext>();
             AiPromptTemplate? template = await context.Set<AiPromptTemplate>()
                 .AsNoTracking()
                 .Where(t => t.Key == key && t.IsActive)

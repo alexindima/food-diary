@@ -38,3 +38,5 @@ ProductUsageQuery implements the owner IProductUsageQuery port. Preserve owner/p
 RecipeUsageQuery implements IRecipeUsageQuery. Preserve owner/public filtering, zero for inaccessible or missing recipes, and the sum of meal items and nested recipe usages. Query the same scoped shared context without tracking or a new transaction.
 
 Identity UserLoginEventQuery implements the owner query port. Preserve the Users inner join, escaped ILIKE search, all filters before count/paging, descending login time with ID tie-break, half-open paged date range and inclusive summary date range. Return immutable DTOs without tracking; use the caller scoped context and transaction.
+
+AiUsageQuery implements the owner IAiUsageQuery port. Preserve SQL-side usage totals, day/operation/model breakdowns, Users inner join for display, requested-user filtering and [fromUtc, toUtc) bounds. Only immutable no-tracking reads live here; usage writes remain in Ai.

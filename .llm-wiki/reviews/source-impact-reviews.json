@@ -68,13 +68,13 @@
       "sources": [
         {
           "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "f24816c406bc36c59f3f820bc289a02cd4296118833db195ab1c76b5541b4eed"
+          "sha256": "8100c5375cd46fada8e9892cb2a329b1bc05fcb4fe44e31d2dabb918cda2d348"
         }
       ],
-      "reason": "16 Swagger tests and Admin login query tests pass; public repository signatures and DTOs unchanged",
+      "reason": "All SQL aggregates and DTO shapes preserved; no HTTP route or snapshot change.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:17:21.8091759Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:06:24.2710317Z"
     },
     {
       "pageId": "system.architecture",
@@ -83,13 +83,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "b816e692daf025660425a40fb2cc2d47d0251c40828bca4c0fee5fbe3942dc84"
+          "sha256": "b95a20e824e8ee973f0f9e24b50f1ce673e0acc06e41c2db7b462753d6a3d664"
         }
       ],
-      "reason": "Identity and composition guides document query ownership and preserved scoped aliases",
+      "reason": "Ai usage read port and staged context extraction documented.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:17:22.5131118Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:06:25.4545240Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -207,17 +207,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "5fefe846eb86b0675345752f207c779a3b8ff5b0fc7b57d2ef92577b64600a80"
+          "sha256": "ac96c1d760a4c6ce87c3dbd19e5db4cdd68f47679c8e58d767663a1c5470c075"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "b816e692daf025660425a40fb2cc2d47d0251c40828bca4c0fee5fbe3942dc84"
+          "sha256": "b95a20e824e8ee973f0f9e24b50f1ce673e0acc06e41c2db7b462753d6a3d664"
         }
       ],
-      "reason": "Solution build 169 Identity infrastructure and 69 host DI tests passed; real PostgreSQL tests cover paging dates literal search and transaction visibility",
+      "reason": "PostgreSQL regression covers upper date boundary and no tracking; DI and architecture checks run.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:17:23.3484061Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:06:26.5884700Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -226,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "79e14a523faf8ad92644c4b38b8e01dc9f655456009ee59efdcf1de90d0d7954"
+          "sha256": "4595f9f1d089422cbd7cd9a14e496805ac067de0f2f44ce5f021259f90bc009d"
         }
       ],
-      "reason": "Routes and payloads unchanged; existing HTTP snapshots retained and PostgreSQL regression executed.",
+      "reason": "No route or payload changes; all 200 API integration tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:55:27.9548308Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:37:31.4216576Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -816,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ce5ba9cedfea7a98b4dbe821f12e651e7ecdecf8e0224e536037330a590ab856"
+          "sha256": "fd17c45a0762fe0a9439a885b1405c9e8bed9a7be768d1cbc8e67c2a7f01e733"
         }
       ],
-      "reason": "Architecture, Identity unit and PostgreSQL suites passed; event-driven context registration regression added.",
+      "reason": "95 Ai unit tests, 69 DI checks and 20 focused architecture checks passed; full PostgreSQL regression running.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:55:28.9983780Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:37:32.5164628Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -891,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0f4f1dd2af2e46fde5fedf4ffa41392a67d665f33f2dbe4a98f48d7ba87c9c6c"
+          "sha256": "65cdd0c746ee78a9f1aa7d108d938bd14feaea329b9e9a14b8f55072fc7dc29e"
         }
       ],
-      "reason": "Identity owner context and PostgreSQL HTTP fixture guidance updated; shared migrations unchanged.",
+      "reason": "AiDbContext ownership, scoped saves and independent quota/job lifetimes documented in owner guides and ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:55:29.8398772Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:37:33.3176702Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -906,21 +906,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ce5ba9cedfea7a98b4dbe821f12e651e7ecdecf8e0224e536037330a590ab856"
+          "sha256": "fd17c45a0762fe0a9439a885b1405c9e8bed9a7be768d1cbc8e67c2a7f01e733"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0f4f1dd2af2e46fde5fedf4ffa41392a67d665f33f2dbe4a98f48d7ba87c9c6c"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c59924d39ec2690d41dd867f83923840ac033b62406bbe08e1a3bb52f20ef372"
+          "sha256": "65cdd0c746ee78a9f1aa7d108d938bd14feaea329b9e9a14b8f55072fc7dc29e"
         }
       ],
-      "reason": "Token rotation and Telegram expiry/replay predicates preserved; no secrets or provider changes.",
+      "reason": "Quota locks, owner filters, idempotency, retention and provider boundaries unchanged; no live provider calls.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:55:30.7184173Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:37:34.3044737Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1166,13 +1162,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "01dbdb84eb0f584e53d662ec97b5fd4d48859997e37e9127db8200c4580e36a4"
+          "sha256": "e3182252493252ad3aa0ffeebd01b69b07e09888a5023b615d4416bd02f33691"
         }
       ],
-      "reason": "Identity and composition guides document query ownership and preserved scoped aliases",
+      "reason": "Ai usage read port and staged context extraction documented.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:17:26.2915109Z"
+      "gitHead": "4b2659b5ad1b748b349b4e669d17309f6ee7e27a",
+      "reviewedAtUtc": "2026-09-13T21:06:33.1629217Z"
     },
     {
       "pageId": "workflow.review-diff",

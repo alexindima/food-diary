@@ -319,3 +319,11 @@ Products now uses ProductsDbContext for runtime product persistence and related-
 Recipes now owns a three-entity RecipesDbContext for Recipe, RecipeStep and RecipeIngredient. Existing mappings and central migrations remain unchanged. Its repository joins the live shared transaction before owner operations; the existing Serializable mutation runner and shared UOW preserve retry/reset, row locking, intermediate flush and atomic rollback. Cross-module usage and overview SQL remain in read composition. SharedRecipesContextIntegrationTests covers graph/snapshot reads, atomic save, rollback and independent row locking.
 
 Identity now owns IdentityDbContext: email templates and owned revisions, refresh sessions, login events, consumed Telegram assertions, login tickets and operation journals. Owner repositories use narrow DbSets and Telegram stores use the typed context, synchronizing the caller transaction before SQL. Shared UOW still commits Users and Identity atomically; central migrations and composed login reporting remain unchanged. The primary HTTP test fixture uses the existing PostgreSQL fixture because registration now writes multiple contexts; the fake-auth HTTP fixture uses the same PostgreSQL base because its admin scenarios also register users.
+
+### Ai usage-read preparation
+
+Ai usage reporting now uses the owner IAiUsageQuery port implemented by ReadModel.Composition. The Users display join and all SQL aggregates preserve user filtering and half-open date ranges. AiUsageRepository stages owned usage writes only. Ai still uses the shared runtime context; quota and recognition-job transactions are unchanged pending their separate context extraction.
+
+### Ai runtime context
+
+AiDbContext applies the five existing root mappings and owned prompt revisions. Scoped usage and template repositories participate in the common UnitOfWork and synchronize its live transaction. AiQuotaRepository and FoodRecognitionJobStore retain fresh contexts and independent short transactions from copied provider options; their retry strategy, locks, idempotency and commit order remain unchanged. Prompt caching resolves the owner context in its own scope. Central migration mappings and the coordinated user-purge bridge remain unchanged; no schema migration is needed.

@@ -17,7 +17,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReserveAsync_WithTwentyConcurrentRequests_NeverExceedsQuota() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
 
         Task<AiQuotaReservationStatus>[] attempts = [.. Enumerable.Range(0, 20)
@@ -37,7 +37,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReserveAsync_WithSameConcurrentRequestId_AcquiresExactlyOnce() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         AiQuotaReservationRequest request = CreateRequest(
             RequestIdFor(0),
@@ -58,7 +58,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReserveAsync_WithExistingRequestIdForDifferentOperation_ReturnsDuplicate() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         AiQuotaReservationRequest request = CreateRequest(
@@ -77,7 +77,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReserveAsync_WithUnsupportedPersistedState_Throws() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         AiQuotaReservationRequest request = CreateRequest(
@@ -88,7 +88,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
             inputLimit: 1_000,
             outputLimit: 1_000);
         await repository.ReserveAsync(request);
-        await using (var context = new FoodDiaryDbContext(options)) {
+        await using (var context = new AiDbContext(options)) {
             await context.Database.ExecuteSqlInterpolatedAsync(
                 $"UPDATE \"AiQuotaReservations\" SET \"State\" = {int.MaxValue} WHERE \"RequestId\" = {request.RequestId}");
         }
@@ -101,7 +101,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReconcileAsync_IsIdempotentAndReturnsUnusedBudget() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         string firstRequestId = RequestIdFor(0);
@@ -124,7 +124,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
             inputLimit: 100,
             outputLimit: 50));
 
-        await using var assertionContext = new FoodDiaryDbContext(options);
+        await using var assertionContext = new AiDbContext(options);
         int usageRows = await assertionContext.AiUsages.CountAsync(item => item.UserId == userId);
         Assert.Equal(AiQuotaReservationStatus.Acquired, reservation);
         Assert.Equal(AiQuotaReservationStatus.Acquired, secondReservation);
@@ -133,7 +133,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReserveAsync_WhenPendingReservationExpires_ChargesItConservatively() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         string firstRequestId = RequestIdFor(0);
@@ -170,7 +170,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReleaseAsync_AllowsSameRequestToAcquireAgain() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         AiQuotaReservationRequest request = CreateRequest(
@@ -191,7 +191,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReconcileAsync_AfterReservationExpires_ReconcilesOrphanedUsage() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         string requestId = RequestIdFor(10);
@@ -215,13 +215,13 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
             outputLimit: 1_000));
         await repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 40, 10, 50));
 
-        await using var context = new FoodDiaryDbContext(options);
+        await using var context = new AiDbContext(options);
         Assert.Single(await context.AiUsages.Where(item => item.UserId == userId).ToListAsync());
     }
 
     [RequiresDockerFact]
     public async Task ReconcileAsync_WhenUsageExceedsReservation_Throws() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         string requestId = RequestIdFor(12);
@@ -240,7 +240,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReconcileAsync_WhenReservationWasReleased_Throws() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         string requestId = RequestIdFor(22);
@@ -261,7 +261,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task ReleaseAsync_WhenReservationIsCompleted_IsIdempotent() {
-        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
         var repository = new AiQuotaRepository(options, timeProvider);
         string requestId = RequestIdFor(13);
@@ -276,16 +276,17 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
         await repository.ReleaseAsync(requestId);
 
-        await using var context = new FoodDiaryDbContext(options);
+        await using var context = new AiDbContext(options);
         Assert.Single(await context.AiUsages.Where(item => item.UserId == userId).ToListAsync());
     }
 
-    private async Task<(DbContextOptions<FoodDiaryDbContext> Options, UserId UserId)> CreateDatabaseAsync() {
+    private async Task<(DbContextOptions<AiDbContext> Options, UserId UserId)> CreateDatabaseAsync() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
             .UseNpgsql(connectionString, npgsqlOptions => npgsqlOptions.EnableRetryOnFailure())
             .Options;
-        await using var context = new FoodDiaryDbContext(options);
+        await using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(connectionString).Options);
         await context.Database.MigrateAsync();
         var user = User.Create($"ai-quota-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);

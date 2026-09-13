@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4068,
-    "symbols": 4009,
-    "interfaceImplementationLinks": 278,
+    "sourceFiles": 4071,
+    "symbols": 4012,
+    "interfaceImplementationLinks": 279,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 2103,
+      "class": 2105,
       "enum": 64,
-      "interface": 483,
+      "interface": 484,
       "record": 1238,
       "record struct": 121
     },
@@ -32,8 +32,8 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1639,
-      "Query": 207,
+      "Other": 1640,
+      "Query": 209,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
@@ -1728,6 +1728,13 @@
       "line": 7
     },
     {
+      "name": "AiUsageQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Ai/AiUsageQuery.cs",
+      "line": 9
+    },
+    {
       "name": "ContentReportReadService",
       "kind": "class",
       "role": "Service",
@@ -1907,7 +1914,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 34
+      "line": 36
     },
     {
       "name": "RecipeOverviewReadService",
@@ -4934,6 +4941,13 @@
       "line": 2
     },
     {
+      "name": "IAiUsageQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageQuery.cs",
+      "line": 2
+    },
+    {
       "name": "IAiUsageReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -5428,7 +5442,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "AiPromptProvider",
@@ -5464,6 +5478,13 @@
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
       "line": 11
+    },
+    {
+      "name": "AiDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs",
+      "line": 6
     },
     {
       "name": "AiUserDataPurgeParticipant",
@@ -28313,6 +28334,13 @@
       "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs",
       "implementation": "AiQuotaRepository",
       "implementationPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IAiUsageQuery",
+      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageQuery.cs",
+      "implementation": "AiUsageQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Ai/AiUsageQuery.cs",
       "confidence": "naming-convention"
     },
     {

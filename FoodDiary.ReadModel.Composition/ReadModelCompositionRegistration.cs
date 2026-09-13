@@ -1,3 +1,5 @@
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.ReadModel.Composition.Ai;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.ReadModel.Composition.Identity;
 using FoodDiary.ReadModel.Composition.Recipes;
@@ -34,6 +36,7 @@ namespace FoodDiary.ReadModel.Composition;
 
 public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
+        services.AddScoped<IAiUsageQuery, AiUsageQuery>();
         services.AddScoped<IUserLoginEventQuery, UserLoginEventQuery>();
         services.AddScoped<IImageAssetUsageQuery, ImageAssetUsageQuery>();
         services.AddScoped<IAchievementMetricReader, AchievementMetricReader>();

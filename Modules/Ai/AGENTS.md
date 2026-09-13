@@ -8,3 +8,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Ai runtime persistence uses AiDbContext; shared migrations and purge coordination remain central. Usage reporting remains host-composed. Quotas and recognition jobs retain independent short transactions.

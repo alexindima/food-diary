@@ -13,7 +13,7 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task ConcurrentAdmissionsAndClaims_AreIdempotentAndOwnerScoped() {
-        (DbContextOptions<FoodDiaryDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
         var store = new FoodRecognitionJobStore(options, TimeProvider.System);
         Result<FoodRecognitionJobModel>[] admissions = await Task.WhenAll(Enumerable.Range(0, 8)
             .Select(_ => store.CreateAsync(job, CancellationToken.None)));
@@ -30,7 +30,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
 
     [RequiresDockerFact]
     public async Task ConcurrentDistinctAdmissions_EnforceTwoOutstandingTasks() {
-        (DbContextOptions<FoodDiaryDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
         var store = new FoodRecognitionJobStore(options, TimeProvider.System);
         Result<FoodRecognitionJobModel>[] admissions = await Task.WhenAll(Enumerable.Range(0, 8)
             .Select(_ => store.CreateAsync(job with { Id = Guid.NewGuid() }, CancellationToken.None)));
@@ -40,7 +40,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
 
     [RequiresDockerFact]
     public async Task InterruptedTask_PreservesCheckpointRejectsLateCompletionAndEventuallyReleasesImage() {
-        (DbContextOptions<FoodDiaryDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
         var clock = new TestClock(DateTimeOffset.UtcNow);
         var store = new FoodRecognitionJobStore(options, clock);
         await store.CreateAsync(job, CancellationToken.None);
@@ -57,7 +57,8 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.Equal("Apple", Assert.Single(interrupted.Vision!.Items).NameEn);
         Assert.Null(await store.ClaimAsync(CancellationToken.None));
         Assert.False(await store.SaveVisionAsync(job.Id, new FoodVisionModel([]), CancellationToken.None));
-        await using var context = new FoodDiaryDbContext(options);
+        await using var context = new FoodDiaryDbContext(new DbContextOptions<FoodDiaryDbContext>(
+            options.Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
         await Assert.ThrowsAsync<Npgsql.PostgresException>(() => context.ImageAssets.ExecuteDeleteAsync());
         clock.Now = clock.Now.AddDays(8);
         await store.MaintainAsync(CancellationToken.None);
@@ -65,11 +66,12 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.Equal(1, await context.ImageAssets.ExecuteDeleteAsync());
     }
 
-    private async Task<(DbContextOptions<FoodDiaryDbContext>, FoodRecognitionJobModel)> CreateDatabaseAsync() {
+    private async Task<(DbContextOptions<AiDbContext>, FoodRecognitionJobModel)> CreateDatabaseAsync() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
             .UseNpgsql(connectionString, provider => provider.EnableRetryOnFailure()).Options;
-        await using var context = new FoodDiaryDbContext(options);
+        await using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(connectionString).Options);
         await context.Database.MigrateAsync();
         Assert.False(context.Database.HasPendingModelChanges());
         var user = User.Create($"recognition-{Guid.NewGuid():N}@example.com", "hash");

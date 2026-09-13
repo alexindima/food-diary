@@ -61,11 +61,11 @@ public sealed class AiPromptProviderTests {
 
     private static ServiceProvider CreateProvider() {
         var services = new ServiceCollection();
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
         services.AddMemoryCache();
-        services.AddSingleton(new FoodDiaryDbContext(options));
+        services.AddSingleton(new AiDbContext(options));
         return services.BuildServiceProvider();
     }
 
@@ -82,7 +82,7 @@ public sealed class AiPromptProviderTests {
     private static async Task SeedAsync(ServiceProvider provider, params AiPromptTemplate[] templates) {
         AsyncServiceScope scope = provider.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            AiDbContext context = scope.ServiceProvider.GetRequiredService<AiDbContext>();
             context.AiPromptTemplates.AddRange(templates);
             await context.SaveChangesAsync().ConfigureAwait(false);
         }

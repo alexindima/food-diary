@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FoodDiary.Infrastructure.Persistence.Ai;
 
-public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext> options, TimeProvider timeProvider)
+public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> options, TimeProvider timeProvider)
     : IFoodRecognitionJobStore {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
@@ -17,7 +17,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
         InTransactionAsync((context, token) => CreateCoreAsync(context, job, token), cancellationToken);
 
     private static async Task<Result<FoodRecognitionJobModel>> CreateCoreAsync(
-        FoodDiaryDbContext context, FoodRecognitionJobModel job, CancellationToken cancellationToken) {
+        AiDbContext context, FoodRecognitionJobModel job, CancellationToken cancellationToken) {
         // Lock task id before owner admission: concurrent conflicting owners cannot race the unique key.
         await context.Database.ExecuteSqlInterpolatedAsync(
             $"SELECT pg_advisory_xact_lock(hashtextextended({job.Id.ToString()}, 732))", cancellationToken).ConfigureAwait(false);
@@ -51,7 +51,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
     }
 
     public async Task<FoodRecognitionJobModel?> GetAsync(Guid userId, Guid jobId, CancellationToken cancellationToken) {
-        var context = new FoodDiaryDbContext(options);
+        var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         var owner = new UserId(userId);
         FoodRecognitionJob? job = await context.Set<FoodRecognitionJob>().AsNoTracking()
@@ -60,7 +60,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
     }
 
     public async Task<IReadOnlyList<FoodRecognitionJobModel>> ListAsync(Guid userId, CancellationToken cancellationToken) {
-        var context = new FoodDiaryDbContext(options);
+        var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         var owner = new UserId(userId);
         DateTime cutoff = timeProvider.GetUtcNow().UtcDateTime.AddDays(-7);
@@ -73,7 +73,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
     public Task<FoodRecognitionJobModel?> ClaimAsync(CancellationToken cancellationToken) =>
         InTransactionAsync(ClaimCoreAsync, cancellationToken);
 
-    private async Task<FoodRecognitionJobModel?> ClaimCoreAsync(FoodDiaryDbContext context, CancellationToken cancellationToken) {
+    private async Task<FoodRecognitionJobModel?> ClaimCoreAsync(AiDbContext context, CancellationToken cancellationToken) {
         // Persist Running before any provider call. SKIP LOCKED permits independent worker replicas.
         List<FoodRecognitionJob> jobs = await context.Set<FoodRecognitionJob>().FromSqlRaw(
             """SELECT * FROM "FoodRecognitionJobs" WHERE "Status" = 'Queued' ORDER BY "CreatedOnUtc" LIMIT 1 FOR UPDATE SKIP LOCKED""")
@@ -89,7 +89,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
     }
 
     public async Task<bool> SaveVisionAsync(Guid jobId, FoodVisionModel vision, CancellationToken cancellationToken) {
-        var context = new FoodDiaryDbContext(options);
+        var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         string json = JsonSerializer.Serialize(vision, JsonOptions);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
@@ -99,7 +99,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
     }
 
     public async Task CompleteAsync(Guid jobId, FoodNutritionModel? nutrition, string? errorCode, string? nutritionErrorCode, CancellationToken cancellationToken) {
-        var context = new FoodDiaryDbContext(options);
+        var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         string? json = nutrition is null ? null : JsonSerializer.Serialize(nutrition, JsonOptions);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
@@ -113,7 +113,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
     }
 
     public async Task MaintainAsync(CancellationToken cancellationToken) {
-        var context = new FoodDiaryDbContext(options);
+        var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         DateTime interrupted = now.AddMinutes(-5);
@@ -129,7 +129,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
     }
 
     public async Task<IReadOnlyList<FoodRecognitionJobUpdate>> GetUpdatesAsync(DateTime sinceUtc, CancellationToken cancellationToken) {
-        var context = new FoodDiaryDbContext(options);
+        var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         return await context.Set<FoodRecognitionJob>().AsNoTracking().Where(x => x.UpdatedOnUtc >= sinceUtc)
             .Select(x => new FoodRecognitionJobUpdate(x.Id, x.UserId.Value)).ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -141,12 +141,12 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<FoodDiaryDbContext>
         job.NutritionJson is null ? null : JsonSerializer.Deserialize<FoodNutritionModel>(job.NutritionJson, JsonOptions),
         job.ErrorCode, job.NutritionErrorCode);
 
-    private async Task<T> InTransactionAsync<T>(Func<FoodDiaryDbContext, CancellationToken, Task<T>> action, CancellationToken cancellationToken) {
-        var strategyContext = new FoodDiaryDbContext(options);
+    private async Task<T> InTransactionAsync<T>(Func<AiDbContext, CancellationToken, Task<T>> action, CancellationToken cancellationToken) {
+        var strategyContext = new AiDbContext(options);
         await using ConfiguredAsyncDisposable strategyDisposal = strategyContext.ConfigureAwait(false);
         IExecutionStrategy strategy = strategyContext.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () => {
-            var context = new FoodDiaryDbContext(options);
+            var context = new AiDbContext(options);
             await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
             IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using ConfiguredAsyncDisposable transactionDisposal = transaction.ConfigureAwait(false);
