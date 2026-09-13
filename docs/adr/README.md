@@ -60,3 +60,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0037: Telegram client identity and operation boundaries](0037-telegram-client-identity-and-operation-boundaries.md)
 
 - [0038: Explicit read-model composition](0038-read-model-composition.md)
+
+- [0039: Separate HTTP contracts and response mappings](0039-presentation-contracts-and-mappings.md)

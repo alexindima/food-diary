@@ -19,7 +19,7 @@ public sealed class DashboardModuleExtractionTests {
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Model")));
         Assert.DoesNotContain("FoodDiary.Modules.Dashboard.Infrastructure",
             ProjectReferenceReader.ReadProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"), StringComparer.Ordinal);
-        Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.DailyAdvices.Contracts", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Tdee.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj"));
     }
 

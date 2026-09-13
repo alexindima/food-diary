@@ -1,0 +1,23 @@
+:host {
+    display: inline-flex;
+    flex: 0 0 auto;
+}
+
+:host([hidden]) {
+    display: none;
+}
+
+fd-ui-button {
+    --fd-button-width: var(--fd-size-control-md);
+    --fd-button-min-width: var(--fd-size-control-md);
+    --fd-button-height-explicit: var(--fd-size-control-md);
+    --fd-button-padding-x: 0;
+    --fd-button-border-radius: var(--fd-radius-pill);
+}
+
+.telegram-entry-button__icon {
+    display: block;
+    width: var(--fd-size-icon-md);
+    height: var(--fd-size-icon-md);
+    color: var(--fd-color-primary-500);
+}

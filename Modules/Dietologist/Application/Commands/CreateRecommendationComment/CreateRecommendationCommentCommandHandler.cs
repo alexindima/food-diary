@@ -8,7 +8,6 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -71,7 +70,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
         UserId recipientUserId = authorUserId == recommendation.ClientUserId
             ? recommendation.DietologistUserId
             : recommendation.ClientUserId;
-        Notification notification = DietologistNotificationFactory.CreateNewRecommendationComment(
+        NotificationRequest notification = DietologistNotificationFactory.CreateNewRecommendationComment(
             recipientUserId,
             recommendation.Id.Value.ToString(),
             recommendation.ClientUserId.Value.ToString(),

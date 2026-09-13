@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Presentation.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../BodyMetrics/Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Cycles/Presentation.Contracts/FoodDiary.Modules.Cycles.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Fasting/Presentation.Contracts/FoodDiary.Modules.Fasting.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Hydration/Presentation.Contracts/FoodDiary.Modules.Hydration.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Meals/Presentation.Contracts/FoodDiary.Modules.Meals.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Tdee/Presentation.Contracts/FoodDiary.Modules.Tdee.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

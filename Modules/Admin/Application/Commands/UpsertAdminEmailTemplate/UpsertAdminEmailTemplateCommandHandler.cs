@@ -1,10 +1,10 @@
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 
@@ -23,7 +23,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
             return Result.Failure<AdminEmailTemplateModel>(localeResult.Error);
         }
 
-        Result<EmailTemplate> templateResult = await administrationService.UpsertAsync(
+        Result<EmailTemplateReadModel> templateResult = await administrationService.UpsertAsync(
             key,
             localeResult.Value,
             command.Subject,

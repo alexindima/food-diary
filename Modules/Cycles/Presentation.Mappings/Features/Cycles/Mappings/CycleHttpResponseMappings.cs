@@ -1,6 +1,5 @@
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Responses;
-using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Cycles.Mappings;
 
@@ -21,11 +20,11 @@ public static class CycleHttpResponseMappings {
                 model.ShowFertilityEstimates,
                 model.DiscreetNotifications,
                 model.Notes,
-                model.BleedingEntries.ToHttpResponseList(ToHttpResponse),
-                model.Symptoms.ToHttpResponseList(ToHttpResponse),
-                model.Factors.ToHttpResponseList(ToHttpResponse),
-                model.FertilitySignals.ToHttpResponseList(ToHttpResponse),
-                (model.MenstrualEpisodes ?? []).ToHttpResponseList(ToHttpResponse),
+                model.BleedingEntries.Select(ToHttpResponse).ToList(),
+                model.Symptoms.Select(ToHttpResponse).ToList(),
+                model.Factors.Select(ToHttpResponse).ToList(),
+                model.FertilitySignals.Select(ToHttpResponse).ToList(),
+                (model.MenstrualEpisodes ?? []).Select(ToHttpResponse).ToList(),
                 ToHttpResponse(model.Predictions),
                 (int)model.Goal,
                 (int)model.ReproductiveState,
@@ -41,8 +40,8 @@ public static class CycleHttpResponseMappings {
                 new(
                     model.CycleProfileId,
                     ToHttpDate(model.Date),
-                    model.BleedingEntries.ToHttpResponseList(ToHttpResponse),
-                    model.Symptoms.ToHttpResponseList(ToHttpResponse),
+                    model.BleedingEntries.Select(ToHttpResponse).ToList(),
+                    model.Symptoms.Select(ToHttpResponse).ToList(),
                     model.FertilitySignal?.ToHttpResponse());
     }
 

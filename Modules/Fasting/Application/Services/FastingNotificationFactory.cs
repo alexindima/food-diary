@@ -1,10 +1,9 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;
 
 internal static class FastingNotificationFactory {
-    public static Notification Create(FastingNotificationCandidate candidate) {
+    public static NotificationRequest Create(FastingNotificationCandidate candidate) {
         return candidate.Type switch {
             NotificationTypes.FastingCompleted => CreatePhaseNotification(candidate),
             NotificationTypes.FastingCheckInReminder => CreateEmptyNotification(candidate),
@@ -14,8 +13,8 @@ internal static class FastingNotificationFactory {
         };
     }
 
-    private static Notification CreatePhaseNotification(FastingNotificationCandidate candidate) =>
-        Notification.Create(
+    private static NotificationRequest CreatePhaseNotification(FastingNotificationCandidate candidate) =>
+        new(
             candidate.UserId,
             candidate.Type,
             NotificationPayloads.FastingPhase(
@@ -23,8 +22,8 @@ internal static class FastingNotificationFactory {
                 candidate.OccurrenceKind ?? string.Empty),
             candidate.ReferenceId);
 
-    private static Notification CreateEmptyNotification(FastingNotificationCandidate candidate) =>
-        Notification.Create(
+    private static NotificationRequest CreateEmptyNotification(FastingNotificationCandidate candidate) =>
+        new(
             candidate.UserId,
             candidate.Type,
             NotificationPayloads.Empty(),

@@ -270,8 +270,20 @@
           "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.favorites.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.favorites.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Presentation.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.identity.application.abstractions": {

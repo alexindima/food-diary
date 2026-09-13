@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;
 
@@ -17,7 +16,7 @@ internal static class FastingNotificationCreationService {
             return false;
         }
 
-        Notification notification = FastingNotificationFactory.Create(candidate);
+        NotificationRequest notification = FastingNotificationFactory.Create(candidate);
         await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         return true;
     }

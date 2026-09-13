@@ -1,3 +1,10 @@
 @if (available()) {
-    <fd-ui-button variant="secondary" [fullWidth]="true" (click)="selected.emit()">{{ 'AUTH.TELEGRAM.CONTINUE' | translate }}</fd-ui-button>
+    <fd-ui-button variant="secondary" [ariaLabel]="'AUTH.TELEGRAM.CONTINUE' | translate" (click)="selected.emit()">
+        <svg class="telegram-entry-button__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+                fill="currentColor"
+                d="M21.44 3.6 18.3 20.04c-.24 1.16-.86 1.44-1.74.9l-4.78-3.53-2.3 2.22c-.25.26-.46.47-.95.47l.34-4.87 8.87-8.02c.39-.34-.08-.54-.6-.2L6.18 13.92l-4.72-1.48c-1.03-.32-1.05-1.03.22-1.53L20.12 3.8c.85-.31 1.59-.2 1.32-.2Z"
+            />
+        </svg>
+    </fd-ui-button>
 }

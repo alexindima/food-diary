@@ -6,7 +6,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 
 namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 
@@ -45,7 +45,7 @@ public sealed class ImportAdminLessonsCommandHandler(ILessonAdministrationServic
                 item.SortOrder, item.IsPublished));
         }
 
-        Result<IReadOnlyList<NutritionLesson>> importResult = await lessonAdministrationService
+        Result<IReadOnlyList<LessonAdminReadModel>> importResult = await lessonAdministrationService
             .ImportAsync(lessons, cancellationToken)
             .ConfigureAwait(false);
         if (importResult.IsFailure) {

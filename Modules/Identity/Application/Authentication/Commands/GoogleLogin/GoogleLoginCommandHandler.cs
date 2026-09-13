@@ -6,7 +6,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
-using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
 
@@ -69,7 +68,7 @@ public sealed class GoogleLoginCommandHandler(
             return;
         }
 
-        var notification = Notification.Create(
+        var notification = new NotificationRequest(
             principal.UserId,
             NotificationTypes.PasswordSetupSuggested,
             NotificationPayloads.Empty(),

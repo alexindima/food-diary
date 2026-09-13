@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -6,7 +6,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Lessons.Contracts.Common;
 
 public interface ILessonAdministrationService {
-    Task<Result<NutritionLesson>> CreateAsync(
+    Task<Result<LessonAdminReadModel>> CreateAsync(
         string title,
         string content,
         string? summary,
@@ -18,7 +18,7 @@ public interface ILessonAdministrationService {
         CancellationToken cancellationToken,
         bool isPublished = true);
 
-    Task<Result<NutritionLesson>> UpdateAsync(
+    Task<Result<LessonAdminReadModel>> UpdateAsync(
         NutritionLessonId lessonId,
         string title,
         string content,
@@ -33,7 +33,7 @@ public interface ILessonAdministrationService {
 
     Task<Result> DeleteAsync(NutritionLessonId lessonId, CancellationToken cancellationToken);
 
-    Task<Result<IReadOnlyList<NutritionLesson>>> ImportAsync(
+    Task<Result<IReadOnlyList<LessonAdminReadModel>>> ImportAsync(
         IReadOnlyList<LessonAdministrationItem> items,
         CancellationToken cancellationToken);
 }

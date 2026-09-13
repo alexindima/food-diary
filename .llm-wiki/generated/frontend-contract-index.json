@@ -23941,7 +23941,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.html",
       "occurrences": 1,
       "inputsUsed": [
-        "fullWidth",
+        "ariaLabel",
         "variant"
       ],
       "outputsHandled": []
@@ -35726,7 +35726,7 @@
       "componentPath": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [],
       "outputsHandled": [
         "selected"

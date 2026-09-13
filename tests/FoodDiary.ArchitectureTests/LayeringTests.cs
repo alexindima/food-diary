@@ -350,7 +350,7 @@ public class LayeringTests {
                                     reference.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal))
                 .Where(reference => !reference.StartsWith($"FoodDiary.Application.{module}", StringComparison.Ordinal))
                 .Where(reference => !reference.StartsWith($"FoodDiary.Modules.{module}.", StringComparison.Ordinal))
-                .Where(reference => !reference.EndsWith(".Presentation", StringComparison.Ordinal))
+                .Where(reference => !reference.EndsWith(".Presentation.Mappings", StringComparison.Ordinal))
                 .Where(reference => !reference.EndsWith(".Contracts", StringComparison.Ordinal))
                 .Where(reference => !allowedCrossModuleApplicationReferences.Contains($"{module} -> {reference}"))
                 .Select(reference => $"{relativePath} crosses ownership through {reference}"));

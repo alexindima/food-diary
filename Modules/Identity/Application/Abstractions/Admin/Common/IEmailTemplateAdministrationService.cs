@@ -1,10 +1,10 @@
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Abstractions.Admin.Common;
 
 public interface IEmailTemplateAdministrationService {
-    Task<Result<EmailTemplate>> UpsertAsync(
+    Task<Result<EmailTemplateReadModel>> UpsertAsync(
         string key,
         string locale,
         string subject,

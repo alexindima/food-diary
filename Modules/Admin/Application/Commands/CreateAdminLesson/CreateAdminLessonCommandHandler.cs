@@ -4,7 +4,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Common;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Commands.CreateAdminLesson;
@@ -24,7 +24,7 @@ public sealed class CreateAdminLessonCommandHandler(ILessonAdministrationService
             return Result.Failure<AdminLessonModel>(difficultyResult.Error);
         }
 
-        Result<NutritionLesson> lessonResult = await lessonAdministrationService.CreateAsync(
+        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.CreateAsync(
             command.Title,
             command.Content,
             command.Summary,

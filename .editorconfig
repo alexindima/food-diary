@@ -531,3 +531,10 @@ dotnet_diagnostic.IDE0130.severity = none
 [Modules/*/Infrastructure/**/*.cs]
 dotnet_diagnostic.FD0015.severity = error
 dotnet_diagnostic.FD0016.severity = error
+
+# Public Dashboard result/query relocation preserves existing CLR names.
+[Modules/Dashboard/Contracts/Models/*.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/Dashboard/Contracts/Queries/**/*.cs]
+dotnet_diagnostic.IDE0130.severity = none

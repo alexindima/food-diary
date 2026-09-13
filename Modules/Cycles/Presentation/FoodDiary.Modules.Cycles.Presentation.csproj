@@ -18,6 +18,8 @@
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
+    <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Cycles.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.Cycles.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 

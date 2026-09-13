@@ -1,5 +1,4 @@
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
 using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
@@ -86,29 +85,7 @@ public static class NotificationHttpMappings {
                     model.FastingCheckInFollowUpReminderHours);
     }
 
-    extension(UserNotificationPreferencesModel model) {
-        public NotificationPreferencesHttpResponse ToHttpResponse() =>
-                new(
-                    model.PushNotificationsEnabled,
-                    model.FastingPushNotificationsEnabled,
-                    model.SocialPushNotificationsEnabled,
-                    model.FastingCheckInReminderHours,
-                    model.FastingCheckInFollowUpReminderHours);
-    }
-
     extension(WebPushSubscriptionModel subscription) {
-        public WebPushSubscriptionHttpResponse ToHttpResponse() =>
-                new(
-                    subscription.Endpoint,
-                    subscription.EndpointHost,
-                    subscription.ExpirationTimeUtc,
-                    subscription.Locale,
-                    subscription.UserAgent,
-                    subscription.CreatedAtUtc,
-                    subscription.UpdatedAtUtc);
-    }
-
-    extension(ProfileWebPushSubscriptionModel subscription) {
         public WebPushSubscriptionHttpResponse ToHttpResponse() =>
                 new(
                     subscription.Endpoint,

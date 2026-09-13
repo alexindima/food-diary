@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Commands.DeliverTestNotification;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Results;
 using FoodDiary.Mediator;
 using FoodDiary.Application.Notifications.Services;
@@ -54,9 +53,9 @@ public sealed class DeliverTestNotificationCommandHandlerTests {
     [InlineData(NotificationTypes.FastingWindowStarted)]
     [InlineData("unsupported")]
     public async Task Handle_CreatesAndPersistsExpectedNotification(string type) {
-        Notification? notification = null;
+        NotificationRequest? notification = null;
         INotificationWriter writer = Substitute.For<INotificationWriter>();
-        writer.AddAsync(Arg.Do<Notification>(value => notification = value), sendWebPush: true, Arg.Any<CancellationToken>())
+        writer.AddAsync(Arg.Do<NotificationRequest>(value => notification = value), sendWebPush: true, Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         INotificationClientRefreshService refresh = Substitute.For<INotificationClientRefreshService>();
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();

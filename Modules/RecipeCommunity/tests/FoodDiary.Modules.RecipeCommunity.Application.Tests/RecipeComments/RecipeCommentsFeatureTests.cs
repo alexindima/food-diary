@@ -10,7 +10,6 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComments;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Services;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -28,7 +27,7 @@ public class RecipeCommentsFeatureTests {
         var ownerId = UserId.New();
         var recipe = Recipe.Create(ownerId, "Pasta", 1);
         var commentRepo = new InMemoryRecipeCommentRepository();
-        INotificationWriter notificationWriter = CreateNotificationWriter(out List<Notification> addedNotifications);
+        INotificationWriter notificationWriter = CreateNotificationWriter(out List<NotificationRequest> addedNotifications);
 
         var handler = new CreateRecipeCommentCommandHandler(
             commentRepo,
@@ -49,7 +48,7 @@ public class RecipeCommentsFeatureTests {
     public async Task CreateRecipeComment_OnOwnRecipe_DoesNotCreateNotification() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Pasta", 1);
-        INotificationWriter notificationWriter = CreateNotificationWriter(out List<Notification> addedNotifications);
+        INotificationWriter notificationWriter = CreateNotificationWriter(out List<NotificationRequest> addedNotifications);
 
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
@@ -431,13 +430,13 @@ public class RecipeCommentsFeatureTests {
     private static INotificationWriter CreateNotificationWriter() =>
         CreateNotificationWriter(out _);
 
-    private static INotificationWriter CreateNotificationWriter(out List<Notification> addedNotifications) {
+    private static INotificationWriter CreateNotificationWriter(out List<NotificationRequest> addedNotifications) {
         addedNotifications = [];
-        List<Notification> capturedNotifications = addedNotifications;
+        List<NotificationRequest> capturedNotifications = addedNotifications;
 
         INotificationWriter writer = Substitute.For<INotificationWriter>();
         writer
-            .AddAsync(Arg.Do<Notification>(capturedNotifications.Add), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .AddAsync(Arg.Do<NotificationRequest>(capturedNotifications.Add), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         return writer;
     }

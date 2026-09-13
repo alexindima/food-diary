@@ -166,3 +166,5 @@ authoritative.
 4. Confirm change-sensitive facts in code, tests, manifests, or configuration.
 5. If the wiki conflicts with stronger evidence, follow the stronger evidence
    and mark or update the wiki page.
+
+Reusable HTTP DTO and mapper boundaries are documented in [ADR 0039](../docs/adr/0039-presentation-contracts-and-mappings.md); owner guides live beside the Presentation.Contracts and Presentation.Mappings projects.

@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.JobManager.Services;
@@ -114,7 +113,7 @@ public sealed class ClientTaskReminderJobTests {
     [ExcludeFromCodeCoverage]
     private sealed class NullNotificationWriter : INotificationWriter {
         public Task AddAsync(
-            Notification notification,
+            NotificationRequest request,
             bool sendWebPush = false,
             CancellationToken cancellationToken = default) =>
             Task.CompletedTask;

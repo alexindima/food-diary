@@ -5,14 +5,14 @@ Rules for `FoodDiary.Presentation.Api/`.
 
 ## Role
 - Treat this project as the shared HTTP/SignalR presentation kernel, not as the executable host or a feature container.
-- Keep reusable ASP.NET transport primitives here; feature controllers, DTOs and mappings belong in `Modules/<Feature>/Presentation`.
+- Keep reusable ASP.NET transport primitives here; feature controllers and request mappings belong in `Modules/<Feature>/Presentation`. Reused wire DTOs and pure response transformations belong in owner `Presentation.Contracts` and `Presentation.Mappings` respectively (ADR 0039).
 - Keep composition root, environment wiring, and middleware orchestration in `FoodDiary.Web.Api`.
 
 ## Architecture
 - Keep only genuinely shared or version-neutral endpoints under `Features/`; organize business endpoints feature-first inside their owning module Presentation project.
 - Keep controllers thin: accept transport model, resolve route/query/current-user context, map to application request, call MediatR, map result to HTTP response.
 - Do not put business logic in controllers.
-- Keep feature HTTP request/response mapping in `Modules/<Feature>/Presentation`, not in Application or this shared kernel.
+- Keep request mapping in `Modules/<Feature>/Presentation`; pure reusable response mapping lives in owner `Presentation.Mappings`, not in Application or this shared kernel.
 - Do not reference `FoodDiary.Infrastructure` or `FoodDiary.Web.Api` from this project.
 - Do not reference `FoodDiary.Domain` directly; map through application requests/models.
 - Do not introduce or revive `FoodDiary.Contracts` namespaces/projects.

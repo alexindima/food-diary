@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Modules.Lessons.Contracts.Common;
@@ -13,7 +14,7 @@ public sealed class LessonAdministrationService(
     INutritionLessonReadRepository readRepository,
     INutritionLessonWriteRepository repository)
     : ILessonAdministrationService {
-    public async Task<Result<NutritionLesson>> CreateAsync(
+    public async Task<Result<LessonAdminReadModel>> CreateAsync(
         string title,
         string content,
         string? summary,
@@ -36,10 +37,10 @@ public sealed class LessonAdministrationService(
 
         lesson.SetPublication(isPublished);
         await repository.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
-        return Result.Success(lesson);
+        return Result.Success(ToAdminReadModel(lesson));
     }
 
-    public async Task<Result<NutritionLesson>> UpdateAsync(
+    public async Task<Result<LessonAdminReadModel>> UpdateAsync(
         NutritionLessonId lessonId,
         string title,
         string content,
@@ -53,13 +54,13 @@ public sealed class LessonAdministrationService(
         bool isPublished = true) {
         NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
-            return Result.Failure<NutritionLesson>(LessonErrors.NotFound(lessonId.Value));
+            return Result.Failure<LessonAdminReadModel>(LessonErrors.NotFound(lessonId.Value));
         }
 
         lesson.Update(title, content, summary, locale, category, difficulty, estimatedReadMinutes, sortOrder);
         lesson.SetPublication(isPublished);
         await repository.UpdateAsync(lesson, cancellationToken).ConfigureAwait(false);
-        return Result.Success(lesson);
+        return Result.Success(ToAdminReadModel(lesson));
     }
 
     public async Task<Result> DeleteAsync(NutritionLessonId lessonId, CancellationToken cancellationToken) {
@@ -72,7 +73,7 @@ public sealed class LessonAdministrationService(
         return Result.Success();
     }
 
-    public async Task<Result<IReadOnlyList<NutritionLesson>>> ImportAsync(
+    public async Task<Result<IReadOnlyList<LessonAdminReadModel>>> ImportAsync(
         IReadOnlyList<LessonAdministrationItem> items,
         CancellationToken cancellationToken) {
         var parsedLessons = new List<NutritionLesson>(items.Count);
@@ -91,7 +92,7 @@ public sealed class LessonAdministrationService(
                 parsed.SetPublication(item.IsPublished);
                 parsedLessons.Add(parsed);
             } catch (ArgumentException exception) {
-                return Result.Failure<IReadOnlyList<NutritionLesson>>(
+                return Result.Failure<IReadOnlyList<LessonAdminReadModel>>(
                     Errors.Validation.Invalid($"lessons[{index.ToString(CultureInfo.InvariantCulture)}]", exception.Message));
             }
         }
@@ -122,8 +123,13 @@ public sealed class LessonAdministrationService(
             await repository.AddRangeAsync(newLessons, cancellationToken).ConfigureAwait(false);
         }
 
-        return Result.Success<IReadOnlyList<NutritionLesson>>(importedLessons);
+        return Result.Success<IReadOnlyList<LessonAdminReadModel>>(importedLessons.Select(ToAdminReadModel).ToArray());
     }
+
+    private static LessonAdminReadModel ToAdminReadModel(NutritionLesson lesson) =>
+        new(lesson.Id.Value, lesson.Title, lesson.Content, lesson.Summary, lesson.Locale,
+            lesson.Category.ToString(), lesson.Difficulty.ToString(), lesson.EstimatedReadMinutes,
+            lesson.SortOrder, lesson.CreatedOnUtc, lesson.ModifiedOnUtc, lesson.IsPublished);
 
     private static LessonContentIdentity ToContentIdentity(NutritionLesson lesson) =>
         new(

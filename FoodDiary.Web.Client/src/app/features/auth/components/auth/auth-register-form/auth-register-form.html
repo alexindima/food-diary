@@ -12,7 +12,10 @@
         <span class="fd-ui-stat-value">{{ 'AUTH.GOOGLE.OR' | translate }}</span>
     </div>
 
-    <fd-auth-google-section unavailableKey="AUTH.GOOGLE.UNAVAILABLE" [isReady]="googleReady()">
-        <div #googleRegisterButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.REGISTER_BUTTON' | translate"></div>
-    </fd-auth-google-section>
+    <div class="auth__providers fd-row fd-gap-sm">
+        <fd-auth-google-section unavailableKey="AUTH.GOOGLE.UNAVAILABLE" [isReady]="googleReady()">
+            <div #googleRegisterButton class="auth__google-button" [aria-label]="'AUTH.GOOGLE.REGISTER_BUTTON' | translate"></div>
+        </fd-auth-google-section>
+        <ng-content />
+    </div>
 </form>

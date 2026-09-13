@@ -6,7 +6,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Application.Admin.Internal.Validation;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
@@ -35,7 +35,7 @@ public sealed class UpdateAdminLessonCommandHandler(ILessonAdministrationService
             return RequiredIdParser.ToFailure<AdminLessonModel, NutritionLessonId>(lessonIdResult);
         }
 
-        Result<NutritionLesson> lessonResult = await lessonAdministrationService.UpdateAsync(
+        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.UpdateAsync(
             lessonIdResult.Value,
             command.Title,
             command.Content,

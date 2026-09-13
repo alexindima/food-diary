@@ -16,15 +16,24 @@
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Dashboard.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Dashboard.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.Dashboard.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../../BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj" />
-    <ProjectReference Include="../../Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj" />
+    <ProjectReference Include="../../BodyMetrics/Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../BodyMetrics/Presentation.Mappings/FoodDiary.Modules.BodyMetrics.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Cycles/Presentation.Contracts/FoodDiary.Modules.Cycles.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Cycles/Presentation.Mappings/FoodDiary.Modules.Cycles.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
-    <ProjectReference Include="../../Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj" />
-    <ProjectReference Include="../../Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj" />
-    <ProjectReference Include="../../Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj" />
-    <ProjectReference Include="../../Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj" />
-    <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
+    <ProjectReference Include="../../Fasting/Presentation.Contracts/FoodDiary.Modules.Fasting.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Fasting/Presentation.Mappings/FoodDiary.Modules.Fasting.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Hydration/Presentation.Contracts/FoodDiary.Modules.Hydration.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Hydration/Presentation.Mappings/FoodDiary.Modules.Hydration.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Meals/Presentation.Contracts/FoodDiary.Modules.Meals.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Meals/Presentation.Mappings/FoodDiary.Modules.Meals.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Tdee/Presentation.Contracts/FoodDiary.Modules.Tdee.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Tdee/Presentation.Mappings/FoodDiary.Modules.Tdee.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Presentation.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
+    <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Cycles.Presentation.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

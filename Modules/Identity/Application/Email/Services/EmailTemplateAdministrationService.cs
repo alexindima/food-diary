@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Results;
@@ -6,7 +7,7 @@ namespace FoodDiary.Application.Identity.Email.Services;
 
 public sealed class EmailTemplateAdministrationService(IEmailTemplateWriteRepository repository)
     : IEmailTemplateAdministrationService {
-    public async Task<Result<EmailTemplate>> UpsertAsync(
+    public async Task<Result<EmailTemplateReadModel>> UpsertAsync(
         string key,
         string locale,
         string subject,
@@ -23,6 +24,8 @@ public sealed class EmailTemplateAdministrationService(IEmailTemplateWriteReposi
             isActive,
             cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(template);
+        return Result.Success(new EmailTemplateReadModel(
+            template.Id, template.Key, template.Locale, template.Subject, template.HtmlBody,
+            template.TextBody, template.IsActive, template.CreatedOnUtc, template.ModifiedOnUtc));
     }
 }

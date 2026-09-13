@@ -10,7 +10,11 @@ import { TelegramAuthFacade } from '../../lib/telegram-auth.facade';
     imports: [TranslatePipe, FdUiButtonComponent],
     providers: [TelegramAuthFacade],
     templateUrl: './telegram-entry-button.html',
+    styleUrl: './telegram-entry-button.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[hidden]': '!available()',
+    },
 })
 export class TelegramEntryButtonComponent {
     public readonly selected = output();

@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Dietologist;
@@ -41,7 +40,7 @@ public sealed class ClientTaskDueReminderProcessorTests {
             () => Assert.Equal(0, secondCount),
             () => Assert.Equal(utcNow, task.DueReminderSentAtUtc));
         await notifications.Received(1).AddAsync(
-            Arg.Is<Notification>(notification => notification != null && notification.UserId == task.ClientUserId),
+            Arg.Is<NotificationRequest>(notification => notification != null && notification.UserId == task.ClientUserId),
             sendWebPush: false,
             Arg.Any<CancellationToken>());
     }

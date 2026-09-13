@@ -817,6 +817,20 @@
     },
     {
       "category": "credential",
+      "name": "HasPassword",
+      "type": "bool",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 8
+    },
+    {
+      "category": "credential",
+      "name": "MustChangePassword",
+      "type": "bool",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 42
+    },
+    {
+      "category": "credential",
       "name": "CurrentPassword",
       "type": "string",
       "path": "Modules/Users/Presentation/Features/Users/Requests/ChangePasswordHttpRequest.cs",
@@ -835,20 +849,6 @@
       "type": "string",
       "path": "Modules/Users/Presentation/Features/Users/Requests/SetPasswordHttpRequest.cs",
       "line": 7
-    },
-    {
-      "category": "credential",
-      "name": "HasPassword",
-      "type": "bool",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 8
-    },
-    {
-      "category": "credential",
-      "name": "MustChangePassword",
-      "type": "bool",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 42
     },
     {
       "category": "credential",
@@ -2490,6 +2490,20 @@
     },
     {
       "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "AverageWeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
       "name": "HeightCm",
       "type": "double?",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
@@ -2508,20 +2522,6 @@
       "type": "double",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Requests/UpdateWeightEntryHttpRequest.cs",
       "line": 5
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "AverageWeightKg",
-      "type": "double",
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
-      "line": 6
     },
     {
       "category": "health",
@@ -2924,6 +2924,104 @@
     },
     {
       "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "AverageCycleLength",
+      "type": "int",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "LoggedCycleDays",
+      "type": "int",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "AverageCaloriesOnBleedingDays",
+      "type": "double",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "AverageCaloriesOnNonBleedingCycleDays",
+      "type": "double",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "AverageFiberOnNonBleedingCycleDays",
+      "type": "double",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "HasEnoughNutritionData",
+      "type": "bool",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
       "name": "AverageCycleLength",
       "type": "int?",
       "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
@@ -2934,104 +3032,6 @@
       "name": "AverageCycleLength",
       "type": "int",
       "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "CycleProfileId",
-      "type": "Guid",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "CycleProfileId",
-      "type": "Guid",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "AverageCycleLength",
-      "type": "int",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "CycleProfileId",
-      "type": "Guid",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "LoggedCycleDays",
-      "type": "int",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "AverageCaloriesOnBleedingDays",
-      "type": "double",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "AverageCaloriesOnNonBleedingCycleDays",
-      "type": "double",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "AverageFiberOnNonBleedingCycleDays",
-      "type": "double",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "HasEnoughNutritionData",
-      "type": "bool",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "CompletedCycleCount",
-      "type": "int",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "CompletedCycleCount",
-      "type": "int",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "CycleProfileId",
-      "type": "Guid",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "CycleProfileId",
-      "type": "Guid",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "CycleProfileId",
-      "type": "Guid",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
       "line": 5
     },
     {
@@ -3183,41 +3183,6 @@
     },
     {
       "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "Modules/Dashboard/Application/Models/DailyCaloriesModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "WeeklyCalories",
-      "type": "IReadOnlyList<DailyCaloriesModel>",
-      "path": "Modules/Dashboard/Application/Models/DashboardSnapshotModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "Weight",
-      "type": "DashboardWeightModel",
-      "path": "Modules/Dashboard/Application/Models/DashboardSnapshotModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "Waist",
-      "type": "DashboardWaistModel",
-      "path": "Modules/Dashboard/Application/Models/DashboardSnapshotModel.cs",
-      "line": 20
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "Modules/Dashboard/Application/Models/DashboardStatisticsModel.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
       "path": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
@@ -3243,27 +3208,6 @@
       "type": "UserCalorieSchedule",
       "path": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
       "line": 18
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "Modules/Dashboard/Application/Models/DashboardWaistModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "Modules/Dashboard/Application/Models/DashboardWeightModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "Modules/Dashboard/Application/Models/WeightPointModel.cs",
-      "line": 3
     },
     {
       "category": "health",
@@ -3316,6 +3260,34 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Dashboard/Contracts/Models/DailyCaloriesModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "WeeklyCalories",
+      "type": "IReadOnlyList<DailyCaloriesModel>",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardSnapshotModel.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "DashboardWeightModel",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardSnapshotModel.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "Waist",
+      "type": "DashboardWaistModel",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardSnapshotModel.cs",
+      "line": 20
+    },
+    {
+      "category": "health",
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Dashboard/Contracts/Models/DashboardStatisticsBucketReadModel.cs",
@@ -3323,65 +3295,93 @@
     },
     {
       "category": "health",
-      "name": "Weight",
-      "type": "int",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "WeeklyCalories",
-      "type": "IReadOnlyList<DailyCaloriesHttpResponse>",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "Weight",
-      "type": "DashboardWeightHttpResponse",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "Waist",
-      "type": "DashboardWaistHttpResponse",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardStatisticsModel.cs",
       "line": 4
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "double?",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardWaistModel.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardWeightModel.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
+      "path": "Modules/Dashboard/Contracts/Models/WeightPointModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "WeeklyCalories",
+      "type": "IReadOnlyList<DailyCaloriesHttpResponse>",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "DashboardWeightHttpResponse",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "Waist",
+      "type": "DashboardWaistHttpResponse",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
       "line": 3
     },
     {
@@ -3948,21 +3948,21 @@
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "CaloriesPerBase",
       "type": "double",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
       "line": 13
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
       "line": 10
     },
     {
@@ -4368,64 +4368,64 @@
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/MealAiItemHttpRequest.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
       "line": 16
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
       "line": 17
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
       "line": 23
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
       "line": 24
     },
     {
       "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
       "line": 22
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Presentation/Features/Meals/Requests/MealAiItemHttpRequest.cs",
+      "line": 8
     },
     {
       "category": "health",
@@ -4528,6 +4528,27 @@
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
       "type": "bool?",
       "path": "Modules/Notifications/Presentation/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
       "line": 5
@@ -4544,27 +4565,6 @@
       "name": "FastingCheckInFollowUpReminderHours",
       "type": "int?",
       "path": "Modules/Notifications/Presentation/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
       "line": 8
     },
     {
@@ -5131,21 +5131,21 @@
       "category": "health",
       "name": "EstimatedTdee",
       "type": "double?",
-      "path": "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
+      "path": "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
       "line": 4
     },
     {
       "category": "health",
       "name": "AdaptiveTdee",
       "type": "double?",
-      "path": "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
+      "path": "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "WeightTrendPerWeek",
       "type": "double?",
-      "path": "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
+      "path": "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
       "line": 9
     },
     {
@@ -6305,6 +6305,146 @@
     },
     {
       "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "StartWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "BirthDate",
+      "type": "DateTime?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "string",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 31
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 33
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 34
+    },
+    {
+      "category": "health",
+      "name": "TargetWaistCm",
+      "type": "double",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "StartWaistCm",
+      "type": "double",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "EndWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "TargetWeightKg",
+      "type": "double",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "StartWeightKg",
+      "type": "double",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "EndWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
       "path": "Modules/Users/Presentation/Features/Goals/Requests/UpdateGoalsHttpRequest.cs",
@@ -6442,146 +6582,6 @@
       "type": "bool?",
       "path": "Modules/Users/Presentation/Features/Users/Requests/UpdateUserHttpRequest.cs",
       "line": 20
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "StartWaistCm",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "BirthDate",
-      "type": "DateTime?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "Gender",
-      "type": "string?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "ActivityLevel",
-      "type": "string",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "HydrationGoal",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 26
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 31
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 33
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 34
-    },
-    {
-      "category": "health",
-      "name": "TargetWaistCm",
-      "type": "double",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "StartWaistCm",
-      "type": "double",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "EndWaistCm",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "TargetWeightKg",
-      "type": "double",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "StartWeightKg",
-      "type": "double",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "EndWeightKg",
-      "type": "double?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
-      "line": 7
     },
     {
       "category": "health",
@@ -7574,7 +7574,7 @@
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
       "line": 8
     },
     {
@@ -7840,14 +7840,14 @@
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
       "line": 7
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "bool",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
       "line": 39
     },
     {
@@ -8365,6 +8365,34 @@
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "line": 16
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
       "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/BleedingLogHttpModel.cs",
       "line": 7
     },
@@ -8409,34 +8437,6 @@
       "type": "bool",
       "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",
       "line": 8
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
-      "line": 16
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
-      "line": 11
     },
     {
       "category": "privateContent",
@@ -8706,31 +8706,31 @@
     },
     {
       "category": "privateContent",
-      "name": "CheckInNotes",
-      "type": "string?",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/UpdateFastingCheckInHttpRequest.cs",
-      "line": 8
-    },
-    {
-      "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
       "line": 10
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
       "line": 21
     },
     {
       "category": "privateContent",
       "name": "CheckInNotes",
       "type": "string?",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
       "line": 27
+    },
+    {
+      "category": "privateContent",
+      "name": "CheckInNotes",
+      "type": "string?",
+      "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/UpdateFastingCheckInHttpRequest.cs",
+      "line": 8
     },
     {
       "category": "privateContent",
@@ -8799,21 +8799,21 @@
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
       "line": 11
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
       "line": 12
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
       "line": 9
     },
     {
@@ -9098,6 +9098,62 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ProductImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "RecipeImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "line": 20
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealHttpRequest.cs",
@@ -9151,62 +9207,6 @@
       "type": "Guid?",
       "path": "Modules/Meals/Presentation/Features/Meals/Requests/UpdateMealHttpRequest.cs",
       "line": 8
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
-      "line": 7
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
-      "line": 11
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
-      "line": 7
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
-      "line": 8
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "ProductImageUrl",
-      "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "RecipeImageUrl",
-      "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs",
-      "line": 20
     },
     {
       "category": "privateContent",
@@ -10185,15 +10185,15 @@
       "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Users/Presentation/Features/Users/Requests/UpdateUserHttpRequest.cs",
-      "line": 23
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 36
     },
     {
       "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 36
+      "path": "Modules/Users/Presentation/Features/Users/Requests/UpdateUserHttpRequest.cs",
+      "line": 23
     }
   ],
   "boundaryFiles": [
@@ -10452,6 +10452,20 @@
       "fieldCount": 4
     },
     {
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
       "categories": [
         "health"
@@ -10473,21 +10487,81 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 5
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
       "categories": [
         "health"
       ],
@@ -10530,123 +10604,49 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
-      "categories": [
-        "health",
-        "privateContent"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
-      "categories": [
-        "health",
-        "privateContent"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
-      "categories": [
-        "health",
-        "privateContent"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 5
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
-      "categories": [
-        "health",
-        "privateContent"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
       "categories": [
         "health"
       ],
@@ -10784,6 +10784,20 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
       "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/UpdateFastingCheckInHttpRequest.cs",
       "categories": [
         "privateContent"
@@ -10791,28 +10805,14 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
-      "categories": [
-        "privateContent"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
-      "categories": [
-        "privateContent"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10820,7 +10820,7 @@
       "fieldCount": 3
     },
     {
-      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -11034,6 +11034,36 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 8
+    },
+    {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 4
+    },
+    {
       "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealHttpRequest.cs",
       "categories": [
         "privateContent"
@@ -11062,34 +11092,18 @@
       "fieldCount": 3
     },
     {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
       "categories": [
         "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
-      "categories": [
-        "privateContent"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
       "categories": [
-        "health",
-        "privateContent"
+        "identity"
       ],
-      "fieldCount": 8
-    },
-    {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs",
-      "categories": [
-        "health",
-        "privateContent"
-      ],
-      "fieldCount": 4
+      "fieldCount": 1
     },
     {
       "path": "Modules/Notifications/Presentation/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
@@ -11097,20 +11111,6 @@
         "health"
       ],
       "fieldCount": 3
-    },
-    {
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 3
-    },
-    {
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
     },
     {
       "path": "Modules/OpenFoodFacts/Presentation/Features/OpenFoodFacts/Responses/OpenFoodFactsProductHttpResponse.cs",
@@ -11226,7 +11226,7 @@
       "fieldCount": 3
     },
     {
-      "path": "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
+      "path": "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
       "categories": [
         "health"
       ],
@@ -11245,6 +11245,44 @@
         "identity"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "categories": [
+        "credential",
+        "health",
+        "identity",
+        "privateContent"
+      ],
+      "fieldCount": 16
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 3
     },
     {
       "path": "Modules/Users/Presentation/Features/Goals/Requests/UpdateGoalsHttpRequest.cs",
@@ -11302,44 +11340,6 @@
         "financial"
       ],
       "fieldCount": 1
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "categories": [
-        "credential",
-        "health",
-        "identity",
-        "privateContent"
-      ],
-      "fieldCount": 16
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 3
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 3
     },
     {
       "path": "Modules/Wearables/Presentation/Features/Wearables/Responses/WearableDailySummaryHttpResponse.cs",

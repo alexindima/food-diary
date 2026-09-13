@@ -46,7 +46,7 @@ public static class ProductHttpResponseMappings {
             return new ProductOverviewHttpResponse(
                 model.RecentItems.ToHttpResponseList(ToHttpResponse),
                 model.AllProducts.ToHttpResponse(),
-                model.FavoriteItems.Select(FavoriteProductHttpMappings.ToHttpResponse).ToList(),
+                model.FavoriteItems.Select(FavoriteProductHttpResponseMappings.ToHttpResponse).ToList(),
                 model.FavoriteTotalCount
             );
         }

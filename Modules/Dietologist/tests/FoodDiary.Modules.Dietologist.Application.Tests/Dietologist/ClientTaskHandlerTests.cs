@@ -11,7 +11,6 @@ using FoodDiary.Application.Dietologist.Queries.GetClientTasksForDietologist;
 using FoodDiary.Application.Dietologist.Queries.GetMyClientTasks;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -58,7 +57,7 @@ public sealed class ClientTaskHandlerTests {
             Arg.Is<ClientTask>(task => task != null && task.ClientUserId == clientId),
             Arg.Any<CancellationToken>());
         await notifications.Received(1).AddAsync(
-            Arg.Is<Notification>(notification => notification != null && notification.UserId == clientId),
+            Arg.Is<NotificationRequest>(notification => notification != null && notification.UserId == clientId),
             false,
             Arg.Any<CancellationToken>());
     }
@@ -154,7 +153,7 @@ public sealed class ClientTaskHandlerTests {
             () => Assert.Equal(ClientTaskStatus.Cancelled, first.Value.Status),
             () => Assert.False(first.Value.IsOverdue));
         await notifications.Received(1).AddAsync(
-            Arg.Is<Notification>(notification => notification != null && notification.UserId == clientId),
+            Arg.Is<NotificationRequest>(notification => notification != null && notification.UserId == clientId),
             false,
             Arg.Any<CancellationToken>());
     }
@@ -241,7 +240,7 @@ public sealed class ClientTaskHandlerTests {
             () => Assert.Equal(ClientTaskStatus.Open, reopened.Value.Status),
             () => Assert.True(reopened.Value.IsOverdue));
         await notifications.Received(2).AddAsync(
-            Arg.Is<Notification>(notification => notification != null && notification.UserId == dietologistId),
+            Arg.Is<NotificationRequest>(notification => notification != null && notification.UserId == dietologistId),
             false,
             Arg.Any<CancellationToken>());
     }

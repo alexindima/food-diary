@@ -248,7 +248,19 @@
           "FoodDiary.Modules.Hydration.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Hydration.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.hydration.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.hydration.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Presentation.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.identity.application.abstractions": {

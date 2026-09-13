@@ -403,3 +403,26 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Gamification scalar domain contracts: `Modules/Gamification/Domain.Contracts/AGENTS.md`
 
 - Cycles scalar domain contracts: `Modules/Cycles/Domain.Contracts/AGENTS.md`
+
+## Reusable Presentation Layers
+
+- BodyMetrics Presentation.Contracts: `Modules/BodyMetrics/Presentation.Contracts/AGENTS.md`
+- BodyMetrics Presentation.Mappings: `Modules/BodyMetrics/Presentation.Mappings/AGENTS.md`
+- Cycles Presentation.Contracts: `Modules/Cycles/Presentation.Contracts/AGENTS.md`
+- Cycles Presentation.Mappings: `Modules/Cycles/Presentation.Mappings/AGENTS.md`
+- Dashboard Presentation.Contracts: `Modules/Dashboard/Presentation.Contracts/AGENTS.md`
+- Dashboard Presentation.Mappings: `Modules/Dashboard/Presentation.Mappings/AGENTS.md`
+- Fasting Presentation.Contracts: `Modules/Fasting/Presentation.Contracts/AGENTS.md`
+- Fasting Presentation.Mappings: `Modules/Fasting/Presentation.Mappings/AGENTS.md`
+- Favorites Presentation.Contracts: `Modules/Favorites/Presentation.Contracts/AGENTS.md`
+- Favorites Presentation.Mappings: `Modules/Favorites/Presentation.Mappings/AGENTS.md`
+- Hydration Presentation.Contracts: `Modules/Hydration/Presentation.Contracts/AGENTS.md`
+- Hydration Presentation.Mappings: `Modules/Hydration/Presentation.Mappings/AGENTS.md`
+- Meals Presentation.Contracts: `Modules/Meals/Presentation.Contracts/AGENTS.md`
+- Meals Presentation.Mappings: `Modules/Meals/Presentation.Mappings/AGENTS.md`
+- Notifications Presentation.Contracts: `Modules/Notifications/Presentation.Contracts/AGENTS.md`
+- Notifications Presentation.Mappings: `Modules/Notifications/Presentation.Mappings/AGENTS.md`
+- Tdee Presentation.Contracts: `Modules/Tdee/Presentation.Contracts/AGENTS.md`
+- Tdee Presentation.Mappings: `Modules/Tdee/Presentation.Mappings/AGENTS.md`
+- Users Presentation.Contracts: `Modules/Users/Presentation.Contracts/AGENTS.md`
+- Users Presentation.Mappings: `Modules/Users/Presentation.Mappings/AGENTS.md`

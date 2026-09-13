@@ -51,7 +51,7 @@ public static class RecipeHttpResponseMappings {
             return new RecipeOverviewHttpResponse(
                 model.RecentItems.ToHttpResponseList(ToHttpResponse),
                 model.AllRecipes.ToHttpResponse(),
-                model.FavoriteItems.Select(FavoriteRecipeHttpMappings.ToHttpResponse).ToList(),
+                model.FavoriteItems.Select(FavoriteRecipeHttpResponseMappings.ToHttpResponse).ToList(),
                 model.FavoriteTotalCount
             );
         }

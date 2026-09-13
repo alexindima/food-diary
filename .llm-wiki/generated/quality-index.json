@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5293,
+    "productionFiles": 5303,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -8010,11 +8010,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
-      "nonBlankLines": 27,
+      "nonBlankLines": 31,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.54
+      "structuralRiskScore": 3.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/dialogs/auth-dialog/auth-dialog.ts",
@@ -14570,19 +14570,19 @@
     },
     {
       "path": "Modules/Admin/Application/Mappings/AdminEmailTemplateMappings.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Admin/Application/Mappings/AdminLessonMappings.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Admin/Application/Mappings/AdminUserMappings.cs",
@@ -18953,6 +18953,54 @@
       "structuralRiskScore": 20.54
     },
     {
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/BodyMetrics/Presentation.Mappings/Features/WaistEntries/Mappings/WaistEntrySharedHttpResponseMappings.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/BodyMetrics/Presentation.Mappings/Features/WeightEntries/Mappings/WeightEntrySharedHttpResponseMappings.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
       "path": "Modules/BodyMetrics/Presentation/Extensions/BodyMetricsPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -18978,11 +19026,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Requests/CreateWaistEntryHttpRequest.cs",
@@ -19025,22 +19073,6 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -19074,11 +19106,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Requests/CreateWeightEntryHttpRequest.cs",
@@ -19119,22 +19151,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
-    },
-    {
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
@@ -20305,6 +20321,102 @@
       "structuralRiskScore": 0.3
     },
     {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "nonBlankLines": 168,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.86
+    },
+    {
       "path": "Modules/Cycles/Presentation/Extensions/CyclesPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -20335,14 +20447,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "nonBlankLines": 169,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.88
     },
     {
       "path": "Modules/Cycles/Presentation/Features/Cycles/MenstrualEpisodesController.cs",
@@ -20431,94 +20535,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleConsentHttpResponse.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/DailyAdvices/Application/Abstractions/Common/DailyAdviceErrors.cs",
@@ -20833,76 +20849,12 @@
       "structuralRiskScore": 1.72
     },
     {
-      "path": "Modules/Dashboard/Application/Models/DailyCaloriesModel.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Dashboard/Application/Models/DashboardMealsModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Dashboard/Application/Models/DashboardSnapshotModel.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
-    },
-    {
-      "path": "Modules/Dashboard/Application/Models/DashboardStatisticsModel.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
       "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.38
-    },
-    {
-      "path": "Modules/Dashboard/Application/Models/DashboardWaistModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Dashboard/Application/Models/DashboardWeightModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Dashboard/Application/Models/WaistPointModel.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Dashboard/Application/Models/WeightPointModel.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
@@ -20927,14 +20879,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.86
-    },
-    {
-      "path": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
@@ -21073,12 +21017,84 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "Modules/Dashboard/Contracts/Models/DailyCaloriesModel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Models/DashboardMealsModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Models/DashboardSnapshotModel.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
       "path": "Modules/Dashboard/Contracts/Models/DashboardStatisticsBucketReadModel.cs",
       "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Models/DashboardStatisticsModel.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Models/DashboardWaistModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Models/DashboardWeightModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Models/WaistPointModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Models/WeightPointModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
@@ -21121,6 +21137,86 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.54
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WaistPointHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "nonBlankLines": 97,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.94
+    },
+    {
       "path": "Modules/Dashboard/Presentation/Extensions/DashboardPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -21145,14 +21241,6 @@
       "structuralRiskScore": 0.58
     },
     {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
-      "nonBlankLines": 98,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.96
-    },
-    {
       "path": "Modules/Dashboard/Presentation/Features/Dashboard/Requests/GetDailyAdviceHttpQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -21167,78 +21255,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WaistPointHttpResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistErrors.cs",
@@ -21706,11 +21722,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-      "nonBlankLines": 114,
+      "nonBlankLines": 113,
       "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.28
+      "structuralRiskScore": 16.26
     },
     {
       "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
@@ -21810,11 +21826,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
-      "nonBlankLines": 100,
+      "nonBlankLines": 99,
       "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13
+      "structuralRiskScore": 12.98
     },
     {
       "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandValidator.cs",
@@ -21938,11 +21954,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Common/DietologistInvitationClientNotifier.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 52,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.06
+      "structuralRiskScore": 1.04
     },
     {
       "path": "Modules/Dietologist/Application/Common/DietologistInvitationTokenGenerator.cs",
@@ -21954,11 +21970,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Common/DietologistNotificationFactory.cs",
-      "nonBlankLines": 64,
+      "nonBlankLines": 63,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.78
+      "structuralRiskScore": 2.76
     },
     {
       "path": "Modules/Dietologist/Application/Common/DietologistNotificationPostCommitActions.cs",
@@ -22066,11 +22082,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 38,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.78
+      "structuralRiskScore": 5.76
     },
     {
       "path": "Modules/Dietologist/Application/Mappings/DietologistMappings.cs",
@@ -24482,19 +24498,19 @@
     },
     {
       "path": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 20,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.92
+      "structuralRiskScore": 1.9
     },
     {
       "path": "Modules/Fasting/Application/Services/FastingNotificationFactory.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 27,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.06
+      "structuralRiskScore": 5.04
     },
     {
       "path": "Modules/Fasting/Application/Services/FastingNotificationPushDispatcher.cs",
@@ -24913,6 +24929,30 @@
       "structuralRiskScore": 4.56
     },
     {
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.54
+    },
+    {
+      "path": "Modules/Fasting/Presentation.Mappings/Features/Fasting/Mappings/FastingSessionHttpResponseMappings.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
       "path": "Modules/Fasting/Presentation/Extensions/FastingPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -24954,11 +24994,11 @@
     },
     {
       "path": "Modules/Fasting/Presentation/Features/Fasting/Mappings/FastingHttpResponseMappings.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.04
+      "structuralRiskScore": 0.8
     },
     {
       "path": "Modules/Fasting/Presentation/Features/Fasting/Requests/ExtendActiveFastingHttpRequest.cs",
@@ -25001,14 +25041,6 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
       "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingInsightsHttpResponse.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -25031,14 +25063,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
     },
     {
       "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingStatsHttpResponse.cs",
@@ -25777,6 +25801,46 @@
       "structuralRiskScore": 41.3
     },
     {
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteProducts/Mappings/FavoriteProductHttpResponseMappings.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpResponseMappings.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
       "path": "Modules/Favorites/Presentation/Extensions/FavoritesPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -25809,14 +25873,6 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/FavoriteProductsController.cs",
       "nonBlankLines": 38,
       "decisionPoints": 0,
@@ -25826,11 +25882,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.04
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Requests/AddFavoriteProductHttpRequest.cs",
@@ -25849,14 +25905,6 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/FavoriteRecipesController.cs",
       "nonBlankLines": 32,
       "decisionPoints": 0,
@@ -25866,11 +25914,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.72
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/AddFavoriteRecipeHttpRequest.cs",
@@ -25879,14 +25927,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
@@ -26689,6 +26729,30 @@
       "structuralRiskScore": 0.22
     },
     {
+      "path": "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Hydration/Presentation.Mappings/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
       "path": "Modules/Hydration/Presentation/Extensions/HydrationPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -26719,14 +26783,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.28
-    },
-    {
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationOperationHttpMappings.cs",
@@ -26767,22 +26823,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
-    },
-    {
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationDailyHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationOperationHttpResponse.cs",
@@ -27482,11 +27522,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-      "nonBlankLines": 71,
+      "nonBlankLines": 70,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.42
+      "structuralRiskScore": 9.4
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
@@ -28114,11 +28154,11 @@
     },
     {
       "path": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
@@ -29562,11 +29602,11 @@
     },
     {
       "path": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
-      "nonBlankLines": 133,
+      "nonBlankLines": 138,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.66
+      "structuralRiskScore": 14.76
     },
     {
       "path": "Modules/Lessons/Application/Services/LessonReadService.cs",
@@ -32089,6 +32129,46 @@
       "structuralRiskScore": 0.22
     },
     {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.58
+    },
+    {
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Meals/Presentation.Mappings/Features/Meals/Mappings/MealSharedHttpResponseMappings.cs",
+      "nonBlankLines": 107,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.14
+    },
+    {
       "path": "Modules/Meals/Presentation/Extensions/MealsPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -32114,11 +32194,11 @@
     },
     {
       "path": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
-      "nonBlankLines": 138,
+      "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.76
+      "structuralRiskScore": 0.72
     },
     {
       "path": "Modules/Meals/Presentation/Features/Meals/Mappings/RecognizedMealCreationHttpMappings.cs",
@@ -32223,38 +32303,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.36
-    },
-    {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
-    },
-    {
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
     },
     {
       "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealOverviewHttpResponse.cs",
@@ -32458,11 +32506,11 @@
     },
     {
       "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Notifications/Application/Abstractions/Common/ITestNotificationDeliveryDispatcher.cs",
@@ -32569,6 +32617,14 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
       "path": "Modules/Notifications/Application/Abstractions/Common/NotificationTargetUrlResolver.cs",
       "nonBlankLines": 37,
       "decisionPoints": 3,
@@ -32666,11 +32722,11 @@
     },
     {
       "path": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 37,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
+      "structuralRiskScore": 5.74
     },
     {
       "path": "Modules/Notifications/Application/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
@@ -33066,11 +33122,11 @@
     },
     {
       "path": "Modules/Notifications/Application/Services/NotificationWriter.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 17,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.82
+      "structuralRiskScore": 1.84
     },
     {
       "path": "Modules/Notifications/Application/Services/TestNotificationDeliveryDispatcher.cs",
@@ -33289,6 +33345,30 @@
       "structuralRiskScore": 93.82
     },
     {
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Notifications/Presentation.Mappings/Features/Notifications/Mappings/NotificationProfileHttpResponseMappings.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.5
+    },
+    {
       "path": "Modules/Notifications/Presentation/Extensions/NotificationsPresentationApplicationBuilderExtensions.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
@@ -33306,11 +33386,11 @@
     },
     {
       "path": "Modules/Notifications/Presentation/Features/Notifications/Mappings/NotificationHttpMappings.cs",
-      "nonBlankLines": 108,
+      "nonBlankLines": 87,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
+      "structuralRiskScore": 1.74
     },
     {
       "path": "Modules/Notifications/Presentation/Features/Notifications/NotificationPushController.cs",
@@ -33377,14 +33457,6 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
       "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/ScheduledNotificationHttpResponse.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -33407,14 +33479,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Notifications/Presentation/Hubs/NotificationHub.cs",
@@ -34730,11 +34794,11 @@
     },
     {
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-      "nonBlankLines": 67,
+      "nonBlankLines": 66,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.84
+      "structuralRiskScore": 7.82
     },
     {
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandValidator.cs",
@@ -36281,6 +36345,22 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Tdee/Presentation.Mappings/Features/Tdee/Mappings/TdeeHttpResponseMappings.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
       "path": "Modules/Tdee/Presentation/Extensions/TdeePresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -36290,19 +36370,11 @@
     },
     {
       "path": "Modules/Tdee/Presentation/Features/Tdee/Mappings/TdeeHttpMappings.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
-    },
-    {
-      "path": "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Tdee/Presentation/Features/Tdee/TdeeController.cs",
@@ -38697,6 +38769,62 @@
       "structuralRiskScore": 0.82
     },
     {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Models/DashboardLayoutHttpModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.88
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Presentation.Mappings/Features/Users/Mappings/UserSharedHttpResponseMappings.cs",
+      "nonBlankLines": 73,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.46
+    },
+    {
       "path": "Modules/Users/Presentation/Extensions/UsersPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -38754,19 +38882,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
-      "nonBlankLines": 103,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.06
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Models/DashboardLayoutHttpModel.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.7
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/Requests/ChangePasswordHttpRequest.cs",
@@ -38823,46 +38943,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.88
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Users/Presentation/Features/Users/UserAiConsentController.cs",
@@ -39746,11 +39826,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
-      "nonBlankLines": 72,
+      "nonBlankLines": 71,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.94
+      "structuralRiskScore": 17.92
     },
     {
       "path": "Modules/WeeklyGoals/Contracts/Common/IWeeklyGoalReadService.cs",
@@ -43696,7 +43776,7 @@
       "name": "CreateRecipeCommentCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-      "line": 14,
+      "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
@@ -43723,7 +43803,7 @@
       "name": "CreateRecommendationCommentCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-      "line": 16,
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
@@ -44152,7 +44232,7 @@
       "name": "GoogleLoginCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-      "line": 12,
+      "line": 11,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs",
@@ -44202,7 +44282,7 @@
       "name": "InviteDietologistCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
-      "line": 18,
+      "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.InviteCommandTests.cs",
@@ -46727,7 +46807,7 @@
       "name": "RecommendationCreatedEventHandler",
       "role": "Handler",
       "path": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
-      "line": 10,
+      "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs"

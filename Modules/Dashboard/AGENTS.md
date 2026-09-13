@@ -6,7 +6,7 @@ Keep all SQL/LINQ batching, tenant predicates, UTC/date semantics, snapshot sect
 fallback paths and cancellation unchanged during extraction.
 
 Application preserves FoodDiary.Application.Dashboard assembly and CLR namespaces.
-Contracts contains only the stable statistics read service and bucket model;
+Contracts contains the stable statistics service, bucket model, public snapshot/result models and client-dashboard query;
 Statistics and WeeklyCheckIn reference it directly; nutrition calculations use Meals contracts.
 Central Application.Abstractions does not re-export this project. Never reference Dashboard
 Application from Statistics; use its stable Contracts seam.

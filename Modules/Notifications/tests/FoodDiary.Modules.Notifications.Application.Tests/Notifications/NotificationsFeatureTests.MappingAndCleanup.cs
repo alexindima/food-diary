@@ -100,11 +100,12 @@ public partial class NotificationsFeatureTests {
         var repository = new InMemoryNotificationRepository();
         var outbox = new RecordingNotificationWebPushOutbox();
         var writer = new NotificationWriter(repository, outbox);
-        var notification = Notification.Create(UserId.New(), "info", "{}");
+        var request = new NotificationRequest(UserId.New(), "info", "{}");
 
-        await writer.AddAsync(notification, sendWebPush: true, CancellationToken.None);
+        await writer.AddAsync(request, sendWebPush: true, CancellationToken.None);
 
-        Assert.Same(notification, Assert.Single(repository.Notifications));
+        Notification notification = Assert.Single(repository.Notifications);
+        Assert.Equal(request.UserId, notification.UserId);
         Assert.Equal(notification.Id, Assert.Single(outbox.NotificationIds));
     }
 }

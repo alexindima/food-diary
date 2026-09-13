@@ -61,17 +61,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "b7e6fef0e857346fa08bce1991b32ed524f3d8bfffe668c994728bf06c501c1b"
+          "sha256": "8b7aff516d70b0629c1398c9c4b87c5a32590381d11c2ab7c9e321a814fb7b73"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
+          "sha256": "589138e41fdd5558e3f60cd75e8dab7702b7e3ac66976be722fa6e7e6aa69512"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:48.5720308Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:22.0110716Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -168,17 +168,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
+          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
         },
         {
           "path": "docs/adr/README.md",
-          "sha256": "881c36fec16a735d90853e241ef0f9d8a6ccbf7df677fb5e8c25ac3663a2c907"
+          "sha256": "08826a4d05b9e60e9e80b4c182c3a48b24c5c844aedb291383b1b2c32a7c8113"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:49.1174413Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:22.2481052Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -255,17 +255,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "2abfa265838b103f35ab852607b94be19339845c0bacb0a2261fca3068a555f2"
+          "sha256": "0f84823847a5ace934e67d997211055276d53702b96a459fc5d79016f96d0e29"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e559540801ff0fb0ead93ad8de2d0e1f9207ad390a48a3240b22bbf15ea29487"
+          "sha256": "7ffd66ec550a2a2418194fd218bd61903feef542bf389a2d02517031cf066c49"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed quality and architecture workflow guidance against the exact dependency matrix: 16 foreign controller references removed, 20 narrow projects added, graph acyclic and all 1296 architecture tests pass. Static test references remain navigation evidence rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:49.3119089Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:22.5283363Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -274,13 +274,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "9b771656f021c52c71a9713318ac93c06ee7af003855111dc356b42ffcf2a893"
+          "sha256": "ec8d03287d4a6f02ca64d4d103416eeb620ea6f321a3aa1c608b14719626df6e"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed contract workflows against relocated DTOs and pure mappings: CLR names and wire shapes are preserved, all 15 Swagger checks pass. Frontend index changes do not alter the documented review procedure; frontend runtime verification is outside this refactoring.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:49.8218820Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:23.1066230Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -500,13 +500,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "881c36fec16a735d90853e241ef0f9d8a6ccbf7df677fb5e8c25ac3663a2c907"
+          "sha256": "08826a4d05b9e60e9e80b4c182c3a48b24c5c844aedb291383b1b2c32a7c8113"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:50.0844739Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:23.6516672Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -819,13 +819,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4bc1ef877d6d753c4a3900e0371a2c6f3a17eae2b7ade912e091f761b07c520f"
+          "sha256": "99e9c848d916327a5ff98afca443fadb4462482bc2423e21f0b74f9112b453c3"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed workflow guidance against pure DTO and mapper relocation: no new provider sharing, persistence, logging or authorization behavior is introduced. Regenerated inventories retain the same evidence semantics and do not constitute a security verdict.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:50.7292302Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:24.2263244Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -864,13 +864,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6ed33e8beee2eedd7fa29acb142d1233a56f4fd82936b17cfa4db6f13903fb9c"
+          "sha256": "921b9a775d4ca6077a71bfe375eaaee550d6b7472582cc2d0efc4c8f00e5f01c"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed quality and architecture workflow guidance against the exact dependency matrix: 16 foreign controller references removed, 20 narrow projects added, graph acyclic and all 1296 architecture tests pass. Static test references remain navigation evidence rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:51.1608642Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:24.6341678Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -939,13 +939,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "007566ed8d81f73cb9af74223583137100bf3be0d0182e91cf7d238bd5b39cf0"
+          "sha256": "69a743132c68e9b04181e689d7772583259c6a69d6e449760a209934530c8dc8"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:51.5053526Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:25.4977953Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -954,21 +954,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6ed33e8beee2eedd7fa29acb142d1233a56f4fd82936b17cfa4db6f13903fb9c"
+          "sha256": "921b9a775d4ca6077a71bfe375eaaee550d6b7472582cc2d0efc4c8f00e5f01c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "007566ed8d81f73cb9af74223583137100bf3be0d0182e91cf7d238bd5b39cf0"
+          "sha256": "69a743132c68e9b04181e689d7772583259c6a69d6e449760a209934530c8dc8"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4bc1ef877d6d753c4a3900e0371a2c6f3a17eae2b7ade912e091f761b07c520f"
+          "sha256": "99e9c848d916327a5ff98afca443fadb4462482bc2423e21f0b74f9112b453c3"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed workflow guidance against pure DTO and mapper relocation: no new provider sharing, persistence, logging or authorization behavior is introduced. Regenerated inventories retain the same evidence semantics and do not constitute a security verdict.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:52.0462095Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:25.8955546Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1101,17 +1101,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "623ddf15036311763520ea40dcefc667bbe4d1c0bbb7c0931e922627e3f022a9"
+          "sha256": "fec60092fdbda4386337f4fc802241eb375ebb60348af4d9a4561b2417b8d453"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "3647c12ef2e1dec32d64554af93931116a0576b1aa3f3f7af4f808cf04f147f0"
+          "sha256": "161222bc8e607376850e9b16778027dd16dc01eea3a095a1addc566bbdff6c67"
         }
       ],
-      "reason": "Reviewed current workflows and regenerated source indexes. This change adds no frontend, HTTP shape, provider, worker, privacy or authentication behavior; 80 HTTP/Swagger cases passed. Their tracing and risk-review instructions remain applicable unchanged.",
+      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T15:48:33.2772474Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:26.2337454Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1150,13 +1150,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
+          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:52.2785487Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:23.3785873Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1199,13 +1199,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "623ddf15036311763520ea40dcefc667bbe4d1c0bbb7c0931e922627e3f022a9"
+          "sha256": "fec60092fdbda4386337f4fc802241eb375ebb60348af4d9a4561b2417b8d453"
         }
       ],
-      "reason": "Reviewed current workflows and regenerated source indexes. This change adds no frontend, HTTP shape, provider, worker, privacy or authentication behavior; 80 HTTP/Swagger cases passed. Their tracing and risk-review instructions remain applicable unchanged.",
+      "reason": "Reviewed contract workflows against relocated DTOs and pure mappings: CLR names and wire shapes are preserved, all 15 Swagger checks pass. Frontend index changes do not alter the documented review procedure; frontend runtime verification is outside this refactoring.",
       "baseRef": "HEAD",
-      "gitHead": "1e0c25934e21b82cd0ff042fa55b839e72d81661",
-      "reviewedAtUtc": "2026-09-12T15:48:33.7236833Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:24.0017708Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1214,17 +1214,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0912d5605ebb8e6b18f750fbaefcc43ee42788e65c0ccb3b83c00156882eb413"
+          "sha256": "840c424e0543920f9798ee9e54883fb84e29658417c25fa8626cef35dc5549a5"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
+          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:52.5926109Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:24.9505128Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1233,13 +1233,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
+          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed quality and architecture workflow guidance against the exact dependency matrix: 16 foreign controller references removed, 20 narrow projects added, graph acyclic and all 1296 architecture tests pass. Static test references remain navigation evidence rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:52.8391541Z"
+      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
+      "reviewedAtUtc": "2026-09-13T00:56:25.2349647Z"
     }
   ]
 }

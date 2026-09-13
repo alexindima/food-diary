@@ -892,9 +892,10 @@ DietologistLastName: null,
         INotificationRepository notificationRepository,
         IWebPushNotificationSender webPushNotificationSender) : INotificationWriter {
         public async Task AddAsync(
-            Notification notification,
+            NotificationRequest request,
             bool sendWebPush = false,
             CancellationToken cancellationToken = default) {
+            var notification = Notification.Create(request.UserId, request.Type, request.PayloadJson, request.ReferenceId);
             await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
 
             if (sendWebPush) {

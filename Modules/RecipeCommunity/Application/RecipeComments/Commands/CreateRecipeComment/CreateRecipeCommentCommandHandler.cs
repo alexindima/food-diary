@@ -8,7 +8,6 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
 
@@ -54,7 +53,7 @@ public sealed class CreateRecipeCommentCommandHandler(
                 IsOwnedByCurrentUser: true));
         }
 
-        var notification = Notification.Create(
+        var notification = new NotificationRequest(
             recipe.UserId,
             NotificationTypes.NewComment,
             NotificationPayloads.Empty(),

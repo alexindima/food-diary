@@ -117,6 +117,17 @@
       "fooddiary.modules.cycles.domain.contracts": {
         "type": "Project"
       },
+      "fooddiary.modules.cycles.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.cycles.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Cycles.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Presentation.Contracts": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.export.application.abstractions": {
         "type": "Project",
         "dependencies": {

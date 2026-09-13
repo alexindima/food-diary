@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1208,
+    "contracts": 1209,
     "ambiguousContracts": 0,
-    "consumerEdges": 8522,
-    "productionConsumerEdges": 5101,
-    "testConsumerEdges": 3421,
-    "consumedContracts": 1208,
+    "consumerEdges": 8557,
+    "productionConsumerEdges": 5118,
+    "testConsumerEdges": 3439,
+    "consumedContracts": 1209,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1586,7 +1586,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2929,7 +2929,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2946,7 +2946,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2963,7 +2963,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2980,7 +2980,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2997,7 +2997,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3014,7 +3014,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3031,7 +3031,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3048,7 +3048,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3065,7 +3065,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3082,7 +3082,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3133,7 +3133,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3150,7 +3150,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3184,7 +3184,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3201,7 +3201,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3218,7 +3218,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4136,7 +4136,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingCheckInHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4204,7 +4204,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4289,7 +4289,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4323,7 +4323,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4340,7 +4340,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4357,7 +4357,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -5615,7 +5615,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7536,7 +7536,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7553,7 +7553,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16721,7 +16721,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16755,7 +16755,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16772,7 +16772,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16806,7 +16806,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16942,7 +16942,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16993,7 +16993,24 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -18710,7 +18727,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
+        "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20087,7 +20104,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20104,7 +20121,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20121,7 +20138,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20223,7 +20240,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20240,7 +20257,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20257,7 +20274,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20291,7 +20308,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WaistPointHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WaistPointHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20376,7 +20393,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20461,7 +20478,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20478,7 +20495,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20495,7 +20512,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20529,7 +20546,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WeightPointHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -25811,10 +25828,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -25824,10 +25841,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -25837,10 +25854,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -25850,7 +25867,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -25863,7 +25880,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/HttpResponseContractCoverageTests.cs",
@@ -31284,23 +31301,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "CycleConsentHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31310,7 +31314,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CycleConsentHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -31323,10 +31340,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31336,10 +31353,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31349,7 +31366,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -31362,7 +31379,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CycleHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/CycleLogsController.cs",
@@ -31375,7 +31405,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/CyclesController.cs",
@@ -31388,20 +31418,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "CycleHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/MenstrualEpisodesController.cs",
@@ -31414,10 +31431,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31427,7 +31444,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -31440,7 +31457,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
@@ -31453,7 +31470,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CycleLogDayHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/CycleLogsController.cs",
@@ -31466,20 +31496,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "CycleLogDayHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -31492,7 +31509,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
@@ -31505,7 +31522,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CycleNutritionSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/CyclesController.cs",
@@ -31518,20 +31548,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "CycleNutritionSummaryHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -31544,7 +31561,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
@@ -31557,7 +31574,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/HttpResponseContractCoverageTests.cs",
@@ -31570,23 +31587,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "CyclePredictionRevisionHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31596,7 +31600,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CyclePredictionRevisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -31609,12 +31626,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "CyclePredictionsHttpResponse",
@@ -31622,10 +31639,23 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CycleSymptomEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31635,10 +31665,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31648,10 +31678,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31661,20 +31691,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "CycleSymptomEntryHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -31687,7 +31704,33 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DailyAdviceHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DailyAdviceHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/DashboardController.cs",
@@ -31700,33 +31743,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "DailyAdviceHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "DailyAdviceHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardControllerTests.cs",
@@ -31739,7 +31756,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardHttpMappingsTests.cs",
@@ -31752,23 +31769,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "DailyCaloriesHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -31778,7 +31782,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DailyCaloriesHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardHttpMappingsTests.cs",
@@ -31882,12 +31899,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "DashboardMealsHttpResponse",
@@ -31895,12 +31912,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "DashboardSnapshotHttpResponse",
@@ -31908,7 +31925,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DashboardSnapshotHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/DashboardController.cs",
@@ -31921,20 +31951,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "DashboardSnapshotHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Presentation/Features/Dietologist/DietologistClientsController.cs",
@@ -31947,7 +31964,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardControllerTests.cs",
@@ -31960,7 +31977,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardHttpMappingsTests.cs",
@@ -31973,7 +31990,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
@@ -32116,12 +32133,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "DashboardStatisticsHttpResponse",
@@ -32129,23 +32146,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "DashboardWaistHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -32155,23 +32159,23 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
     {
-      "contract": "DashboardWeightHttpResponse",
+      "contract": "DashboardWaistHttpResponse",
       "roles": [
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -32181,12 +32185,25 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "DashboardWeightHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
     },
     {
       "contract": "DeclineInvitationCommand",
@@ -35678,10 +35695,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingCheckInHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Fasting/Presentation/Features/Fasting/Mappings/FastingHttpResponseMappings.cs",
+      "consumerPath": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -35691,10 +35708,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingCheckInHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "consumerPath": "Modules/Fasting/Presentation.Mappings/Features/Fasting/Mappings/FastingSessionHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -35821,10 +35838,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -35834,7 +35851,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Presentation.Mappings/Features/Fasting/Mappings/FastingSessionHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FastingSessionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Presentation/Features/Fasting/FastingController.cs",
@@ -35847,7 +35877,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Presentation/Features/Fasting/FastingReadController.cs",
@@ -35860,12 +35890,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Presentation/Features/Fasting/Mappings/FastingHttpResponseMappings.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "FastingSessionHttpResponse",
@@ -35873,7 +35903,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingOverviewHttpResponse.cs",
@@ -35886,7 +35916,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingHttpMappingsTests.cs",
@@ -35899,7 +35929,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
+        "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -36133,7 +36163,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/FavoriteMealsController.cs",
@@ -36146,7 +36176,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
@@ -36159,7 +36189,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
@@ -36172,7 +36202,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Features/Meals/Responses/MealOverviewHttpResponse.cs",
@@ -36185,7 +36215,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs",
@@ -36198,7 +36228,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -36237,7 +36267,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation.Mappings/Features/FavoriteProducts/Mappings/FavoriteProductHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FavoriteProductHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteProducts/FavoriteProductsController.cs",
@@ -36250,20 +36293,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "FavoriteProductHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Presentation/Features/Products/Responses/ProductOverviewHttpResponse.cs",
@@ -36276,7 +36306,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductHttpMappingsTests.cs",
@@ -36289,7 +36319,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
@@ -36302,7 +36332,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Presentation.Mappings/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FavoriteRecipeHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/FavoriteRecipesController.cs",
@@ -36315,20 +36358,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "FavoriteRecipeHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Presentation/Features/Recipes/Responses/RecipeOverviewHttpResponse.cs",
@@ -36341,7 +36371,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipeHttpMappingsTests.cs",
@@ -36354,7 +36384,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
+        "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
@@ -36367,10 +36397,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -36380,10 +36410,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -36393,10 +36423,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -36406,7 +36436,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -40865,7 +40895,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
@@ -40878,7 +40908,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Presentation/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
@@ -40891,7 +40921,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
@@ -40904,7 +40934,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
@@ -40917,7 +40947,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistHttpMappingsTests.cs",
@@ -48314,10 +48344,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -48327,7 +48357,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Presentation.Mappings/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "HydrationDailyHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Presentation/Features/Hydration/HydrationEntriesController.cs",
@@ -48340,20 +48383,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "HydrationDailyHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -48366,7 +48396,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Presentation.Mappings/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "HydrationEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Presentation/Features/Hydration/HydrationEntriesController.cs",
@@ -48379,20 +48422,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "HydrationEntryHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
+        "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -67172,6 +67202,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "IEmailTemplateAdministrationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ConsumerAggregateContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IEmailTemplateProvider",
       "roles": [
         "Other"
@@ -76012,6 +76055,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "ILessonAdministrationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ConsumerAggregateContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "ILessonReadService",
       "roles": [
         "Service"
@@ -82480,6 +82536,19 @@
         "Modules/Notifications/Application/Abstractions/Common/INotificationWebPushOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationWriterTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "INotificationWebPushOutbox",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/INotificationWebPushOutbox.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -82935,6 +83004,19 @@
         "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ConsumerAggregateContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationWriter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/ClientTaskReminderJobTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -83029,6 +83111,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "INotificationWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/INotificationWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationWriterTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "INotificationWriteRepository",
@@ -87836,7 +87931,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+      "consumerPath": "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -106192,7 +106287,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+      "consumerPath": "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115094,23 +115189,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "MealAiItemHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "consumerPath": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115120,7 +115202,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Presentation.Mappings/Features/Meals/Mappings/MealSharedHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "MealAiItemHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/HttpResponseContractCoverageTests.cs",
@@ -115185,23 +115280,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "MealAiSessionHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "consumerPath": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115211,7 +115293,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Presentation.Mappings/Features/Meals/Mappings/MealSharedHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "MealAiSessionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/HttpResponseContractCoverageTests.cs",
@@ -115224,10 +115319,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115237,12 +115332,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
+      "consumerPath": "Modules/Meals/Presentation.Mappings/Features/Meals/Mappings/MealSharedHttpResponseMappings.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 2
     },
     {
       "contract": "MealHttpResponse",
@@ -115250,7 +115345,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Features/Meals/MealsController.cs",
@@ -115263,7 +115371,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Features/Meals/Responses/MealOverviewHttpResponse.cs",
@@ -115276,7 +115384,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardHttpMappingsTests.cs",
@@ -115289,7 +115397,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Presentation.Tests/MealHttpMappingsTests.cs",
@@ -115302,7 +115410,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
@@ -115445,12 +115553,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
+      "consumerPath": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "MealItemHttpResponse",
@@ -115458,12 +115566,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs"
+        "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
+      "consumerPath": "Modules/Meals/Presentation.Mappings/Features/Meals/Mappings/MealSharedHttpResponseMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "MealNutritionAppliedDomainEvent",
@@ -115835,10 +115943,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115848,10 +115956,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "consumerPath": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115861,7 +115969,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
+        "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -115965,12 +116073,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Notifications/Presentation/Features/Notifications/Mappings/NotificationHttpMappings.cs",
+      "consumerPath": "Modules/Notifications/Presentation.Mappings/Features/Notifications/Mappings/NotificationProfileHttpResponseMappings.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "NotificationPreferencesHttpResponse",
@@ -115978,7 +116086,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Features/Notifications/Mappings/NotificationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationPreferencesHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Presentation/Features/Notifications/NotificationsController.cs",
@@ -115991,7 +116112,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
@@ -116004,7 +116125,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationHttpMappingsTests.cs",
@@ -116017,12 +116138,350 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Application/Common/DietologistInvitationClientNotifier.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Application/Common/DietologistNotificationFactory.cs",
+      "isTest": false,
+      "referenceCount": 8
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationFactory.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Services/NotificationWriter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskDueReminderProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationWriterTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ConsumerAggregateContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.JobManager.Tests/ClientTaskReminderJobTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -123960,10 +124419,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
+        "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -123973,10 +124432,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
+        "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Tdee/Presentation/Features/Tdee/Mappings/TdeeHttpMappings.cs",
+      "consumerPath": "Modules/Tdee/Presentation.Mappings/Features/Tdee/Mappings/TdeeHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -123986,7 +124445,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
+        "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Presentation/Features/Tdee/TdeeController.cs",
@@ -123999,7 +124458,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
+        "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Presentation.Tests/TdeeControllerTests.cs",
@@ -124012,7 +124471,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
+        "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Presentation.Tests/TdeeHttpMappingsTests.cs",
@@ -129498,7 +129957,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
@@ -129511,10 +129970,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
+      "consumerPath": "Modules/Users/Presentation.Mappings/Features/Users/Mappings/UserSharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -129524,7 +129983,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/UsersController.cs",
@@ -129537,7 +129996,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersControllerTests.cs",
@@ -129550,7 +130009,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
@@ -129563,10 +130022,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
+      "consumerPath": "Modules/Users/Presentation.Mappings/Features/Users/Mappings/UserSharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -129576,7 +130035,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/UsersController.cs",
@@ -129589,7 +130048,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersControllerTests.cs",
@@ -129602,7 +130061,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Presentation/Features/Dietologist/DietologistClientsController.cs",
@@ -129615,7 +130074,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/AuthSessionController.cs",
@@ -129628,7 +130087,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
@@ -129641,10 +130100,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
+      "consumerPath": "Modules/Users/Presentation.Mappings/Features/Users/Mappings/UserSharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -129654,7 +130113,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
@@ -129667,7 +130126,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/UsersController.cs",
@@ -129680,7 +130139,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
@@ -129693,7 +130152,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionControllerTests.cs",
@@ -129706,7 +130165,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthTelegramControllerTests.cs",
@@ -129719,7 +130178,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UserHttpMappingsTests.cs",
@@ -129732,7 +130191,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersControllerTests.cs",
@@ -130343,10 +130802,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
+      "consumerPath": "Modules/BodyMetrics/Presentation.Mappings/Features/WaistEntries/Mappings/WaistEntrySharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -130356,7 +130815,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
@@ -130369,7 +130828,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/WaistEntriesController.cs",
@@ -130382,7 +130841,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WaistEntryHttpMappingsTests.cs",
@@ -130395,7 +130854,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -130408,10 +130867,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
+      "consumerPath": "Modules/BodyMetrics/Presentation.Mappings/Features/WaistEntries/Mappings/WaistEntrySharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -130421,7 +130880,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
@@ -130434,7 +130893,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/WaistEntriesController.cs",
@@ -130447,10 +130906,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -130460,7 +130919,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/Presentation/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
@@ -130473,7 +130932,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WaistEntryHttpMappingsTests.cs",
@@ -130486,7 +130945,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -130499,7 +130958,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
@@ -130512,10 +130971,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
+      "consumerPath": "Modules/Users/Presentation.Mappings/Features/Users/Mappings/UserSharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -130525,7 +130984,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/WaistGoalsController.cs",
@@ -130538,7 +130997,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WaistEntryHttpMappingsTests.cs",
@@ -130603,10 +131062,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WaistPointHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WaistPointHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -130616,10 +131075,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WaistPointHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WaistPointHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -130811,12 +131270,12 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Notifications/Presentation/Features/Notifications/Mappings/NotificationHttpMappings.cs",
+      "consumerPath": "Modules/Notifications/Presentation.Mappings/Features/Notifications/Mappings/NotificationProfileHttpResponseMappings.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "WebPushSubscriptionHttpResponse",
@@ -130824,7 +131283,20 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Features/Notifications/Mappings/NotificationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "WebPushSubscriptionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Presentation/Features/Notifications/NotificationPushController.cs",
@@ -130837,7 +131309,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
@@ -130850,7 +131322,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationHttpMappingsTests.cs",
@@ -130863,7 +131335,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
+        "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs",
@@ -131045,10 +131517,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
+      "consumerPath": "Modules/BodyMetrics/Presentation.Mappings/Features/WeightEntries/Mappings/WeightEntrySharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -131058,7 +131530,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
@@ -131071,7 +131543,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs",
@@ -131084,7 +131556,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WeightEntryHttpMappingsTests.cs",
@@ -131097,7 +131569,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -131110,7 +131582,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
@@ -131123,10 +131595,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
+      "consumerPath": "Modules/BodyMetrics/Presentation.Mappings/Features/WeightEntries/Mappings/WeightEntrySharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -131136,7 +131608,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
@@ -131149,7 +131621,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs",
@@ -131162,10 +131634,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -131175,7 +131647,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/Presentation/Features/Statistics/Responses/StatisticsSummaryHttpResponse.cs",
@@ -131188,7 +131660,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WeightEntryHttpMappingsTests.cs",
@@ -131201,7 +131673,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
+        "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -131214,7 +131686,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
@@ -131227,10 +131699,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
+      "consumerPath": "Modules/Users/Presentation.Mappings/Features/Users/Mappings/UserSharedHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -131240,7 +131712,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Features/Users/WeightGoalsController.cs",
@@ -131253,7 +131725,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
+        "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WeightEntryHttpMappingsTests.cs",
@@ -131318,10 +131790,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WeightPointHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -131331,10 +131803,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WeightPointHttpResponse.cs"
+        "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },

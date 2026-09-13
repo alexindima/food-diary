@@ -52,7 +52,7 @@ No literal attribute-routed controller was associated with this module.
 - DTO/read-model/projection types: 4
 - Enums: 1
 - Exported repository-shaped contracts: 4
-- Contracts referencing domain entities: 3
+- Contracts referencing domain entities: 2
 - `class LessonErrors`
 - `enum LessonSortOption`
 - `interface ILessonAdministrationReadService`

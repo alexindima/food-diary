@@ -181,6 +181,16 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.notifications.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.notifications.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Notifications.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.products.domain.contracts": {
         "type": "Project",
         "dependencies": {

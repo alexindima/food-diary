@@ -3,6 +3,8 @@
 Own authentication/provider/token/session/login-event contracts and email-template
 administration/provider contracts. Authentication and legacy Admin email-template
 namespaces are preserved; their declaring assembly now belongs to Identity.
+Email-template administration returns EmailTemplateReadModel snapshots; EmailTemplate
+aggregates remain behind Identity's repository ports and owner implementation.
 
 Users owns credential state and exposes capabilities through Users Contracts.
 Depend one-way on those contracts, Identity Domain, Users Domain.Contracts and

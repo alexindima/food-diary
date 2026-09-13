@@ -17,6 +17,8 @@
     <ProjectReference Include="../Application/FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
+    <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Hydration.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.Hydration.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 

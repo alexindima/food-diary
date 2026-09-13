@@ -10,9 +10,6 @@
     </p>
 
     <div class="auth__content fd-stack fd-gap-md">
-        @if (!hideTelegram()) {
-            <fd-telegram-entry-button (selected)="openTelegram()" />
-        }
         @if (authMode === 'login') {
             @if (showPasswordReset()) {
                 <fd-auth-password-reset-form
@@ -39,7 +36,11 @@
                     (loginNativeInput)="onLoginNativeInput()"
                     (passwordResetOpen)="onPasswordResetOpen()"
                     (restoreSubmit)="onRestoreSubmit()"
-                />
+                >
+                    @if (!hideTelegram()) {
+                        <fd-telegram-entry-button (selected)="openTelegram()" />
+                    }
+                </fd-auth-login-form>
             }
         } @else {
             <fd-auth-register-form
@@ -48,7 +49,11 @@
                 [globalError]="globalError()"
                 [isSubmitting]="isSubmitting()"
                 [googleReady]="googleReady()"
-            />
+            >
+                @if (!hideTelegram()) {
+                    <fd-telegram-entry-button (selected)="openTelegram()" />
+                }
+            </fd-auth-register-form>
         }
     </div>
 </div>

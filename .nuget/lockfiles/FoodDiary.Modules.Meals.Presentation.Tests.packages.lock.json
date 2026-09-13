@@ -159,24 +159,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.application.favorites": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Products.FoodQuality": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
-        }
-      },
       "FoodDiary.Application.Meals": {
         "type": "Project",
         "dependencies": {
@@ -307,17 +289,8 @@
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.favorites.presentation": {
-        "type": "Project",
-        "dependencies": {
-          "Asp.Versioning.Mvc": "[10.2.1, )",
-          "FoodDiary.Application.Favorites": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Presentation.Api": "[1.0.0, )"
-        }
+      "fooddiary.modules.favorites.presentation.contracts": {
+        "type": "Project"
       },
       "fooddiary.modules.identity.application.abstractions": {
         "type": "Project",
@@ -410,12 +383,24 @@
           "Asp.Versioning.Mvc": "[10.2.1, )",
           "FoodDiary.Application.Meals": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Service.Contracts": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.meals.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.meals.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Meals.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Service.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.meals.service.contracts": {

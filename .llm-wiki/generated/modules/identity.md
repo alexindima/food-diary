@@ -53,7 +53,7 @@ No literal attribute-routed controller was associated with this module.
 - DTO/read-model/projection types: 5
 - Enums: 0
 - Exported repository-shaped contracts: 13
-- Contracts referencing domain entities: 6
+- Contracts referencing domain entities: 5
 - `class JwtImpersonationClaimNames`
 - `class JwtSecurityClaimNames`
 - `class JwtTokenUseClaimNames`

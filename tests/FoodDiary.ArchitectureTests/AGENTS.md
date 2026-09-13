@@ -17,6 +17,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - Treat these tests as a source of truth for dependency direction, feature structure, source conventions, and service boundaries.
 
 ## Current Guardrails
+
+- PresentationContractBoundaryTests prohibits module-to-foreign-Presentation references. Reusable Presentation.Contracts contain wire DTOs only; Presentation.Mappings depend on narrow contracts and pure mappings, never controllers, handlers, framework/provider packages or persistence. Dashboard public snapshot/query declarations belong to Contracts; see ADR 0039.
+
+- ConsumerAggregateContractTests protects Notifications writer requests and Lessons/Identity administrative result contracts from domain entity types, including transitively available types. It also prevents the migrated consumer applications from using those foreign aggregates; owner repository interfaces retain their aggregate capabilities.
 - `BuildWorkflowGuardrailTests` requires a complete, disjoint backend CI project partition, fast-before-slow ordering, bounded slow-group parallelism, and a final gate over all backend groups. `ContainerSupplyChainGuardrailTests` checks locked restore for both the full solution and generated group solutions.
 - Wiki CI guardrails retain independent Focused/Full workers, the stable required aggregate gate, explicit PR-only audit skipping, and all compatibility/reporting checks. Gate outcome contracts cover success, failure, cancellation, and skip combinations.
 - ProviderAdapterOwnershipTests protects moved provider sources, one-way shared helper dependencies and explicit API/JobManager composition without adding providers to Initializer. Identity's Google/Telegram providers need no Integrations dependency; Images shares only existing URI/telemetry helpers. ExternalHttpClientGuardrailTests scans all six module provider roots; relocation must not remove response-bound/cancellation guard coverage.

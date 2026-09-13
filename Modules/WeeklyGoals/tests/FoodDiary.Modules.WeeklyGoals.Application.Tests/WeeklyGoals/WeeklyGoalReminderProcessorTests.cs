@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
 using FoodDiary.Application.WeeklyGoals.Services;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -43,7 +42,7 @@ public sealed class WeeklyGoalReminderProcessorTests {
             () => Assert.Equal(0, secondResult),
             () => Assert.Equal(new DateOnly(2026, 8, 10), goal.LastReminderLocalDate));
         await notificationWriter.Received(1).AddAsync(
-            Arg.Is<Notification>(notification => notification.UserId == goal.UserId),
+            Arg.Is<NotificationRequest>(notification => notification.UserId == goal.UserId),
             sendWebPush: true,
             cancellationToken: Arg.Any<CancellationToken>());
         await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -89,7 +88,7 @@ public sealed class WeeklyGoalReminderProcessorTests {
 
         Assert.Equal(1, sent);
         await writer.Received(1).AddAsync(
-            Arg.Any<Notification>(),
+            Arg.Any<NotificationRequest>(),
             sendWebPush: true,
             cancellationToken: Arg.Any<CancellationToken>());
     }

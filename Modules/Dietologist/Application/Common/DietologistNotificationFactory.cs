@@ -1,23 +1,22 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Common;
 
 internal static class DietologistNotificationFactory {
-    public static Notification CreateNewRecommendation(UserId userId, string dietologistName, string? referenceId = null) =>
-        Notification.Create(
+    public static NotificationRequest CreateNewRecommendation(UserId userId, string dietologistName, string? referenceId = null) =>
+        new(
             userId,
             NotificationTypes.NewRecommendation,
             NotificationPayloads.NewRecommendation(dietologistName),
             referenceId);
 
-    public static Notification CreateNewRecommendationComment(
+    public static NotificationRequest CreateNewRecommendationComment(
         UserId userId,
         string recommendationId,
         string clientUserId,
         bool forDietologist) =>
-        Notification.Create(
+        new(
             userId,
             forDietologist
                 ? NotificationTypes.NewRecommendationCommentForDietologist
@@ -25,13 +24,13 @@ internal static class DietologistNotificationFactory {
             NotificationPayloads.Empty(),
             forDietologist ? $"{clientUserId}|{recommendationId}" : recommendationId);
 
-    public static Notification CreateClientTaskChanged(
+    public static NotificationRequest CreateClientTaskChanged(
         UserId userId,
         string clientUserId,
         bool forDietologist,
         bool cancelled = false) {
         string notificationType = ResolveClientTaskNotificationType(forDietologist, cancelled);
-        return Notification.Create(
+        return new NotificationRequest(
             userId,
             notificationType,
             NotificationPayloads.Empty(),
@@ -48,25 +47,25 @@ internal static class DietologistNotificationFactory {
             : NotificationTypes.NewClientTask;
     }
 
-    public static Notification CreateClientTaskDueSoon(UserId userId) =>
-        Notification.Create(userId, NotificationTypes.ClientTaskDueSoon, NotificationPayloads.Empty());
+    public static NotificationRequest CreateClientTaskDueSoon(UserId userId) =>
+        new(userId, NotificationTypes.ClientTaskDueSoon, NotificationPayloads.Empty());
 
-    public static Notification CreateInvitationReceived(UserId userId, string clientName, string referenceId) =>
-        Notification.Create(
+    public static NotificationRequest CreateInvitationReceived(UserId userId, string clientName, string referenceId) =>
+        new(
             userId,
             NotificationTypes.DietologistInvitationReceived,
             NotificationPayloads.DietologistInvitationReceived(clientName),
             referenceId);
 
-    public static Notification CreateInvitationAccepted(UserId userId, string dietologistName, string referenceId) =>
-        Notification.Create(
+    public static NotificationRequest CreateInvitationAccepted(UserId userId, string dietologistName, string referenceId) =>
+        new(
             userId,
             NotificationTypes.DietologistInvitationAccepted,
             NotificationPayloads.DietologistInvitationDecision(dietologistName),
             referenceId);
 
-    public static Notification CreateInvitationDeclined(UserId userId, string dietologistName, string referenceId) =>
-        Notification.Create(
+    public static NotificationRequest CreateInvitationDeclined(UserId userId, string dietologistName, string referenceId) =>
+        new(
             userId,
             NotificationTypes.DietologistInvitationDeclined,
             NotificationPayloads.DietologistInvitationDecision(dietologistName),

@@ -12,7 +12,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 
@@ -98,7 +97,7 @@ public sealed class InviteDietologistCommandHandler(
         UserDietologistProfileModel client,
         DietologistInvitation invitation,
         CancellationToken cancellationToken) {
-        Notification notification = DietologistNotificationFactory.CreateInvitationReceived(
+        NotificationRequest notification = DietologistNotificationFactory.CreateInvitationReceived(
             new UserId(registeredDietologist.Id),
             ResolveClientName(client),
             invitation.Id.Value.ToString());

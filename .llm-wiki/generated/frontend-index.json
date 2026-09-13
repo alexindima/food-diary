@@ -2931,7 +2931,7 @@
       "role": "Component",
       "selector": "fd-telegram-entry-button",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
-      "line": 15
+      "line": 19
     },
     {
       "name": "AuthDialogComponent",

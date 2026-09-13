@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Presentation.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Dashboard.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../BodyMetrics/Presentation.Mappings/FoodDiary.Modules.BodyMetrics.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Cycles/Presentation.Mappings/FoodDiary.Modules.Cycles.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
+    <ProjectReference Include="../../Fasting/Presentation.Mappings/FoodDiary.Modules.Fasting.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Hydration/Presentation.Mappings/FoodDiary.Modules.Hydration.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Meals/Presentation.Mappings/FoodDiary.Modules.Meals.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Tdee/Presentation.Mappings/FoodDiary.Modules.Tdee.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

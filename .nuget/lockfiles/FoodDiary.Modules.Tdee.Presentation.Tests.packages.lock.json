@@ -297,7 +297,19 @@
           "Asp.Versioning.Mvc": "[10.2.1, )",
           "FoodDiary.Application.Tdee": "[1.0.0, )",
           "FoodDiary.Modules.Tdee.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Tdee.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Tdee.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.tdee.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.tdee.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Tdee.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Tdee.Presentation.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.users.contracts": {

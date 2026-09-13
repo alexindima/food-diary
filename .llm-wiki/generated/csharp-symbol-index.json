@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4005,
-    "symbols": 3946,
+    "sourceFiles": 4015,
+    "symbols": 3956,
     "interfaceImplementationLinks": 268,
     "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 2052,
+      "class": 2061,
       "enum": 64,
       "interface": 474,
-      "record": 1235,
+      "record": 1236,
       "record struct": 121
     },
     "roles": {
@@ -32,13 +32,13 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1596,
+      "Other": 1605,
       "Query": 193,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
       "Repository": 108,
-      "Request": 148,
+      "Request": 149,
       "Response": 213,
       "Service": 314,
       "Validator": 223,
@@ -3041,14 +3041,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Application/Mappings/AdminEmailTemplateMappings.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "AdminLessonMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Application/Mappings/AdminLessonMappings.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "AdminUserMappings",
@@ -6824,6 +6824,48 @@
       "line": 9
     },
     {
+      "name": "WaistEntryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistEntrySummaryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightEntryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightEntrySummaryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistEntrySharedHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Presentation.Mappings/Features/WaistEntries/Mappings/WaistEntrySharedHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "WeightEntrySharedHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Presentation.Mappings/Features/WeightEntries/Mappings/WeightEntrySharedHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "BodyMetricsPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -6849,7 +6891,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "CreateWaistEntryHttpRequest",
@@ -6887,20 +6929,6 @@
       "line": 2
     },
     {
-      "name": "WaistEntryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistEntrySummaryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistEntrySummaryHttpResponse.cs",
-      "line": 2
-    },
-    {
       "name": "WaistHistoryPageSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -6933,7 +6961,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "CreateWeightEntryHttpRequest",
@@ -6968,20 +6996,6 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Requests/UpdateWeightEntryHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightEntryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightEntrySummaryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightEntrySummaryHttpResponse.cs",
       "line": 2
     },
     {
@@ -7993,6 +8007,90 @@
       "line": 7
     },
     {
+      "name": "BleedingEntryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleConsentHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleFactorHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleLogDayHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleNutritionSummaryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionRevisionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleSymptomEntryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FertilitySignalHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MenstrualEpisodeHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "CyclesPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -8019,13 +8117,6 @@
       "role": "Other",
       "path": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpMappings.cs",
       "line": 16
-    },
-    {
-      "name": "CycleHttpResponseMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "line": 6
     },
     {
       "name": "MenstrualEpisodesController",
@@ -8102,83 +8193,6 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "BleedingEntryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleConsentHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleConsentHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleFactorHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleLogDayHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleNutritionSummaryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CyclePredictionRevisionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CyclePredictionsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleSymptomEntryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "FertilitySignalHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MenstrualEpisodeHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
       "line": 2
     },
     {
@@ -8448,67 +8462,11 @@
       "line": 2
     },
     {
-      "name": "DailyCaloriesModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/DailyCaloriesModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/DashboardMealsModel.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardSnapshotModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/DashboardSnapshotModel.cs",
-      "line": 11
-    },
-    {
-      "name": "DashboardStatisticsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/DashboardStatisticsModel.cs",
-      "line": 2
-    },
-    {
       "name": "DashboardUserContextModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
       "line": 4
-    },
-    {
-      "name": "DashboardWaistModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/DashboardWaistModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWeightModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/DashboardWeightModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistPointModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/WaistPointModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightPointModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Application/Models/WeightPointModel.cs",
-      "line": 2
     },
     {
       "name": "GetDashboardSnapshotQuery",
@@ -8530,13 +8488,6 @@
       "role": "Validator",
       "path": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
       "line": 5
-    },
-    {
-      "name": "GetDietologistClientDashboardQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-      "line": 6
     },
     {
       "name": "GetDietologistClientDashboardQueryHandler",
@@ -8658,11 +8609,74 @@
       "line": 6
     },
     {
+      "name": "DailyCaloriesModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DailyCaloriesModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardMealsModel.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardSnapshotModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardSnapshotModel.cs",
+      "line": 11
+    },
+    {
       "name": "DashboardStatisticsBucketReadModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Dashboard/Contracts/Models/DashboardStatisticsBucketReadModel.cs",
       "line": 2
+    },
+    {
+      "name": "DashboardStatisticsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardStatisticsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWaistModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardWaistModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWeightModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardWeightModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistPointModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/WaistPointModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightPointModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/WeightPointModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetDietologistClientDashboardQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Dashboard/Contracts/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+      "line": 6
     },
     {
       "name": "DependencyInjection",
@@ -8693,6 +8707,76 @@
       "line": 9
     },
     {
+      "name": "DailyAdviceHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DailyCaloriesHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardSnapshotHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
+      "line": 10
+    },
+    {
+      "name": "DashboardStatisticsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWaistHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWeightHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistPointHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WaistPointHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightPointHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Presentation.Mappings/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
+      "line": 14
+    },
+    {
       "name": "DashboardPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -8714,13 +8798,6 @@
       "line": 7
     },
     {
-      "name": "DashboardHttpResponseMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpResponseMappings.cs",
-      "line": 15
-    },
-    {
       "name": "GetDailyAdviceHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -8733,69 +8810,6 @@
       "role": "Query",
       "path": "Modules/Dashboard/Presentation/Features/Dashboard/Requests/GetDashboardSnapshotHttpQuery.cs",
       "line": 5
-    },
-    {
-      "name": "DailyAdviceHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "DailyCaloriesHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DailyCaloriesHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardMealsHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardSnapshotHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardSnapshotHttpResponse.cs",
-      "line": 10
-    },
-    {
-      "name": "DashboardStatisticsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardStatisticsHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWaistHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWaistHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWeightHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistPointHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WaistPointHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightPointHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Dashboard/Presentation/Features/Dashboard/Responses/WeightPointHttpResponse.cs",
-      "line": 2
     },
     {
       "name": "DietologistErrors",
@@ -9201,7 +9215,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "CreateRecommendationCommentCommandValidator",
@@ -9292,7 +9306,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "InviteDietologistCommandValidator",
@@ -9404,7 +9418,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Application/Common/DietologistInvitationClientNotifier.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "DietologistInvitationTokenGenerator",
@@ -9418,7 +9432,7 @@
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Dietologist/Application/Common/DietologistNotificationFactory.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "DietologistNotificationPostCommitActions",
@@ -9516,7 +9530,7 @@
       "kind": "class",
       "role": "Handler",
       "path": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "DietologistMappings",
@@ -11581,14 +11595,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "FastingNotificationFactory",
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Fasting/Application/Services/FastingNotificationFactory.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "FastingNotificationPushDispatcher",
@@ -11955,6 +11969,27 @@
       "line": 8
     },
     {
+      "name": "FastingCheckInHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingSessionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingSessionHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Presentation.Mappings/Features/Fasting/Mappings/FastingSessionHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "FastingPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -12032,13 +12067,6 @@
       "line": 2
     },
     {
-      "name": "FastingCheckInHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
-      "line": 2
-    },
-    {
       "name": "FastingInsightsHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -12058,13 +12086,6 @@
       "role": "Response",
       "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingOverviewHttpResponse.cs",
       "line": 4
-    },
-    {
-      "name": "FastingSessionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Fasting/Presentation/Features/Fasting/Responses/FastingSessionHttpResponse.cs",
-      "line": 2
     },
     {
       "name": "FastingStatsHttpResponse",
@@ -12704,6 +12725,41 @@
       "line": 11
     },
     {
+      "name": "FavoriteMealHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FavoriteProductHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FavoriteRecipeHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FavoriteProductHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteProducts/Mappings/FavoriteProductHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "FavoriteRecipeHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "FavoritesPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -12732,13 +12788,6 @@
       "line": 2
     },
     {
-      "name": "FavoriteMealHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
-      "line": 2
-    },
-    {
       "name": "FavoriteProductsController",
       "kind": "class",
       "role": "Controller",
@@ -12750,7 +12799,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "AddFavoriteProductHttpRequest",
@@ -12767,13 +12816,6 @@
       "line": 2
     },
     {
-      "name": "FavoriteProductHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
-      "line": 2
-    },
-    {
       "name": "FavoriteRecipesController",
       "kind": "class",
       "role": "Controller",
@@ -12785,20 +12827,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
-      "line": 10
+      "line": 8
     },
     {
       "name": "AddFavoriteRecipeHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Requests/AddFavoriteRecipeHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteRecipeHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
       "line": 2
     },
     {
@@ -13481,6 +13516,27 @@
       "line": 7
     },
     {
+      "name": "HydrationDailyHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "HydrationEntryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "HydrationHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Presentation.Mappings/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "HydrationPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -13507,13 +13563,6 @@
       "role": "Other",
       "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationHttpQueryMappings.cs",
       "line": 6
-    },
-    {
-      "name": "HydrationHttpResponseMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
-      "line": 5
     },
     {
       "name": "HydrationOperationHttpMappings",
@@ -13548,20 +13597,6 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Hydration/Presentation/Features/Hydration/Requests/UpdateHydrationEntryHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "HydrationDailyHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationDailyHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "HydrationEntryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
       "line": 2
     },
     {
@@ -14171,7 +14206,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "GoogleLoginCommandValidator",
@@ -14738,7 +14773,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "EmailTemplate",
@@ -15984,7 +16019,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "LessonReadService",
@@ -18157,6 +18192,41 @@
       "line": 6
     },
     {
+      "name": "MealAiItemHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MealAiSessionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MealHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MealItemHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MealSharedHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Meals/Presentation.Mappings/Features/Meals/Mappings/MealSharedHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "MealsPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -18273,34 +18343,6 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Meals/Presentation/Features/Meals/Requests/UpdateMealHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MealAiItemHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiItemHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MealAiSessionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MealHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MealItemHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealItemHttpResponse.cs",
       "line": 2
     },
     {
@@ -18476,7 +18518,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
-      "line": 4
+      "line": 2
     },
     {
       "name": "INotificationWriteRepository",
@@ -18575,6 +18617,13 @@
       "role": "Other",
       "path": "Modules/Notifications/Application/Abstractions/Common/NotificationPayloadSerializer.cs",
       "line": 4
+    },
+    {
+      "name": "NotificationRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs",
+      "line": 7
     },
     {
       "name": "NotificationTargetUrlResolver",
@@ -19193,6 +19242,27 @@
       "line": 5
     },
     {
+      "name": "NotificationPreferencesHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushSubscriptionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationProfileHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Presentation.Mappings/Features/Notifications/Mappings/NotificationProfileHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "NotificationsPresentationApplicationBuilderExtensions",
       "kind": "class",
       "role": "Other",
@@ -19211,7 +19281,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Presentation/Features/Notifications/Mappings/NotificationHttpMappings.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "NotificationPushController",
@@ -19270,13 +19340,6 @@
       "line": 2
     },
     {
-      "name": "NotificationPreferencesHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
-      "line": 2
-    },
-    {
       "name": "ScheduledNotificationHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -19295,13 +19358,6 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushConfigurationHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushSubscriptionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
       "line": 2
     },
     {
@@ -20422,7 +20478,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "CreateRecipeCommentCommandValidator",
@@ -21734,6 +21790,20 @@
       "line": 6
     },
     {
+      "name": "TdeeInsightHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Tdee/Presentation.Contracts/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TdeeHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Tdee/Presentation.Mappings/Features/Tdee/Mappings/TdeeHttpResponseMappings.cs",
+      "line": 5
+    },
+    {
       "name": "TdeePresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -21745,14 +21815,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Tdee/Presentation/Features/Tdee/Mappings/TdeeHttpMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "TdeeInsightHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "TdeeController",
@@ -23813,6 +23876,55 @@
       "line": 9
     },
     {
+      "name": "DashboardLayoutHttpModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Models/DashboardLayoutHttpModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserDesiredWaistHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "UserDesiredWeightHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "UserHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/UserHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "name": "WaistGoalHistoryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightGoalHistoryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "UserSharedHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Presentation.Mappings/Features/Users/Mappings/UserSharedHttpResponseMappings.cs",
+      "line": 6
+    },
+    {
       "name": "UsersPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -23866,14 +23978,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Presentation/Features/Users/Mappings/UserHttpResponseMappings.cs",
-      "line": 8
-    },
-    {
-      "name": "DashboardLayoutHttpModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Users/Presentation/Features/Users/Models/DashboardLayoutHttpModel.cs",
-      "line": 2
+      "line": 7
     },
     {
       "name": "ChangePasswordHttpRequest",
@@ -23923,41 +24028,6 @@
       "role": "Response",
       "path": "Modules/Users/Presentation/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
       "line": 5
-    },
-    {
-      "name": "UserDesiredWaistHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWaistHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "UserDesiredWeightHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "UserHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "name": "WaistGoalHistoryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WaistGoalHistoryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightGoalHistoryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Users/Presentation/Features/Users/Responses/WeightGoalHistoryHttpResponse.cs",
-      "line": 2
     },
     {
       "name": "UserAiConsentController",
@@ -24699,7 +24769,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "IWeeklyGoalReadService",

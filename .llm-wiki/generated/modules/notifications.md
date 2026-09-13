@@ -40,18 +40,18 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
-- Public contract files: 41
+- Public contract files: 42
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 41
+- Public contract types: 42
 - Interfaces: 22
-- DTO/read-model/projection types: 2
+- DTO/read-model/projection types: 3
 - Enums: 0
 - Exported repository-shaped contracts: 9
-- Contracts referencing domain entities: 6
+- Contracts referencing domain entities: 5
 - `class NotificationErrors`
 - `class NotificationPayloads`
 - `class NotificationPayloadSerializer`
@@ -82,7 +82,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IWebPushSubscriptionWriteRepository`
 - `record DietologistInvitationDecisionNotificationPayload`
 - `record DietologistInvitationReceivedNotificationPayload`
-- ... 11 more type(s)
+- ... 12 more type(s)
 
 ## Focused Tests
 
@@ -91,6 +91,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationFactoryTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationReadServiceCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationWriterTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Queries.cs`

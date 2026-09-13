@@ -20,7 +20,8 @@
     <ProjectReference Include="../Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj" />
+    <ProjectReference Include="../../Favorites/Presentation.Contracts/FoodDiary.Modules.Favorites.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Favorites/Presentation.Mappings/FoodDiary.Modules.Favorites.Presentation.Mappings.csproj" />
   </ItemGroup>
 
 </Project>

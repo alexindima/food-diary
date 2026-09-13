@@ -232,10 +232,12 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
     [ExcludeFromCodeCoverage]
     private sealed class StubNotificationWriter(INotificationWriteRepository notificationRepository) : INotificationWriter {
         public async Task AddAsync(
-            Notification notification,
+            NotificationRequest request,
             bool sendWebPush = false,
             CancellationToken cancellationToken = default) =>
-            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+            await notificationRepository.AddAsync(
+                Notification.Create(request.UserId, request.Type, request.PayloadJson, request.ReferenceId),
+                cancellationToken).ConfigureAwait(false);
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Common;
@@ -46,7 +45,7 @@ internal static class DietologistInvitationClientNotifier {
         INotificationWriter notificationWriter,
         INotificationClientRefreshService notificationClientRefreshService,
             IPostCommitActionQueue postCommitActionQueue,
-        Notification notification,
+        NotificationRequest notification,
         CancellationToken cancellationToken) {
         await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         DietologistNotificationPostCommitActions.EnqueueUnreadCountPush(

@@ -7,8 +7,8 @@ Rules for all logical modules under `Modules/`. A module-specific `AGENTS.md` ma
 ## Physical boundaries
 
 - Keep module-owned HTTP controllers, request/response DTOs, mappings, and presentation-only processors in the module's `Presentation` project.
-- A module Presentation project may reference the shared `FoodDiary.Presentation.Api` HTTP kernel and its own Application, Contracts, or Domain contracts. Cross-module Presentation references must reflect an existing composite HTTP response and must not grant access to foreign persistence or write adapters.
-- A response type genuinely reused by another module may live in a dependency-free `Presentation.Contracts` project owned by the defining module; do not duplicate the type or introduce a reverse Presentation-project reference merely to reuse its wire shape.
+- A module Presentation project may reference the shared `FoodDiary.Presentation.Api` HTTP kernel and its own Application, Contracts, or Domain contracts. Do not reference another module's controller-bearing Presentation assembly; consume its Presentation.Contracts and pure Presentation.Mappings when composing responses.
+- A response type genuinely reused by another module may live in a `Presentation.Contracts` project that depends only on other wire DTO contracts owned by the defining module; do not duplicate the type or introduce a reverse Presentation-project reference merely to reuse its wire shape.
 - Keep shared filters, binders, result/error mapping, policies, and host-neutral SignalR primitives in `FoodDiary.Presentation.Api`.
 - Keep middleware, environment configuration, authentication setup, Swagger configuration, telemetry exporters, and executable composition in `FoodDiary.Web.Api`.
 - Every module Presentation assembly must be registered explicitly by the Web API composition root so MVC controller discovery cannot depend on accidental transitive references.
@@ -34,3 +34,5 @@ FD0015 blocks foreign tracking/writes; FD0016 requires an exact reviewed fingerp
 for shared-context save, transaction and tracker escape APIs. See ADR 0031.
 
 Application and Presentation projects never reference a foreign whole Application implementation. Actual cross-module requests/results belong to the owning Contracts project. Scalar Meals/Favorites IDs and Meals enums belong to their Domain.Contracts seams.
+
+Reusable response mappers belong to owner `Presentation.Mappings` projects. They reference only narrow application/scalar contracts, DTO contracts and pure mappers. Keep request-to-command mapping in Presentation; do not expose controllers or handlers through reusable layers. See docs/adr/0039-presentation-contracts-and-mappings.md.

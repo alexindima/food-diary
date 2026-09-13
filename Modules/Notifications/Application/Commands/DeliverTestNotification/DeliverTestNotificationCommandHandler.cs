@@ -31,7 +31,8 @@ public sealed class DeliverTestNotificationCommandHandler(
             _ => NotificationFactory.CreateFastingCompleted(userId, "Extended", "FastDay", referenceId),
         };
 
-        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
+        var request = new NotificationRequest(notification.UserId, notification.Type, notification.PayloadJson, notification.ReferenceId);
+        await notificationWriter.AddAsync(request, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         await clientRefreshService.RefreshAsync(userId, pushChanged: true, cancellationToken).ConfigureAwait(false);
         await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);

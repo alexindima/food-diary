@@ -39,15 +39,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 17
+- Public contract files: 26
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
+- Public contract types: 26
 - Interfaces: 4
-- DTO/read-model/projection types: 12
+- DTO/read-model/projection types: 20
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
@@ -55,19 +55,28 @@ No literal attribute-routed controller was associated with this module.
 - `interface IDashboardMealsReadService`
 - `interface IDashboardReadService`
 - `interface IDashboardStatisticsReadService`
+- `record DailyCaloriesModel`
 - `record DashboardBodyReadModel`
 - `record DashboardMealAiItemReadModel`
 - `record DashboardMealAiSessionReadModel`
 - `record DashboardMealItemReadModel`
 - `record DashboardMealReadModel`
+- `record DashboardMealsModel`
 - `record DashboardMealsReadModel`
 - `record DashboardReadModel`
 - `record DashboardReadSections`
+- `record DashboardSnapshotModel`
 - `record DashboardStatisticsBucketReadModel`
+- `record DashboardStatisticsModel`
+- `record DashboardWaistModel`
 - `record DashboardWaistPointReadModel`
 - `record DashboardWaistSummaryReadModel`
+- `record DashboardWeightModel`
 - `record DashboardWeightPointReadModel`
 - `record DashboardWeightSummaryReadModel`
+- `record GetDietologistClientDashboardQuery`
+- `record WaistPointModel`
+- `record WeightPointModel`
 
 ## Focused Tests
 

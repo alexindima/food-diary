@@ -345,3 +345,7 @@ Domain.Contracts for shared constants/enums; see [ownership details](ai/admin-sc
 Application aggregate boundaries: all module Application projects use narrow foreign
 contracts instead of foreign Domain projects. Cycles public enums belong to
 Cycles.Domain.Contracts; see [details](ai/application-domain-boundaries.md).
+
+## Reusable HTTP responses
+
+ADR 0039 separates reused wire DTOs into owner `Presentation.Contracts` and pure response transformations into `Presentation.Mappings`. BodyMetrics, Cycles, Dashboard, Fasting, Favorites, Hydration, Meals, Notifications, Tdee and Users own both layers. Existing Dietologist DTO contracts remain. There are no foreign controller-bearing Presentation references; controllers and request mappings stay in Presentation. Dashboard public snapshot models and its client-dashboard query live in Dashboard.Contracts.

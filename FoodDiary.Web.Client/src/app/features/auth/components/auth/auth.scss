@@ -91,11 +91,17 @@
         }
     }
 
+    &__providers {
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
     &__google-button {
         display: inline-flex;
         width: 100%;
         justify-content: center;
-        min-height: var(--fd-size-control-touch);
+        min-height: var(--fd-size-control-md);
     }
 
     &__native-google-button {

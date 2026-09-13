@@ -144,6 +144,16 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.hydration.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.hydration.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Presentation.Contracts": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.identity.application.abstractions": {
         "type": "Project",
         "dependencies": {

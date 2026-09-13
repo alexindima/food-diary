@@ -10,7 +10,6 @@ using FoodDiary.Application.Dietologist.Queries.GetRecommendationComments;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -125,7 +124,7 @@ public sealed class RecommendationCommentHandlerTests {
                 comment.Text == "My question"),
             Arg.Any<CancellationToken>());
         await notifications.Received(1).AddAsync(
-            Arg.Is<Notification>(notification => notification != null && notification.UserId == dietologistId),
+            Arg.Is<NotificationRequest>(notification => notification != null && notification.UserId == dietologistId),
             sendWebPush: false,
             Arg.Any<CancellationToken>());
     }

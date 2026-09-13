@@ -15,6 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="../Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Tdee.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.Tdee.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 

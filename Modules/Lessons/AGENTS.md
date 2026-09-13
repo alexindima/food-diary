@@ -10,6 +10,7 @@ Rules for `Modules/Lessons/`.
 - Keep the real application assembly at `Application/FoodDiary.Modules.Lessons.Application.csproj`; do not create a root wrapper project.
 - Preserve legacy `FoodDiary.Application.Lessons.*`, `FoodDiary.Application.Abstractions.Lessons.*`, and `FoodDiary.Domain.*` CLR namespaces and the `FoodDiary.Application.Lessons` application assembly name.
 - External business modules consume only `Contracts`; repository ports and persistence projections remain internal module abstractions.
+- Administration capabilities return immutable LessonAdminReadModel snapshots. Never return NutritionLesson aggregates to consumers; construct and mutate them only inside Lessons.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
 - Composition roots register the complete module through Infrastructure's `AddLessonsModule` facade.
 

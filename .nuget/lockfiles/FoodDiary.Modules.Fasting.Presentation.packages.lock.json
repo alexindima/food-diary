@@ -148,6 +148,16 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.fasting.presentation.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.fasting.presentation.mappings": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Presentation.Contracts": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.identity.application.abstractions": {
         "type": "Project",
         "dependencies": {

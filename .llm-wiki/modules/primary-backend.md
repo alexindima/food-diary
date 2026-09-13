@@ -3,6 +3,7 @@ id: module.primary-backend
 kind: module
 status: current
 sources:
+  - docs/adr/0039-presentation-contracts-and-mappings.md
   - FoodDiary.Application.Runtime/AGENTS.md
   - Shared/FoodDiary.Application.Contracts/AGENTS.md
   - Shared/FoodDiary.Audit.Contracts/AGENTS.md
@@ -97,3 +98,7 @@ Admin consumes billing provider names, moderation status and achievement metrics
 Module Application projects have no direct foreign aggregate Domain references.
 Cycles read-model enums belong to dependency-free Cycles Domain.Contracts;
 see docs/ai/application-domain-boundaries.md for scope and transitive limitations.
+
+## Reusable HTTP contract boundary
+
+ADR 0039 separates owner Presentation.Contracts (wire DTOs) from Presentation.Mappings (pure response transformations). Module Presentation assemblies no longer reference foreign controller assemblies. Mappers consume narrow application/scalar contracts and DTOs; Dashboard public snapshot/query declarations now live in Dashboard.Contracts. The exact project matrix and PresentationContractBoundaryTests enforce these boundaries.

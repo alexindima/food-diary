@@ -19,8 +19,12 @@
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../../Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
-    <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
+    <ProjectReference Include="../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
+    <ProjectReference Include="../../Dashboard/Presentation.Contracts/FoodDiary.Modules.Dashboard.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Dashboard/Presentation.Mappings/FoodDiary.Modules.Dashboard.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj" />
   </ItemGroup>
 
 </Project>
