@@ -4,15 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class BillingPaymentRepository(DbSet<BillingPayment> payments) : IBillingPaymentRepository {
-    public Task<BillingPayment?> GetByExternalPaymentIdAsync(
+public sealed class BillingPaymentRepository(DbSet<BillingPayment> payments, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingPaymentRepository {
+    public async Task<BillingPayment?> GetByExternalPaymentIdAsync(
         string provider,
         string externalPaymentId,
         CancellationToken cancellationToken = default) {
-        return payments
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        return await payments
             .FirstOrDefaultAsync(
                 payment => payment.Provider == provider && payment.ExternalPaymentId == externalPaymentId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
@@ -24,4 +25,7 @@ public sealed class BillingPaymentRepository(DbSet<BillingPayment> payments) : I
         payments.Update(payment);
         return Task.CompletedTask;
     }
+
+    private Task SynchronizeTransactionAsync(CancellationToken cancellationToken) =>
+        synchronizeTransactionAsync?.Invoke(cancellationToken) ?? Task.CompletedTask;
 }

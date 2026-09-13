@@ -67,22 +67,18 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
+          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
+          "sha256": "459026f71bd237d6427300b9fb9f06f5de4ddea2676341cbbdd5f88ca038a49b"
         },
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "2d77880597d3512a588cba77b514141c2bb49b21fd9004b8b4e8325ef2146b04"
-        },
-        {
-          "path": "Modules/Admin/Infrastructure/AGENTS.md",
-          "sha256": "c98284cc8e859e5090e6a61c128e0b67a7eeef8afb2a404f7a01cafe7f93335e"
+          "path": "Modules/Billing/Infrastructure/AGENTS.md",
+          "sha256": "82e5408e2b00b02f3b67a86f0e68a703d980bae5f17ab6a2fd0dc47535f75599"
         }
       ],
-      "reason": "No HTTP or message contract changes; existing callers still pass their central context",
+      "reason": "No routes or payloads changed and reader method body is identical",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T10:49:21.7565159Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:27.8350532Z"
     },
     {
       "pageId": "system.architecture",
@@ -90,18 +86,14 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c2052dd49c803f52aabad8280f468ab4194960039c83280d32280db636ba2a2b"
+          "sha256": "148665dd7d3c5adfaee3f65b3b33ccb31aa12433d7d8cf414b334801f3dea485"
         }
       ],
-      "reason": "Owner contexts and retained shared seams documented in ADR 0040",
+      "reason": "Dietologist metrics reader ownership and retained authorization documented in scoped guides",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T11:22:38.7111422Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:28.5144950Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -223,17 +215,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "6cc9317e9bdb2d9bfc90a50d62b40d0fd244951e29ce5ba97d084736c9ea274d"
+          "sha256": "898ff7104a0b55649bf14ffd1a6398dc74a8ff16c5e7e8f1fa82e9b917ebecd3"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c2052dd49c803f52aabad8280f468ab4194960039c83280d32280db636ba2a2b"
+          "sha256": "148665dd7d3c5adfaee3f65b3b33ccb31aa12433d7d8cf414b334801f3dea485"
         }
       ],
-      "reason": "1788 architecture owner unit HTTP and PostgreSQL tests pass",
+      "reason": "Solution builds clean; PostgreSQL 5 and application 261 and infrastructure 16 passed; final architecture and DI checks pending",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T11:22:39.2393908Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:29.2680253Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -242,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "31851d1b95dc3bf4f878d2e86b9437971d90a6cd6690bec74f1b279ced691cbe"
+          "sha256": "ec20e744e7ff14e4939733c4e17d073947afeb2784bd58657d566865bde2ebad"
         }
       ],
-      "reason": "HTTP and Swagger tests pass with unchanged payloads",
+      "reason": "No routes or payloads changed and reader method body is identical",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T11:22:40.1653367Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:30.3738786Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -787,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a7360d1ae1b2920594ef7931c9729c851a7c3136f68b671e24ee58eeeedb335e"
+          "sha256": "3197c35811a2e80300d61d7f808cff603a3f4589a84851d5b10597c276755fce"
         }
       ],
-      "reason": "Relationship authorization permission checks post-commit usage recording and user-scoped source reads remain unchanged.",
+      "reason": "Requested-client predicates and application permission checks unchanged; no tracking or provider changes",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:51.5184955Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:31.1835799Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -832,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4ce53434411a0d83806f5858af9d7609d59cede2988c9960864589f9369c6637"
+          "sha256": "95fe01e294da6d86e7801efa05663a3a8235a48e45c6acee0b317181aa05fc29"
         }
       ],
-      "reason": "1788 architecture owner unit HTTP and PostgreSQL tests pass",
+      "reason": "Solution builds clean; PostgreSQL 5 and application 261 and infrastructure 16 passed; final architecture and DI checks pending",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T11:22:40.9660538Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:32.1349613Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -907,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "48c379ce79d9b450b762ceabe0271a77f1835dcb1f71151d1dd6831d16d4e60d"
+          "sha256": "8ab7236915b3ae35c184f171e70eebfca01e13f260c441c8cd5f0d425ff036db"
         }
       ],
-      "reason": "Owner contexts and retained shared seams documented in ADR 0040",
+      "reason": "Dietologist metrics reader ownership and retained authorization documented in scoped guides",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T11:22:42.2510633Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:34.9364779Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -922,17 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4ce53434411a0d83806f5858af9d7609d59cede2988c9960864589f9369c6637"
+          "sha256": "95fe01e294da6d86e7801efa05663a3a8235a48e45c6acee0b317181aa05fc29"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "48c379ce79d9b450b762ceabe0271a77f1835dcb1f71151d1dd6831d16d4e60d"
+          "sha256": "8ab7236915b3ae35c184f171e70eebfca01e13f260c441c8cd5f0d425ff036db"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "3197c35811a2e80300d61d7f808cff603a3f4589a84851d5b10597c276755fce"
         }
       ],
-      "reason": "Ownership checks restrictive image FKs and atomic purge retained and tested",
+      "reason": "Requested-client predicates and application permission checks unchanged; no tracking or provider changes",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T11:22:43.0363774Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:36.3487752Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1178,13 +1174,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "81e906964af0f27ae8464b5c792ef1b3c48f0671e1ef9ff00e52300a5666a2c8"
+          "sha256": "ffb9af56b594e608581bb851f0a329cf3cc16a97b2693e55a2468b04a0355007"
         }
       ],
-      "reason": "Owner contexts and retained shared seams documented in ADR 0040",
+      "reason": "Dietologist metrics reader ownership and retained authorization documented in scoped guides",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T11:22:41.6567758Z"
+      "gitHead": "b86570085b9e3e998e2eb7c489277f7e8edc9976",
+      "reviewedAtUtc": "2026-09-13T12:51:33.5947553Z"
     },
     {
       "pageId": "workflow.review-diff",

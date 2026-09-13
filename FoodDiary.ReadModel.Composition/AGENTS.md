@@ -22,3 +22,7 @@ ContentReports owns a single-entity runtime context and report writes. The host
 composition implements its existing read-model and target-read ports, preserving
 visibility predicates, SQL paging and bounded title/comment excerpts. No module
 references the composition implementation; central migrations remain (ADR 0040).
+
+Favorites composition owns product/recipe source visibility predicates and joined DTO projections. Return authorized scalar favorite IDs for owner materialization, never favorite aggregates. Preserve user/public filtering, private product comment masking, recipe ingredient count and DTO ordering/limits. Keep IDs filtered by the requested favorite or source IDs for point/batch lookups.
+
+Dietologist attention metrics implement the owner IAttentionSignalMetricsReadService port. Preserve requested-client filtering, inclusive date bounds, all-time last meal, manual-calorie fallback, daily grouping and ordered weight points. Relationship authorization and permission-dependent signal decisions remain in Dietologist Application. Cross-module reader tests live in central Infrastructure.Tests and the existing PostgreSQL Dietologist integration suite.

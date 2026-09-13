@@ -1,3 +1,6 @@
+using FoodDiary.ReadModel.Composition.Favorites;
+using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.ReadModel.Composition.Images;
 using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
@@ -186,8 +189,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.FavoriteProducts.AddRange(favoriteProduct, ownerFavoriteProduct);
         context.FavoriteRecipes.AddRange(favoriteRecipe, ownerFavoriteRecipe);
         await context.SaveChangesAsync();
-        var productRepository = new FavoriteProductRepository(context);
-        var recipeRepository = new FavoriteRecipeRepository(context);
+        var productRepository = new FavoriteProductRepository(context.FavoriteProducts, new FavoriteProductQuery(context));
+        var recipeRepository = new FavoriteRecipeRepository(context.FavoriteRecipes, new FavoriteRecipeQuery(context));
 
         Assert.Single(await productRepository.GetAllReadModelsAsync(reader.Id));
         Assert.True(await productRepository.ExistsByProductIdAsync(product.Id, reader.Id));
@@ -1149,7 +1152,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverBillingTransactionRunnerAsync(FoodDiaryDbContext context) {
-        var runner = new EfBillingTransactionRunner(context);
+        var runner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
         bool executed = false;
 
         await runner.ExecuteAsync(token => {
@@ -1495,7 +1498,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             "{}");
         await webhookRepository.AddAsync(inboxEvent);
         await context.SaveChangesAsync();
-        var billingTransactionRunner = new EfBillingTransactionRunner(context);
+        var billingTransactionRunner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
 
         await Assert.ThrowsAsync<BillingPaymentAlreadyExistsException>(
             () => billingTransactionRunner.ExecuteAsync(
@@ -1531,7 +1534,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await webhookRepository.AddAsync(webhookEvent);
         await context.SaveChangesAsync();
         Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, "evt_test"));
-        var billingTransactionRunner = new EfBillingTransactionRunner(context);
+        var billingTransactionRunner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
 
         await Assert.ThrowsAsync<BillingWebhookEventAlreadyProcessedException>(
             () => billingTransactionRunner.ExecuteAsync(
@@ -1656,7 +1659,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId userId,
         ProductId productId) {
-        var repository = new FavoriteProductRepository(context);
+        var repository = new FavoriteProductRepository(context.FavoriteProducts, new FavoriteProductQuery(context));
         Assert.Empty(await repository.GetByProductIdsAsync(userId, []));
         FavoriteProduct favorite = await repository.AddAsync(FavoriteProduct.Create(userId, productId, "Rice", 120));
         await context.SaveChangesAsync();
@@ -1688,7 +1691,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId userId,
         RecipeId recipeId) {
-        var repository = new FavoriteRecipeRepository(context);
+        var repository = new FavoriteRecipeRepository(context.FavoriteRecipes, new FavoriteRecipeQuery(context));
         Assert.Empty(await repository.GetByRecipeIdsAsync(userId, []));
         FavoriteRecipe favorite = await repository.AddAsync(FavoriteRecipe.Create(userId, recipeId, "Dinner recipe"));
         await context.SaveChangesAsync();
@@ -1716,7 +1719,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId userId,
         MealId mealId) {
-        var repository = new FavoriteMealRepository(context, new FavoriteMealQuery(context));
+        var repository = new FavoriteMealRepository(context.FavoriteMeals, new FavoriteMealQuery(context));
         Assert.Empty(await repository.GetByMealIdsAsync(userId, []));
         FavoriteMeal favorite = await repository.AddAsync(FavoriteMeal.Create(userId, mealId, "Dinner meal"));
         await context.SaveChangesAsync();

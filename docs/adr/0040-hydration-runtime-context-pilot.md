@@ -279,3 +279,19 @@ Replay adapters intentionally keep the central context for audit/reset transacti
 User purge and image reassignment also keep shared transaction access. User cleanup
 now saves through IUnitOfWork, including image-deletion outbox entries in the owner
 context. Historical migrations and central read model stay unchanged.
+
+## WeeklyGoals runtime context
+
+WeeklyGoalsDbContext owns WeeklyGoal tracking and saves through the shared unit of work. The repository follows the current shared transaction before each read, including late transaction creation and reuse after rollback. EfWeeklyGoalTransactionRunner retains its user/week PostgreSQL advisory lock, shared retry/reset boundary and commit responsibility. Reminder ordering and pagination, external delivery timing and the central User Cascade FK remain unchanged. Provider tests use real DI to cover concurrent creation and rollback after an owner save followed by reuse.
+
+## Billing runtime context
+
+BillingDbContext owns the three Billing entities and their local mappings. Narrow repositories receive owner sets plus a live shared-transaction synchronization callback, invoked before reads. The Billing transaction runner retains its advisory locks, execution strategy, clean-entry/reset and commit boundary. It saves all participants through IUnitOfWork and translates the existing payment/webhook unique constraints using the failing EF entries, including entries tracked in the owner context. Checkout leases, provider HTTP and authenticity checks, inbox retries, central User FKs and migrations do not change. Real-DI PostgreSQL coverage verifies mixed saves, both duplicate translations with shared rollback and reuse, intermediate save/read rollback, and serialized concurrent webhook creation.
+
+## Wearables runtime context
+
+WearablesDbContext owns WearableConnection and WearableSyncEntry; repositories receive only their own entity sets. The serialized runner retains a separate session advisory lease and executes its callback once, outside database transactions. IUnitOfWork saves owner changes with the existing persistence retry strategy. Intermediate saves remain durable on later failure; the shared reset discards remaining owner tracking. Real-DI PostgreSQL tests cover connection/sync races, one callback despite a transient save failure, and durable intermediate save followed by failure and scope reuse. Provider clients, token protection, central User Cascade FKs and migrations are unchanged.
+
+## Favorites runtime context
+
+FavoritesDbContext owns all three favorite entities. Composition queries return authorized product/recipe favorite IDs and existing immutable DTOs, preserving SQL visibility predicates, comment masking, ordering and collection limits. Owner entity retrieval performs one additional read by those IDs and UserId; tracking remains entirely local. GetOwnedById keeps its deliberate ability to remove a favorite after the source becomes inaccessible. Shared IUnitOfWork preserves atomic writes and the central User/source Cascade FKs remain unchanged. Real-DI tests verify tracking identity, edits, visibility revocation, removal and missing-source rollback.

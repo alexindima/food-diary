@@ -1,9 +1,10 @@
+using FoodDiary.Application.Abstractions.Wearables.Common;
+using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Wearables;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -15,7 +16,8 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
     [RequiresDockerFact]
     public async Task ExecuteSerializedAsync_DoesNotHoldTransactionWhileOperationRuns() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var runner = new EfWearableTransactionRunner(context);
+        await using ServiceProvider provider = WearableTestComposition.CreateProvider(context);
+        IWearableTransactionRunner runner = provider.GetRequiredService<IWearableTransactionRunner>();
 
         bool result = await runner.ExecuteSerializedAsync(
             $"wearable-transaction-scope:{Guid.NewGuid():N}",
@@ -39,13 +41,15 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
 
         await using FoodDiaryDbContext firstContext = CreateContext(seedContext);
         await using FoodDiaryDbContext secondContext = CreateContext(seedContext);
-        var firstRunner = new EfWearableTransactionRunner(firstContext);
-        var secondRunner = new EfWearableTransactionRunner(secondContext);
+        await using ServiceProvider firstProvider = WearableTestComposition.CreateProvider(firstContext);
+        IWearableTransactionRunner firstRunner = firstProvider.GetRequiredService<IWearableTransactionRunner>();
+        await using ServiceProvider secondProvider = WearableTestComposition.CreateProvider(secondContext);
+        IWearableTransactionRunner secondRunner = secondProvider.GetRequiredService<IWearableTransactionRunner>();
         string serializationKey = $"wearable-connect:{user.Id.Value:N}:{WearableProvider.Fitbit}";
 
         await Task.WhenAll(
-            CreateConnectionIfMissingAsync(firstRunner, firstContext, serializationKey, user.Id, "first"),
-            CreateConnectionIfMissingAsync(secondRunner, secondContext, serializationKey, user.Id, "second"));
+            CreateConnectionIfMissingAsync(firstRunner, firstProvider.GetRequiredService<WearablesDbContext>(), serializationKey, user.Id, "first"),
+            CreateConnectionIfMissingAsync(secondRunner, secondProvider.GetRequiredService<WearablesDbContext>(), serializationKey, user.Id, "second"));
 
         await using FoodDiaryDbContext verificationContext = CreateContext(seedContext);
         int connectionCount = await verificationContext.WearableConnections
@@ -64,14 +68,16 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
 
         await using FoodDiaryDbContext firstContext = CreateContext(seedContext);
         await using FoodDiaryDbContext secondContext = CreateContext(seedContext);
-        var firstRunner = new EfWearableTransactionRunner(firstContext);
-        var secondRunner = new EfWearableTransactionRunner(secondContext);
+        await using ServiceProvider firstProvider = WearableTestComposition.CreateProvider(firstContext);
+        IWearableTransactionRunner firstRunner = firstProvider.GetRequiredService<IWearableTransactionRunner>();
+        await using ServiceProvider secondProvider = WearableTestComposition.CreateProvider(secondContext);
+        IWearableTransactionRunner secondRunner = secondProvider.GetRequiredService<IWearableTransactionRunner>();
         string serializationKey = FormattableString.Invariant(
             $"wearable-sync:{user.Id.Value:N}:{WearableProvider.Fitbit}:{date:yyyy-MM-dd}");
 
         await Task.WhenAll(
-            CreateSyncEntryIfMissingAsync(firstRunner, firstContext, serializationKey, user.Id, date, 1000),
-            CreateSyncEntryIfMissingAsync(secondRunner, secondContext, serializationKey, user.Id, date, 2000));
+            CreateSyncEntryIfMissingAsync(firstRunner, firstProvider.GetRequiredService<WearablesDbContext>(), serializationKey, user.Id, date, 1000),
+            CreateSyncEntryIfMissingAsync(secondRunner, secondProvider.GetRequiredService<WearablesDbContext>(), serializationKey, user.Id, date, 2000));
 
         await using FoodDiaryDbContext verificationContext = CreateContext(seedContext);
         List<WearableSyncEntry> entries = await verificationContext.WearableSyncEntries
@@ -86,8 +92,8 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
     }
 
     private static Task<bool> CreateConnectionIfMissingAsync(
-        EfWearableTransactionRunner runner,
-        FoodDiaryDbContext context,
+        IWearableTransactionRunner runner,
+        WearablesDbContext context,
         string serializationKey,
         FoodDiary.Domain.ValueObjects.Ids.UserId userId,
         string externalUserId) =>
@@ -114,8 +120,8 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
             CancellationToken.None);
 
     private static Task<bool> CreateSyncEntryIfMissingAsync(
-        EfWearableTransactionRunner runner,
-        FoodDiaryDbContext context,
+        IWearableTransactionRunner runner,
+        WearablesDbContext context,
         string serializationKey,
         FoodDiary.Domain.ValueObjects.Ids.UserId userId,
         DateTime date,

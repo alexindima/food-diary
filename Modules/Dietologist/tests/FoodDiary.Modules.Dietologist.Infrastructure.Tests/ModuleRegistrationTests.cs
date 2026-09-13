@@ -21,7 +21,7 @@ public sealed class ModuleRegistrationTests {
         AssertRegistration<IClientTaskRepository, ClientTaskRepository>(services);
         AssertRegistration<IRecommendationTemplateRepository, RecommendationTemplateRepository>(services);
         AssertRegistration<IRecommendationBulkDispatchRepository, RecommendationBulkDispatchRepository>(services);
-        AssertRegistration<IAttentionSignalMetricsReadService, AttentionSignalMetricsReadService>(services);
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IAttentionSignalMetricsReadService));
 
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDietologistInvitationReadRepository));
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IDietologistInvitationReadModelRepository));

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Wearables;
 
-internal sealed class WearableSyncRepository(FoodDiaryDbContext context) : IWearableSyncRepository {
+internal sealed class WearableSyncRepository(DbSet<WearableSyncEntry> records) : IWearableSyncRepository {
     public async Task<WearableSyncEntry?> GetAsync(
         UserId userId, WearableProvider provider, WearableDataType dataType,
         DateTime date, CancellationToken cancellationToken = default) {
-        return await context.WearableSyncEntries
+        return await records
             .FirstOrDefaultAsync(e =>
                 e.UserId == userId && e.Provider == provider &&
                 e.DataType == dataType && e.Date == date.Date,
@@ -20,7 +20,7 @@ internal sealed class WearableSyncRepository(FoodDiaryDbContext context) : IWear
 
     public async Task<IReadOnlyList<WearableSyncEntry>> GetDailySummaryAsync(
         UserId userId, DateTime date, CancellationToken cancellationToken = default) {
-        return await context.WearableSyncEntries
+        return await records
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -30,7 +30,7 @@ internal sealed class WearableSyncRepository(FoodDiaryDbContext context) : IWear
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default) {
-        return await context.WearableSyncEntries
+        return await records
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
             .Select(e => new WearableSyncEntryReadModel(e.DataType, e.Value))
@@ -39,13 +39,13 @@ internal sealed class WearableSyncRepository(FoodDiaryDbContext context) : IWear
 
     public async Task<WearableSyncEntry> AddAsync(
         WearableSyncEntry entry, CancellationToken cancellationToken = default) {
-        await context.WearableSyncEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public async Task UpdateAsync(
         WearableSyncEntry entry, CancellationToken cancellationToken = default) {
-        context.WearableSyncEntries.Update(entry);
+        records.Update(entry);
         await Task.CompletedTask.ConfigureAwait(false);
     }
 }

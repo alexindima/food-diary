@@ -723,6 +723,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Billing": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",

@@ -15,6 +15,7 @@
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />

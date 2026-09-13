@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.ReadModel.Composition.Images;
@@ -70,7 +71,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
                 await new EfWeeklyGoalTransactionRunner(context, unitOfWork, queue).ExecuteSerializedAsync(user.Id, DateTime.UtcNow.Date, MutateAsync);
                 break;
             case "Billing":
-                await new EfBillingTransactionRunner(context, queue).ExecuteAsync(async token => await MutateAsync(token));
+                await new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance), queue).ExecuteAsync(async token => await MutateAsync(token));
                 break;
             default: throw new ArgumentOutOfRangeException(nameof(owner));
         }

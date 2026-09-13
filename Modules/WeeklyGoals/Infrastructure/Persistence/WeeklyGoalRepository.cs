@@ -1,3 +1,5 @@
+using System.Data.Common;
+using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -5,20 +7,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.WeeklyGoals;
 
-public sealed class WeeklyGoalRepository(FoodDiaryDbContext context) : IWeeklyGoalRepository {
-    public Task<WeeklyGoal?> GetAsync(
+public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTransaction?> currentTransaction) : IWeeklyGoalRepository {
+    public async Task<WeeklyGoal?> GetAsync(
         UserId userId,
         DateTime weekStartUtc,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<WeeklyGoal> query = context.WeeklyGoals;
         if (!asTracking) {
             query = query.AsNoTracking();
         }
 
-        return query.SingleOrDefaultAsync(
+        return await query.SingleOrDefaultAsync(
             goal => goal.UserId == userId && goal.WeekStartUtc == weekStartUtc,
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task AddAsync(WeeklyGoal goal, CancellationToken cancellationToken = default) {
@@ -31,6 +34,7 @@ public sealed class WeeklyGoalRepository(FoodDiaryDbContext context) : IWeeklyGo
         int offset,
         int limit,
         CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         return await context.WeeklyGoals
             .Where(goal =>
                 goal.ReminderEnabled &&
@@ -42,5 +46,11 @@ public sealed class WeeklyGoalRepository(FoodDiaryDbContext context) : IWeeklyGo
             .Take(limit)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
+        if (context.Database.IsRelational()) {
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+        }
     }
 }

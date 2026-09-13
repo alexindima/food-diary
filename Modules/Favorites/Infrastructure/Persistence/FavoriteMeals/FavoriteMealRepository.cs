@@ -1,20 +1,19 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.Entities.FavoriteMeals;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
 
-public sealed class FavoriteMealRepository(FoodDiaryDbContext context, IFavoriteMealQuery queries) : IFavoriteMealRepository {
+public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavoriteMealQuery queries) : IFavoriteMealRepository {
     public Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) {
-        context.FavoriteMeals.Add(favorite);
+        favorites.Add(favorite);
         return Task.FromResult(favorite);
     }
 
     public Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) {
-        context.FavoriteMeals.Remove(favorite);
+        favorites.Remove(favorite);
         return Task.CompletedTask;
     }
 
@@ -23,7 +22,7 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context, IFavorite
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<FavoriteMeal> query = context.FavoriteMeals
+        IQueryable<FavoriteMeal> query = favorites
             .AsQueryable();
 
         if (!asTracking) {
@@ -39,7 +38,7 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context, IFavorite
         MealId mealId,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.FavoriteMeals
+        return await favorites
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 f => f.MealId == mealId && f.UserId == userId,
@@ -50,7 +49,7 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context, IFavorite
         MealId mealId,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.FavoriteMeals
+        return await favorites
             .AsNoTracking()
             .AnyAsync(
                 f => f.MealId == mealId && f.UserId == userId,
@@ -65,12 +64,12 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context, IFavorite
             return new Dictionary<MealId, FavoriteMeal>();
         }
 
-        List<FavoriteMeal> favorites = await context.FavoriteMeals
+        List<FavoriteMeal> results = await favorites
             .AsNoTracking()
             .Where(f => f.UserId == userId && mealIds.Contains(f.MealId))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return favorites.ToDictionary(favorite => favorite.MealId);
+        return results.ToDictionary(favorite => favorite.MealId);
     }
 
     public async Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoriteIdsByMealIdsAsync(
@@ -81,19 +80,19 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context, IFavorite
             return new Dictionary<MealId, FavoriteMealId>();
         }
 
-        List<FavoriteMealIdByMealIdReadModel> favorites = await context.FavoriteMeals
+        List<FavoriteMealIdByMealIdReadModel> results = await favorites
             .AsNoTracking()
             .Where(f => f.UserId == userId && mealIds.Contains(f.MealId))
             .Select(f => new FavoriteMealIdByMealIdReadModel(MealId: f.MealId, FavoriteMealId: f.Id))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return favorites.ToDictionary(favorite => favorite.MealId, favorite => favorite.FavoriteMealId);
+        return results.ToDictionary(favorite => favorite.MealId, favorite => favorite.FavoriteMealId);
     }
 
     public async Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.FavoriteMeals
+        return await favorites
             .AsNoTracking()
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)

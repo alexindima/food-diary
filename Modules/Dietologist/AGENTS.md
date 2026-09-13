@@ -36,3 +36,5 @@ kinds and parameter formatting. Reference the owner explicitly; this grants no f
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 Dietologist PersistenceModel consumes Users.Domain.Contracts for scalar IDs. Central DietologistCrossModuleRelationships owns its ten User FKs: seven Cascade, two ClientTask Restrict, one optional invitation DietologistUserId SetNull. Preserve IsRequired(false), local Recommendation relationships, xmin and indexes. Do not move permissions, access checks or audit behavior into composition.
+
+AttentionSignalMetricsReadService is implemented and registered by ReadModel.Composition. Dietologist retains its port, relationship authorization, permission filtering and signal calculation. The composition adapter preserves batch SQL projections over Users, Meals and BodyMetrics; it never returns aggregates or tracks writes. Audit interception and runtime persistence remain in Dietologist pending coordinated context extraction.

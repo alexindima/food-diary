@@ -1,9 +1,9 @@
+using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Dietologist;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;

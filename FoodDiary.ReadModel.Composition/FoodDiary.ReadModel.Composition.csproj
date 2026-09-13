@@ -9,11 +9,13 @@
     <ProjectReference Include="../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
     <ProjectReference Include="../Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
+    <ProjectReference Include="../Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
     <ProjectReference Include="../Modules/ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />
     <ProjectReference Include="../Modules/ContentReports/Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />

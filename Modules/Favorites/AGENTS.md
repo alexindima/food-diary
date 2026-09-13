@@ -26,13 +26,14 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 Favorites owns its source DTOs and Result-returning source ports. Meals, Products
 and Recipes implement them and preserve their existing not-found errors.
 IMealFavoriteReadService and MealFavoriteMealModel belong to Favorites Contracts.
-Repositories join foreign sources with AsNoTracking and track only Favorites rows.
+Composition queries join foreign sources with AsNoTracking; repositories track only Favorites rows.
 
-EF tracking mode affects the complete query. Apply the requested AsTracking/
-AsNoTracking mode after correlated foreign access predicates; otherwise nested
-AsNoTracking can silently detach the owned Favorite row. PostgreSQL coverage must
-verify identity reuse, persisted updates and absence of foreign tracked entities.
+Apply the requested AsTracking/AsNoTracking mode to the owner query after the
+composition visibility check. PostgreSQL coverage must verify identity reuse,
+persisted updates and absence of foreign tracked entities.
 
 Stable favorite IDs live in Domain.Contracts. Favorites Domain references Meals Domain.Contracts for MealId; this does not expose Meals aggregates.
 
 Favorites and MealPlanning extend scalar model protection to twenty-two assemblies. Central typed composers preserve six Favorites Cascade FKs and four MealPlanning relationships: optional MealPlan User Cascade, MealPlanMeal Recipe Restrict, ShoppingList User Cascade, and optional ShoppingListItem Product SetNull. Same-owner mappings, indexes, converters and source provenance stay local. Central Infrastructure references Products.Domain explicitly; no schema or API change is intended.
+
+FavoritesDbContext owns all three favorite entities and saves through the shared unit of work. Repositories receive owner DbSets. Product/recipe visibility predicates and joined DTOs live in composition behind IFavoriteProductQuery/IFavoriteRecipeQuery, returning only authorized IDs and immutable models. Entity retrieval adds a second owner read; keep user predicates on both reads and apply owner tracking only after authorization. GetOwnedById deliberately permits removal of an inaccessible source's favorite. Preserve source/User Cascade constraints in the central model. PostgreSQL tests must verify same tracked instance, persisted edits, revocation after public-to-private changes, and atomic FK failure.

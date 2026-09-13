@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
@@ -84,7 +86,7 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         context.Users.Add(user);
         await context.SaveChangesAsync();
         user.MarkDeleted(DateTime.UtcNow);
-        var runner = new EfBillingTransactionRunner(context);
+        var runner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
         bool invoked = false;
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => runner.ExecuteAsync(_ => {

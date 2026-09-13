@@ -345,6 +345,8 @@
     "Modules/Billing/Infrastructure/ModuleRegistration.cs": {
       "module": "Billing",
       "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database",
         "entity:BillingPayment",
         "entity:BillingSubscription",
         "entity:BillingWebhookEvent",
@@ -352,7 +354,8 @@
         "tracked:BillingSubscription",
         "tracked:BillingWebhookEvent"
       ],
-      "reason": "Billing composition resolves only the three owner DbSet instances from the shared scoped context; transaction and SaveChanges ownership remain with the shared unit of work."
+      "reason": "Creates Billing owner context and supplies only owner sets plus a live shared transaction synchronization callback to repositories.",
+      "technicalSourceSha256": "1aefeea95589ffefb19841371bb3bc191f7eec1313b8a7b79a35856ddbe42ab1"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
@@ -384,14 +387,10 @@
     "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs": {
       "module": "Billing",
       "capabilities": [
-        "context:ChangeTracker",
-        "context:Database",
-        "context:SaveChangesAsync",
-        "entity:BillingPayment",
-        "entity:BillingWebhookEvent"
+        "context:Database"
       ],
-      "reason": "Billing owns serialized payment/webhook operations, save/commit and retry tracker reset; advisory locks serialize billing updates.",
-      "technicalSourceSha256": "7459f98be78850aacd21d16ca8e194818f04724da3f9ff191dc37e2cbd0374db"
+      "reason": "Retains shared advisory-lock transaction, retry and commit coordination; saves through IUnitOfWork and maps owner duplicate entries reported by EF.",
+      "technicalSourceSha256": "3b98a96c8dcdb080405c2c3a4e2d76773d72a7c37357f6e88d144989a3053dcc"
     },
     "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs": {
       "module": "Billing",
@@ -522,15 +521,6 @@
         "entity:WeightEntry"
       ],
       "reason": "Dashboard composes Hydration and BodyMetrics into a no-tracking body summary."
-    },
-    "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs": {
-      "module": "Dietologist",
-      "capabilities": [
-        "entity:Meal",
-        "entity:User",
-        "entity:WeightEntry"
-      ],
-      "reason": "Dietologist relationship-authorized attention metrics project Users, Meals and BodyMetrics; no foreign mutation."
     },
     "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs": {
       "module": "Dietologist",
@@ -690,21 +680,19 @@
       "module": "Favorites",
       "capabilities": [
         "entity:FavoriteProduct",
-        "entity:Product",
         "tracked:FavoriteProduct",
         "write:FavoriteProduct"
       ],
-      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Tracks only owner favorites; source visibility and composed DTO reads go through a read port."
     },
     "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs": {
       "module": "Favorites",
       "capabilities": [
         "entity:FavoriteRecipe",
-        "entity:Recipe",
         "tracked:FavoriteRecipe",
         "write:FavoriteRecipe"
       ],
-      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Tracks only owner favorites; source visibility and composed DTO reads go through a read port."
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs": {
       "module": "Gamification",
@@ -1278,11 +1266,10 @@
     "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs": {
       "module": "Wearables",
       "capabilities": [
-        "context:Database",
-        "context:SaveChangesAsync"
+        "context:Database"
       ],
-      "reason": "Wearables executes provider callbacks once under a separate session advisory lock; EF owns the implicit SaveChanges transaction and retries. Pending tracking is discarded on failure.",
-      "technicalSourceSha256": "b9d96f6c4f7f7dea603e3f309918101ca36a89a744031380fcd84e2e548292a4"
+      "reason": "Retains separate session advisory lock and clean shared boundary; callback executes once and IUnitOfWork owns atomic persistence retries.",
+      "technicalSourceSha256": "eaf9619b47d88bc8e6d9ef0d6e586eb00e6683c138a547da2f72f5b74d5f76ad"
     },
     "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs": {
       "module": "Wearables",
@@ -1313,11 +1300,13 @@
     "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs": {
       "module": "WeeklyGoals",
       "capabilities": [
+        "context:Database",
         "entity:WeeklyGoal",
         "tracked:WeeklyGoal",
         "write:WeeklyGoal"
       ],
-      "reason": "WeeklyGoals-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Reads and stages only WeeklyGoal records through the owner context; joins the current shared transaction before reads without committing.",
+      "technicalSourceSha256": "2df62f13cc293b635af2f9213ad2304283cb7de5ea56ae1454176b82a2629c8d"
     },
     "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs": {
       "module": "Admin",
@@ -1470,6 +1459,66 @@
       ],
       "reason": "Registers two owned Lessons sets on the shared connection and unit-of-work coordinator; no foreign entity access.",
       "technicalSourceSha256": "5ed54a77b3cbe0cd142d51225248efe1460407f85677233909c50eb37927a42d"
+    },
+    "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs": {
+      "module": "WeeklyGoals",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "context:Database"
+      ],
+      "reason": "Creates owner context and supplies a live shared transaction accessor; advisory lock and commit remain in the shared transaction runner.",
+      "technicalSourceSha256": "8e1907af9d430acdbc1023c3b0d292ccb64241989f02ecac7993707e07d5e3a6"
+    },
+    "Modules/Wearables/Infrastructure/ModuleRegistration.cs": {
+      "module": "Wearables",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:WearableConnection",
+        "entity:WearableSyncEntry",
+        "tracked:WearableConnection",
+        "tracked:WearableSyncEntry"
+      ],
+      "reason": "Creates owner runtime context and passes only its two entity sets to repositories.",
+      "technicalSourceSha256": "e24c06af7e1feb68833206ac646f9058872a34f507fe62ba9cb2780f5c6bc697"
+    },
+    "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:FavoriteProduct",
+        "entity:Product"
+      ],
+      "reason": "Read-only SQL visibility predicates return authorized favorite IDs and existing bounded immutable DTOs; no aggregate tracking."
+    },
+    "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:FavoriteRecipe",
+        "entity:Recipe"
+      ],
+      "reason": "Read-only SQL visibility predicates return authorized favorite IDs and existing bounded immutable DTOs; no aggregate tracking."
+    },
+    "Modules/Favorites/Infrastructure/ModuleRegistration.cs": {
+      "module": "Favorites",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:FavoriteMeal",
+        "entity:FavoriteProduct",
+        "entity:FavoriteRecipe",
+        "tracked:FavoriteMeal",
+        "tracked:FavoriteProduct",
+        "tracked:FavoriteRecipe"
+      ],
+      "reason": "Creates owner runtime context and passes only owner sets plus composition read ports.",
+      "technicalSourceSha256": "54abf19ce53a44a9fc1e59af6b8ca7c95946d0bcdeb0e7653e4189e5dffd69e3"
+    },
+    "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:Meal",
+        "entity:User",
+        "entity:WeightEntry"
+      ],
+      "reason": "Dietologist relationship-authorized attention metrics project Users, Meals and BodyMetrics; no foreign mutation."
     }
   }
 }

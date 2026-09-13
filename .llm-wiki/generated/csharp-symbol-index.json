@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4043,
-    "symbols": 3984,
-    "interfaceImplementationLinks": 271,
+    "sourceFiles": 4051,
+    "symbols": 3992,
+    "interfaceImplementationLinks": 273,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 2085,
+      "class": 2091,
       "enum": 64,
-      "interface": 477,
+      "interface": 479,
       "record": 1237,
       "record struct": 121
     },
@@ -32,8 +32,8 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1629,
-      "Query": 195,
+      "Other": 1633,
+      "Query": 199,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 48,
@@ -1784,11 +1784,32 @@
       "line": 12
     },
     {
+      "name": "AttentionSignalMetricsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
+      "line": 8
+    },
+    {
       "name": "FavoriteMealQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
       "line": 9
+    },
+    {
+      "name": "FavoriteProductQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
+      "line": 11
+    },
+    {
+      "name": "FavoriteRecipeQuery",
+      "kind": "class",
+      "role": "Query",
+      "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
+      "line": 11
     },
     {
       "name": "AchievementMetricReader",
@@ -1837,7 +1858,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 23
+      "line": 28
     },
     {
       "name": "RecipeOverviewReadService",
@@ -6093,7 +6114,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "line": 8
+      "line": 10
+    },
+    {
+      "name": "BillingDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
+      "line": 5
     },
     {
       "name": "BillingPaymentRepository",
@@ -10156,13 +10184,6 @@
       "line": 13
     },
     {
-      "name": "AttentionSignalMetricsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 7
-    },
-    {
       "name": "DietologistInvitationRepository",
       "kind": "class",
       "role": "Repository",
@@ -12277,6 +12298,13 @@
       "line": 4
     },
     {
+      "name": "IFavoriteProductQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
+      "line": 5
+    },
+    {
       "name": "IFavoriteProductReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -12317,6 +12345,13 @@
       "role": "Other",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs",
       "line": 4
+    },
+    {
+      "name": "IFavoriteRecipeQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
+      "line": 5
     },
     {
       "name": "IFavoriteRecipeReadModelRepository",
@@ -12792,28 +12827,35 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "FavoriteMealRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "FavoriteProductRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
-      "line": 11
+      "line": 8
     },
     {
       "name": "FavoriteRecipeRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
-      "line": 11
+      "line": 8
+    },
+    {
+      "name": "FavoritesDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Favorites/Infrastructure/Persistence/FavoritesDbContext.cs",
+      "line": 7
     },
     {
       "name": "FavoriteMealHttpResponse",
@@ -24629,14 +24671,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "EfWearableTransactionRunner",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WearableConnectionRepository",
@@ -24644,6 +24686,13 @@
       "role": "Repository",
       "path": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
       "line": 9
+    },
+    {
+      "name": "WearablesDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Infrastructure/Persistence/WearablesDbContext.cs",
+      "line": 5
     },
     {
       "name": "WearableSyncRepository",
@@ -25021,7 +25070,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 10
     },
     {
       "name": "EfWeeklyGoalTransactionRunner",
@@ -25035,7 +25084,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
-      "line": 7
+      "line": 9
+    },
+    {
+      "name": "WeeklyGoalsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalsDbContext.cs",
+      "line": 5
     },
     {
       "name": "WeeklyGoalsPresentationServiceCollectionExtensions",
@@ -28158,7 +28214,7 @@
       "interface": "IAttentionSignalMetricsReadService",
       "interfacePath": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs",
       "implementation": "AttentionSignalMetricsReadService",
-      "implementationPath": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28687,6 +28743,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IFavoriteProductQuery",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
+      "implementation": "FavoriteProductQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IFavoriteProductReadService",
       "interfacePath": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs",
       "implementation": "FavoriteProductReadService",
@@ -28705,6 +28768,13 @@
       "interfacePath": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs",
       "implementation": "FavoriteProductSourceReadService",
       "implementationPath": "Modules/Products/Infrastructure/FavoriteProductSourceReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IFavoriteRecipeQuery",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
+      "implementation": "FavoriteRecipeQuery",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
       "confidence": "naming-convention"
     },
     {

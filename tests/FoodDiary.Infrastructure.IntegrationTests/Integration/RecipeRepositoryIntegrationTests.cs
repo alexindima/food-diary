@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Favorites;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
@@ -327,7 +328,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         context.Recipes.Add(recipe);
         await context.SaveChangesAsync();
 
-        var repository = new FavoriteRecipeRepository(context);
+        var repository = new FavoriteRecipeRepository(context.FavoriteRecipes, new FavoriteRecipeQuery(context));
         FavoriteRecipe favorite = await repository.AddAsync(FavoriteRecipe.Create(user.Id, recipe.Id, "Dinner"));
         await context.SaveChangesAsync();
 

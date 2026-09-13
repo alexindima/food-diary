@@ -34,8 +34,8 @@ public sealed class LegacyTokenUpgradeTests {
         await context.SaveChangesAsync();
         context.Entry(connection).Property(nameof(WearableConnection.AccessToken)).CurrentValue =
             ProtectedWearableToken.FromStoredValue("legacy-access-token");
-        var connectionRepository = new WearableConnectionRepository(context);
-        var syncRepository = new WearableSyncRepository(context);
+        var connectionRepository = new WearableConnectionRepository(context.WearableConnections);
+        var syncRepository = new WearableSyncRepository(context.WearableSyncEntries);
         var protector = new TestTokenProtector();
         var handler = new SyncWearableDataCommandHandler(
             [new EmptyWearableClient()],

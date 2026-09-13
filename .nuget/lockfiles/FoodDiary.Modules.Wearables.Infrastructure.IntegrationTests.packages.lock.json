@@ -1214,6 +1214,7 @@
       "fooddiary.modules.wearables.infrastructure": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Wearables": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations.Http": "[1.0.0, )",

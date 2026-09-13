@@ -2014,6 +2014,20 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
+      "line": 93
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
+      "line": 95
+    },
+    {
+      "category": "health",
       "name": "SnapshotCaloriesPerBase",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
@@ -3579,20 +3593,6 @@
       "type": "ShareWeight,",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
       "line": 99
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 92
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 94
     },
     {
       "category": "health",

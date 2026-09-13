@@ -1,9 +1,10 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Dietologist;
+namespace FoodDiary.ReadModel.Composition.Dietologist;
 
 internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext context)
     : IAttentionSignalMetricsReadService {

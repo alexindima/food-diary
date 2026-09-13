@@ -1,9 +1,15 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.WeeklyGoals.Infrastructure;
+using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.WeeklyGoals;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
@@ -17,7 +23,9 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
         var user = User.Create($"weekly-goal-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
-        var repository = new WeeklyGoalRepository(context);
+        await using ServiceProvider provider = CreateProvider(context);
+        IWeeklyGoalRepository repository = provider.GetRequiredService<IWeeklyGoalRepository>();
+        WeeklyGoalsDbContext owned = provider.GetRequiredService<WeeklyGoalsDbContext>();
         var weekStartUtc = new DateTime(2026, 8, 10, 0, 0, 0, DateTimeKind.Utc);
         var goal = WeeklyGoal.Create(
             user.Id,
@@ -29,12 +37,12 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
             timeZoneOffsetMinutes: 240);
 
         await repository.AddAsync(goal, CancellationToken.None);
-        await context.SaveChangesAsync();
-        context.ChangeTracker.Clear();
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        owned.ChangeTracker.Clear();
 
         WeeklyGoal? untracked = await repository.GetAsync(user.Id, weekStartUtc, cancellationToken: CancellationToken.None);
         Assert.NotNull(untracked);
-        Assert.Equal(EntityState.Detached, context.Entry(untracked).State);
+        Assert.Equal(EntityState.Detached, owned.Entry(untracked).State);
 
         WeeklyGoal? tracked = await repository.GetAsync(
             user.Id,
@@ -50,7 +58,7 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
 
         Assert.NotNull(tracked);
         Assert.Multiple(
-            () => Assert.Equal(EntityState.Unchanged, context.Entry(tracked).State),
+            () => Assert.Equal(EntityState.Unchanged, owned.Entry(tracked).State),
             () => Assert.Equal(goal.Id, tracked.Id),
             () => Assert.Equal(goal.Id, Assert.Single(reminders).Id));
     }
@@ -76,12 +84,42 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
             goal => goal.UserId == user.Id && goal.WeekStartUtc == weekStartUtc));
     }
 
+    [RequiresDockerFact]
+    public async Task FailedSerializedAttemptClearsOwnerChangesAndCanBeRetriedAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"weekly-retry-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        await using ServiceProvider provider = CreateProvider(context);
+        IWeeklyGoalRepository repository = provider.GetRequiredService<IWeeklyGoalRepository>();
+        WeeklyGoalsDbContext owned = provider.GetRequiredService<WeeklyGoalsDbContext>();
+        IWeeklyGoalTransactionRunner runner = provider.GetRequiredService<IWeeklyGoalTransactionRunner>();
+        var week = new DateTime(2026, 8, 17, 0, 0, 0, DateTimeKind.Utc);
+        Assert.Equal(typeof(WeeklyGoal), Assert.Single(owned.Model.GetEntityTypes()).ClrType);
+        Assert.Same(context.Database.GetDbConnection(), owned.Database.GetDbConnection());
+        await Assert.ThrowsAsync<InvalidOperationException>(() => runner.ExecuteSerializedAsync<bool>(user.Id, week, async token => {
+            await repository.AddAsync(WeeklyGoal.Create(user.Id, week, WeeklyGoalType.DiaryLogging, targetDays: 5, reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null), token);
+            await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync(token);
+            throw new InvalidOperationException("Injected failure after owner save.");
+        }));
+        Assert.Empty(owned.ChangeTracker.Entries());
+        Assert.Null(await repository.GetAsync(user.Id, week));
+        await runner.ExecuteSerializedAsync(user.Id, week, async token => {
+            await repository.AddAsync(WeeklyGoal.Create(user.Id, week, WeeklyGoalType.DiaryLogging, targetDays: 5, reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null), token);
+            return true;
+        });
+        Assert.NotNull(await repository.GetAsync(user.Id, week));
+        Assert.Empty(context.ChangeTracker.Entries<WeeklyGoal>());
+    }
+
     private static async Task CreateGoalWithRunnerAsync(
         FoodDiaryDbContext context,
         FoodDiary.Domain.ValueObjects.Ids.UserId userId,
         DateTime weekStartUtc) {
-        var repository = new WeeklyGoalRepository(context);
-        var runner = new EfWeeklyGoalTransactionRunner(context, new TestUnitOfWork(context));
+        await using ServiceProvider provider = CreateProvider(context);
+        IWeeklyGoalRepository repository = provider.GetRequiredService<IWeeklyGoalRepository>();
+        IWeeklyGoalTransactionRunner runner = provider.GetRequiredService<IWeeklyGoalTransactionRunner>();
         await runner.ExecuteSerializedAsync(
             userId,
             weekStartUtc,
@@ -106,11 +144,17 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
             CancellationToken.None);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class TestUnitOfWork(FoodDiaryDbContext context) : IUnitOfWork {
-        public bool HasPendingChanges => context.ChangeTracker.HasChanges();
+    private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
+        var services = new ServiceCollection();
+        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddSingleton(context);
+        services.AddSingleton<IDomainEventPublisher, NoEvents>();
+        services.AddWeeklyGoalsModule();
+        return services.BuildServiceProvider();
+    }
 
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
-            context.SaveChangesAsync(cancellationToken);
+    [ExcludeFromCodeCoverage]
+    private sealed class NoEvents : IDomainEventPublisher {
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

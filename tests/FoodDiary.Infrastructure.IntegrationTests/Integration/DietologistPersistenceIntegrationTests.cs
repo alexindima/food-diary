@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
@@ -11,7 +12,6 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Audit;
-using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using Microsoft.EntityFrameworkCore;

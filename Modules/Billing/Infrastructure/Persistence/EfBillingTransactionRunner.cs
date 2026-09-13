@@ -9,7 +9,7 @@ using Npgsql;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context, IPostCommitActionQueue? postCommitActionQueue = null) : IBillingTransactionRunner {
+public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context, IUnitOfWork unitOfWork, IPostCommitActionQueue? postCommitActionQueue = null) : IBillingTransactionRunner {
     public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
         ExecuteCoreAsync(serializationKey: null, operation, cancellationToken);
 
@@ -37,18 +37,18 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context, IPost
                     }
 
                     await operation(cancellationToken).ConfigureAwait(false);
-                    await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                     await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 }
             } catch (DbUpdateException ex) when (IsDuplicatePayment(ex)) {
-                BillingPayment? payment = DetachAddedPayment();
+                BillingPayment? payment = DetachAddedPayment(ex);
                 if (payment is null) {
                     throw;
                 }
 
                 throw new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
             } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
-                BillingWebhookEvent? webhookEvent = DetachAddedWebhookEvent();
+                BillingWebhookEvent? webhookEvent = DetachAddedWebhookEvent(ex);
                 if (webhookEvent is null) {
                     throw;
                 }
@@ -74,28 +74,26 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context, IPost
         }
     }
 
-    private BillingPayment? DetachAddedPayment() {
-        Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<BillingPayment>? entry = context.ChangeTracker
-            .Entries<BillingPayment>()
-            .FirstOrDefault(candidate => candidate.State == EntityState.Added);
+    private static BillingPayment? DetachAddedPayment(DbUpdateException exception) {
+        Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry? entry = exception.Entries
+            .FirstOrDefault(candidate => candidate.Entity is BillingPayment && candidate.State == EntityState.Added);
         if (entry is null) {
             return null;
         }
 
-        BillingPayment payment = entry.Entity;
+        var payment = (BillingPayment)entry.Entity;
         entry.State = EntityState.Detached;
         return payment;
     }
 
-    private BillingWebhookEvent? DetachAddedWebhookEvent() {
-        Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<BillingWebhookEvent>? entry = context.ChangeTracker
-            .Entries<BillingWebhookEvent>()
-            .FirstOrDefault(candidate => candidate.State == EntityState.Added);
+    private static BillingWebhookEvent? DetachAddedWebhookEvent(DbUpdateException exception) {
+        Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry? entry = exception.Entries
+            .FirstOrDefault(candidate => candidate.Entity is BillingWebhookEvent && candidate.State == EntityState.Added);
         if (entry is null) {
             return null;
         }
 
-        BillingWebhookEvent webhookEvent = entry.Entity;
+        var webhookEvent = (BillingWebhookEvent)entry.Entity;
         entry.State = EntityState.Detached;
         return webhookEvent;
     }

@@ -1,3 +1,6 @@
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
 using FoodDiary.Application.WeeklyGoals;
 using FoodDiary.Infrastructure.Persistence.WeeklyGoals;
@@ -8,7 +11,13 @@ namespace FoodDiary.Modules.WeeklyGoals.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddWeeklyGoalsModule(this IServiceCollection services) {
         services.AddWeeklyGoalsApplication();
-        services.AddScoped<IWeeklyGoalRepository, WeeklyGoalRepository>();
+        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+            .CreateModuleContext<WeeklyGoalsDbContext>(options => new WeeklyGoalsDbContext(options)));
+        services.AddScoped<IWeeklyGoalRepository>(provider => {
+            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            return new WeeklyGoalRepository(provider.GetRequiredService<WeeklyGoalsDbContext>(),
+                () => shared.Database.CurrentTransaction?.GetDbTransaction());
+        });
         services.AddScoped<IWeeklyGoalTransactionRunner, EfWeeklyGoalTransactionRunner>();
         return services;
     }

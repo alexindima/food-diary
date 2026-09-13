@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5331,
+    "productionFiles": 5339,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -4489,12 +4489,36 @@
       "structuralRiskScore": 9.9
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
+      "nonBlankLines": 86,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.22
+    },
+    {
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
       "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.64
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.1
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.4
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
@@ -4546,11 +4570,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 54,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.92
+      "structuralRiskScore": 1.08
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -18098,43 +18122,51 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
-    },
-    {
-      "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 44,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.96
+      "structuralRiskScore": 2.38
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.52
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
-      "nonBlankLines": 87,
-      "decisionPoints": 10,
+      "nonBlankLines": 95,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.74
+      "structuralRiskScore": 18.4
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.82
-    },
-    {
-      "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
-      "nonBlankLines": 100,
+      "nonBlankLines": 47,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.5
+      "structuralRiskScore": 11.44
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
+      "nonBlankLines": 98,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.46
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
@@ -22802,19 +22834,11 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.8
-    },
-    {
-      "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
-      "nonBlankLines": 85,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.2
+      "structuralRiskScore": 0.78
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs",
@@ -25281,6 +25305,14 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
       "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
@@ -25327,6 +25359,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs",
@@ -25874,35 +25914,43 @@
     },
     {
       "path": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 34,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.68
     },
     {
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
-      "nonBlankLines": 92,
+      "nonBlankLines": 91,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.84
+      "structuralRiskScore": 13.82
     },
     {
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
-      "nonBlankLines": 126,
-      "decisionPoints": 25,
+      "nonBlankLines": 53,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.02
+      "structuralRiskScore": 10.06
     },
     {
       "path": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
-      "nonBlankLines": 115,
-      "decisionPoints": 26,
+      "nonBlankLines": 52,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.3
+      "structuralRiskScore": 10.04
+    },
+    {
+      "path": "Modules/Favorites/Infrastructure/Persistence/FavoritesDbContext.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteMeals/Responses/FavoriteMealHttpResponse.cs",
@@ -39650,19 +39698,19 @@
     },
     {
       "path": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 31,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.6
+      "structuralRiskScore": 3.62
     },
     {
       "path": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
@@ -39679,6 +39727,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 8.4
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Persistence/WearablesDbContext.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Wearables/Infrastructure/Providers/Options/FitbitOptions.cs",
@@ -40114,11 +40170,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
@@ -40130,11 +40186,19 @@
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 4,
+      "nonBlankLines": 50,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.82
+      "structuralRiskScore": 8.5
+    },
+    {
+      "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalsDbContext.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/WeeklyGoals/Presentation/Extensions/WeeklyGoalsPresentationServiceCollectionExtensions.cs",

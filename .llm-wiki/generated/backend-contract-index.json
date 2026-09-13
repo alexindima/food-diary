@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1214,
+    "contracts": 1218,
     "ambiguousContracts": 0,
-    "consumerEdges": 8737,
-    "productionConsumerEdges": 5143,
-    "testConsumerEdges": 3594,
-    "consumedContracts": 1214,
+    "consumerEdges": 8783,
+    "productionConsumerEdges": 5157,
+    "testConsumerEdges": 3626,
+    "consumedContracts": 1218,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -4329,6 +4329,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "FavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "class"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "FavoriteRecipeHttpResponse",
       "roles": [
         "Response"
@@ -4341,6 +4358,23 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "FavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "class"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10483,6 +10517,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IFavoriteProductReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -10580,6 +10631,23 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -25773,6 +25841,19 @@
         "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
       "isTest": false,
       "referenceCount": 8
@@ -25788,7 +25869,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
       "isTest": false,
-      "referenceCount": 5
+      "referenceCount": 4
     },
     {
       "contract": "BillingWebhookEvent",
@@ -25932,6 +26013,19 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "BleedingEntryHttpResponse",
@@ -36529,6 +36623,32 @@
       "referenceCount": 6
     },
     {
+      "contract": "FavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "FavoriteRecipeHttpResponse",
       "roles": [
         "Response"
@@ -36592,6 +36712,45 @@
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "FavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "FavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "FertilitySignalHttpResponse",
@@ -52267,33 +52426,33 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAttentionSignalMetricsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAttentionSignalMetricsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAttentionSignalMetricsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAttentionSignalMetricsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -53411,6 +53570,19 @@
         "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingPaymentReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -53596,6 +53768,19 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IBillingPaymentWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IBillingPaymentWriteRepository",
@@ -54451,6 +54636,19 @@
         "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -54545,6 +54743,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IBillingTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IBillingTransactionRunner",
@@ -54789,6 +55000,19 @@
         "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IBillingWebhookEventReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -54948,6 +55172,19 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IBillingWebhookEventWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "IBillingWebhookEventWriteRepository",
@@ -66995,6 +67232,32 @@
       "definitionPaths": [
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableTestComposition.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
       "consumerArea": "Shared",
       "consumerPath": "Shared/tests/FoodDiary.Domain.Primitives.Tests/EntityAndAggregateRootTests.cs",
       "isTest": true,
@@ -67100,6 +67363,19 @@
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedDeliveryContextsIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -67114,6 +67390,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFastingContextCompositionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -67308,9 +67597,48 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableTestComposition.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AdditionalPersistenceRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BoundaryReliabilityIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IDomainEventPublisher",
@@ -67360,6 +67688,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleBoundaryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleContextCompositionIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -67373,7 +67714,33 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAdminContextCompositionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -67400,6 +67767,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFastingContextCompositionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -72144,6 +72524,19 @@
         "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteMealQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
       "isTest": false,
       "referenceCount": 1
@@ -72630,6 +73023,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteProductQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "IFavoriteProductReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -72691,6 +73136,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteProductReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -73132,8 +73590,73 @@
         "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IFavoriteProductWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -73198,6 +73721,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -73590,6 +74126,19 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteRecipeWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IFavoriteRecipeWriteRepository",
@@ -102654,6 +103203,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -102824,6 +103386,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -103057,6 +103632,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableRetryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -103085,7 +103673,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IUnitOfWork",
@@ -103213,6 +103801,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedDeliveryContextsIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -103227,6 +103828,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFastingContextCompositionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFavoritesContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -113158,6 +113772,32 @@
         "Modules/Wearables/Application/Abstractions/Common/IWearableTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableRetryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IWearableTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableTransactionRunnerIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 12
+    },
+    {
+      "contract": "IWearableTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -114133,6 +114773,19 @@
         "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IWeeklyGoalRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/WeeklyGoalReminderJobTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -114188,6 +114841,19 @@
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IWeightEntryReadModelRepository",

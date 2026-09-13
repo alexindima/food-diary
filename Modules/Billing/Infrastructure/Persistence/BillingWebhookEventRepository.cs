@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> webhookEvents, TimeProvider? timeProvider = null) : IBillingWebhookEventRepository {
+public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> webhookEvents, TimeProvider? timeProvider = null, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingWebhookEventRepository {
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
-    public Task<bool> ExistsAsync(
+    public async Task<bool> ExistsAsync(
         string provider,
         string eventId,
         CancellationToken cancellationToken = default) {
-        return webhookEvents
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        return await webhookEvents
             .AnyAsync(
                 webhookEvent => webhookEvent.Provider == provider && webhookEvent.EventId == eventId,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
     }
 
     public Task<BillingWebhookEvent> AddAsync(
@@ -23,12 +24,15 @@ public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> web
         return Task.FromResult(webhookEvent);
     }
 
-    public Task<BillingWebhookEvent?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
-        webhookEvents.SingleOrDefaultAsync(webhookEvent => webhookEvent.Id == id, cancellationToken);
+    public async Task<BillingWebhookEvent?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        return await webhookEvents.SingleOrDefaultAsync(webhookEvent => webhookEvent.Id == id, cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task<IReadOnlyList<BillingWebhookEvent>> GetPendingAsync(
         int limit,
         CancellationToken cancellationToken = default) {
+        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         return await webhookEvents
             .Where(webhookEvent =>
                 (webhookEvent.Status == BillingWebhookEvent.ReceivedStatus || webhookEvent.Status == BillingWebhookEvent.FailedStatus) &&
@@ -44,4 +48,7 @@ public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> web
         webhookEvents.Update(webhookEvent);
         return Task.CompletedTask;
     }
+
+    private Task SynchronizeTransactionAsync(CancellationToken cancellationToken) =>
+        synchronizeTransactionAsync?.Invoke(cancellationToken) ?? Task.CompletedTask;
 }

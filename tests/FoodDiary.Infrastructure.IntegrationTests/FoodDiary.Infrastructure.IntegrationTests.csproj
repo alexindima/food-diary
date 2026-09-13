@@ -45,6 +45,7 @@
     <ProjectReference Include="../../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="../../Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
@@ -70,6 +71,7 @@
     <ProjectReference Include="../../Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />

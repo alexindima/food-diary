@@ -36,7 +36,6 @@ public static class ModuleRegistration {
         services.AddScoped<IRecommendationBulkDispatchRepository, RecommendationBulkDispatchRepository>();
         services.AddScoped<IRecommendationBulkDispatchLookupRepository>(static provider => provider.GetRequiredService<IRecommendationBulkDispatchRepository>());
         services.AddScoped<IRecommendationBulkDispatchWriteRepository>(static provider => provider.GetRequiredService<IRecommendationBulkDispatchRepository>());
-        services.AddScoped<IAttentionSignalMetricsReadService, AttentionSignalMetricsReadService>();
         return services;
     }
 }

@@ -1,3 +1,8 @@
+using FoodDiary.ReadModel.Composition.Dietologist;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.ReadModel.Composition.Favorites;
+using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.ReadModel.Composition.Images;
@@ -43,6 +48,9 @@ public static class ReadModelCompositionRegistration {
         services.RemoveAll<IDashboardMealsReadService>();
         services.AddScoped<DashboardMealsReadService>();
         services.AddScoped<IDashboardMealsReadService>(static provider => provider.GetRequiredService<DashboardMealsReadService>());
+        services.AddScoped<IFavoriteProductQuery, FavoriteProductQuery>();
+        services.AddScoped<IFavoriteRecipeQuery, FavoriteRecipeQuery>();
+        services.AddScoped<IAttentionSignalMetricsReadService, AttentionSignalMetricsReadService>();
         return services;
     }
 }

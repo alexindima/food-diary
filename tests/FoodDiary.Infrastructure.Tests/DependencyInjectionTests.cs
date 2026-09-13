@@ -1,3 +1,4 @@
+using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
@@ -34,7 +35,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
-using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
@@ -467,7 +467,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RefreshTokenExpirationDays"] = "7",
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
-        services.AddInfrastructure(configuration).AddAiPersistence().AddDietologistModule();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddDietologistModule().AddReadModelComposition();
 
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();

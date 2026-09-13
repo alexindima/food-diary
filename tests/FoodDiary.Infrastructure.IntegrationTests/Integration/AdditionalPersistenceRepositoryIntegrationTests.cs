@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Billing.Models;
@@ -47,7 +49,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var connectionRepository = new WearableConnectionRepository(context);
+        var connectionRepository = new WearableConnectionRepository(context.WearableConnections);
         var connection = WearableConnection.Create(
             user.Id,
             WearableProvider.Fitbit,
@@ -96,7 +98,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             () => Assert.Equal("external-user-reconnected", reconnected.ExternalUserId),
             () => Assert.Equal("fdp1:access-token-3", reconnected.AccessToken.Value));
 
-        var syncRepository = new WearableSyncRepository(context);
+        var syncRepository = new WearableSyncRepository(context.WearableSyncEntries);
         DateTime date = DateTime.UtcNow.Date;
         var syncEntry = WearableSyncEntry.Create(user.Id, WearableProvider.Fitbit, WearableDataType.Steps, date.AddHours(9), 1200);
 
@@ -565,8 +567,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await using FoodDiaryDbContext firstContext = await databaseFixture.CreateDbContextAsync();
         string connectionString = firstContext.Database.GetConnectionString()!;
         await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString);
-        var firstRunner = new EfBillingTransactionRunner(firstContext);
-        var secondRunner = new EfBillingTransactionRunner(secondContext);
+        var firstRunner = new EfBillingTransactionRunner(firstContext, new EfUnitOfWork(firstContext, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
+        var secondRunner = new EfBillingTransactionRunner(secondContext, new EfUnitOfWork(secondContext, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
         var firstEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var secondEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
