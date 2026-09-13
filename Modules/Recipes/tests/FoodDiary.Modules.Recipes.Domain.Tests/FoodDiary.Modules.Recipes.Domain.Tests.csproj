@@ -11,9 +11,9 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <Using Include="Xunit" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>

@@ -7,7 +7,7 @@ public sealed class AdminModuleExtractionTests {
     [InlineData("Application.Abstractions", "FoodDiary.Modules.Admin.Application.Abstractions.csproj")]
     [InlineData("Domain", "FoodDiary.Modules.Admin.Domain.csproj")]
     [InlineData("Infrastructure", "FoodDiary.Modules.Admin.Infrastructure.csproj")]
-    [InlineData("Infrastructure/Model", "FoodDiary.Modules.Admin.PersistenceModel.csproj")]
+    [InlineData("PersistenceModel", "FoodDiary.Modules.Admin.PersistenceModel.csproj")]
     public void OwnedLayers_HavePhysicalProjects(string folder, string project) {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Admin", folder, project)));
     }
@@ -18,7 +18,7 @@ public sealed class AdminModuleExtractionTests {
             "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj"));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Admin/Domain/Entities/AdminImpersonationSession.cs")));
         string[] references = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
         Assert.Contains("FoodDiary.Modules.Admin.PersistenceModel", references, StringComparer.Ordinal);
         Assert.DoesNotContain("FoodDiary.Modules.Admin.Infrastructure", references, StringComparer.Ordinal);

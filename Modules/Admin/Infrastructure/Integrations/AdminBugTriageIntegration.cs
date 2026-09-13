@@ -1,10 +1,10 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Infrastructure.Integrations.BugTriage;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations.BugTriage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Integrations;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations;
 
 public static class AdminBugTriageIntegration {
     public static IServiceCollection AddAdminBugTriageIntegration(this IServiceCollection services, IConfiguration configuration) {

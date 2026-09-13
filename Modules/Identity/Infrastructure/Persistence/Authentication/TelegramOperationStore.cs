@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Application.Abstractions.Authentication.Common;

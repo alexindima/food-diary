@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
     [Fact]

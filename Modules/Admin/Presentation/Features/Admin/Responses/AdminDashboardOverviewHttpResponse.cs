@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.Admin.Responses;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
 public sealed record AdminDashboardOverviewHttpResponse(DateTime FromUtc, DateTime ToUtc, string Interval,
     AdminDashboardPeriodHttpResponse Period, AdminDashboardPeriodHttpResponse? Previous,

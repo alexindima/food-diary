@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Admin.Common;
+namespace FoodDiary.Modules.Admin.Application.Common;
 
 public static class AdminLocaleParser {
     public static Result<string> ParseRequiredLanguage(string value, string fieldName, string message) =>

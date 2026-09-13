@@ -1,6 +1,6 @@
 using System.Text;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Infrastructure.Integrations.MailInbox;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Export;
 using FoodDiary.MailInbox.Client.Models;

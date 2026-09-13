@@ -1,13 +1,13 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
-using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Models;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserLoginActivityFeatureTests {

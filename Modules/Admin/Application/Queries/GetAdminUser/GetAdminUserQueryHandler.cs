@@ -1,15 +1,16 @@
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminUser;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
 
-public sealed class GetAdminUserQueryHandler(IAdminUserReadService userReadService)
+public sealed class GetAdminUserQueryHandler(IUserAdministrationReadService userReadService)
     : IQueryHandler<GetAdminUserQuery, Result<AdminUserModel>> {
     public async Task<Result<AdminUserModel>> Handle(
         GetAdminUserQuery query,
@@ -22,9 +23,9 @@ public sealed class GetAdminUserQueryHandler(IAdminUserReadService userReadServi
         }
 
         UserId userId = userIdResult.Value;
-        AdminUserModel? user = await userReadService.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+        UserAdminReadModel? user = await userReadService.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
         return user is null
             ? Result.Failure<AdminUserModel>(UserErrors.NotFound(userId))
-            : Result.Success(user);
+            : Result.Success(user.ToAdminModel());
     }
 }

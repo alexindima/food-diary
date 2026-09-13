@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;

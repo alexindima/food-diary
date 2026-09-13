@@ -9,12 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Application.Marketing.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.Marketing.Domain.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Application.Marketing.csproj" />
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Marketing.Domain.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

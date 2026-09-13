@@ -1,7 +1,8 @@
+using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Services;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Services;
 using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -39,9 +40,9 @@ public sealed class UserApplicationServiceDelegationTests {
     }
 
     [Fact]
-    public async Task AdminUserReadService_DelegatesReadMethodsToRepositories() {
+    public async Task UserAdministrationReadService_DelegatesReadsAndFeedsAdminSummary() {
         IUserAdminReadModelRepository adminReadRepository = Substitute.For<IUserAdminReadModelRepository>();
-        var service = new AdminUserReadService(new UserAdministrationReadService(adminReadRepository));
+        var service = new UserAdministrationReadService(adminReadRepository);
         var userId = UserId.New();
         var user = User.Create("admin@test.com", "hashed-password");
         UserAdminReadModel userReadModel = ToAdminReadModel(user);
@@ -55,12 +56,12 @@ public sealed class UserApplicationServiceDelegationTests {
             .GetAdminDashboardSummaryReadModelsAsync(recentLimit: 3, cancellationTokenSource.Token)
             .Returns((TotalUsers: 10, ActiveUsers: 8, PremiumUsers: 2, DeletedUsers: 1, RecentUsers: users));
 
-        AdminUserModel? byId = await service.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
-        (IReadOnlyList<AdminUserModel> items, int totalItems) = await service.GetPagedAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
-        AdminDashboardSummaryModel summary = await service.GetDashboardSummaryAsync(
-            recentLimit: 3,
-            pendingReportsCount: 4,
-            cancellationTokenSource.Token);
+        UserAdminReadModel? byId = await service.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
+        (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await service.GetPagedAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
+        IContentReportAdministrationReadService reports = Substitute.For<IContentReportAdministrationReadService>();
+        reports.CountAsync(FoodDiary.Domain.Enums.ReportStatus.Pending, cancellationTokenSource.Token).Returns(4);
+        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(service, reports)
+            .GetSummaryAsync(3, cancellationTokenSource.Token)).Value;
 
         Assert.Multiple(
             () => Assert.Equal(user.Id.Value, byId?.Id),

@@ -18,7 +18,6 @@
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Dashboard.Presentation.Contracts.csproj" />
     <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.Dashboard.Presentation.Mappings.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../BodyMetrics/Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../BodyMetrics/Presentation.Mappings/FoodDiary.Modules.BodyMetrics.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../Cycles/Presentation.Contracts/FoodDiary.Modules.Cycles.Presentation.Contracts.csproj" />
@@ -34,6 +33,7 @@
     <ProjectReference Include="../../Tdee/Presentation.Mappings/FoodDiary.Modules.Tdee.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminEmailTemplates;
 
 public sealed record GetAdminEmailTemplatesQuery
     : IQuery<Result<IReadOnlyList<AdminEmailTemplateModel>>>;

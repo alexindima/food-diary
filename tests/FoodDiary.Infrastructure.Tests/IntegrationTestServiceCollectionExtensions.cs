@@ -1,5 +1,5 @@
 using FoodDiary.Integrations;
-using FoodDiary.Infrastructure.Integrations;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

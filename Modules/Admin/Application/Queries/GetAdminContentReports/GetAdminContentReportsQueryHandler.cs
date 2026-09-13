@@ -1,15 +1,15 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Admin.Internal.Validation;
-using FoodDiary.Application.Admin.Mappings;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Internal.Validation;
+using FoodDiary.Modules.Admin.Application.Mappings;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminContentReports;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminContentReports;
 
 public sealed class GetAdminContentReportsQueryHandler(IContentReportAdministrationReadService contentReportReadService)
     : IQueryHandler<GetAdminContentReportsQuery, Result<PagedResponse<AdminContentReportModel>>> {

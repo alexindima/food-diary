@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
 
 public sealed class GetAdminAiUsageSummaryQueryValidator : AbstractValidator<GetAdminAiUsageSummaryQuery> {
     public GetAdminAiUsageSummaryQueryValidator() {

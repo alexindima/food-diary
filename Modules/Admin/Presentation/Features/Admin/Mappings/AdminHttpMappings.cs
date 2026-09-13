@@ -1,22 +1,22 @@
-using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
-using FoodDiary.Application.Admin.Commands.CreateAdminUser;
-using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
-using FoodDiary.Application.Admin.Commands.DismissContentReport;
-using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
-using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
-using FoodDiary.Application.Admin.Commands.ReviewContentReport;
-using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
-using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
-using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
-using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
-using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
-using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
-using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
-using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
-using FoodDiary.Application.Admin.Queries.GetCollaborationAudit;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
+using FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
+using FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
+using FoodDiary.Modules.Admin.Application.Commands.ReviewContentReport;
+using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
+using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
+using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
+using FoodDiary.Modules.Admin.Application.Queries.GetCollaborationAudit;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminHttpMappings {
     extension(GetCollaborationAuditHttpQuery query) {

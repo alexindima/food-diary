@@ -1,3 +1,4 @@
+using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;

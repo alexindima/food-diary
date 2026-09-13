@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
 
 public sealed class UpsertAdminEmailTemplateCommandValidator : AbstractValidator<UpsertAdminEmailTemplateCommand> {
     public UpsertAdminEmailTemplateCommandValidator() {

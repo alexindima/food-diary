@@ -1,10 +1,10 @@
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminHttpResponseMappings {
     extension(AdminAuditEntryModel model) {

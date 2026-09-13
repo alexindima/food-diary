@@ -1,4 +1,4 @@
-namespace FoodDiary.Infrastructure.Integrations.BugTriage;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.BugTriage;
 
 public sealed class AdminBugTriageOptions {
     public string BaseUrl { get; set; } = string.Empty;

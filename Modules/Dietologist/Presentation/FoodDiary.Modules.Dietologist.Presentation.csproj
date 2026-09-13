@@ -17,14 +17,14 @@
     <ProjectReference Include="../Application/FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
     <ProjectReference Include="../../Dashboard/Presentation.Contracts/FoodDiary.Modules.Dashboard.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Dashboard/Presentation.Mappings/FoodDiary.Modules.Dashboard.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 
 </Project>

@@ -32,8 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
-    <ProjectReference Include="../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="../../FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
     <ProjectReference Include="../../Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj" />
     <ProjectReference Include="../../Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj" />
     <ProjectReference Include="../../Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj" />
@@ -70,5 +68,7 @@
     <ProjectReference Include="../../Modules/Wearables/Presentation/FoodDiary.Modules.Wearables.Presentation.csproj" />
     <ProjectReference Include="../../Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj" />
     <ProjectReference Include="../../Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj" />
+    <ProjectReference Include="../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+    <ProjectReference Include="../../FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
   </ItemGroup>
 </Project>

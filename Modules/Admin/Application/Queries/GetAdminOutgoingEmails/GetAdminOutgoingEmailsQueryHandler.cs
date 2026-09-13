@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminOutgoingEmails;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminOutgoingEmails;
 
 public sealed class GetAdminOutgoingEmailsQueryHandler(IOutgoingEmailJournal journal) : IQueryHandler<GetAdminOutgoingEmailsQuery, Result<OutgoingEmailJournalPage>> {
     public async Task<Result<OutgoingEmailJournalPage>> Handle(GetAdminOutgoingEmailsQuery query, CancellationToken cancellationToken) =>

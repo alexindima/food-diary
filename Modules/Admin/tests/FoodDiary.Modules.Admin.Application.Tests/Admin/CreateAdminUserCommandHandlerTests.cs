@@ -3,15 +3,15 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Admin.Commands.CreateAdminUser;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class CreateAdminUserCommandHandlerTests {

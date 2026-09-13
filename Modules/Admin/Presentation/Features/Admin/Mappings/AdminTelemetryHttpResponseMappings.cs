@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminTelemetryHttpResponseMappings {
     extension(FastingTelemetrySummaryModel summary) {

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
+namespace FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
 
 public sealed record ImportAdminLessonItem(
     string Title,

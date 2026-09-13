@@ -1,17 +1,18 @@
-using FoodDiary.Application.Admin.Commands.CreateAdminAchievementDefinition;
-using FoodDiary.Application.Admin.Commands.UpdateAdminAchievementDefinition;
-using FoodDiary.Application.Admin.Queries.GetAdminAchievementDefinitions;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Presentation.Api.Authorization;
-using FoodDiary.Presentation.Api.Features.Admin;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Admin.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AdminAchievementDefinitionsControllerTests {

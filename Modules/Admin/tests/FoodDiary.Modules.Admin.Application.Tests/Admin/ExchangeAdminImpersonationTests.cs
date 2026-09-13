@@ -1,9 +1,10 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Admin.Commands.ExchangeAdminImpersonation;
+using FoodDiary.Modules.Admin.Application.Commands.ExchangeAdminImpersonation;
+using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class ExchangeAdminImpersonationTests {

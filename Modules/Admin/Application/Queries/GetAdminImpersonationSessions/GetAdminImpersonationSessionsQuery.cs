@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
 
 public sealed record GetAdminImpersonationSessionsQuery(
     int Page,

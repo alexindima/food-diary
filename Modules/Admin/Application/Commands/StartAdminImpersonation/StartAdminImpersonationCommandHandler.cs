@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
@@ -9,11 +9,11 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
+namespace FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 
 public sealed class StartAdminImpersonationCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

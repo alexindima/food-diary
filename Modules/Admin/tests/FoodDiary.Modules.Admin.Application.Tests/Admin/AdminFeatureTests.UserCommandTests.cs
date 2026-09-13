@@ -1,15 +1,15 @@
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
-using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FluentValidation.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Users.Services;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
     [Fact]

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
 
 public sealed class GetAdminUserLoginEventsQueryValidator : AbstractValidator<GetAdminUserLoginEventsQuery> {
     public GetAdminUserLoginEventsQueryValidator() {

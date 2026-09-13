@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingWebhookEvents;
 
 public sealed record GetAdminBillingWebhookEventsQuery(
     int Page,

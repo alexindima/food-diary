@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminRetention;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminRetention;
 
 public sealed class GetAdminRetentionQueryHandler(IAdminRetentionReader reader, TimeProvider timeProvider)
     : IQueryHandler<GetAdminRetentionQuery, Result<AdminRetentionReport>> {

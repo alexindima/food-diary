@@ -1,7 +1,7 @@
 using FoodDiary.Application.Marketing.Models;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminMarketingHttpResponseMappings {
     extension(MarketingAttributionSummaryModel summary) {

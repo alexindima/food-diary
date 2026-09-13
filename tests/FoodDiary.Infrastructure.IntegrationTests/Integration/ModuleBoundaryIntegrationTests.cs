@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition.Recipes;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;

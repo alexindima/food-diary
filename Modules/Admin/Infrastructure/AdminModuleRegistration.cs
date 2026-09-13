@@ -1,13 +1,13 @@
+using FoodDiary.Modules.Admin.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Admin;
+using FoodDiary.Modules.Admin.Application;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Infrastructure.Authentication;
-using FoodDiary.Infrastructure.Persistence.Admin;
+using FoodDiary.Modules.Admin.Infrastructure.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Admin.Infrastructure;
 
 public static class AdminModuleRegistration {
     public static IServiceCollection AddAdminModule(this IServiceCollection services) =>

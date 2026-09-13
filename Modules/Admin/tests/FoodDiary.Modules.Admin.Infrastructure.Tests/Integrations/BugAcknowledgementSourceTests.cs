@@ -1,5 +1,5 @@
 using System.Text;
-using FoodDiary.Infrastructure.Integrations.MailInbox;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 namespace FoodDiary.Modules.Admin.Infrastructure.Tests.Integrations;
 

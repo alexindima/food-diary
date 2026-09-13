@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Admin.Mappings;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Mappings;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminLessons;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminLessons;
 
 public sealed class GetAdminLessonsQueryHandler(ILessonAdministrationReadService lessonReadService)
     : IQueryHandler<GetAdminLessonsQuery, Result<IReadOnlyList<AdminLessonModel>>> {

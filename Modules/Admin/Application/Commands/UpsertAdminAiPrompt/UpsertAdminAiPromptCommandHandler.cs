@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Admin.Mappings;
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Mappings;
+using FoodDiary.Modules.Admin.Application.Common;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Ai.Models;
 
-namespace FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
 
 public sealed class UpsertAdminAiPromptCommandHandler(IAiPromptAdministrationService administrationService)
     : ICommandHandler<UpsertAdminAiPromptCommand, Result<AdminAiPromptModel>> {

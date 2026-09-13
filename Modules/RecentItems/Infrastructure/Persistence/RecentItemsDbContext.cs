@@ -1,7 +1,8 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Recents;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 
 public sealed class RecentItemsDbContext(DbContextOptions<RecentItemsDbContext> options) : DbContext(options) {
     public DbSet<RecentItem> RecentItems => Set<RecentItem>();

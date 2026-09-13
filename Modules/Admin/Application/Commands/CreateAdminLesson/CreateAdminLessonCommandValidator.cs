@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Commands.CreateAdminLesson;
+namespace FoodDiary.Modules.Admin.Application.Commands.CreateAdminLesson;
 
 public sealed class CreateAdminLessonCommandValidator : AbstractValidator<CreateAdminLessonCommand> {
     public CreateAdminLessonCommandValidator() {

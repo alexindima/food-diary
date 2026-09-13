@@ -1,9 +1,9 @@
-using FoodDiary.Application.Admin.Queries.GetAdminOutgoingEmails;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminOutgoingEmails;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminOutgoingEmailHttpMappings {
     public static GetAdminOutgoingEmailsQuery ToQuery(this GetAdminOutgoingEmailsHttpQuery query) =>

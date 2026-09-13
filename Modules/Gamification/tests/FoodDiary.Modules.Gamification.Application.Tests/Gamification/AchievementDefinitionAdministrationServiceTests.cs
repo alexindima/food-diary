@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Admin.Commands.CreateAdminAchievementDefinition;
-using FoodDiary.Application.Admin.Commands.UpdateAdminAchievementDefinition;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Domain.Entities.Achievements;

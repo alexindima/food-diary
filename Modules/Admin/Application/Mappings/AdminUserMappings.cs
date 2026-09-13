@@ -1,7 +1,7 @@
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 
-namespace FoodDiary.Application.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Application.Mappings;
 
 public static class AdminUserMappings {
     public static AdminUserModel ToAdminModel(this UserAdminReadModel user) =>

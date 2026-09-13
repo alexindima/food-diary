@@ -1,5 +1,6 @@
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
 using FoodDiary.Application.Identity.Email.Services;
-using FoodDiary.Application.Admin.Services;
+using FoodDiary.Modules.Admin.Application.Services;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Users.Services;
@@ -7,20 +8,20 @@ using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingRevenueSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
-using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
-using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
-using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
-using FoodDiary.Application.Admin.Queries.GetAdminUser;
-using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiPrompts;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingPayments;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingRevenueSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingSubscriptions;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingWebhookEvents;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminContentReports;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminEmailTemplates;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessageDetails;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessages;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Ai;
@@ -31,9 +32,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FluentValidation.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
 
@@ -45,11 +46,12 @@ public partial class AdminFeatureTests {
         var filter = new UserAdministrationFilter(Role: "Admin", EmailConfirmed: true);
         repository.GetFilteredPagedReadModelsAsync("filtered", 2, 10, UserAccountStatusFilter.All, filter, cancellation.Token)
             .Returns((new[] { user.ToAdminReadModel() }, 31));
-        var service = new AdminUserReadService(new UserAdministrationReadService(repository));
-        (IReadOnlyList<AdminUserModel> items, int total) = await service.GetFilteredPagedAsync("filtered", 2, 10, UserAccountStatusFilter.All, filter, cancellation.Token);
-        AdminUserModel actual = Assert.Single(items);
+        var handler = new GetAdminUsersQueryHandler(new UserAdministrationReadService(repository));
+        Result<PagedResponse<AdminUserModel>> result = await handler.Handle(new GetAdminUsersQuery(2, 10, "filtered", UserAccountStatusFilter.All, filter), cancellation.Token);
+        ResultAssert.Success(result);
+        AdminUserModel actual = Assert.Single(result.Value.Data);
         Assert.Equal(user.Id.Value, actual.Id);
-        Assert.Equal(31, total);
+        Assert.Equal(31, result.Value.TotalItems);
         await repository.Received(1).GetFilteredPagedReadModelsAsync("filtered", 2, 10, UserAccountStatusFilter.All, filter, cancellation.Token);
     }
 
@@ -230,16 +232,15 @@ public partial class AdminFeatureTests {
     }
 
     [Fact]
-    public async Task AdminUserReadService_ExistsIncludingDeletedAsync_UsesLookupRepository() {
+    public async Task GetAdminUserRoleAudit_UsesInclusiveUserLookup() {
         User user = CreateUserWithRoles("admin-read-exists@example.com", [RoleNames.Admin]);
         IUserAdminReadModelRepository repository = Substitute.For<IUserAdminReadModelRepository>();
         repository.GetByIdIncludingDeletedReadModelAsync(user.Id, Arg.Any<CancellationToken>())
             .Returns(user.ToAdminReadModel());
-        var service = new AdminUserReadService(new UserAdministrationReadService(repository));
-
-        bool exists = await service.ExistsIncludingDeletedAsync(user.Id, CancellationToken.None);
-
-        Assert.True(exists);
+        var handler = new GetAdminUserRoleAuditQueryHandler(new UserAdministrationReadService(repository), new RecordingUserRoleAuditRepository());
+        Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 10), CancellationToken.None);
+        ResultAssert.Success(result);
+        await repository.Received(1).GetByIdIncludingDeletedReadModelAsync(user.Id, CancellationToken.None);
     }
 
     [Fact]

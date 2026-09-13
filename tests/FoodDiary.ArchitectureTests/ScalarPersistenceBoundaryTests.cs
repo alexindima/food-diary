@@ -6,6 +6,7 @@ using FoodDiary.Modules.Notifications.Infrastructure.Model;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 

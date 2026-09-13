@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using System.Text.Json;
 using System.Runtime.CompilerServices;
 using FoodDiary.Application.Abstractions.Ai.Common;

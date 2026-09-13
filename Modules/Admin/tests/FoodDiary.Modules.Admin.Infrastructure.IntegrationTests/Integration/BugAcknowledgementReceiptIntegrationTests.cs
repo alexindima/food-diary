@@ -1,12 +1,14 @@
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Infrastructure.Integrations;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Admin.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

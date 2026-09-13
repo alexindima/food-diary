@@ -21,7 +21,7 @@ Rules for `Modules/Admin/Application/`.
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 - Register application handlers via AddAdminApplication; hosts use Infrastructure AddAdminModule.
-- Keep legacy FoodDiary.Application.Admin AssemblyName and CLR namespaces.
+- Keep legacy FoodDiary.Application.Admin AssemblyName; use FoodDiary.Modules.Admin.Application namespaces.
 
 Password reset requests session revocation through Users Contracts IUserSessionRevocationService. Admin must not acquire Identity session repository writes; Identity supplies the existing scoped implementation.
 

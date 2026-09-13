@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Queries.GetCollaborationAudit;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Queries.GetCollaborationAudit;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class GetCollaborationAuditQueryHandlerTests {

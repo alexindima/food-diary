@@ -1,6 +1,6 @@
 using FoodDiary.Presentation.Api.Policies;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
 
 public sealed record GetCollaborationAuditHttpQuery(
     Guid? ClientUserId = null,

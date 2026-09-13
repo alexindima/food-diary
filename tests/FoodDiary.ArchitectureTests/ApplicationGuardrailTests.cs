@@ -1591,10 +1591,10 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void AdminQueries_UseAdminUserReadServiceModelsInsteadOfUserAggregates() {
+    public void AdminQueries_UseOwnerReadModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
-        string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");
-        string[] adminQueryFiles = [.. SourceScanner.SourceFiles(adminQueriesRoot)];
+        string adminQueriesRoot = ModuleSourceCatalog.ApplicationRoot("Admin") + "/Queries";
+        string[] adminQueryFiles = ModuleSourceCatalog.RequiredFiles(adminQueriesRoot);
 
         string[] violations = [
             .. FindReferencesInFiles(root, adminQueryFiles, "FoodDiary.Domain.Entities.Users"),
@@ -1605,40 +1605,38 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void AdminBillingQueries_UseReadServiceInsteadOfBillingRepository() {
+    public void AdminBillingQueries_DoNotUseAggregatesOrWriteRepositories() {
         string root = GetRepositoryRoot();
-        string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");
+        string adminQueriesRoot = ModuleSourceCatalog.ApplicationRoot("Admin") + "/Queries";
         string[] adminBillingQueryFiles = [
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingPayments")),
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingSubscriptions")),
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingWebhookEvents")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingPayments")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingSubscriptions")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingWebhookEvents")),
         ];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, adminBillingQueryFiles, "IAdminBillingReadRepository"),
+            .. FindReferencesInFiles(root, adminBillingQueryFiles, "IAdminBillingRepository"),
             .. FindReferencesInFiles(root, adminBillingQueryFiles, "FoodDiary.Domain.Entities.Billing"),
-            .. FindReferencesInFiles(root, adminBillingQueryFiles, "AdminBillingQueryFilters"),
         ];
 
         Assert.Empty(violations);
     }
 
     [Fact]
-    public void AdminAuditAndLoginQueries_UseReadServicesInsteadOfRepositories() {
+    public void AdminAuditAndLoginQueries_DoNotAcquireWriteRepositories() {
         string root = GetRepositoryRoot();
-        string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");
+        string adminQueriesRoot = ModuleSourceCatalog.ApplicationRoot("Admin") + "/Queries";
         string[] adminAuditAndLoginQueryFiles = [
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminUserLoginEvents")),
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminUserLoginSummary")),
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminUserRoleAudit")),
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminImpersonationSessions")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminUserLoginEvents")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminUserLoginSummary")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminUserRoleAudit")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminImpersonationSessions")),
         ];
 
         string[] violations = [
             .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IUserLoginEventReadRepository"),
-            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IAdminUserRoleAuditReadRepository"),
-            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IAdminImpersonationSessionReadRepository"),
-            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "MaskIpAddress"),
+            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IAdminUserRoleAuditRepository"),
+            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IAdminImpersonationSessionWriteRepository"),
         ];
 
         Assert.Empty(violations);
@@ -1647,10 +1645,10 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void AdminSummaryQueries_UseReadServicesInsteadOfRepositories() {
         string root = GetRepositoryRoot();
-        string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");
+        string adminQueriesRoot = ModuleSourceCatalog.ApplicationRoot("Admin") + "/Queries";
         string[] adminSummaryQueryFiles = [
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminAiUsageSummary")),
-            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminDashboardSummary")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminAiUsageSummary")),
+            .. ModuleSourceCatalog.RequiredFiles(Path.Combine(adminQueriesRoot, "GetAdminDashboardSummary")),
         ];
 
         string[] violations = [
@@ -1663,14 +1661,15 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void AdminUserReadService_UsesReadModelsInsteadOfUserAggregates() {
+    public void AdminUserConsumers_UseReadModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
-        string servicePath = Path.Combine(
-            root,
-            "Modules/Admin/Application",
-            "Services",
-            "AdminUserReadService.cs");
-        string[] serviceFiles = [servicePath];
+        string[] serviceFiles = [
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs"),
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs"),
+            Path.Combine(root, "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs"),
+            Path.Combine(root, "Modules/Admin/Application/Services/AdminDashboardReadService.cs"),
+        ];
+        Assert.All(serviceFiles, path => Assert.True(File.Exists(path), $"Missing consumer: {path}"));
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Users"),

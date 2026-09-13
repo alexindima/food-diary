@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Admin.Presentation.Extensions;
+using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
@@ -34,7 +36,7 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure;
-using FoodDiary.Infrastructure.Integrations;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Web.Api.Services;

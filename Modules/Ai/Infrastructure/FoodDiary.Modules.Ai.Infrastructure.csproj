@@ -8,14 +8,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
-    <ProjectReference Include="Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -42,7 +42,7 @@
           "Modules/Admin/Domain"
         ],
         "persistenceModelProjects": [
-          "Modules/Admin/Infrastructure/Model"
+          "Modules/Admin/PersistenceModel"
         ],
         "infrastructureProjects": [
           "Modules/Admin/Infrastructure"

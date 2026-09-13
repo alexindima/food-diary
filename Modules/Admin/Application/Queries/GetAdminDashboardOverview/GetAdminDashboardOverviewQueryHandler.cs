@@ -2,11 +2,11 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Common;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminDashboardOverview;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardOverview;
 
 public sealed class GetAdminDashboardOverviewQueryHandler(IAdminDashboardMetricsReader metrics, IAdminBillingReadRepository billing, IAdminDashboardReadService dashboard, TimeProvider clock)
     : IQueryHandler<GetAdminDashboardOverviewQuery, Result<AdminDashboardOverviewModel>> {

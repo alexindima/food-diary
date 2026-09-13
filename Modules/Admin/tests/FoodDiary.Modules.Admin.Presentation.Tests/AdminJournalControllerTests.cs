@@ -1,20 +1,21 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminAudit;
-using FoodDiary.Application.Admin.Queries.GetAdminBugReports;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessagePage;
-using FoodDiary.Application.Admin.Queries.GetAdminOutgoingEmails;
-using FoodDiary.Application.Admin.Queries.GetAdminRetention;
-using FoodDiary.Application.Admin.Queries.GetAdminTemplateRevisions;
-using FoodDiary.Presentation.Api.Features.Admin;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessagePage;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminOutgoingEmails;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminRetention;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Admin.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AdminJournalControllerTests {

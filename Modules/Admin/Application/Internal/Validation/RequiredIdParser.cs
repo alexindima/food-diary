@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Internal.Validation;
+namespace FoodDiary.Modules.Admin.Application.Internal.Validation;
 
 internal static class RequiredIdParser {
     public static Result<TId> Parse<TId>(

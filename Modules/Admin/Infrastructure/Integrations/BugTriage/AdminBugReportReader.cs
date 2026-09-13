@@ -4,7 +4,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Integrations.BugTriage;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.BugTriage;
 
 internal sealed class AdminBugReportReader(HttpClient http, IOptions<AdminBugTriageOptions> options) : IAdminBugReportReader {
     public async Task<AdminBugReportPage> GetPageAsync(AdminBugReportFilter filter, CancellationToken cancellationToken) {

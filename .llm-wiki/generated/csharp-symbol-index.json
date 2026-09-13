@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4060,
-    "symbols": 4001,
-    "interfaceImplementationLinks": 273,
-    "dependencyInjectionRegistrations": 153,
+    "sourceFiles": 4058,
+    "symbols": 3999,
+    "interfaceImplementationLinks": 272,
+    "dependencyInjectionRegistrations": 152,
     "kinds": {
-      "class": 2100,
+      "class": 2099,
       "enum": 64,
-      "interface": 478,
+      "interface": 477,
       "record": 1238,
       "record struct": 121
     },
@@ -40,7 +40,7 @@
       "Repository": 108,
       "Request": 150,
       "Response": 213,
-      "Service": 306,
+      "Service": 304,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 46
@@ -801,14 +801,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Communication.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "FoodDiaryDbContext",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 24
+      "line": 25
     },
     {
       "name": "FoodDiaryDbContext",
@@ -1025,7 +1025,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 352
+      "line": 353
     },
     {
       "name": "UsdaCsvReader",
@@ -1046,7 +1046,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 76
+      "line": 77
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -2222,7 +2222,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 47
+      "line": 49
     },
     {
       "name": "ApiTelemetry",
@@ -2459,273 +2459,273 @@
       "name": "AdminMailInboxErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/AdminMailInboxErrors.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/AdminMailInboxErrors.cs",
       "line": 4
     },
     {
       "name": "BugAcknowledgementCandidate",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/BugAcknowledgementCandidate.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/BugAcknowledgementCandidate.cs",
       "line": 2
     },
     {
       "name": "IAdminBillingReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs",
       "line": 4
     },
     {
       "name": "IAdminBillingRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs",
       "line": 2
     },
     {
       "name": "IAdminBugReportReader",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs",
       "line": 4
     },
     {
       "name": "IAdminDashboardMetricsReader",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminDashboardMetricsReader.cs",
       "line": 4
     },
     {
       "name": "IAdminImpersonationHandoffService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs",
       "line": 2
     },
     {
       "name": "IAdminImpersonationSessionQuery",
       "kind": "interface",
       "role": "Query",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs",
       "line": 2
     },
     {
       "name": "IAdminImpersonationSessionReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs",
       "line": 4
     },
     {
       "name": "IAdminImpersonationSessionRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
       "line": 2
     },
     {
       "name": "IAdminImpersonationSessionWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs",
       "line": 4
     },
     {
       "name": "IAdminMailInboxReader",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs",
       "line": 4
     },
     {
       "name": "IAdminRetentionReader",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminRetentionReader.cs",
       "line": 4
     },
     {
       "name": "IAdminUserRoleAuditReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs",
       "line": 4
     },
     {
       "name": "IAdminUserRoleAuditRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs",
       "line": 2
     },
     {
       "name": "IBugAcknowledgementReceipts",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs",
       "line": 2
     },
     {
       "name": "IBugAcknowledgementSource",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs",
       "line": 2
     },
     {
       "name": "AdminBillingListFilter",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingListFilter.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingListFilter.cs",
       "line": 2
     },
     {
       "name": "AdminBillingPaymentReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 2
     },
     {
       "name": "AdminBillingRevenueCurrencyReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingRevenueCurrencyReadModel.cs",
       "line": 2
     },
     {
       "name": "AdminBillingRevenueSummaryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueSummaryReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingRevenueSummaryReadModel.cs",
       "line": 2
     },
     {
       "name": "AdminBillingSubscriptionReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 2
     },
     {
       "name": "AdminBillingWebhookEventReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingWebhookEventReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingWebhookEventReadModel.cs",
       "line": 2
     },
     {
       "name": "AdminBugReportEntry",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBugReportEntry.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBugReportEntry.cs",
       "line": 2
     },
     {
       "name": "AdminBugReportFilter",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBugReportFilter.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBugReportFilter.cs",
       "line": 2
     },
     {
       "name": "AdminBugReportPage",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBugReportPage.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBugReportPage.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardMetrics",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardMetrics.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminDashboardMetrics.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardRevenuePoint",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardRevenuePoint.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminDashboardRevenuePoint.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardTrend",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardTrend.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminDashboardTrend.cs",
       "line": 2
     },
     {
       "name": "AdminImpersonationSessionReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminImpersonationSessionReadModel.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxDmarcRecordModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxDmarcRecordModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminMailInboxDmarcRecordModel.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxDmarcReportModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxDmarcReportModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminMailInboxDmarcReportModel.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxMessageDetailsModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessageDetailsModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminMailInboxMessageDetailsModel.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxMessagePageModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessagePageModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminMailInboxMessagePageModel.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxMessageSummaryModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessageSummaryModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminMailInboxMessageSummaryModel.cs",
       "line": 2
     },
     {
       "name": "AdminRetentionCohort",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminRetentionCohort.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminRetentionCohort.cs",
       "line": 2
     },
     {
       "name": "AdminRetentionDay",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminRetentionDay.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminRetentionDay.cs",
       "line": 2
     },
     {
       "name": "AdminRetentionReport",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminRetentionReport.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminRetentionReport.cs",
       "line": 2
     },
     {
       "name": "AdminUserRoleAuditEventReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminUserRoleAuditEventReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminUserRoleAuditEventReadModel.cs",
       "line": 2
     },
     {
@@ -2824,14 +2824,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ExchangeAdminImpersonationCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ImportAdminLessonItem",
@@ -3077,13 +3077,6 @@
       "role": "Service",
       "path": "Modules/Admin/Application/Common/IAdminDashboardReadService.cs",
       "line": 5
-    },
-    {
-      "name": "IAdminUserReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Admin/Application/Common/IAdminUserReadService.cs",
-      "line": 6
     },
     {
       "name": "DependencyInjection",
@@ -3671,7 +3664,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetAdminUserLoginEventsQuery",
@@ -3720,7 +3713,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "GetAdminUsersQuery",
@@ -3734,7 +3727,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "GetAdminUsersQueryValidator",
@@ -3769,21 +3762,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "AdminUserReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Admin/Application/Services/AdminUserReadService.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "BugAcknowledgementService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Admin/Application/Services/BugAcknowledgementService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ExchangeAdminImpersonationCommand",
@@ -3796,7 +3782,7 @@
       "name": "AdminImpersonationSession",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 5
     },
     {
@@ -3853,7 +3839,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "BugAcknowledgementSource",
@@ -3877,53 +3863,53 @@
       "line": 7
     },
     {
-      "name": "AdminPersistenceModelRegistration",
+      "name": "AdminDbContext",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Infrastructure/Model/AdminPersistenceModelRegistration.cs",
-      "line": 5
-    },
-    {
-      "name": "BugAcknowledgementReceipt",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Admin/Infrastructure/Model/BugAcknowledgementReceipt.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminImpersonationSessionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Admin/Infrastructure/Model/Configurations/Admin/AdminImpersonationSessionConfiguration.cs",
-      "line": 7
+      "path": "Modules/Admin/Infrastructure/Persistence/AdminDbContext.cs",
+      "line": 6
     },
     {
       "name": "AdminImpersonationSessionRepository",
       "kind": "class",
       "role": "Repository",
-      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "path": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
       "line": 7
-    },
-    {
-      "name": "AdminDbContext",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Admin/Infrastructure/Persistence/AdminDbContext.cs",
-      "line": 5
     },
     {
       "name": "AdminUserDataPurgeParticipant",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs",
-      "line": 6
+      "line": 7
+    },
+    {
+      "name": "AdminPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/PersistenceModel/AdminPersistenceModelRegistration.cs",
+      "line": 5
+    },
+    {
+      "name": "BugAcknowledgementReceipt",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/PersistenceModel/BugAcknowledgementReceipt.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminImpersonationSessionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Admin/PersistenceModel/Configurations/AdminImpersonationSessionConfiguration.cs",
+      "line": 7
     },
     {
       "name": "AdminPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AdminAchievementDefinitionsController",
@@ -5372,14 +5358,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AiPromptProvider",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AiPromptTemplateRepository",
@@ -5393,7 +5379,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AiUsageRepository",
@@ -5407,14 +5393,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AiDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "AiUserDataPurgeParticipant",
@@ -15011,7 +14997,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "IdentityProviderRegistration",
@@ -15109,35 +15095,35 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "TelegramLoginTicketStore",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "TelegramOperationStore",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "EmailTemplateProvider",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "IdentityDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RefreshTokenSessionRepository",
@@ -18350,7 +18336,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "MealAiItemConfiguration",
@@ -18399,7 +18385,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "MealDailyCalorieReadService",
@@ -18420,7 +18406,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRecognitionReceiptRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MealRepository",
@@ -18434,7 +18420,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/Persistence/MealsDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MealsUserDataPurgeParticipant",
@@ -20415,7 +20401,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ProductSnapshotReadService",
@@ -20429,7 +20415,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/Persistence/ProductsDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ProductsUserDataPurgeParticipant",
@@ -20443,7 +20429,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ProductLookupService",
@@ -20646,7 +20632,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "PostCommitRecentItemUsageRecorder",
@@ -20660,14 +20646,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecentItemsDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItemsDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "RecentItemsUserDataPurgeParticipant",
@@ -20933,7 +20919,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "RecipeCommentRepository",
@@ -20947,7 +20933,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeCommunityDbContext.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RecipeLikeRepository",
@@ -21661,14 +21647,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "RecipesDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "RecipesUserDataPurgeParticipant",
@@ -21682,7 +21668,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "RecipeAccessService",
@@ -24167,14 +24153,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Infrastructure/Persistence/UsersDbContext.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "UsersModuleRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "DashboardLayoutHttpModel",
@@ -24734,7 +24720,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "EfWearableTransactionRunner",
@@ -24755,7 +24741,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/Persistence/WearablesDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "WearableSyncRepository",
@@ -28107,21 +28093,21 @@
     },
     {
       "interface": "IAdminBillingRepository",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs",
       "implementation": "AdminBillingRepository",
       "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminBugReportReader",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs",
       "implementation": "AdminBugReportReader",
       "implementationPath": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminDashboardMetricsReader",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminDashboardMetricsReader.cs",
       "implementation": "AdminDashboardMetricsReader",
       "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
       "confidence": "naming-convention"
@@ -28135,28 +28121,28 @@
     },
     {
       "interface": "IAdminImpersonationHandoffService",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs",
       "implementation": "AdminImpersonationHandoffService",
       "implementationPath": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminImpersonationSessionQuery",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs",
       "implementation": "AdminImpersonationSessionQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminImpersonationSessionRepository",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
       "implementation": "AdminImpersonationSessionRepository",
-      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "implementationPath": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminRetentionReader",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminRetentionReader.cs",
       "implementation": "AdminRetentionReader",
       "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
       "confidence": "naming-convention"
@@ -28169,15 +28155,8 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IAdminUserReadService",
-      "interfacePath": "Modules/Admin/Application/Common/IAdminUserReadService.cs",
-      "implementation": "AdminUserReadService",
-      "implementationPath": "Modules/Admin/Application/Services/AdminUserReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IAdminUserRoleAuditRepository",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs",
       "implementation": "AdminUserRoleAuditRepository",
       "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
       "confidence": "naming-convention"
@@ -28324,14 +28303,14 @@
     },
     {
       "interface": "IBugAcknowledgementReceipts",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs",
       "implementation": "BugAcknowledgementReceipts",
       "implementationPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBugAcknowledgementSource",
-      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs",
       "implementation": "BugAcknowledgementSource",
       "implementationPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementSource.cs",
       "confidence": "naming-convention"
@@ -30058,21 +30037,21 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 394
+      "line": 395
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 395
+      "line": 396
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 67
+      "line": 68
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -30128,7 +30107,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 178
+      "line": 180
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30136,13 +30115,6 @@
       "lifetime": "Scoped",
       "path": "Modules/Admin/Application/DependencyInjection.cs",
       "line": 14
-    },
-    {
-      "service": "IAdminUserReadService",
-      "implementation": "AdminUserReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Admin/Application/DependencyInjection.cs",
-      "line": 15
     },
     {
       "service": "IOpenAiFoodService",

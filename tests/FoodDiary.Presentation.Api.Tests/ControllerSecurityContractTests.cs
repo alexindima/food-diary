@@ -5,8 +5,8 @@ using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Presentation.Api.Features.Admin;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Ai;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
@@ -306,8 +306,8 @@ public sealed class ControllerSecurityContractTests {
     [Fact]
     public void ClosedSetQueryStrings_RejectUnknownValues() {
         (Type QueryType, string ParameterName, string AcceptedValue)[] expectations = [
-            (typeof(global::FoodDiary.Presentation.Api.Features.Admin.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Admin.Requests.GetAdminUsersHttpQuery), "Status", PresentationQueryValues.Active),
+            (typeof(global::FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),
+            (typeof(global::FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests.GetAdminUsersHttpQuery), "Status", PresentationQueryValues.Active),
             (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
             (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
             (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),

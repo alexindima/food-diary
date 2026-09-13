@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetCollaborationAudit;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetCollaborationAudit;
 
 public sealed class GetCollaborationAuditQueryHandler(IAuditEntryReadService readService)
     : IQueryHandler<GetCollaborationAuditQuery, Result<IReadOnlyList<AdminAuditEntryModel>>> {

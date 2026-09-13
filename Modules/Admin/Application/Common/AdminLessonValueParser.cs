@@ -1,8 +1,8 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Internal.Validation;
+using FoodDiary.Modules.Admin.Application.Internal.Validation;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Admin.Common;
+namespace FoodDiary.Modules.Admin.Application.Common;
 
 internal static class AdminLessonValueParser {
     public static Result<LessonCategory> ParseCategory(string? value, string fieldName) =>

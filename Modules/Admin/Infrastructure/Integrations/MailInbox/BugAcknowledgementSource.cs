@@ -7,7 +7,7 @@ using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Export;
 using MimeKit;
 
-namespace FoodDiary.Infrastructure.Integrations.MailInbox;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 internal sealed class BugAcknowledgementSource(IMailInboxExportClient export, IMailInboxClient inbox, IBugAcknowledgementReceipts receipts) : IBugAcknowledgementSource {
     public async IAsyncEnumerable<BugAcknowledgementCandidate> ReadAsync(DateTimeOffset since, [EnumeratorCancellation] CancellationToken cancellationToken) {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Policies;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
 
 public sealed record GetAdminBillingHttpQuery(
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,

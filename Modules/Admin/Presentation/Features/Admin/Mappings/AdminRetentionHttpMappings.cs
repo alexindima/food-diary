@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminRetention;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminRetention;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminRetentionHttpMappings {
     public static GetAdminRetentionQuery ToQuery(this GetAdminRetentionHttpQuery query) => new(query.From, query.To);

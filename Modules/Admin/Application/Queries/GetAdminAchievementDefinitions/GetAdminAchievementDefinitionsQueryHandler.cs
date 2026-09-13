@@ -3,7 +3,7 @@ using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminAchievementDefinitions;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
 
 public sealed class GetAdminAchievementDefinitionsQueryHandler(IAchievementDefinitionAdministrationService service)
     : IQueryHandler<GetAdminAchievementDefinitionsQuery, Result<IReadOnlyList<AchievementDefinitionAdminModel>>> {

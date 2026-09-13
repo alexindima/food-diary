@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Admin.Commands.DismissContentReport;
+namespace FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
 
 public sealed class DismissContentReportCommandHandler(IContentReportAdministrationService administrationService)
     : ICommandHandler<DismissContentReportCommand, Result> {

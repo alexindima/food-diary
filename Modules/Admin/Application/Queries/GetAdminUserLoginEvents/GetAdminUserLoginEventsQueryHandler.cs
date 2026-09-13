@@ -3,10 +3,10 @@ using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
 
 public sealed class GetAdminUserLoginEventsQueryHandler(IAuthenticationLoginEventReadService readService)
     : IQueryHandler<GetAdminUserLoginEventsQuery, Result<PagedResponse<AdminUserLoginEventModel>>> {

@@ -1,9 +1,9 @@
 using FoodDiary.Application.Marketing.Models;
 using FoodDiary.Application.Marketing.Queries.GetMarketingAttributionRange;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminMarketingRangeHttpMappings {
     public static GetMarketingAttributionRangeQuery ToQuery(this GetMarketingAttributionRangeHttpQuery query) =>

@@ -1,8 +1,9 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Admin.Infrastructure.Persistence;
 
 internal sealed class AdminUserDataPurgeParticipant(FoodDiaryDbContext context) : IUserDataPurgeParticipant {
     public int Order => 30;

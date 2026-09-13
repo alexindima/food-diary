@@ -3,7 +3,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessages;
 
 public sealed class GetAdminMailInboxMessagesQueryHandler(IAdminMailInboxReader reader)
     : IQueryHandler<GetAdminMailInboxMessagesQuery, Result<IReadOnlyList<AdminMailInboxMessageSummaryModel>>> {

@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 
-namespace FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
+namespace FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 
 public sealed class SetAdminUserPasswordCommandHandler(
     IUserAdministrationMutationService userManagementService,

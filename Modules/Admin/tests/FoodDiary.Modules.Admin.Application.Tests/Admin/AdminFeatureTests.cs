@@ -1,23 +1,22 @@
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Admin.Commands.DismissContentReport;
-using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
-using FoodDiary.Application.Admin.Commands.ReviewContentReport;
-using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
-using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
-using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
-using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
+using FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
+using FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
+using FoodDiary.Modules.Admin.Application.Commands.ReviewContentReport;
+using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Identity.Email.Services;
-using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
-using FoodDiary.Application.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
@@ -35,9 +34,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Results;
 using FluentValidation.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public partial class AdminFeatureTests {
@@ -568,7 +567,7 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles)
-        : IUserRepository, IUserRoleCatalogService, IAdminUserReadService {
+        : IUserRepository, IUserRoleCatalogService, IUserAdministrationReadService {
         private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
             name => name,
             name => user.UserRoles
@@ -588,8 +587,8 @@ public partial class AdminFeatureTests {
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
 
-        async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
-            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel().ToAdminModel();
+        async Task<UserAdminReadModel?> IUserAdministrationReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel();
 
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -606,9 +605,9 @@ public partial class AdminFeatureTests {
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
 
-        Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> IAdminUserReadService.GetPagedAsync(
+        Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> IUserAdministrationReadService.GetPagedAsync(
             string? search,
             int page,
             int limit,
@@ -622,14 +621,10 @@ public partial class AdminFeatureTests {
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 
-        Task<AdminDashboardSummaryModel> IAdminUserReadService.GetDashboardSummaryAsync(
+        Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)> IUserAdministrationReadService.GetDashboardSummaryAsync(
             int recentLimit,
-            int pendingReportsCount,
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
-
-        async Task<bool> IAdminUserReadService.ExistsIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
-            await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false) is not null;
 
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
             var found = names.Where(name => _roles.ContainsKey(name)).Select(name => _roles[name]).ToList();
@@ -688,13 +683,13 @@ public partial class AdminFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingImpersonationSessionRepository : IAdminImpersonationSessionRepository {
         public int AddCallCount { get; private set; }
-        public FoodDiary.Domain.Entities.Admin.AdminImpersonationSession? LastSession { get; private set; }
+        public FoodDiary.Modules.Admin.Domain.Entities.AdminImpersonationSession? LastSession { get; private set; }
         public (IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems) PagedResponse { get; set; } = ([], 0);
         public int LastPage { get; private set; }
         public int LastLimit { get; private set; }
         public string? LastSearch { get; private set; }
 
-        public Task AddAsync(FoodDiary.Domain.Entities.Admin.AdminImpersonationSession session, CancellationToken cancellationToken = default) {
+        public Task AddAsync(FoodDiary.Modules.Admin.Domain.Entities.AdminImpersonationSession session, CancellationToken cancellationToken = default) {
             AddCallCount++;
             LastSession = session;
             return Task.CompletedTask;
@@ -761,7 +756,7 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class SummaryUserRepository(
-        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) response) : IUserRepository, IAdminUserReadService {
+        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) response) : IUserRepository, IUserAdministrationReadService {
         public int LastRecentLimit { get; private set; }
 
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(
@@ -776,28 +771,21 @@ public partial class AdminFeatureTests {
             CancellationToken cancellationToken = default) =>
             GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 
-        public async Task<AdminDashboardSummaryModel> GetDashboardSummaryAsync(
+        async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)> IUserAdministrationReadService.GetDashboardSummaryAsync(
             int recentLimit,
-            int pendingReportsCount,
-            CancellationToken cancellationToken = default) {
+            CancellationToken cancellationToken) {
             (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) =
                 await GetAdminDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
 
-            return new AdminDashboardSummaryModel(
-                totalUsers,
-                activeUsers,
-                premiumUsers,
-                deletedUsers,
-                pendingReportsCount,
-                [.. recentUsers.Select(user => user.ToAdminReadModel().ToAdminModel())]);
+            return (totalUsers, activeUsers, premiumUsers, deletedUsers, [.. recentUsers.Select(user => user.ToAdminReadModel())]);
         }
 
         public Task<User?> GetByEmailAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
-            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel().ToAdminModel();
+        async Task<UserAdminReadModel?> IUserAdministrationReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -808,9 +796,9 @@ public partial class AdminFeatureTests {
             UserAccountStatusFilter status,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-        public Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
 
-        Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> IAdminUserReadService.GetPagedAsync(
+        Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> IUserAdministrationReadService.GetPagedAsync(
             string? search,
             int page,
             int limit,

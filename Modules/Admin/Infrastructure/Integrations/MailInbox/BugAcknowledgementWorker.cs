@@ -1,10 +1,10 @@
-using FoodDiary.Application.Admin.Services;
+using FoodDiary.Modules.Admin.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Integrations.MailInbox;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 internal sealed class BugAcknowledgementWorker(IServiceScopeFactory scopes, IOptions<BugAcknowledgementOptions> options,
     ILogger<BugAcknowledgementWorker> logger) : BackgroundService {

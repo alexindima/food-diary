@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Infrastructure.Integrations.MailInbox;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client.Extensions;
 using FoodDiary.MailInbox.Client.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Integrations;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations;
 
 public static class AdminMailInboxIntegration {
     private static readonly string[] ConfigurationKeys = [
@@ -35,7 +35,7 @@ public static class AdminMailInboxIntegration {
                 client.BaseAddress = new Uri(options.BaseUrl);
                 client.Timeout = options.Timeout;
             }).ConfigurePrimaryHttpMessageHandler(static () => new HttpClientHandler { AllowAutoRedirect = false });
-            services.AddScoped<FoodDiary.Application.Admin.Services.BugAcknowledgementService>();
+            services.AddScoped<FoodDiary.Modules.Admin.Application.Services.BugAcknowledgementService>();
             services.AddScoped<IBugAcknowledgementReceipts, BugAcknowledgementReceipts>();
             services.AddScoped<FoodDiary.Modules.Admin.Application.Abstractions.Common.IBugAcknowledgementSource, BugAcknowledgementSource>();
             services.AddOptions<BugAcknowledgementOptions>().Bind(configuration.GetSection("BugAcknowledgement"))

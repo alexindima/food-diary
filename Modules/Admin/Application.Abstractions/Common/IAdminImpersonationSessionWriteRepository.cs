@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Modules.Admin.Domain.Entities;
 
 namespace FoodDiary.Modules.Admin.Application.Abstractions.Common;
 

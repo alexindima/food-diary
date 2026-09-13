@@ -1,14 +1,15 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminDashboardOverview;
-using FoodDiary.Presentation.Api.Features.Admin;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardOverview;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Admin.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AdminDashboardOverviewTests {

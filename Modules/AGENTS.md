@@ -46,3 +46,5 @@ for shared-context save, transaction and tracker escape APIs. See ADR 0031.
 Application and Presentation projects never reference a foreign whole Application implementation. Actual cross-module requests/results belong to the owning Contracts project. Scalar Meals/Favorites IDs and Meals enums belong to their Domain.Contracts seams.
 
 Reusable response mappers belong to owner `Presentation.Mappings` projects. They reference only narrow application/scalar contracts, DTO contracts and pure mappers. Keep request-to-command mapping in Presentation; do not expose controllers or handlers through reusable layers. See docs/adr/0039-presentation-contracts-and-mappings.md.
+
+Module runtime DbContext types must use `FoodDiary.Modules.<Module>.Infrastructure.Persistence`, regardless of legacy RootNamespace values retained for other types. RuntimeContextNamespaceTests enforces this across module Infrastructure sources. Keep provider CLR names and migration models separate from this naming rule.

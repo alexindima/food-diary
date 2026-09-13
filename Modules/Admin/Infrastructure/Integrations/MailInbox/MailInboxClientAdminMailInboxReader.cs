@@ -3,7 +3,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Models;
 
-namespace FoodDiary.Infrastructure.Integrations.MailInbox;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailInboxClient) : IAdminMailInboxReader {
     public async Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {

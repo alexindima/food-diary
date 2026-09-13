@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

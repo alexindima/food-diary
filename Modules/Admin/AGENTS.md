@@ -5,10 +5,11 @@ Rules for `Modules/Admin/`.
 
 ## Admin physical ownership
 
+All seven production projects are sibling directories: Application, Application.Abstractions, Contracts, Domain, Infrastructure, PersistenceModel and Presentation. Do not nest their project files. PersistenceModel retains its EF mappings; architecture source discovery includes this sibling directory.
+
 Admin owns application slices, billing-report/impersonation/mail-reader ports,
 AdminImpersonationSession Domain, its explicit EF model and reporting/session
-adapters under Modules/Admin. Legacy application assembly and CLR namespaces
-remain stable; compatibility requires coordinated host rebuilds. Email templates
+adapters under Modules/Admin. The legacy application assembly name remains stable; compatibility requires coordinated host rebuilds. Email templates
 remain Identity-owned and role audit/User capabilities remain Users-owned despite
 legacy Admin namespaces. Shared context/migrations/cleanup, SSO store/JWT providers,
 HTTP authorization, structured audit and MailInbox client bridge remain central.
@@ -29,3 +30,5 @@ kinds and parameter formatting. Reference the owner explicitly; this grants no f
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 Identity Presentation consumes only ExchangeAdminImpersonationCommand from Admin Contracts; the handler and protocol remain Admin-owned.
+
+Do not repeat an `Admin` grouping directory inside Application, Application.Abstractions, Contracts, Domain, Infrastructure or PersistenceModel. Presentation/Features/Admin is a deferred migration. Do not override RootNamespace: namespaces follow the .csproj filename and physical folders. AdminNamespaceTests checks all production and test projects, and IDE0130 enforces this during compilation.

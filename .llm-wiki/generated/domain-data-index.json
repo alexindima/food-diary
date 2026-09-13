@@ -119,7 +119,7 @@
       "area": "FoodDiary",
       "name": "AdminImpersonationSession",
       "role": "entity",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 5
     },
     {
@@ -1591,35 +1591,35 @@
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Actor user id must not be empty.\", nameof(actorUserId))",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 25
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Target user id must not be empty.\", nameof(targetUserId))",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 29
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Reason is required.\", nameof(value))",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 49
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Reason must be between 10 and 500 characters.\") : trimmed",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 53
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 66
     },
     {
@@ -5219,7 +5219,7 @@
         "e => e.TargetUserId)"
       ],
       "relationships": [],
-      "path": "Modules/Admin/Infrastructure/Model/Configurations/Admin/AdminImpersonationSessionConfiguration.cs"
+      "path": "Modules/Admin/PersistenceModel/Configurations/AdminImpersonationSessionConfiguration.cs"
     },
     {
       "area": "FoodDiary",

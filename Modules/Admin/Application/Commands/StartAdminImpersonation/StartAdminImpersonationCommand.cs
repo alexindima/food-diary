@@ -1,8 +1,8 @@
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
-namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
+namespace FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 
 public sealed record StartAdminImpersonationCommand(
     Guid ActorUserId,

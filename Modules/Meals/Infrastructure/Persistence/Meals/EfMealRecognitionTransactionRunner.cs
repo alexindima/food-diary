@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;

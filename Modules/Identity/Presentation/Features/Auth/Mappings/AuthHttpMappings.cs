@@ -1,5 +1,5 @@
 using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
-using FoodDiary.Application.Admin.Commands.ExchangeAdminImpersonation;
+using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;

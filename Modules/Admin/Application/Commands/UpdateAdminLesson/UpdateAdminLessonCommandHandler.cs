@@ -1,15 +1,15 @@
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Mappings;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Common;
+using FoodDiary.Modules.Admin.Application.Mappings;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Common;
-using FoodDiary.Application.Admin.Internal.Validation;
+using FoodDiary.Modules.Admin.Application.Internal.Validation;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
 
 public sealed class UpdateAdminLessonCommandHandler(ILessonAdministrationService lessonAdministrationService)
     : ICommandHandler<UpdateAdminLessonCommand, Result<AdminLessonModel>> {

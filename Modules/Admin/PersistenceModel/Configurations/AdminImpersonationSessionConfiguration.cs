@@ -1,9 +1,9 @@
-using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Admin;
+namespace FoodDiary.Modules.Admin.PersistenceModel.Configurations;
 
 internal sealed class AdminImpersonationSessionConfiguration : IEntityTypeConfiguration<AdminImpersonationSession> {
     public void Configure(EntityTypeBuilder<AdminImpersonationSession> builder) {

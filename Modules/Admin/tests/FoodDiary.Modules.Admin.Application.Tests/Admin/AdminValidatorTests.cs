@@ -1,16 +1,16 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
-using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
-using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
-using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
-using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
-using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
-using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
+using FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
+using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
+using FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
+using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessageDetails;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessages;
 using System.Globalization;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public class AdminValidatorTests {

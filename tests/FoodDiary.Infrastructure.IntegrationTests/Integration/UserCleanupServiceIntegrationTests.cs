@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Admin.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
@@ -9,7 +11,7 @@ using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Application.Abstractions.Users.Common;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Products;

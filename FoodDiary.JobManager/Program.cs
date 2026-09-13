@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;
@@ -17,7 +18,7 @@ using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Infrastructure;
-using FoodDiary.Infrastructure.Integrations;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
 using Hangfire;

@@ -3,9 +3,9 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
 
 public sealed class GetAdminAiUsageSummaryQueryHandler(
     IAiAdministrationReadService aiReadService,

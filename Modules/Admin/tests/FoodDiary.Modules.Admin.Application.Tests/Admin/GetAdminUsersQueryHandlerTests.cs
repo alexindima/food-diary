@@ -1,19 +1,19 @@
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminUsers;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class GetAdminUsersQueryHandlerTests {
     [Fact]
     public async Task GetAdminUsersQueryHandler_NormalizesPagingAndCalculatesTotalPages() {
-        IAdminUserReadService readService = Substitute.For<IAdminUserReadService>();
+        IUserAdministrationReadService readService = Substitute.For<IUserAdministrationReadService>();
         readService.GetPagedAsync("alex", 1, 20, UserAccountStatusFilter.Active, Arg.Any<CancellationToken>())
-            .Returns((Array.Empty<AdminUserModel>(), 41));
+            .Returns((Array.Empty<UserAdminReadModel>(), 41));
         GetAdminUsersQueryHandler handler = new(readService);
 
         Result<PagedResponse<AdminUserModel>> result = await handler.Handle(

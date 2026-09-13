@@ -16,18 +16,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Application.Images.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Application.Images.csproj" />
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

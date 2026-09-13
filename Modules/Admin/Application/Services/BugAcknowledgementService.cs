@@ -4,7 +4,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using System.Net;
 
-namespace FoodDiary.Application.Admin.Services;
+namespace FoodDiary.Modules.Admin.Application.Services;
 
 public sealed class BugAcknowledgementService(IBugAcknowledgementSource source, IEmailTemplateAdministrationReadService templates, IEmailTransport transport, IBugAcknowledgementReceipts receipts) {
     public async Task RunAsync(DateTimeOffset since, CancellationToken cancellationToken) {

@@ -7,16 +7,16 @@ using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminAudit;
-using FoodDiary.Application.Admin.Queries.GetAdminBugReports;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessagePage;
-using FoodDiary.Application.Admin.Queries.GetAdminOutgoingEmails;
-using FoodDiary.Application.Admin.Queries.GetAdminRetention;
-using FoodDiary.Application.Admin.Queries.GetAdminTemplateRevisions;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessagePage;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminOutgoingEmails;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminRetention;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public class AdminJournalQueryTests {

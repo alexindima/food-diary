@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Features.Admin;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin;
 using FoodDiary.Presentation.Api.Features.Fasting;
 using FoodDiary.Presentation.Api.Features.Users;
 using Microsoft.AspNetCore.Mvc;

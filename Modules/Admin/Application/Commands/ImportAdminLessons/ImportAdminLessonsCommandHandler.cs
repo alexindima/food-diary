@@ -1,14 +1,14 @@
 using System.Globalization;
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Mappings;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Common;
+using FoodDiary.Modules.Admin.Application.Mappings;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 
-namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
+namespace FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
 
 public sealed class ImportAdminLessonsCommandHandler(ILessonAdministrationService lessonAdministrationService)
     : ICommandHandler<ImportAdminLessonsCommand, Result<AdminLessonsImportModel>> {

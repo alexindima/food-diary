@@ -1,9 +1,9 @@
-using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminLesson;
 using FoodDiary.Application.Lessons.Services;
-using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
-using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
-using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
-using FoodDiary.Application.Admin.Queries.GetAdminLessons;
+using FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminLessons;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Abstractions.Lessons.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;
@@ -11,10 +11,10 @@ using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FluentValidation.Results;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public class AdminLessonFeatureTests {

@@ -1,8 +1,8 @@
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminTemplateRevisions;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminTemplateRevisionHttpMappings {
     public static GetAdminTemplateRevisionsQuery ToTemplateRevisionsQuery(string key, string locale, bool isAiPrompt) => new(key, locale, isAiPrompt);

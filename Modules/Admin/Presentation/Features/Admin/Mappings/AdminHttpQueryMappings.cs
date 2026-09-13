@@ -1,27 +1,27 @@
-using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingRevenueSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
-using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
-using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
-using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
-using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
-using FoodDiary.Application.Admin.Queries.GetAdminLessons;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessagePage;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
-using FoodDiary.Application.Admin.Queries.GetAdminUser;
-using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
-using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
-using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
-using FoodDiary.Application.Admin.Queries.GetAdminUsers;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingPayments;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingRevenueSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingSubscriptions;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingWebhookEvents;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminContentReports;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiPrompts;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminEmailTemplates;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminLessons;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessageDetails;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessagePage;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessages;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginSummary;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Fasting.Application.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Application.Marketing.Queries.GetMarketingAttributionSummary;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminHttpQueryMappings {
     extension(GetAdminMailInboxMessagePageHttpQuery query) {

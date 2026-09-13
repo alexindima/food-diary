@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
 
 public sealed class GetAdminImpersonationSessionsQueryValidator : AbstractValidator<GetAdminImpersonationSessionsQuery> {
     public GetAdminImpersonationSessionsQueryValidator() {

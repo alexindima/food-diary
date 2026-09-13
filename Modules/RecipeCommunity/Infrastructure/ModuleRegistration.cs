@@ -1,3 +1,4 @@
+using FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.RecipeCommunity;

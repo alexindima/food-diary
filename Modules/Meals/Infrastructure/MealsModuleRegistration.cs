@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Products.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;

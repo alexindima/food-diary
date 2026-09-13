@@ -1,16 +1,16 @@
-using FoodDiary.Application.Admin.Queries.GetAdminTemplateRevisions;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Identity.Email.Services;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class AdminTemplateHistoryTests {

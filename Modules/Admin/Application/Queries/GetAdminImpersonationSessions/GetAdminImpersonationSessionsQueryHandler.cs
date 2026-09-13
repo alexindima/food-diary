@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
 
 public sealed class GetAdminImpersonationSessionsQueryHandler(IAdminImpersonationSessionReadRepository impersonationSessionRepository)
     : IQueryHandler<GetAdminImpersonationSessionsQuery, Result<PagedResponse<AdminImpersonationSessionReadModel>>> {

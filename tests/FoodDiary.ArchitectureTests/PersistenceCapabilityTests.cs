@@ -10,7 +10,7 @@ public sealed class PersistenceCapabilityTests {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
     [Theory]
-    [InlineData("Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs", "DbSet<AdminImpersonationSession>")]
+    [InlineData("Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs", "DbSet<AdminImpersonationSession>")]
     [InlineData("Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs", "DbSet<BillingPayment>")]
     [InlineData("Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs", "DbSet<BillingSubscription>")]
     [InlineData("Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs", "DbSet<BillingWebhookEvent>")]

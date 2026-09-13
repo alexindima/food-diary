@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1222,
+    "contracts": 1221,
     "ambiguousContracts": 0,
     "consumerEdges": 8856,
-    "productionConsumerEdges": 5170,
-    "testConsumerEdges": 3686,
-    "consumedContracts": 1222,
+    "productionConsumerEdges": 5167,
+    "testConsumerEdges": 3689,
+    "consumedContracts": 1221,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -7757,7 +7757,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7774,7 +7774,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7791,7 +7791,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7808,7 +7808,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminDashboardMetricsReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7842,7 +7842,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7859,7 +7859,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7876,7 +7876,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7893,7 +7893,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7910,7 +7910,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7927,7 +7927,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7944,7 +7944,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminRetentionReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7984,23 +7984,6 @@
       "collisionClassification": "unique"
     },
     {
-      "name": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
       "name": "IAdminUserRoleAuditReadRepository",
       "roles": [
         "ReadRepository"
@@ -8012,7 +7995,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8029,7 +8012,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8811,7 +8794,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8828,7 +8811,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -39886,7 +39869,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "GetAdminUserRoleAuditQuery",
@@ -40004,6 +39987,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminUsersQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetAdminUsersQuery",
@@ -49579,7 +49575,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -49592,10 +49588,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
+      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -49605,7 +49601,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
@@ -49618,7 +49614,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
@@ -49631,7 +49627,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQueryHandler.cs",
@@ -49644,7 +49640,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
@@ -49657,7 +49653,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQueryHandler.cs",
@@ -49670,7 +49666,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminDashboardOverviewTests.cs",
@@ -49683,12 +49679,12 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IAdminBillingReadRepository",
@@ -49696,7 +49692,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -49709,7 +49705,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
@@ -49722,7 +49718,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -49735,7 +49731,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -49748,12 +49744,12 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IAdminBillingRepository",
@@ -49761,7 +49757,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -49774,7 +49770,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryHandler.cs",
@@ -49787,7 +49783,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/AdminBugTriageIntegration.cs",
@@ -49800,7 +49796,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
@@ -49813,7 +49809,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
@@ -49826,7 +49822,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminBugReportReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/AdminBugReportReaderTests.cs",
@@ -49839,7 +49835,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminDashboardMetricsReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
@@ -49852,7 +49848,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminDashboardMetricsReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -49865,7 +49861,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminDashboardMetricsReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQueryHandler.cs",
@@ -49878,7 +49874,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminDashboardMetricsReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminDashboardOverviewTests.cs",
@@ -49956,7 +49952,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
@@ -49969,7 +49965,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
@@ -49982,7 +49978,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
@@ -49995,7 +49991,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
@@ -50008,7 +50004,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -50021,7 +50017,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationHandoffService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ExchangeAdminImpersonationTests.cs",
@@ -50034,7 +50030,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
@@ -50047,7 +50043,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -50060,7 +50056,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
@@ -50073,10 +50069,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "consumerPath": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50086,10 +50082,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionQuery.cs",
+      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50099,10 +50095,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
+      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50112,7 +50108,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryHandler.cs",
@@ -50125,7 +50121,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
@@ -50138,12 +50134,12 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IAdminImpersonationSessionReadRepository",
@@ -50151,7 +50147,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -50164,7 +50160,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
@@ -50177,10 +50173,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "consumerPath": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50190,7 +50186,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -50203,7 +50199,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -50216,7 +50212,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAdminContextCompositionIntegrationTests.cs",
@@ -50229,7 +50225,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -50242,10 +50238,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
+      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50255,7 +50251,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
@@ -50268,7 +50264,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
@@ -50281,7 +50277,20 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAdminContextCompositionIntegrationTests.cs",
@@ -50294,7 +50303,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -50307,7 +50316,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommandHandler.cs",
@@ -50320,7 +50329,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQueryHandler.cs",
@@ -50333,7 +50342,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
@@ -50346,7 +50355,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryHandler.cs",
@@ -50359,7 +50368,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
@@ -50372,7 +50381,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/MailInboxClientAdminMailInboxReader.cs",
@@ -50385,7 +50394,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -50398,7 +50407,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.DefaultMailReaderTests.cs",
@@ -50411,7 +50420,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
@@ -50424,7 +50433,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/AdminMailInboxRegistrationTests.cs",
@@ -50437,7 +50446,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -50450,7 +50459,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminRetentionReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
@@ -50463,7 +50472,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminRetentionReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -50476,7 +50485,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminRetentionReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQueryHandler.cs",
@@ -50489,7 +50498,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminRetentionReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
@@ -50744,116 +50753,12 @@
       "referenceCount": 5
     },
     {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Services/AdminUserReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 8
-    },
-    {
-      "contract": "IAdminUserReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application/Common/IAdminUserReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetAdminUsersQueryHandlerTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
       "contract": "IAdminUserRoleAuditReadRepository",
       "roles": [
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -50866,10 +50771,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
+      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -50879,7 +50784,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
@@ -50892,7 +50797,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs",
@@ -50905,12 +50810,12 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IAdminUserRoleAuditReadRepository",
@@ -50918,7 +50823,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -50931,7 +50836,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminUserRoleAuditRepository.cs",
@@ -50944,7 +50849,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -50957,7 +50862,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -50970,7 +50875,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs",
@@ -50983,7 +50888,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Compatibility/UsersIdentityContractAssemblyTests.cs",
@@ -50996,12 +50901,12 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IAdminUserRoleAuditRepository",
@@ -51009,7 +50914,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+        "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -55117,7 +55022,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/BugAcknowledgementService.cs",
@@ -55130,7 +55035,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
@@ -55143,7 +55048,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
@@ -55156,7 +55061,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementSource.cs",
@@ -55169,7 +55074,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs",
@@ -55182,7 +55087,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/BugAcknowledgementReceiptIntegrationTests.cs",
@@ -55195,7 +55100,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementPagingTests.cs",
@@ -55208,7 +55113,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementWorkerTests.cs",
@@ -55221,7 +55126,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementReceipts.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAdminContextCompositionIntegrationTests.cs",
@@ -55234,7 +55139,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/BugAcknowledgementService.cs",
@@ -55247,7 +55152,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
@@ -55260,7 +55165,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementSource.cs",
@@ -55273,7 +55178,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs",
@@ -55286,7 +55191,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs"
+        "Modules/Admin/Application.Abstractions/Common/IBugAcknowledgementSource.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementWorkerTests.cs",
@@ -60206,6 +60111,19 @@
       "consumerPath": "Modules/ContentReports/Application/Services/ContentReportAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IContentReportAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/ContentReports/Contracts/Common/IContentReportAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserApplicationServiceDelegationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IContentReportAdministrationService",
@@ -105663,7 +105581,46 @@
         "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Services/AdminUserReadService.cs",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105692,6 +105649,32 @@
       "consumerPath": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 8
+    },
+    {
+      "contract": "IUserAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetAdminUsersQueryHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUserAdminReadModelRepository",
@@ -121616,7 +121599,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "PagedResponse",

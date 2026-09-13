@@ -1,8 +1,9 @@
+using FoodDiary.Infrastructure;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Users.Infrastructure.Persistence;
 
 public sealed class UsersDbContext(DbContextOptions<UsersDbContext> options) : DbContext(options) {
     public DbSet<WeightGoal> WeightGoals => Set<WeightGoal>();

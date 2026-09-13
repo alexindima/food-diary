@@ -3,7 +3,7 @@ using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Commands.UpdateAdminAchievementDefinition;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
 
 public sealed class UpdateAdminAchievementDefinitionCommandHandler(IAchievementDefinitionAdministrationService service)
     : ICommandHandler<UpdateAdminAchievementDefinitionCommand, Result<AchievementDefinitionAdminModel>> {

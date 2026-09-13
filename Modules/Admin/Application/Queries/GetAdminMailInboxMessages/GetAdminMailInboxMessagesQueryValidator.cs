@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessages;
 
 public sealed class GetAdminMailInboxMessagesQueryValidator : AbstractValidator<GetAdminMailInboxMessagesQuery> {
     public GetAdminMailInboxMessagesQueryValidator() {

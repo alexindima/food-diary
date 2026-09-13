@@ -543,3 +543,37 @@ dotnet_diagnostic.IDE0130.severity = none
 [Modules/Admin/Application.Abstractions/**/*.cs]
 dotnet_style_namespace_match_folder = true
 dotnet_diagnostic.IDE0130.severity = error
+
+# RuntimeContextNamespaceTests enforces the exact owner namespace for these contexts.
+# IDE0130 still infers the legacy project root retained for other implementation types.
+[Modules/Ai/Infrastructure/Persistence/AiDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/Users/Infrastructure/Persistence/UsersDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/Meals/Infrastructure/Persistence/MealsDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/Products/Infrastructure/Persistence/ProductsDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/Recipes/Infrastructure/Persistence/RecipesDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/RecipeCommunity/Infrastructure/Persistence/RecipeCommunityDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/RecentItems/Infrastructure/Persistence/RecentItemsDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/Wearables/Infrastructure/Persistence/WearablesDbContext.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+# Admin production projects use their project names as namespace roots.
+[Modules/Admin/{Application,Application.Abstractions,Contracts,Domain,Infrastructure,PersistenceModel,Presentation}/**/*.cs]
+dotnet_style_namespace_match_folder = true
+dotnet_diagnostic.IDE0130.severity = error

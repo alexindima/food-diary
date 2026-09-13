@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
+namespace FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
 
 public sealed class ImportAdminLessonsCommandValidator : AbstractValidator<ImportAdminLessonsCommand> {
     public ImportAdminLessonsCommandValidator() {

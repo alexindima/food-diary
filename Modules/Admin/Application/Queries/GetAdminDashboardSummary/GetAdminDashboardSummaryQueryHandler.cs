@@ -1,9 +1,9 @@
-using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Common;
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Application.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardSummary;
 
 public sealed class GetAdminDashboardSummaryQueryHandler(IAdminDashboardReadService readService)
     : IQueryHandler<GetAdminDashboardSummaryQuery, Result<AdminDashboardSummaryModel>> {

@@ -1,3 +1,6 @@
+using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
+using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
+using FoodDiary.Modules.Products.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition.Identity;
 using FoodDiary.ReadModel.Composition.Recipes;
 using FoodDiary.ReadModel.Composition.Products;

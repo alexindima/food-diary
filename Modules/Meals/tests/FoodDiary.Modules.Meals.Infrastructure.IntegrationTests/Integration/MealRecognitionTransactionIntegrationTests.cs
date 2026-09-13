@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Meals.Common;

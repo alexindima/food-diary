@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
 
 public sealed class UpdateAdminLessonCommandValidator : AbstractValidator<UpdateAdminLessonCommand> {
     public UpdateAdminLessonCommandValidator() {

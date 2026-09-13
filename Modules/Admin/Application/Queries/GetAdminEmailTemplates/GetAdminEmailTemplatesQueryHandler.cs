@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Admin.Mappings;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Mappings;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminEmailTemplates;
 
 public sealed class GetAdminEmailTemplatesQueryHandler(IEmailTemplateAdministrationReadService emailTemplateReadService)
     : IQueryHandler<GetAdminEmailTemplatesQuery, Result<IReadOnlyList<AdminEmailTemplateModel>>> {

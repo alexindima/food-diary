@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Dashboard.Infrastructure;
@@ -49,7 +50,7 @@ using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
-using FoodDiary.Infrastructure.Integrations.MailInbox;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.Integrations.Services.OpenAi;
 using FoodDiary.Integrations.Wearables;

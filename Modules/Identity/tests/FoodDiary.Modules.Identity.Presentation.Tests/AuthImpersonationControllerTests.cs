@@ -1,4 +1,4 @@
-using FoodDiary.Application.Admin.Commands.ExchangeAdminImpersonation;
+using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;

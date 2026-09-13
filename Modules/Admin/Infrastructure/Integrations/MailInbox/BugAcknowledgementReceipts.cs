@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Admin.Infrastructure.Persistence;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Admin.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.ExceptionServices;
 
-namespace FoodDiary.Infrastructure.Integrations.MailInbox;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 internal sealed class BugAcknowledgementReceipts(AdminDbContext context, IUnitOfWork unitOfWork) : IBugAcknowledgementReceipts {
     public Task<bool> ContainsAsync(Guid inboxId, CancellationToken cancellationToken) =>

@@ -1,7 +1,7 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Admin.Common;
+namespace FoodDiary.Modules.Admin.Application.Common;
 
 public interface IAdminDashboardReadService {
     Task<Result<AdminDashboardSummaryModel>> GetSummaryAsync(int recentLimit, CancellationToken cancellationToken);

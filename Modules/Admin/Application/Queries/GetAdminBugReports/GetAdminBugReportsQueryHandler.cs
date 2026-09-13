@@ -3,7 +3,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminBugReports;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;
 
 public sealed class GetAdminBugReportsQueryHandler(IAdminBugReportReader reader) : IQueryHandler<GetAdminBugReportsQuery, Result<AdminBugReportPage>> {
     public async Task<Result<AdminBugReportPage>> Handle(GetAdminBugReportsQuery query, CancellationToken cancellationToken) =>

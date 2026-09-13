@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Audit.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminAudit;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminAuditJournalHttpMappings {
     public static GetAdminAuditQuery ToQuery(this GetAdminAuditHttpQuery query) => new(new AuditEntryFilter(

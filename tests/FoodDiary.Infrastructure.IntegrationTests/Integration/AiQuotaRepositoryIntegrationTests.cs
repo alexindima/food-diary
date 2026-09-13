@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;

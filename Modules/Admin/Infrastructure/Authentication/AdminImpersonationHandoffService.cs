@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 
-namespace FoodDiary.Infrastructure.Authentication;
+namespace FoodDiary.Modules.Admin.Infrastructure.Authentication;
 
 public sealed class AdminImpersonationHandoffService(IAdminSsoCodeStore codeStore) : IAdminImpersonationHandoffService {
     private static readonly TimeSpan CodeTtl = TimeSpan.FromMinutes(2);

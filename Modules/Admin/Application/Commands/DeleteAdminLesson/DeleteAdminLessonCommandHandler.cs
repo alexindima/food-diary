@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Common;
-using FoodDiary.Application.Admin.Internal.Validation;
+using FoodDiary.Modules.Admin.Application.Internal.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
+namespace FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
 
 public sealed class DeleteAdminLessonCommandHandler(ILessonAdministrationService lessonAdministrationService)
     : ICommandHandler<DeleteAdminLessonCommand, Result> {

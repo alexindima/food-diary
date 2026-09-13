@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;

@@ -2,10 +2,10 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Admin.Services;
+using FoodDiary.Modules.Admin.Application.Services;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingPayments;
 
 public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingReadRepository billingRepository)
     : IQueryHandler<GetAdminBillingPaymentsQuery, Result<PagedResponse<AdminBillingPaymentReadModel>>> {

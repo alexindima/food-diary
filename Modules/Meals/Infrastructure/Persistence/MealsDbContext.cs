@@ -1,7 +1,8 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Meals;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Meals.Infrastructure.Persistence;
 
 public sealed class MealsDbContext(DbContextOptions<MealsDbContext> options) : DbContext(options) {
     public DbSet<Meal> Meals => Set<Meal>();

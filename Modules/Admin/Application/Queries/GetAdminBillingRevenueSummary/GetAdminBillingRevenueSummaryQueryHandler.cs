@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminBillingRevenueSummary;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingRevenueSummary;
 
 public sealed class GetAdminBillingRevenueSummaryQueryHandler(IAdminBillingReadRepository billingRepository, TimeProvider? timeProvider = null)
     : IQueryHandler<GetAdminBillingRevenueSummaryQuery, Result<AdminBillingRevenueSummaryReadModel>> {

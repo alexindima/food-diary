@@ -1,8 +1,8 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Admin.Commands.CreateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class CreateAdminUserCommandValidatorTests {

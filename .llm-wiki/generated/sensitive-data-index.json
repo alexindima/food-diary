@@ -57,7 +57,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 84
+      "line": 85
     },
     {
       "category": "credential",
@@ -1120,140 +1120,140 @@
       "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 7
     },
     {
       "category": "financial",
       "name": "ExternalPaymentId",
       "type": "string",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 9
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 10
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 11
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 12
     },
     {
       "category": "financial",
       "name": "ExternalPriceId",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 13
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "decimal?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 17
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 18
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingRevenueCurrencyReadModel.cs",
       "line": 4
     },
     {
       "category": "financial",
       "name": "Refunds",
       "type": "decimal",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingRevenueCurrencyReadModel.cs",
       "line": 6
     },
     {
       "category": "financial",
       "name": "SuccessfulPayments",
       "type": "int",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingRevenueCurrencyReadModel.cs",
       "line": 10
     },
     {
       "category": "financial",
       "name": "Tax",
       "type": "decimal",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingRevenueCurrencyReadModel.cs",
       "line": 11
     },
     {
       "category": "financial",
       "name": "EarningsTrackedPayments",
       "type": "int",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingRevenueCurrencyReadModel.cs",
       "line": 14
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 8
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 9
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 10
     },
     {
       "category": "financial",
       "name": "ExternalPriceId",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 11
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 17
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardRevenuePoint.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminDashboardRevenuePoint.cs",
       "line": 3
     },
     {
       "category": "financial",
       "name": "Revenue",
       "type": "IReadOnlyList<AdminDashboardRevenuePoint>",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardTrend.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminDashboardTrend.cs",
       "line": 4
     },
     {
@@ -6783,49 +6783,49 @@
       "category": "identity",
       "name": "UserEmail",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "UserEmail",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ActorEmail",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminImpersonationSessionReadModel.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "TargetEmail",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminImpersonationSessionReadModel.cs",
       "line": 8
     },
     {
       "category": "identity",
       "name": "ActorIpAddress",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminImpersonationSessionReadModel.cs",
       "line": 10
     },
     {
       "category": "identity",
       "name": "ActorUserAgent",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminImpersonationSessionReadModel.cs",
       "line": 11
     },
     {
       "category": "identity",
       "name": "ActorEmail",
       "type": "string?",
-      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminUserRoleAuditEventReadModel.cs",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminUserRoleAuditEventReadModel.cs",
       "line": 9
     },
     {
@@ -6930,14 +6930,14 @@
       "category": "identity",
       "name": "ActorIpAddress",
       "type": "string?",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 10
     },
     {
       "category": "identity",
       "name": "ActorUserAgent",
       "type": "string?",
-      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/AdminImpersonationSession.cs",
       "line": 11
     },
     {

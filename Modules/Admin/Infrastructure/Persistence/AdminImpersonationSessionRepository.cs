@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Modules.Admin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Admin;
+namespace FoodDiary.Modules.Admin.Infrastructure.Persistence;
 
 public sealed class AdminImpersonationSessionRepository(
     DbSet<AdminImpersonationSession> sessions, IAdminImpersonationSessionQuery queries) : IAdminImpersonationSessionRepository {

@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -15,16 +14,12 @@
   <ItemGroup>
     <Using Include="Xunit" />
     <Using Include="NSubstitute" />
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Modules.Admin.Application.Tests.Support" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Admin.Application.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../../Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="../../../Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
@@ -46,5 +41,9 @@
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
   </ItemGroup>
 </Project>

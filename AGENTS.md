@@ -25,7 +25,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Admin ports: `Modules/Admin/Application.Abstractions/AGENTS.md`
 - Admin domain: `Modules/Admin/Domain/AGENTS.md`
 - Admin infrastructure: `Modules/Admin/Infrastructure/AGENTS.md`
-- Admin persistence model: `Modules/Admin/Infrastructure/Model/AGENTS.md`
+- Admin persistence model: `Modules/Admin/PersistenceModel/AGENTS.md`
 - Admin tests: `Modules/Admin/tests/AGENTS.md`
 - AI consumer contracts: `Modules/Ai/Contracts/AGENTS.md`
 - AI logical module: `Modules/Ai/AGENTS.md`

@@ -1,11 +1,11 @@
-using FoodDiary.Application.Admin.Commands.CreateAdminAchievementDefinition;
-using FoodDiary.Application.Admin.Commands.UpdateAdminAchievementDefinition;
-using FoodDiary.Application.Admin.Queries.GetAdminAchievementDefinitions;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
 using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminAchievementDefinitionsHttpMappings {
     public static GetAdminAchievementDefinitionsQuery ToQuery() => new();

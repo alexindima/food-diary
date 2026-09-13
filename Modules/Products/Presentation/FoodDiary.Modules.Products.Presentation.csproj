@@ -18,10 +18,10 @@
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Products.Domain.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Favorites/Presentation.Contracts/FoodDiary.Modules.Favorites.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Favorites/Presentation.Mappings/FoodDiary.Modules.Favorites.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 
 </Project>

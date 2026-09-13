@@ -2,7 +2,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
-namespace FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
+namespace FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
 
 public sealed class MarkAdminMailInboxMessageReadCommandHandler(IAdminMailInboxReader reader)
     : ICommandHandler<MarkAdminMailInboxMessageReadCommand, Result> {

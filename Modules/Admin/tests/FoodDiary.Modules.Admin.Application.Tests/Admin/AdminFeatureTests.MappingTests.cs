@@ -1,8 +1,8 @@
-using FoodDiary.Application.Admin.Mappings;
+using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
 

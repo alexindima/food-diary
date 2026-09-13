@@ -1,7 +1,8 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Recipes;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 
 public sealed class RecipesDbContext(DbContextOptions<RecipesDbContext> options) : DbContext(options) {
     public DbSet<Recipe> Recipes => Set<Recipe>();

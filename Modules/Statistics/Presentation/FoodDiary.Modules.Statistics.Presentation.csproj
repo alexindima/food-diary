@@ -14,9 +14,9 @@
 
   <ItemGroup>
     <ProjectReference Include="../Application/FoodDiary.Modules.Statistics.Application.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../BodyMetrics/Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../BodyMetrics/Presentation.Mappings/FoodDiary.Modules.BodyMetrics.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 
 </Project>

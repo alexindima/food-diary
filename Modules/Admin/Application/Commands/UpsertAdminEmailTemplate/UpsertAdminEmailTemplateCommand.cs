@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
 
 public sealed record UpsertAdminEmailTemplateCommand(
     string Key,

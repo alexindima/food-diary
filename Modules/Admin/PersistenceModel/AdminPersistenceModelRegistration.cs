@@ -1,7 +1,7 @@
-using FoodDiary.Infrastructure.Persistence.Configurations.Admin;
+using FoodDiary.Modules.Admin.PersistenceModel.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Admin.PersistenceModel;
 
 public static class AdminPersistenceModelRegistration {
     public static ModelBuilder ApplyAdminPersistenceModel(this ModelBuilder modelBuilder) {

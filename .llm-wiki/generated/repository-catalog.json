@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 286,
-    "documentationPages": 191
+    "documentationPages": 192
   },
   "dotnet": {
     "projects": [
@@ -110,7 +110,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
+          "Modules/Admin/PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj",
           "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
           "Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
@@ -467,7 +467,7 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
@@ -738,7 +738,7 @@
       {
         "name": "FoodDiary.Modules.Admin.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Admin.Application.Abstractions",
-        "path": "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+        "path": "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -763,7 +763,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Contracts/FoodDiary.Modules.Admin.Contracts.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
           "Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj",
@@ -840,10 +840,10 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj",
-          "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
+          "Modules/Admin/PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
@@ -880,7 +880,7 @@
       {
         "name": "FoodDiary.Modules.Admin.PersistenceModel",
         "assemblyName": "FoodDiary.Modules.Admin.PersistenceModel",
-        "path": "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
+        "path": "Modules/Admin/PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -914,7 +914,7 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
@@ -941,7 +941,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
@@ -1029,7 +1029,7 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
@@ -1089,7 +1089,7 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj",
@@ -13229,7 +13229,7 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
@@ -13470,10 +13470,10 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
-          "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
+          "Modules/Admin/PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
           "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj",
@@ -13637,7 +13637,7 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj",
@@ -13841,7 +13841,7 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
@@ -14845,12 +14845,12 @@
       "FoodDiary.Web.Client/src/app/features/AGENTS.md",
       "Modules/AGENTS.md",
       "Modules/Admin/AGENTS.md",
+      "Modules/Admin/Application.Abstractions/AGENTS.md",
       "Modules/Admin/Application/AGENTS.md",
-      "Modules/Admin/Application/Abstractions/AGENTS.md",
       "Modules/Admin/Contracts/AGENTS.md",
       "Modules/Admin/Domain/AGENTS.md",
       "Modules/Admin/Infrastructure/AGENTS.md",
-      "Modules/Admin/Infrastructure/Model/AGENTS.md",
+      "Modules/Admin/PersistenceModel/AGENTS.md",
       "Modules/Admin/tests/AGENTS.md",
       "Modules/Ai/AGENTS.md",
       "Modules/Ai/Application/AGENTS.md",
@@ -15251,6 +15251,7 @@
       "docs/architecture/Exception-vs-Result.md",
       "docs/architecture/architecture-improvements-20260905.md",
       "docs/architecture/infrastructure-boundary-audit.md",
+      "docs/architecture/runtime-context-dependencies.md",
       "docs/backend/ADMIN_DASHBOARD.md",
       "docs/backend/ADMIN_REPORTING.md",
       "docs/backend/AI_RECOGNITION_JOBS.md",

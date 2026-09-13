@@ -18,7 +18,7 @@ using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Infrastructure;
-using FoodDiary.Infrastructure.Integrations;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Configuration;

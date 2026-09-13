@@ -1,10 +1,10 @@
 using FluentValidation;
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Admin.Services;
+using FoodDiary.Modules.Admin.Application.Common;
+using FoodDiary.Modules.Admin.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Admin;
+namespace FoodDiary.Modules.Admin.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddAdminApplication(this IServiceCollection services) {
@@ -12,7 +12,6 @@ public static class DependencyInjection {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         services.AddScoped<IAdminDashboardReadService, AdminDashboardReadService>();
-        services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         return services;
     }
 }

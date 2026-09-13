@@ -13,13 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Recipes.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
-    <ProjectReference Include="Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj" />
     <ProjectReference Include="../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
     <ProjectReference Include="../../Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
@@ -27,5 +24,8 @@
     <ProjectReference Include="../../Products/FoodQuality/FoodDiary.Modules.Products.FoodQuality.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

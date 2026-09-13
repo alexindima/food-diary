@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminBugReports;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
 
 public static class AdminBugReportHttpMappings {
     public static GetAdminBugReportsQuery ToQuery(this GetAdminBugReportsHttpQuery query) =>

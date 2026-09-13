@@ -1,9 +1,9 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Presentation.Api.Features.Admin.Mappings;
-using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Features.Admin;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/admin/email-templates")]

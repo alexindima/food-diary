@@ -1,16 +1,16 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Audit.Models;
-using FoodDiary.Application.Admin.Queries.GetAdminAudit;
-using FoodDiary.Application.Admin.Queries.GetAdminBugReports;
-using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
-using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
-using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessagePage;
-using FoodDiary.Application.Admin.Queries.GetAdminOutgoingEmails;
-using FoodDiary.Application.Admin.Queries.GetAdminTemplateRevisions;
-using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminContentReports;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessagePage;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminOutgoingEmails;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public class AdminJournalValidatorTests {

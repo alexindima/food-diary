@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Admin.Internal.Validation;
+namespace FoodDiary.Modules.Admin.Application.Internal.Validation;
 
 internal static class EnumFilterParser {
     public static TEnum? ParseOptional<TEnum>(string? value)

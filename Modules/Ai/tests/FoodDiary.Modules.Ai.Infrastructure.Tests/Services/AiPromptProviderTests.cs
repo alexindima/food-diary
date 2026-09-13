@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Ai;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;

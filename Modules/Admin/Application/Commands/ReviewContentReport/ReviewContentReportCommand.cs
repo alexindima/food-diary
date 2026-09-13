@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Commands.ReviewContentReport;
+namespace FoodDiary.Modules.Admin.Application.Commands.ReviewContentReport;
 
 public sealed record ReviewContentReportCommand(
     Guid ReportId,

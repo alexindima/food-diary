@@ -22,14 +22,14 @@
       "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9f84b604c146f7ae81d71c518e21e1acb1e7866e51167ae1c054c6fa3072b653"
+          "path": "AGENTS.md",
+          "sha256": "acea3297b84b134e6693599c3afbd9db6ba90474241e7f0f6fd8a9f80602eb6b"
         }
       ],
-      "reason": "ADR 0040 documents Admin context shared receipt save and retained transactional purge",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "8d669c6328baca51fa08a26397ef839e10045959",
-      "reviewedAtUtc": "2026-09-13T10:17:26.9088639Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:25.0636725Z"
     },
     {
       "pageId": "module.frontend",
@@ -67,18 +67,18 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "eb97f06dc4eff8f644735658db0a56dd5502c84208b883cda17e6e1fe72c8b3e"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
         },
         {
-          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "c5c2188c07eacd494e919740029b70273081208ae0ae6fd0b1ddd30a2e1b8b25"
+          "path": "Modules/Admin/Infrastructure/AGENTS.md",
+          "sha256": "feb0ed8039e87d2e9cb885ef4db9735f30e9e42d908f464ccf46d4ff88c41c70"
         }
       ],
-      "reason": "Users runtime persistence now uses six owned entity mappings and narrow adapters. Stable save priority keeps new Users before central and Identity writes; PostgreSQL tests prove rollback, transaction rejoining and Telegram conflict translation. Current measurement reads remain in composition. HTTP suite passed without contract or migration changes; ADR 0040 and scoped infrastructure guides document the remaining shared bridges.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:28:13.9515352Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:25.7578638Z"
     },
     {
       "pageId": "system.architecture",
@@ -86,14 +86,14 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c39bdc3d7a18a154383be789a31d8a3dde8344c6f0db377016d5541c96574422"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
         }
       ],
-      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:35:10.4879568Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:26.7235614Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -102,13 +102,13 @@
       "sources": [
         {
           "path": "Directory.Build.props",
-          "sha256": "81cabc5e80e1be8733d7f3a7992a0d3def2629d748ac3209bc14b9caf0ba65d3"
+          "sha256": "65c364af3b5247b5dd7a119be65651a062d6d0c1e390a248281c8f3f37ea1d79"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:29.2419188Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:27.6848415Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -131,14 +131,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "493e7e63e4a7a84baafa2919a914a590d5c0a7c2186376d42a61faf305e1f741"
+          "path": "AGENTS.md",
+          "sha256": "acea3297b84b134e6693599c3afbd9db6ba90474241e7f0f6fd8a9f80602eb6b"
         }
       ],
-      "reason": "ADR 0040 and Hydration Infrastructure guidance describe the runtime context, shared transaction coordinator, retained migration model and purge/read bridges.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
-      "reviewedAtUtc": "2026-09-13T04:32:33.0800346Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:29.0048992Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -146,14 +146,18 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "ec8cc3324704a7c2e30654b87be1b6710a7567341804910951e1224d31388854"
+          "path": "Directory.Build.props",
+          "sha256": "65c364af3b5247b5dd7a119be65651a062d6d0c1e390a248281c8f3f37ea1d79"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:33.4698717Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:30.1008981Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -196,13 +200,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "c7914e0d0e31b8e213e33b3cecd28b5cea827e5b09148ef133f222b92bc823f5"
+          "sha256": "7f3b7a78da827aa76ac17306c6ee80ca98d04f5d8a4719da7ae02e2179e2f76e"
         }
       ],
-      "reason": "Routes and payloads unchanged; existing HTTP snapshots retained and PostgreSQL regression executed.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T20:55:26.7303635Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:30.9144206Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -210,18 +214,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "136ff5b871be1e2aab7d2fe2631749cb86bbcf862ce90b96ba8a32dcb9d69cae"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c39bdc3d7a18a154383be789a31d8a3dde8344c6f0db377016d5541c96574422"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
         }
       ],
-      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:35:11.3174521Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:31.3538333Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "454f05431124e01fae16e7e2ce500ea8378a12adf9dc614c1daac93f491d3d75"
+          "sha256": "127537d4ee8b501acd6e96ba48986eb1e27f361a1b3ce7cafacd6bd06f7390d8"
         }
       ],
-      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:35:12.5697109Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:32.5074338Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -500,14 +500,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "eb97f06dc4eff8f644735658db0a56dd5502c84208b883cda17e6e1fe72c8b3e"
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "c9a35906468bc0571f9156ef851b1a9cc7882c94d8ddf8daf4bb003340c36ecb"
         }
       ],
-      "reason": "Users runtime persistence now uses six owned entity mappings and narrow adapters. Stable save priority keeps new Users before central and Identity writes; PostgreSQL tests prove rollback, transaction rejoining and Telegram conflict translation. Current measurement reads remain in composition. HTTP suite passed without contract or migration changes; ADR 0040 and scoped infrastructure guides document the remaining shared bridges.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:28:16.4021905Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:33.4599502Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -775,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c59924d39ec2690d41dd867f83923840ac033b62406bbe08e1a3bb52f20ef372"
+          "sha256": "11082ab9d49018b8b881daaa01a45f08d711a25a3bee34731cd4cac253dc13d0"
         }
       ],
-      "reason": "Owner/public visibility and private comment masking preserved; no new provider sharing",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "6b086327b25518aa20e2ce116fbfa78945824304",
-      "reviewedAtUtc": "2026-09-13T14:48:03.4911084Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:34.1520030Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0d587f471810d01ae7cc5c32cdcadde70cac76bb3b2875315bf1a772e1419a4b"
+          "sha256": "832d8984f4da13d48e986b2f5a2997dae0b0f3c31c5c42558c3cc1e1859d7c53"
         }
       ],
-      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:35:13.6858283Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:35.0475222Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8ff490eca126221625e74b92a0a4ca3f412e474db55060fea26892f9a79664e6"
+          "sha256": "a4ff4c8d31fc3a880f3c74559138a0809e7d2c848d45af669db5c974e2aa06bd"
         }
       ],
-      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:35:15.2540139Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:36.9496101Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,17 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0d587f471810d01ae7cc5c32cdcadde70cac76bb3b2875315bf1a772e1419a4b"
+          "sha256": "832d8984f4da13d48e986b2f5a2997dae0b0f3c31c5c42558c3cc1e1859d7c53"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8ff490eca126221625e74b92a0a4ca3f412e474db55060fea26892f9a79664e6"
+          "sha256": "a4ff4c8d31fc3a880f3c74559138a0809e7d2c848d45af669db5c974e2aa06bd"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "11082ab9d49018b8b881daaa01a45f08d711a25a3bee34731cd4cac253dc13d0"
         }
       ],
-      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:35:16.1992286Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:37.8168922Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1102,13 +1106,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
+          "sha256": "acea3297b84b134e6693599c3afbd9db6ba90474241e7f0f6fd8a9f80602eb6b"
         }
       ],
-      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:50.9236381Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:32.8990492Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1166,13 +1170,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "86d818b8bf35c3514f16baae2d46170a434f6a5e8299609e589e2e68c57c7d85"
+          "sha256": "0480becdc3ca93d1d0c30486ab4ed4f2ca13087b0351e214ecb62a283f1ecda1"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "acea3297b84b134e6693599c3afbd9db6ba90474241e7f0f6fd8a9f80602eb6b"
         }
       ],
-      "reason": "Users extraction and the updated scoped security-reader test were reviewed. The test uses the production shared unit of work and owner tracker, with explicit shared event and persistence contract references. All 50 Users provider scenarios, 200 HTTP tests, 1376 architecture checks and the rebuilt dependency matrix passed. Runtime ownership and unchanged migration/HTTP boundaries are documented in ADR 0040.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "e9fe193195ee745378cadc7765ba84de6f9d14cd",
-      "reviewedAtUtc": "2026-09-13T22:35:14.5149283Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:35.6882785Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1181,13 +1189,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
+          "sha256": "acea3297b84b134e6693599c3afbd9db6ba90474241e7f0f6fd8a9f80602eb6b"
         }
       ],
-      "reason": "Full build passed. Contract closure and assembly ownership guards updated; focused PostgreSQL tests passed.",
+      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:53.3870947Z"
+      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
+      "reviewedAtUtc": "2026-09-13T23:52:36.1461899Z"
     }
   ]
 }

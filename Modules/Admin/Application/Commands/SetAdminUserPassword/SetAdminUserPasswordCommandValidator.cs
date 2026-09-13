@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
+namespace FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 
 public sealed class SetAdminUserPasswordCommandValidator : AbstractValidator<SetAdminUserPasswordCommand> {
     public SetAdminUserPasswordCommandValidator() {

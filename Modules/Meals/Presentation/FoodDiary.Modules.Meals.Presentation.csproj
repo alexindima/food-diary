@@ -20,9 +20,9 @@
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Meals.Presentation.Contracts.csproj" />
     <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.Meals.Presentation.Mappings.csproj" />
     <ProjectReference Include="../Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Favorites/Presentation.Contracts/FoodDiary.Modules.Favorites.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 
 </Project>

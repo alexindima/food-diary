@@ -3,10 +3,10 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminTemplateRevisions;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
 
 public sealed class GetAdminTemplateRevisionsQueryHandler(IEmailTemplateAdministrationReadService emailTemplateReadService, IAiAdministrationReadService aiReadService)
     : IQueryHandler<GetAdminTemplateRevisionsQuery, Result<IReadOnlyList<AdminTemplateRevisionModel>>> {

@@ -4,7 +4,6 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class PhysicalProjectLayoutTests {
     // Existing physical nesting only. Remove entries as projects move; do not add new exceptions.
     private static readonly string[] LegacyNesting = [
-        "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj -> Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
         "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj -> Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
         "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj -> Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj",
         "Modules/Billing/Application/FoodDiary.Application.Billing.csproj -> Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
@@ -63,6 +62,29 @@ public sealed class PhysicalProjectLayoutTests {
         "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj -> Modules/WeeklyGoals/Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj",
         "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj -> Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj",
     ];
+
+    [Fact]
+    public void AdminPersistenceModel_RemainsInInfrastructureSourceCoverage() {
+        Assert.Contains(ArchitectureTestPaths.FromRoot("Modules", "Admin", "PersistenceModel"),
+            ModuleSourceCatalog.InfrastructureRoots(), StringComparer.OrdinalIgnoreCase);
+    }
+
+    [Theory]
+    [InlineData("Application")]
+    [InlineData("Application.Abstractions")]
+    [InlineData("Contracts")]
+    [InlineData("Domain")]
+    [InlineData("Infrastructure")]
+    [InlineData("PersistenceModel")]
+    public void AdminProjects_DoNotRepeatModuleFolders(string project) {
+        // Presentation/Features/Admin is migrated separately.
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Admin", project);
+        Assert.True(Directory.Exists(root));
+        Assert.DoesNotContain(Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories),
+            directory => string.Equals(Path.GetFileName(directory), "Admin", StringComparison.OrdinalIgnoreCase)
+                && !Path.GetRelativePath(root, directory).Split(Path.DirectorySeparatorChar)
+                    .Any(segment => segment is "bin" or "obj" or ".artifacts"));
+    }
 
     [Fact]
     public void AdminAbstractions_DoNotRepeatModuleFolder() {

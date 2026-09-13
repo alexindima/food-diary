@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Infrastructure.Integrations;
-using FoodDiary.Infrastructure.Integrations.MailInbox;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations;
+using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client.Export;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

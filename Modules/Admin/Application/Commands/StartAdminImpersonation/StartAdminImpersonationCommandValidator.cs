@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
+namespace FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 
 public sealed class StartAdminImpersonationCommandValidator : AbstractValidator<StartAdminImpersonationCommand> {
     public StartAdminImpersonationCommandValidator() {

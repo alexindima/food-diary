@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Policies;
 
-namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
+namespace FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
 
 public sealed record GetAdminMailInboxMessagePageHttpQuery(
     [OpenApiNumericRange(1, int.MaxValue)] int Page = 1,

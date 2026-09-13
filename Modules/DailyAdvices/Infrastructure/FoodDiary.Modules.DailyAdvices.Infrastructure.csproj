@@ -9,10 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
-    <ProjectReference Include="Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   </ItemGroup>
 

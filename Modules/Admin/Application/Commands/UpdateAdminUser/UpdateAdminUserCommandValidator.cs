@@ -2,7 +2,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 
 public sealed class UpdateAdminUserCommandValidator : AbstractValidator<UpdateAdminUserCommand> {
     public UpdateAdminUserCommandValidator() {

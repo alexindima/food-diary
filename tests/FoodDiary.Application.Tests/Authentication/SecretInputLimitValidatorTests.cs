@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Admin.Commands.CreateAdminUser;
-using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 using FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
 using FoodDiary.Application.Export.Models;

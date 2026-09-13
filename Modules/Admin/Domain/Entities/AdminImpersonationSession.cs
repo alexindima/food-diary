@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Admin;
+namespace FoodDiary.Modules.Admin.Domain.Entities;
 
 public sealed class AdminImpersonationSession : Entity<Guid> {
     public UserId ActorUserId { get; private set; }

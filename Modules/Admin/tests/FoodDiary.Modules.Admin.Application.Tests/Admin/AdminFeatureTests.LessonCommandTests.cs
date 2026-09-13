@@ -1,12 +1,12 @@
-using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
-using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Tests.Admin;
+namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
 

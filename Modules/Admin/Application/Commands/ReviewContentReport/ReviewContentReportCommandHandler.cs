@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Admin.Commands.ReviewContentReport;
+namespace FoodDiary.Modules.Admin.Application.Commands.ReviewContentReport;
 
 public sealed class ReviewContentReportCommandHandler(IContentReportAdministrationService administrationService)
     : ICommandHandler<ReviewContentReportCommand, Result> {

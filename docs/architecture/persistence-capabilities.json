@@ -56,7 +56,7 @@
         "context:Database"
       ],
       "reason": "Owner runtime context shares the central connection; a live transaction accessor preserves immediate SQL and post-commit execution.",
-      "technicalSourceSha256": "28473f8d96c6a0a3588e49a843c77c3309d8f0976f617e3e3af5443399ca78ff"
+      "technicalSourceSha256": "f365dbcdb21bc505615c6514556068b7955947ed4eaf189c7054c2a83e6b8dc0"
     },
     "Modules/ContentReports/Infrastructure/ModuleRegistration.cs": {
       "module": "ContentReports",
@@ -154,7 +154,7 @@
         "tracked:RecipeLike"
       ],
       "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "b703d64d0c6c6cfe2f18361985493ef611be0cbe47022859cf7e72ee3880d7be"
+      "technicalSourceSha256": "f1a4e2da603b22883aab60e217c2cec692c02c8b4884443afa3ca9270bc62cb3"
     },
     "Modules/Fasting/Infrastructure/ModuleRegistration.cs": {
       "module": "Fasting",
@@ -211,7 +211,7 @@
         "write:MealRecognitionReceipt"
       ],
       "reason": "Meals-owned receipts and owner-filtered row lock for undo. Parameterized SQL locks only the selected owned Meal. No foreign aggregate access; caller transaction owns SaveChanges and commit.",
-      "technicalSourceSha256": "912d1e5d86b42c625380622f0ce266c445e239b3a635d9aef6ba60209a3132d1"
+      "technicalSourceSha256": "0720aed697e026e291f41aad999dbd8f936100c8450fdc184ea8c4fed64c8919"
     },
     "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs": {
       "module": "Meals",
@@ -221,7 +221,7 @@
         "entity:Meal"
       ],
       "reason": "Meals-owned user-serialized transaction with intermediate unit-of-work flush to capture the newly added owned Meal xmin. Commit includes the receipt; shared retry boundary resets tracking and post-commit actions. No external provider calls or foreign aggregate mutations.",
-      "technicalSourceSha256": "88b95f17c0798a531ec2ad853ccb20f86266e3ac241362aab9a99295fdefc1a8"
+      "technicalSourceSha256": "4548bb11e67350eed318383b7a9ef949a3a2342c62e964e17494e54aa02fa63d"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
       "module": "Identity",
@@ -232,7 +232,7 @@
         "write:TelegramOperation"
       ],
       "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
-      "technicalSourceSha256": "83ea186bb99f9f3f36556698aa13368dc32326b5ce5db6faaf103273bf37b92a"
+      "technicalSourceSha256": "643d5b32b59329b6b8d5d0509987337ff4c77550450e2db0bc8726bdd060a33f"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
@@ -243,7 +243,7 @@
         "write:TelegramLoginTicket"
       ],
       "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
-      "technicalSourceSha256": "d2ecb71464f7a5da7ef632186492262a3227cc29ca3ac16f43e7780a843e6ed3"
+      "technicalSourceSha256": "070d5ad8d66e37ac31a51c2745fcdd306777ccc46e1860ce32f19629340f37d7"
     },
     "Modules/Admin/Infrastructure/AdminModuleRegistration.cs": {
       "module": "Admin",
@@ -253,9 +253,9 @@
         "tracked:AdminImpersonationSession"
       ],
       "reason": "Admin composition supplies only the owned session set to its writer; composed reads stay behind the existing query port.",
-      "technicalSourceSha256": "6fb5e6116e1a00f5da8dd53c001e86771fec2eff66286128c09f75977006cc98"
+      "technicalSourceSha256": "b30f8a1db91396be13f72a2e4f11d167635a8a45b95cc31ecaf83c1e51aab2fd"
     },
-    "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs": {
+    "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs": {
       "module": "Admin",
       "capabilities": [
         "entity:AdminImpersonationSession",
@@ -318,7 +318,7 @@
         "write:AiUsage"
       ],
       "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
-      "technicalSourceSha256": "b52e079f1fef9875ece1a4b5cd91174ab1542f5bfbf26e09ef11fa39817b6670"
+      "technicalSourceSha256": "24fd975ef1af58cbdd31ceb5d401635bf2b627e70cf33873d8ca9a84701b2c56"
     },
     "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs": {
       "module": "Ai",
@@ -792,7 +792,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "bb4fb7321208039696db3b74a248fb5e34d71927345a696d15849638ae710f86"
+      "technicalSourceSha256": "a97bf941ac2ab93ba832e4ff290a7dd4010b31fdc613f97978685e96390e5521"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -812,7 +812,7 @@
         "context:Database"
       ],
       "reason": "Identity replay prevention atomically inserts assertion fingerprints and deletes expired fingerprints in ConsumedTelegramAssertions.",
-      "technicalSourceSha256": "5dcdedf8146946ecb531bb9cc10f78f3eef16f6dd404b2afb4c4eb45b1fee4fc"
+      "technicalSourceSha256": "acc5f65c42c1c0b04dda7e80c671049aa619bfdc403d529ae6f7d8a28bae8f4d"
     },
     "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs": {
       "module": "Identity",
@@ -1051,7 +1051,7 @@
         "write:Product"
       ],
       "reason": "Owner product persistence and parameterized row locking. Cross-module usage count is delegated to the host-composed query in the same scoped transaction.",
-      "technicalSourceSha256": "3a61666f43a98b7a1a359fa0ca4e9654cd5e50d7632443dd48df7ad7b4d214c9"
+      "technicalSourceSha256": "241c99491f0698ceb243ec096101b73b7bdb1277a197d0a9161fdc269d5f46b0"
     },
     "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs": {
       "module": "Products",
@@ -1074,7 +1074,7 @@
         "write:RecentItem"
       ],
       "reason": "RecentItems owns recency upsert/pruning. Tracker inspection merges pending own records; SQL handles conflict-safe usage and bounded retention.",
-      "technicalSourceSha256": "59001a037919e2e576ff46c74861a09e4d645a1029ff85689df261fd38896760"
+      "technicalSourceSha256": "0be89212184082a797ae28b2fbb706963c5ce1c12651eb96e2e9b1cdd9ca571a"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs": {
       "module": "RecentItems",
@@ -1122,7 +1122,7 @@
         "write:Recipe"
       ],
       "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. Usage counts delegate to IRecipeUsageQuery in host composition. Ingredient product snapshots are transient immutable projections from the owner batch port; no foreign aggregate tracking or writes.",
-      "technicalSourceSha256": "13b2358f26880bc35c7b954891d753117e4643f68c9436eb21b3a218a98abe6a"
+      "technicalSourceSha256": "f323defe61aa5852a8b196e85d6feaaaf711debeae09b131a183ebc160651ceb"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",
@@ -1290,7 +1290,7 @@
         "write:BugAcknowledgementReceipt"
       ],
       "reason": "Admin-owned acknowledgement receipts contain only an opaque MailInbox ID. The dedicated background scope saves its receipt after durable MailRelay enqueue; duplicate inserts are detached and verified by existence lookup, other failures propagate. No foreign aggregate writes, raw SQL or message content persistence.",
-      "technicalSourceSha256": "6540ff85dc050c62d9d4522da30004f1fcea0d7549359fae745bf09e241cf97a"
+      "technicalSourceSha256": "5ee64fd131215b3c21a88799948a0687bc01c1eeecbd43d1ada67e8073a1a8a3"
     },
     "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs": {
       "module": "Marketing",
@@ -1311,7 +1311,7 @@
         "write:FoodRecognitionJob"
       ],
       "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. No foreign aggregate writes.",
-      "technicalSourceSha256": "9c6eae9904311f75397a61392c33dac7a78a4c6c29b03189d60bfee633f78dda"
+      "technicalSourceSha256": "c3277ba42780404f9f366a6ee26f1a433db44ee5e654afa1d083dfc40151c652"
     },
     "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
       "module": "ReadModelComposition",
@@ -1452,7 +1452,7 @@
         "tracked:WearableSyncEntry"
       ],
       "reason": "Creates owner runtime context and passes only its two entity sets to repositories.",
-      "technicalSourceSha256": "e24c06af7e1feb68833206ac646f9058872a34f507fe62ba9cb2780f5c6bc697"
+      "technicalSourceSha256": "11effbc925789d486f698c9891668173494c2d26cc59d859425460d30e77f87e"
     },
     "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs": {
       "module": "ReadModelComposition",
@@ -1552,7 +1552,7 @@
         "tracked:Meal"
       ],
       "reason": "Compose scoped owner context and narrow meal repositories; rejoin the live shared transaction before queries, including after intermediate recognition flush.",
-      "technicalSourceSha256": "6539a560c6c6d29a25425e7f111ae2a93b9776f592911700853f7dcd03c815f1"
+      "technicalSourceSha256": "fa4e1a39874b2a6005dc39ae0bf9be391322e8ea791a0d582d1173524eb52470"
     },
     "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
       "module": "ReadModelComposition",
@@ -1581,7 +1581,7 @@
         "tracked:Product"
       ],
       "reason": "Scoped owner context, repository and snapshot read registration. Rejoin the live shared transaction before owner queries, including after intermediate unit-of-work saves.",
-      "technicalSourceSha256": "441c7f838cb2523093bd2677c093e1f7ffdfd2f3245c068b8712d68cbea814b0"
+      "technicalSourceSha256": "9365d39ff41ad42e845ce297b48226253d6b30d216990d52820d0c85871921b6"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1598,7 +1598,7 @@
         "context:Database"
       ],
       "reason": "Owner runtime context registration and live shared transaction synchronization, including after intermediate UOW saves.",
-      "technicalSourceSha256": "16974c5e08e5002d738de42a091b7094ecffcadd9d1cf9bbbace9139d38fd3c6"
+      "technicalSourceSha256": "ae56c6d8665f1be25dbc9e6954d13461611825be41563e505afad08d6a0b3f16"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",
@@ -1627,7 +1627,7 @@
         "tracked:AiUsage"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "9c61d5b5fcc0c0de549d05fa4c34893b83e3149b89850fb655af25c89021b7ee"
+      "technicalSourceSha256": "ac8d0b622e329331e06ce7389d25671245979c66931af1ca0296b2426e9d83aa"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",
@@ -1658,7 +1658,7 @@
         "tracked:UserRoleAuditEvent"
       ],
       "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
-      "technicalSourceSha256": "662b3378a74792e63635cf40e5d112279823a61b4e28aa480996dedefbf7e207"
+      "technicalSourceSha256": "7889ae072e77660f0564cbdfdba2344aa150af842362e526d1cef02b68204fba"
     }
   }
 }

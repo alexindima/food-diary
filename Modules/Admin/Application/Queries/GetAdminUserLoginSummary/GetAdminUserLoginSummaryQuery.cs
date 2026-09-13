@@ -1,8 +1,8 @@
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginSummary;
 
 public sealed record GetAdminUserLoginSummaryQuery(
     DateTime? FromUtc,

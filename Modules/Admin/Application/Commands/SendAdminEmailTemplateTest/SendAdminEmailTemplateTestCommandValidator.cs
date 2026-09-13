@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
+namespace FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 
 public sealed class SendAdminEmailTemplateTestCommandValidator : AbstractValidator<SendAdminEmailTemplateTestCommand> {
     public SendAdminEmailTemplateTestCommandValidator() {

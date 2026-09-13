@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
+namespace FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 
 public sealed record SendAdminEmailTemplateTestCommand(
     string ToEmail,

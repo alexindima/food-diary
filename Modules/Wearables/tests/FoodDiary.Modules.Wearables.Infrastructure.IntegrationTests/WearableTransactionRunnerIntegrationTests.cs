@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Domain.Entities.Users;

@@ -12,3 +12,5 @@ entities/mappings or introduce central-to-module adapter references.
 ADR 0038: reviewed cross-module SQL read implementations now live in FoodDiary.ReadModel.Composition, registered explicitly by hosts. Module writes and existing repository aliases stay here; modules never reference the composition assembly. Shared DbContext capabilities remain inventoried. See docs/adr/0038-read-model-composition.md.
 
 Impersonation session writes accept only DbSet<AdminImpersonationSession>, supplied by AddAdminPersistence. The repository cannot access other central tables or save independently. Existing composed reads remain behind IAdminImpersonationSessionQuery. AdminDbContext owns session and receipt tracking. AddAdminPersistence creates it through the shared context factory. Receipts retain immediate persistence through IUnitOfWork, duplicate detachment and existence verification. User purge remains on the central context inside the caller transaction; migrations and composed reads remain central.
+
+Keep the impersonation repository directly in `Persistence`, with namespace `FoodDiary.Modules.Admin.Infrastructure.Persistence`.

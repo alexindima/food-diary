@@ -1,7 +1,8 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Wearables;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 
 public sealed class WearablesDbContext(DbContextOptions<WearablesDbContext> options) : DbContext(options) {
     public DbSet<WearableConnection> WearableConnections => Set<WearableConnection>();

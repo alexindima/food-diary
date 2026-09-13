@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests.Domain;
+namespace FoodDiary.Modules.Admin.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public class AdminInvariantTests {

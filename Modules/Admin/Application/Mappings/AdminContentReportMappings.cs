@@ -1,7 +1,7 @@
 using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Admin.Mappings;
+namespace FoodDiary.Modules.Admin.Application.Mappings;
 
 public static class AdminContentReportMappings {
     public static AdminContentReportModel ToAdminModel(this ContentReportAdminReadModel report) =>

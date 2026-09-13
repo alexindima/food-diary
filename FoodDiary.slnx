@@ -569,7 +569,7 @@
     <Project Path="Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <Project Path="Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj" />
     <Project Path="Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
-    <Project Path="Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
+    <Project Path="Modules/Admin/PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
     <Project Path="Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Admin/tests/">

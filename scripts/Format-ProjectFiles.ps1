@@ -3,8 +3,8 @@
 .SYNOPSIS
 Formats project reference lists. Use -Check in CI or -Path for selected projects.
 .DESCRIPTION
-Orders literal Include references within uninterrupted runs: own module, Shared,
-then other projects, ordered by repository-relative path (ordinal comparison).
+Orders project references within uninterrupted runs by ascending leading ../ count,
+then project file name and full Include as a tie-breaker (ordinal comparison).
 Package references are ordered by package id. Conditions, comments, duplicate
 includes, expressions, Update/Remove items and other item types are sort barriers.
 No references are moved between ItemGroups. Metadata moves with its reference.
@@ -18,22 +18,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 
-function Get-SortKey([System.Xml.XmlElement]$Element, [string]$ProjectPath) {
-    $include = $Element.GetAttribute('Include')
-    if ($Element.LocalName -eq 'PackageReference') { return $include }
-    $target = [IO.Path]::GetFullPath((Join-Path (Split-Path $ProjectPath -Parent) $include))
-    $relative = [IO.Path]::GetRelativePath($root, $target).Replace('\', '/')
-    $ownerPath = [IO.Path]::GetRelativePath($root, $ProjectPath).Replace('\', '/')
-    $rank = '2'
-    if ($ownerPath -match '^Modules/([^/]+)/' -and $relative.StartsWith("Modules/$($Matches[1])/", [StringComparison]::Ordinal)) {
-        $rank = '0'
-    } elseif ($relative.StartsWith('Shared/', [StringComparison]::Ordinal)) {
-        $rank = '1'
-    }
-    return "$rank/$relative"
-}
-
-function Sort-ReferenceRun([System.Collections.Generic.List[System.Xml.XmlElement]]$Run, [string]$ProjectPath) {
+function Sort-ReferenceRun([System.Collections.Generic.List[System.Xml.XmlElement]]$Run) {
     if ($Run.Count -lt 2) { return }
     $keys = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($element in $Run) {
@@ -42,7 +27,18 @@ function Sort-ReferenceRun([System.Collections.Generic.List[System.Xml.XmlElemen
     $sorted = [Collections.Generic.List[System.Xml.XmlElement]]::new($Run)
     $sorted.Sort([Comparison[System.Xml.XmlElement]]{
         param($left, $right)
-        [StringComparer]::Ordinal.Compare((Get-SortKey $left $ProjectPath), (Get-SortKey $right $ProjectPath))
+        $leftInclude = $left.GetAttribute('Include')
+        $rightInclude = $right.GetAttribute('Include')
+        if ($left.LocalName -eq 'ProjectReference') {
+            $leftDepth = [regex]::Match($leftInclude, '^(?:\./)?(?<parent>\.\./)*').Groups['parent'].Captures.Count
+            $rightDepth = [regex]::Match($rightInclude, '^(?:\./)?(?<parent>\.\./)*').Groups['parent'].Captures.Count
+            $comparison = $leftDepth.CompareTo($rightDepth)
+            if ($comparison -ne 0) { return $comparison }
+            $comparison = [StringComparer]::Ordinal.Compare(
+                [IO.Path]::GetFileName($leftInclude), [IO.Path]::GetFileName($rightInclude))
+            if ($comparison -ne 0) { return $comparison }
+        }
+        return [StringComparer]::Ordinal.Compare($leftInclude, $rightInclude)
     })
     for ($i = 0; $i -lt $Run.Count; $i++) {
         [void]$Run[$i].ParentNode.ReplaceChild($sorted[$i].CloneNode($true), $Run[$i])
@@ -50,8 +46,9 @@ function Sort-ReferenceRun([System.Collections.Generic.List[System.Xml.XmlElemen
 }
 
 if (-not $Path) {
-    $Path = @(& git -C $root ls-files -- '*.csproj')
+    $Path = @(& git -C $root ls-files --cached --others --exclude-standard -- '*.csproj')
     if ($LASTEXITCODE -ne 0) { throw 'Cannot list repository projects.' }
+    $Path = @($Path | Sort-Object -Unique | Where-Object { [IO.File]::Exists((Join-Path $root $_)) })
 }
 $changes = 0
 foreach ($entry in $Path) {
@@ -69,7 +66,7 @@ foreach ($entry in $Path) {
                 $node.HasAttribute('Include') -and -not $node.HasAttribute('Condition') -and
                 $node.GetAttribute('Include') -notmatch '[$@%*?;]'
             if (-not $sortable -or ($kind -and $kind -ne $node.LocalName)) {
-                Sort-ReferenceRun $run $full
+                Sort-ReferenceRun $run
                 $run.Clear()
                 $kind = ''
             }
@@ -81,7 +78,7 @@ foreach ($entry in $Path) {
                 $run.Add($node)
             }
         }
-        Sort-ReferenceRun $run $full
+        Sort-ReferenceRun $run
     }
     $newline = if ($source.Contains("`r`n")) { "`r`n" } else { "`n" }
     foreach ($group in $document.SelectNodes('//*[local-name()="ItemGroup" or local-name()="PropertyGroup"]')) {

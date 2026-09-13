@@ -1,8 +1,9 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Infrastructure.Persistence.Ai;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Ai.Infrastructure.Persistence;
 
 public sealed class AiDbContext(DbContextOptions<AiDbContext> options) : DbContext(options) {
     public DbSet<AiUsage> AiUsages => Set<AiUsage>();

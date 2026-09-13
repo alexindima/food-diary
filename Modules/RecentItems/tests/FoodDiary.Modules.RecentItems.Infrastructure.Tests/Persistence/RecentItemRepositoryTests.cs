@@ -1,8 +1,8 @@
+using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.RecentItems;
 using Microsoft.EntityFrameworkCore;
 

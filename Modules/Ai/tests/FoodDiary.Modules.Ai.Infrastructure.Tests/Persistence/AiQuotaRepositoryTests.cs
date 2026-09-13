@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Ai;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,8 +1,8 @@
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
 
 public sealed record UpdateAdminLessonCommand(
     Guid Id,

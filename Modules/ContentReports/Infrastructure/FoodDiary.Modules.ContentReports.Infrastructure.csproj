@@ -15,12 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
-    <ProjectReference Include="Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

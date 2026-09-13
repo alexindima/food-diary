@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingSubscriptions;
 
 public sealed record GetAdminBillingSubscriptionsQuery(
     int Page,

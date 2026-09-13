@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -5,7 +6,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Admin;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Admin.Queries.GetAdminAudit;
+namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAudit;
 
 public sealed class GetAdminAuditQueryHandler(IAuditEntryJournal journal) : IQueryHandler<GetAdminAuditQuery, Result<AdminAuditPage>> {
     public async Task<Result<AdminAuditPage>> Handle(GetAdminAuditQuery query, CancellationToken cancellationToken) {

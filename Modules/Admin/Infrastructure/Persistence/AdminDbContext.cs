@@ -1,7 +1,8 @@
-using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Modules.Admin.PersistenceModel;
+using FoodDiary.Modules.Admin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Admin.Infrastructure.Persistence;
 
 public sealed class AdminDbContext(DbContextOptions<AdminDbContext> options) : DbContext(options) {
     public DbSet<AdminImpersonationSession> AdminImpersonationSessions => Set<AdminImpersonationSession>();

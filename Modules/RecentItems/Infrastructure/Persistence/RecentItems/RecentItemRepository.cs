@@ -1,3 +1,4 @@
+using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Enums;

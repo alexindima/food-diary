@@ -3,7 +3,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FluentValidation;
 
-namespace FoodDiary.Application.Admin.Commands.CreateAdminUser;
+namespace FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
 
 public sealed class CreateAdminUserCommandValidator : AbstractValidator<CreateAdminUserCommand> {
     private static readonly HashSet<string> AllowedRoles = new(

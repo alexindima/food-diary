@@ -130,7 +130,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("UserAchievements", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Admin.AdminImpersonationSession", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Admin.Domain.Entities.AdminImpersonationSession", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -4469,7 +4469,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("TelegramOperations", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.BugAcknowledgementReceipt", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Admin.PersistenceModel.BugAcknowledgementReceipt", b => {
                 b.Property<Guid>("InboxId")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -4708,7 +4708,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Admin.AdminImpersonationSession", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Admin.Domain.Entities.AdminImpersonationSession", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("ActorUserId")

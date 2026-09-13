@@ -25,12 +25,12 @@ sources:
 ## Source Areas
 
 - `Modules/Admin/Application`
-- `Modules/Admin/Application/Abstractions`
+- `Modules/Admin/Application.Abstractions`
 - `Modules/Admin/Contracts`
 - `Modules/Admin/Domain`
 - `Modules/Admin/Infrastructure`
 - `Modules/Admin/Infrastructure/Integrations/MailInbox`
-- `Modules/Admin/Infrastructure/Model`
+- `Modules/Admin/PersistenceModel`
 - `Modules/Admin/Presentation`
 - `Modules/Admin/Presentation/Features/Admin`
 
@@ -54,7 +54,7 @@ No literal attribute-routed controller was associated with this module.
 - DTO/read-model/projection types: 12
 - Enums: 0
 - Exported repository-shaped contracts: 7
-- Contracts referencing domain entities: 1
+- Contracts referencing domain entities: 0
 - `class AdminMailInboxErrors`
 - `interface IAdminBillingReadRepository`
 - `interface IAdminBillingRepository`

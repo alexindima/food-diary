@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Admin.Models;
+using FoodDiary.Modules.Admin.Application.Models;
 
-namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
+namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 
 public sealed record UpdateAdminUserCommand(
     Guid UserId,

@@ -1,9 +1,10 @@
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence.Authentication;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Modules.Identity.Infrastructure.Persistence;
 
 public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options) {
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();

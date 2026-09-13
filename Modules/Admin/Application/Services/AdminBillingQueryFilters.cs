@@ -3,7 +3,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Billing;
 
-namespace FoodDiary.Application.Admin.Services;
+namespace FoodDiary.Modules.Admin.Application.Services;
 
 internal static class AdminBillingQueryFilters {
     public static AdminBillingListFilter Create(

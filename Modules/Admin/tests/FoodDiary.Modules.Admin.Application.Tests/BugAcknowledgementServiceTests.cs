@@ -3,9 +3,9 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Application.Admin.Services;
+using FoodDiary.Modules.Admin.Application.Services;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Admin.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BugAcknowledgementServiceTests {

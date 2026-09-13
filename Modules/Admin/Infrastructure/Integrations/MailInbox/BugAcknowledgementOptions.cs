@@ -1,4 +1,4 @@
-namespace FoodDiary.Infrastructure.Integrations.MailInbox;
+namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 public sealed class BugAcknowledgementOptions {
     public bool Enabled { get; set; }

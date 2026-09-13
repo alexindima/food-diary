@@ -1,9 +1,9 @@
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.Enums;
 using FluentValidation;
-using FoodDiary.Application.Admin.Internal.Validation;
+using FoodDiary.Modules.Admin.Application.Internal.Validation;
 
-namespace FoodDiary.Application.Admin.Commands.CreateAdminAchievementDefinition;
+namespace FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
 
 public sealed class CreateAdminAchievementDefinitionCommandValidator : AbstractValidator<CreateAdminAchievementDefinitionCommand> {
     public CreateAdminAchievementDefinitionCommandValidator() {

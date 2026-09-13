@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Wearables;
