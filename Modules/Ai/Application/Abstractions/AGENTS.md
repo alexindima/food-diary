@@ -1,5 +1,7 @@
-# Ai module guidelines
+# AI internal application ports
 
-Own Ai ports, errors, models and AiUsage administration projections. Keep legacy CLR namespaces. Depend only on Ai Domain and shared Results; never central Application Abstractions (which must not re-export this project).
-
-Ai/Common owns IAiAdministrationReadService and IAiPromptAdministrationService in the matching Abstractions namespace. Administration writes return AiPromptTemplateReadModel; never return the mutable AiPromptTemplate to Admin. Implementations remain in Ai Application.
+Own provider, quota, job-store and repository ports, internal models and errors.
+Keep legacy CLR namespaces. Reference owner Contracts for public DTOs; never
+re-export repository/provider capability through Contracts. Administration services
+and completed-recognition reads live in Modules/Ai/Contracts.
+Implementations remain in AI Application and Infrastructure.

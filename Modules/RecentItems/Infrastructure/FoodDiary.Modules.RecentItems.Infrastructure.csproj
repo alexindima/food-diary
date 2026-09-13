@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.RecentItems.Contracts.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.RecentItems.PersistenceModel.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />

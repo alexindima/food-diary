@@ -1,5 +1,9 @@
 # Gamification consumer contracts
 
-Own achievement administration inputs/projections and IAchievementDefinitionAdministrationService consumed by Admin. Keep aggregate mutations and handlers in Application. Contracts depend only on Results.
+Own achievement administration inputs/projections and IAchievementDefinitionAdministrationService consumed by Admin. Keep aggregate mutations and handlers in Application. Contracts depend only on Results and scalar Users.Domain.Contracts.
 
 Preserve existing CLR namespaces and wire fields during coordinated rebuilds. Do not add persistence, provider clients, DI registration or handlers to this package. Reference the owning contract directly from every consumer.
+
+IAchievementEvaluationOutbox is the consumer enqueue capability used by Lessons.
+It belongs to Contracts; processing, repositories and reconciliation remain internal
+Abstractions. Preserve ambient transaction and coalescing behavior in its adapter.

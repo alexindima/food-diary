@@ -38,14 +38,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 30
+- Public contract files: 29
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 30
-- Interfaces: 17
+- Public contract types: 29
+- Interfaces: 16
 - DTO/read-model/projection types: 9
 - Enums: 0
 - Exported repository-shaped contracts: 10
@@ -55,7 +55,6 @@ No literal attribute-routed controller was associated with this module.
 - `class BillingPaymentAlreadyExistsException`
 - `class BillingWebhookEventAlreadyProcessedException`
 - `interface IBillingCheckoutLock`
-- `interface IBillingMarketingConversionRecorder`
 - `interface IBillingPaymentReadRepository`
 - `interface IBillingPaymentRepository`
 - `interface IBillingPaymentWriteRepository`

@@ -1837,7 +1837,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Images/TelegramImageDownloader.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "TelegramImageSelection",
@@ -4710,34 +4710,6 @@
       "line": 2
     },
     {
-      "name": "AiUsageBreakdown",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageBreakdown.cs",
-      "line": 2
-    },
-    {
-      "name": "AiUsageDailySummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageDailySummary.cs",
-      "line": 2
-    },
-    {
-      "name": "AiUsageSummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageSummary.cs",
-      "line": 2
-    },
-    {
-      "name": "AiUsageUserSummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageUserSummary.cs",
-      "line": 4
-    },
-    {
       "name": "AiErrors",
       "kind": "class",
       "role": "Other",
@@ -4792,20 +4764,6 @@
       "role": "Other",
       "path": "Modules/Ai/Application/Abstractions/Ai/Common/FoodRecognitionJobUpdate.cs",
       "line": 2
-    },
-    {
-      "name": "IAiAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IAiPromptAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs",
-      "line": 5
     },
     {
       "name": "IAiPromptProvider",
@@ -4885,13 +4843,6 @@
       "line": 2
     },
     {
-      "name": "IFoodRecognitionResultReader",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs",
-      "line": 5
-    },
-    {
       "name": "IOpenAiFoodClient",
       "kind": "interface",
       "role": "Other",
@@ -4910,55 +4861,6 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "AiPromptRevisionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptRevisionReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AiPromptTemplateReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptTemplateReadModel.cs",
-      "line": 6
-    },
-    {
-      "name": "FoodNutritionItemModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionItemModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodNutritionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodRecognitionJobModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodRecognitionJobModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodVisionItemModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodVisionItemModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodVisionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodVisionModel.cs",
       "line": 2
     },
     {
@@ -5184,6 +5086,104 @@
       "role": "Service",
       "path": "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs",
       "line": 8
+    },
+    {
+      "name": "AiUsageBreakdown",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageBreakdown.cs",
+      "line": 2
+    },
+    {
+      "name": "AiUsageDailySummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageDailySummary.cs",
+      "line": 2
+    },
+    {
+      "name": "AiUsageSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageSummary.cs",
+      "line": 2
+    },
+    {
+      "name": "AiUsageUserSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageUserSummary.cs",
+      "line": 4
+    },
+    {
+      "name": "IAiAdministrationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IAiPromptAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs",
+      "line": 5
+    },
+    {
+      "name": "IFoodRecognitionResultReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs",
+      "line": 5
+    },
+    {
+      "name": "AiPromptRevisionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Models/AiPromptRevisionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AiPromptTemplateReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Models/AiPromptTemplateReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodNutritionItemModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodNutritionItemModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodNutritionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodNutritionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodRecognitionJobModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodRecognitionJobModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodVisionItemModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodVisionItemModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodVisionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodVisionModel.cs",
+      "line": 2
     },
     {
       "name": "AiPromptRevision",
@@ -5540,13 +5540,6 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingMarketingConversionRecorder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs",
       "line": 2
     },
     {
@@ -5968,6 +5961,13 @@
       "role": "Service",
       "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
       "line": 11
+    },
+    {
+      "name": "IBillingMarketingConversionRecorder",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs",
+      "line": 2
     },
     {
       "name": "BillingProviderNames",
@@ -8854,13 +8854,6 @@
       "line": 5
     },
     {
-      "name": "IDietologistDashboardAccessService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs",
-      "line": 6
-    },
-    {
       "name": "IDietologistEmailSender",
       "kind": "interface",
       "role": "Other",
@@ -9020,13 +9013,6 @@
       "role": "Other",
       "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
       "line": 4
-    },
-    {
-      "name": "DietologistPermissionsReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistPermissionsReadModel.cs",
-      "line": 2
     },
     {
       "name": "RecommendationBulkDispatchReadModel",
@@ -9895,6 +9881,20 @@
       "role": "Service",
       "path": "Modules/Dietologist/Application/Services/RecommendationTemplateReadService.cs",
       "line": 8
+    },
+    {
+      "name": "IDietologistDashboardAccessService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Dietologist/Contracts/Dietologist/Common/IDietologistDashboardAccessService.cs",
+      "line": 6
+    },
+    {
+      "name": "DietologistPermissionsReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "line": 2
     },
     {
       "name": "ClientTask",
@@ -12165,13 +12165,6 @@
       "line": 2
     },
     {
-      "name": "IFavoriteMealSourceReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs",
-      "line": 6
-    },
-    {
       "name": "IFavoriteMealWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -12183,13 +12176,6 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteMealSourceModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
       "line": 2
     },
     {
@@ -12221,13 +12207,6 @@
       "line": 2
     },
     {
-      "name": "IFavoriteProductSourceReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs",
-      "line": 6
-    },
-    {
       "name": "IFavoriteProductWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -12239,13 +12218,6 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "FavoriteProductSourceModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
       "line": 4
     },
     {
@@ -12277,13 +12249,6 @@
       "line": 2
     },
     {
-      "name": "IFavoriteRecipeSourceReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs",
-      "line": 6
-    },
-    {
       "name": "IFavoriteRecipeWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -12295,13 +12260,6 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteRecipeSourceModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
       "line": 2
     },
     {
@@ -12578,6 +12536,13 @@
       "line": 5
     },
     {
+      "name": "IFavoriteMealSourceReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs",
+      "line": 6
+    },
+    {
       "name": "IMealFavoriteReadService",
       "kind": "interface",
       "role": "Service",
@@ -12589,6 +12554,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FavoriteMealSourceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
       "line": 2
     },
     {
@@ -12606,11 +12578,25 @@
       "line": 5
     },
     {
+      "name": "IFavoriteProductSourceReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs",
+      "line": 6
+    },
+    {
       "name": "FavoriteProductModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductModel.cs",
       "line": 2
+    },
+    {
+      "name": "FavoriteProductSourceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
+      "line": 4
     },
     {
       "name": "IFavoriteRecipeReadService",
@@ -12620,10 +12606,24 @@
       "line": 5
     },
     {
+      "name": "IFavoriteRecipeSourceReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs",
+      "line": 6
+    },
+    {
       "name": "FavoriteRecipeModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FavoriteRecipeSourceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
       "line": 2
     },
     {
@@ -12851,13 +12851,6 @@
       "line": 5
     },
     {
-      "name": "IAchievementEvaluationOutbox",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
-      "line": 4
-    },
-    {
       "name": "IAchievementEvaluationOutboxProcessor",
       "kind": "interface",
       "role": "Other",
@@ -13003,6 +12996,13 @@
       "role": "Service",
       "path": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
       "line": 9
+    },
+    {
+      "name": "IAchievementEvaluationOutbox",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs",
+      "line": 4
     },
     {
       "name": "IAchievementDefinitionAdministrationService",
@@ -20320,20 +20320,6 @@
       "line": 2
     },
     {
-      "name": "IRecentItemUsageReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IRecentItemUsageRecorder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs",
-      "line": 4
-    },
-    {
       "name": "IRecentItemWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -20341,17 +20327,31 @@
       "line": 2
     },
     {
+      "name": "IRecentItemUsageReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "IRecentItemUsageRecorder",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs",
+      "line": 4
+    },
+    {
       "name": "RecentProductUsage",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/RecentProductUsage.cs",
+      "path": "Modules/RecentItems/Contracts/RecentItems/Common/RecentProductUsage.cs",
       "line": 4
     },
     {
       "name": "RecentRecipeUsage",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/RecentRecipeUsage.cs",
+      "path": "Modules/RecentItems/Contracts/RecentItems/Common/RecentRecipeUsage.cs",
       "line": 4
     },
     {
@@ -21874,46 +21874,11 @@
       "line": 2
     },
     {
-      "name": "IUsdaFoodSearchService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs",
-      "line": 4
-    },
-    {
-      "name": "IUsdaMealNutritionReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaMealNutritionReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUsdaProductLinkService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUsdaProductSuggestionReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs",
-      "line": 4
-    },
-    {
       "name": "UsdaErrors",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Usda/Application/Abstractions/Common/UsdaErrors.cs",
       "line": 5
-    },
-    {
-      "name": "UsdaMealProductNutritionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Usda/Application/Abstractions/Models/UsdaMealProductNutritionReadModel.cs",
-      "line": 2
     },
     {
       "name": "LinkProductToUsdaFoodCommand",
@@ -22042,6 +22007,34 @@
       "line": 5
     },
     {
+      "name": "IUsdaFoodSearchService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs",
+      "line": 4
+    },
+    {
+      "name": "IUsdaMealNutritionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUsdaProductLinkService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUsdaProductSuggestionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs",
+      "line": 4
+    },
+    {
       "name": "DailyMicronutrientModel",
       "kind": "record",
       "role": "Other",
@@ -22109,6 +22102,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Usda/Contracts/Models/UsdaFoodReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaMealProductNutritionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaMealProductNutritionReadModel.cs",
       "line": 2
     },
     {
@@ -27785,7 +27785,7 @@
     },
     {
       "interface": "IAchievementEvaluationOutbox",
-      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
+      "interfacePath": "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs",
       "implementation": "AchievementEvaluationOutbox",
       "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
       "confidence": "naming-convention"
@@ -27932,14 +27932,14 @@
     },
     {
       "interface": "IAiAdministrationReadService",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs",
+      "interfacePath": "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs",
       "implementation": "AiAdministrationReadService",
       "implementationPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAiPromptAdministrationService",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs",
+      "interfacePath": "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs",
       "implementation": "AiPromptAdministrationService",
       "implementationPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
       "confidence": "naming-convention"
@@ -28282,7 +28282,7 @@
     },
     {
       "interface": "IDietologistDashboardAccessService",
-      "interfacePath": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs",
+      "interfacePath": "Modules/Dietologist/Contracts/Dietologist/Common/IDietologistDashboardAccessService.cs",
       "implementation": "DietologistDashboardAccessService",
       "implementationPath": "Modules/Dietologist/Application/Services/DietologistDashboardAccessService.cs",
       "confidence": "naming-convention"
@@ -28527,7 +28527,7 @@
     },
     {
       "interface": "IFavoriteProductSourceReadService",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs",
+      "interfacePath": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs",
       "implementation": "FavoriteProductSourceReadService",
       "implementationPath": "Modules/Products/Infrastructure/FavoriteProductSourceReadService.cs",
       "confidence": "naming-convention"
@@ -28548,7 +28548,7 @@
     },
     {
       "interface": "IFavoriteRecipeSourceReadService",
-      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs",
+      "interfacePath": "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs",
       "implementation": "FavoriteRecipeSourceReadService",
       "implementationPath": "Modules/Recipes/Infrastructure/FavoriteRecipeSourceReadService.cs",
       "confidence": "naming-convention"
@@ -28569,7 +28569,7 @@
     },
     {
       "interface": "IFoodRecognitionResultReader",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs",
+      "interfacePath": "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs",
       "implementation": "FoodRecognitionResultReader",
       "implementationPath": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
       "confidence": "naming-convention"
@@ -29360,14 +29360,14 @@
     },
     {
       "interface": "IUsdaFoodSearchService",
-      "interfacePath": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs",
+      "interfacePath": "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs",
       "implementation": "UsdaFoodSearchService",
       "implementationPath": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUsdaProductSuggestionReadService",
-      "interfacePath": "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs",
+      "interfacePath": "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs",
       "implementation": "UsdaProductSuggestionReadService",
       "implementationPath": "Modules/Usda/Application/Services/UsdaProductSuggestionReadService.cs",
       "confidence": "naming-convention"

@@ -12,6 +12,7 @@ public sealed class SurfaceStyleCodeTests {
     public void TryParse_NormalizesSupportedValues(string input, string expected) {
         Assert.True(SurfaceStyleCode.TryParse(input, out SurfaceStyleCode value));
         Assert.Equal(expected, value.Value);
+        Assert.Equal(expected, value.ToString());
     }
 
     [Theory]

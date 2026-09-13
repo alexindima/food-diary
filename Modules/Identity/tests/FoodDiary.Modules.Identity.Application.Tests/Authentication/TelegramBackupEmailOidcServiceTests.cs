@@ -12,6 +12,53 @@ namespace FoodDiary.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramBackupEmailOidcServiceTests {
+    [Fact]
+    public async Task DisabledProvider_DoesNotCreateOrConsumeAnAttempt() {
+        _provider.IsEnabled.Returns(returnThis: false);
+        Assert.Equal(TelegramIdentityErrors.NotConfigured.Code,
+            (await Create().StartAsync(_user.Id.Value, "backup@example.com", _browser, CancellationToken.None)).Error.Code);
+        Assert.Equal(TelegramIdentityErrors.InvalidProof.Code,
+            (await Create().CompleteAsync(_user.Id.Value, "code", "state", _browser, CancellationToken.None)).Error.Code);
+        Assert.Empty(_tickets.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task Start_UnavailablePrincipalCannotCreateProof() {
+        _identities.GetAuthenticationPrincipalAsync(_user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound()));
+        Assert.True((await Create().StartAsync(_user.Id.Value, "backup@example.com", _browser, CancellationToken.None)).IsFailure);
+        Assert.Empty(_stored);
+    }
+
+    [Fact]
+    public async Task Start_PreservesAuthorizationProviderFailure() {
+        _provider.CreateAuthorizationUrl(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(Result.Failure<string>(TelegramIdentityErrors.NotConfigured));
+        Assert.Equal(TelegramIdentityErrors.NotConfigured.Code,
+            (await Create().StartAsync(_user.Id.Value, "backup@example.com", _browser, CancellationToken.None)).Error.Code);
+    }
+
+    [Theory]
+    [InlineData("{")]
+    [InlineData("null")]
+    [InlineData("{}")]
+    public async Task Complete_RejectsCorruptOrForeignStoredAttempt(string payload) {
+        _stored[("telegram-backup-email-oidc", $"{_browser}:{_user.Id.Value:D}")] = payload;
+        Result result = await Create().CompleteAsync(_user.Id.Value, "code", "state", _browser, CancellationToken.None);
+        Assert.Equal(TelegramIdentityErrors.InvalidProof.Code, result.Error.Code);
+        await _provider.DidNotReceive().ExchangeAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        Assert.Empty(_mail.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task Complete_PropagatesProviderRejectionWithoutSendingEmail() {
+        TelegramBackupEmailOidcService service = Create();
+        await service.StartAsync(_user.Id.Value, "backup@example.com", _browser, CancellationToken.None);
+        _provider.ExchangeAsync("code", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.InvalidProof));
+        Result result = await service.CompleteAsync(_user.Id.Value, "code", "state", _browser, CancellationToken.None);
+        Assert.Equal(TelegramIdentityErrors.InvalidProof.Code, result.Error.Code);
+        Assert.Empty(_mail.ReceivedCalls());
+    }
+
     private readonly ITelegramOidcProvider _provider = Substitute.For<ITelegramOidcProvider>();
     private readonly ITelegramLoginTicketStore _tickets = Substitute.For<ITelegramLoginTicketStore>();
     private readonly IUserAuthenticationIdentityService _identities = Substitute.For<IUserAuthenticationIdentityService>();

@@ -4,6 +4,14 @@ namespace FoodDiary.Application.Tests.Statistics;
 
 [ExcludeFromCodeCoverage]
 public sealed class LocalStatisticsCalendarTests {
+    [Fact]
+    public void RepeatedMidnight_UsesTheFirstOccurrence() {
+        LocalStatisticsDay day = Assert.Single(LocalStatisticsCalendar.GetDays(
+            new DateTime(2026, 11, 1, 12, 0, 0, DateTimeKind.Utc), "America/Havana", 1));
+        Assert.Equal(new DateTime(2026, 11, 1, 4, 0, 0, DateTimeKind.Utc), day.StartUtc);
+        Assert.Equal(TimeSpan.FromHours(25), day.EndExclusiveUtc - day.StartUtc);
+    }
+
     [Theory]
     [InlineData(2026, 3, 8, 23)]
     [InlineData(2026, 11, 1, 25)]

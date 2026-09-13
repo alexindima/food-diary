@@ -6,6 +6,15 @@ namespace FoodDiary.Telegram.Bot.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramImageSelectorTests {
     [Fact]
+    public void Select_RejectsPhotoWhenNoSizeCanBeDownloaded() {
+        var message = new Message { Photo = [new PhotoSize { FileId = "photo", Width = 0, Height = 100 }] };
+        Assert.Null(TelegramImageSelector.Select(message, out string? error));
+        Assert.Equal("size", error);
+        Assert.Null(TelegramImageSelector.Select(new Message(), out error));
+        Assert.Null(error);
+    }
+
+    [Fact]
     public void Select_PhotoPicksLargestUsableResolution() {
         var message = new Message {
             Photo = [

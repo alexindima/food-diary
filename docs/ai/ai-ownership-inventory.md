@@ -1,5 +1,11 @@
 # Ai ownership inventory
 
+Current consumer seam: `Modules/Ai/Contracts` owns administration services and
+completed recognition reads with their DTOs. The extraction notes below describe
+the initial module move; their former no-new-Contracts constraint is superseded
+by this implemented boundary. Internal repositories, quota and provider ports remain
+in Application/Abstractions. Runtime behavior described below is unchanged.
+
 Base: a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6. Worktree: C:/Users/alexi/.codex/worktrees/901d/FD. Initial HEAD equals local master; no pre-existing changes.
 
 ## Proven responsibility and intended physical boundary

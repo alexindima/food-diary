@@ -19,7 +19,7 @@ Rules for `Modules/Dietologist/`.
   grants internal storage access without making a public audit entity API.
 - Focused audit rule/composition tests live in the existing module Infrastructure
   tests. Central PostgreSQL tests retain the shared dispatch/transaction boundary.
-- Do not add a Contracts project until a stable cross-module API distinct from adapter-facing application ports is proven.
+- Keep the Dashboard access service and permission projection in Contracts; Dashboard references it directly. Internal repositories and adapter-facing ports stay in Application/Abstractions.
 
 ## Verification
 

@@ -13,6 +13,7 @@ public sealed class AiModuleExtractionTests {
     }
 
     [Theory]
+    [InlineData("Contracts", "FoodDiary.Modules.Ai.Contracts.csproj")]
     [InlineData("Application", "FoodDiary.Modules.Ai.Application.csproj")]
     [InlineData("Application/Abstractions", "FoodDiary.Modules.Ai.Application.Abstractions.csproj")]
     [InlineData("Domain", "FoodDiary.Modules.Ai.Domain.csproj")]
@@ -54,7 +55,7 @@ public sealed class AiModuleExtractionTests {
     public void ExtractedAiAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Contracts", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

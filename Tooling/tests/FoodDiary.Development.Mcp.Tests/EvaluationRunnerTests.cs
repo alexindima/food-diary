@@ -7,6 +7,21 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class EvaluationRunnerTests {
     [Theory]
+    [InlineData("null", false)]
+    [InlineData("[]", false)]
+    [InlineData("{}", false)]
+    [InlineData("{\"required\":[\"tests/Target.cs\"]}", true)]
+    [InlineData("{\"recommended\":[{\"path\":\"TESTS/Target.cs\"}]}", true)]
+    [InlineData("{\"focusedTestDetails\":[false,{}, {\"path\":\"tests/Other.cs\"}]}", false)]
+    [InlineData("{\"focusedTestFiles\":[\"tests/Target.cs\"]}", true)]
+    public void NamedTestEvidence_RequiresExactPathInSupportedFields(string json, bool expected) {
+        WikiCommandResult? result = string.Equals(json, "null", StringComparison.Ordinal) ? null
+            : new WikiCommandResult("test-plan", "raw", JsonSerializer.Deserialize<JsonElement>(json), "repository", "head", [], [], [], []);
+        MethodInfo method = typeof(DevelopmentContextEvaluationRunner).GetMethod("HasNamedTest", BindingFlags.Static | BindingFlags.NonPublic)!;
+        Assert.Equal(expected, (bool)method.Invoke(null, [result, "tests/Target.cs"])!);
+    }
+
+    [Theory]
     [InlineData("rank")]
     [InlineData("test")]
     [InlineData("forbidden")]

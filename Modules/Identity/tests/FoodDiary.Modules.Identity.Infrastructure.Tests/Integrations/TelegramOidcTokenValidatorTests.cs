@@ -15,6 +15,40 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramOidcTokenValidatorTests {
+    [Theory]
+    [InlineData(0, 5)]
+    [InlineData(16385, 5)]
+    [InlineData(5, 0)]
+    [InlineData(5, 129)]
+    public async Task InvalidInput_DoesNotFetchMetadata(int tokenLength, int nonceLength) {
+        var configuration = new StaticConfiguration(signingKey: null);
+        Result<TelegramOidcIdentity> result = await CreateValidator(configuration)
+            .ValidateAsync(new string('x', tokenLength), new string('n', nonceLength), CancellationToken.None);
+        Assert.True(result.IsFailure);
+        Assert.Equal(0, configuration.FetchCount);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task MetadataFailure_RejectsProofButPropagatesCallerCancellation(bool callerCancelled) {
+        using var cancellation = new CancellationTokenSource();
+        var configuration = new StaticConfiguration(signingKey: null) { OnFetch = async () => {
+            if (callerCancelled) {
+                await cancellation.CancelAsync();
+                throw new OperationCanceledException(cancellation.Token);
+            }
+            throw new HttpRequestException("Metadata unavailable");
+        }, };
+        TelegramOidcTokenValidator validator = CreateValidator(configuration);
+        if (callerCancelled) {
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => validator.ValidateAsync("token", "nonce", cancellation.Token));
+        } else {
+            Assert.True((await validator.ValidateAsync("token", "nonce", cancellation.Token)).IsFailure);
+        }
+        Assert.Equal(1, configuration.FetchCount);
+    }
+
     private static readonly DateTime Now = new(2026, 9, 12, 12, 0, 0, DateTimeKind.Utc);
 
     [Fact]
@@ -132,20 +166,26 @@ public sealed class TelegramOidcTokenValidatorTests {
             "https://oauth.telegram.org", "123456", claims ?? Claims(), Now.AddMinutes(-1), Now.AddMinutes(5),
             new SigningCredentials(key, SecurityAlgorithms.RsaSha256)));
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedClock : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(Now);
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class StaticConfiguration(SecurityKey? signingKey) : IConfigurationManager<OpenIdConnectConfiguration> {
+        public Func<Task>? OnFetch { get; init; }
         public int FetchCount { get; private set; }
         public bool RefreshRequested { get; private set; }
-        public Task<OpenIdConnectConfiguration> GetConfigurationAsync(CancellationToken cancel) {
+        public async Task<OpenIdConnectConfiguration> GetConfigurationAsync(CancellationToken cancel) {
             FetchCount++;
+            if (OnFetch is not null) {
+                await OnFetch();
+            }
             var configuration = new OpenIdConnectConfiguration();
             if (signingKey is not null) {
                 configuration.SigningKeys.Add(signingKey);
             }
-            return Task.FromResult(configuration);
+            return configuration;
         }
         public void RequestRefresh() => RefreshRequested = true;
     }

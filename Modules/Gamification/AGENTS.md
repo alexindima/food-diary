@@ -20,7 +20,7 @@ Rules for `Modules/Gamification/`.
 
 ## Consumer boundary
 
-Own achievement administration inputs/projections and IAchievementDefinitionAdministrationService consumed by Admin. Keep aggregate mutations and handlers in Application. Contracts depend only on Results. See `Contracts/AGENTS.md` and ADR 0033.
+Own achievement administration inputs/projections and IAchievementDefinitionAdministrationService consumed by Admin. Keep aggregate mutations and handlers in Application. Contracts depend only on Results and scalar Users.Domain.Contracts. See `Contracts/AGENTS.md` and ADR 0033.
 
 Both Revision and LockedBy fence every EF finalization, including failures. On a conflict, release only a changed revision still held by the original owner; preserve the new request timestamp, attempt count and failure metadata. Shared processing owns SaveChanges and durable-outcome logging.
 
@@ -39,3 +39,7 @@ Scalar types AchievementMetric belong to Domain.Contracts.
 Reference that owner directly without acquiring aggregate capabilities.
 
 AchievementDefinitionLimits owns shared length limits. AchievementDefinition retains constant aliases for compatibility; Admin validators consume the narrow limits directly.
+
+IAchievementEvaluationOutbox is the consumer enqueue capability used by Lessons.
+It belongs to Contracts; processing, repositories and reconciliation remain internal
+Abstractions. Preserve ambient transaction and coalescing behavior in its adapter.

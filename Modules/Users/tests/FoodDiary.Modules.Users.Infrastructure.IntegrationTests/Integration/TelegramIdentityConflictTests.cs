@@ -9,6 +9,23 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIdentityConflictTests {
     [Fact]
+    public async Task SaveFailureHooks_PreserveUnrelatedFailuresAndTranslateIdentityConflict() {
+        var interceptor = new TelegramIdentityConflictInterceptor();
+        var unrelated = new DbContextErrorEventData(null!, static (_, _) => string.Empty, null!, new IOException("unrelated"));
+        await interceptor.SaveChangesFailedAsync(unrelated);
+        var provider = new PostgresException("private", "ERROR", "ERROR", PostgresErrorCodes.UniqueViolation, constraintName: "IX_Users_TelegramUserId");
+        var conflict = new DbContextErrorEventData(null!, static (_, _) => string.Empty, null!, new DbUpdateException("private SQL", provider));
+        Assert.Throws<DbUpdateConcurrencyException>(() => interceptor.SaveChangesFailed(conflict));
+        await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => interceptor.SaveChangesFailedAsync(conflict));
+    }
+
+    [Fact]
+    public void SaveFailureHook_PreservesUnrelatedException() {
+        var eventData = new DbContextErrorEventData(null!, static (_, _) => string.Empty, null!, new IOException("unrelated"));
+        new TelegramIdentityConflictInterceptor().SaveChangesFailed(eventData);
+    }
+
+    [Fact]
     public void Registration_IsScopedAndDoesNotDuplicateTheSaveInterceptor() {
         var services = new ServiceCollection();
         services.AddUsersPersistence().AddUsersPersistence();

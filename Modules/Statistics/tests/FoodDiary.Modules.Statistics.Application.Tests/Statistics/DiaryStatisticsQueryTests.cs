@@ -13,6 +13,36 @@ namespace FoodDiary.Application.Tests.Statistics;
 
 [ExcludeFromCodeCoverage]
 public sealed class DiaryStatisticsQueryTests {
+    [Theory]
+    [InlineData("access", "User.AccessDenied")]
+    [InlineData("days", "Statistics.InvalidDays")]
+    [InlineData("profile", "Profile.Unavailable")]
+    [InlineData("owner", "Statistics.ProfileNotFound")]
+    [InlineData("zone", "Statistics.InvalidTimeZone")]
+    public async Task InvalidRequestOrProfile_DoesNotQueryNutritionOrHydration(string scenario, string expectedCode) {
+        var owner = new UserId(Guid.NewGuid());
+        ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
+        if (string.Equals(scenario, "access", StringComparison.Ordinal)) {
+            access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns(new Error("User.AccessDenied", "Denied"));
+        }
+        IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
+        UserDashboardProfileModel profile = Profile(owner) with {
+            Id = string.Equals(scenario, "owner", StringComparison.Ordinal) ? Guid.NewGuid() : owner.Value,
+            TimeZoneId = string.Equals(scenario, "zone", StringComparison.Ordinal) ? "Unknown/Zone" : "UTC",
+        };
+        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(string.Equals(scenario, "profile", StringComparison.Ordinal)
+            ? Result.Failure<UserDashboardProfileModel>(new Error("Profile.Unavailable", "Unavailable")) : Result.Success(profile));
+        IDashboardStatisticsReadService statistics = Substitute.For<IDashboardStatisticsReadService>();
+        IHydrationIntervalReadService hydration = Substitute.For<IHydrationIntervalReadService>();
+        var handler = new GetDiaryStatisticsQueryHandler(access, profiles, statistics, hydration, new Clock());
+        var query = new GetDiaryStatisticsQuery(owner.Value,
+            string.Equals(scenario, "days", StringComparison.Ordinal) ? 2 : 1);
+        Result<DiaryStatisticsSummaryModel> result = await handler.Handle(query, CancellationToken.None);
+        Assert.Equal(expectedCode, result.Error.Code);
+        Assert.Empty(statistics.ReceivedCalls());
+        Assert.Empty(hydration.ReceivedCalls());
+    }
+
     [Fact]
     public async Task SevenDays_UsesLocalBoundariesAndIncludesEmptyDaysInAverage() {
         var owner = new UserId(Guid.NewGuid());

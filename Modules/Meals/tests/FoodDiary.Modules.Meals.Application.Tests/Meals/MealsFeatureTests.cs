@@ -33,7 +33,7 @@ public partial class MealsFeatureTests {
     private static UpdateMealCommandHandler UpdateMealHandler(
         IMealRepository repository,
         IMealNutritionService mealNutritionService,
-        IRecentItemRepository recentItemRepository,
+        IRecentItemUsageRecorder recentItemRepository,
         IImageAssetCleanupService imageAssetCleanupService,
         ICurrentUserAccessService currentUserAccessService,
         TimeProvider dateTimeProvider,
@@ -700,7 +700,7 @@ public partial class MealsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingRecentItemRepository : IRecentItemRepository {
+    private sealed class RecordingRecentItemRepository : IRecentItemUsageRecorder {
         public IReadOnlyList<ProductId> LastProductIds { get; private set; } = [];
         public IReadOnlyList<RecipeId> LastRecipeIds { get; private set; } = [];
 

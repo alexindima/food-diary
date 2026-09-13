@@ -19,7 +19,7 @@ public sealed class UsersIdentityContractAssemblyTests {
     [InlineData(typeof(IPasswordHasher), "FoodDiary.Authentication.Contracts")]
     [InlineData(typeof(IEmailTemplateRepository), "FoodDiary.Modules.Identity.Application.Abstractions")]
     [InlineData(typeof(IAdminUserRoleAuditRepository), "FoodDiary.Modules.Admin.Application.Abstractions")]
-    [InlineData(typeof(IBillingMarketingConversionRecorder), "FoodDiary.Modules.Billing.Application.Abstractions")]
+    [InlineData(typeof(IBillingMarketingConversionRecorder), "FoodDiary.Modules.Billing.Contracts")]
     [InlineData(typeof(DietologistRequiredIdParser), "FoodDiary.Application.Dietologist")]
     [InlineData(typeof(DietologistEnumValueParser), "FoodDiary.Application.Dietologist")]
     [InlineData(typeof(CurrentUserAccessResolver), "FoodDiary.Modules.Users.Contracts")]

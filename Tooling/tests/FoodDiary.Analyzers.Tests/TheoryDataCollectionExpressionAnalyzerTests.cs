@@ -31,6 +31,8 @@ public sealed class TheoryDataCollectionExpressionAnalyzerTests {
 
     [Theory]
     [InlineData("Xunit.TheoryData<int> Data => [1, 2];")]
+    [InlineData("Xunit.TheoryData<int> Data => new();")]
+    [InlineData("Xunit.TheoryData<int> Data => new Xunit.TheoryData<int>();")]
     [InlineData("System.Collections.Generic.List<int> Data => new() { 1, 2 };")]
     [InlineData("Other.TheoryData<int> Data => new() { 1, 2 };")]
     [InlineData("Xunit.TheoryData<int, int> Data => new() { { 1, 2 } };")]

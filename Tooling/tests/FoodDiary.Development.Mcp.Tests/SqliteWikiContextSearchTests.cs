@@ -5,6 +5,40 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class SqliteWikiContextSearchTests : IDisposable {
     [Theory]
+    [InlineData("Where are water frontend API requests sent?", "FoodDiary.Web.Client/src/app/water.service.ts", "requested frontend transport implementation")]
+    [InlineData("Where does the backend water query run?", "Modules/Hydration/Application/WaterQueryHandler.cs", "application flow handler")]
+    [InlineData("Where does the backend water query run?", "FoodDiary.Web.Client/src/app/water.service.ts", "backend intent excludes frontend source")]
+    [InlineData("Where is the wiki background water capability?", ".llm-wiki/tools/Get-Water.ps1", "wiki capability tool role")]
+    [InlineData("Where is the wiki background water capability?", ".llm-wiki/tools/Test-Water.ps1", "wiki capability tool role")]
+    public async Task ConversationalSearch_ExplainsRequestedLayerAndCapability(string query, string path, string reason) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code','web','FoodDiary.Web.Client/src/app/water.service.ts','web','typescript','WaterService','water frontend backend api requests query'),
+                ('code','backend','Modules/Hydration/Application/WaterQueryHandler.cs','backend','csharp','WaterQueryHandler','water frontend backend query'),
+                ('code','wiki','.llm-wiki/tools/Get-Water.ps1','wiki','powershell','Get-Water','wiki background water capability'),
+                ('code','test','.llm-wiki/tools/Test-Water.ps1','test','powershell','Test-Water','wiki background water capability');
+            INSERT INTO context_search_identity(rowid,path,title) SELECT rowid,path,title FROM context_search;
+            """;
+        await command.ExecuteNonQueryAsync();
+
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Any", module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.True(result.Ready);
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates, item => string.Equals(item.Path, path, StringComparison.Ordinal));
+        Assert.Contains(reason, candidate.Reasons, StringComparer.Ordinal);
+        if (query.Contains("background", StringComparison.Ordinal)) {
+            Assert.Contains("runtime", result.QueryTerms, StringComparer.Ordinal);
+            Assert.Contains("topology", result.QueryTerms, StringComparer.Ordinal);
+        }
+    }
+
+    [Theory]
     [InlineData("Find the integration with GhostNutrition927 provider", true)]
     [InlineData("Find the integration with NutritionProvider provider", false)]
     public async Task SearchAsync_ReportsUnmatchedExplicitIdentifierWithoutHidingCandidates(string query, bool unmatched) {

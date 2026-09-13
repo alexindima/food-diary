@@ -6,6 +6,16 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ToolExecutionTests {
+    [Fact]
+    public async Task RunToolAsync_NoMatchReportsMissingIndexedEvidence() {
+        var trace = new WikiCommandResult("trace", "raw", JsonSerializer.SerializeToElement(new { status = "no-match" }),
+            "repository", "head", [], [], [], []);
+        CallToolResult result = await ToolExecution.RunToolAsync(() => Task.FromResult(trace), CancellationToken.None);
+        Assert.False(result.IsError);
+        TextContentBlock content = Assert.IsType<TextContentBlock>(Assert.Single(result.Content));
+        Assert.Contains("No matching indexed symbol", content.Text, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("low", false, true, "low-confidence")]
     [InlineData("unknown", false, true, "low-confidence")]

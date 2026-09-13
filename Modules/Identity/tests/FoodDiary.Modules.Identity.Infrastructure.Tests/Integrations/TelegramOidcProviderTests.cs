@@ -15,6 +15,55 @@ public sealed class TelegramOidcProviderTests {
     private const string Verifier = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
 
     [Fact]
+    public async Task DisabledProvider_DoesNotSendCredentials() {
+        using var handler = new RecordingHandler();
+        using var http = new HttpClient(handler);
+        var provider = new TelegramOidcProvider(http, MsOptions.Create(new TelegramOidcOptions()), new RecordingValidator());
+        Assert.False(provider.IsEnabled);
+        Assert.True(provider.CreateAuthorizationUrl("state", "nonce", Verifier).IsFailure);
+        Assert.True((await provider.ExchangeAsync("code", Verifier, "nonce", CancellationToken.None)).IsFailure);
+        Assert.Null(handler.Url);
+    }
+
+    [Theory]
+    [InlineData("", 43, "nonce")]
+    [InlineData("code", 42, "nonce")]
+    [InlineData("code", 43, "")]
+    public async Task InvalidExchangeInput_NeverCallsProvider(string code, int verifierLength, string nonce) {
+        using var handler = new RecordingHandler();
+        using var http = new HttpClient(handler);
+        Assert.True((await CreateProvider(http, new RecordingValidator()).ExchangeAsync(code, new string('a', verifierLength), nonce, CancellationToken.None)).IsFailure);
+        Assert.Null(handler.Url);
+    }
+
+    [Theory]
+    [InlineData("http")]
+    [InlineData("timeout")]
+    [InlineData("status")]
+    [InlineData("oversized")]
+    public async Task ProviderFailure_DoesNotValidateToken(string scenario) {
+        using var handler = new RecordingHandler {
+            Failure = scenario switch { "http" => new HttpRequestException("Unavailable"), "timeout" => new OperationCanceledException(), _ => null },
+            Status = string.Equals(scenario, "status", StringComparison.Ordinal) ? HttpStatusCode.BadGateway : HttpStatusCode.OK,
+            ResponseBody = string.Equals(scenario, "oversized", StringComparison.Ordinal) ? new string('x', 32769) : "{}",
+        };
+        using var http = new HttpClient(handler);
+        var validator = new RecordingValidator();
+        Assert.True((await CreateProvider(http, validator).ExchangeAsync("code", Verifier, "nonce", CancellationToken.None)).IsFailure);
+        Assert.Equal(0, validator.CallCount);
+    }
+
+    [Fact]
+    public async Task CallerCancellation_IsPropagated() {
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        using var handler = new RecordingHandler { Failure = new OperationCanceledException(cancellation.Token) };
+        using var http = new HttpClient(handler);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => CreateProvider(http, new RecordingValidator())
+            .ExchangeAsync("code", Verifier, "nonce", cancellation.Token));
+    }
+
+    [Fact]
     public void AuthorizationUrl_UsesPkceAndConfiguredCallback() {
         using var handler = new RecordingHandler();
         using var http = new HttpClient(handler);
@@ -71,6 +120,7 @@ public sealed class TelegramOidcProviderTests {
             RedirectUri = "https://app.example/auth/telegram/callback",
         }), validator);
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingValidator : ITelegramOidcTokenValidator {
         public TelegramOidcIdentity Identity { get; set; } = new("https://oauth.telegram.org", "subject", 123, FirstName: null, LastName: null, Username: null);
         public int CallCount { get; private set; }
@@ -84,16 +134,22 @@ public sealed class TelegramOidcProviderTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingHandler : HttpMessageHandler {
+        public Exception? Failure { get; init; }
+        public HttpStatusCode Status { get; init; } = HttpStatusCode.OK;
         public string ResponseBody { get; init; } = "{\"id_token\":\"signed-id\"}";
         public string? Url { get; private set; }
         public string? Authorization { get; private set; }
         public string? Body { get; private set; }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+            if (Failure is not null) {
+                throw Failure;
+            }
             Url = request.RequestUri?.AbsoluteUri;
             Authorization = request.Headers.Authorization?.ToString();
             Body = await request.Content!.ReadAsStringAsync(cancellationToken);
-            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ResponseBody, Encoding.UTF8, "application/json") };
+            return new HttpResponseMessage(Status) { Content = new StringContent(ResponseBody, Encoding.UTF8, "application/json") };
         }
     }
 }

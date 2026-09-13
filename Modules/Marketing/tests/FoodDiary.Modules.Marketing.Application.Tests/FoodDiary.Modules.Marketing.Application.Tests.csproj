@@ -22,5 +22,6 @@
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Application.Marketing.csproj" />
     <ProjectReference Include="../../../Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj" />
   </ItemGroup>
 </Project>

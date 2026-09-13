@@ -8,6 +8,45 @@ namespace FoodDiary.Telegram.Bot.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class BotOperationClientTests {
     [Fact]
+    public async Task RegisterAsync_PreservesApiErrorAndStatus() {
+        using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.Forbidden) { Content = JsonContent.Create(new { error = "Telegram.NotLinked" }) }));
+        using var http = new HttpClient(handler);
+        BotOperationApiException error = await Assert.ThrowsAsync<BotOperationApiException>(() => CreateClient(http).RegisterAsync(10, 123, "payload", CancellationToken.None));
+        Assert.Multiple(
+            () => Assert.Equal("Telegram.NotLinked", error.ErrorCode),
+            () => Assert.Equal(HttpStatusCode.Forbidden, error.StatusCode));
+    }
+
+    [Fact]
+    public async Task RegisterAsync_RejectsEmptyOperationId() {
+        using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { operationId = Guid.Empty }) }));
+        using var http = new HttpClient(handler);
+        await Assert.ThrowsAsync<InvalidDataException>(() => CreateClient(http).RegisterAsync(10, 123, "payload", CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ListReadyAsync_RejectsNullResponse() {
+        using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("null") }));
+        using var http = new HttpClient(handler);
+        await Assert.ThrowsAsync<InvalidDataException>(() => CreateClient(http).ListReadyAsync(CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task CheckpointAsync_ReportsLostLeaseWithoutPretendingItWasSaved() {
+        using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.Conflict)));
+        using var http = new HttpClient(handler);
+        var lease = new BotOperationLease(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 1, "payload", Checkpoint: null, DateTime.UtcNow);
+        Assert.False(await CreateClient(http).CheckpointAsync(lease, "{}", completed: false, DateTime.UtcNow, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task MissingSecret_FailsBeforeSendingRequest() {
+        using var http = new HttpClient();
+        var client = new BotOperationClient(http, Options.Create(new TelegramBotOptions { ApiBaseUrl = "https://diary.example", ApiSecret = "" }));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => client.ListReadyAsync(CancellationToken.None));
+    }
+
+    [Fact]
     public async Task RegisterAsync_SendsStablePayloadAndBotSecretToConfiguredApi() {
         var id = Guid.NewGuid();
         using var handler = new Handler(async request => {

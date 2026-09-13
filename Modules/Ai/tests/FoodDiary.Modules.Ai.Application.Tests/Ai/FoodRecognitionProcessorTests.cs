@@ -11,6 +11,22 @@ namespace FoodDiary.Application.Tests.Ai;
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionProcessorTests {
     [Fact]
+    public async Task ProcessNextAsync_EmptyVisionCompletesWithoutChargingForNutrition() {
+        IFoodRecognitionJobStore store = Substitute.For<IFoodRecognitionJobStore>();
+        ISender sender = Substitute.For<ISender>();
+        FoodRecognitionJobModel job = Job();
+        var vision = new FoodVisionModel([]);
+        store.ClaimAsync(Arg.Any<CancellationToken>()).Returns(job);
+        store.SaveVisionAsync(job.Id, vision, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        sender.Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(vision));
+
+        Assert.True(await new FoodRecognitionProcessor(store, sender).ProcessNextAsync(CancellationToken.None));
+
+        await store.Received(1).CompleteAsync(job.Id, nutrition: null, errorCode: null, nutritionErrorCode: null, Arg.Any<CancellationToken>());
+        await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task ProcessNextAsync_SavesVisionBeforeNutritionAndUsesDistinctStableQuotaIds() {
         IFoodRecognitionJobStore store = Substitute.For<IFoodRecognitionJobStore>();
         ISender sender = Substitute.For<ISender>();

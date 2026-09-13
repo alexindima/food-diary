@@ -41,6 +41,7 @@ public sealed class ProviderRegistrationTests {
         GoogleTokenValidator google = Assert.IsType<GoogleTokenValidator>(provider.GetRequiredService<IGoogleTokenValidator>());
         TelegramAuthValidator telegram = Assert.IsType<TelegramAuthValidator>(provider.GetRequiredService<ITelegramAuthValidator>());
         TelegramLoginWidgetValidator widget = Assert.IsType<TelegramLoginWidgetValidator>(provider.GetRequiredService<ITelegramLoginWidgetValidator>());
+        Assert.IsType<TelegramOidcProvider>(provider.GetRequiredService<ITelegramOidcProvider>());
         Assert.Multiple(
             () => Assert.Same(google, scope.ServiceProvider.GetRequiredService<IGoogleTokenValidator>()),
             () => Assert.Same(telegram, scope.ServiceProvider.GetRequiredService<ITelegramAuthValidator>()),

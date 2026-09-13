@@ -27,6 +27,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Admin infrastructure: `Modules/Admin/Infrastructure/AGENTS.md`
 - Admin persistence model: `Modules/Admin/Infrastructure/Model/AGENTS.md`
 - Admin tests: `Modules/Admin/tests/AGENTS.md`
+- AI consumer contracts: `Modules/Ai/Contracts/AGENTS.md`
 - AI logical module: `Modules/Ai/AGENTS.md`
 - AI application: `Modules/Ai/Application/AGENTS.md`
 - AI application ports: `Modules/Ai/Application/Abstractions/AGENTS.md`
@@ -433,3 +434,9 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Tdee Presentation.Mappings: `Modules/Tdee/Presentation.Mappings/AGENTS.md`
 - Users Presentation.Contracts: `Modules/Users/Presentation.Contracts/AGENTS.md`
 - Users Presentation.Mappings: `Modules/Users/Presentation.Mappings/AGENTS.md`
+
+- RecentItems consumer contracts: `Modules/RecentItems/Contracts/AGENTS.md`
+
+- Billing consumer contracts: `Modules/Billing/Contracts/AGENTS.md`
+
+- Dietologist consumer contracts: `Modules/Dietologist/Contracts/AGENTS.md`

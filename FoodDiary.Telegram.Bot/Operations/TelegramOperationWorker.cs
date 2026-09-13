@@ -182,21 +182,18 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                     }
                     return checkpoint with { Stage = "recognizing", RecognitionId = job.Id };
                 }
-            case "recognizing": {
-                    Guid jobId = checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition checkpoint.");
-                    BotRecognitionJob job = await diary.GetRecognitionAsync(token, jobId, cancellationToken).ConfigureAwait(false);
-                    if (job.Id != jobId || job.ImageAssetId != checkpoint.ImageAssetId) {
-                        throw new InvalidDataException("Recognition identity mismatch.");
-                    }
-                    return job.Status switch {
-                        "Succeeded" when job.NutritionErrorCode is null => checkpoint with { Stage = "recognition-ready", Nutrition = job.Nutrition },
-                        "Succeeded" or "Failed" => checkpoint with { Stage = "failed", ErrorCode = job.ErrorCode ?? job.NutritionErrorCode ?? "RecognitionFailed" },
-                        _ => checkpoint,
-                    };
-                }
-            default:
-                return checkpoint;
         }
+        // The state reader rejects unknown stages before processing; the remaining active photo stage is recognizing.
+        Guid jobId = checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition checkpoint.");
+        BotRecognitionJob recognition = await diary.GetRecognitionAsync(token, jobId, cancellationToken).ConfigureAwait(false);
+        if (recognition.Id != jobId || recognition.ImageAssetId != checkpoint.ImageAssetId) {
+            throw new InvalidDataException("Recognition identity mismatch.");
+        }
+        return recognition.Status switch {
+            "Succeeded" when recognition.NutritionErrorCode is null => checkpoint with { Stage = "recognition-ready", Nutrition = recognition.Nutrition },
+            "Succeeded" or "Failed" => checkpoint with { Stage = "failed", ErrorCode = recognition.ErrorCode ?? recognition.NutritionErrorCode ?? "RecognitionFailed" },
+            _ => checkpoint,
+        };
     }
 
     private async Task SendCompletionAsync(BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {

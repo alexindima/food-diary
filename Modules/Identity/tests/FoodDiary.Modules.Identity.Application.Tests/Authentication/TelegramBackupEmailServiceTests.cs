@@ -2,6 +2,7 @@ using System.Text.Json;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -21,6 +22,71 @@ public sealed class TelegramBackupEmailServiceTests {
     private readonly IUserTelegramAccountService _accounts = Substitute.For<IUserTelegramAccountService>();
     private readonly ITelegramLoginTicketStore _tickets = Substitute.For<ITelegramLoginTicketStore>();
     private readonly IEmailSender _mail = Substitute.For<IEmailSender>();
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("not-an-email")]
+    [InlineData("Name <mail@example.com>")]
+    public async Task Request_InvalidEmailDoesNotValidateProofOrSendMail(string email) {
+        Result result = await Create().RequestAsync(Guid.NewGuid(), email, "proof", CancellationToken.None);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Empty(_validator.ReceivedCalls());
+        Assert.Empty(_mail.ReceivedCalls());
+    }
+
+    [Theory]
+    [InlineData("invalid-signature")]
+    [InlineData("expired")]
+    [InlineData("future")]
+    [InlineData("unspecified-time")]
+    [InlineData("missing-user")]
+    [InlineData("other-user")]
+    [InlineData("email-present")]
+    [InlineData("replayed")]
+    public async Task Request_RejectsUntrustedProofBeforeCreatingEmailTicket(string scenario) {
+        var user = User.CreateTelegram(123, "hash");
+        UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, Now);
+        DateTime proofTime = scenario switch {
+            "expired" => Now.AddMinutes(-5),
+            "future" => Now.AddSeconds(1),
+            "unspecified-time" => DateTime.SpecifyKind(Now, DateTimeKind.Unspecified),
+            _ => Now,
+        };
+        if (string.Equals(scenario, "email-present", StringComparison.Ordinal)) {
+            principal = principal with { Email = "existing@example.com" };
+        }
+        _validator.ValidateInitData("proof").Returns(string.Equals(scenario, "invalid-signature", StringComparison.Ordinal)
+            ? Result.Failure<TelegramInitData>(TelegramIdentityErrors.InvalidProof)
+            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, proofTime)));
+        _identities.AuthenticateTelegramAsync(123, Now, Arg.Any<CancellationToken>()).Returns(string.Equals(scenario, "missing-user", StringComparison.Ordinal)
+            ? Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound()) : Result.Success(principal));
+        _replay.TryConsumeAsync("proof", Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: false);
+
+        Result result = await Create().RequestAsync(string.Equals(scenario, "other-user", StringComparison.Ordinal) ? Guid.NewGuid() : user.Id.Value,
+            "backup@example.com", "proof", CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Empty(_tickets.ReceivedCalls());
+        Assert.Empty(_mail.ReceivedCalls());
+    }
+
+    [Theory]
+    [InlineData("{")]
+    [InlineData("null")]
+    public async Task Confirm_MalformedTicketCannotAssignEmail(string payload) {
+        var userId = Guid.NewGuid();
+        _tickets.ConsumeAsync("ticket", "telegram-backup-email", userId.ToString("D"), Arg.Any<CancellationToken>()).Returns(payload);
+        Result result = await Create().ConfirmAsync(userId, "telegram-backup.ticket", CancellationToken.None);
+        Assert.Equal("Authentication.TelegramProofRequired", result.Error.Code);
+        Assert.Empty(_accounts.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task Confirm_WrongTokenPurposeIsRejectedBeforeConsumption() {
+        Result result = await Create().ConfirmAsync(Guid.NewGuid(), "ordinary-email-token", CancellationToken.None);
+        Assert.Equal("Authentication.TelegramProofRequired", result.Error.Code);
+        Assert.Empty(_tickets.ReceivedCalls());
+    }
 
     [Fact]
     public async Task Request_SendsBoundProofWithoutAssigningEmail() {
@@ -57,6 +123,7 @@ public sealed class TelegramBackupEmailServiceTests {
 
     [Fact]
     public async Task Confirm_ExpiredOrUsedTicketDoesNotChangeAccount() {
+        _tickets.ConsumeAsync("expired", "telegram-backup-email", Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns((string?)null);
         Result result = await Create().ConfirmAsync(Guid.NewGuid(), "telegram-backup.expired", CancellationToken.None);
         Assert.True(result.IsFailure);
         await _accounts.DidNotReceive().AddVerifiedEmailAsync(Arg.Any<UserId>(), Arg.Any<string>(), Arg.Any<long>(), Arg.Any<CancellationToken>());

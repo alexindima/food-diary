@@ -13,6 +13,20 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task InvalidTransactionScope_CannotCaptureOrLockMealReceipt() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var runner = new EfMealRecognitionTransactionRunner(context, new TestUnitOfWork(context));
+        var receipts = new MealRecognitionReceiptRepository(context);
+        var owner = UserId.New();
+        var meal = MealId.New();
+        await Assert.ThrowsAsync<ArgumentException>(() => runner.ExecuteSerializedAsync(new UserId(Guid.Empty), _ => Task.FromResult(1)));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => runner.FlushCreatedMealAsync(meal, owner));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => receipts.LockMealForUndoAsync(owner, meal));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => runner.ExecuteSerializedAsync(owner, token => runner.FlushCreatedMealAsync(meal, owner, token)));
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task ConcurrentRetries_CommitOneMealAndReceipt() {
         await using FoodDiaryDbContext setup = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"recognition-race-{Guid.NewGuid():N}@example.com", "hash");

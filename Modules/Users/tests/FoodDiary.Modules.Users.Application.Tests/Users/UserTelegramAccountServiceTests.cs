@@ -10,6 +10,46 @@ namespace FoodDiary.Application.Tests.Users;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserTelegramAccountServiceTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task IsRegisteredAsync_DistinguishesNewAndActiveIdentity(bool registered) {
+        if (registered) {
+            _lookup.GetByTelegramUserIdIncludingDeletedAsync(123, Arg.Any<CancellationToken>()).Returns(User.CreateTelegram(123, "hash"));
+        }
+        Result<bool> result = await CreateService().IsRegisteredAsync(123, CancellationToken.None);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(registered, result.Value);
+    }
+
+    [Theory]
+    [InlineData("bind")]
+    [InlineData("unlink")]
+    [InlineData("email")]
+    public async Task MissingAccount_CannotChangeIdentity(string operation) {
+        var owner = UserId.New();
+        UserTelegramAccountService service = CreateService();
+        Result result = operation switch {
+            "bind" => await service.BindOidcIdentityAsync(owner, 123, "https://oauth.telegram.org", "subject", CancellationToken.None),
+            "unlink" => await service.UnlinkAsync(owner, 123, 0, CancellationToken.None),
+            _ => await service.AddVerifiedEmailAsync(owner, "backup@example.com", 0, CancellationToken.None),
+        };
+        Assert.True(result.IsFailure);
+        Assert.Empty(_writer.ReceivedCalls());
+        Assert.Empty(_sessions.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task AddVerifiedEmailAsync_ExistingEmailCannotBeReplaced() {
+        var user = User.CreateTelegram(123, "hash");
+        user.AddVerifiedEmail("original@example.com");
+        _lookup.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        Result result = await CreateService().AddVerifiedEmailAsync(user.Id, "replacement@example.com", user.SecurityVersion, CancellationToken.None);
+        Assert.Equal("User.EmailAlreadyExists", result.Error.Code);
+        Assert.Equal("original@example.com", user.Email);
+        Assert.Empty(_writer.ReceivedCalls());
+    }
+
     [Fact]
     public async Task BindOidcIdentityAsync_RejectsDifferentSubjectWithoutWriting() {
         var user = User.CreateTelegram(123, "hash");

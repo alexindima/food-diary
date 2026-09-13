@@ -72,8 +72,8 @@ public sealed class UsersIdentityContractOwnershipTests {
 
     [Fact]
     public void Marketing_ExplicitlyConsumesBillingOwnedConversionPort() {
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs")));
-        Assert.Contains("FoodDiary.Modules.Billing.Application.Abstractions",
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs")));
+        Assert.Contains("FoodDiary.Modules.Billing.Contracts",
             ProjectReferenceReader.ReadProjectReferences("Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj"),
             StringComparer.Ordinal);
     }

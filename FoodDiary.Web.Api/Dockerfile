@@ -58,6 +58,10 @@ COPY Modules/Identity/Application/*.csproj Modules/Identity/Application/
 COPY Modules/Identity/Application/Abstractions/*.csproj Modules/Identity/Application/Abstractions/
 COPY Modules/BodyMetrics/Contracts/*.csproj Modules/BodyMetrics/Contracts/
 COPY Modules/Identity/Contracts/*.csproj Modules/Identity/Contracts/
+COPY Modules/Ai/Contracts/*.csproj Modules/Ai/Contracts/
+COPY Modules/Dietologist/Contracts/*.csproj Modules/Dietologist/Contracts/
+COPY Modules/Billing/Contracts/*.csproj Modules/Billing/Contracts/
+COPY Modules/RecentItems/Contracts/*.csproj Modules/RecentItems/Contracts/
 COPY Modules/Identity/Domain/*.csproj Modules/Identity/Domain/
 COPY Modules/Identity/Infrastructure/*.csproj Modules/Identity/Infrastructure/
 COPY Modules/Identity/Infrastructure/Model/*.csproj Modules/Identity/Infrastructure/Model/
@@ -337,6 +341,10 @@ COPY Modules/Identity/Application/ Modules/Identity/Application/
 COPY Modules/Identity/Application/Abstractions/ Modules/Identity/Application/Abstractions/
 COPY Modules/BodyMetrics/Contracts/ Modules/BodyMetrics/Contracts/
 COPY Modules/Identity/Contracts/ Modules/Identity/Contracts/
+COPY Modules/Ai/Contracts/ Modules/Ai/Contracts/
+COPY Modules/Dietologist/Contracts/ Modules/Dietologist/Contracts/
+COPY Modules/Billing/Contracts/ Modules/Billing/Contracts/
+COPY Modules/RecentItems/Contracts/ Modules/RecentItems/Contracts/
 COPY Modules/Identity/Domain/ Modules/Identity/Domain/
 COPY Modules/Identity/Infrastructure/ Modules/Identity/Infrastructure/
 COPY Modules/Identity/Infrastructure/Model/ Modules/Identity/Infrastructure/Model/

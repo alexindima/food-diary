@@ -3,6 +3,13 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class NarrowConsumerContractTests {
     [Theory]
+    [InlineData("FoodDiary.Modules.Favorites.Contracts")]
+    [InlineData("FoodDiary.Modules.RecentItems.Contracts")]
+    [InlineData("FoodDiary.Modules.Billing.Contracts")]
+    [InlineData("FoodDiary.Modules.Dietologist.Contracts")]
+    [InlineData("FoodDiary.Modules.Usda.Contracts")]
+    [InlineData("FoodDiary.Modules.Ai.Contracts")]
+    [InlineData("FoodDiary.Modules.Gamification.Contracts")]
     [InlineData("FoodDiary.Modules.Users.Contracts")]
     [InlineData("FoodDiary.Modules.Lessons.Contracts")]
     [InlineData("FoodDiary.Modules.Notifications.Contracts")]
@@ -33,6 +40,13 @@ public sealed class NarrowConsumerContractTests {
     }
 
     [Theory]
+    [InlineData("Favorites")]
+    [InlineData("RecentItems")]
+    [InlineData("Billing")]
+    [InlineData("Dietologist")]
+    [InlineData("Usda")]
+    [InlineData("Ai")]
+    [InlineData("Gamification")]
     [InlineData("Notifications")]
     [InlineData("Identity")]
     [InlineData("BodyMetrics")]

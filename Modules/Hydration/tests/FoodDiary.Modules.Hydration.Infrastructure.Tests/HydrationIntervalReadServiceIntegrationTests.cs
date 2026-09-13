@@ -25,6 +25,9 @@ public sealed class HydrationIntervalReadServiceIntegrationTests(PostgresDatabas
         context.ChangeTracker.Clear();
         var reader = new HydrationIntervalReadService(context.HydrationEntries);
 
+        await Assert.ThrowsAsync<ArgumentException>(() => reader.GetTotalAsync(owner.Id, end, start));
+        await Assert.ThrowsAsync<ArgumentException>(() => reader.GetTotalAsync(owner.Id, DateTime.SpecifyKind(start, DateTimeKind.Unspecified), end));
+
         long total = await reader.GetTotalAsync(owner.Id, start, end);
         long empty = await reader.GetTotalAsync(owner.Id, end.AddDays(1), end.AddDays(2));
         long zeroDuration = await reader.GetTotalAsync(owner.Id, start, start);

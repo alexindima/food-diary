@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1501,
+    "productionProjectEdges": 1518,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 62,
     "componentsWithoutDirectSpecs": 145,
-    "criticalSymbolsWithoutTestReferences": 36,
+    "criticalSymbolsWithoutTestReferences": 31,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -5139,16 +5139,6 @@
       "coveredThrough": []
     },
     {
-      "name": "ExchangeTelegramOidcCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
-      "line": 11,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "RegisterTelegramOperationCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommandHandler.cs",
@@ -5179,30 +5169,10 @@
       "coveredThrough": []
     },
     {
-      "name": "StartTelegramOidcCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
-      "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "BugReportJournalController",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
       "line": 14,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "FoodRecognitionController",
-      "role": "Controller",
-      "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
-      "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5232,26 +5202,6 @@
       "name": "GetFoodRecognitionQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetTelegramConfigurationQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "ListFoodRecognitionsQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
       "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],

@@ -5,6 +5,16 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramAccountTests {
     [Fact]
+    public void EmailAndOidcIdentity_RequireAnUnclaimedAddressAndLinkedTelegram() {
+        var user = User.CreateTelegram(123, "hash");
+        user.AddVerifiedEmail("owner@example.com");
+        Assert.Throws<InvalidOperationException>(() => user.AddVerifiedEmail("replacement@example.com"));
+        var emailUser = User.Create("email@example.com", "hash");
+        Assert.Throws<InvalidOperationException>(() => emailUser.BindTelegramOidcIdentity("https://oauth.telegram.org", "subject"));
+        Assert.Equal("owner@example.com", user.Email);
+    }
+
+    [Fact]
     public void OidcIdentity_IsStableUntilTelegramIsDisconnected() {
         var user = User.CreateTelegram(123, "hash");
         user.BindTelegramOidcIdentity("https://oauth.telegram.org", "subject-456");
@@ -79,7 +89,9 @@ public sealed class TelegramAccountTests {
     public void TimeZone_PreservesIanaZoneAndRejectsUnknownValue() {
         var user = User.CreateTelegram(123, "hash");
         user.SetTimeZone("Europe/Berlin");
+        user.SetTimeZone("Europe/Berlin");
         Assert.Equal("Europe/Berlin", user.TimeZoneId);
         Assert.Throws<TimeZoneNotFoundException>(() => user.SetTimeZone("Invalid/Zone"));
+        Assert.Throws<ArgumentException>(() => user.SetTimeZone("Eastern Standard Time"));
     }
 }

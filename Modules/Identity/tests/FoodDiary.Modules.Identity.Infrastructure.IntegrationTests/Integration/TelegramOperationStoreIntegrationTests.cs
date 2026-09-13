@@ -13,6 +13,17 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
     private static readonly DateTime Now = new(2026, 9, 12, 12, 0, 0, DateTimeKind.Utc);
 
     [RequiresDockerFact]
+    public async Task InvalidRegistrationOrRetryInput_DoesNotPersistOrLeaseWork() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());
+        await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(0, 1, Guid.NewGuid(), 1, "payload", CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(123, 1, Guid.NewGuid(), 1, new string('я', 16385), CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.CheckpointAsync(123, Guid.NewGuid(), Guid.NewGuid(), "checkpoint", completed: false, Now.AddDays(2), CancellationToken.None));
+        Assert.Null(await store.GetLeaseAsync(123, Guid.NewGuid(), Guid.NewGuid(), CancellationToken.None));
+        Assert.Empty(await context.Set<TelegramOperation>().ToArrayAsync());
+    }
+
+    [RequiresDockerFact]
     public async Task MissingProtectionKey_PreservesWorkAndAllowsRecoveryAfterKeyRestoration() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var clock = new Clock();

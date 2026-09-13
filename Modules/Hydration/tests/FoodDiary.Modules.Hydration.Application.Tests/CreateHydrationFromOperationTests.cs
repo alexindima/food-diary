@@ -8,6 +8,31 @@ namespace FoodDiary.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CreateHydrationFromOperationTests {
+    [Theory]
+    [InlineData("access")]
+    [InlineData("amount")]
+    [InlineData("operation")]
+    [InlineData("timestamp")]
+    public async Task InvalidInput_DoesNotReadOrWriteReceipts(string scenario) {
+        var owner = new UserId(Guid.NewGuid());
+        IHydrationEntryWriteRepository entries = Substitute.For<IHydrationEntryWriteRepository>();
+        IHydrationOperationReceiptRepository receipts = Substitute.For<IHydrationOperationReceiptRepository>();
+        ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
+        if (string.Equals(scenario, "access", StringComparison.Ordinal)) {
+            access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns(new FoodDiary.Results.Error("User.Denied", "Denied"));
+        }
+        Guid operation = string.Equals(scenario, "operation", StringComparison.Ordinal) ? Guid.Empty : Guid.NewGuid();
+        DateTime timestamp = string.Equals(scenario, "timestamp", StringComparison.Ordinal) ? DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified) : DateTime.UtcNow;
+        int amount = string.Equals(scenario, "amount", StringComparison.Ordinal) ? 0 : 250;
+
+        FoodDiary.Results.Result<FoodDiary.Application.Hydration.Models.HydrationOperationModel> result = await new CreateHydrationFromOperationCommandHandler(entries, receipts, access)
+            .Handle(new CreateHydrationFromOperationCommand(owner.Value, operation, timestamp, amount), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Empty(receipts.ReceivedCalls());
+        Assert.Empty(entries.ReceivedCalls());
+    }
+
     [Fact]
     public async Task NewOperation_StagesWaterAndReceiptTogether() {
         var owner = new UserId(Guid.NewGuid());

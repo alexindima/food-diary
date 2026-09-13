@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
     <ProjectReference Include="../../Presentation/FoodDiary.Modules.Ai.Presentation.csproj" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />

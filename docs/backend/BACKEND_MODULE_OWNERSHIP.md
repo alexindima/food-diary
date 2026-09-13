@@ -306,7 +306,7 @@ Images owns `ImageAsset`, `ImageAssetId`, upload validation, cleanup policy and 
 
 FavoriteProducts, FavoriteRecipes and FavoriteMeals are three cohesive feature slices inside the single physical `FoodDiary.Application.Favorites` module. Each slice owns its favorite entity and exposes commands plus a semantic read service, while sharing one composition boundary because they have the same lifecycle, dependency profile and relationship-focused responsibility. Products, Recipes and Meal Diary consume those read services rather than favorite repositories.
 
-FavoriteMeals uses `IFavoriteMealSourceReadService` from `Modules/Favorites/Application/Abstractions` when creating a favorite from a source meal. Meals implements that source projection. Meals also consumes its own `IMealFavoriteReadService` from `Modules/Meals/Contracts`, implemented by Favorites. Public Favorites read services and models live in `Modules/Favorites/Contracts`; repository ports/read models/errors remain in its Application/Abstractions. Central Application.Abstractions retains only delegating Errors facades. The two Application implementations never reference each other. Existing FavoriteMealId/MealId dependencies remain at their Domain owners; this move does not grant foreign aggregate mutation rights. See `docs/ai/favorites-contracts-extraction.md`.
+Favorites consumes source readers implemented by Meals, Products and Recipes through `Modules/Favorites/Contracts`. Meals also consumes `IMealFavoriteReadService` from that same project. Public read projections and source DTOs belong to Contracts; repositories, persistence projections and errors stay in Application/Abstractions. Foreign modules must not reference these internal ports. Scalar IDs belong to their Domain.Contracts owners; central Errors facades are retired. See `docs/ai/favorites-contracts-extraction.md`.
 
 Images EF/outbox configuration belongs to `Modules/Images/Infrastructure/Model`. Favorite relationship configurations live in `Modules/Favorites/Infrastructure/Model/Configurations`, with repositories separated by slice under module Infrastructure. Shared context/migrations remain central.
 
@@ -463,3 +463,12 @@ cycles separately from its acyclic Application API edges. See
 The separate `docs/architecture/runtime-module-boundaries.json` inventory exposes foreign implementations of consumer-owned ports, including Users-to-Identity session revocation and owner purge participants. Reference direction and execution direction are different views. Synchronous owner capabilities normally join the caller unit of work; they must not save another caller's pending changes. See ADR 0035.
 
 Users Infrastructure owns narrow persisted profile projections. Dashboard consumes Meals' tenant-scoped batch ingredient display service; snapshot/fallback rules and quality calculations stay with Meals. Products/Recipes composition uses Serializable transactions and whole-attempt retries, with no global advisory lock.
+
+## Narrow consumer ports
+
+RecentItems.Contracts exposes usage reading/recording and immutable records; its
+repository composition ports remain internal. Billing.Contracts owns the conversion
+recorder implemented by Marketing. Dietologist.Contracts exposes Dashboard access
+and permission results while Dietologist retains relationship authorization. These
+contracts require no database, provider or HTTP changes. Foreign business modules
+must consume Contracts rather than another module's Application.Abstractions.

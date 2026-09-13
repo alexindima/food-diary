@@ -42,22 +42,20 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
-- Public contract files: 37
+- Public contract files: 23
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 37
-- Interfaces: 16
-- DTO/read-model/projection types: 10
+- Public contract types: 23
+- Interfaces: 13
+- DTO/read-model/projection types: 3
 - Enums: 1
 - Exported repository-shaped contracts: 9
 - Contracts referencing domain entities: 3
 - `class AiErrors`
 - `enum AiQuotaReservationStatus`
-- `interface IAiAdministrationReadService`
-- `interface IAiPromptAdministrationService`
 - `interface IAiPromptProvider`
 - `interface IAiPromptTemplateReadModelRepository`
 - `interface IAiPromptTemplateReadRepository`
@@ -69,22 +67,16 @@ No literal attribute-routed controller was associated with this module.
 - `interface IAiUsageWriteRepository`
 - `interface IFoodRecognitionJobStore`
 - `interface IFoodRecognitionProcessor`
-- `interface IFoodRecognitionResultReader`
 - `interface IOpenAiFoodClient`
 - `interface IOpenAiFoodService`
-- `record AiPromptRevisionReadModel`
-- `record AiPromptTemplateReadModel`
 - `record AiProviderTokenBudget`
 - `record AiQuotaReservationRequest`
 - `record AiQuotaUsage`
-- `record AiUsageBreakdown`
-- `record AiUsageDailySummary`
-- `record AiUsageSummary`
 - `record AiUsageTotals`
-- `record AiUsageUserSummary`
-- `record FoodNutritionItemModel`
-- `record FoodNutritionModel`
-- ... 7 more type(s)
+- `record FoodRecognitionJobUpdate`
+- `record OpenAiFoodClientResponse`
+- `record UserAiUsageModel`
+- `record struct AiUsageTokens`
 
 ## Focused Tests
 
@@ -109,6 +101,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs`
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs`
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiHttpMappingsTests.cs`
+- [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`

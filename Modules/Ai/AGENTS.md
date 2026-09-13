@@ -1,6 +1,6 @@
 # Ai module guidelines
 
-Ai owns usage, prompts and quota orchestration/ledger. Follow docs/ai/ai-ownership-inventory.md. Preserve all provider, consent, image access, quota and cancellation behavior. No live provider calls. No empty Contracts project: existing semantic administration surface remains compatible in Application/Common.
+Ai owns usage, prompts and quota orchestration/ledger. Follow docs/ai/ai-ownership-inventory.md. Preserve all provider, consent, image access, quota and cancellation behavior. No live provider calls. Contracts owns the existing administration and completed-recognition interfaces plus their DTOs. Internal provider, quota and repository ports remain in Application/Abstractions; see Contracts/AGENTS.md.
 
 ## Error ownership
 

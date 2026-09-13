@@ -11,6 +11,45 @@ namespace FoodDiary.Application.Tests.Meals;
 [ExcludeFromCodeCoverage]
 public sealed class UndoRecognizedMealTests {
     [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task InvalidOwnerOrOperation_NeverReadsReceipt(bool denied) {
+        var owner = UserId.New();
+        ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
+        if (denied) {
+            access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns(new Error("User.Denied", "Denied"));
+        }
+        IMealRecognitionReceiptRepository receipts = Substitute.For<IMealRecognitionReceiptRepository>();
+        var handler = new UndoRecognizedMealCommandHandler(new InlineTransactions(), receipts, Substitute.For<IMealWriteRepository>(), access, TimeProvider.System);
+
+        Result<RecognizedMealUndoModel> result = await handler.Handle(new UndoRecognizedMealCommand(owner.Value, Guid.Empty), CancellationToken.None);
+
+        Assert.Equal(denied ? "User.Denied" : "Meal.InvalidRecognitionOperation", result.Error.Code);
+        Assert.Empty(receipts.ReceivedCalls());
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task MismatchedLockedMeal_IsNeverDeleted(bool wrongOwner) {
+        var owner = UserId.New();
+        DateTime now = DateTime.UtcNow;
+        var meal = Meal.Create(wrongOwner ? UserId.New() : owner, now);
+        var receipt = MealRecognitionReceipt.Create(Guid.NewGuid(), owner, Guid.NewGuid(), wrongOwner ? meal.Id : MealId.New(), 7, now, now, TimeSpan.FromDays(1));
+        IMealRecognitionReceiptRepository receipts = Substitute.For<IMealRecognitionReceiptRepository>();
+        receipts.FindAsync(owner, receipt.OperationId, Arg.Any<CancellationToken>()).Returns(receipt);
+        receipts.LockMealForUndoAsync(owner, receipt.MealId, Arg.Any<CancellationToken>()).Returns((meal, 7u));
+        IMealWriteRepository meals = Substitute.For<IMealWriteRepository>();
+
+        Result<RecognizedMealUndoModel> result = await new UndoRecognizedMealCommandHandler(new InlineTransactions(), receipts, meals, Substitute.For<ICurrentUserAccessService>(), TimeProvider.System)
+            .Handle(new UndoRecognizedMealCommand(owner.Value, receipt.OperationId), CancellationToken.None);
+
+        Assert.Equal("Meal.RecognitionOperationNotFound", result.Error.Code);
+        Assert.Null(receipt.UndoneAtUtc);
+        Assert.Empty(meals.ReceivedCalls());
+    }
+
+    [Theory]
     [InlineData(7, 0, true)]
     [InlineData(8, 0, false)]
     [InlineData(7, 25, false)]

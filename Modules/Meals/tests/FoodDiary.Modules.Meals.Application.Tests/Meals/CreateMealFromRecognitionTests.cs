@@ -14,6 +14,44 @@ namespace FoodDiary.Application.Tests.Meals;
 
 [ExcludeFromCodeCoverage]
 public sealed class CreateMealFromRecognitionTests {
+    [Theory]
+    [InlineData("access")]
+    [InlineData("locked-access")]
+    [InlineData("id")]
+    [InlineData("time")]
+    [InlineData("foreign-result")]
+    [InlineData("create-failure")]
+    public async Task FailedValidationOrCreation_DoesNotPersistReceipt(string scenario) {
+        bool Is(string value) => string.Equals(scenario, value, StringComparison.Ordinal);
+        var owner = UserId.New();
+        DateTime now = DateTime.UtcNow;
+        FoodRecognitionJobModel job = CreateJob(owner, now);
+        ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
+        if (Is("access")) {
+            access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns(new Error("User.Denied", "Denied"));
+        } else if (Is("locked-access")) {
+            access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns((Error?)null, new Error("User.Denied", "Denied"));
+        }
+        IFoodRecognitionResultReader reader = Substitute.For<IFoodRecognitionResultReader>();
+        reader.GetCompletedAsync(owner.Value, job.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(Is("foreign-result") ? job with { UserId = Guid.NewGuid() } : job));
+        FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>> create = Substitute.For<FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>>>();
+        create.Handle(Arg.Any<CreateMealCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Failure<MealModel>(new Error("Meal.CreateFailed", "Failed")));
+        IMealRecognitionReceiptRepository receipts = Substitute.For<IMealRecognitionReceiptRepository>();
+
+        Result<RecognizedMealCreationModel> result = await new CreateMealFromRecognitionCommandHandler(new InlineTransactions(), receipts, reader, create, access, TimeProvider.System)
+            .Handle(new CreateMealFromRecognitionCommand(owner.Value, Is("id") ? Guid.Empty : job.Id, Is("time") ? DateTime.SpecifyKind(now, DateTimeKind.Unspecified) : now), CancellationToken.None);
+
+        string expected = scenario switch {
+            "access" or "locked-access" => "User.Denied",
+            "id" or "time" => "Meal.InvalidRecognitionOperation",
+            "foreign-result" => "Meal.InvalidRecognitionResult",
+            _ => "Meal.CreateFailed",
+        };
+        Assert.Equal(expected, result.Error.Code);
+        await receipts.DidNotReceive().AddAsync(Arg.Any<MealRecognitionReceipt>(), Arg.Any<CancellationToken>());
+        await create.Received(Is("create-failure") ? 1 : 0).Handle(Arg.Any<CreateMealCommand>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task CompletedRecognition_UsesExistingCreateHandlerAndPersistsReceipt() {
         var owner = new UserId(Guid.NewGuid());

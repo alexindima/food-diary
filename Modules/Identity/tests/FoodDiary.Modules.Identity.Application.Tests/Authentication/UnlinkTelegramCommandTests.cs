@@ -14,6 +14,32 @@ namespace FoodDiary.Application.Tests.Authentication;
 [ExcludeFromCodeCoverage]
 public sealed class UnlinkTelegramCommandTests {
     [Theory]
+    [InlineData("owner")]
+    [InlineData("proof")]
+    [InlineData("signature")]
+    [InlineData("principal")]
+    public async Task InvalidProofOrUnavailableAccount_DoesNotUnlink(string scenario) {
+        bool Is(string value) => string.Equals(scenario, value, StringComparison.Ordinal);
+        DateTime now = DateTime.UtcNow;
+        ITelegramAuthValidator validator = Substitute.For<ITelegramAuthValidator>();
+        validator.ValidateInitData("proof").Returns(Is("signature")
+            ? Result.Failure<TelegramInitData>(new Error("Proof.Invalid", "Invalid"))
+            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, now)));
+        IUserAuthenticationIdentityService identities = Substitute.For<IUserAuthenticationIdentityService>();
+        identities.AuthenticateTelegramAsync(123, now, Arg.Any<CancellationToken>()).Returns(Result.Failure<UserAuthenticationPrincipalModel>(new Error("User.Missing", "Missing")));
+        IUserTelegramAccountService accounts = Substitute.For<IUserTelegramAccountService>();
+        ITelegramAssertionReplayGuard replay = Substitute.For<ITelegramAssertionReplayGuard>();
+
+        Result result = await new UnlinkTelegramCommandHandler(validator, replay, identities, accounts, new Clock(now), Substitute.For<ITelegramOperationStore>(), Substitute.For<IPostCommitActionQueue>())
+            .Handle(new UnlinkTelegramCommand(Is("owner") ? Guid.Empty : Guid.NewGuid(), Is("proof") ? "" : "proof"), CancellationToken.None);
+
+        string expected = scenario switch { "signature" => "Proof.Invalid", "principal" => "User.Missing", _ => "Authentication.TelegramProofRequired" };
+        Assert.Equal(expected, result.Error.Code);
+        Assert.Empty(accounts.ReceivedCalls());
+        Assert.Empty(replay.ReceivedCalls());
+    }
+
+    [Theory]
     [InlineData(0, true, true, true, true)]
     [InlineData(-6, true, true, true, false)]
     [InlineData(1, true, true, true, false)]

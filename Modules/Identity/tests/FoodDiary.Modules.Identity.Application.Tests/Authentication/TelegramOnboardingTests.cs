@@ -18,6 +18,98 @@ namespace FoodDiary.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramOnboardingTests {
+    [Fact]
+    public async Task UnavailableAccount_DoesNotCreateAnAuthenticationIntent() {
+        _accounts.IsRegisteredAsync(123, Arg.Any<CancellationToken>()).Returns(Result.Failure<bool>(UserErrors.NotFound()));
+        Result<TelegramAuthenticationIntentModel> result = await CreateIntents().CreateAsync(123, firstName: null, lastName: null, language: null,
+            "browser", linkUserId: null, CancellationToken.None);
+        Assert.Equal(UserErrors.NotFound().Code, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Link_RecordsAuthenticationAndIssuesTokensForTheLinkedOwner() {
+        var user = User.CreateTelegram(123, "hash");
+        UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, DateTime.UtcNow);
+        _accounts.IsRegisteredAsync(123, Arg.Any<CancellationToken>()).Returns(Result.Success(value: true));
+        _identities.LinkTelegramAsync(user.Id, 123, Arg.Any<CancellationToken>()).Returns(Result.Success(principal.User));
+        _identities.RecordAuthenticationAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(Result.Success(principal));
+        _accounts.BindOidcIdentityAsync(user.Id, 123, "https://oauth.telegram.org", "subject", Arg.Any<CancellationToken>()).Returns(Result.Success());
+        TelegramAuthenticationIntentModel intent = (await CreateIntents().CreateAsync(123, firstName: null, lastName: null, language: null,
+            "browser", user.Id.Value, CancellationToken.None, "https://oauth.telegram.org", "subject")).Value;
+
+        Result<AuthenticationModel> result = await CreateHandler().Handle(new CompleteTelegramAuthenticationCommand(intent.Ticket, "browser", "link", user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(user.Id.Value, result.Value.User.Id);
+        await _tokens.Received(1).IssueFromPrincipalAsync(principal, Arg.Any<CancellationToken>(), Arg.Any<AuthenticationClientContext?>(), Arg.Any<bool>());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("Not/A_TimeZone")]
+    public async Task Registration_InvalidTimeZoneDoesNotConsumeProof(string? zone) {
+        Result<AuthenticationModel> result = await CreateHandler().Handle(
+            new CompleteTelegramAuthenticationCommand("unused-ticket", "browser", "register", TimeZoneId: zone), CancellationToken.None);
+        Assert.Equal(TelegramIdentityErrors.TimeZoneRequired.Code, result.Error.Code);
+        Assert.Equal(0, _tickets.ConsumptionCount);
+    }
+
+    [Fact]
+    public async Task Registration_OverlongTimeZoneDoesNotConsumeProof() {
+        Result<AuthenticationModel> result = await CreateHandler().Handle(
+            new CompleteTelegramAuthenticationCommand("unused-ticket", "browser", "register", TimeZoneId: new string('x', 101)), CancellationToken.None);
+        Assert.Equal(TelegramIdentityErrors.TimeZoneRequired.Code, result.Error.Code);
+        Assert.Equal(0, _tickets.ConsumptionCount);
+    }
+
+    [Theory]
+    [InlineData("UTC")]
+    [InlineData("Asia/Tbilisi")]
+    [InlineData("Europe/London")]
+    public async Task Registration_AcceptsIanaTimeZoneAndPassesItToAccountOwner(string zone) {
+        _accounts.IsRegisteredAsync(123, Arg.Any<CancellationToken>()).Returns(Result.Success(value: false));
+        _accounts.RegisterAsync(Arg.Any<UserTelegramRegistrationModel>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.TelegramAlreadyLinked));
+        TelegramAuthenticationIntentModel intent = await CreateIntentAsync();
+        Result<AuthenticationModel> result = await CreateHandler().Handle(
+            new CompleteTelegramAuthenticationCommand(intent.Ticket, "browser", "register", TimeZoneId: zone), CancellationToken.None);
+        Assert.Equal(UserErrors.TelegramAlreadyLinked.Code, result.Error.Code);
+        await _accounts.Received(1).RegisterAsync(Arg.Is<UserTelegramRegistrationModel>(model => model.TimeZoneId == zone), Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
+    [InlineData("unsupported")]
+    [InlineData("link")]
+    public async Task InvalidAction_DoesNotConsumeAnyTicket(string action) {
+        Result<AuthenticationModel> result = await CreateHandler().Handle(new CompleteTelegramAuthenticationCommand("ticket", "browser", action), CancellationToken.None);
+        Assert.Equal(TelegramIdentityErrors.InvalidProof.Code, result.Error.Code);
+        Assert.Equal(0, _tickets.ConsumptionCount);
+    }
+
+    [Theory]
+    [InlineData("null")]
+    [InlineData("{")]
+    [InlineData("{}")]
+    [InlineData("{\"TelegramUserId\":123,\"OidcIssuer\":\"issuer\"}")]
+    public async Task InvalidStoredPayload_DoesNotAuthenticate(string payload) {
+        string ticket = await _tickets.CreateAsync("telegram-login", "browser", payload, DateTime.UtcNow.AddMinutes(1), CancellationToken.None);
+        Result<AuthenticationModel> result = await CreateHandler().Handle(new CompleteTelegramAuthenticationCommand(ticket, "browser", "login"), CancellationToken.None);
+        Assert.Equal(TelegramIdentityErrors.InvalidProof.Code, result.Error.Code);
+        await _identities.DidNotReceive().AuthenticateTelegramAsync(Arg.Any<long>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task LinkingOnboardingProof_PreservesAccountConflictWithoutIssuingTokens() {
+        _accounts.IsRegisteredAsync(123, Arg.Any<CancellationToken>()).Returns(Result.Success(value: false));
+        TelegramAuthenticationIntentModel intent = await CreateIntentAsync();
+        _identities.LinkTelegramAsync(Arg.Any<UserId>(), 123, Arg.Any<CancellationToken>()).Returns(Result.Failure<UserModel>(UserErrors.TelegramAlreadyLinked));
+        Result<AuthenticationModel> result = await CreateHandler().Handle(new CompleteTelegramAuthenticationCommand(intent.Ticket, "browser", "link", Guid.NewGuid()), CancellationToken.None);
+        Assert.Equal(UserErrors.TelegramAlreadyLinked.Code, result.Error.Code);
+        await _tokens.DidNotReceive().IssueFromPrincipalAsync(Arg.Any<UserAuthenticationPrincipalModel>(), Arg.Any<CancellationToken>(), Arg.Any<AuthenticationClientContext?>(), Arg.Any<bool>());
+    }
+
     private readonly IUserTelegramAccountService _accounts = Substitute.For<IUserTelegramAccountService>();
     private readonly IUserAuthenticationIdentityService _identities = Substitute.For<IUserAuthenticationIdentityService>();
     private readonly IAuthenticationTokenService _tokens = Substitute.For<IAuthenticationTokenService>();
@@ -141,6 +233,7 @@ public sealed class TelegramOnboardingTests {
         (await CreateIntents().CreateAsync(123, "Alex", lastName: null, "ru", "browser", linkUserId, CancellationToken.None)).Value;
     private CompleteTelegramAuthenticationCommandHandler CreateHandler() => new(_tickets, _policy, _accounts, _identities, _tokens, TimeProvider.System);
 
+    [ExcludeFromCodeCoverage]
     private sealed class MemoryTickets : ITelegramLoginTicketStore {
         private readonly Dictionary<string, (string Purpose, string Binding, string Payload)> _values = new(StringComparer.Ordinal);
         public int ConsumptionCount { get; private set; }

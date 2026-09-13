@@ -28,7 +28,8 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         request.Headers.Add("X-Telegram-Bot-Secret", options.Value.ApiSecret);
         request.Content = JsonContent.Create(new { TelegramUserId = telegramUserId });
         AuthReply reply = await SendAsync<AuthReply>(request, cancellationToken).ConfigureAwait(false);
-        if (reply.User.Id != lease.UserId || !MatchesSecurityVersion(reply.AccessToken, lease.SecurityVersion)) {
+        if (reply.User is null || reply.User.Id != lease.UserId || string.IsNullOrWhiteSpace(reply.AccessToken) ||
+            !MatchesSecurityVersion(reply.AccessToken, lease.SecurityVersion)) {
             throw new InvalidDataException("Telegram authentication no longer matches the operation owner.");
         }
         return reply.AccessToken;
@@ -149,7 +150,8 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
             string base64 = parts[1].Replace('-', '+').Replace('_', '/');
             base64 = base64.PadRight((base64.Length + 3) / 4 * 4, '=');
             using var payload = JsonDocument.Parse(Convert.FromBase64String(base64));
-            return payload.RootElement.TryGetProperty("security_version", out JsonElement version) &&
+            return payload.RootElement.ValueKind == JsonValueKind.Object &&
+                payload.RootElement.TryGetProperty("security_version", out JsonElement version) &&
                 version.ValueKind == JsonValueKind.String &&
                 long.TryParse(version.GetString(), NumberStyles.None, CultureInfo.InvariantCulture, out long actual) && actual == expected;
         } catch (FormatException) {

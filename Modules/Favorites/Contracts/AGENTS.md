@@ -1,6 +1,8 @@
 # Favorites consumer contracts
 
-Expose only the three semantic favorite read services and their projection models.
+Expose semantic favorite read services and their projection models, plus the three
+consumer-owned source read services and immutable source models supplied by Meals,
+Products and Recipes. Results preserves existing owner-scoped access errors.
 Preserve legacy namespaces, nullability, defaults and strongly typed IDs. Do not
 expose aggregates, repository ports, EF, HTTP or application implementations.
 

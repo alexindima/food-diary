@@ -444,6 +444,17 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
+    public async Task SendDashboardTestEmail_TelegramOnlyAccountRequiresAddressWithoutSending() {
+        var user = User.CreateTelegram(123, "hash");
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
+        var handler = new SendDashboardTestEmailCommandHandler(CreateUserRepository(user), emailSender,
+            NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
+        Assert.Equal("User.EmailRequired", result.Error.Code);
+        Assert.Null(getLastMessage());
+    }
+
+    [Fact]
     public async Task SendDashboardTestEmail_WhenUserMissing_ReturnsInvalidToken() {
         IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
         var handler = new SendDashboardTestEmailCommandHandler(

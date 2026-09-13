@@ -5,6 +5,24 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class WikiCommandResultTests {
     [Fact]
+    public void CompactTrace_PreservesNestedEvidenceAndReportsTruncation() {
+        string[] evidence = ["first.cs", "second.cs"];
+        JsonElement output = JsonSerializer.SerializeToElement(new {
+            namespaceFilters = evidence, nestedDependencies = evidence, unresolvedDependencies = evidence,
+            dependencies = evidence, implementations = evidence, presentation = evidence, tests = evidence, directConsumers = evidence,
+            impact = new { paths = evidence, consumers = evidence },
+        });
+        WikiCommandResult compact = CreateResult(output).ToCompactTrace(itemLimit: 1);
+        JsonElement summary = Assert.IsType<JsonElement>(compact.StructuredOutput);
+        foreach (string name in new[] { "namespaceFilters", "nestedDependencies", "unresolvedDependencies", "dependencies", "implementations", "presentation", "tests", "directConsumers" }) {
+            Assert.Equal("first.cs", Assert.Single(summary.GetProperty(name).EnumerateArray()).GetString());
+        }
+        Assert.True(summary.GetProperty("truncated").GetBoolean());
+        Assert.True(summary.GetProperty("nestedDependenciesTruncated").GetBoolean());
+        Assert.True(summary.GetProperty("impact").GetProperty("truncated").GetBoolean());
+    }
+
+    [Fact]
     public void ToCompactTrace_LimitsCollectionsAndCanPreserveRawOutput() {
         JsonElement structuredOutput = JsonSerializer.SerializeToElement(new {
             query = "user flow",

@@ -11,6 +11,27 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
     private static readonly DateTime Now = new(2026, 9, 12, 12, 0, 0, DateTimeKind.Utc);
 
     [RequiresDockerFact]
+    public async Task InvalidParameters_DoNotPersistTickets() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var store = new TelegramLoginTicketStore(context, new EphemeralDataProtectionProvider(), new FixedClock());
+        await Assert.ThrowsAsync<ArgumentException>(() => store.CreateAsync("login", "browser", "payload", Now, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.CreateAsync("login", "browser", new string('я', 4097), Now.AddMinutes(1), CancellationToken.None));
+        Assert.Null(await store.ConsumeAsync("invalid-ticket", "login", "browser", CancellationToken.None));
+        Assert.Empty(await context.Set<TelegramLoginTicket>().ToArrayAsync());
+    }
+
+    [RequiresDockerFact]
+    public async Task WrongProtectionKey_ConsumesUnrecoverableTicketWithoutExposingPayload() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var original = new TelegramLoginTicketStore(context, new EphemeralDataProtectionProvider(), new FixedClock());
+        string ticket = await original.CreateAsync("login", "browser", "identity", Now.AddMinutes(5), CancellationToken.None);
+        var differentKey = new TelegramLoginTicketStore(context, new EphemeralDataProtectionProvider(), new FixedClock());
+        Assert.Null(await differentKey.ConsumeAsync(ticket, "login", "browser", CancellationToken.None));
+        Assert.Null(await original.ConsumeAsync(ticket, "login", "browser", CancellationToken.None));
+        Assert.Empty(await context.Set<TelegramLoginTicket>().ToArrayAsync());
+    }
+
+    [RequiresDockerFact]
     public async Task Ticket_IsEncryptedBoundAndSingleUse() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var protection = new EphemeralDataProtectionProvider();
@@ -59,6 +80,7 @@ public sealed class TelegramLoginTicketStoreIntegrationTests(PostgresDatabaseFix
         Assert.Null(await store.ConsumeAsync(ticket, "login", "browser", CancellationToken.None));
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class FixedClock : TimeProvider {
         public DateTime NowUtc { get; set; } = Now;
         public override DateTimeOffset GetUtcNow() => new(NowUtc);

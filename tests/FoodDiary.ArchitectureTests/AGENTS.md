@@ -144,3 +144,7 @@ RoleAndQualityBoundaryTests protects the narrow Products FoodQuality dependency 
 AdminScalarBoundaryTests protects the narrow Billing, ContentReports and Gamification scalar owners, their exact exported types, and the removed Admin/ContentReports aggregate dependencies.
 
 ApplicationDomainBoundaryTests prevents foreign aggregate Domain project references from all module Application projects. Cycle scalar ownership tests protect the eleven dependency-free exported enums and aggregate-free consumer Contracts.
+
+Narrow consumer closure and foreign internal-port guards also cover Favorites,
+RecentItems, Billing and Dietologist. Favorites source ports/models belong to
+Contracts alongside its public read projections; repository models stay internal.

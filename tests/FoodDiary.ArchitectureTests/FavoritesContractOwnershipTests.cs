@@ -6,9 +6,9 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class FavoritesContractOwnershipTests {
     [Theory]
-    [InlineData("Meal", 9)]
-    [InlineData("Product", 8)]
-    [InlineData("Recipe", 8)]
+    [InlineData("Meal", 7)]
+    [InlineData("Product", 6)]
+    [InlineData("Recipe", 6)]
     public void Contracts_AreOwnedOnce_AndSeparatedFromRepositories(string kind, int ownerFileCount) {
         string area = $"Favorite{kind}s";
         string ownerRoot = ArchitectureTestPaths.FromRoot($"Modules/Favorites/Application/Abstractions/{area}");
@@ -18,7 +18,7 @@ public sealed class FavoritesContractOwnershipTests {
             Assert.Empty(SourceScanner.SourceFiles(centralRoot));
         }
         Assert.Equal(ownerFileCount, SourceScanner.SourceFiles(ownerRoot).Count());
-        Assert.Equal(kind.Equals("Meal", StringComparison.Ordinal) ? 4 : 2, SourceScanner.SourceFiles(publicRoot).Count());
+        Assert.Equal(kind.Equals("Meal", StringComparison.Ordinal) ? 6 : 4, SourceScanner.SourceFiles(publicRoot).Count());
         foreach (string suffix in new[] { "Repository", "ReadRepository", "ReadModelRepository", "WriteRepository" }) {
             Assert.True(File.Exists(Path.Combine(ownerRoot, "Common", $"IFavorite{kind}{suffix}.cs")));
         }
@@ -43,10 +43,10 @@ public sealed class FavoritesContractOwnershipTests {
 
     [Fact]
     public void SourceMealPort_RemainsFavoritesOwned_WithExplicitMealsConsumer() {
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealSourceModel.cs")));
         string[] references = ProjectReferenceReader.ReadProjectReferences("Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj");
-        Assert.Contains("FoodDiary.Modules.Favorites.Application.Abstractions", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Favorites.Application.Abstractions", references, StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Modules.Favorites.Contracts", references, StringComparer.Ordinal);
         Assert.DoesNotContain("FoodDiary.Application.Favorites", references, StringComparer.Ordinal);
     }

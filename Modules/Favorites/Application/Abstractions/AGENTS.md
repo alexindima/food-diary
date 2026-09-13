@@ -1,7 +1,7 @@
 # Favorites application ports
 
 Own the three slices' repository interfaces, persistence read models and errors.
-`IFavoriteMealSourceReadService` is a consumed source-data port implemented by
+`IFavoriteMealSourceReadService` belongs to Favorites Contracts and is implemented by
 Meals, not permission to acquire a Meal aggregate. Keep legacy namespaces,
 signatures, cancellation/default forwarding and user-scoped access intact.
 
@@ -11,3 +11,5 @@ Infrastructure or HTTP. Public favorite read services and projections belong to
 ports. The central Errors facade is retired; direct callers preserve the existing error contract.
 
 Consumer-owned Result source ports cover Meals, Products and Recipes. Their owners supply scoped source models and original errors; keep foreign aggregates and foreign repository writes out of these contracts.
+
+All three source-data ports and source DTOs belong to Contracts, not these internal ports.

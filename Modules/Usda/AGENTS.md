@@ -20,3 +20,10 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+## Consumer boundary
+
+Products and Meals use Contracts for USDA search/suggestions, product-link and meal
+nutrition capabilities. They must not reference USDA Application.Abstractions. The
+existing owner implementations, access checks, SQL projections and provider behavior
+remain unchanged. Contracts imports only Results and scalar Products/Users contracts.

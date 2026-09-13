@@ -71,7 +71,7 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "line": 162
+      "line": 164
     },
     {
       "category": "credential",
@@ -2352,14 +2352,14 @@
       "category": "health",
       "name": "Calories",
       "type": "decimal",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionItemModel.cs",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodNutritionItemModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "decimal",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionModel.cs",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodNutritionModel.cs",
       "line": 4
     },
     {
@@ -3442,34 +3442,6 @@
     },
     {
       "category": "health",
-      "name": "ShareWeight",
-      "type": "bool",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistPermissionsReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "ShareWaist",
-      "type": "bool",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistPermissionsReadModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "ShareHydration",
-      "type": "bool",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistPermissionsReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "ShareFasting",
-      "type": "bool",
-      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistPermissionsReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Dietologist/Application/Models/ClientSummaryModel.cs",
@@ -3530,6 +3502,34 @@
       "type": "double",
       "path": "Modules/Dietologist/Application/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
       "line": 12
+    },
+    {
+      "category": "health",
+      "name": "ShareWeight",
+      "type": "bool",
+      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "ShareWaist",
+      "type": "bool",
+      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "ShareHydration",
+      "type": "bool",
+      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "ShareFasting",
+      "type": "bool",
+      "path": "Modules/Dietologist/Contracts/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "line": 11
     },
     {
       "category": "health",
@@ -3876,24 +3876,10 @@
     },
     {
       "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
       "line": 16
-    },
-    {
-      "category": "health",
-      "name": "CaloriesPerBase",
-      "type": "double",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
-      "line": 11
     },
     {
       "category": "health",
@@ -3905,23 +3891,16 @@
     {
       "category": "health",
       "name": "TotalCalories",
-      "type": "double?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
-      "line": 7
+      "type": "double",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
+      "line": 10
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
-      "line": 10
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
+      "line": 6
     },
     {
       "category": "health",
@@ -3939,10 +3918,31 @@
     },
     {
       "category": "health",
+      "name": "CaloriesPerBase",
+      "type": "double",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
       "line": 10
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double?",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
+      "line": 7
     },
     {
       "category": "health",
@@ -7063,7 +7063,7 @@
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageUserSummary.cs",
+      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageUserSummary.cs",
       "line": 7
     },
     {
@@ -8118,34 +8118,6 @@
     },
     {
       "category": "privateContent",
-      "name": "PromptText",
-      "type": "string",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptRevisionReadModel.cs",
-      "line": 3
-    },
-    {
-      "category": "privateContent",
-      "name": "PromptText",
-      "type": "string",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptTemplateReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodRecognitionJobModel.cs",
-      "line": 6
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodRecognitionJobModel.cs",
-      "line": 7
-    },
-    {
-      "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
@@ -8156,6 +8128,34 @@
       "name": "ImageAssetId",
       "type": "Guid",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Ai/Contracts/Ai/Models/AiPromptRevisionReadModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Ai/Contracts/Ai/Models/AiPromptTemplateReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodRecognitionJobModel.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "Modules/Ai/Contracts/Ai/Models/FoodRecognitionJobModel.cs",
       "line": 7
     },
     {
@@ -8755,31 +8755,10 @@
     },
     {
       "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
       "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
-      "line": 5
     },
     {
       "category": "privateContent",
@@ -8797,10 +8776,31 @@
     },
     {
       "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
       "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
+      "line": 5
     },
     {
       "category": "privateContent",

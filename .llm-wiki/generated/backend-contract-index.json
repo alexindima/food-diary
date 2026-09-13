@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1211,
     "ambiguousContracts": 0,
-    "consumerEdges": 8576,
+    "consumerEdges": 8629,
     "productionConsumerEdges": 5124,
-    "testConsumerEdges": 3452,
+    "testConsumerEdges": 3505,
     "consumedContracts": 1211,
     "unconsumedContracts": 0
   },
@@ -7638,7 +7638,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8114,7 +8114,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8131,7 +8131,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8505,7 +8505,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9423,7 +9423,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
+        "Modules/Dietologist/Contracts/Dietologist/Common/IDietologistDashboardAccessService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10460,7 +10460,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10562,7 +10562,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10664,7 +10664,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10732,7 +10732,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs"
+        "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -13303,7 +13303,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -13320,7 +13320,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14595,7 +14595,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14612,7 +14612,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaMealNutritionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14629,7 +14629,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14646,7 +14646,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -24606,7 +24606,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "AnalyzeFoodImageCommand",
@@ -25527,9 +25527,35 @@
         "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "BeginTelegramMiniAppCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "BeginTelegramMiniAppCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "BillingOverviewHttpResponse",
@@ -26244,7 +26270,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "CalculateFoodNutritionCommand",
@@ -27219,7 +27245,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 13
     },
     {
       "contract": "CompleteTelegramAuthenticationHttpRequest",
@@ -29052,6 +29078,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/CreateHydrationFromOperationTests.cs",
       "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "CreateHydrationFromOperationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Application/Commands/CreateHydrationFromOperation/CreateHydrationFromOperationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/HydrationOperationControllerTests.cs",
+      "isTest": true,
       "referenceCount": 2
     },
     {
@@ -29078,6 +29117,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationOperationHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateHydrationFromOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Presentation/Features/Hydration/Requests/CreateHydrationFromOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/HydrationOperationControllerTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -29312,7 +29364,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealFromRecognitionTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 15
     },
     {
       "contract": "CreateMealCommand",
@@ -29390,7 +29442,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealFromRecognitionTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "CreateMealFromRecognitionHttpRequest",
@@ -35165,6 +35217,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "ExchangeTelegramOidcCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ExchangeTelegramOidcCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ExchangeTelegramOidcHttpRequest",
       "roles": [
         "Request"
@@ -35202,6 +35280,19 @@
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "ExchangeTelegramOidcHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/ExchangeTelegramOidcHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ExerciseEntryHttpResponse",
@@ -36697,6 +36788,19 @@
       "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "FoodTextHttpRequest",
@@ -40921,7 +41025,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/DiaryStatisticsQueryTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetDietologistClientDashboardQuery",
@@ -46280,6 +46384,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetTelegramConfigurationQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetTelegramConfigurationQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetUnreadCountQuery",
       "roles": [
         "Query"
@@ -48490,6 +48620,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "HydrationOperationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationOperationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/HydrationOperationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IAchievementAwardService",
       "roles": [
         "Service"
@@ -48729,7 +48872,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
@@ -48742,7 +48885,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
@@ -48755,7 +48898,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
@@ -48768,7 +48911,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
@@ -48781,7 +48924,20 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAchievementEvaluationOutbox",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Contracts/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
@@ -50835,7 +50991,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminAiUsageReadService.cs",
@@ -50848,7 +51004,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminContentReadService.cs",
@@ -50861,7 +51017,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
@@ -50874,7 +51030,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
@@ -50887,7 +51043,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
@@ -50895,12 +51051,25 @@
       "referenceCount": 2
     },
     {
+      "contract": "IAiAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IAiPromptAdministrationService",
       "roles": [
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommandHandler.cs",
@@ -50913,7 +51082,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
@@ -50926,11 +51095,24 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptAdministrationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -51841,7 +52023,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IApiVersionInfo",
@@ -52876,7 +53058,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
@@ -52889,7 +53071,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/Application/DependencyInjection.cs",
@@ -52902,7 +53084,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
@@ -52915,7 +53097,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -52928,7 +53110,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs",
@@ -52941,7 +53123,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Compatibility/UsersIdentityContractAssemblyTests.cs",
@@ -52954,7 +53136,20 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs"
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingMarketingConversionRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersIdentityContractOwnershipTests.cs",
@@ -62878,7 +63073,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/CreateHydrationFromOperationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -62943,7 +63138,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealFromRecognitionTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -62995,7 +63190,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/UndoRecognizedMealTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 8
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -63112,7 +63307,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/DiaryStatisticsQueryTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -64516,7 +64711,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/DiaryStatisticsQueryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -64901,7 +65096,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
+        "Modules/Dietologist/Contracts/Dietologist/Common/IDietologistDashboardAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
@@ -64914,7 +65109,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
+        "Modules/Dietologist/Contracts/Dietologist/Common/IDietologistDashboardAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/DependencyInjection.cs",
@@ -64927,11 +65122,24 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
+        "Modules/Dietologist/Contracts/Dietologist/Common/IDietologistDashboardAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Services/DietologistDashboardAccessService.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDietologistDashboardAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Contracts/Dietologist/Common/IDietologistDashboardAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -67012,7 +67220,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "IEmailSender",
@@ -71609,7 +71817,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
@@ -71622,7 +71830,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Common/IMealReadService.cs",
@@ -71635,7 +71843,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/DependencyInjection.cs",
@@ -71648,7 +71856,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Services/MealReadService.cs",
@@ -71661,7 +71869,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -71674,10 +71882,23 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/FavoritesContractOwnershipTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFavoriteMealSourceReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -72090,7 +72311,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
@@ -72103,7 +72324,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
@@ -72116,7 +72337,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Infrastructure/FavoriteProductSourceReadService.cs",
@@ -72129,7 +72350,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
@@ -72142,12 +72363,25 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IFavoriteProductSourceReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IFavoriteProductWriteRepository",
@@ -72584,7 +72818,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
@@ -72597,7 +72831,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Infrastructure/FavoriteRecipeSourceReadService.cs",
@@ -72610,7 +72844,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
@@ -72623,12 +72857,25 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IFavoriteRecipeSourceReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IFavoriteRecipeWriteRepository",
@@ -72836,7 +73083,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "IFoodRecognitionJobStore",
@@ -72862,7 +73109,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 6
     },
     {
       "contract": "IFoodRecognitionJobStore",
@@ -72925,6 +73172,19 @@
         "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.JobManager.Tests/FoodRecognitionWorkerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IFoodRecognitionProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/TelegramRecognitionJourney.cs",
       "isTest": true,
       "referenceCount": 2
@@ -72935,7 +73195,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs"
+        "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
@@ -72948,7 +73208,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs"
+        "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
@@ -72961,7 +73221,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs"
+        "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs",
@@ -72974,12 +73234,25 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionResultReader.cs"
+        "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealFromRecognitionTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
+    },
+    {
+      "contract": "IFoodRecognitionResultReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IGamificationReadService",
@@ -73538,7 +73811,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/CreateHydrationFromOperationTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -73681,7 +73954,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/DiaryStatisticsQueryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
+    },
+    {
+      "contract": "IHydrationIntervalReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Contracts/Common/IHydrationIntervalReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IHydrationOperationReceiptRepository",
@@ -73733,7 +74019,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/CreateHydrationFromOperationTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IIdempotencyStore",
@@ -74097,7 +74383,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IImageAssetAccessService",
@@ -79687,7 +79973,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealFromRecognitionTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 9
     },
     {
       "contract": "IMealRecognitionReceiptRepository",
@@ -79700,7 +79986,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/UndoRecognizedMealTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 12
     },
     {
       "contract": "IMealRecognitionTransactionRunner",
@@ -80012,7 +80298,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/UndoRecognizedMealTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 11
     },
     {
       "contract": "IMealWriteRepository",
@@ -85690,6 +85976,19 @@
         "Shared/FoodDiary.Authentication.Contracts/Authentication/Common/IPasswordHasher.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/TelegramIdentityRecoveryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IPasswordHasher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Authentication.Contracts/Authentication/Common/IPasswordHasher.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserCredentialVerificationServiceTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -86342,7 +86641,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IPostCommitActionQueue",
@@ -91007,19 +91306,6 @@
         "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IRecentItemRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -91095,7 +91381,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Services/RecentProductReadService.cs",
@@ -91108,7 +91394,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs",
@@ -91121,7 +91407,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
@@ -91134,7 +91420,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Services/RecentRecipeReadService.cs",
@@ -91147,10 +91433,23 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecentItemUsageReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -91160,7 +91459,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommandHandler.cs",
@@ -91173,7 +91472,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
@@ -91186,7 +91485,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs",
@@ -91199,7 +91498,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
@@ -91212,7 +91511,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
@@ -91225,10 +91524,36 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecentItemUsageRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecentItemUsageRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Contracts/RecentItems/Common/IRecentItemUsageRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -95401,6 +95726,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -95609,6 +95947,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/HydrationOperationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AdminSsoControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -95662,6 +96013,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthTelegramControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -96534,7 +96898,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealFromRecognitionTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 9
     },
     {
       "contract": "IRequestHandler",
@@ -98029,7 +98393,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "ISender",
@@ -98043,6 +98407,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ISender",
@@ -98287,6 +98664,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/HydrationOperationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AdminSsoControllerTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -98340,6 +98730,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthTelegramControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -99964,6 +100367,19 @@
         "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ITelegramAssertionReplayGuard",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -100005,7 +100421,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "ITelegramAssertionReplayGuard",
@@ -100133,6 +100549,19 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ITelegramAuthValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -100174,7 +100603,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "ITelegramAuthValidator",
@@ -100302,6 +100731,19 @@
         "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ITelegramIdentityPolicy",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -100409,6 +100851,19 @@
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramLoginTicketStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ITelegramLoginTicketStore",
@@ -100627,9 +101082,35 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ITelegramOidcProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ITelegramOidcProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ITelegramOidcProvider",
@@ -100837,7 +101318,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "ITelegramOperationStore",
@@ -101924,7 +102405,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
@@ -101937,7 +102418,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application/Services/UsdaFoodReadService.cs",
@@ -101950,7 +102431,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
@@ -101963,7 +102444,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Infrastructure/UsdaProviderRegistration.cs",
@@ -101976,7 +102457,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductSearchSuggestionTests.cs",
@@ -101989,7 +102470,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
@@ -102002,7 +102483,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
@@ -102015,7 +102496,20 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaFoodSearchService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -102028,7 +102522,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaMealNutritionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/DependencyInjection.cs",
@@ -102041,7 +102535,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaMealNutritionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Services/MealProductNutritionReadService.cs",
@@ -102054,7 +102548,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaMealNutritionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application/Services/UsdaDailyMicronutrientReadService.cs",
@@ -102067,7 +102561,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaMealNutritionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
@@ -102075,12 +102569,25 @@
       "referenceCount": 2
     },
     {
+      "contract": "IUsdaMealNutritionReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IUsdaProductLinkService",
       "roles": [
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/DependencyInjection.cs",
@@ -102093,7 +102600,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Services/ProductUsdaLinkService.cs",
@@ -102106,7 +102613,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
@@ -102119,7 +102626,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
@@ -102132,7 +102639,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaFeatureTests.cs",
@@ -102140,12 +102647,25 @@
       "referenceCount": 6
     },
     {
+      "contract": "IUsdaProductLinkService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaProductLinkService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IUsdaProductSuggestionReadService",
       "roles": [
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
@@ -102158,7 +102678,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application/DependencyInjection.cs",
@@ -102171,7 +102691,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application/Services/UsdaProductSuggestionReadService.cs",
@@ -102184,10 +102704,23 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs"
+        "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaProductSuggestionReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaProductSuggestionReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -103177,7 +103710,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserAuthenticationRegistrationService",
@@ -104035,7 +104568,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/DiaryStatisticsQueryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IUserDataPurgeParticipant",
@@ -104748,6 +105281,19 @@
         "Modules/Users/Application/Abstractions/Users/Common/IUserGoogleIdentityRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/TelegramIdentityRecoveryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserGoogleIdentityRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Abstractions/Users/Common/IUserGoogleIdentityRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -105336,6 +105882,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryProfileCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IUserLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Abstractions/Users/Common/IUserLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/TelegramIdentityRecoveryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IUserLookupRepository",
@@ -109181,6 +109740,19 @@
         "Modules/Users/Contracts/Users/Common/IUserTelegramAccountService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserTelegramAccountService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserTelegramAccountService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -109222,7 +109794,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserTelegramAccountService",
@@ -109470,6 +110042,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryProfileCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Abstractions/Users/Common/IUserWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/TelegramIdentityRecoveryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IUserWriteRepository",
@@ -113369,6 +113954,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ListFoodRecognitionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ListFoodRecognitionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -123054,7 +123665,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "SendDashboardTestEmailCommand",
@@ -124367,7 +124978,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "StartFoodRecognitionHttpRequest",
@@ -124537,6 +125148,32 @@
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "StartTelegramOidcCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "StartTelegramOidcCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "StatisticsSummaryHttpResponse",
@@ -124786,6 +125423,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "TelegramAuthenticationIntentHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramAuthenticationIntentHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "TelegramAuthHttpRequest",
       "roles": [
         "Request"
@@ -124862,6 +125512,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthTelegramControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "TelegramAuthHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/TelegramAuthHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "TelegramAuthHttpRequest",
@@ -125085,6 +125748,19 @@
       "referenceCount": 2
     },
     {
+      "contract": "TelegramConfigurationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramConfigurationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "TelegramLoginWidgetCommand",
       "roles": [
         "Command"
@@ -125290,6 +125966,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcStartHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOidcStartHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -125537,7 +126226,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/UndoRecognizedMealTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "UnlinkProductFromUsdaFoodCommand",
@@ -125641,7 +126330,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "UnreadCountHttpResponse",

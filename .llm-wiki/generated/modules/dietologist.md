@@ -40,15 +40,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ClientTask, DietologistInvitation, Recommendation, RecommendationBulkDispatch, RecommendationComment, RecommendationTemplate
-- Public contract files: 35
+- Public contract files: 33
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 35
-- Interfaces: 23
-- DTO/read-model/projection types: 10
+- Public contract types: 33
+- Interfaces: 22
+- DTO/read-model/projection types: 9
 - Enums: 0
 - Exported repository-shaped contracts: 20
 - Contracts referencing domain entities: 8
@@ -57,7 +57,6 @@ No literal attribute-routed controller was associated with this module.
 - `interface IClientTaskReadModelRepository`
 - `interface IClientTaskRepository`
 - `interface IClientTaskWriteRepository`
-- `interface IDietologistDashboardAccessService`
 - `interface IDietologistEmailSender`
 - `interface IDietologistInvitationReadModelRepository`
 - `interface IDietologistInvitationReadRepository`
@@ -82,7 +81,8 @@ No literal attribute-routed controller was associated with this module.
 - `record ClientTaskReadModel`
 - `record DietologistInvitationMessage`
 - `record DietologistInvitationReadModel`
-- ... 5 more type(s)
+- `record RecommendationBulkDispatchReadModel`
+- ... 3 more type(s)
 
 ## Focused Tests
 
@@ -103,6 +103,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistInvitationTokenGeneratorTests.cs`
+- [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistProfileDisplayNameTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs`
@@ -117,7 +118,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/RecommendationCommentInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/RecommendationInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/RecommendationTemplateInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs`
 
 ## Working Rule
 

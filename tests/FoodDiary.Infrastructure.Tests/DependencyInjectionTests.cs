@@ -546,6 +546,8 @@ public sealed class DependencyInjectionTests {
         IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
         IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
         IHydrationEntryReadModelRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryReadModelRepository>();
+        Assert.IsType<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationIntervalReadService>(
+            scope.ServiceProvider.GetRequiredService<FoodDiary.Application.Hydration.Common.IHydrationIntervalReadService>());
         IExerciseEntryRepository exerciseRepository = scope.ServiceProvider.GetRequiredService<IExerciseEntryRepository>();
 
         Assert.Multiple(

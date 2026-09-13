@@ -1,4 +1,5 @@
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 
 namespace FoodDiary.Telegram.Bot.Images;
@@ -11,7 +12,11 @@ internal sealed class TelegramImageDownloader(ITelegramBotClient botClient) {
         }
         var stream = new BoundedImageStream((int)TelegramImageSelector.MaximumFileBytes);
         await using (stream.ConfigureAwait(false)) {
-            await botClient.DownloadFile(file.FilePath, stream, cancellationToken).ConfigureAwait(false);
+            try {
+                await botClient.DownloadFile(file.FilePath, stream, cancellationToken).ConfigureAwait(false);
+            } catch (RequestException error) when (error.InnerException is InvalidDataException) {
+                throw new InvalidDataException("Telegram image exceeds the download limit.", error);
+            }
             byte[] content = stream.ToArray();
             if (!HasExpectedSignature(content, image.ContentType)) {
                 throw new InvalidDataException("Telegram file does not match its image type.");

@@ -11,6 +11,25 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 public sealed class ImageAssetContentServiceTests {
     [Fact]
+    public async Task GetDataUrlAsync_UnconfiguredStorageDoesNotAttemptNetworkRead() {
+        var fixture = new Fixture();
+        var service = new ImageAssetContentService(new Repository(fixture.Asset), fixture.Storage,
+            Microsoft.Extensions.Options.Options.Create(new S3Options()));
+        Result<string> result = await service.GetDataUrlAsync(fixture.Asset.Id, fixture.Asset.UserId, CancellationToken.None);
+        Assert.Equal("Image.StorageError", result.Error.Code);
+        Assert.Equal(0, fixture.Storage.MetadataCalls);
+    }
+
+    [Fact]
+    public async Task GetDataUrlAsync_StorageTimeoutReturnsSafeFailure() {
+        var fixture = new Fixture();
+        fixture.Storage.BeforeRead = () => throw new OperationCanceledException("private storage details");
+        Result<string> result = await fixture.Service.GetDataUrlAsync(fixture.Asset.Id, fixture.Asset.UserId, CancellationToken.None);
+        Assert.Equal("Image.StorageError", result.Error.Code);
+        Assert.DoesNotContain("private storage details", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task GetDataUrlAsync_ReadsConfirmedObjectFromPublishedBucketInsteadOfLocalUrl() {
         var fixture = new Fixture();
         Result<string> result = await fixture.Service.GetDataUrlAsync(fixture.Asset.Id, fixture.Asset.UserId, CancellationToken.None);

@@ -23,17 +23,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "301d3f0cad3eeb56db623d05ed0e6b4470f1d293f565f3cee98804e22e709938"
+          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "Owner guides and backend ownership map describe the four narrow consumer boundaries; source paths verified against relocated files.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:31.8327134Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:36:47.5199866Z"
     },
     {
       "pageId": "module.frontend",
@@ -68,17 +64,17 @@
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "c8ccde28549c30413011482a87e08a943232a2c4c22fd9bf6a2d34603955e1e4",
+      "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "92ce499a9e88ba0d7ad6374aad19855a970ab4d99d583e1dee31d2bc95db2191"
         }
       ],
-      "reason": "Reviewed relocated values and notification capabilities: namespaces, signatures and serialized shapes are preserved; all 15 Swagger snapshot tests pass. Backend consumer-review procedure remains valid.",
+      "reason": "Thirteen declarations preserve identical namespaces signatures and DTO fields. No controllers routes status codes or wire models changed; coordinated host rebuild is required.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:31.4581108Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:36:48.3852925Z"
     },
     {
       "pageId": "system.architecture",
@@ -86,22 +82,14 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "ec8cc3324704a7c2e30654b87be1b6710a7567341804910951e1224d31388854"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "301d3f0cad3eeb56db623d05ed0e6b4470f1d293f565f3cee98804e22e709938"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "571664ff21a64f4ca3519abf29487833fe0f962f027012d55d2892e5b6ef3505"
+          "sha256": "90a7218c6a9d6f8590f87fb101e01f33b2c3af342b0795af7a26f8eef71ac900"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "Owner guides and backend ownership map describe the four narrow consumer boundaries; source paths verified against relocated files.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:32.5769395Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:36:49.4150428Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -140,13 +128,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
+          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:32.9918130Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:49.3899012Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -223,17 +211,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7a1f8cfd6ed9b7c913eb655c557248479c431ee445f204c01d5067d535f64512"
+          "sha256": "e5cefe6d3004e30aab8d5f2f38691c4a6c1179dedff640a1624eceda57890b5e"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "571664ff21a64f4ca3519abf29487833fe0f962f027012d55d2892e5b6ef3505"
+          "sha256": "90a7218c6a9d6f8590f87fb101e01f33b2c3af342b0795af7a26f8eef71ac900"
         }
       ],
-      "reason": "Updated static dependency and ownership assertions retain aggregate isolation checks; generated indexes reflect the current 444-project solution.",
+      "reason": "Full build passed. Contract closure and assembly ownership guards updated; focused PostgreSQL tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:33.9825730Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:49.6944617Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -242,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "c41f90db5274f871b16a887057a4329051bdf77f4b71663aa8733b33492efa30"
+          "sha256": "8aa1cf543cfe2a2064ecffb5268f6b85d3d5de61409519a613219884b2f2fab6"
         }
       ],
-      "reason": "Public HTTP routes and payloads remain unchanged; contract relocation preserves namespaces and Swagger checks passed.",
+      "reason": "Thirteen declarations moved without wire changes; current source consumers and immutable DTOs verified.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:34.9522983Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:46:18.4357735Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -787,13 +775,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e34fc85499d0240ddf10e935175551cd025d0e8ae5544b2b7282b8688332f872"
+          "sha256": "a7360d1ae1b2920594ef7931c9729c851a7c3136f68b671e24ee58eeeedb335e"
         }
       ],
-      "reason": "Impersonation still uses the same JWT generator, claims and authorization checks through a narrow issuer; no storage, logging or provider data changes.",
+      "reason": "Relationship authorization permission checks post-commit usage recording and user-scoped source reads remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:36.4189677Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:51.5184955Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -832,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4bd87912653fda1bcf6e9cd716d31afbe83d28b07d019f397ebeee4db7965197"
+          "sha256": "2c5e6c82e97e3aacc466243d825c25c0629d068c79df2123a77f4f78268cb77e"
         }
       ],
-      "reason": "Updated static dependency and ownership assertions retain aggregate isolation checks; generated indexes reflect the current 444-project solution.",
+      "reason": "Full build passed. Contract closure and assembly ownership guards updated; focused PostgreSQL tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:37.1385980Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:52.4846676Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -907,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "82d6b549b9e5d1d7319fd23d6c0dc18e49a93db04e7cc4cdf6a0442edcb0b747"
+          "sha256": "86d26023e36626cb2acd7b65c29998a8d0a2be586c496f0d03d06799c6f74a74"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:38.3500851Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:53.9048258Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -922,21 +910,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4bd87912653fda1bcf6e9cd716d31afbe83d28b07d019f397ebeee4db7965197"
+          "sha256": "2c5e6c82e97e3aacc466243d825c25c0629d068c79df2123a77f4f78268cb77e"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "82d6b549b9e5d1d7319fd23d6c0dc18e49a93db04e7cc4cdf6a0442edcb0b747"
+          "sha256": "86d26023e36626cb2acd7b65c29998a8d0a2be586c496f0d03d06799c6f74a74"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e34fc85499d0240ddf10e935175551cd025d0e8ae5544b2b7282b8688332f872"
+          "sha256": "a7360d1ae1b2920594ef7931c9729c851a7c3136f68b671e24ee58eeeedb335e"
         }
       ],
-      "reason": "Impersonation still uses the same JWT generator, claims and authorization checks through a narrow issuer; no storage, logging or provider data changes.",
+      "reason": "Relationship authorization permission checks post-commit usage recording and user-scoped source reads remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:38.9224537Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:54.7384530Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1118,13 +1106,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
+          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:35.2886245Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:50.9236381Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1182,17 +1170,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "7b62e5168aa19b197ff6d6161ce6e262fd292c2778f83410261a1b0f52fb5e77"
+          "sha256": "c7cd36399c798f3fcd9d342cd11d83d07a772e50e295ef2ce2b1da3ddcd661da"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
+          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:37.6194106Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:52.9357362Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1201,13 +1189,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "adcb3205e7069461679b2a42569552d5aa2242f06c5d6f4a8495916ae242286b"
+          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
         }
       ],
-      "reason": "Updated static dependency and ownership assertions retain aggregate isolation checks; generated indexes reflect the current 444-project solution.",
+      "reason": "Full build passed. Contract closure and assembly ownership guards updated; focused PostgreSQL tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:38.0077553Z"
+      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
+      "reviewedAtUtc": "2026-09-13T03:40:53.3870947Z"
     }
   ]
 }

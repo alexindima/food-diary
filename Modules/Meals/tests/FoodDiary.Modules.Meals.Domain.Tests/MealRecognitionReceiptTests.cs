@@ -5,6 +5,33 @@ namespace FoodDiary.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealRecognitionReceiptTests {
+    [Theory]
+    [InlineData("operation")]
+    [InlineData("owner")]
+    [InlineData("recognition")]
+    [InlineData("meal")]
+    [InlineData("version")]
+    [InlineData("occurred")]
+    [InlineData("saved")]
+    [InlineData("window")]
+    public void Create_RejectsInvalidIdentityOrTime(string field) {
+        bool Is(string value) => string.Equals(field, value, StringComparison.Ordinal);
+        Assert.ThrowsAny<ArgumentException>(() => MealRecognitionReceipt.Create(
+            Is("operation") ? Guid.Empty : Guid.NewGuid(), Is("owner") ? new UserId(Guid.Empty) : UserId.New(),
+            Is("recognition") ? Guid.Empty : Guid.NewGuid(), Is("meal") ? new MealId(Guid.Empty) : MealId.New(),
+            Is("version") ? 0u : 42u, Is("occurred") ? DateTime.SpecifyKind(Now, DateTimeKind.Unspecified) : Now,
+            Is("saved") ? DateTime.SpecifyKind(Now, DateTimeKind.Local) : Now, Is("window") ? TimeSpan.Zero : TimeSpan.FromDays(1)));
+    }
+
+    [Fact]
+    public void Undo_RejectsNonUtcClockWithoutChangingReceipt() {
+        MealRecognitionReceipt receipt = Create();
+        Assert.Throws<ArgumentException>(() => receipt.TryUndo(42, DateTime.SpecifyKind(Now, DateTimeKind.Unspecified)));
+        Assert.Null(receipt.UndoneAtUtc);
+        Assert.Equal(Now, receipt.SavedAtUtc);
+        Assert.Equal(Now.AddDays(1), receipt.UndoUntilUtc);
+    }
+
     private static readonly DateTime Now = new(2026, 9, 12, 12, 0, 0, DateTimeKind.Utc);
 
     [Fact]

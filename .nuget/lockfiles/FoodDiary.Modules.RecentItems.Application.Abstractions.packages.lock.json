@@ -23,6 +23,14 @@
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.recentitems.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.recipes.domain.contracts": {
         "type": "Project",
         "dependencies": {

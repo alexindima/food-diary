@@ -1,3 +1,5 @@
 # RecentItems Application Abstractions
 
-Own the repository composition interfaces and semantic usage read/recording contracts. Keep namespaces under `FoodDiary.Application.Abstractions.RecentItems` and depend only on central domain identifiers.
+Own only the repository composition interfaces. Semantic usage read/recording
+interfaces and immutable records belong to RecentItems Contracts. Depend directly
+on that narrow project; preserve existing namespaces and post-commit behavior.
