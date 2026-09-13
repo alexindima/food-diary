@@ -282,3 +282,11 @@ BodyMetrics is the second module with an owned runtime context (ADR 0040). Weigh
 Exercises extends the owned runtime contexts to three modules (ADR 0040), sharing the same scoped connection and UoW. Central migration/read/purge mappings remain.
 
 Cycles is the fourth runtime-context owner (ADR 0040). Its profile and seven child mappings share the existing UoW; central migration/read/purge bridges remain unchanged.
+
+Fasting also owns its five-entity runtime `FastingDbContext`; narrow repository sets
+participate in the shared unit of work. Standalone telemetry bulk cleanup and
+central migration ownership are retained (ADR 0040).
+
+RecipeCommunity (two entities) and MealPlanning (six entities) also own runtime
+write contexts. MealPlanning delegates composed recipe/product reads through its port to
+ReadModel.Composition; user purge and migrations remain central. See ADR 0040.

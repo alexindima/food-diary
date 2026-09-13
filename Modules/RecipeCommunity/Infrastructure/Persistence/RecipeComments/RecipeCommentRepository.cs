@@ -9,25 +9,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.RecipeComments;
 
-internal sealed class RecipeCommentRepository(FoodDiaryDbContext context, IUserCommentAuthorReadService users) : IRecipeCommentRepository {
+internal sealed class RecipeCommentRepository(DbSet<RecipeComment> entries, IUserCommentAuthorReadService users) : IRecipeCommentRepository {
     public async Task<RecipeComment> AddAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
-        await context.RecipeComments.AddAsync(comment, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(comment, cancellationToken).ConfigureAwait(false);
         return comment;
     }
 
     public async Task<RecipeComment?> GetByIdAsync(
         RecipeCommentId id, bool asTracking = false, CancellationToken cancellationToken = default) {
-        IQueryable<RecipeComment> query = asTracking ? context.RecipeComments.AsTracking() : context.RecipeComments.AsNoTracking();
+        IQueryable<RecipeComment> query = asTracking ? entries.AsTracking() : entries.AsNoTracking();
         return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public Task UpdateAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
-        context.RecipeComments.Update(comment);
+        entries.Update(comment);
         return Task.CompletedTask;
     }
 
     public Task DeleteAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
-        context.RecipeComments.Remove(comment);
+        entries.Remove(comment);
         return Task.CompletedTask;
     }
 
@@ -35,7 +35,7 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context, IUserC
         RecipeId recipeId, int page, int limit, CancellationToken cancellationToken = default) {
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
-        IQueryable<RecipeComment> query = context.RecipeComments
+        IQueryable<RecipeComment> query = entries
             .AsNoTracking()
             .Where(c => c.RecipeId == recipeId);
 
@@ -57,7 +57,7 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context, IUserC
         CancellationToken cancellationToken = default) {
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
-        IQueryable<RecipeComment> query = context.RecipeComments
+        IQueryable<RecipeComment> query = entries
             .AsNoTracking()
             .Where(c => c.RecipeId == recipeId);
 

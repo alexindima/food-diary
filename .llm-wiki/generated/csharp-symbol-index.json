@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4024,
-    "symbols": 3965,
-    "interfaceImplementationLinks": 269,
+    "sourceFiles": 4029,
+    "symbols": 3970,
+    "interfaceImplementationLinks": 270,
     "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 2068,
+      "class": 2072,
       "enum": 64,
-      "interface": 475,
+      "interface": 476,
       "record": 1237,
       "record struct": 121
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1613,
+      "Other": 1618,
       "Query": 193,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -1784,6 +1784,13 @@
       "line": 9
     },
     {
+      "name": "MealPlanCompositionReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
+      "line": 9
+    },
+    {
       "name": "MealItemDisplayProjection",
       "kind": "record",
       "role": "Other",
@@ -1809,7 +1816,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "RecipeOverviewReadService",
@@ -11966,42 +11973,49 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "FastingCheckInRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingCheckInRepository.cs",
-      "line": 9
+      "line": 8
+    },
+    {
+      "name": "FastingDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Infrastructure/Persistence/FastingDbContext.cs",
+      "line": 5
     },
     {
       "name": "FastingOccurrenceRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "FastingPlanRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "FastingSessionRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FastingTelemetryEventRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FastingCheckInHttpResponse",
@@ -16561,6 +16575,13 @@
       "line": 7
     },
     {
+      "name": "IMealPlanCompositionReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanCompositionReader.cs",
+      "line": 6
+    },
+    {
       "name": "IMealPlanReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -17286,7 +17307,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs",
-      "line": 12
+      "line": 13
+    },
+    {
+      "name": "MealPlanningDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningDbContext.cs",
+      "line": 7
     },
     {
       "name": "MealPlanningUserDataPurgeParticipant",
@@ -20716,7 +20744,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "RecipeCommentRepository",
@@ -20724,6 +20752,13 @@
       "role": "Repository",
       "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
       "line": 11
+    },
+    {
+      "name": "RecipeCommunityDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeCommunityDbContext.cs",
+      "line": 6
     },
     {
       "name": "RecipeLikeRepository",
@@ -28936,6 +28971,13 @@
       "interfacePath": "Modules/Meals/Contracts/Meals/Common/IMealNutritionStatisticsReadService.cs",
       "implementation": "MealNutritionStatisticsReadService",
       "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMealPlanCompositionReader",
+      "interfacePath": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanCompositionReader.cs",
+      "implementation": "MealPlanCompositionReader",
+      "implementationPath": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
       "confidence": "naming-convention"
     },
     {

@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.RecipeLikes;
 
-internal sealed class RecipeLikeRepository(FoodDiaryDbContext context) : IRecipeLikeRepository {
+internal sealed class RecipeLikeRepository(DbSet<RecipeLike> entries) : IRecipeLikeRepository {
     public async Task<RecipeLike?> GetByUserAndRecipeAsync(
         UserId userId, RecipeId recipeId, CancellationToken cancellationToken = default) {
-        return await context.RecipeLikes
+        return await entries
             .AsTracking()
             .FirstOrDefaultAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
     }
@@ -17,23 +17,23 @@ internal sealed class RecipeLikeRepository(FoodDiaryDbContext context) : IRecipe
         UserId userId,
         RecipeId recipeId,
         CancellationToken cancellationToken = default) {
-        return await context.RecipeLikes
+        return await entries
             .AsNoTracking()
             .AnyAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<RecipeLike> AddAsync(RecipeLike like, CancellationToken cancellationToken = default) {
-        await context.RecipeLikes.AddAsync(like, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(like, cancellationToken).ConfigureAwait(false);
         return like;
     }
 
     public Task DeleteAsync(RecipeLike like, CancellationToken cancellationToken = default) {
-        context.RecipeLikes.Remove(like);
+        entries.Remove(like);
         return Task.CompletedTask;
     }
 
     public async Task<int> CountByRecipeAsync(RecipeId recipeId, CancellationToken cancellationToken = default) {
-        return await context.RecipeLikes
+        return await entries
             .AsNoTracking()
             .CountAsync(l => l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
     }

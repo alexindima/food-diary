@@ -310,7 +310,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         context.Recipes.Add(recipe);
         await context.SaveChangesAsync();
 
-        var likeRepository = new RecipeLikeRepository(context);
+        var likeRepository = new RecipeLikeRepository(context.RecipeLikes);
         RecipeLike like = await likeRepository.AddAsync(RecipeLike.Create(user.Id, recipe.Id));
         await context.SaveChangesAsync();
 
@@ -323,7 +323,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.False(await likeRepository.ExistsByUserAndRecipeAsync(user.Id, recipe.Id));
         Assert.Equal(0, await likeRepository.CountByRecipeAsync(recipe.Id));
 
-        var commentRepository = new RecipeCommentRepository(context, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
+        var commentRepository = new RecipeCommentRepository(context.RecipeComments, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
         RecipeComment comment = await commentRepository.AddAsync(RecipeComment.Create(user.Id, recipe.Id, "First comment"));
         await context.SaveChangesAsync();
         comment.UpdateText("Updated comment");
@@ -389,7 +389,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         curated.AddDay(1).AddMeal(MealType.Breakfast, recipe.Id, servings: 1);
         var keto = MealPlan.CreateCurated("Keto curated", "Curated", DietType.Keto, durationDays: 7, targetCaloriesPerDay: 1800);
         var userPlan = MealPlan.CreateForUser(user.Id, "User plan", description: null, DietType.Balanced, durationDays: 3, targetCaloriesPerDay: null);
-        var repository = new MealPlanRepository(context);
+        var repository = new MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context));
 
         await repository.AddAsync(curated);
         await repository.AddAsync(keto);

@@ -97,3 +97,34 @@ RecentItems direct SQL/post-commit work and Wearables serialized transaction run
 need a separate transaction-entry review before using a runtime context. The
 shared coordinator enlists contexts during saving, which is not evidence that
 SQL executed earlier in a use case already shares its transaction.
+
+## Fasting follow-up
+
+Fasting is the fifth runtime owner. Its five existing entity mappings are applied
+by FastingDbContext. Repositories receive only their owned DbSet; plan/occurrence
+and occurrence/check-in relationships stay inside the model. Sessions retain
+tracked updates and the existing detached-state check. The registration uses the
+shared connection and unit-of-work coordinator, retaining central migrations,
+composed reads and user purge. No schema or API change is required.
+
+Telemetry cleanup remains a standalone batched ExecuteDelete operation in its
+existing Hangfire job. It does not wait for SaveChanges and is not moved into the
+shared tracked-write transaction. PostgreSQL coverage protects batch boundaries,
+shared-save rollback, session updates and User cascade.
+
+## RecipeCommunity and MealPlanning follow-up
+
+RecipeCommunity maps only RecipeComment and RecipeLike in its runtime context;
+repositories receive narrow owned sets. MealPlanning maps its six plan/list
+entities and owns all repository writes through the shared coordinator.
+
+MealPlanRepository now receives its owned set and IMealPlanCompositionReader.
+The host ReadModel.Composition adapter preserves SQL joins and returns only
+immutable MealPlanReadModel and recipe snapshots. The module owns the port,
+aggregate reads and snapshot attachment. No module references the composition
+implementation. ShoppingLists use the owned set for reads and writes. Central
+user purge and migration relationships remain unchanged.
+
+PostgreSQL coverage verifies joint User/Recipe/module saves, nested list updates,
+composed plan reads, user cleanup and rollback of an earlier planning write when
+the unique user/recipe like constraint fails. No relational or HTTP change.

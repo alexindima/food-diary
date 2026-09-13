@@ -1,20 +1,19 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
-public sealed class FastingSessionRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : IFastingSessionRepository {
+public sealed class FastingSessionRepository(DbSet<FastingSession> entries, TimeProvider timeProvider) : IFastingSessionRepository {
     public async Task<FastingSession?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken = default) {
-        return await context.FastingSessions
+        return await entries
             .FirstOrDefaultAsync(s => s.UserId == userId && !s.IsCompleted, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FastingSession?> GetByIdAsync(
         FastingSessionId id, bool asTracking = false, CancellationToken cancellationToken = default) {
-        IQueryable<FastingSession> query = context.FastingSessions;
+        IQueryable<FastingSession> query = entries;
 
         if (!asTracking) {
             query = query.AsNoTracking();
@@ -25,7 +24,7 @@ public sealed class FastingSessionRepository(FoodDiaryDbContext context, TimePro
 
     public async Task<IReadOnlyList<FastingSession>> GetHistoryAsync(
         UserId userId, DateTime from, DateTime to, CancellationToken cancellationToken = default) {
-        return await context.FastingSessions
+        return await entries
             .AsNoTracking()
             .Where(s => s.UserId == userId && s.StartedAtUtc >= from && s.StartedAtUtc <= to)
             .OrderByDescending(s => s.StartedAtUtc)
@@ -33,7 +32,7 @@ public sealed class FastingSessionRepository(FoodDiaryDbContext context, TimePro
     }
 
     public async Task<int> GetCompletedCountAsync(UserId userId, CancellationToken cancellationToken = default) {
-        List<FastingSession> endedSessions = await context.FastingSessions
+        List<FastingSession> endedSessions = await entries
             .AsNoTracking()
             .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -42,7 +41,7 @@ public sealed class FastingSessionRepository(FoodDiaryDbContext context, TimePro
     }
 
     public async Task<int> GetCurrentStreakAsync(UserId userId, CancellationToken cancellationToken = default) {
-        List<FastingSession> recentSessions = await context.FastingSessions
+        List<FastingSession> recentSessions = await entries
             .AsNoTracking()
             .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
             .OrderByDescending(s => s.StartedAtUtc)
@@ -71,13 +70,13 @@ public sealed class FastingSessionRepository(FoodDiaryDbContext context, TimePro
     }
 
     public Task<FastingSession> AddAsync(FastingSession session, CancellationToken cancellationToken = default) {
-        context.FastingSessions.Add(session);
+        entries.Add(session);
         return Task.FromResult(session);
     }
 
     public Task UpdateAsync(FastingSession session, CancellationToken cancellationToken = default) {
-        if (context.Entry(session).State == EntityState.Detached) {
-            context.FastingSessions.Update(session);
+        if (entries.Entry(session).State == EntityState.Detached) {
+            entries.Update(session);
         }
 
         return Task.CompletedTask;

@@ -3,6 +3,17 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class FastingModuleExtractionTests {
     [Fact]
+    public void RuntimeRepositoriesUseOnlyOwnedSets() {
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Fasting", "Infrastructure");
+        foreach (string path in Directory.GetFiles(Path.Combine(root, "Persistence"), "*Repository.cs")) {
+            string source = File.ReadAllText(path);
+            Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+            Assert.Contains("DbSet<Fasting", source, StringComparison.Ordinal);
+        }
+        Assert.Contains("CreateModuleContext<FastingDbContext>", File.ReadAllText(Path.Combine(root, "ModuleRegistration.cs")), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void FastingApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Fasting");
         string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Fasting", "Application");

@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.MealPlans;
 
-internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlanRepository {
+internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanCompositionReader composition) : IMealPlanRepository {
     public Task<MealPlan> AddAsync(MealPlan plan, CancellationToken cancellationToken = default) {
-        context.Set<MealPlan>().Add(plan);
+        plans.Add(plan);
         return Task.FromResult(plan);
     }
 
@@ -17,7 +17,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
         MealPlanId id,
         bool includeDays = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<MealPlan> query = context.Set<MealPlan>().AsNoTracking();
+        IQueryable<MealPlan> query = plans.AsNoTracking();
 
         if (includeDays) {
             query = query
@@ -48,50 +48,14 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
             includeDays,
             cancellationToken);
 
-    public async Task<MealPlanReadModel?> GetReadModelByIdAsync(
-        MealPlanId id,
-        CancellationToken cancellationToken = default) {
-        return await context.Set<MealPlan>()
-            .AsNoTracking()
-            .Where(p => p.Id == id)
-            .Select(p => new MealPlanReadModel(
-                p.Id.Value,
-                p.UserId == null ? null : p.UserId.Value.Value,
-                p.Name,
-                p.Description,
-                p.DietType.ToString(),
-                p.DurationDays,
-                p.TargetCaloriesPerDay,
-                p.IsCurated,
-                p.Days
-                    .OrderBy(d => d.DayNumber)
-                    .Select(d => new MealPlanDayReadModel(
-                        d.Id.Value,
-                        d.DayNumber,
-                        d.Meals
-                            .OrderBy(m => m.MealType)
-                            .Join(context.Recipes.AsNoTracking(), m => m.RecipeId, recipe => recipe.Id, (m, recipe) => new MealPlanMealReadModel(
-                                m.Id.Value,
-                                m.MealType.ToString(),
-                                m.RecipeId.Value,
-                                recipe.Name,
-                                m.Servings,
-                                recipe.Servings > 0 ? recipe.Servings : 1,
-                                recipe.TotalCalories,
-                                recipe.TotalProteins,
-                                recipe.TotalFats,
-                                recipe.TotalCarbs))
-                            .ToList()))
-                    .ToList()))
-            .AsSplitQuery()
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
-    }
+    public Task<MealPlanReadModel?> GetReadModelByIdAsync(
+        MealPlanId id, CancellationToken cancellationToken = default) =>
+        composition.GetReadModelByIdAsync(id, cancellationToken);
 
     public async Task<IReadOnlyList<MealPlan>> GetCuratedAsync(
         DietType? dietType = null,
         CancellationToken cancellationToken = default) {
-        IQueryable<MealPlan> query = context.Set<MealPlan>()
+        IQueryable<MealPlan> query = plans
             .AsNoTracking()
             .Include(p => p.Days)
                 .ThenInclude(d => d.Meals)
@@ -108,7 +72,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
     public async Task<IReadOnlyList<MealPlanSummaryReadModel>> GetCuratedSummaryReadModelsAsync(
         DietType? dietType = null,
         CancellationToken cancellationToken = default) {
-        IQueryable<MealPlan> query = context.Set<MealPlan>()
+        IQueryable<MealPlan> query = plans
             .AsNoTracking()
             .Where(p => p.IsCurated);
 
@@ -126,7 +90,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
     public async Task<IReadOnlyList<MealPlan>> GetByUserAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.Set<MealPlan>()
+        return await plans
             .AsNoTracking()
             .Include(p => p.Days)
                 .ThenInclude(d => d.Meals)
@@ -139,7 +103,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
     public async Task<IReadOnlyList<MealPlanSummaryReadModel>> GetByUserSummaryReadModelsAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await ProjectSummaryReadModels(context.Set<MealPlan>()
+        return await ProjectSummaryReadModels(plans
                 .AsNoTracking()
                 .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.CreatedOnUtc))
@@ -167,7 +131,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
         System.Linq.Expressions.Expression<Func<MealPlan, bool>> accessPredicate,
         bool includeDays,
         CancellationToken cancellationToken) {
-        IQueryable<MealPlan> query = context.Set<MealPlan>()
+        IQueryable<MealPlan> query = plans
             .AsNoTracking()
             .Where(accessPredicate);
 
@@ -188,23 +152,8 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
         RecipeId[] ids = [.. meals.Select(meal => meal.RecipeId).Distinct()];
         if (ids.Length == 0) { return; }
 
-        var recipes = await context.Recipes.AsNoTracking()
-            .Where(recipe => Enumerable.Contains(ids, recipe.Id))
-            .Select(recipe => new { recipe.Id, recipe.Name, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-        var ingredients = await context.Recipes.AsNoTracking()
-            .Where(recipe => Enumerable.Contains(ids, recipe.Id))
-            .SelectMany(recipe => recipe.Steps.SelectMany(step => step.Ingredients)
-                .Select(ingredient => new { RecipeId = recipe.Id, ingredient.ProductId, ingredient.Amount }))
-            .Join(context.Products.AsNoTracking(), ingredient => ingredient.ProductId, product => (ProductId?)product.Id,
-                (ingredient, product) => new {
-                    ingredient.RecipeId,
-                    Ingredient = new MealPlanRecipeIngredientSnapshot(product.Id, ingredient.Amount, product.Name, product.BaseUnit, product.Category),
-                })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-        ILookup<RecipeId, MealPlanRecipeIngredientSnapshot> byRecipe = ingredients.ToLookup(item => item.RecipeId, item => item.Ingredient);
-        var snapshots = recipes.ToDictionary(recipe => recipe.Id,
-            recipe => new MealPlanRecipeSnapshot(recipe.Id, recipe.Name, recipe.Servings, byRecipe[recipe.Id].ToArray(), recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs));
+        IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await composition
+            .GetRecipeSnapshotsAsync(ids, cancellationToken).ConfigureAwait(false);
         foreach (MealPlanMeal meal in meals) {
             meal.SetRecipeSnapshot(snapshots.GetValueOrDefault(meal.RecipeId));
         }

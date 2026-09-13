@@ -7,7 +7,8 @@ Rules for `Modules/Fasting/Infrastructure/` except the scoped `Model/` guide.
 ## Role
 
 - Own Fasting repository implementations and module composition registration.
-- Reuse the shared `FoodDiaryDbContext` while the application has one database and migration host.
+- Own `FastingDbContext` for runtime tracking of the five Fasting entities. Repositories receive narrow owned DbSets; registration uses the central context factory and shared unit of work.
+- Keep standalone telemetry bulk cleanup independent of tracked SaveChanges; preserve batching and cancellation.
 
 ## Boundaries
 

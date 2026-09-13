@@ -6,3 +6,6 @@ Read comment authors through Users.Contracts IUserCommentAuthorReadService after
 selecting the ordered page. Batch distinct page user IDs; preserve total count,
 null names and missing-author omission without refilling the page. Do not read
 Users sets or reference Users.Domain.
+
+Runtime writes use the owned RecipeCommunityDbContext created by the central factory and
+shared unit of work (ADR 0040). Central migration mappings remain.

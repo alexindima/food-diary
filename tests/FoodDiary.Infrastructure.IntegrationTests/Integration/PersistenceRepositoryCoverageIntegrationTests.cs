@@ -590,7 +590,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Products.Add(product);
         await context.SaveChangesAsync();
 
-        var repository = new ShoppingListRepository(context);
+        var repository = new ShoppingListRepository(context.ShoppingLists);
         var list = ShoppingList.Create(user.Id, "Weekly");
         ShoppingListItem item = AddShoppingListItemWithSource(
             list,
@@ -796,7 +796,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         DateTime now = DateTime.UtcNow;
-        FastingPlanRepository planRepository = new(context);
+        FastingPlanRepository planRepository = new(context.FastingPlans);
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, now.AddDays(-3), "Plan");
         await planRepository.AddAsync(plan);
         await context.SaveChangesAsync();
@@ -1737,7 +1737,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         UserId userId,
         FastingPlanId planId,
         DateTime now) {
-        var occurrenceRepository = new FastingOccurrenceRepository(context, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
+        var occurrenceRepository = new FastingOccurrenceRepository(context.FastingOccurrences, new FoodDiary.Infrastructure.Persistence.Users.UserRelatedDataReadService(context));
         var active = FastingOccurrence.Create(planId, userId, FastingOccurrenceKind.FastingWindow, now.AddHours(-4), 1, targetHours: 16);
         var scheduled = FastingOccurrence.Schedule(planId, userId, FastingOccurrenceKind.EatingWindow, now.AddHours(20), 2, targetHours: 8);
         await occurrenceRepository.AddAsync(active);
@@ -1756,7 +1756,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             1,
             (await occurrenceRepository.GetPagedByUserAsync(userId, page: 0, limit: 0, status: FastingOccurrenceStatus.Active)).TotalItems);
 
-        var checkInRepository = new FastingCheckInRepository(context);
+        var checkInRepository = new FastingCheckInRepository(context.FastingCheckIns);
         Assert.Empty(await checkInRepository.GetByOccurrenceIdsAsync([]));
         Assert.Empty(await checkInRepository.GetByOccurrenceIdReadModelsAsync([]));
         await checkInRepository.AddAsync(FastingCheckIn.Create(active.Id, userId, 2, 4, 5, ["hungry"], "Ok", now));
@@ -1769,7 +1769,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId userId,
         DateTime now) {
-        var repository = new FastingSessionRepository(context, FixedTime);
+        var repository = new FastingSessionRepository(context.FastingSessions, FixedTime);
         Assert.Equal(0, await repository.GetCurrentStreakAsync(UserId.New()));
         FastingSession currentSession = await repository.AddAsync(FastingSession.Create(userId, FastingProtocol.Fast16Eat8, 16, now.AddHours(-2)));
         FastingSession completedSession = await repository.AddAsync(FastingSession.Create(userId, FastingProtocol.Fast24, 24, now.AddDays(-2)));
@@ -1808,7 +1808,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         FastingSessionId sessionId,
         DateTime now) {
-        var repository = new FastingTelemetryEventRepository(context);
+        var repository = new FastingTelemetryEventRepository(context.FastingTelemetryEvents);
         var currentRecord = new FastingTelemetryEventRecord(
             Name: "fasting.started",
             OccurredAtUtc: now,

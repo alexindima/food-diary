@@ -6,14 +6,13 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
-public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUserFastingReminderReadService users) : IFastingOccurrenceRepository {
+public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries, IUserFastingReminderReadService users) : IFastingOccurrenceRepository {
     private static readonly Expression<Func<FastingOccurrence, FastingOccurrenceReadModel>> ReadModelProjection =
         occurrence => new FastingOccurrenceReadModel(
             occurrence.Id,
@@ -54,7 +53,7 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUse
             occurrence.CheckInNotes);
 
     public async Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken cancellationToken = default) {
-        List<FastingOccurrence> occurrences = await context.FastingOccurrences
+        List<FastingOccurrence> occurrences = await entries
             .AsNoTracking()
             .Include(occurrence => occurrence.Plan)
             .Where(occurrence => occurrence.Status == FastingOccurrenceStatus.Active)
@@ -74,8 +73,8 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUse
 
     public async Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {
         IIncludableQueryable<FastingOccurrence, FastingPlan> query = (asTracking
-            ? context.FastingOccurrences.AsQueryable()
-            : context.FastingOccurrences.AsNoTracking())
+            ? entries.AsQueryable()
+            : entries.AsNoTracking())
             .Include(occurrence => occurrence.Plan);
 
         return await query
@@ -85,7 +84,7 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUse
     }
 
     public async Task<FastingOccurrenceReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) {
-        return await context.FastingOccurrences
+        return await entries
             .AsNoTracking()
             .Where(occurrence => occurrence.UserId == userId && occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
@@ -96,8 +95,8 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUse
     public async Task<FastingOccurrence?> GetByIdAsync(
         FastingOccurrenceId id, bool asTracking = false, CancellationToken cancellationToken = default) {
         IQueryable<FastingOccurrence> query = (asTracking
-            ? context.FastingOccurrences
-            : context.FastingOccurrences.AsNoTracking())
+            ? entries
+            : entries.AsNoTracking())
             .Include(occurrence => occurrence.Plan);
 
         return await query.FirstOrDefaultAsync(occurrence => occurrence.Id == id, cancellationToken).ConfigureAwait(false);
@@ -107,7 +106,7 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUse
         FastingPlanId planId,
         bool includeCompleted = true,
         CancellationToken cancellationToken = default) {
-        IQueryable<FastingOccurrence> query = context.FastingOccurrences
+        IQueryable<FastingOccurrence> query = entries
             .Include(occurrence => occurrence.Plan)
             .AsNoTracking()
             .Where(occurrence => occurrence.PlanId == planId);
@@ -198,7 +197,7 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUse
         DateTime? from,
         DateTime? to,
         FastingOccurrenceStatus? status) {
-        IQueryable<FastingOccurrence> query = context.FastingOccurrences
+        IQueryable<FastingOccurrence> query = entries
             .Include(occurrence => occurrence.Plan)
             .AsNoTracking()
             .Where(occurrence => occurrence.UserId == userId);
@@ -219,11 +218,11 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context, IUse
     }
 
     public async Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) {
-        await context.FastingOccurrences.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) {
-        context.FastingOccurrences.Update(occurrence);
+        entries.Update(occurrence);
         await Task.CompletedTask.ConfigureAwait(false);
     }
 }

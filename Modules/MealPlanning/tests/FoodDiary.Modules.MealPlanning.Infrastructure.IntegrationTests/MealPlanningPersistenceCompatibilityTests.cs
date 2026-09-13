@@ -24,7 +24,7 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        FoodDiary.Domain.Entities.MealPlans.MealPlan? loaded = await new FoodDiary.Infrastructure.Persistence.MealPlans.MealPlanRepository(context).GetByIdAsync(plan.Id, includeDays: true);
+        FoodDiary.Domain.Entities.MealPlans.MealPlan? loaded = await new FoodDiary.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context)).GetByIdAsync(plan.Id, includeDays: true);
 
         Assert.NotNull(loaded);
         FoodDiary.Domain.Entities.MealPlans.MealPlanRecipeSnapshot? snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot;

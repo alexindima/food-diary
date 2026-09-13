@@ -1,12 +1,11 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
-public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) : IFastingTelemetryEventRepository {
+public sealed class FastingTelemetryEventRepository(DbSet<FastingTelemetryEvent> entries) : IFastingTelemetryEventRepository {
     public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) {
         var entity = FastingTelemetryEvent.Create(
             record.Name,
@@ -28,7 +27,7 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
             record.SymptomsCount,
             record.HadNotes);
 
-        context.FastingTelemetryEvents.Add(entity);
+        entries.Add(entity);
         return Task.CompletedTask;
     }
 
@@ -36,7 +35,7 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
         DateTime olderThanUtc,
         int batchSize,
         CancellationToken cancellationToken = default) {
-        FastingTelemetryEventId[] ids = await context.FastingTelemetryEvents
+        FastingTelemetryEventId[] ids = await entries
             .AsNoTracking()
             .Where(item => item.OccurredAtUtc < olderThanUtc)
             .OrderBy(item => item.OccurredAtUtc)
@@ -48,7 +47,7 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
             return 0;
         }
 
-        return await context.FastingTelemetryEvents
+        return await entries
             .Where(item => Enumerable.Contains(ids, item.Id))
             .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -57,7 +56,7 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
         DateTime fromUtc,
         DateTime toUtc,
         CancellationToken cancellationToken = default) {
-        return await context.FastingTelemetryEvents
+        return await entries
             .AsNoTracking()
             .Where(x => x.OccurredAtUtc >= fromUtc && x.OccurredAtUtc <= toUtc)
             .OrderByDescending(x => x.OccurredAtUtc)

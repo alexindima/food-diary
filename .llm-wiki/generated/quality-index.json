@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5312,
+    "productionFiles": 5317,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -4489,6 +4489,14 @@
       "structuralRiskScore": 0.64
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
+      "nonBlankLines": 69,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.88
+    },
+    {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
       "nonBlankLines": 42,
       "decisionPoints": 0,
@@ -4514,11 +4522,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -24922,51 +24930,59 @@
     },
     {
       "path": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 37,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.74
     },
     {
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingCheckInRepository.cs",
-      "nonBlankLines": 45,
+      "nonBlankLines": 44,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.9
+      "structuralRiskScore": 3.88
+    },
+    {
+      "path": "Modules/Fasting/Infrastructure/Persistence/FastingDbContext.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
-      "nonBlankLines": 203,
+      "nonBlankLines": 202,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.56
+      "structuralRiskScore": 17.54
     },
     {
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs",
-      "nonBlankLines": 50,
+      "nonBlankLines": 49,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.5
+      "structuralRiskScore": 5.48
     },
     {
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 67,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.86
+      "structuralRiskScore": 20.84
     },
     {
       "path": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
-      "nonBlankLines": 78,
+      "nonBlankLines": 77,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.56
+      "structuralRiskScore": 4.54
     },
     {
       "path": "Modules/Fasting/Presentation.Contracts/Features/Fasting/Responses/FastingCheckInHttpResponse.cs",
@@ -30225,6 +30241,14 @@
       "structuralRiskScore": 0.6
     },
     {
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanCompositionReader.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
       "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
@@ -31074,11 +31098,19 @@
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 30,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningDbContext.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs",
@@ -31090,11 +31122,11 @@
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
-      "nonBlankLines": 190,
+      "nonBlankLines": 139,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.3
+      "structuralRiskScore": 19.28
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
@@ -35074,11 +35106,11 @@
     },
     {
       "path": "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
@@ -35087,6 +35119,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.9
+    },
+    {
+      "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeCommunityDbContext.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",

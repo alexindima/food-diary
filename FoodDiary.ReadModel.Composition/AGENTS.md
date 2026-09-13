@@ -12,3 +12,8 @@ visible in persistence-capabilities.json and architecture capability scanning.
 Do not move owner writes or application orchestration into this project.
 
 Verify host DI, the architecture suite and affected PostgreSQL query tests.
+
+MealPlanning composition implements IMealPlanCompositionReader. Return only the
+immutable detail model and recipe snapshot dictionary. Preserve inner joins,
+serving fallback and ingredient batching; aggregate mutation/attachment stays in
+the owner repository. Hosts register the adapter through AddReadModelComposition.

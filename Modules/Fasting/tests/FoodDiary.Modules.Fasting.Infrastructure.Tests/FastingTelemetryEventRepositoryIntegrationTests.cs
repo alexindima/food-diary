@@ -12,12 +12,13 @@ public sealed class FastingTelemetryEventRepositoryIntegrationTests(PostgresData
     public async Task DeleteOlderThanAsync_DeletesOnlyExpiredEventsWithinBatch() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var cutoffUtc = new DateTime(2030, 8, 19, 12, 0, 0, DateTimeKind.Utc);
-        var repository = new FastingTelemetryEventRepository(context);
+        await using FastingDbContext fasting = context.CreateModuleContext<FastingDbContext>(static options => new FastingDbContext(options));
+        var repository = new FastingTelemetryEventRepository(fasting.FastingTelemetryEvents);
 
         await repository.AddAsync(CreateRecord("fast_started", cutoffUtc.AddDays(-3), "session-oldest"));
         await repository.AddAsync(CreateRecord("fast_completed", cutoffUtc.AddDays(-2), "session-older"));
         await repository.AddAsync(CreateRecord("fast_started", cutoffUtc.AddMinutes(1), "session-fresh"));
-        await context.SaveChangesAsync();
+        await fasting.SaveChangesAsync();
 
         int noneDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc.AddDays(-10), batchSize: 10);
         int firstDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc, batchSize: 1);

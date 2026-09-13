@@ -2,14 +2,13 @@ using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
-public sealed class FastingCheckInRepository(FoodDiaryDbContext context) : IFastingCheckInRepository {
+public sealed class FastingCheckInRepository(DbSet<FastingCheckIn> entries) : IFastingCheckInRepository {
     public async Task AddAsync(FastingCheckIn checkIn, CancellationToken cancellationToken = default) {
-        await context.FastingCheckIns.AddAsync(checkIn, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(checkIn, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<FastingCheckIn>> GetByOccurrenceIdsAsync(
@@ -19,7 +18,7 @@ public sealed class FastingCheckInRepository(FoodDiaryDbContext context) : IFast
             return [];
         }
 
-        return await context.FastingCheckIns
+        return await entries
             .AsNoTracking()
             .Where(x => occurrenceIds.Contains(x.OccurrenceId))
             .OrderByDescending(x => x.CheckedInAtUtc)
@@ -33,7 +32,7 @@ public sealed class FastingCheckInRepository(FoodDiaryDbContext context) : IFast
             return [];
         }
 
-        return await context.FastingCheckIns
+        return await entries
             .AsNoTracking()
             .Where(checkIn => occurrenceIds.Contains(checkIn.OccurrenceId))
             .OrderByDescending(checkIn => checkIn.CheckedInAtUtc)

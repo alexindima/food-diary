@@ -42,7 +42,7 @@ public sealed class UserRelatedConsumerIntegrationTests(PostgresDatabaseFixture 
         users.GetAuthorsAsync(Arg.Any<IReadOnlyCollection<UserId>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyDictionary<UserId, UserCommentAuthorModel>>(
                 new Dictionary<UserId, UserCommentAuthorModel> { [user.Id] = new("author", "Name") }));
-        var repository = new RecipeCommentRepository(context, users);
+        var repository = new RecipeCommentRepository(context.RecipeComments, users);
         (IReadOnlyList<RecipeCommentReadModel> items, int total) = await repository.GetPagedReadModelsByRecipeAsync(recipe.Id, 2, 2);
 
         Assert.Equal(5, total);
@@ -75,7 +75,7 @@ public sealed class UserRelatedConsumerIntegrationTests(PostgresDatabaseFixture 
             .Returns(Task.FromResult<IReadOnlyDictionary<UserId, UserFastingReminderModel>>(
                 new Dictionary<UserId, UserFastingReminderModel> { [user.Id] = new(6, 10) }));
 
-        IReadOnlyList<FastingActiveOccurrenceModel> rows = await new FastingOccurrenceRepository(context, users).GetActiveAsync();
+        IReadOnlyList<FastingActiveOccurrenceModel> rows = await new FastingOccurrenceRepository(context.FastingOccurrences, users).GetActiveAsync();
 
         Assert.Equal(new[] { first.Id, second.Id }, rows.Select(row => row.Occurrence.Id));
         Assert.All(rows, row => {
@@ -92,13 +92,13 @@ public sealed class UserRelatedConsumerIntegrationTests(PostgresDatabaseFixture 
     public async Task EmptyFastingAndCancelledReads_DoNotInvokeUserReader() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         IUserFastingReminderReadService users = Substitute.For<IUserFastingReminderReadService>();
-        var repository = new FastingOccurrenceRepository(context, users);
+        var repository = new FastingOccurrenceRepository(context.FastingOccurrences, users);
         Assert.Empty(await repository.GetActiveAsync());
         using var cancelled = new CancellationTokenSource();
         await cancelled.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.GetActiveAsync(cancelled.Token));
         Assert.Empty(users.ReceivedCalls());
-        var comments = new RecipeCommentRepository(context, new UserRelatedDataReadService(context));
+        var comments = new RecipeCommentRepository(context.RecipeComments, new UserRelatedDataReadService(context));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => comments.GetPagedReadModelsByRecipeAsync(
             RecipeId.New(), 1, 10, cancelled.Token));
     }

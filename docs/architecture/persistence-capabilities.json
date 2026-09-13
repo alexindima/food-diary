@@ -2,6 +2,58 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:MealPlan",
+        "entity:MealPlanRecipeIngredientSnapshot",
+        "entity:Product",
+        "entity:Recipe"
+      ],
+      "reason": "Unchanged no-tracking SQL joins and bounded recipe ingredient snapshots; immutable results only. MealPlanning owns aggregate hydration and writes."
+    },
+    "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs": {
+      "module": "MealPlanning",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:MealPlan",
+        "entity:ShoppingList",
+        "tracked:MealPlan",
+        "tracked:ShoppingList"
+      ],
+      "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
+      "technicalSourceSha256": "6cdd6006cfb536ca21fe989a19570bd8785dbfb038e0163c633e2eca413c9702"
+    },
+    "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs": {
+      "module": "RecipeCommunity",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:RecipeComment",
+        "entity:RecipeLike",
+        "tracked:RecipeComment",
+        "tracked:RecipeLike"
+      ],
+      "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
+      "technicalSourceSha256": "b703d64d0c6c6cfe2f18361985493ef611be0cbe47022859cf7e72ee3880d7be"
+    },
+    "Modules/Fasting/Infrastructure/ModuleRegistration.cs": {
+      "module": "Fasting",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:FastingCheckIn",
+        "entity:FastingOccurrence",
+        "entity:FastingPlan",
+        "entity:FastingSession",
+        "entity:FastingTelemetryEvent",
+        "tracked:FastingCheckIn",
+        "tracked:FastingOccurrence",
+        "tracked:FastingPlan",
+        "tracked:FastingSession",
+        "tracked:FastingTelemetryEvent"
+      ],
+      "reason": "Owner-only runtime sets created through the shared transaction coordinator; central migrations remain. ADR 0040.",
+      "technicalSourceSha256": "e9c2805c7cd79fae0bf2b1e7d68d531b092cd6aa2101917a0b87d901bcbb3bb1"
+    },
     "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs": {
       "module": "Identity",
       "capabilities": ["entity:TelegramOperation", "tracked:TelegramOperation", "write:TelegramOperation"],
@@ -461,13 +513,11 @@
     "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs": {
       "module": "Fasting",
       "capabilities": [
-        "context:Entry",
         "entity:FastingSession",
         "tracked:FastingSession",
         "write:FastingSession"
       ],
-      "reason": "Fasting owns sessions; Entry checks detached state before attaching the owner aggregate.",
-      "technicalSourceSha256": "6a5a1e6a40d6e769f08f6d288c5f6fa0e82a37a50742ad7381adb1ea4f34b5ab"
+      "reason": "Fasting owns sessions; narrow DbSet.Entry checks detached state without exposing a context escape."
     },
     "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs": {
       "module": "Fasting",
@@ -754,13 +804,10 @@
       "capabilities": [
         "call:MealPlanMeal.SetRecipeSnapshot",
         "entity:MealPlan",
-        "entity:MealPlanRecipeIngredientSnapshot",
-        "entity:Product",
-        "entity:Recipe",
         "tracked:MealPlan",
         "write:MealPlan"
       ],
-      "reason": "MealPlanning tracks/writes its own plans and batch-projects Recipes and Products without tracking into immutable recipe/ingredient snapshots. Foreign schema relationships remain scalar."
+      "reason": "Own MealPlan set only; recipe/product reads are delegated through immutable composition port."
     },
     "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs": {
       "module": "MealPlanning",

@@ -2,16 +2,15 @@ using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
-public sealed class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRepository {
+public sealed class FastingPlanRepository(DbSet<FastingPlan> entries) : IFastingPlanRepository {
     public async Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {
         IQueryable<FastingPlan> query = asTracking
-            ? context.FastingPlans.AsQueryable()
-            : context.FastingPlans.AsNoTracking();
+            ? entries.AsQueryable()
+            : entries.AsNoTracking();
 
         return await query
             .Where(plan => plan.UserId == userId && plan.Status == FastingPlanStatus.Active)
@@ -22,8 +21,8 @@ public sealed class FastingPlanRepository(FoodDiaryDbContext context) : IFasting
     public async Task<FastingPlan?> GetByIdAsync(
         FastingPlanId id, bool asTracking = false, CancellationToken cancellationToken = default) {
         IQueryable<FastingPlan> query = asTracking
-            ? context.FastingPlans
-            : context.FastingPlans.AsNoTracking();
+            ? entries
+            : entries.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken).ConfigureAwait(false);
     }
@@ -33,7 +32,7 @@ public sealed class FastingPlanRepository(FoodDiaryDbContext context) : IFasting
         FastingPlanType? type = null,
         FastingPlanStatus? status = null,
         CancellationToken cancellationToken = default) {
-        IQueryable<FastingPlan> query = context.FastingPlans
+        IQueryable<FastingPlan> query = entries
             .AsNoTracking()
             .Where(plan => plan.UserId == userId);
 
@@ -51,11 +50,11 @@ public sealed class FastingPlanRepository(FoodDiaryDbContext context) : IFasting
     }
 
     public async Task AddAsync(FastingPlan plan, CancellationToken cancellationToken = default) {
-        await context.FastingPlans.AddAsync(plan, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(plan, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(FastingPlan plan, CancellationToken cancellationToken = default) {
-        context.FastingPlans.Update(plan);
+        entries.Update(plan);
         await Task.CompletedTask.ConfigureAwait(false);
     }
 }

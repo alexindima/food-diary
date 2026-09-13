@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.ShoppingLists;
 
-public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
+public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShoppingListRepository {
     public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
-        context.ShoppingLists.Add(list);
+        entries.Add(list);
         return Task.FromResult(list);
     }
 
@@ -19,7 +19,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
         bool includeItems = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<ShoppingList> query = context.ShoppingLists;
+        IQueryable<ShoppingList> query = entries;
 
         if (!asTracking) {
             query = query.AsNoTracking();
@@ -38,7 +38,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
         ShoppingListId id,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await ProjectReadModel(context.ShoppingLists
+        return await ProjectReadModel(entries
                 .AsNoTracking()
                 .Where(list => list.Id == id && list.UserId == userId))
             .FirstOrDefaultAsync(cancellationToken)
@@ -50,7 +50,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
         bool includeItems = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<ShoppingList> query = context.ShoppingLists;
+        IQueryable<ShoppingList> query = entries;
 
         if (!asTracking) {
             query = query.AsNoTracking();
@@ -69,7 +69,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
     public async Task<ShoppingListReadModel?> GetCurrentReadModelAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await ProjectReadModel(context.ShoppingLists
+        return await ProjectReadModel(entries
                 .AsNoTracking()
                 .Where(list => list.UserId == userId)
                 .OrderByDescending(list => list.CreatedOnUtc))
@@ -81,7 +81,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
         UserId userId,
         bool includeItems = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<ShoppingList> query = context.ShoppingLists.AsNoTracking();
+        IQueryable<ShoppingList> query = entries.AsNoTracking();
 
         if (includeItems) {
             query = IncludeItemsAndSources(query);
@@ -96,7 +96,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
     public async Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.ShoppingLists
+        return await entries
             .AsNoTracking()
             .Where(list => list.UserId == userId)
             .OrderByDescending(list => list.CreatedOnUtc)
@@ -111,14 +111,14 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
     }
 
     public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) {
-        context.ShoppingLists.Update(list);
+        entries.Update(list);
         return Task.CompletedTask;
     }
 
     public async Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) {
-        ShoppingList? tracked = await context.ShoppingLists.FindAsync([list.Id], cancellationToken).ConfigureAwait(false);
+        ShoppingList? tracked = await entries.FindAsync([list.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
-            context.ShoppingLists.Remove(tracked);
+            entries.Remove(tracked);
         }
     }
 

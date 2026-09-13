@@ -42,20 +42,21 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: MealPlan, MealPlanDay, MealPlanMeal, ShoppingList, ShoppingListItem, ShoppingListItemSource
-- Public contract files: 18
+- Public contract files: 19
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 18
-- Interfaces: 8
+- Public contract types: 19
+- Interfaces: 9
 - DTO/read-model/projection types: 8
 - Enums: 0
 - Exported repository-shaped contracts: 8
-- Contracts referencing domain entities: 4
+- Contracts referencing domain entities: 5
 - `class MealPlanErrors`
 - `class ShoppingListErrors`
+- `interface IMealPlanCompositionReader`
 - `interface IMealPlanReadModelRepository`
 - `interface IMealPlanReadRepository`
 - `interface IMealPlanRepository`

@@ -60,6 +60,7 @@
     <ProjectReference Include="../../Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj" />
     <ProjectReference Include="../../Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />
@@ -97,8 +98,10 @@
     <ProjectReference Include="../../Modules/RecentItems/Contracts/FoodDiary.Modules.RecentItems.Contracts.csproj" />
     <ProjectReference Include="../../Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
     <ProjectReference Include="../../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
