@@ -17,6 +17,9 @@ internal sealed class DomainEventDispatchInterceptor(
         CancellationToken cancellationToken = default) {
         if (eventData.Context is not null) {
             await DomainEventDispatcher.DispatchAsync(eventData.Context, publisher, logger, cancellationToken).ConfigureAwait(false);
+            if (eventData.Context is FoodDiaryDbContext context) {
+                context.EnsureModuleSaveIsCoordinated();
+            }
         }
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
@@ -26,7 +29,7 @@ internal sealed class DomainEventDispatchInterceptor(
         SaveChangesCompletedEventData eventData,
         int result,
         CancellationToken cancellationToken = default) {
-        if (eventData.Context is not null) {
+        if (eventData.Context is not null && eventData.Context is not FoodDiaryDbContext { IsCoordinatingModuleSave: true }) {
             DomainEventDispatcher.ClearDomainEvents(eventData.Context);
         }
 

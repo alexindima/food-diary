@@ -62,3 +62,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0038: Explicit read-model composition](0038-read-model-composition.md)
 
 - [0039: Separate HTTP contracts and response mappings](0039-presentation-contracts-and-mappings.md)
+
+- [0040: Hydration runtime context pilot](0040-hydration-runtime-context-pilot.md)

@@ -74,6 +74,13 @@ Core rules:
 
 ## Application Read Boundaries
 
+Hydration is the runtime-context pilot: its repositories use HydrationDbContext
+with only HydrationEntry and HydrationOperationReceipt. The shared unit of work
+coordinates both trackers on one connection and transaction. The full central
+context remains the migration model and supports existing composed reads and the
+user-purge bridge. This does not establish separate databases. See
+[ADR 0040](adr/0040-hydration-runtime-context-pilot.md).
+
 Dietologist-specific collaboration auditing is composed through EF's existing
 `ISaveChangesInterceptor` port. The owning module registers its scoped interceptor
 idempotently; central persistence appends module registrations after telemetry and
@@ -267,3 +274,11 @@ Products and Recipes use Serializable top-level transactions with whole-attempt 
 ## Bug triage supporting service
 
 `Services/BugTriage/` is an independent operational service with its own database. Only its Infrastructure references MailInbox.Client. MailInbox exports generic mail data and never owns defect investigation or Git execution. See ADR 0036 and `docs/backend/BUG_TRIAGE.md`.
+
+BodyMetrics is the second module with an owned runtime context (ADR 0040). Weight and waist repositories use only its owned sets; Users retains goals. Shared UoW coordinates central, Hydration and BodyMetrics contexts; central migration/read/purge mappings remain.
+
+BodyMetrics is the second module with an owned runtime context (ADR 0040). Weight and waist repositories use only its owned sets; Users retains goals. Shared UoW coordinates central, Hydration and BodyMetrics contexts; central migration/read/purge mappings remain.
+
+Exercises extends the owned runtime contexts to three modules (ADR 0040), sharing the same scoped connection and UoW. Central migration/read/purge mappings remain.
+
+Cycles is the fourth runtime-context owner (ADR 0040). Its profile and seven child mappings share the existing UoW; central migration/read/purge bridges remain unchanged.

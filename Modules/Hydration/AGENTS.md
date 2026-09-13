@@ -11,7 +11,7 @@ Rules for `Modules/Hydration/`.
 - Do not reference the core `FoodDiary.Application` project.
 - Register application behavior through `AddHydrationApplication`; composition roots use Infrastructure's `AddHydrationModule` facade.
 - Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
-- Keep the shared `FoodDiaryDbContext`, migrations, and model snapshot in central Infrastructure.
+- Keep migrations and the full migration model in central Infrastructure. Hydration Infrastructure owns the two-entity runtime HydrationDbContext; shared IUnitOfWork coordinates saves and transactions across contexts. Central composition reads and purge remain explicit pilot bridges; see ADR 0040.
 - Keep `HydrationEntry` and `HydrationEntryId` in `Domain` with their legacy CLR namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse `User.HydrationEntries` navigation.
 - Preserve legacy `FoodDiary.Application.Hydration.*` and Hydration domain CLR namespaces during this extraction.
 

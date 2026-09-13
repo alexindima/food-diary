@@ -5,12 +5,44 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class EfUnitOfWorkTests {
+    [Fact]
+    public async Task ModuleTracker_IsSavedByUnitOfWorkAndVisibleThroughLegacyReadModelAsync() {
+        await using FoodDiaryDbContext context = CreateContext();
+        await using HydrationDbContext module = context.CreateModuleContext<HydrationDbContext>(static options => new HydrationDbContext(options));
+        var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
+        module.HydrationEntries.Add(entry);
+        var unitOfWork = new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance);
+
+        Assert.True(unitOfWork.HasPendingChanges);
+        Assert.Throws<InvalidOperationException>(() => FoodDiary.Infrastructure.Persistence.Shared.SharedTransactionBoundary.EnsureCleanEntry(context));
+        await unitOfWork.SaveChangesAsync();
+
+        Assert.False(unitOfWork.HasPendingChanges);
+        Assert.True(await context.HydrationEntries.AsNoTracking().AnyAsync(item => item.Id == entry.Id));
+    }
+
+    [Fact]
+    public async Task TransactionAttempt_ResetIncludesModuleTrackerAsync() {
+        await using FoodDiaryDbContext context = CreateContext();
+        await using HydrationDbContext module = context.CreateModuleContext<HydrationDbContext>(static options => new HydrationDbContext(options));
+        module.HydrationEntries.Add(HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            FoodDiary.Infrastructure.Persistence.Shared.SharedTransactionBoundary.ExecuteAttemptAsync<int>(context, postCommitActionQueue: null,
+                () => Task.FromException<int>(new InvalidOperationException("Failed attempt."))));
+
+        Assert.Empty(module.ChangeTracker.Entries());
+    }
+
     [Fact]
     public async Task TransactionBoundary_RejectsPendingPostCommitActionsWithoutDiscardingThem() {
         await using FoodDiaryDbContext context = CreateContext();
@@ -85,7 +117,7 @@ public sealed class EfUnitOfWorkTests {
 
     private static FoodDiaryDbContext CreateContext(SaveChangesInterceptor? interceptor = null) {
         DbContextOptionsBuilder<FoodDiaryDbContext> builder = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"));
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"), new InMemoryDatabaseRoot());
         if (interceptor is not null) {
             builder.AddInterceptors(interceptor);
         }

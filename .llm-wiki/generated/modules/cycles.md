@@ -107,6 +107,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs`
 - [presentation] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/CyclesModuleExtractionTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/CyclesContextCompositionIntegrationTests.cs`
 
 ## Working Rule
 

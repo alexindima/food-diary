@@ -1,4 +1,3 @@
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Domain.Entities.Tracking;
@@ -7,16 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Exercises.Infrastructure.Persistence;
 
-internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExerciseEntryRepository {
+internal sealed class ExerciseEntryRepository(DbSet<ExerciseEntry> entries) : IExerciseEntryRepository {
     public Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
-        context.Set<ExerciseEntry>().Add(entry);
+        entries.Add(entry);
         return Task.FromResult(entry);
     }
 
     public Task UpdateAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
     public Task DeleteAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) {
-        context.Set<ExerciseEntry>().Remove(entry);
+        entries.Remove(entry);
         return Task.CompletedTask;
     }
 
@@ -26,8 +25,8 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
         IQueryable<ExerciseEntry> query = asTracking
-            ? context.Set<ExerciseEntry>().AsTracking()
-            : context.Set<ExerciseEntry>().AsNoTracking();
+            ? entries.AsTracking()
+            : entries.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(
             e => e.Id == id && e.UserId == userId, cancellationToken).ConfigureAwait(false);
@@ -38,7 +37,7 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
-        return await context.Set<ExerciseEntry>()
+        return await entries
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date >= dateFrom.Date && e.Date <= dateTo.Date)
             .OrderByDescending(e => e.Date)
@@ -51,7 +50,7 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
-        return await context.Set<ExerciseEntry>()
+        return await entries
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date >= dateFrom.Date && e.Date <= dateTo.Date)
             .OrderByDescending(e => e.Date)
@@ -71,7 +70,7 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default) {
-        return await context.Set<ExerciseEntry>()
+        return await entries
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
             .SumAsync(e => e.CaloriesBurned, cancellationToken).ConfigureAwait(false);

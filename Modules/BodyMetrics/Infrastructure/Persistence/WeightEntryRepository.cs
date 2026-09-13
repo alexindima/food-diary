@@ -3,23 +3,22 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 
 namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 
-public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRepository {
+public sealed class WeightEntryRepository(DbSet<WeightEntry> entries) : IWeightEntryRepository {
     public async Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
-        await context.WeightEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
-        context.WeightEntries.Update(entry);
+        entries.Update(entry);
         return Task.CompletedTask;
     }
 
     public Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
-        context.WeightEntries.Remove(entry);
+        entries.Remove(entry);
         return Task.CompletedTask;
     }
 
@@ -29,8 +28,8 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
         IQueryable<WeightEntry> query = asTracking
-            ? context.WeightEntries.AsQueryable()
-            : context.WeightEntries.AsNoTracking();
+            ? entries.AsQueryable()
+            : entries.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(
             entry => entry.Id == id && entry.UserId == userId,
@@ -42,7 +41,7 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
         DateTime date,
         CancellationToken cancellationToken = default) {
         DateTime normalizedDate = date.Date;
-        return await context.WeightEntries
+        return await entries
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 entry => entry.UserId == userId && entry.Date == normalizedDate,
@@ -56,7 +55,7 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
         int? limit,
         bool descending,
         CancellationToken cancellationToken = default) {
-        IQueryable<WeightEntry> query = context.WeightEntries
+        IQueryable<WeightEntry> query = entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId);
 
@@ -88,7 +87,7 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
         int? limit,
         bool descending,
         CancellationToken cancellationToken = default) {
-        IQueryable<WeightEntry> query = context.WeightEntries
+        IQueryable<WeightEntry> query = entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId);
 
@@ -123,7 +122,7 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
         var from = DateTime.SpecifyKind(dateFrom, DateTimeKind.Utc);
         var to = DateTime.SpecifyKind(dateTo, DateTimeKind.Utc);
 
-        return await context.WeightEntries
+        return await entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)
@@ -139,7 +138,7 @@ public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightE
         var from = DateTime.SpecifyKind(dateFrom, DateTimeKind.Utc);
         var to = DateTime.SpecifyKind(dateTo, DateTimeKind.Utc);
 
-        return await context.WeightEntries
+        return await entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)

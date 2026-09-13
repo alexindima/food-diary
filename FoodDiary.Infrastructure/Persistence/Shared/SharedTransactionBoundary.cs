@@ -28,6 +28,10 @@ internal static class SharedTransactionBoundary {
     private static void Reset(FoodDiaryDbContext context, IPostCommitActionQueue? postCommitActionQueue) {
         DomainEventDispatcher.ClearDomainEvents(context);
         context.ChangeTracker.Clear();
+        foreach (DbContext module in context.ModuleContexts) {
+            DomainEventDispatcher.ClearDomainEvents(module);
+            module.ChangeTracker.Clear();
+        }
         postCommitActionQueue?.Discard();
     }
 
@@ -35,7 +39,7 @@ internal static class SharedTransactionBoundary {
         if (postCommitActionQueue?.HasActions == true) {
             throw new InvalidOperationException("A top-level transaction cannot inherit pending post-commit actions.");
         }
-        if (context.ChangeTracker.HasChanges()) {
+        if (context.ChangeTracker.HasChanges() || context.ModuleContexts.Any(module => module.ChangeTracker.HasChanges())) {
             throw new InvalidOperationException("A top-level transaction cannot save pending changes from its caller. Enter the transaction before mutating tracked entities.");
         }
 

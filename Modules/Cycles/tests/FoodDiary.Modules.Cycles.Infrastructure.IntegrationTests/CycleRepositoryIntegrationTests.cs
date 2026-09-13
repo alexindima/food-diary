@@ -24,7 +24,7 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
         await context.SaveChangesAsync();
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var repository = new CycleRepository(context);
+        var repository = new CycleRepository(context.CycleProfiles);
         var profile = CycleProfile.Create(
             user.Id,
             today.AddDays(-28),
@@ -81,7 +81,7 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
         var meal = Meal.Create(user.Id, today.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), MealType.Dinner);
         context.Users.Add(user);
         context.Meals.Add(meal);
-        var repository = new CycleRepository(context);
+        var repository = new CycleRepository(context.CycleProfiles);
         await repository.AddAsync(profile);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
@@ -132,7 +132,7 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
         context.CycleProfiles.Add(profile);
         await context.SaveChangesAsync();
 
-        var repository = new CycleRepository(context);
+        var repository = new CycleRepository(context.CycleProfiles);
         CycleProfileReadModel? readModel = await repository.GetCurrentReadModelAsync(user.Id);
 
         Assert.NotNull(readModel);

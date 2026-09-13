@@ -3,6 +3,18 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class HydrationModuleExtractionTests {
     [Fact]
+    public void HydrationRuntimeContextAndCoordinatedSaveRemainExplicit() {
+        string registration = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Hydration/Infrastructure/ModuleRegistration.cs"));
+        Assert.Contains("CreateModuleContext<HydrationDbContext>", registration, StringComparison.Ordinal);
+        Assert.Contains("GetRequiredService<HydrationDbContext>().HydrationEntries", registration, StringComparison.Ordinal);
+        Assert.DoesNotContain("GetRequiredService<FoodDiaryDbContext>().HydrationEntries", registration, StringComparison.Ordinal);
+        string context = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Hydration/Infrastructure/Persistence/HydrationDbContext.cs"));
+        Assert.Contains("ApplyHydrationPersistenceModel()", context, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", context, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Domain.Entities.Users", context, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void HydrationRepository_ReceivesOnlyItsOwnedSet() {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "Modules", "Hydration", "Infrastructure", "Persistence", "HydrationEntryRepository.cs"));

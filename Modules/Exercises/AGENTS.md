@@ -17,3 +17,5 @@ reference the exact owner; shared guards and generic values belong to
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+ExercisesDbContext is the third owned runtime context (ADR 0040). It shares the scoped connection and coordinated unit of work; the central schema and purge/read bridges remain unchanged.

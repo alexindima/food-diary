@@ -2,6 +2,16 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CyclesModuleExtractionTests {
+    [Fact]
+    public void RuntimeRepositoryReceivesOnlyTheOwnedAggregateSet() {
+        string registration = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Cycles/Infrastructure/ModuleRegistration.cs"));
+        string repository = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs"));
+        Assert.Contains("CreateModuleContext<CyclesDbContext>", registration, StringComparison.Ordinal);
+        Assert.Contains("GetRequiredService<CyclesDbContext>().CycleProfiles", registration, StringComparison.Ordinal);
+        Assert.Contains("DbSet<CycleProfile> profiles", repository, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", repository, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData(typeof(FoodDiary.Domain.Enums.BleedingType))]
     [InlineData(typeof(FoodDiary.Domain.Enums.CycleSymptomCategory))]

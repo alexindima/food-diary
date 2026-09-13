@@ -22,14 +22,18 @@
       "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "673b430eb397e538c2919d065e686fa82482c2ebbce638b135c53bca267f103d"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "b92839eb8b262147ebd92090ed5ea2efef7c47e69db50d5d1d854c466b7fa0d8"
         }
       ],
-      "reason": "Owner guides and backend ownership map describe the four narrow consumer boundaries; source paths verified against relocated files.",
+      "reason": "ADR 0040 records Cycles as fourth runtime owner and preserves central migration/read/purge bridges. RecentItems and Wearables require separate transaction-entry analysis.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:36:47.5199866Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:49:56.8787656Z"
     },
     {
       "pageId": "module.frontend",
@@ -52,14 +56,18 @@
       "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "673b430eb397e538c2919d065e686fa82482c2ebbce638b135c53bca267f103d"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "301d3f0cad3eeb56db623d05ed0e6b4470f1d293f565f3cee98804e22e709938"
+          "sha256": "b92839eb8b262147ebd92090ed5ea2efef7c47e69db50d5d1d854c466b7fa0d8"
         }
       ],
-      "reason": "Owner guides and backend module map now document Identity and BodyMetrics consumer assemblies and relocated image and error contracts.",
+      "reason": "ADR 0040 records Cycles as fourth runtime owner and preserves central migration/read/purge bridges. RecentItems and Wearables require separate transaction-entry analysis.",
       "baseRef": "HEAD",
-      "gitHead": "9f9f6604d5850338d39ebcfb61e7da110e286bd8",
-      "reviewedAtUtc": "2026-09-13T02:07:32.1869742Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:49:57.0710818Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -67,14 +75,18 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "92ce499a9e88ba0d7ad6374aad19855a970ab4d99d583e1dee31d2bc95db2191"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "b92839eb8b262147ebd92090ed5ea2efef7c47e69db50d5d1d854c466b7fa0d8"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "2ca430104010e833b36dc396845a8073c752edd4dba7cd5d8ebd6d986b5d481c"
         }
       ],
-      "reason": "Thirteen declarations preserve identical namespaces signatures and DTO fields. No controllers routes status codes or wire models changed; coordinated host rebuild is required.",
+      "reason": "Cycle repository projection and split queries are unchanged; seven HTTP and Swagger checks passed without snapshot edits.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:36:48.3852925Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:49:57.2510403Z"
     },
     {
       "pageId": "system.architecture",
@@ -82,14 +94,22 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "673b430eb397e538c2919d065e686fa82482c2ebbce638b135c53bca267f103d"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "b92839eb8b262147ebd92090ed5ea2efef7c47e69db50d5d1d854c466b7fa0d8"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "90a7218c6a9d6f8590f87fb101e01f33b2c3af342b0795af7a26f8eef71ac900"
+          "sha256": "5820aa058e10f0219822b327819faa7ea53b6d92ca493a7616b77763ddc8a504"
         }
       ],
-      "reason": "Owner guides and backend ownership map describe the four narrow consumer boundaries; source paths verified against relocated files.",
+      "reason": "ADR 0040 records Cycles as fourth runtime owner and preserves central migration/read/purge bridges. RecentItems and Wearables require separate transaction-entry analysis.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:36:49.4150428Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:49:57.4583265Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -127,14 +147,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
+          "path": "docs/adr/README.md",
+          "sha256": "493e7e63e4a7a84baafa2919a914a590d5c0a7c2186376d42a61faf305e1f741"
         }
       ],
-      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
+      "reason": "ADR 0040 and Hydration Infrastructure guidance describe the runtime context, shared transaction coordinator, retained migration model and purge/read bridges.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:49.3899012Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T04:32:33.0800346Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -210,18 +230,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e5cefe6d3004e30aab8d5f2f38691c4a6c1179dedff640a1624eceda57890b5e"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "90a7218c6a9d6f8590f87fb101e01f33b2c3af342b0795af7a26f8eef71ac900"
+          "sha256": "5820aa058e10f0219822b327819faa7ea53b6d92ca493a7616b77763ddc8a504"
         }
       ],
-      "reason": "Full build passed. Contract closure and assembly ownership guards updated; focused PostgreSQL tests passed.",
+      "reason": "Added eight-entity model and shared PostgreSQL tracking/projection/cascade/rollback tests; three passed. Full build is clean; focused architecture and existing owner suites cover the remaining boundary. Other session changes remain outside implementation scope.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:49.6944617Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:49:57.6481712Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +246,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8aa1cf543cfe2a2064ecffb5268f6b85d3d5de61409519a613219884b2f2fab6"
+          "sha256": "3ffe31c5fb348340b5d62b40a3b1a5aa571f89d08d694e18b9e7a75c8ccd1f3b"
         }
       ],
-      "reason": "Thirteen declarations moved without wire changes; current source consumers and immutable DTOs verified.",
+      "reason": "Generated backend index reflects the new runtime owner; no public request or response changes. Seven HTTP and Swagger checks passed without snapshot updates.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:46:18.4357735Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:52:28.7257655Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -456,13 +472,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "08826a4d05b9e60e9e80b4c182c3a48b24c5c844aedb291383b1b2c32a7c8113"
+          "sha256": "493e7e63e4a7a84baafa2919a914a590d5c0a7c2186376d42a61faf305e1f741"
         }
       ],
-      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
+      "reason": "ADR 0040 and Hydration Infrastructure guidance describe the runtime context, shared transaction coordinator, retained migration model and purge/read bridges.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:23.6516672Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T04:32:34.8318422Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -500,14 +516,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "0c634fd2c02276ba144a27e9895c084ff30a35b7ab82024f4ce71b9128ff8f7c"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "2ca430104010e833b36dc396845a8073c752edd4dba7cd5d8ebd6d986b5d481c"
         }
       ],
-      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
+      "reason": "Added eight-entity model and shared PostgreSQL tracking/projection/cascade/rollback tests; three passed. Full build is clean; focused architecture and existing owner suites cover the remaining boundary. Other session changes remain outside implementation scope.",
       "baseRef": "HEAD",
-      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
-      "reviewedAtUtc": "2026-09-13T01:27:36.9525706Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:49:57.8924710Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -820,13 +836,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2c5e6c82e97e3aacc466243d825c25c0629d068c79df2123a77f4f78268cb77e"
+          "sha256": "a4773eb59f27815b7097178f5d3d3092153688e44a823e7f70ef339135a2cd19"
         }
       ],
-      "reason": "Full build passed. Contract closure and assembly ownership guards updated; focused PostgreSQL tests passed.",
+      "reason": "Generated quality and symbol indexes refreshed after adding the Cycles context and focused tests. 329 target cases and full build passed; workflow checks remain applicable and no exceptions were broadened.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:52.4846676Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:52:29.1756850Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +911,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "86d26023e36626cb2acd7b65c29998a8d0a2be586c496f0d03d06799c6f74a74"
+          "sha256": "03f0e280327c548ad0220fb6cd601c9c3d65d89a17df45c418e323d963017f51"
         }
       ],
-      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
+      "reason": "Generated catalog and runtime indexes now include CyclesDbContext. Existing navigation and runtime-impact workflows remain applicable; deployment, hosts and central migration ownership unchanged under ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:53.9048258Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:52:29.9186144Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,21 +926,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2c5e6c82e97e3aacc466243d825c25c0629d068c79df2123a77f4f78268cb77e"
+          "sha256": "a4773eb59f27815b7097178f5d3d3092153688e44a823e7f70ef339135a2cd19"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "86d26023e36626cb2acd7b65c29998a8d0a2be586c496f0d03d06799c6f74a74"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a7360d1ae1b2920594ef7931c9729c851a7c3136f68b671e24ee58eeeedb335e"
+          "sha256": "03f0e280327c548ad0220fb6cd601c9c3d65d89a17df45c418e323d963017f51"
         }
       ],
-      "reason": "Relationship authorization permission checks post-commit usage recording and user-scoped source reads remain unchanged.",
+      "reason": "New context contains only Cycles-owned health entities. Existing user predicates and consent lifecycle remain; PostgreSQL tests verify isolation and cascade. No new external data boundary or logging.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:54.7384530Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:52:30.5135656Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1170,17 +1182,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c7cd36399c798f3fcd9d342cd11d83d07a772e50e295ef2ce2b1da3ddcd661da"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "70d8ebd49d1d7eab452a0828fecc234b76e3c234280e076511d8a9d68c5459db"
+          "sha256": "7f584c7f7801320e0b3d73ab595475e7f2ba050895ff09bb10fb597016d192dd"
         }
       ],
-      "reason": "Owner Contracts guides and backend ownership map verified against current files.",
+      "reason": "Generated catalog and runtime indexes now include CyclesDbContext. Existing navigation and runtime-impact workflows remain applicable; deployment, hosts and central migration ownership unchanged under ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "0b5a4e603c3d0e6c506767e3c089f97d5b2cb29b",
-      "reviewedAtUtc": "2026-09-13T03:40:52.9357362Z"
+      "gitHead": "cdb33554104b69d71215ee099f3323fae506131c",
+      "reviewedAtUtc": "2026-09-13T05:52:29.5522582Z"
     },
     {
       "pageId": "workflow.review-diff",

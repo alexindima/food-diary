@@ -214,6 +214,18 @@
       ],
       "reason": "Options validation calls the Billing-owned provider-name catalog and has no database access."
     },
+    "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs": {
+      "module": "BodyMetrics",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:WaistEntry",
+        "entity:WeightEntry",
+        "tracked:WaistEntry",
+        "tracked:WeightEntry"
+      ],
+      "reason": "BodyMetrics registration supplies only owned sets from its runtime context. The shared factory preserves connection and coordinated UoW saves; central migration/read/purge bridges remain. See ADR 0040.",
+      "technicalSourceSha256": "a1b8851a857408f9520a0ed17817603a1499fc6290a15700c732069031610d68"
+    },
     "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs": {
       "module": "BodyMetrics",
       "capabilities": [
@@ -233,7 +245,7 @@
         "tracked:WaistEntry",
         "write:WaistEntry"
       ],
-      "reason": "BodyMetrics-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "BodyMetrics repository persists only its injected owned DbSet. Runtime DI supplies BodyMetricsDbContext; caller IUnitOfWork retains SaveChanges and commit."
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs": {
       "module": "BodyMetrics",
@@ -242,7 +254,7 @@
         "tracked:WeightEntry",
         "write:WeightEntry"
       ],
-      "reason": "BodyMetrics-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "BodyMetrics repository persists only its injected owned DbSet. Runtime DI supplies BodyMetricsDbContext; caller IUnitOfWork retains SaveChanges and commit."
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs": {
       "module": "ContentReports",
@@ -254,6 +266,16 @@
         "write:ContentReport"
       ],
       "reason": "ContentReports owns report writes; Recipe and RecipeComment supply moderation target projections."
+    },
+    "Modules/Cycles/Infrastructure/ModuleRegistration.cs": {
+      "module": "Cycles",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:CycleProfile",
+        "tracked:CycleProfile"
+      ],
+      "reason": "Cycles DI supplies its aggregate root set from its eight-entity owned runtime model, using shared connection and UoW coordination. Central migrations/read/purge remain. ADR 0040.",
+      "technicalSourceSha256": "5c180f90f3f9b63ed2fb0adb6b6eae7310c7c2eba457f83f978942700613bf2b"
     },
     "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs": {
       "module": "Cycles",
@@ -388,6 +410,16 @@
         "write:RecommendationTemplate"
       ],
       "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Exercises/Infrastructure/ModuleRegistration.cs": {
+      "module": "Exercises",
+      "capabilities": [
+        "context:CreateModuleContext",
+        "entity:ExerciseEntry",
+        "tracked:ExerciseEntry"
+      ],
+      "reason": "Exercises registration supplies the owned runtime DbSet through the shared connection factory. IUnitOfWork owns atomic saves; tracked updates and central migration/read/purge bridges remain. ADR 0040.",
+      "technicalSourceSha256": "f638534262844e29d29d0c82fbeb33ae1ce39b8ad4cf5b6770333022ca42a6d7"
     },
     "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs": {
       "module": "Exercises",
@@ -542,12 +574,14 @@
     "Modules/Hydration/Infrastructure/ModuleRegistration.cs": {
       "module": "Hydration",
       "capabilities": [
+        "context:CreateModuleContext",
         "entity:HydrationEntry",
         "entity:HydrationOperationReceipt",
         "tracked:HydrationEntry",
         "tracked:HydrationOperationReceipt"
       ],
-      "reason": "Hydration composition obtains only its entry and operation receipt sets from the shared scoped context and passes each narrow set to its repository."
+      "reason": "Hydration composition creates its owned runtime context through the shared provider/connection factory. Only its two owned sets reach repositories; IUnitOfWork coordinates transactions and saves. Central purge remains a separate reviewed bridge; see ADR 0040.",
+      "technicalSourceSha256": "d82a1bd156b63d81347f200883bda9ae72fbd0f402ab878e32607691effb8758"
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs": {
       "module": "Hydration",

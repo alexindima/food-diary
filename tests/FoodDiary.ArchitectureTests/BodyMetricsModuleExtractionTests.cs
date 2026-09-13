@@ -2,6 +2,20 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BodyMetricsModuleExtractionTests {
+    [Fact]
+    public void RuntimeRepositoriesReceiveOnlyOwnedSetsFromModuleContext() {
+        string registration = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs"));
+        Assert.Contains("CreateModuleContext<BodyMetricsDbContext>", registration, StringComparison.Ordinal);
+        foreach (string kind in new[] { "Weight", "Waist" }) {
+            string repository = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+                $"Modules/BodyMetrics/Infrastructure/Persistence/{kind}EntryRepository.cs"));
+            Assert.Contains($"DbSet<{kind}Entry> entries", repository, StringComparison.Ordinal);
+            Assert.DoesNotContain("FoodDiaryDbContext", repository, StringComparison.Ordinal);
+            Assert.Contains($"GetRequiredService<BodyMetricsDbContext>().{kind}Entries", registration, StringComparison.Ordinal);
+        }
+    }
+
     [Theory]
     [InlineData("WeightEntries")]
     [InlineData("WaistEntries")]

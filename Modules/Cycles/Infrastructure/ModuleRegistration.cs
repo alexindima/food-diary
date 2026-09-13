@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Cycles;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +12,10 @@ public static class ModuleRegistration {
     public static IServiceCollection AddCyclesModule(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, CyclesUserDataPurgeParticipant>());
         services.AddCyclesApplication();
-        services.AddScoped<ICycleRepository, CycleRepository>();
+        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+            .CreateModuleContext<CyclesDbContext>(static options => new CyclesDbContext(options)));
+        services.AddScoped<ICycleRepository>(static provider => new CycleRepository(
+            provider.GetRequiredService<CyclesDbContext>().CycleProfiles));
         services.AddScoped<ICycleReadRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<ICycleReadModelRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<ICycleWriteRepository>(static provider => provider.GetRequiredService<ICycleRepository>());

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4018,
-    "symbols": 3959,
+    "sourceFiles": 4024,
+    "symbols": 3965,
     "interfaceImplementationLinks": 269,
     "dependencyInjectionRegistrations": 162,
     "kinds": {
-      "class": 2062,
+      "class": 2068,
       "enum": 64,
       "interface": 475,
       "record": 1237,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1607,
+      "Other": 1613,
       "Query": 193,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -745,7 +745,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "EmailOutbox",
@@ -830,6 +830,13 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Meals.cs",
       "line": 8
+    },
+    {
+      "name": "FoodDiaryDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Modules.cs",
+      "line": 6
     },
     {
       "name": "FoodDiaryDbContext",
@@ -942,6 +949,13 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
       "line": 4
+    },
+    {
+      "name": "ModuleContextSaveCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/ModuleContextSaveCoordinator.cs",
+      "line": 7
     },
     {
       "name": "SharedTransactionBoundary",
@@ -6800,7 +6814,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 11
+    },
+    {
+      "name": "BodyMetricsDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs",
+      "line": 5
     },
     {
       "name": "BodyMetricsUserDataPurgeParticipant",
@@ -6814,14 +6835,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "WeightEntryRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "WaistEntryHttpResponse",
@@ -7990,14 +8011,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "CycleRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
-      "line": 10
+      "line": 9
+    },
+    {
+      "name": "CyclesDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Infrastructure/Persistence/CyclesDbContext.cs",
+      "line": 5
     },
     {
       "name": "CyclesUserDataPurgeParticipant",
@@ -10643,14 +10671,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Exercises/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ExerciseEntryRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
-      "line": 9
+      "line": 8
+    },
+    {
+      "name": "ExercisesDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Infrastructure/Persistence/ExercisesDbContext.cs",
+      "line": 6
     },
     {
       "name": "ExercisesPresentationServiceCollectionExtensions",
@@ -13486,6 +13521,13 @@
       "role": "Other",
       "path": "Modules/Hydration/Infrastructure/ModuleRegistration.cs",
       "line": 10
+    },
+    {
+      "name": "HydrationDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationDbContext.cs",
+      "line": 5
     },
     {
       "name": "HydrationEntryRepository",

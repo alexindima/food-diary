@@ -8,6 +8,7 @@ Rules for `FoodDiary.Infrastructure/`.
 - Implement abstractions declared in upper layers.
 
 ## Data Access
+- Hydration is the runtime-context pilot (ADR 0040). Central migration mappings remain unchanged. ModuleContextSaveCoordinator owns multi-context saves, common connection/transaction, savepoints and execution-strategy retries; repositories never commit independently. Direct central SaveChanges rejects pending module changes. Include registered module trackers in transaction-entry guards and reset; preserve command telemetry and post-commit ordering.
 - Keep the shared `DbContext`, migrations and model snapshot here. Module-owned entity configurations live in their PersistenceModel projects and are applied explicitly by the shared context. Shared audit, email-outbox, and replay-audit records/configurations live in their narrow Shared PersistenceModel projects; the central context applies them explicitly while the generic processing engines remain here.
 - Use Fluent API for mapping and constraints.
 - Keep migrations in this project.
@@ -180,3 +181,9 @@ Products extends the scalar persistence boundary to twenty-three models. Its thr
 Recipes and Meals extend scalar persistence protection to twenty-five models. Their ten foreign FKs live in RecipesCrossModuleRelationships and MealsCrossModuleRelationships; all optionality and delete policies remain unchanged, including four image ClientNoAction mappings. Owned nested Recipe Restrict and Meal/Ai cascades stay local. Recognition receipts retain their User Cascade FK and deliberately have no Meal FK. The models consume direct ID contracts; existing central Domain references suffice. No module PersistenceModel retains a foreign Domain project reference.
 
 ADR 0038: reviewed cross-module SQL read implementations now live in FoodDiary.ReadModel.Composition, registered explicitly by hosts. Module writes and existing repository aliases stay here; modules never reference the composition assembly. Shared DbContext capabilities remain inventoried. See docs/adr/0038-read-model-composition.md.
+
+BodyMetrics is the second module with an owned runtime context (ADR 0040). Weight and waist repositories use only its owned sets; Users retains goals. Shared UoW coordinates central, Hydration and BodyMetrics contexts; central migration/read/purge mappings remain.
+
+Exercises extends the owned runtime contexts to three modules (ADR 0040), sharing the same scoped connection and UoW. Central migration/read/purge mappings remain.
+
+Cycles is the fourth runtime-context owner (ADR 0040). Its profile and seven child mappings share the existing UoW; central migration/read/purge bridges remain unchanged.

@@ -727,7 +727,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         (WeightEntry weight, WaistEntry waist) = await CoverBodyMetricRepositoriesAsync(context, user.Id, today);
 
-        var exerciseRepository = new ExerciseEntryRepository(context);
+        var exerciseRepository = new ExerciseEntryRepository(context.ExerciseEntries);
         ExerciseEntry exercise = await exerciseRepository.AddAsync(ExerciseEntry.Create(user.Id, today, ExerciseType.Cardio, 45, 300, "Run", "Easy"));
         await context.SaveChangesAsync();
         exercise.Update(caloriesBurned: 320, clearNotes: true);
@@ -745,8 +745,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Equal(0, await exerciseRepository.GetTotalCaloriesBurnedAsync(user.Id, today.AddDays(1)));
 
         await hydrationRepository.DeleteAsync(hydration);
-        await new WeightEntryRepository(context).DeleteAsync(weight);
-        await new WaistEntryRepository(context).DeleteAsync(waist);
+        await new WeightEntryRepository(context.WeightEntries).DeleteAsync(weight);
+        await new WaistEntryRepository(context.WaistEntries).DeleteAsync(waist);
         await exerciseRepository.DeleteAsync(exercise);
         await context.SaveChangesAsync();
     }
@@ -755,7 +755,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId userId,
         DateTime today) {
-        var weightRepository = new WeightEntryRepository(context);
+        var weightRepository = new WeightEntryRepository(context.WeightEntries);
         WeightEntry weight = await weightRepository.AddAsync(WeightEntry.Create(userId, today, 80));
         await context.SaveChangesAsync();
         weight.Update(79.5, today.AddDays(-1));
@@ -770,7 +770,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Single(await weightRepository.GetByPeriodAsync(userId, today.AddDays(-2), today));
         Assert.Single(await weightRepository.GetByPeriodReadModelsAsync(userId, today.AddDays(-2), today));
 
-        var waistRepository = new WaistEntryRepository(context);
+        var waistRepository = new WaistEntryRepository(context.WaistEntries);
         WaistEntry waist = await waistRepository.AddAsync(WaistEntry.Create(userId, today, 90));
         await context.SaveChangesAsync();
         waist.Update(89.5, today.AddDays(-1));

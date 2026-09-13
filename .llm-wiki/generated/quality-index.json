@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5306,
+    "productionFiles": 5312,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -3266,11 +3266,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
+      "nonBlankLines": 30,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 5.1
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutbox.cs",
@@ -3361,6 +3361,14 @@
       "structuralRiskScore": 0.38
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Modules.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.34
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
@@ -3410,11 +3418,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatchInterceptor.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 2,
+      "nonBlankLines": 33,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.6
+      "structuralRiskScore": 6.66
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatcher.cs",
@@ -3497,12 +3505,20 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 6,
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/ModuleContextSaveCoordinator.cs",
+      "nonBlankLines": 75,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.82
+      "structuralRiskScore": 16.5
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.9
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -18922,11 +18938,19 @@
     },
     {
       "path": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.56
+    },
+    {
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
@@ -18938,19 +18962,19 @@
     },
     {
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
-      "nonBlankLines": 127,
+      "nonBlankLines": 126,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.54
+      "structuralRiskScore": 20.52
     },
     {
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
-      "nonBlankLines": 127,
+      "nonBlankLines": 126,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.54
+      "structuralRiskScore": 20.52
     },
     {
       "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs",
@@ -20298,19 +20322,27 @@
     },
     {
       "path": "Modules/Cycles/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
-      "nonBlankLines": 127,
+      "nonBlankLines": 126,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.54
+      "structuralRiskScore": 5.52
+    },
+    {
+      "path": "Modules/Cycles/Infrastructure/Persistence/CyclesDbContext.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs",
@@ -23378,19 +23410,27 @@
     },
     {
       "path": "Modules/Exercises/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
-      "nonBlankLines": 70,
+      "nonBlankLines": 69,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.4
+      "structuralRiskScore": 10.38
+    },
+    {
+      "path": "Modules/Exercises/Infrastructure/Persistence/ExercisesDbContext.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Exercises/Presentation/Extensions/ExercisesPresentationServiceCollectionExtensions.cs",
@@ -26690,11 +26730,19 @@
     },
     {
       "path": "Modules/Hydration/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.5
+    },
+    {
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationDbContext.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
@@ -36058,11 +36106,11 @@
     },
     {
       "path": "Modules/Statistics/Application/Common/LocalStatisticsCalendar.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 42,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.74
+      "structuralRiskScore": 9.84
     },
     {
       "path": "Modules/Statistics/Application/Common/LocalStatisticsDay.cs",
@@ -36130,11 +36178,11 @@
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetDiaryStatistics/GetDiaryStatisticsQueryHandler.cs",
-      "nonBlankLines": 62,
+      "nonBlankLines": 65,
       "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.74
+      "structuralRiskScore": 19.8
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQuery.cs",
@@ -37378,11 +37426,11 @@
     },
     {
       "path": "Modules/Users/Application/Common/UserTimeZoneInput.cs",
-      "nonBlankLines": 19,
+      "nonBlankLines": 20,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.38
+      "structuralRiskScore": 9.4
     },
     {
       "path": "Modules/Users/Application/DependencyInjection.cs",

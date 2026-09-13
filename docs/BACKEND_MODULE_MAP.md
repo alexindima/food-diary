@@ -1,5 +1,12 @@
 # Backend Module Map
 
+## Hydration runtime persistence pilot
+
+Hydration Infrastructure owns HydrationDbContext and its two-entity runtime model.
+Repositories receive owned sets from this context. Central IUnitOfWork coordinates
+atomic saves with the shared context; central migrations, composed reads and purge
+remain explicit bridges. See [ADR 0040](adr/0040-hydration-runtime-context-pilot.md).
+
 ## Composed SQL reads
 
 `FoodDiary.ReadModel.Composition` implements the reviewed Admin reporting,
@@ -359,3 +366,11 @@ services and immutable results. Products/Recipes/Cycles error factories live in
 existing Contracts; image cleanup and ownership capabilities live in existing
 Images.Service.Contracts. Internal repository/provider ports remain in owner
 Abstractions. See [the boundary extraction](ai/remaining-consumer-boundaries.md).
+
+BodyMetrics is the second module with an owned runtime context (ADR 0040). Weight and waist repositories use only its owned sets; Users retains goals. Shared UoW coordinates central, Hydration and BodyMetrics contexts; central migration/read/purge mappings remain.
+
+BodyMetrics is the second module with an owned runtime context (ADR 0040). Weight and waist repositories use only its owned sets; Users retains goals. Shared UoW coordinates central, Hydration and BodyMetrics contexts; central migration/read/purge mappings remain.
+
+Exercises extends the owned runtime contexts to three modules (ADR 0040), sharing the same scoped connection and UoW. Central migration/read/purge mappings remain.
+
+Cycles is the fourth runtime-context owner (ADR 0040). Its profile and seven child mappings share the existing UoW; central migration/read/purge bridges remain unchanged.

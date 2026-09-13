@@ -3,12 +3,11 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Cycles.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using System.Linq.Expressions;
 
 namespace FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 
-public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
+public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleRepository {
     private static readonly Expression<Func<CycleProfile, CycleProfileReadModel>> ReadModelProjection = profile =>
         new CycleProfileReadModel(
             profile.Id.Value,
@@ -61,17 +60,17 @@ public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleReposito
                     revision.AlgorithmVersion)).ToList());
 
     public async Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
-        await context.CycleProfiles.AddAsync(profile, cancellationToken).ConfigureAwait(false);
+        await profiles.AddAsync(profile, cancellationToken).ConfigureAwait(false);
         return profile;
     }
 
     public async Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
-        context.CycleProfiles.Update(profile);
+        profiles.Update(profile);
         await Task.CompletedTask.ConfigureAwait(false);
     }
 
     public Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
-        context.CycleProfiles.Remove(profile);
+        profiles.Remove(profile);
         return Task.CompletedTask;
     }
 
@@ -101,7 +100,7 @@ public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleReposito
     public async Task<CycleProfileReadModel?> GetCurrentReadModelAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return await context.CycleProfiles
+        return await profiles
             .AsNoTracking().AsSplitQuery()
             .Where(profile => profile.UserId == userId)
             .OrderByDescending(profile => profile.CreatedOnUtc).ThenByDescending(profile => profile.Id)
@@ -122,8 +121,8 @@ public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleReposito
 
     private IQueryable<CycleProfile> BuildQuery(bool includeDetails, bool asTracking) {
         IQueryable<CycleProfile> query = asTracking
-            ? context.CycleProfiles.AsQueryable()
-            : context.CycleProfiles.AsNoTracking();
+            ? profiles.AsQueryable()
+            : profiles.AsNoTracking();
 
         if (includeDetails) {
             query = query

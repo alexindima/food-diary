@@ -14,6 +14,7 @@ Rules for `Modules/BodyMetrics/`.
 - Keep `WeightEntry`, `WaistEntry`, and their IDs in module-owned `Domain` with their legacy CLR namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse measurement navigations.
 - Keep `WeightGoal`, `WaistGoal`, their IDs and lifecycle/status behavior, and the public goal navigations in Users Domain as User-owned responsibilities.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
+- Runtime measurement repositories use BodyMetricsDbContext, sharing the scoped connection and atomic IUnitOfWork with Hydration and central Infrastructure (ADR 0040). Central mappings remain for migration, composed reads and purge; goals remain Users-owned.
 - Register application and persistence through Infrastructure's `AddBodyMetricsModule` facade.
 - Treat body measurements as private health data: preserve current-user authorization and user-scoped repository predicates.
 

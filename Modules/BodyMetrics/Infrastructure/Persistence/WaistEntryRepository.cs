@@ -2,24 +2,23 @@ using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 
-public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepository {
+public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntryRepository {
     public async Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
-        await context.WaistEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
     public Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
-        context.WaistEntries.Update(entry);
+        entries.Update(entry);
         return Task.CompletedTask;
     }
 
     public Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
-        context.WaistEntries.Remove(entry);
+        entries.Remove(entry);
         return Task.CompletedTask;
     }
 
@@ -29,8 +28,8 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
         IQueryable<WaistEntry> query = asTracking
-            ? context.WaistEntries.AsQueryable()
-            : context.WaistEntries.AsNoTracking();
+            ? entries.AsQueryable()
+            : entries.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(
             entry => entry.Id == id && entry.UserId == userId,
@@ -42,7 +41,7 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
         DateTime date,
         CancellationToken cancellationToken = default) {
         DateTime normalizedDate = date.Date;
-        return await context.WaistEntries
+        return await entries
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 entry => entry.UserId == userId && entry.Date == normalizedDate,
@@ -56,7 +55,7 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
         int? limit,
         bool descending,
         CancellationToken cancellationToken = default) {
-        IQueryable<WaistEntry> query = context.WaistEntries
+        IQueryable<WaistEntry> query = entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId);
 
@@ -88,7 +87,7 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
         int? limit,
         bool descending,
         CancellationToken cancellationToken = default) {
-        IQueryable<WaistEntry> query = context.WaistEntries
+        IQueryable<WaistEntry> query = entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId);
 
@@ -123,7 +122,7 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
         var from = DateTime.SpecifyKind(dateFrom, DateTimeKind.Utc);
         var to = DateTime.SpecifyKind(dateTo, DateTimeKind.Utc);
 
-        return await context.WaistEntries
+        return await entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)
@@ -139,7 +138,7 @@ public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEnt
         var from = DateTime.SpecifyKind(dateFrom, DateTimeKind.Utc);
         var to = DateTime.SpecifyKind(dateTo, DateTimeKind.Utc);
 
-        return await context.WaistEntries
+        return await entries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)

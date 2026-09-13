@@ -2,6 +2,16 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ExercisesModuleExtractionTests {
+    [Fact]
+    public void RuntimeRepositoryReceivesOnlyItsOwnedSet() {
+        string registration = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Exercises/Infrastructure/ModuleRegistration.cs"));
+        string repository = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs"));
+        Assert.Contains("CreateModuleContext<ExercisesDbContext>", registration, StringComparison.Ordinal);
+        Assert.Contains("GetRequiredService<ExercisesDbContext>().ExerciseEntries", registration, StringComparison.Ordinal);
+        Assert.Contains("DbSet<ExerciseEntry> entries", repository, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", repository, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("Entities/Tracking/ExerciseEntry.cs")]
     [InlineData("Enums/ExerciseType.cs")]
