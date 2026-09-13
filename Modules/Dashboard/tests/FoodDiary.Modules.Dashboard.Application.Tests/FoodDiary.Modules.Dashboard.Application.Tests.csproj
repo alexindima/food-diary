@@ -18,6 +18,9 @@
     <Using Include="FoodDiary.Application.Tests.Support" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Application/FoodDiary.Modules.Dashboard.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
@@ -32,6 +35,7 @@
     <ProjectReference Include="../../../Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../../Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

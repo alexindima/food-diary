@@ -5759,6 +5759,104 @@
     },
     {
       "category": "health",
+      "name": "MondayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "TuesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "WednesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "ThursdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "FridayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "SaturdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "MondayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "TuesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "WednesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 28
+    },
+    {
+      "category": "health",
+      "name": "ThursdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "FridayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "SaturdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 31
+    },
+    {
+      "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 32
+    },
+    {
+      "category": "health",
       "name": "TargetWaistCm",
       "type": "double",
       "path": "Modules/Users/Domain/Entities/Tracking/WaistGoal.cs",
@@ -6043,104 +6141,6 @@
       "type": "double?",
       "path": "Modules/Users/Domain/ValueObjects/UserActivityGoals.cs",
       "line": 8
-    },
-    {
-      "category": "health",
-      "name": "MondayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "TuesdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "WednesdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "ThursdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "FridayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "SaturdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "SundayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "MondayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 26
-    },
-    {
-      "category": "health",
-      "name": "TuesdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 27
-    },
-    {
-      "category": "health",
-      "name": "WednesdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 28
-    },
-    {
-      "category": "health",
-      "name": "ThursdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 29
-    },
-    {
-      "category": "health",
-      "name": "FridayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 30
-    },
-    {
-      "category": "health",
-      "name": "SaturdayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 31
-    },
-    {
-      "category": "health",
-      "name": "SundayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 32
     },
     {
       "category": "health",

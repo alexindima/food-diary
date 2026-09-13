@@ -7,8 +7,8 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ConsumerAggregateContractTests {
     [Theory]
-    [InlineData("Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs")]
-    [InlineData("Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs")]
+    [InlineData("Modules/Notifications/Contracts/Common/INotificationWriter.cs")]
+    [InlineData("Modules/Notifications/Contracts/Common/NotificationRequest.cs")]
     [InlineData("Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs")]
     [InlineData("Modules/Lessons/Contracts/Models/LessonAdminReadModel.cs")]
     [InlineData("Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs")]

@@ -16,6 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
@@ -55,6 +61,7 @@
     <ProjectReference Include="../../Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
     <ProjectReference Include="../../Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
@@ -77,12 +84,4 @@
     <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="FoodDiary.Application.Tests.Support" />
-    <Using Include="NSubstitute" />
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-
 </Project>

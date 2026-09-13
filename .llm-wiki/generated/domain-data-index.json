@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 230,
+    "domainTypes": 225,
     "entities": 86,
-    "valueObjects": 96,
-    "invariants": 517,
+    "valueObjects": 93,
+    "invariants": 514,
     "persistenceMappings": 91,
     "indexes": 167,
     "relationships": 35
@@ -782,20 +782,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "LessonCategory",
-      "role": "enum",
-      "path": "Modules/Lessons/Domain/Enums/LessonCategory.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "LessonDifficulty",
-      "role": "enum",
-      "path": "Modules/Lessons/Domain/Enums/LessonDifficulty.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
       "name": "RecentItemType",
       "role": "enum",
       "path": "Modules/RecentItems/Domain/Enums/RecentItemType.cs",
@@ -1111,13 +1097,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "NutritionLessonId",
-      "role": "value-object",
-      "path": "Modules/Lessons/Domain/ValueObjects/Ids/NutritionLessonId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
       "name": "ProductIdentityState",
       "role": "value-object",
       "path": "Modules/Products/Domain/ValueObjects/ProductIdentityState.cs",
@@ -1377,13 +1356,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "UserCalorieSchedule",
-      "role": "value-object",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
       "name": "UserGoalState",
       "role": "value-object",
       "path": "Modules/Users/Domain/ValueObjects/UserGoalState.cs",
@@ -1429,13 +1401,6 @@
       "name": "UserPreferenceState",
       "role": "value-object",
       "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "UserPreferenceUpdate",
-      "role": "value-object",
-      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceUpdate.cs",
       "line": 2
     },
     {
@@ -4918,27 +4883,6 @@
       "message": "throw new ArgumentOutOfRangeException(nameof(outputLimit), \"Output limit must be non-negative.\")",
       "path": "Modules/Users/Domain/ValueObjects/UserAiQuotaState.cs",
       "line": 29
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 84
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 92
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\")",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 96
     },
     {
       "area": "FoodDiary",

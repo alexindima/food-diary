@@ -29649,6 +29649,30 @@
       "structuralRiskScore": 0.34
     },
     {
+      "path": "Modules/Lessons/Domain.Contracts/Enums/LessonCategory.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Lessons/Domain.Contracts/Enums/LessonDifficulty.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Lessons/Domain.Contracts/ValueObjects/Ids/NutritionLessonId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
       "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
       "nonBlankLines": 13,
       "decisionPoints": 1,
@@ -29671,30 +29695,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.54
-    },
-    {
-      "path": "Modules/Lessons/Domain/Enums/LessonCategory.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "Modules/Lessons/Domain/Enums/LessonDifficulty.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Lessons/Domain/ValueObjects/Ids/NutritionLessonId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Lessons/Domain/ValueObjects/Ids/UserLessonProgressId.cs",
@@ -32369,60 +32369,12 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationDecisionNotificationPayload.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationReceivedNotificationPayload.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/EmptyNotificationPayload.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/FastingPhaseNotificationPayload.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
       "path": "Modules/Notifications/Application/Abstractions/Common/INotificationCleanupService.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Notifications/Application/Abstractions/Common/INotificationLookupRepository.cs",
@@ -32505,14 +32457,6 @@
       "structuralRiskScore": 0.34
     },
     {
-      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
       "path": "Modules/Notifications/Application/Abstractions/Common/ITestNotificationDeliveryDispatcher.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -32577,14 +32521,6 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Notifications/Application/Abstractions/Common/NewRecommendationNotificationPayload.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
       "path": "Modules/Notifications/Application/Abstractions/Common/NotificationCleanupPolicy.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -32601,30 +32537,6 @@
       "structuralRiskScore": 1.7
     },
     {
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationPayloadSerializer.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.44
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationPayloads.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
       "path": "Modules/Notifications/Application/Abstractions/Common/NotificationTargetUrlResolver.cs",
       "nonBlankLines": 37,
       "decisionPoints": 3,
@@ -32639,14 +32551,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationTypes.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Notifications/Application/Abstractions/Common/ScheduledNotificationData.cs",
@@ -33151,6 +33055,102 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.94
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/DietologistInvitationDecisionNotificationPayload.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/DietologistInvitationReceivedNotificationPayload.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/EmptyNotificationPayload.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/FastingPhaseNotificationPayload.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/INotificationWriter.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/NewRecommendationNotificationPayload.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/NotificationPayloadSerializer.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.44
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/NotificationPayloads.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/NotificationRequest.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Notifications/Contracts/Common/NotificationTypes.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
@@ -38225,6 +38225,22 @@
       "structuralRiskScore": 5.14
     },
     {
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "nonBlankLines": 88,
+      "decisionPoints": 25,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 39.26
+    },
+    {
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserPreferenceUpdate.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
       "path": "Modules/Users/Domain/AssemblyInfo.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -38505,14 +38521,6 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "nonBlankLines": 88,
-      "decisionPoints": 25,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.26
-    },
-    {
       "path": "Modules/Users/Domain/ValueObjects/UserGoalState.cs",
       "nonBlankLines": 30,
       "decisionPoints": 0,
@@ -38559,14 +38567,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.5
-    },
-    {
-      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceUpdate.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/UserProfileMediaState.cs",

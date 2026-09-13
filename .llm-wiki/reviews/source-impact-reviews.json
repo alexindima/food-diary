@@ -19,25 +19,21 @@
     {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
-      "pageSha256": "eaac3733a7811ffabb1a5249aafa3cb7f3f6e9f476b14ad0d231f371c4653e9d",
+      "pageSha256": "9c01fe47f4b5fa3e54660264f85298c296ef71132195c7a88bb9161932e01478",
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ec5abe7ad204c797e98244be8b5a44abbb6910915905887b3c60369719679598"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "b7e6fef0e857346fa08bce1991b32ed524f3d8bfffe668c994728bf06c501c1b"
+          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
+          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:48.3226337Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:30.1356055Z"
     },
     {
       "pageId": "module.frontend",
@@ -60,76 +56,48 @@
       "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "8b7aff516d70b0629c1398c9c4b87c5a32590381d11c2ab7c9e321a814fb7b73"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "589138e41fdd5558e3f60cd75e8dab7702b7e3ac66976be722fa6e7e6aa69512"
+          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
         }
       ],
-      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
+      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:22.0110716Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:30.8626207Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "7f0552d1eb7f6521ba9095db702a5d390ab7278fa2328cff28f871a234722d75",
+      "pageSha256": "c8ccde28549c30413011482a87e08a943232a2c4c22fd9bf6a2d34603955e1e4",
       "sources": [
         {
-          "path": "docs/adr/0038-read-model-composition.md",
-          "sha256": "d69560ec4ae976156043ac8d9cccfabc85b3c6d352c3128e3a417630dde72a0d"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "7047164191fd33c861f5d074bd3e513249066f8644a7de6252c5522435a32882"
-        },
-        {
-          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "cbfe4747c03b61e4a8d3d0219833b33040485863ad40d0a3b7dd321348648d91"
-        },
-        {
-          "path": "Modules/Admin/Infrastructure/AGENTS.md",
-          "sha256": "bc1771ea7346fd08ea42d82c6b888d6539c4ebd957a8820cc975c4bbd906a5d1"
+          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed relocated values and notification capabilities: namespaces, signatures and serialized shapes are preserved; all 15 Swagger snapshot tests pass. Backend consumer-review procedure remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:48.7236105Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:31.4581108Z"
     },
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "cd25d1c6e5c08ab71f8202c4e2269172b397ee34aa2b02c0a2a7462461fccace",
+      "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
-          "path": "docs/adr/0038-read-model-composition.md",
-          "sha256": "d69560ec4ae976156043ac8d9cccfabc85b3c6d352c3128e3a417630dde72a0d"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "b7e6fef0e857346fa08bce1991b32ed524f3d8bfffe668c994728bf06c501c1b"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3bc0109002afdeadab7a8adfff3ee8b518837048a5bb4821ac189c358f683e3b"
+          "sha256": "ac2041a7b210871b92a91b775fcb8258402f6ddbc0331d0304c64726d1f24ca1"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e559540801ff0fb0ead93ad8de2d0e1f9207ad390a48a3240b22bbf15ea29487"
+          "sha256": "3a96f0c01e842b4ca89e149a93ad33746f9097828d0b52ef3fe5a76648661d36"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:48.9249294Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:32.1502892Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -168,17 +136,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "08826a4d05b9e60e9e80b4c182c3a48b24c5c844aedb291383b1b2c32a7c8113"
+          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
         }
       ],
-      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
+      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:22.2481052Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:32.7729957Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -255,17 +219,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "0f84823847a5ace934e67d997211055276d53702b96a459fc5d79016f96d0e29"
+          "sha256": "64245c9738e5cbe8e90aada6ae9e7882b95e95767afd929b94082fb6654a83b2"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "7ffd66ec550a2a2418194fd218bd61903feef542bf389a2d02517031cf066c49"
+          "sha256": "3a96f0c01e842b4ca89e149a93ad33746f9097828d0b52ef3fe5a76648661d36"
         }
       ],
-      "reason": "Reviewed quality and architecture workflow guidance against the exact dependency matrix: 16 foreign controller references removed, 20 narrow projects added, graph acyclic and all 1296 architecture tests pass. Static test references remain navigation evidence rather than execution coverage.",
+      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:22.5283363Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:33.7640510Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -274,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "ec8d03287d4a6f02ca64d4d103416eeb620ea6f321a3aa1c608b14719626df6e"
+          "sha256": "3cde462d29dc6194f968329c2a87fa8b4fa607de87da3ded45eeab9593d3b8f1"
         }
       ],
-      "reason": "Reviewed contract workflows against relocated DTOs and pure mappings: CLR names and wire shapes are preserved, all 15 Swagger checks pass. Frontend index changes do not alter the documented review procedure; frontend runtime verification is outside this refactoring.",
+      "reason": "Reviewed relocated values and notification capabilities: namespaces, signatures and serialized shapes are preserved; all 15 Swagger snapshot tests pass. Backend consumer-review procedure remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:23.1066230Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:35.0105889Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -544,14 +508,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "7047164191fd33c861f5d074bd3e513249066f8644a7de6252c5522435a32882"
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "0c634fd2c02276ba144a27e9895c084ff30a35b7ab82024f4ce71b9128ff8f7c"
         }
       ],
-      "reason": "ADR 0038 moves only composed SQL reads to a host-registered read-only assembly. Updated primary-backend and architecture pages, verified all ten removed project edges and exact matrix, reviewed unchanged SQL paging and owner writes. No mail-service/provider/credential behavior changed. 1280 architecture, 277 infrastructure unit, Admin/Dashboard and owner PostgreSQL tests plus 17 API contract tests passed; detailed review is in .artifacts/read-composition-tests/review.md.",
+      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0099fb00b7c4d93b691a4f6f73957082fd4b2099",
-      "reviewedAtUtc": "2026-09-12T17:56:50.3620449Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:36.9525706Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -819,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "99e9c848d916327a5ff98afca443fadb4462482bc2423e21f0b74f9112b453c3"
+          "sha256": "4d9a17a3af91069c2705f299fda8b9344e6686ebe0634b4dbb2c011b4f217b0d"
         }
       ],
-      "reason": "Reviewed workflow guidance against pure DTO and mapper relocation: no new provider sharing, persistence, logging or authorization behavior is introduced. Regenerated inventories retain the same evidence semantics and do not constitute a security verdict.",
+      "reason": "Source relocation preserves validation, user IDs, notification payload serialization, caller transactions and delivery behavior. No data sharing, authorization, storage or logging behavior changes; inventory guidance still distinguishes leads from proven findings.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:24.2263244Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:37.7805645Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -864,13 +828,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "921b9a775d4ca6077a71bfe375eaaee550d6b7472582cc2d0efc4c8f00e5f01c"
+          "sha256": "7236f6aae1d4601363a970d54b11cf8cf9c6d4d944acdadfec4034156a2fe977"
         }
       ],
-      "reason": "Reviewed quality and architecture workflow guidance against the exact dependency matrix: 16 foreign controller references removed, 20 narrow projects added, graph acyclic and all 1296 architecture tests pass. Static test references remain navigation evidence rather than execution coverage.",
+      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:24.6341678Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:38.5545642Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -939,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "69a743132c68e9b04181e689d7772583259c6a69d6e449760a209934530c8dc8"
+          "sha256": "6bf7009d60895a749274c68a71f2a751931fc2c267ad72beabddf806c320bfc8"
         }
       ],
-      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
+      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:25.4977953Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:42.4029939Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -954,21 +918,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "921b9a775d4ca6077a71bfe375eaaee550d6b7472582cc2d0efc4c8f00e5f01c"
+          "sha256": "7236f6aae1d4601363a970d54b11cf8cf9c6d4d944acdadfec4034156a2fe977"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "69a743132c68e9b04181e689d7772583259c6a69d6e449760a209934530c8dc8"
+          "sha256": "6bf7009d60895a749274c68a71f2a751931fc2c267ad72beabddf806c320bfc8"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "99e9c848d916327a5ff98afca443fadb4462482bc2423e21f0b74f9112b453c3"
+          "sha256": "4d9a17a3af91069c2705f299fda8b9344e6686ebe0634b4dbb2c011b4f217b0d"
         }
       ],
-      "reason": "Reviewed workflow guidance against pure DTO and mapper relocation: no new provider sharing, persistence, logging or authorization behavior is introduced. Regenerated inventories retain the same evidence semantics and do not constitute a security verdict.",
+      "reason": "Source relocation preserves validation, user IDs, notification payload serialization, caller transactions and delivery behavior. No data sharing, authorization, storage or logging behavior changes; inventory guidance still distinguishes leads from proven findings.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:25.8955546Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:43.5392753Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1150,13 +1114,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
+          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
         }
       ],
-      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
+      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:23.3785873Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:35.6231986Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1214,17 +1178,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "840c424e0543920f9798ee9e54883fb84e29658417c25fa8626cef35dc5549a5"
+          "sha256": "1dc03e66dbe430c40bfc0bc5f17626daa8c17350c530d8e449b2ae674e6f9b9a"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
+          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
         }
       ],
-      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
+      "reason": "Reviewed guide and module-map changes: Lessons scalar contracts and Notifications consumer API are narrow in-process assemblies. Discovery and review procedures and MailRelay/MailInbox service ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:24.9505128Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:39.6023122Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1233,13 +1197,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "4baff700ae19e8515cbb219f6edcb47818aed4ec03e18717ae2ef027962759d3"
+          "sha256": "f4f5507f873946a5dca1bc2e5ea73b6fe87d233e76e7789b6ba7d32520c0d005"
         }
       ],
-      "reason": "Reviewed quality and architecture workflow guidance against the exact dependency matrix: 16 foreign controller references removed, 20 narrow projects added, graph acyclic and all 1296 architecture tests pass. Static test references remain navigation evidence rather than execution coverage.",
+      "reason": "Dependency matrix and ownership guards are updated for two new projects and direct scalar consumers. Existing workflow advice remains valid: static inventories are navigation, while executed consumer and domain tests provide behavioral evidence.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:25.2349647Z"
+      "gitHead": "fe92d2b81470f5305be01ade734cdd450f2ad512",
+      "reviewedAtUtc": "2026-09-13T01:27:41.3651029Z"
     }
   ]
 }

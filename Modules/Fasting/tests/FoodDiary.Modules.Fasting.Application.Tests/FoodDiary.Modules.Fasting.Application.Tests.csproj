@@ -23,6 +23,7 @@
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../../Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../../Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>

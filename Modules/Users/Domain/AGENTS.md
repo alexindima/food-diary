@@ -5,6 +5,9 @@ roles, role audit, weight/waist goals, lifecycle events and User-specific state 
 value objects. Preserve legacy CLR namespaces and all invariants. Keep authentication
 flows and providers in Identity and their established adapters.
 
+Reusable UserCalorieSchedule and UserPreferenceUpdate live in Users.Domain.Contracts;
+consume those exact types rather than duplicating their value semantics here.
+
 Own DesiredWeightKg and DesiredWaistCm with their unchanged limits and validation.
 Reference Users Domain.Contracts for UserId, ActivityLevel and LanguageCode,
 Primitives for generic guards and EmailAddress, and Images Contracts for ImageAssetId.

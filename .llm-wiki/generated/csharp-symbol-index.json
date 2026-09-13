@@ -16057,6 +16057,27 @@
       "line": 6
     },
     {
+      "name": "LessonCategory",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Lessons/Domain.Contracts/Enums/LessonCategory.cs",
+      "line": 2
+    },
+    {
+      "name": "LessonDifficulty",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Lessons/Domain.Contracts/Enums/LessonDifficulty.cs",
+      "line": 2
+    },
+    {
+      "name": "NutritionLessonId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Lessons/Domain.Contracts/ValueObjects/Ids/NutritionLessonId.cs",
+      "line": 4
+    },
+    {
       "name": "LessonsDomainGuard",
       "kind": "class",
       "role": "Entity",
@@ -16076,27 +16097,6 @@
       "role": "Entity",
       "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
       "line": 5
-    },
-    {
-      "name": "LessonCategory",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Lessons/Domain/Enums/LessonCategory.cs",
-      "line": 2
-    },
-    {
-      "name": "LessonDifficulty",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Lessons/Domain/Enums/LessonDifficulty.cs",
-      "line": 2
-    },
-    {
-      "name": "NutritionLessonId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Lessons/Domain/ValueObjects/Ids/NutritionLessonId.cs",
-      "line": 4
     },
     {
       "name": "UserLessonProgressId",
@@ -18402,53 +18402,11 @@
       "line": 7
     },
     {
-      "name": "DietologistInvitationDecisionNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationDecisionNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "DietologistInvitationReceivedNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationReceivedNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "EmptyNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/EmptyNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingPhaseNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/FastingPhaseNotificationPayload.cs",
-      "line": 2
-    },
-    {
       "name": "INotificationCleanupService",
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Notifications/Application/Abstractions/Common/INotificationCleanupService.cs",
       "line": 2
-    },
-    {
-      "name": "INotificationClientRefreshService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs",
-      "line": 4
-    },
-    {
-      "name": "INotificationDeduplicationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs",
-      "line": 4
     },
     {
       "name": "INotificationLookupRepository",
@@ -18511,13 +18469,6 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWebPushOutboxProcessor.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationWriter",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
       "line": 2
     },
     {
@@ -18584,13 +18535,6 @@
       "line": 5
     },
     {
-      "name": "NewRecommendationNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/NewRecommendationNotificationPayload.cs",
-      "line": 2
-    },
-    {
       "name": "NotificationCleanupPolicy",
       "kind": "record",
       "role": "Other",
@@ -18605,27 +18549,6 @@
       "line": 4
     },
     {
-      "name": "NotificationPayloads",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationPayloads.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationPayloadSerializer",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationPayloadSerializer.cs",
-      "line": 4
-    },
-    {
-      "name": "NotificationRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs",
-      "line": 7
-    },
-    {
       "name": "NotificationTargetUrlResolver",
       "kind": "class",
       "role": "Other",
@@ -18637,13 +18560,6 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Notifications/Application/Abstractions/Common/NotificationText.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationTypes",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationTypes.cs",
       "line": 2
     },
     {
@@ -19079,6 +18995,90 @@
       "role": "Service",
       "path": "Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs",
       "line": 11
+    },
+    {
+      "name": "DietologistInvitationDecisionNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/DietologistInvitationDecisionNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "DietologistInvitationReceivedNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/DietologistInvitationReceivedNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "EmptyNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/EmptyNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingPhaseNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/FastingPhaseNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationClientRefreshService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs",
+      "line": 4
+    },
+    {
+      "name": "INotificationDeduplicationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs",
+      "line": 4
+    },
+    {
+      "name": "INotificationWriter",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/INotificationWriter.cs",
+      "line": 2
+    },
+    {
+      "name": "NewRecommendationNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/NewRecommendationNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationPayloads",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/NotificationPayloads.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationPayloadSerializer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/NotificationPayloadSerializer.cs",
+      "line": 4
+    },
+    {
+      "name": "NotificationRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Notifications/Contracts/Common/NotificationRequest.cs",
+      "line": 7
+    },
+    {
+      "name": "NotificationTypes",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/NotificationTypes.cs",
+      "line": 2
     },
     {
       "name": "Notification",
@@ -23414,6 +23414,20 @@
       "line": 2
     },
     {
+      "name": "UserCalorieSchedule",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserCalorieSchedule.cs",
+      "line": 2
+    },
+    {
+      "name": "UserPreferenceUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserPreferenceUpdate.cs",
+      "line": 2
+    },
+    {
       "name": "WaistGoal",
       "kind": "class",
       "role": "Entity",
@@ -23652,13 +23666,6 @@
       "line": 6
     },
     {
-      "name": "UserCalorieSchedule",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 2
-    },
-    {
       "name": "UserGoalState",
       "kind": "record struct",
       "role": "ValueObject",
@@ -23698,13 +23705,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
-      "line": 2
-    },
-    {
-      "name": "UserPreferenceUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceUpdate.cs",
       "line": 2
     },
     {
@@ -28926,7 +28926,7 @@
     },
     {
       "interface": "INotificationClientRefreshService",
-      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs",
+      "interfacePath": "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs",
       "implementation": "NotificationClientRefreshService",
       "implementationPath": "Modules/Notifications/Application/Services/NotificationClientRefreshService.cs",
       "confidence": "naming-convention"
@@ -28989,7 +28989,7 @@
     },
     {
       "interface": "INotificationWriter",
-      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
+      "interfacePath": "Modules/Notifications/Contracts/Common/INotificationWriter.cs",
       "implementation": "NotificationWriter",
       "implementationPath": "Modules/Notifications/Application/Services/NotificationWriter.cs",
       "confidence": "naming-convention"

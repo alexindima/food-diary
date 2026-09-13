@@ -256,6 +256,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 ## Cross-Repo Rules
 
+- Lessons scalar domain contracts: `Modules/Lessons/Domain.Contracts/AGENTS.md`
+- Lessons consumer contracts: `Modules/Lessons/Contracts/AGENTS.md`
+- Notifications consumer contracts: `Modules/Notifications/Contracts/AGENTS.md`
+
 - Keep architecture feature-first and move legacy flat areas incrementally.
 - Do not repeat an application module name as a root folder inside its own `FoodDiary.Application.<Module>` project. Add feature grouping folders only when a module owns multiple distinct areas, such as `BodyMetrics/WeightEntries` and `BodyMetrics/WaistEntries`.
 - Place every application command and query slice in its own feature folder under `Commands/` or `Queries/`; do not put C# files directly in those folders.

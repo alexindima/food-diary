@@ -4,14 +4,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application/FoodDiary.Application.Cycles.csproj" />
-    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
-    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="coverlet.collector" />
@@ -23,5 +15,14 @@
     <Using Include="FoodDiary.Application.Tests.Support" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Application/FoodDiary.Application.Cycles.csproj" />
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
+    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

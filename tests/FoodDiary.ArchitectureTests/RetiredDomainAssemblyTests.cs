@@ -3,6 +3,17 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class RetiredDomainAssemblyTests {
     [Theory]
+    [InlineData(typeof(FoodDiary.Domain.ValueObjects.UserCalorieSchedule), "FoodDiary.Modules.Users.Domain.Contracts")]
+    [InlineData(typeof(FoodDiary.Domain.ValueObjects.UserPreferenceUpdate), "FoodDiary.Modules.Users.Domain.Contracts")]
+    [InlineData(typeof(FoodDiary.Domain.ValueObjects.Ids.NutritionLessonId), "FoodDiary.Modules.Lessons.Domain.Contracts")]
+    [InlineData(typeof(FoodDiary.Domain.Enums.LessonCategory), "FoodDiary.Modules.Lessons.Domain.Contracts")]
+    [InlineData(typeof(FoodDiary.Domain.Enums.LessonDifficulty), "FoodDiary.Modules.Lessons.Domain.Contracts")]
+    [InlineData(typeof(FoodDiary.Application.Abstractions.Notifications.Common.INotificationWriter), "FoodDiary.Modules.Notifications.Contracts")]
+    public void ConsumerValueAndCapability_HasNarrowAssemblyOwner(Type type, string assembly) {
+        Assert.Equal(assembly, type.Assembly.GetName().Name);
+    }
+
+    [Theory]
     [InlineData(typeof(FoodDiary.Domain.Enums.RoleNames), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/Enums", "FoodDiary.Domain.Enums")]
     [InlineData(typeof(FoodDiary.Domain.Enums.MeasurementUnit), "FoodDiary.Modules.Products.Domain.Contracts", "Modules/Products/Domain.Contracts/Enums", "FoodDiary.Domain.Enums")]
     [InlineData(typeof(FoodDiary.Domain.ValueObjects.FoodQualityScore), "FoodDiary.Modules.Products.FoodQuality", "Modules/Products/FoodQuality/ValueObjects", "FoodDiary.Domain.ValueObjects")]

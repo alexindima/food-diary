@@ -13,3 +13,4 @@ Rules for `Modules/Notifications/`.
 - User profile preference fields remain owned by Users and are accessed through the existing profile contracts.
 - Notification HTTP and SignalR transport lives in `Modules/Notifications/Presentation`; only reusable SignalR identity plumbing remains in `FoodDiary.Presentation.Api`, while scheduling and consumers remain in `FoodDiary.JobManager`.
 - The shared `FoodDiaryDbContext`, migrations and model snapshot remain central.
+- Foreign business modules consume Notifications.Contracts; repository and delivery ports remain in Application/Abstractions.

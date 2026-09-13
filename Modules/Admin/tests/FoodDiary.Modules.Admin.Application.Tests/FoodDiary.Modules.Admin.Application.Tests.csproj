@@ -6,6 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="NSubstitute" />
+    <Using Include="FoodDiary.Application.Tests.Support" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
@@ -25,23 +38,11 @@
     <ProjectReference Include="../../../Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="../../../Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
+    <ProjectReference Include="../../../Lessons/Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Application/FoodDiary.Modules.Users.Application.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NSubstitute" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Xunit" />
-    <Using Include="NSubstitute" />
-    <Using Include="FoodDiary.Application.Tests.Support" />
   </ItemGroup>
 </Project>

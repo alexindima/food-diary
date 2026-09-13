@@ -5,9 +5,8 @@ account-status filtering and UserErrors. Preserve legacy namespaces, signatures,
 nullability, error values and cancellation/default parameters.
 
 Do not expose User/Role aggregates or repository interfaces here. The existing
-UserCalorieSchedule and UserPreferenceUpdate values currently require a Users
-Domain reference; this is a value-type compatibility seam, not permission to
-acquire aggregates. Users Domain.Contracts supplies UserId.
+UserCalorieSchedule, UserPreferenceUpdate and UserId belong to Users
+Domain.Contracts. Do not reference the aggregate-bearing Users Domain assembly.
 
 Do not reference the retired central Application.Abstractions, Identity contracts, application
 implementations, Infrastructure, HTTP or provider SDKs. Identity contracts may

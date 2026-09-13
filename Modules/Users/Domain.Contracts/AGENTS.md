@@ -1,3 +1,7 @@
 # Users domain contracts
 
+Own UserCalorieSchedule and UserPreferenceUpdate as reusable value contracts.
+Preserve schedule validation, fallback and weekly-total behavior verbatim; profile
+mutation rules remain on the User aggregate.
+
 Own RoleNames, UserId, ActivityLevel, LanguageCode, DesiredWeightKg and DesiredWaistCm with their existing CLR namespaces. Reference only shared Domain.Primitives. LanguageCode owns the user's en/ru preference contract: TryParse accepts only exact normalized codes; FromPreferred maps the ru prefix to ru and otherwise defaults to en. Preserve this behavior and all existing ID/enum semantics. Do not add aggregate, application or persistence dependencies.

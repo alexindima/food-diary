@@ -4,18 +4,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Application/FoodDiary.Application.RecipeCommunity.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
-    <ProjectReference Include="../../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
-    <ProjectReference Include="../../../Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
-    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />
@@ -29,5 +17,18 @@
 
   <ItemGroup>
     <Using Include="FoodDiary.Application.Tests.Support" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Application.RecipeCommunity.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
+    <ProjectReference Include="../../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
+    <ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
+    <ProjectReference Include="../../../Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

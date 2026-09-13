@@ -48,3 +48,8 @@ The existing Admin application suite covers lesson create/update/import/retry an
 email-template responses. Consumer application suites cover notification behavior.
 The common DbContext and remaining broad Abstractions dependencies are separate
 architectural concerns and are not removed by this change.
+
+The subsequent [consumer-contract extraction](narrow-consumer-contracts.md)
+moves notification consumer capabilities to Notifications.Contracts and removes
+Domain dependencies from Users.Contracts and Lessons.Contracts. Internal
+notification repository/delivery ports remain in Application.Abstractions.

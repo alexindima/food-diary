@@ -116,6 +116,7 @@
     <Project Path="Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/FoodDiary.Modules.Billing.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Notifications/">
+    <Project Path="Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <Project Path="Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <Project Path="Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />
     <Project Path="Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj" />
@@ -308,6 +309,7 @@
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/FoodDiary.Modules.Hydration.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Lessons/">
+    <Project Path="Modules/Lessons/Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj" />
     <Project Path="Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <Project Path="Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <Project Path="Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />

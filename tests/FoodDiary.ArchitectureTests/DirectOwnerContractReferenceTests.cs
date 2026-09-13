@@ -23,7 +23,7 @@ public sealed class DirectOwnerContractReferenceTests {
     [InlineData("Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj", "FoodDiary.Modules.Dashboard.Contracts")]
     [InlineData("Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj", "FoodDiary.Modules.Favorites.Application.Abstractions")]
     [InlineData("Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj", "FoodDiary.Modules.Recipes.Contracts")]
-    [InlineData("Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj", "FoodDiary.Modules.Notifications.Application.Abstractions")]
+    [InlineData("Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj", "FoodDiary.Modules.Notifications.Contracts")]
     public void CrossModuleConsumers_ReferenceTheirContractOwnerDirectly(string projectPath, string contractProject) {
         string[] references = ProjectReferenceReader.ReadProjectReferences(projectPath);
 

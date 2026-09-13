@@ -10,6 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
@@ -18,15 +24,8 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FluentValidation" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-  </ItemGroup>
-
 </Project>

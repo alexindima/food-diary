@@ -40,27 +40,22 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
-- Public contract files: 42
+- Public contract files: 30
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 42
-- Interfaces: 22
-- DTO/read-model/projection types: 3
+- Public contract types: 30
+- Interfaces: 19
+- DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 9
 - Contracts referencing domain entities: 5
 - `class NotificationErrors`
-- `class NotificationPayloads`
-- `class NotificationPayloadSerializer`
 - `class NotificationTargetUrlResolver`
-- `class NotificationTypes`
 - `class WebPushDeliveryLimits`
 - `interface INotificationCleanupService`
-- `interface INotificationClientRefreshService`
-- `interface INotificationDeduplicationService`
 - `interface INotificationLookupRepository`
 - `interface INotificationPusher`
 - `interface INotificationReadModelRepository`
@@ -70,7 +65,6 @@ No literal attribute-routed controller was associated with this module.
 - `interface INotificationTextRenderer`
 - `interface INotificationWebPushOutbox`
 - `interface INotificationWebPushOutboxProcessor`
-- `interface INotificationWriter`
 - `interface INotificationWriteRepository`
 - `interface ITestNotificationDeliveryDispatcher`
 - `interface IWebPushConfigurationProvider`
@@ -80,9 +74,14 @@ No literal attribute-routed controller was associated with this module.
 - `interface IWebPushSubscriptionReadRepository`
 - `interface IWebPushSubscriptionRepository`
 - `interface IWebPushSubscriptionWriteRepository`
-- `record DietologistInvitationDecisionNotificationPayload`
-- `record DietologistInvitationReceivedNotificationPayload`
-- ... 12 more type(s)
+- `record NotificationCleanupPolicy`
+- `record NotificationReadModel`
+- `record NotificationText`
+- `record ScheduledNotificationData`
+- `record WebPushClientConfiguration`
+- `record WebPushDeliverySubscription`
+- `record WebPushSubscriptionData`
+- `record WebPushSubscriptionReadModel`
 
 ## Focused Tests
 

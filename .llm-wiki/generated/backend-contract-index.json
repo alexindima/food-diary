@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1209,
     "ambiguousContracts": 0,
-    "consumerEdges": 8557,
+    "consumerEdges": 8558,
     "productionConsumerEdges": 5118,
-    "testConsumerEdges": 3439,
+    "testConsumerEdges": 3440,
     "consumedContracts": 1209,
     "unconsumedContracts": 0
   },
@@ -12334,7 +12334,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -12351,7 +12351,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -12589,7 +12589,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -17010,7 +17010,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -68445,7 +68445,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Lessons/Domain/ValueObjects/Ids/NutritionLessonId.cs",
+      "consumerPath": "Modules/Lessons/Domain.Contracts/ValueObjects/Ids/NutritionLessonId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81207,7 +81207,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
@@ -81220,7 +81220,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
@@ -81233,7 +81233,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
@@ -81246,7 +81246,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
@@ -81259,7 +81259,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
@@ -81272,7 +81272,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Common/DietologistInvitationClientNotifier.cs",
@@ -81285,7 +81285,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Common/DietologistNotificationPostCommitActions.cs",
@@ -81298,7 +81298,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
@@ -81311,7 +81311,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationPushDispatcher.cs",
@@ -81324,7 +81324,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
@@ -81337,7 +81337,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
@@ -81350,7 +81350,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
@@ -81363,7 +81363,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
@@ -81376,7 +81376,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Common/NotificationPostCommitActions.cs",
@@ -81389,7 +81389,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/DependencyInjection.cs",
@@ -81402,7 +81402,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Services/NotificationClientRefreshService.cs",
@@ -81415,7 +81415,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
@@ -81428,7 +81428,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
@@ -81441,7 +81441,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
@@ -81454,7 +81454,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
@@ -81467,7 +81467,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
@@ -81480,7 +81480,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Abstractions/Common/INotificationLookupRepository.cs",
@@ -81493,7 +81493,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs"
+        "Modules/Notifications/Contracts/Common/INotificationDeduplicationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/DependencyInjection.cs",
@@ -82624,7 +82624,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
@@ -82637,7 +82637,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
@@ -82650,7 +82650,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
@@ -82663,7 +82663,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
@@ -82676,7 +82676,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
@@ -82689,7 +82689,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
@@ -82702,7 +82702,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
@@ -82715,7 +82715,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
@@ -82728,7 +82728,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
@@ -82741,7 +82741,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Common/DietologistInvitationClientNotifier.cs",
@@ -82754,7 +82754,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
@@ -82767,7 +82767,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Services/ClientTaskDueReminderProcessor.cs",
@@ -82780,7 +82780,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
@@ -82793,7 +82793,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
@@ -82806,7 +82806,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
@@ -82819,7 +82819,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
@@ -82832,7 +82832,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/DependencyInjection.cs",
@@ -82845,7 +82845,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Services/NotificationWriter.cs",
@@ -82858,7 +82858,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
@@ -82871,7 +82871,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
@@ -82884,7 +82884,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskDueReminderProcessorTests.cs",
@@ -82897,7 +82897,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs",
@@ -82910,7 +82910,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
@@ -82923,7 +82923,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
@@ -82936,7 +82936,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
@@ -82949,7 +82949,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -82962,7 +82962,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
@@ -82975,7 +82975,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
@@ -82988,7 +82988,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
@@ -83001,7 +83001,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ConsumerAggregateContractTests.cs",
@@ -83014,7 +83014,20 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs"
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationWriter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Contracts/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/ClientTaskReminderJobTests.cs",
@@ -116151,7 +116164,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
@@ -116164,7 +116177,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
@@ -116177,7 +116190,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Common/DietologistInvitationClientNotifier.cs",
@@ -116190,7 +116203,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Common/DietologistNotificationFactory.cs",
@@ -116203,7 +116216,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
@@ -116216,7 +116229,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
@@ -116229,7 +116242,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationFactory.cs",
@@ -116242,7 +116255,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
@@ -116255,20 +116268,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "NotificationRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
@@ -116281,7 +116281,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Services/NotificationWriter.cs",
@@ -116294,7 +116294,20 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Contracts/Common/INotificationWriter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
@@ -116307,7 +116320,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
@@ -116320,7 +116333,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskDueReminderProcessorTests.cs",
@@ -116333,7 +116346,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs",
@@ -116346,7 +116359,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
@@ -116359,7 +116372,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
@@ -116372,7 +116385,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
@@ -116385,7 +116398,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -116398,7 +116411,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
@@ -116411,7 +116424,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs",
@@ -116424,7 +116437,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationWriterTests.cs",
@@ -116437,7 +116450,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
@@ -116450,7 +116463,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
@@ -116463,7 +116476,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ConsumerAggregateContractTests.cs",
@@ -116476,7 +116489,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/NotificationRequest.cs"
+        "Modules/Notifications/Contracts/Common/NotificationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/ClientTaskReminderJobTests.cs",

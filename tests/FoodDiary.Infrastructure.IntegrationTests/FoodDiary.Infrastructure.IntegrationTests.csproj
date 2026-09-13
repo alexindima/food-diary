@@ -19,6 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="NSubstitute" />
+    <Using Include="FoodDiary.Testing" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
@@ -63,6 +69,7 @@
     <ProjectReference Include="../../Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Lessons/Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
@@ -72,6 +79,7 @@
     <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
@@ -92,12 +100,4 @@
     <ProjectReference Include="../../Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
     <ProjectReference Include="../FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="NSubstitute" />
-    <Using Include="FoodDiary.Testing" />
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-
 </Project>

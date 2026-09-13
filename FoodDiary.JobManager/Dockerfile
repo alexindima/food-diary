@@ -95,6 +95,8 @@ COPY Modules/BodyMetrics/Infrastructure/*.csproj Modules/BodyMetrics/Infrastruct
 COPY Modules/BodyMetrics/Infrastructure/Model/*.csproj Modules/BodyMetrics/Infrastructure/Model/
 COPY Modules/Notifications/Application/*.csproj Modules/Notifications/Application/
 COPY Modules/Notifications/Application/Abstractions/*.csproj Modules/Notifications/Application/Abstractions/
+COPY Modules/Notifications/Contracts/*.csproj Modules/Notifications/Contracts/
+COPY Modules/Lessons/Domain.Contracts/*.csproj Modules/Lessons/Domain.Contracts/
 COPY Modules/Notifications/Domain/*.csproj Modules/Notifications/Domain/
 COPY Modules/Notifications/Infrastructure/*.csproj Modules/Notifications/Infrastructure/
 COPY Modules/Notifications/Infrastructure/Model/*.csproj Modules/Notifications/Infrastructure/Model/
@@ -309,6 +311,8 @@ COPY Modules/BodyMetrics/Infrastructure/ Modules/BodyMetrics/Infrastructure/
 COPY Modules/BodyMetrics/Infrastructure/Model/ Modules/BodyMetrics/Infrastructure/Model/
 COPY Modules/Notifications/Application/ Modules/Notifications/Application/
 COPY Modules/Notifications/Application/Abstractions/ Modules/Notifications/Application/Abstractions/
+COPY Modules/Notifications/Contracts/ Modules/Notifications/Contracts/
+COPY Modules/Lessons/Domain.Contracts/ Modules/Lessons/Domain.Contracts/
 COPY Modules/Notifications/Domain/ Modules/Notifications/Domain/
 COPY Modules/Notifications/Infrastructure/ Modules/Notifications/Infrastructure/
 COPY Modules/Notifications/Infrastructure/Model/ Modules/Notifications/Infrastructure/Model/

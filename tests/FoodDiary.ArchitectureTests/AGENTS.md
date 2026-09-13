@@ -1,5 +1,10 @@
 # Architecture Test Guidelines
 
+NarrowConsumerContractTests checks the complete project-reference closure of
+Users, Lessons and Notifications consumer contracts and rejects foreign business
+module references to Notifications internal ports. RetiredDomainAssemblyTests
+checks the actual assembly owners of the extracted value types and writer.
+
 `DirectOwnerContractReferenceTests` prevents nine unused contract exports from returning to central Application.Abstractions and checks representative direct consumers. The exact dependency matrix protects every production/test ProjectReference; emitted assembly metadata audits complement, but do not replace, compile-time verification.
 
 ## Scope

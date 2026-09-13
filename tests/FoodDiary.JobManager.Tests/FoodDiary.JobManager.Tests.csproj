@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
@@ -39,6 +43,7 @@
     <ProjectReference Include="../../Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
     <ProjectReference Include="../../Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
@@ -53,10 +58,4 @@
     <ProjectReference Include="../../Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="../../Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-
 </Project>
