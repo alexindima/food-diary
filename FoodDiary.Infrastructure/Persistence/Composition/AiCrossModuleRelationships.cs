@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Infrastructure.Persistence.Ai;
+using FoodDiary.Modules.Ai.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Composition;

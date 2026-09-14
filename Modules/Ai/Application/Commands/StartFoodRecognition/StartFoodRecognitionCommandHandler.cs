@@ -1,22 +1,24 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Images.Models;
-using FoodDiary.Application.Ai.Common;
+
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Ai.Commands.StartFoodRecognition;
+namespace FoodDiary.Modules.Ai.Application.Commands.StartFoodRecognition;
 
 public sealed class StartFoodRecognitionCommandHandler(
     IFoodRecognitionJobStore store,
     IImageAssetAccessService images,
-    IAiUserContextService userContext,
+    IUserAiProfileReadService userContext,
     TimeProvider timeProvider) : ICommandHandler<StartFoodRecognitionCommand, Result<FoodRecognitionJobModel>> {
     public async Task<Result<FoodRecognitionJobModel>> Handle(StartFoodRecognitionCommand request, CancellationToken cancellationToken) {
         var userId = (UserId)request.UserId;
-        Result<AiUserContext> context = await userContext.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserAiProfileModel> context = await userContext.GetAiProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (context.IsFailure) {
             return Result.Failure<FoodRecognitionJobModel>(context.Error);
         }

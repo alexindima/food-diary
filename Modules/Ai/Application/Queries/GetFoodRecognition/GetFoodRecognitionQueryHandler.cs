@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Ai.Queries.GetFoodRecognition;
+namespace FoodDiary.Modules.Ai.Application.Queries.GetFoodRecognition;
 
 public sealed class GetFoodRecognitionQueryHandler(IFoodRecognitionJobStore store)
     : IQueryHandler<GetFoodRecognitionQuery, Result<FoodRecognitionJobModel>> {

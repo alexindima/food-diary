@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
+namespace FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
 
 public sealed class CalculateFoodNutritionCommandValidator : AbstractValidator<CalculateFoodNutritionCommand> {
     public CalculateFoodNutritionCommandValidator() {

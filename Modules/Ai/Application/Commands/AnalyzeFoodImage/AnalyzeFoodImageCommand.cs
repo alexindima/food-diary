@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 
-namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
+namespace FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 
 public sealed record AnalyzeFoodImageCommand(Guid UserId, Guid ImageAssetId, string? Description, string RequestId)
     : ICommand<Result<FoodVisionModel>>;

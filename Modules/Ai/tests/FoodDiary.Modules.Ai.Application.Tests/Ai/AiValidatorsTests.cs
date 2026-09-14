@@ -1,14 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
+using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Images.Services;
-using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
-using FoodDiary.Application.Ai.Commands.ParseFoodText;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
+using FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
+
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
-using FoodDiary.Application.Ai.Services;
+using FoodDiary.Modules.Ai.Application.Queries.GetUserAiUsageSummary;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -18,7 +18,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 
-namespace FoodDiary.Application.Tests.Ai;
+namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public class AiValidatorsTests {
@@ -28,7 +28,7 @@ public class AiValidatorsTests {
         images.GetDataUrlAsync(Arg.Any<ImageAssetId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<string>(new Error("Image.Forbidden", "Denied", ErrorKind.Forbidden)));
         IOpenAiFoodService provider = CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls);
-        var handler = new AnalyzeFoodImageCommandHandler(images, CreateAiUserContextService(user: null), provider);
+        var handler = new AnalyzeFoodImageCommandHandler(images, CreateUserAiProfileReadService(user: null), provider);
 
         Result<FoodVisionModel> result = await handler.Handle(new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), Description: null, RequestId), CancellationToken.None);
 
@@ -82,7 +82,7 @@ public class AiValidatorsTests {
         var user = User.Create("ai-handler@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
             CreateImageContentService(CreateImageAssetRepository()),
-            CreateAiUserContextService(user),
+            CreateUserAiProfileReadService(user),
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
@@ -98,7 +98,7 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new AnalyzeFoodImageCommandHandler(
             CreateImageContentService(CreateImageAssetRepository()),
-            CreateAiUserContextService(User.Create("ai-empty-image-user@example.com", "hash")),
+            CreateUserAiProfileReadService(User.Create("ai-empty-image-user@example.com", "hash")),
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
@@ -115,7 +115,7 @@ public class AiValidatorsTests {
         var user = User.Create("ai-missing-image@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
             CreateImageContentService(CreateImageAssetRepository()),
-            CreateAiUserContextService(user),
+            CreateUserAiProfileReadService(user),
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
@@ -133,7 +133,7 @@ public class AiValidatorsTests {
         var asset = ImageAsset.Create(owner.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
             CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateAiUserContextService(requester),
+            CreateUserAiProfileReadService(requester),
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
@@ -150,7 +150,7 @@ public class AiValidatorsTests {
         var asset = ImageAsset.Create(user.Id, "images/invalid.jpg", "https://cdn.example.com/invalid.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
             CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateAiUserContextService(user),
+            CreateUserAiProfileReadService(user),
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
@@ -170,7 +170,7 @@ public class AiValidatorsTests {
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
             CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateAiUserContextService(user: null),
+            CreateUserAiProfileReadService(user: null),
             openAiFoodService);
 
         Result<FoodVisionModel> result = await handler.Handle(
@@ -191,7 +191,7 @@ public class AiValidatorsTests {
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
             CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateAiUserContextService(user),
+            CreateUserAiProfileReadService(user),
             openAiFoodService);
 
         Result<FoodVisionModel> result = await handler.Handle(
@@ -276,10 +276,10 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new GetUserAiUsageSummaryQueryHandler(CreateUserAiUsageSummaryReadService(
-            CreateAiUserContextService(User.Create("ai-empty-user@example.com", "hash")),
+        var handler = new GetUserAiUsageSummaryQueryHandler(
+            CreateUserAiProfileReadService(User.Create("ai-empty-user@example.com", "hash")),
             CreateAiUsageRepository(),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc))));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(Guid.Empty), CancellationToken.None);
 
@@ -289,40 +289,10 @@ public class AiValidatorsTests {
     }
 
     [Fact]
-    public async Task AiUserContextService_WhenUserMissing_ReturnsAccessFailure() {
-        IUserAiProfileReadService userProfileReadService = Substitute.For<IUserAiProfileReadService>();
-        userProfileReadService
-            .GetAiProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
-        var service = new AiUserContextService(userProfileReadService);
-
-        Result<AiUserContext> result = await service.GetAsync(UserId.New(), CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-    }
-
-    [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public async Task AiUserContextService_MapsConsentEligibility(bool hasAcceptedAiConsent) {
-        var userId = UserId.New();
-        IUserAiProfileReadService userProfileReadService = Substitute.For<IUserAiProfileReadService>();
-        userProfileReadService
-            .GetAiProfileAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Result.Success(new UserAiProfileModel(userId, "en", 100, 50, hasAcceptedAiConsent)));
-        var service = new AiUserContextService(userProfileReadService);
-
-        AiUserContext result = ResultAssert.Success(await service.GetAsync(userId, CancellationToken.None));
-
-        Assert.Equal(hasAcceptedAiConsent, result.HasAcceptedAiConsent);
-    }
-
-    [Fact]
     public async Task CalculateFoodNutritionHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new CalculateFoodNutritionCommandHandler(
             CreateOpenAiFoodService(),
-            CreateAiUserContextService(User.Create("ai-empty-nutrition@example.com", "hash")));
+            CreateUserAiProfileReadService(User.Create("ai-empty-nutrition@example.com", "hash")));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -340,7 +310,7 @@ public class AiValidatorsTests {
     public async Task CalculateFoodNutritionHandler_WithEmptyItems_ReturnsEmptyItems() {
         var handler = new CalculateFoodNutritionCommandHandler(
             CreateOpenAiFoodService(),
-            CreateAiUserContextService(User.Create("ai-empty-items@example.com", "hash")));
+            CreateUserAiProfileReadService(User.Create("ai-empty-items@example.com", "hash")));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(Guid.NewGuid(), [], RequestId),
@@ -355,7 +325,7 @@ public class AiValidatorsTests {
         var user = User.Create("inactive-ai-nutrition@example.com", "hash");
         user.Deactivate();
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateAiUserContextService(user));
+        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateUserAiProfileReadService(user));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -373,7 +343,7 @@ public class AiValidatorsTests {
     public async Task CalculateFoodNutritionHandler_WithActiveUser_CalculatesNutrition() {
         var user = User.Create("active-ai-nutrition@example.com", "hash");
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateAiUserContextService(user));
+        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateUserAiProfileReadService(user));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -390,7 +360,7 @@ public class AiValidatorsTests {
     public async Task ParseFoodTextHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new ParseFoodTextCommandHandler(
             CreateOpenAiFoodService(),
-            CreateAiUserContextService(User.Create("ai-empty-text-user@example.com", "hash")),
+            CreateUserAiProfileReadService(User.Create("ai-empty-text-user@example.com", "hash")),
             CreateCurrentUserAccessService(User.Create("ai-empty-text-user@example.com", "hash")));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple", RequestId), CancellationToken.None);
@@ -404,7 +374,7 @@ public class AiValidatorsTests {
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new ParseFoodTextCommandHandler(
             openAiFoodService,
-            CreateAiUserContextService(user: null),
+            CreateUserAiProfileReadService(user: null),
             CreateCurrentUserAccessService(user: null));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple", RequestId), CancellationToken.None);
@@ -415,12 +385,12 @@ public class AiValidatorsTests {
     }
 
     [Fact]
-    public async Task ParseFoodTextHandler_WhenAiUserContextFails_ReturnsFailureWithoutCallingOpenAi() {
+    public async Task ParseFoodTextHandler_WhenUserAiProfileModelFails_ReturnsFailureWithoutCallingOpenAi() {
         var user = User.Create("ai-context-fails@example.com", "hash");
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new ParseFoodTextCommandHandler(
             openAiFoodService,
-            CreateAiUserContextService(user: null),
+            CreateUserAiProfileReadService(user: null),
             CreateCurrentUserAccessService(user));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple", RequestId), CancellationToken.None);
@@ -435,7 +405,7 @@ public class AiValidatorsTests {
         var user = User.Create("active-ai-text@example.com", "hash");
         user.SetLanguage("ru");
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateAiUserContextService(user), CreateCurrentUserAccessService(user));
+        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateUserAiProfileReadService(user), CreateCurrentUserAccessService(user));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g", RequestId), CancellationToken.None);
 
@@ -448,10 +418,10 @@ public class AiValidatorsTests {
     [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_UsesDateTimeProviderForMonthBounds() {
         var user = User.Create("ai-usage@example.com", "hash");
-        IAiUserContextService aiUserContextService = CreateAiUserContextService(user);
-        IAiUsageRepository aiUsageRepository = CreateAiUsageRepository(out Func<(DateTime FromUtc, DateTime ToUtc)> getLastPeriod);
+        IUserAiProfileReadService userProfileReadService = CreateUserAiProfileReadService(user);
+        IAiUsageQuery aiUsageRepository = CreateAiUsageRepository(out Func<(DateTime FromUtc, DateTime ToUtc)> getLastPeriod);
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc));
-        var handler = new GetUserAiUsageSummaryQueryHandler(CreateUserAiUsageSummaryReadService(aiUserContextService, aiUsageRepository, dateTimeProvider));
+        var handler = new GetUserAiUsageSummaryQueryHandler(userProfileReadService, aiUsageRepository, dateTimeProvider);
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
@@ -465,10 +435,10 @@ public class AiValidatorsTests {
     public async Task GetUserAiUsageSummaryQueryHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive-ai@example.com", "hash");
         user.Deactivate();
-        var handler = new GetUserAiUsageSummaryQueryHandler(CreateUserAiUsageSummaryReadService(
-            CreateAiUserContextService(user),
+        var handler = new GetUserAiUsageSummaryQueryHandler(
+            CreateUserAiProfileReadService(user),
             CreateAiUsageRepository(),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc))));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
@@ -476,21 +446,21 @@ public class AiValidatorsTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-    private static IAiUserContextService CreateAiUserContextService(User? user) {
-        IAiUserContextService service = Substitute.For<IAiUserContextService>();
+    private static IUserAiProfileReadService CreateUserAiProfileReadService(User? user) {
+        IUserAiProfileReadService service = Substitute.For<IUserAiProfileReadService>();
         service
-            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetAiProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {
-                    return Task.FromResult(Result.Failure<AiUserContext>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
                 }
 
                 if (!user.IsActive || user.DeletedAt is not null) {
-                    return Task.FromResult(Result.Failure<AiUserContext>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
                 }
 
-                return Task.FromResult(Result.Success(new AiUserContext(
+                return Task.FromResult(Result.Success(new UserAiProfileModel(
                     user.Id,
                     user.Language,
                     user.AiInputTokenLimit,
@@ -513,12 +483,6 @@ public class AiValidatorsTests {
             });
         return service;
     }
-
-    private static IUserAiUsageSummaryReadService CreateUserAiUsageSummaryReadService(
-        IAiUserContextService aiUserContextService,
-        IAiUsageReadRepository aiUsageRepository,
-        TimeProvider dateTimeProvider) =>
-        new UserAiUsageSummaryReadService(aiUserContextService, aiUsageRepository, dateTimeProvider);
 
     private const string TestImageDataUrl = "data:image/png;base64,AQID";
 
@@ -606,15 +570,15 @@ public class AiValidatorsTests {
         return service;
     }
 
-    private static IAiUsageRepository CreateAiUsageRepository() =>
+    private static IAiUsageQuery CreateAiUsageRepository() =>
         CreateAiUsageRepository(out _);
 
-    private static IAiUsageRepository CreateAiUsageRepository(
+    private static IAiUsageQuery CreateAiUsageRepository(
         out Func<(DateTime FromUtc, DateTime ToUtc)> getLastPeriod) {
         DateTime lastFromUtc = default;
         DateTime lastToUtc = default;
-        IAiUsageRepository repository = Substitute.For<IAiUsageRepository>();
-        ((IAiUsageReadRepository)repository)
+        IAiUsageQuery repository = Substitute.For<IAiUsageQuery>();
+        ((IAiUsageQuery)repository)
             .GetUserTotalsAsync(
                 Arg.Any<UserId>(),
                 Arg.Any<DateTime>(),

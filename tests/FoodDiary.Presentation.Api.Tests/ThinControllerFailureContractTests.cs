@@ -1,7 +1,7 @@
 using System.Reflection;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Admin.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Ai;
+using FoodDiary.Modules.Ai.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Cycles;
 using FoodDiary.Presentation.Api.Features.Export;

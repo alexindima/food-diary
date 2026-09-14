@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Ai.Services;
+namespace FoodDiary.Modules.Ai.Application.Services;
 
 public sealed class FoodRecognitionResultReader(IFoodRecognitionJobStore jobs) : IFoodRecognitionResultReader {
     public async Task<Result<FoodRecognitionJobModel>> GetCompletedAsync(Guid userId, Guid jobId, CancellationToken cancellationToken) {

@@ -1,12 +1,12 @@
-using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Common;
 
-namespace FoodDiary.Application.Ai.Services;
+namespace FoodDiary.Modules.Ai.Application.Services;
 
 public sealed class AiAdministrationReadService(
-    IAiUsageReadRepository usageRepository,
+    IAiUsageQuery usageRepository,
     IAiPromptTemplateReadModelRepository promptRepository) : IAiAdministrationReadService {
     public Task<IReadOnlyList<AiPromptRevisionReadModel>> GetPromptRevisionsAsync(string key, string locale, CancellationToken cancellationToken) =>
         promptRepository.GetRevisionsAsync(key, locale, cancellationToken);

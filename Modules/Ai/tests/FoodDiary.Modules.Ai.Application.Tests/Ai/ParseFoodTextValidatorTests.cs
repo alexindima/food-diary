@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Ai.Commands.ParseFoodText;
+using FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
 
-namespace FoodDiary.Application.Tests.Ai;
+namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public class ParseFoodTextValidatorTests {

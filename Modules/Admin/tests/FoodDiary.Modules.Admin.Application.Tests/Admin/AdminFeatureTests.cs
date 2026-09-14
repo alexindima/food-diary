@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
@@ -8,17 +9,17 @@ using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
-using FoodDiary.Application.Ai.Services;
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Services;
@@ -26,7 +27,7 @@ using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -719,24 +720,24 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingAiUsageRepository(
-        FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary? response = null) : IAiUsageRepository {
-        public Task<FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary> GetSummaryForUserAsync(
+        FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary? response = null) : IAiUsageQuery {
+        public Task<FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary> GetSummaryForUserAsync(
             DateTime fromUtc, DateTime toUtc, UserId userId, CancellationToken cancellationToken) => GetSummaryAsync(fromUtc, toUtc, cancellationToken);
 
         public DateTime LastFromUtc { get; private set; }
         public DateTime LastToUtc { get; private set; }
 
-        public Task AddAsync(FoodDiary.Domain.Entities.Ai.AiUsage usage, CancellationToken cancellationToken = default) =>
+        public Task AddAsync(FoodDiary.Modules.Ai.Domain.Entities.AiUsage usage, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary> GetSummaryAsync(
+        public Task<FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary> GetSummaryAsync(
             DateTime fromUtc,
             DateTime toUtc,
             CancellationToken cancellationToken = default) {
             LastFromUtc = fromUtc;
             LastToUtc = toUtc;
 
-            return Task.FromResult(response ?? new FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary(
+            return Task.FromResult(response ?? new FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary(
                 0,
                 0,
                 0,

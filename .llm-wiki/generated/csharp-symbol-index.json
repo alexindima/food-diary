@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4056,
-    "symbols": 3997,
-    "interfaceImplementationLinks": 271,
-    "dependencyInjectionRegistrations": 152,
+    "sourceFiles": 4049,
+    "symbols": 3990,
+    "interfaceImplementationLinks": 268,
+    "dependencyInjectionRegistrations": 150,
     "kinds": {
-      "class": 2099,
+      "class": 2097,
       "enum": 64,
-      "interface": 475,
-      "record": 1238,
+      "interface": 471,
+      "record": 1237,
       "record struct": 121
     },
     "roles": {
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1641,
+      "Other": 1640,
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
-      "ReadRepository": 45,
-      "Repository": 107,
+      "ReadRepository": 44,
+      "Repository": 106,
       "Request": 150,
       "Response": 213,
-      "Service": 304,
+      "Service": 300,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 46
@@ -808,7 +808,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 25
+      "line": 26
     },
     {
       "name": "FoodDiaryDbContext",
@@ -920,7 +920,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "OutboxMessageClaimer",
@@ -1025,7 +1025,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 353
+      "line": 354
     },
     {
       "name": "UsdaCsvReader",
@@ -1046,7 +1046,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 77
+      "line": 78
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -2180,7 +2180,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ApiAuthenticationServiceCollectionExtensions",
@@ -2229,7 +2229,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 49
+      "line": 51
     },
     {
       "name": "ApiTelemetry",
@@ -4755,168 +4755,154 @@
       "name": "AiErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/AiErrors.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiErrors.cs",
       "line": 4
     },
     {
       "name": "AiProviderTokenBudget",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/AiProviderTokenBudget.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiProviderTokenBudget.cs",
       "line": 2
     },
     {
       "name": "AiQuotaReservationRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationRequest.cs",
       "line": 4
     },
     {
       "name": "AiQuotaReservationStatus",
       "kind": "enum",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationStatus.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationStatus.cs",
       "line": 2
     },
     {
       "name": "AiQuotaUsage",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaUsage.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiQuotaUsage.cs",
       "line": 2
     },
     {
       "name": "AiUsageTokens",
       "kind": "record struct",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/AiUsageTokens.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiUsageTokens.cs",
       "line": 6
     },
     {
       "name": "AiUsageTotals",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/AiUsageTotals.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/AiUsageTotals.cs",
       "line": 2
     },
     {
       "name": "FoodRecognitionJobUpdate",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/FoodRecognitionJobUpdate.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionJobUpdate.cs",
       "line": 2
     },
     {
       "name": "IAiPromptProvider",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs",
       "line": 2
     },
     {
       "name": "IAiPromptTemplateReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateReadModelRepository.cs",
       "line": 4
     },
     {
       "name": "IAiPromptTemplateReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateReadRepository.cs",
       "line": 5
     },
     {
       "name": "IAiPromptTemplateRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateRepository.cs",
       "line": 2
     },
     {
       "name": "IAiPromptTemplateWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateWriteRepository.cs",
       "line": 5
     },
     {
       "name": "IAiQuotaRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiQuotaRepository.cs",
       "line": 2
     },
     {
       "name": "IAiUsageQuery",
       "kind": "interface",
       "role": "Query",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageQuery.cs",
-      "line": 2
-    },
-    {
-      "name": "IAiUsageReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiUsageQuery.cs",
       "line": 5
-    },
-    {
-      "name": "IAiUsageRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs",
-      "line": 2
     },
     {
       "name": "IAiUsageWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs",
+      "line": 4
     },
     {
       "name": "IFoodRecognitionJobStore",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobStore.cs",
       "line": 5
     },
     {
       "name": "IFoodRecognitionProcessor",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionProcessor.cs",
       "line": 2
     },
     {
       "name": "IOpenAiFoodClient",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs",
       "line": 5
     },
     {
       "name": "IOpenAiFoodService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs",
       "line": 6
     },
     {
       "name": "OpenAiFoodClientResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs",
+      "path": "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs",
       "line": 2
     },
     {
       "name": "UserAiUsageModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Application/Abstractions/Ai/Models/UserAiUsageModel.cs",
+      "path": "Modules/Ai/Application.Abstractions/Models/UserAiUsageModel.cs",
       "line": 2
     },
     {
@@ -4931,7 +4917,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "AnalyzeFoodImageCommandValidator",
@@ -4952,7 +4938,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "CalculateFoodNutritionCommandValidator",
@@ -4973,7 +4959,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ParseFoodTextCommandValidator",
@@ -4994,7 +4980,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "StartFoodRecognitionCommandValidator",
@@ -5002,27 +4988,6 @@
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandValidator.cs",
       "line": 4
-    },
-    {
-      "name": "AiUserContext",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Common/AiUserContext.cs",
-      "line": 4
-    },
-    {
-      "name": "IAiUserContextService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Common/IAiUserContextService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserAiUsageSummaryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Common/IUserAiUsageSummaryReadService.cs",
-      "line": 6
     },
     {
       "name": "DependencyInjection",
@@ -5057,7 +5022,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
-      "line": 10
+      "line": 13
     },
     {
       "name": "GetUserAiUsageSummaryQueryValidator",
@@ -5092,13 +5057,6 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
-      "line": 7
-    },
-    {
-      "name": "AiUserContextService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Services/AiUserContextService.cs",
       "line": 8
     },
     {
@@ -5120,140 +5078,133 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "OpenAiFoodService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
-      "line": 8
-    },
-    {
-      "name": "UserAiUsageSummaryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "AiUsageBreakdown",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageBreakdown.cs",
-      "line": 2
-    },
-    {
-      "name": "AiUsageDailySummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageDailySummary.cs",
-      "line": 2
-    },
-    {
-      "name": "AiUsageSummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageSummary.cs",
-      "line": 2
-    },
-    {
-      "name": "AiUsageUserSummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Contracts/Admin/Models/AiUsageUserSummary.cs",
-      "line": 4
+      "line": 10
     },
     {
       "name": "IAiAdministrationReadService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs",
-      "line": 5
+      "path": "Modules/Ai/Contracts/Common/IAiAdministrationReadService.cs",
+      "line": 4
     },
     {
       "name": "IAiPromptAdministrationService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs",
+      "path": "Modules/Ai/Contracts/Common/IAiPromptAdministrationService.cs",
       "line": 5
     },
     {
       "name": "IFoodRecognitionResultReader",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs",
+      "path": "Modules/Ai/Contracts/Common/IFoodRecognitionResultReader.cs",
       "line": 5
     },
     {
       "name": "AiPromptRevisionReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Models/AiPromptRevisionReadModel.cs",
+      "path": "Modules/Ai/Contracts/Models/AiPromptRevisionReadModel.cs",
       "line": 2
     },
     {
       "name": "AiPromptTemplateReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Models/AiPromptTemplateReadModel.cs",
+      "path": "Modules/Ai/Contracts/Models/AiPromptTemplateReadModel.cs",
       "line": 6
+    },
+    {
+      "name": "AiUsageBreakdown",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/AiUsageBreakdown.cs",
+      "line": 2
+    },
+    {
+      "name": "AiUsageDailySummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/AiUsageDailySummary.cs",
+      "line": 2
+    },
+    {
+      "name": "AiUsageSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/AiUsageSummary.cs",
+      "line": 2
+    },
+    {
+      "name": "AiUsageUserSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/AiUsageUserSummary.cs",
+      "line": 4
     },
     {
       "name": "FoodNutritionItemModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Models/FoodNutritionItemModel.cs",
+      "path": "Modules/Ai/Contracts/Models/FoodNutritionItemModel.cs",
       "line": 2
     },
     {
       "name": "FoodNutritionModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Models/FoodNutritionModel.cs",
+      "path": "Modules/Ai/Contracts/Models/FoodNutritionModel.cs",
       "line": 2
     },
     {
       "name": "FoodRecognitionJobModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Models/FoodRecognitionJobModel.cs",
+      "path": "Modules/Ai/Contracts/Models/FoodRecognitionJobModel.cs",
       "line": 2
     },
     {
       "name": "FoodVisionItemModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Models/FoodVisionItemModel.cs",
+      "path": "Modules/Ai/Contracts/Models/FoodVisionItemModel.cs",
       "line": 2
     },
     {
       "name": "FoodVisionModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Ai/Contracts/Ai/Models/FoodVisionModel.cs",
+      "path": "Modules/Ai/Contracts/Models/FoodVisionModel.cs",
       "line": 2
     },
     {
       "name": "AiPromptRevision",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptRevision.cs",
+      "path": "Modules/Ai/Domain/Entities/AiPromptRevision.cs",
       "line": 2
     },
     {
       "name": "AiPromptTemplate",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "path": "Modules/Ai/Domain/Entities/AiPromptTemplate.cs",
       "line": 6
     },
     {
       "name": "AiUsage",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiUsage.cs",
-      "line": 6
+      "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
+      "line": 7
     },
     {
       "name": "AiPromptTemplateId",
@@ -5277,130 +5228,60 @@
       "line": 10
     },
     {
-      "name": "AiQuotaPeriod",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Infrastructure/Model/Ai/AiQuotaPeriod.cs",
-      "line": 4
-    },
-    {
-      "name": "AiQuotaReservation",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Infrastructure/Model/Ai/AiQuotaReservation.cs",
-      "line": 5
-    },
-    {
-      "name": "AiQuotaReservationState",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Ai/Infrastructure/Model/Ai/AiQuotaReservationState.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodRecognitionJob",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Infrastructure/Model/Ai/FoodRecognitionJob.cs",
-      "line": 4
-    },
-    {
-      "name": "AiPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Infrastructure/Model/AiPersistenceModelRegistration.cs",
-      "line": 5
-    },
-    {
-      "name": "AiPromptTemplateConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiPromptTemplateConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "AiQuotaPeriodConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiQuotaPeriodConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "AiQuotaReservationConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiQuotaReservationConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "AiUsageConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiUsageConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FoodRecognitionJobConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/FoodRecognitionJobConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 12
-    },
-    {
-      "name": "AiPromptProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs",
-      "line": 9
-    },
-    {
-      "name": "AiPromptTemplateRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "AiQuotaRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "line": 10
-    },
-    {
-      "name": "AiUsageRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "FoodRecognitionJobStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "AiDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs",
-      "line": 7
+      "line": 6
+    },
+    {
+      "name": "AiPromptProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs",
+      "line": 8
+    },
+    {
+      "name": "AiPromptTemplateRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "AiQuotaRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs",
+      "line": 10
+    },
+    {
+      "name": "AiUsageRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Ai/Infrastructure/Persistence/AiUsageRepository.cs",
+      "line": 6
     },
     {
       "name": "AiUserDataPurgeParticipant",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs",
-      "line": 7
+      "line": 8
+    },
+    {
+      "name": "FoodRecognitionJobStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
+      "line": 12
     },
     {
       "name": "OpenAiOptions",
@@ -5421,7 +5302,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "OpenAiRequestFactory",
@@ -5431,123 +5312,102 @@
       "line": 5
     },
     {
-      "name": "AiPresentationServiceCollectionExtensions",
+      "name": "AiPersistenceModelRegistration",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Ai/Presentation/Extensions/AiPresentationServiceCollectionExtensions.cs",
+      "path": "Modules/Ai/PersistenceModel/AiPersistenceModelRegistration.cs",
+      "line": 5
+    },
+    {
+      "name": "AiQuotaPeriod",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/PersistenceModel/AiQuotaPeriod.cs",
+      "line": 4
+    },
+    {
+      "name": "AiQuotaReservation",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/PersistenceModel/AiQuotaReservation.cs",
+      "line": 5
+    },
+    {
+      "name": "AiQuotaReservationState",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Ai/PersistenceModel/AiQuotaReservationState.cs",
+      "line": 2
+    },
+    {
+      "name": "AiPromptTemplateConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiPromptTemplateConfiguration.cs",
       "line": 7
+    },
+    {
+      "name": "AiQuotaPeriodConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiQuotaPeriodConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "AiQuotaReservationConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiQuotaReservationConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "AiUsageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiUsageConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FoodRecognitionJobConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Ai/PersistenceModel/Configurations/FoodRecognitionJobConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodRecognitionJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
+      "line": 4
     },
     {
       "name": "AiFoodController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Ai/Presentation/Features/Ai/AiFoodController.cs",
+      "path": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
       "line": 24
     },
     {
       "name": "AiUsageController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Ai/Presentation/Features/Ai/AiUsageController.cs",
+      "path": "Modules/Ai/Presentation/Controllers/AiUsageController.cs",
       "line": 14
     },
     {
       "name": "FoodRecognitionController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Ai/Presentation/Features/Ai/FoodRecognitionController.cs",
+      "path": "Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs",
       "line": 20
     },
     {
-      "name": "AiHttpMappings",
+      "name": "AiPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Ai/Presentation/Features/Ai/Mappings/AiHttpMappings.cs",
-      "line": 10
-    },
-    {
-      "name": "AiHttpResponseMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Presentation/Features/Ai/Mappings/AiHttpResponseMappings.cs",
-      "line": 7
-    },
-    {
-      "name": "FoodRecognitionHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Presentation/Features/Ai/Mappings/FoodRecognitionHttpMappings.cs",
-      "line": 9
-    },
-    {
-      "name": "FoodVisionItemHttpModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Ai/Presentation/Features/Ai/Models/FoodVisionItemHttpModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodNutritionHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Ai/Presentation/Features/Ai/Requests/FoodNutritionHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "name": "FoodTextHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Ai/Presentation/Features/Ai/Requests/FoodTextHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodVisionHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Ai/Presentation/Features/Ai/Requests/FoodVisionHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "StartFoodRecognitionHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "Modules/Ai/Presentation/Features/Ai/Requests/StartFoodRecognitionHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodNutritionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodNutritionItemHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodNutritionItemHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodRecognitionJobHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodRecognitionJobHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodVisionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Ai/Presentation/Features/Ai/Responses/FoodVisionHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "name": "UserAiUsageHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "Modules/Ai/Presentation/Features/Ai/Responses/UserAiUsageHttpResponse.cs",
-      "line": 2
+      "path": "Modules/Ai/Presentation/Extensions/AiPresentationServiceCollectionExtensions.cs",
+      "line": 8
     },
     {
       "name": "FoodRecognitionHub",
@@ -5555,6 +5415,97 @@
       "role": "Other",
       "path": "Modules/Ai/Presentation/Hubs/FoodRecognitionHub.cs",
       "line": 7
+    },
+    {
+      "name": "AiHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Mappings/AiHttpMappings.cs",
+      "line": 10
+    },
+    {
+      "name": "AiHttpResponseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Mappings/AiHttpResponseMappings.cs",
+      "line": 8
+    },
+    {
+      "name": "FoodRecognitionHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Mappings/FoodRecognitionHttpMappings.cs",
+      "line": 9
+    },
+    {
+      "name": "FoodVisionItemHttpModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Models/FoodVisionItemHttpModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodNutritionHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Ai/Presentation/Requests/FoodNutritionHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "FoodTextHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Ai/Presentation/Requests/FoodTextHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodVisionHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Ai/Presentation/Requests/FoodVisionHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "StartFoodRecognitionHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodNutritionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodNutritionItemHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodRecognitionJobHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodVisionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "name": "UserAiUsageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/UserAiUsageHttpResponse.cs",
+      "line": 2
     },
     {
       "name": "FoodRecognitionNotifier",
@@ -15837,7 +15788,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ImageObjectDeletionOutbox",
@@ -19421,7 +19372,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "WebPushSubscriptionRepository",
@@ -28142,58 +28093,44 @@
     },
     {
       "interface": "IAiAdministrationReadService",
-      "interfacePath": "Modules/Ai/Contracts/Ai/Common/IAiAdministrationReadService.cs",
+      "interfacePath": "Modules/Ai/Contracts/Common/IAiAdministrationReadService.cs",
       "implementation": "AiAdministrationReadService",
       "implementationPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAiPromptAdministrationService",
-      "interfacePath": "Modules/Ai/Contracts/Ai/Common/IAiPromptAdministrationService.cs",
+      "interfacePath": "Modules/Ai/Contracts/Common/IAiPromptAdministrationService.cs",
       "implementation": "AiPromptAdministrationService",
       "implementationPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAiPromptProvider",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs",
       "implementation": "AiPromptProvider",
-      "implementationPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs",
+      "implementationPath": "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAiPromptTemplateRepository",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateRepository.cs",
       "implementation": "AiPromptTemplateRepository",
-      "implementationPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs",
+      "implementationPath": "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAiQuotaRepository",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiQuotaRepository.cs",
       "implementation": "AiQuotaRepository",
-      "implementationPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
+      "implementationPath": "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAiUsageQuery",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageQuery.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiUsageQuery.cs",
       "implementation": "AiUsageQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Ai/AiUsageQuery.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAiUsageRepository",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs",
-      "implementation": "AiUsageRepository",
-      "implementationPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAiUserContextService",
-      "interfacePath": "Modules/Ai/Application/Common/IAiUserContextService.cs",
-      "implementation": "AiUserContextService",
-      "implementationPath": "Modules/Ai/Application/Services/AiUserContextService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28793,21 +28730,21 @@
     },
     {
       "interface": "IFoodRecognitionJobStore",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionJobStore.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobStore.cs",
       "implementation": "FoodRecognitionJobStore",
-      "implementationPath": "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs",
+      "implementationPath": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFoodRecognitionProcessor",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IFoodRecognitionProcessor.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionProcessor.cs",
       "implementation": "FoodRecognitionProcessor",
       "implementationPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFoodRecognitionResultReader",
-      "interfacePath": "Modules/Ai/Contracts/Ai/Common/IFoodRecognitionResultReader.cs",
+      "interfacePath": "Modules/Ai/Contracts/Common/IFoodRecognitionResultReader.cs",
       "implementation": "FoodRecognitionResultReader",
       "implementationPath": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
       "confidence": "naming-convention"
@@ -29290,14 +29227,14 @@
     },
     {
       "interface": "IOpenAiFoodClient",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs",
       "implementation": "OpenAiFoodClient",
       "implementationPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IOpenAiFoodService",
-      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs",
       "implementation": "OpenAiFoodService",
       "implementationPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "confidence": "naming-convention"
@@ -29674,13 +29611,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IUserAiUsageSummaryReadService",
-      "interfacePath": "Modules/Ai/Application/Common/IUserAiUsageSummaryReadService.cs",
-      "implementation": "UserAiUsageSummaryReadService",
-      "implementationPath": "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IUserAuthenticationIdentityService",
       "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAuthenticationIdentityService.cs",
       "implementation": "UserAuthenticationIdentityService",
@@ -30016,21 +29946,21 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 395
+      "line": 396
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 396
+      "line": 397
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 68
+      "line": 69
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -30086,7 +30016,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 180
+      "line": 182
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30117,32 +30047,18 @@
       "line": 17
     },
     {
-      "service": "IAiUserContextService",
-      "implementation": "AiUserContextService",
-      "lifetime": "Scoped",
-      "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 18
-    },
-    {
       "service": "IAiAdministrationReadService",
       "implementation": "AiAdministrationReadService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 18
     },
     {
       "service": "IAiPromptAdministrationService",
       "implementation": "AiPromptAdministrationService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 20
-    },
-    {
-      "service": "IUserAiUsageSummaryReadService",
-      "implementation": "UserAiUsageSummaryReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 19
     },
     {
       "service": "IBillingOverviewReadService",

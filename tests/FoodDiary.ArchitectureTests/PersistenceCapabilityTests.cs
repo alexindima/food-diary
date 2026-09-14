@@ -103,6 +103,13 @@ public sealed class PersistenceCapabilityTests {
     }
 
     [Fact]
+    public void Scanner_RecognizesModuleEntitiesWithoutRootDbSets() {
+        const string source = "using FoodDiary.Modules.Ai.Domain.Entities; using Microsoft.EntityFrameworkCore; class Probe(DbSet<AiPromptRevision> revisions) { public object Read() => revisions.AsNoTracking(); }";
+        IReadOnlyDictionary<string, string[]> actual = PersistenceCapabilityScanner.Scan([("probe.cs", source)]);
+        Assert.Equal(["entity:AiPromptRevision"], actual["probe.cs"], StringComparer.Ordinal);
+    }
+
+    [Fact]
     public void NoTrackingRead_DoesNotReceiveWriteOrTrackedCapabilities() {
         const string source = "using FoodDiary.Infrastructure.Persistence; using Microsoft.EntityFrameworkCore; class Probe(FoodDiaryDbContext db) { public object Read() => db.Users.AsNoTracking(); }";
         IReadOnlyDictionary<string, string[]> actual = PersistenceCapabilityScanner.Scan([("probe.cs", source)]);

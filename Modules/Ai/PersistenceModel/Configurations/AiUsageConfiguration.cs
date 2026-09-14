@@ -1,0 +1,31 @@
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FoodDiary.Modules.Ai.PersistenceModel.Configurations;
+
+internal sealed class AiUsageConfiguration : IEntityTypeConfiguration<AiUsage> {
+    public void Configure(EntityTypeBuilder<AiUsage> builder) {
+        builder.Property(e => e.Id)
+            .HasConversion(id => id.Value, value => new AiUsageId(value))
+            .ValueGeneratedNever();
+
+        builder.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        builder.Property(e => e.Operation)
+            .IsRequired()
+            .HasMaxLength(32);
+
+        builder.Property(e => e.Model)
+            .IsRequired()
+            .HasMaxLength(64);
+
+        builder.HasIndex(e => e.UserId);
+        builder.HasIndex(e => e.CreatedOnUtc);
+        builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
+    }
+}

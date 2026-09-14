@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 
-namespace FoodDiary.Domain.Tests.Domain;
+namespace FoodDiary.Modules.Ai.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public class AiPromptTemplateInvariantTests {

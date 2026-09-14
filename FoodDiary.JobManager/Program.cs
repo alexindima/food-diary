@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;

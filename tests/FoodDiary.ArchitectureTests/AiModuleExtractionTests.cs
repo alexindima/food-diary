@@ -8,17 +8,17 @@ public sealed class AiModuleExtractionTests {
         Assert.NotEmpty(SourceScanner.SourceFiles(adminRoot));
         Assert.Empty(SourceScanner.FindLinePatternViolations(adminRoot, [
             "IAiQuotaRepository", "IAiPromptTemplateRepository", "IAiPromptTemplateWriteRepository",
-            "IAiPromptTemplateReadRepository", "IAiUsageRepository", "IAiUsageWriteRepository",
+            "IAiPromptTemplateReadRepository", "IAiUsageQuery", "IAiUsageWriteRepository",
         ]));
     }
 
     [Theory]
     [InlineData("Contracts", "FoodDiary.Modules.Ai.Contracts.csproj")]
     [InlineData("Application", "FoodDiary.Modules.Ai.Application.csproj")]
-    [InlineData("Application/Abstractions", "FoodDiary.Modules.Ai.Application.Abstractions.csproj")]
+    [InlineData("Application.Abstractions", "FoodDiary.Modules.Ai.Application.Abstractions.csproj")]
     [InlineData("Domain", "FoodDiary.Modules.Ai.Domain.csproj")]
     [InlineData("Infrastructure", "FoodDiary.Modules.Ai.Infrastructure.csproj")]
-    [InlineData("Infrastructure/Model", "FoodDiary.Modules.Ai.PersistenceModel.csproj")]
+    [InlineData("PersistenceModel", "FoodDiary.Modules.Ai.PersistenceModel.csproj")]
     public void OwnedLayers_HavePhysicalProjects(string folder, string project) {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Ai", folder, project)));
     }

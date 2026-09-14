@@ -1,0 +1,54 @@
+using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Modules.Ai.Presentation.Mappings;
+using FoodDiary.Modules.Ai.Presentation.Requests;
+using FoodDiary.Modules.Ai.Presentation.Responses;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+
+namespace FoodDiary.Modules.Ai.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/ai/food")]
+[Authorize(Roles = PresentationRoleNames.Premium)]
+[EnableRateLimiting(PresentationPolicyNames.AiRateLimitPolicyName)]
+[RequestSizeLimit(PresentationRequestLimits.AiPayloadBytes)]
+[RejectOversizedRequest(PresentationRequestLimits.AiPayloadBytes)]
+[ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpPost("vision")]
+    [EnableIdempotency(requireKey: true)]
+    [ProducesResponseType<FoodVisionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    public Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
+
+    [HttpPost("text")]
+    [EnableIdempotency(requireKey: true)]
+    [ProducesResponseType<FoodVisionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    public Task<IActionResult> ParseFoodText([FromCurrentUser] Guid userId, [FromBody] FoodTextHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
+
+    [HttpPost("nutrition")]
+    [EnableIdempotency(requireKey: true)]
+    [ProducesResponseType<FoodNutritionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    public Task<IActionResult> CalculateNutrition([FromCurrentUser] Guid userId, [FromBody] FoodNutritionHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
+
+    private string GetRequestId() =>
+        IdempotencyRequestContext.GetRequestId(HttpContext) ?? throw new InvalidOperationException("Required idempotency context is unavailable.");
+}

@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Admin.Infrastructure;
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1568,
+    "productionProjectEdges": 1567,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -31,9 +31,16 @@
     {
       "module": "Admin",
       "fanIn": 0,
-      "fanOut": 3,
+      "fanOut": 4,
       "level": "informational",
       "role": "orchestrator"
+    },
+    {
+      "module": "Meals",
+      "fanIn": 2,
+      "fanOut": 2,
+      "level": "informational",
+      "role": "aggregate-owner"
     },
     {
       "module": "Hydration",
@@ -50,9 +57,9 @@
       "role": "aggregate-owner"
     },
     {
-      "module": "Meals",
+      "module": "Ai",
       "fanIn": 2,
-      "fanOut": 1,
+      "fanOut": 0,
       "level": "informational",
       "role": "aggregate-owner"
     },
@@ -153,13 +160,6 @@
       "fanOut": 1,
       "level": "informational",
       "role": "read-composer"
-    },
-    {
-      "module": "Ai",
-      "fanIn": 0,
-      "fanOut": 0,
-      "level": "informational",
-      "role": "aggregate-owner"
     },
     {
       "module": "Billing",

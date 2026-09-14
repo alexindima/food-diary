@@ -4,8 +4,6 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class PhysicalProjectLayoutTests {
     // Existing physical nesting only. Remove entries as projects move; do not add new exceptions.
     private static readonly string[] LegacyNesting = [
-        "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj -> Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
-        "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj -> Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj",
         "Modules/Billing/Application/FoodDiary.Application.Billing.csproj -> Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
         "Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj -> Modules/Billing/Infrastructure/Model/FoodDiary.Modules.Billing.PersistenceModel.csproj",
         "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj -> Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj",

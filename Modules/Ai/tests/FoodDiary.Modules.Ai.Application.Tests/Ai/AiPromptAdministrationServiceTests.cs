@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Services;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Services;
+using FoodDiary.Modules.Ai.Domain.Entities;
 
-namespace FoodDiary.Application.Tests.Ai;
+namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiPromptAdministrationServiceTests {

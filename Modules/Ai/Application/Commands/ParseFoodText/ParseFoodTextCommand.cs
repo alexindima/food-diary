@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Ai.Commands.ParseFoodText;
+namespace FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
 
 public record ParseFoodTextCommand(
     Guid? UserId,

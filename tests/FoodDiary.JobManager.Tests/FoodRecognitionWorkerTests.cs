@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;

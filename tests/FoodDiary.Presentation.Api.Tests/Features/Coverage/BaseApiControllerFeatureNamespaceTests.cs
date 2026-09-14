@@ -1,5 +1,5 @@
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Ai;
+using FoodDiary.Modules.Ai.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Images;
 

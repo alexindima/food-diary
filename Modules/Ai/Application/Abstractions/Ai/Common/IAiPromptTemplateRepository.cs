@@ -1,3 +1,0 @@
-namespace FoodDiary.Application.Abstractions.Ai.Common;
-
-public interface IAiPromptTemplateRepository : IAiPromptTemplateReadRepository, IAiPromptTemplateReadModelRepository, IAiPromptTemplateWriteRepository;

@@ -1,9 +1,10 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Ai.Services;
+namespace FoodDiary.Modules.Ai.Application.Services;
 
 public sealed class AiPromptAdministrationService(IAiPromptTemplateWriteRepository repository)
     : IAiPromptAdministrationService {

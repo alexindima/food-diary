@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Mappings;

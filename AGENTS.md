@@ -30,10 +30,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - AI consumer contracts: `Modules/Ai/Contracts/AGENTS.md`
 - AI logical module: `Modules/Ai/AGENTS.md`
 - AI application: `Modules/Ai/Application/AGENTS.md`
-- AI application ports: `Modules/Ai/Application/Abstractions/AGENTS.md`
+- AI application ports: `Modules/Ai/Application.Abstractions/AGENTS.md`
 - AI domain: `Modules/Ai/Domain/AGENTS.md`
 - AI infrastructure: `Modules/Ai/Infrastructure/AGENTS.md`
-- AI persistence model: `Modules/Ai/Infrastructure/Model/AGENTS.md`
+- AI persistence model: `Modules/Ai/PersistenceModel/AGENTS.md`
 - AI tests: `Modules/Ai/tests/AGENTS.md`
 - BodyMetrics logical module: `Modules/BodyMetrics/AGENTS.md`
 - BodyMetrics application: `Modules/BodyMetrics/Application/AGENTS.md`

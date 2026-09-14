@@ -1,12 +1,12 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
-using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
-using FoodDiary.Application.Ai.Services;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
+using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Ai;
+namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionProcessorTests {

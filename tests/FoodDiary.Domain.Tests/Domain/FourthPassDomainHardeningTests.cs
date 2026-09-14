@@ -1,6 +1,7 @@
+using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;
 using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
@@ -8,7 +9,6 @@ using FoodDiary.Domain.Entities.OpenFoodFacts;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Tests.Domain;
 

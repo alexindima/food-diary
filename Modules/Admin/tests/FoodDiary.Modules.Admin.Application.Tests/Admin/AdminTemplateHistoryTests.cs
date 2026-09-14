@@ -1,13 +1,14 @@
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Ai.Services;
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Application.Identity.Email.Services;
 
 namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
@@ -17,7 +18,7 @@ public sealed class AdminTemplateHistoryTests {
     [Fact]
     public async Task AiUsage_PreservesUserScopeAndCancellation() {
         using var cancellation = new CancellationTokenSource();
-        IAiUsageReadRepository repository = Substitute.For<IAiUsageReadRepository>();
+        IAiUsageQuery repository = Substitute.For<IAiUsageQuery>();
         var userId = Guid.NewGuid();
         var summary = new AiUsageSummary(30, 10, 20, [], [], [], []);
         repository.GetSummaryForUserAsync(DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1), new FoodDiary.Domain.ValueObjects.Ids.UserId(userId), cancellation.Token).Returns(summary);
@@ -31,7 +32,7 @@ public sealed class AdminTemplateHistoryTests {
         IEmailTemplateReadModelRepository emailRepository = Substitute.For<IEmailTemplateReadModelRepository>();
         IEmailTemplateAdministrationReadService email = new EmailTemplateAdministrationReadService(emailRepository);
         IAiPromptTemplateReadModelRepository aiRepository = Substitute.For<IAiPromptTemplateReadModelRepository>();
-        IAiAdministrationReadService ai = new AiAdministrationReadService(Substitute.For<IAiUsageReadRepository>(), aiRepository);
+        IAiAdministrationReadService ai = new AiAdministrationReadService(Substitute.For<IAiUsageQuery>(), aiRepository);
         var revision = new EmailTemplateRevisionReadModel(Guid.NewGuid(), "subject", "html", "text", IsActive: false, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1));
         emailRepository.GetRevisionsAsync("welcome", "en", cancellation.Token).Returns([revision]);
         var service = new GetAdminTemplateRevisionsQueryHandler(email, ai);
@@ -46,7 +47,7 @@ public sealed class AdminTemplateHistoryTests {
         IEmailTemplateReadModelRepository emailRepository = Substitute.For<IEmailTemplateReadModelRepository>();
         IEmailTemplateAdministrationReadService email = new EmailTemplateAdministrationReadService(emailRepository);
         IAiPromptTemplateReadModelRepository aiRepository = Substitute.For<IAiPromptTemplateReadModelRepository>();
-        IAiAdministrationReadService ai = new AiAdministrationReadService(Substitute.For<IAiUsageReadRepository>(), aiRepository);
+        IAiAdministrationReadService ai = new AiAdministrationReadService(Substitute.For<IAiUsageQuery>(), aiRepository);
         var revision = new AiPromptRevisionReadModel(Guid.NewGuid(), "prompt", 3, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1));
         aiRepository.GetRevisionsAsync("welcome", "ru", cancellation.Token).Returns([revision]);
         var service = new GetAdminTemplateRevisionsQueryHandler(email, ai);

@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Integrations.Services.OpenAi;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderRegistrationTests {
@@ -27,9 +27,9 @@ public sealed class ProviderRegistrationTests {
         Assert.Multiple(
             () => Assert.IsType<OpenAiFoodClient>(client),
             () => Assert.Equal("FoodDiary.Modules.Ai.Infrastructure", client.GetType().Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Services.OpenAi.OpenAiFoodClient", client.GetType().FullName),
+            () => Assert.Equal("FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi.OpenAiFoodClient", client.GetType().FullName),
             () => Assert.Equal("FoodDiary.Modules.Ai.Infrastructure", typeof(OpenAiOptions).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Options.OpenAiOptions", typeof(OpenAiOptions).FullName),
+            () => Assert.Equal("FoodDiary.Modules.Ai.Infrastructure.Providers.Options.OpenAiOptions", typeof(OpenAiOptions).FullName),
             () => Assert.Same(clock, provider.GetRequiredService<TimeProvider>()));
         using HttpClient httpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(IOpenAiFoodClient));
         Assert.Equal(TimeSpan.FromSeconds(60), httpClient.Timeout);

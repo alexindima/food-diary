@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 
 public sealed class OpenAiOptions {
     public const string SectionName = "OpenAi";

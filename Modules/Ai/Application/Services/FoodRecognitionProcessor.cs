@@ -1,13 +1,13 @@
 using System.Security.Cryptography;
 using System.Text;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
-using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
+using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Ai.Services;
+namespace FoodDiary.Modules.Ai.Application.Services;
 
 public sealed class FoodRecognitionProcessor(IFoodRecognitionJobStore store, ISender sender) : IFoodRecognitionProcessor {
     public async Task<bool> ProcessNextAsync(CancellationToken cancellationToken) {

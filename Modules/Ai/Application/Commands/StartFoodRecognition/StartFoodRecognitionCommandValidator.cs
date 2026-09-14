@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Ai.Commands.StartFoodRecognition;
+namespace FoodDiary.Modules.Ai.Application.Commands.StartFoodRecognition;
 
 public sealed class StartFoodRecognitionCommandValidator : AbstractValidator<StartFoodRecognitionCommand> {
     public StartFoodRecognitionCommandValidator() {

@@ -1,7 +1,7 @@
 # AI consumer contracts
 
 Own administration reads, prompt administration and completed recognition reads,
-with their immutable DTOs. Preserve existing CLR namespaces and method signatures.
+with their immutable DTOs. Use project-and-folder namespaces and preserve method signatures.
 Depend only on Results and scalar Users.Domain.Contracts. Never expose aggregates,
 job stores, provider clients, quota repositories or processing entrypoints here.
 

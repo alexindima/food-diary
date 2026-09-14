@@ -1,10 +1,9 @@
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence.Ai;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiQuotaRepositoryTests {

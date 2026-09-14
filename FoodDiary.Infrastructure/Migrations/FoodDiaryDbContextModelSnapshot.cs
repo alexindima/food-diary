@@ -174,7 +174,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("AdminImpersonationSessions");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Ai.AiPromptTemplate", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.Domain.Entities.AiPromptTemplate", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -215,7 +215,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("AiPromptTemplates");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Ai.AiUsage", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.Domain.Entities.AiUsage", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -4179,7 +4179,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("AchievementEvaluationOutbox", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.AiQuotaPeriod", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.AiQuotaPeriod", b => {
                 b.Property<Guid>("UserId")
                     .HasColumnType("uuid");
 
@@ -4214,7 +4214,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 });
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.AiQuotaReservation", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.AiQuotaReservation", b => {
                 b.Property<string>("RequestId")
                     .HasMaxLength(64)
                     .HasColumnType("character varying(64)");
@@ -4267,7 +4267,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 });
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.FoodRecognitionJob", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -4722,8 +4722,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Ai.AiPromptTemplate", b => {
-                b.OwnsMany("FoodDiary.Domain.Entities.Ai.AiPromptRevision", "Revisions", b1 => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.Domain.Entities.AiPromptTemplate", b => {
+                b.OwnsMany("FoodDiary.Modules.Ai.Domain.Entities.AiPromptRevision", "Revisions", b1 => {
                     b1.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
@@ -4760,7 +4760,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Revisions");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Ai.AiUsage", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.Domain.Entities.AiUsage", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5532,7 +5532,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.AiQuotaPeriod", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.AiQuotaPeriod", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5540,15 +5540,15 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.AiQuotaReservation", b => {
-                b.HasOne("FoodDiary.Infrastructure.Persistence.Ai.AiQuotaPeriod", null)
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.AiQuotaReservation", b => {
+                b.HasOne("FoodDiary.Modules.Ai.PersistenceModel.AiQuotaPeriod", null)
                     .WithMany()
                     .HasForeignKey("UserId", "PeriodStartUtc")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.FoodRecognitionJob", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")

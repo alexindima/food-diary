@@ -1,13 +1,14 @@
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Queries.ListFoodRecognitions;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Queries.ListFoodRecognitions;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Ai;
-using FoodDiary.Presentation.Api.Features.Ai.Responses;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Ai.Presentation.Controllers;
+using FoodDiary.Modules.Ai.Presentation.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Ai.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionListControllerTests {

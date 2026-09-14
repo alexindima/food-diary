@@ -7,7 +7,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Modules.Admin.Presentation.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Requests;
-using FoodDiary.Presentation.Api.Features.Ai;
+using FoodDiary.Modules.Ai.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Meals;

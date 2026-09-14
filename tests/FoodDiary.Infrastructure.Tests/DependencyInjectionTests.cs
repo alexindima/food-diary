@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition;
@@ -12,7 +13,7 @@ using FoodDiary.Modules.Wearables.Infrastructure;
 using Amazon.S3;
 using System.Net;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -29,7 +30,7 @@ using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -49,10 +50,11 @@ using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Integrations.Services;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client;
-using FoodDiary.Integrations.Services.OpenAi;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 using FoodDiary.Integrations.Wearables;
 using FoodDiary.MailRelay.Client.Options;
 using FoodDiary.Mediator;
@@ -947,11 +949,11 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateRepository",
+            "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateRepository",
             [
-                "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateReadRepository",
-                "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateReadModelRepository",
-                "FoodDiary.Application.Abstractions.Ai.Common.IAiPromptTemplateWriteRepository",
+                "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateReadRepository",
+                "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateReadModelRepository",
+                "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateWriteRepository",
             ]
         },
         {

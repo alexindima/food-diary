@@ -9,7 +9,7 @@
     <ProjectReference Include="../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../Modules/Admin/PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
-    <ProjectReference Include="../Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Ai/PersistenceModel/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="../Modules/Billing/Infrastructure/Model/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />

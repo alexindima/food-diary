@@ -443,7 +443,7 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void PresentationApi_EndpointControllersLiveUnderFeatures() {
+    public void PresentationApi_EndpointControllersLiveInControllerOrFeatureFolders() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
         string controllersRoot = Path.Combine(presentationRoot, "Controllers");
@@ -455,6 +455,8 @@ public class LayeringTests {
 
         string[] violations = [.. presentationRoots.SelectMany(path => Directory.GetFiles(path, "*Controller.cs", SearchOption.AllDirectories))
             .Where(path => !path.StartsWith(controllersRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !presentationRoots.Any(project => string.Equals(Path.GetDirectoryName(path),
+                Path.Combine(project, "Controllers"), StringComparison.OrdinalIgnoreCase)))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Select(path => Path.GetRelativePath(root, path))
             .Order(StringComparer.Ordinal)];

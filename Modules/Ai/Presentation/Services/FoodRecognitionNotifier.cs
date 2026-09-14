@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Presentation.Api.Hubs;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Presentation.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Presentation.Api.Services;
+namespace FoodDiary.Modules.Ai.Presentation.Services;
 
 public sealed class FoodRecognitionNotifier(
     IServiceScopeFactory scopes,

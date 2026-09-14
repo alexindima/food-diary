@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Models;

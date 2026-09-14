@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Ai.Commands.ParseFoodText;
+namespace FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
 
 public sealed class ParseFoodTextCommandValidator : AbstractValidator<ParseFoodTextCommand> {
     public ParseFoodTextCommandValidator() {

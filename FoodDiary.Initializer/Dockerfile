@@ -153,7 +153,7 @@ COPY Modules/Images/Service.Contracts/*.csproj Modules/Images/Service.Contracts/
 COPY Modules/Images/Domain/*.csproj Modules/Images/Domain/
 COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/*.csproj Modules/Images/Infrastructure/Model/
-COPY Modules/Ai/Application/Abstractions/*.csproj Modules/Ai/Application/Abstractions/
+COPY Modules/Ai/Application.Abstractions/*.csproj Modules/Ai/Application.Abstractions/
 COPY Modules/Admin/Application/*.csproj Modules/Admin/Application/
 COPY Modules/Admin/Application.Abstractions/*.csproj Modules/Admin/Application.Abstractions/
 COPY Modules/Admin/Domain/*.csproj Modules/Admin/Domain/
@@ -162,7 +162,7 @@ COPY Modules/Admin/PersistenceModel/*.csproj Modules/Admin/PersistenceModel/
 COPY Modules/Ai/Application/*.csproj Modules/Ai/Application/
 COPY Modules/Ai/Domain/*.csproj Modules/Ai/Domain/
 COPY Modules/Ai/Infrastructure/*.csproj Modules/Ai/Infrastructure/
-COPY Modules/Ai/Infrastructure/Model/*.csproj Modules/Ai/Infrastructure/Model/
+COPY Modules/Ai/PersistenceModel/*.csproj Modules/Ai/PersistenceModel/
 COPY Modules/Lessons/Application/*.csproj Modules/Lessons/Application/
 COPY Modules/Lessons/Application/Abstractions/*.csproj Modules/Lessons/Application/Abstractions/
 COPY Modules/Lessons/Contracts/*.csproj Modules/Lessons/Contracts/
@@ -391,8 +391,8 @@ COPY Modules/Admin/PersistenceModel/ Modules/Admin/PersistenceModel/
 COPY Modules/Ai/Application/ Modules/Ai/Application/
 COPY Modules/Ai/Domain/ Modules/Ai/Domain/
 COPY Modules/Ai/Infrastructure/ Modules/Ai/Infrastructure/
-COPY Modules/Ai/Application/Abstractions/ Modules/Ai/Application/Abstractions/
-COPY Modules/Ai/Infrastructure/Model/ Modules/Ai/Infrastructure/Model/
+COPY Modules/Ai/Application.Abstractions/ Modules/Ai/Application.Abstractions/
+COPY Modules/Ai/PersistenceModel/ Modules/Ai/PersistenceModel/
 COPY Modules/Lessons/Application/ Modules/Lessons/Application/
 COPY Modules/Lessons/Application/Abstractions/ Modules/Lessons/Application/Abstractions/
 COPY Modules/Lessons/Contracts/ Modules/Lessons/Contracts/

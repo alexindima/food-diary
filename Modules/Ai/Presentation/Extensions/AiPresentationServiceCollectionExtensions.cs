@@ -1,9 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Presentation.Api.Hubs;
-using FoodDiary.Presentation.Api.Services;
+using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Modules.Ai.Presentation.Hubs;
+using FoodDiary.Modules.Ai.Presentation.Services;
 using Microsoft.AspNetCore.Builder;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Ai.Presentation.Extensions;
 
 public static class AiPresentationServiceCollectionExtensions {
     public static IServiceCollection AddAiPresentation(this IServiceCollection services) {

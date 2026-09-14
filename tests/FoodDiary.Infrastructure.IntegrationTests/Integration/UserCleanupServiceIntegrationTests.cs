@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Domain.Primitives;
@@ -10,7 +11,7 @@ using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Application.Abstractions.Users.Common;
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -113,7 +114,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.NotNull(survivorOperation);
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
-        UserCleanupService service = CreateService(context, imageObjectDeletionOutbox);
+        await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
 
         int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
@@ -149,7 +150,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         (User? deletedUser, User? survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
-        UserCleanupService service = CreateService(context, imageObjectDeletionOutbox);
+        await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -196,7 +197,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await context.SaveChangesAsync();
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
-        UserCleanupService service = CreateService(context, imageObjectDeletionOutbox);
+        await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -223,7 +224,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         user.Restore();
         await context.SaveChangesAsync();
 
-        UserCleanupService service = CreateService(context, new RecordingImageObjectDeletionOutbox());
+        await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service);
 
         bool removed = await service.CleanupUserAsync(
             user.Id,
@@ -245,7 +246,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var telegram = new TelegramOperationStore(identity, new EphemeralDataProtectionProvider(), TimeProvider.System);
         Guid? operation = await telegram.RegisterAsync(123, 1, deleted.Id.Value, 0, "recoverable-photo", CancellationToken.None);
         Assert.NotNull(operation);
-        UserCleanupService service = CreateService(context, new RecordingImageObjectDeletionOutbox(), new FailingParticipant(context));
+        await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service, new FailingParticipant(context));
 
         int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, survivor.Id.Value);
 
@@ -272,7 +273,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         }
     }
 
-    private static UserCleanupService CreateService(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, IUserDataPurgeParticipant? extra = null) {
+    private static ServiceProvider CreateServiceProvider(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, out UserCleanupService service, IUserDataPurgeParticipant? extra = null) {
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddAdminPersistence();
@@ -290,11 +291,12 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         services.AddRecipesPersistence();
         services.AddSingleton(outbox);
         if (extra is not null) { services.AddSingleton(extra); }
-        using ServiceProvider provider = services.BuildServiceProvider();
+        ServiceProvider provider = services.BuildServiceProvider();
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
         Assert.Equal(extra is null ? 13 : 14, participants.Length);
-        return new UserCleanupService(context, participants, NullLogger<UserCleanupService>.Instance,
+        service = new UserCleanupService(context, participants, NullLogger<UserCleanupService>.Instance,
             new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance));
+        return provider;
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {

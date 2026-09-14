@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using FoodDiary.Integrations.Http;
 
-namespace FoodDiary.Integrations.Services.OpenAi;
+namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 
 internal static class OpenAiErrorMetadata {
     private const int MaximumDiagnosticTokenLength = 64;

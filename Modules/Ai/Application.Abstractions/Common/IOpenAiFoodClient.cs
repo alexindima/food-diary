@@ -1,0 +1,42 @@
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Results;
+
+namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
+
+public interface IOpenAiFoodClient {
+    Task<Result<AiProviderTokenBudget>> GetAnalyzeFoodImageTokenBudgetAsync(
+        string imageUrl,
+        string? userLanguage,
+        string? description,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
+    Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> AnalyzeFoodImageAsync(
+        string imageUrl,
+        string? userLanguage,
+        string? description,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
+    Task<Result<AiProviderTokenBudget>> GetParseFoodTextTokenBudgetAsync(
+        string text,
+        string? userLanguage,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
+    Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> ParseFoodTextAsync(
+        string text,
+        string? userLanguage,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
+    Task<Result<AiProviderTokenBudget>> GetCalculateNutritionTokenBudgetAsync(
+        IReadOnlyList<FoodVisionItemModel> items,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
+    Task<Result<OpenAiFoodClientResponse<FoodNutritionModel>>> CalculateNutritionAsync(
+        IReadOnlyList<FoodVisionItemModel> items,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+}

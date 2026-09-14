@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.ReadModel.Composition;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +24,8 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         AiDbContext owned = provider.GetRequiredService<AiDbContext>();
         IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
-        IAiUsageRepository usages = provider.GetRequiredService<IAiUsageRepository>();
+        IAiUsageWriteRepository usages = provider.GetRequiredService<IAiUsageWriteRepository>();
+        Assert.Null(provider.GetService<IAiUsageQuery>());
         IAiPromptTemplateRepository templates = provider.GetRequiredService<IAiPromptTemplateRepository>();
         var user = User.Create("ai-context@example.com", "hash");
         shared.Users.Add(user);
@@ -89,7 +90,6 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
             ["Database:EnableRetries"] = "false",
         }).Build());
         services.AddAiPersistence();
-        services.AddReadModelComposition();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         return services.BuildServiceProvider();
     }

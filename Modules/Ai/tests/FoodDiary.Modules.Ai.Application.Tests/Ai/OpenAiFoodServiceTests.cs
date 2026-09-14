@@ -1,14 +1,15 @@
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Ai.Services;
+
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Ai;
+namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public sealed class OpenAiFoodServiceTests {
@@ -374,7 +375,7 @@ public sealed class OpenAiFoodServiceTests {
         new(
             client,
             quotaRepository,
-            CreateAiUserContextService(user, returnNull),
+            CreateUserAiProfileReadService(user, returnNull),
             new StubDateTimeProvider(),
             CreateAiPromptProvider(),
             overallOperationTimeout);
@@ -516,22 +517,22 @@ public sealed class OpenAiFoodServiceTests {
         }
     }
 
-    private static IAiUserContextService CreateAiUserContextService(User? user = null, bool returnNull = false) {
+    private static IUserAiProfileReadService CreateUserAiProfileReadService(User? user = null, bool returnNull = false) {
         User resolvedUser = user ?? User.Create("ai-tests@example.com", "hash");
         bool hasAcceptedAiConsent = user is null || resolvedUser.AiConsentAcceptedAt is not null;
-        IAiUserContextService service = Substitute.For<IAiUserContextService>();
+        IUserAiProfileReadService service = Substitute.For<IUserAiProfileReadService>();
         service
-            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetAiProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(_ => {
                 if (returnNull) {
-                    return Task.FromResult(Result.Failure<AiUserContext>(UserErrors.NotFound()));
+                    return Task.FromResult(Result.Failure<UserAiProfileModel>(UserErrors.NotFound()));
                 }
 
                 if (!resolvedUser.IsActive || resolvedUser.DeletedAt is not null) {
-                    return Task.FromResult(Result.Failure<AiUserContext>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
                 }
 
-                return Task.FromResult(Result.Success(new AiUserContext(
+                return Task.FromResult(Result.Success(new UserAiProfileModel(
                     resolvedUser.Id,
                     resolvedUser.Language,
                     resolvedUser.AiInputTokenLimit,

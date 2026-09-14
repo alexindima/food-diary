@@ -1,7 +1,7 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 
-namespace FoodDiary.Integrations.Services.OpenAi;
+namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 
 internal static class OpenAiRequestFactory {
     public static object BuildVisionRequest(

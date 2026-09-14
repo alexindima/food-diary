@@ -1,0 +1,69 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
+using System.Globalization;
+using FoodDiary.Domain.Primitives;
+
+namespace FoodDiary.Modules.Ai.Domain.Entities;
+
+public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
+    private readonly List<AiPromptRevision> _revisions = [];
+    public IReadOnlyCollection<AiPromptRevision> Revisions => _revisions;
+    private const int KeyMaxLength = 64;
+    private const int LocaleMaxLength = 8;
+    private const int PromptTextMaxLength = 4096;
+
+    public string Key { get; private set; } = string.Empty;
+    public string Locale { get; private set; } = string.Empty;
+    public string PromptText { get; private set; } = string.Empty;
+    public int Version { get; private set; } = 1;
+    public bool IsActive { get; private set; } = true;
+
+    private AiPromptTemplate() {
+    }
+
+    public static AiPromptTemplate Create(
+        string key,
+        string locale,
+        string promptText,
+        bool isActive = true) {
+        var template = new AiPromptTemplate {
+            Id = AiPromptTemplateId.New(),
+            Key = NormalizeRequired(key, KeyMaxLength, nameof(key)).ToLowerInvariant(),
+            Locale = NormalizeRequired(locale, LocaleMaxLength, nameof(locale)).ToLowerInvariant(),
+            PromptText = NormalizeRequired(promptText, PromptTextMaxLength, nameof(promptText)),
+            Version = 1,
+            IsActive = isActive,
+        };
+        template.SetCreated();
+        return template;
+    }
+
+    public void Update(string promptText, bool? isActive = null) {
+        string normalizedText = NormalizeRequired(promptText, PromptTextMaxLength, nameof(promptText));
+        bool textChanged = !string.Equals(PromptText, normalizedText, StringComparison.Ordinal);
+        bool nextActive = isActive ?? IsActive;
+        if (!textChanged && nextActive == IsActive) { return; }
+        int nextVersion = textChanged ? GetNextVersion() : Version;
+        _revisions.Add(AiPromptRevision.Capture(this));
+        PromptText = normalizedText;
+        Version = nextVersion;
+        IsActive = nextActive;
+        SetModified();
+    }
+
+    private int GetNextVersion() {
+        return Version == int.MaxValue
+            ? throw new InvalidOperationException("Prompt template version limit has been reached.")
+            : Version + 1;
+    }
+
+    private static string NormalizeRequired(string value, int maxLength, string paramName) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            throw new ArgumentException($"{paramName} is required.", paramName);
+        }
+
+        string trimmed = value.Trim();
+        return trimmed.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Must be at most {maxLength} characters."))
+            : trimmed;
+    }
+}

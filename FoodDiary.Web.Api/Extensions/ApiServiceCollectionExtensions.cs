@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Ai.Presentation.Extensions;
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Presentation.Extensions;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition;

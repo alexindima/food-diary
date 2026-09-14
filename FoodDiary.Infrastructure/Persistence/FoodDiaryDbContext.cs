@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Infrastructure.Persistence.Composition;
 using FoodDiary.Infrastructure.Persistence.Authentication;

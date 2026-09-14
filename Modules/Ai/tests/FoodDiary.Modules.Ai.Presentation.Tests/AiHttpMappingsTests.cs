@@ -1,14 +1,15 @@
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
-using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
-using FoodDiary.Application.Ai.Commands.ParseFoodText;
-using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
-using FoodDiary.Presentation.Api.Features.Ai.Mappings;
-using FoodDiary.Presentation.Api.Features.Ai.Models;
-using FoodDiary.Presentation.Api.Features.Ai.Requests;
-using FoodDiary.Presentation.Api.Features.Ai.Responses;
+using FoodDiary.Modules.Ai.Application.Abstractions.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
+using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
+using FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
+using FoodDiary.Modules.Ai.Application.Queries.GetUserAiUsageSummary;
+using FoodDiary.Modules.Ai.Presentation.Mappings;
+using FoodDiary.Modules.Ai.Presentation.Models;
+using FoodDiary.Modules.Ai.Presentation.Requests;
+using FoodDiary.Modules.Ai.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Ai.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiHttpMappingsTests {

@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Infrastructure.Persistence.Ai;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Ai.Infrastructure;
 
 public static class ModuleRegistration {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -19,10 +18,8 @@ public static class ModuleRegistration {
             .Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AiUserDataPurgeParticipant>());
         services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
-        services.AddScoped<IAiUsageRepository>(provider => new AiUsageRepository(
-            provider.GetRequiredService<AiDbContext>().AiUsages, provider.GetRequiredService<IAiUsageQuery>(), CreateTransactionSynchronizer(provider)));
-        services.AddScoped<IAiUsageReadRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
-        services.AddScoped<IAiUsageWriteRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
+        services.AddScoped<IAiUsageWriteRepository>(provider => new AiUsageRepository(
+            provider.GetRequiredService<AiDbContext>().AiUsages, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();
         services.AddScoped<IFoodRecognitionJobStore, FoodRecognitionJobStore>();
         services.AddScoped<IAiPromptTemplateRepository>(provider => new AiPromptTemplateRepository(
@@ -45,7 +42,7 @@ public static class ModuleRegistration {
     }
 
     public static IServiceCollection AddAiModule(this IServiceCollection services) {
-        FoodDiary.Application.Ai.DependencyInjection.AddAiApplication(services);
+        FoodDiary.Modules.Ai.Application.DependencyInjection.AddAiApplication(services);
         return services.AddAiPersistence();
     }
 }

@@ -201,6 +201,19 @@ public sealed class DatabaseNormalizationGuardrailTests {
             string.Join(Environment.NewLine, violations));
     }
 
+    [Theory]
+    [InlineData("FoodDiary.Domain.Entities.Users", true)]
+    [InlineData("FoodDiary.Modules.Ai.Domain.Entities", true)]
+    [InlineData("FoodDiary.Modules.Admin.Domain.Entities", true)]
+    [InlineData("FoodDiary.Modules.Ai.PersistenceModel", false)]
+    [InlineData("FoodDiary.Modules.Ai.Domain.EntitiesHelpers", false)]
+    public void DomainEntityDiscovery_RecognizesCanonicalModuleNamespaces(string value, bool expected) =>
+        Assert.Equal(expected, IsDomainEntityNamespace(value));
+
+    private static bool IsDomainEntityNamespace(string? value) =>
+        value?.Split('.') is ["FoodDiary", "Domain", "Entities", ..]
+            or ["FoodDiary", "Modules", _, "Domain", "Entities", ..];
+
     private static IReadOnlyList<IEntityType> RelationalEntityTypes() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql("Host=localhost;Database=food_diary_architecture;Username=test;Password=test")
@@ -209,7 +222,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
         using var context = new FoodDiaryDbContext(options);
 
         return context.Model.GetEntityTypes()
-            .Where(static entity => entity.ClrType.Namespace?.StartsWith("FoodDiary.Domain.Entities", StringComparison.Ordinal) == true)
+            .Where(static entity => IsDomainEntityNamespace(entity.ClrType.Namespace))
             .Where(static entity => !entity.IsOwned())
             .OrderBy(static entity => entity.ClrType.FullName, StringComparer.Ordinal)
             .ToArray();

@@ -1,19 +1,20 @@
 using System.Reflection;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
-using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
-using FoodDiary.Application.Ai.Commands.ParseFoodText;
+using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
+using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
+using FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Ai;
-using FoodDiary.Presentation.Api.Features.Ai.Models;
-using FoodDiary.Presentation.Api.Features.Ai.Requests;
-using FoodDiary.Presentation.Api.Features.Ai.Responses;
+using FoodDiary.Modules.Ai.Presentation.Controllers;
+using FoodDiary.Modules.Ai.Presentation.Models;
+using FoodDiary.Modules.Ai.Presentation.Requests;
+using FoodDiary.Modules.Ai.Presentation.Responses;
 using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Ai.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiFoodControllerTests {

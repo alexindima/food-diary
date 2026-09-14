@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Admin, Images, Users
+- Abstraction-contract dependencies: Images, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,13 +25,12 @@ sources:
 ## Source Areas
 
 - `Modules/Ai/Application`
-- `Modules/Ai/Application/Abstractions`
+- `Modules/Ai/Application.Abstractions`
 - `Modules/Ai/Domain`
 - `Modules/Ai/Infrastructure`
-- `Modules/Ai/Infrastructure/Model`
 - `Modules/Ai/Infrastructure/Providers`
+- `Modules/Ai/PersistenceModel`
 - `Modules/Ai/Presentation`
-- `Modules/Ai/Presentation/Features/Ai`
 
 ## HTTP Surface
 
@@ -42,18 +41,18 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
-- Public contract files: 24
+- Public contract files: 22
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 24
-- Interfaces: 14
+- Public contract types: 22
+- Interfaces: 12
 - DTO/read-model/projection types: 3
 - Enums: 1
-- Exported repository-shaped contracts: 9
-- Contracts referencing domain entities: 3
+- Exported repository-shaped contracts: 7
+- Contracts referencing domain entities: 0
 - `class AiErrors`
 - `enum AiQuotaReservationStatus`
 - `interface IAiPromptProvider`
@@ -63,8 +62,6 @@ No literal attribute-routed controller was associated with this module.
 - `interface IAiPromptTemplateWriteRepository`
 - `interface IAiQuotaRepository`
 - `interface IAiUsageQuery`
-- `interface IAiUsageReadRepository`
-- `interface IAiUsageRepository`
 - `interface IAiUsageWriteRepository`
 - `interface IFoodRecognitionJobStore`
 - `interface IFoodRecognitionProcessor`
@@ -105,6 +102,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiNamespaceTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiProjectLayoutTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
 

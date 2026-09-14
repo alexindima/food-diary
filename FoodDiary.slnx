@@ -39,11 +39,11 @@
   </Folder>
   <Folder Name="/Modules/Ai/">
     <Project Path="Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
-    <Project Path="Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <Project Path="Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <Project Path="Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
     <Project Path="Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
     <Project Path="Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
-    <Project Path="Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
+    <Project Path="Modules/Ai/PersistenceModel/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
     <Project Path="Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Ai/tests/">

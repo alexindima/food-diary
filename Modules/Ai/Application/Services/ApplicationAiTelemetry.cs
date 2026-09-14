@@ -1,7 +1,7 @@
 using System.Diagnostics.Metrics;
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Ai.Services;
+namespace FoodDiary.Modules.Ai.Application.Services;
 
 internal static class ApplicationAiTelemetry {
     public const string MeterName = "FoodDiary.Application.Ai";

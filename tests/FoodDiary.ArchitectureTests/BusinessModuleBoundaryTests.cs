@@ -315,8 +315,8 @@ public sealed class BusinessModuleBoundaryTests {
 
     private static readonly HashSet<string> ApprovedMealsApplicationDependencies = new(StringComparer.Ordinal) {
         // ADR 0037: consume the owned recognition result, never the mutable job store.
-        "FoodDiary.Application.Abstractions.Ai.Common",
-        "FoodDiary.Application.Abstractions.Ai.Models",
+        "FoodDiary.Modules.Ai.Contracts.Common",
+        "FoodDiary.Modules.Ai.Contracts.Models",
         "FoodDiary.Application.Abstractions.Usda",
         "FoodDiary.Application.Abstractions.Achievements.Common",
         "FoodDiary.Application.Abstractions.Common",
@@ -1114,7 +1114,7 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("Ai", "IAiUsageReadRepository", "IAiPromptTemplateReadModelRepository")]
+    [InlineData("Ai", "IAiUsageQuery", "IAiPromptTemplateReadModelRepository")]
     [InlineData("Lessons", "INutritionLessonReadModelRepository")]
     [InlineData("Email", "IEmailTemplateReadModelRepository")]
     [InlineData("ContentReports", "IContentReportReadModelRepository")]

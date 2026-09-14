@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Products.Common;
@@ -51,7 +51,7 @@ public class CommonAbstractionsTests {
         string[] missingKinds = [.. typeof(Errors)
             .GetNestedTypes(BindingFlags.Public)
             .Concat([
-                typeof(FoodDiary.Application.Abstractions.Ai.Common.AiErrors),
+                typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
                 typeof(FoodDiary.Application.Abstractions.Billing.Common.BillingErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),
@@ -675,7 +675,7 @@ public class CommonAbstractionsTests {
         IEnumerable<string> publishedCodes = typeof(Errors)
             .GetNestedTypes(BindingFlags.Public)
             .Concat([
-                typeof(FoodDiary.Application.Abstractions.Ai.Common.AiErrors),
+                typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
                 typeof(FoodDiary.Application.Abstractions.Billing.Common.BillingErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),

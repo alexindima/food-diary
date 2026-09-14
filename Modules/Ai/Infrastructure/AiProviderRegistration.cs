@@ -1,12 +1,12 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services.OpenAi;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http.Resilience;
 using Polly;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Ai.Infrastructure;
 
 public static class AiProviderRegistration {
     public static IServiceCollection AddAiProvider(this IServiceCollection services, IConfiguration configuration) {

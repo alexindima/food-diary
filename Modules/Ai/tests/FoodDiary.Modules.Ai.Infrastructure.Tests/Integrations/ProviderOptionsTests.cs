@@ -1,6 +1,6 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderOptionsTests {

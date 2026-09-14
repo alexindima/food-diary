@@ -1,13 +1,12 @@
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Infrastructure.Persistence.Ai;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiPromptProviderTests {

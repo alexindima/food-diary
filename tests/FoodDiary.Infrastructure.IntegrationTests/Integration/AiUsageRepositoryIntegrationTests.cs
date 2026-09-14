@@ -1,12 +1,11 @@
 using FoodDiary.ReadModel.Composition.Ai;
 using System.Reflection;
-using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Ai;
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
@@ -26,7 +25,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         SetCreatedOnUtc(second, from);
         context.AiUsages.AddRange(first, second);
         await context.SaveChangesAsync();
-        var repository = new AiUsageRepository(context.AiUsages, new AiUsageQuery(context));
+        var repository = new AiUsageQuery(context);
         AiUsageSummary result = await repository.GetSummaryForUserAsync(from, from.AddDays(1), included.Id, CancellationToken.None);
         Assert.Equal(5, result.TotalTokens);
         Assert.Equal(5, Assert.Single(result.ByDay).TotalTokens);
@@ -54,7 +53,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         context.AiUsages.AddRange(inRangeFirst, inRangeSecond, outOfRange, atExclusiveEnd);
         await context.SaveChangesAsync();
 
-        var repository = new AiUsageRepository(context.AiUsages, new AiUsageQuery(context));
+        var repository = new AiUsageQuery(context);
 
         context.ChangeTracker.Clear();
         AiUsageSummary summary = await repository.GetSummaryAsync(
@@ -82,8 +81,8 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var repository = new AiUsageRepository(context.AiUsages, new AiUsageQuery(context));
-        await repository.AddAsync(AiUsage.Create(user.Id, "vision", "gpt-test", 1, 2, 3));
+        var repository = new AiUsageQuery(context);
+        await new AiUsageRepository(context.AiUsages).AddAsync(AiUsage.Create(user.Id, "vision", "gpt-test", 1, 2, 3));
 
         AiUsageSummary emptySummary = await repository.GetSummaryAsync(
             new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),

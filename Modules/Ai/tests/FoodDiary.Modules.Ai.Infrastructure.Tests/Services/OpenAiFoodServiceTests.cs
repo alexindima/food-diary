@@ -3,15 +3,15 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services.OpenAi;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 using Microsoft.Extensions.Logging.Abstractions;
 using Polly.CircuitBreaker;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class OpenAiFoodServiceTests {

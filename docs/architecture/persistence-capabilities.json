@@ -273,14 +273,14 @@
       ],
       "reason": "Admin owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
-    "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs": {
+    "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs": {
       "module": "Ai",
       "capabilities": [
         "entity:AiPromptTemplate"
       ],
       "reason": "Ai-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
-    "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs": {
+    "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs": {
       "module": "Ai",
       "capabilities": [
         "entity:AiPromptRevision",
@@ -290,7 +290,7 @@
       ],
       "reason": "Ai-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed. Reads at most 50 owned revision projections without tracking; snapshots are captured by the owning aggregate on update."
     },
-    "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs": {
+    "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs": {
       "module": "Ai",
       "capabilities": [
         "call:AiQuotaPeriod.CanReserve",
@@ -318,16 +318,16 @@
         "write:AiUsage"
       ],
       "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
-      "technicalSourceSha256": "24fd975ef1af58cbdd31ceb5d401635bf2b627e70cf33873d8ca9a84701b2c56"
+      "technicalSourceSha256": "899297f7749b790a9a718e7c7316078652e577dc51bf66d8e3fb1b3cfe346834"
     },
-    "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs": {
+    "Modules/Ai/Infrastructure/Persistence/AiUsageRepository.cs": {
       "module": "Ai",
       "capabilities": [
         "entity:AiUsage",
         "tracked:AiUsage",
         "write:AiUsage"
       ],
-      "reason": "AI stages usage writes through its own DbSet and delegates immutable reporting to host composition."
+      "reason": "AI stages usage writes through its own DbSet and transaction synchronizer. Immutable reporting uses IAiUsageQuery directly; the writer has no query dependency."
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
@@ -1300,7 +1300,7 @@
       ],
       "reason": "Owner-only acquisition reporting over no-tracking event roots, with calendar aggregation and filtered journal pagination. Scanner conservatively marks composed IQueryable aliases as potentially tracked; only aggregate and event read models are materialized. No writes or context escapes."
     },
-    "Modules/Ai/Infrastructure/Persistence/Ai/FoodRecognitionJobStore.cs": {
+    "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs": {
       "module": "Ai",
       "capabilities": [
         "context:ConfigureAwait",
@@ -1311,7 +1311,7 @@
         "write:FoodRecognitionJob"
       ],
       "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. No foreign aggregate writes.",
-      "technicalSourceSha256": "c3277ba42780404f9f366a6ee26f1a433db44ee5e654afa1d083dfc40151c652"
+      "technicalSourceSha256": "614195b3fd393eed7cfca449a22c17f12b8bd107e98488e64766710ce12b3fb9"
     },
     "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
       "module": "ReadModelComposition",
@@ -1627,7 +1627,7 @@
         "tracked:AiUsage"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "ac8d0b622e329331e06ce7389d25671245979c66931af1ca0296b2426e9d83aa"
+      "technicalSourceSha256": "431247cde2274e35dc44bdc9099db3250cd12531d191d78642430d79bf47cf99"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",

@@ -15,10 +15,10 @@ public sealed class ProviderAdapterOwnershipTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs", "FoodDiary.Integrations.Services.OpenAi")]
-    [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiRequestFactory.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs", "FoodDiary.Integrations.Services.OpenAi")]
-    [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiErrorMetadata.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiErrorMetadata.cs", "FoodDiary.Integrations.Services.OpenAi")]
-    [InlineData("FoodDiary.Integrations/Options/OpenAiOptions.cs", "Modules/Ai/Infrastructure/Providers/Options/OpenAiOptions.cs", "FoodDiary.Integrations.Options")]
+    [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs", "FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi")]
+    [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiRequestFactory.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs", "FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi")]
+    [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiErrorMetadata.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiErrorMetadata.cs", "FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi")]
+    [InlineData("FoodDiary.Integrations/Options/OpenAiOptions.cs", "Modules/Ai/Infrastructure/Providers/Options/OpenAiOptions.cs", "FoodDiary.Modules.Ai.Infrastructure.Providers.Options")]
     [InlineData("FoodDiary.Integrations/Services/OpenFoodFactsService.cs", "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs", "FoodDiary.Integrations.Services")]
     [InlineData("FoodDiary.Integrations/Options/OpenFoodFactsApiOptions.cs", "Modules/OpenFoodFacts/Infrastructure/Providers/Options/OpenFoodFactsApiOptions.cs", "FoodDiary.Integrations.Options")]
     [InlineData("FoodDiary.Integrations/Services/UsdaFoodSearchService.cs", "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs", "FoodDiary.Integrations.Services")]

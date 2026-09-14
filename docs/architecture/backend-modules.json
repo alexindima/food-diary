@@ -69,13 +69,13 @@
       "sourceMappings": {
         "logicalRoot": "Modules/Ai",
         "persistenceModelProjects": [
-          "Modules/Ai/Infrastructure/Model"
+          "Modules/Ai/PersistenceModel"
         ],
         "applicationProjects": [
           "Modules/Ai/Application"
         ],
         "abstractionAreas": [
-          "Modules/Ai/Application/Abstractions"
+          "Modules/Ai/Application.Abstractions"
         ],
         "domainProjects": [
           "Modules/Ai/Domain"

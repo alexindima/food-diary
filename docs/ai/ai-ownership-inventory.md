@@ -1,41 +1,35 @@
-# Ai ownership inventory
+# AI ownership inventory
 
-Current consumer seam: `Modules/Ai/Contracts` owns administration services and
-completed recognition reads with their DTOs. The extraction notes below describe
-the initial module move; their former no-new-Contracts constraint is superseded
-by this implemented boundary. Internal repositories, quota and provider ports remain
-in Application/Abstractions. Runtime behavior described below is unchanged.
+AI owns food analysis, prompt administration, usage reporting contracts, quotas and asynchronous recognition. All seven production projects are sibling directories under `Modules/Ai`: Application, Application.Abstractions, Contracts, Domain, Infrastructure, PersistenceModel and Presentation. Namespaces follow the project filename and relative folders. The Application assembly name remains `FoodDiary.Application.Ai` for existing assembly discovery.
 
-Base: a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6. Worktree: C:/Users/alexi/.codex/worktrees/901d/FD. Initial HEAD equals local master; no pre-existing changes.
+## Boundaries
 
-## Proven responsibility and intended physical boundary
+- Contracts exposes administration reads, prompt administration and completed recognition reads with their DTOs. Admin and Meals consume these public capabilities; they do not acquire quota, provider or job-store ports.
+- Application.Abstractions owns provider, quota, job-store and repository ports. IAiUsageQuery is implemented by FoodDiary.ReadModel.Composition. IAiUsageWriteRepository stages owner writes independently of query registration.
+- Application owns command/query handlers, provider/quota orchestration, completed-result validation and background recognition processing. GetUserAiUsageSummary computes its result in the handler. Profile consumers use the existing Users.Contracts IUserAiProfileReadService and UserAiProfileModel directly; no duplicate AI profile adapter or model is needed.
+- Domain owns AI usage and prompt entities and IDs. UserId comes from Users.Domain.Contracts; no foreign aggregate navigation is permitted.
+- PersistenceModel owns EF mappings and internal quota/job records. Four foreign User/ImageAsset relationships are composed centrally by AiCrossModuleRelationships. Preserve indexes, conversions and delete behavior.
+- Infrastructure owns AiDbContext, staged usage and prompt writes, independent quota/job stores, prompt caching, and OpenAI transport under Providers. Shared HTTP bounds and telemetry helpers belong to Shared/FoodDiary.Integrations.Http.
+- Presentation owns Controllers, Requests, Responses, Models, Mappings, Hubs, Services and Extensions. FoodRecognitionNotifier publishes invalidation hints; owner-scoped HTTP remains authoritative. Presentation has no direct Domain reference.
 
-- Application: AnalyzeFoodImage, ParseFoodText, CalculateFoodNutrition and GetUserAiUsageSummary slices; OpenAiFoodService quota orchestration, AiUserContextService, prompt administration, administration/usage projections and ApplicationAiTelemetry. Preserve FoodDiary.Application.Ai assembly and CLR namespaces.
-- Application/Abstractions: existing Ai provider, quota and repository ports, models and errors. Move the four AiUsage* projection records from Admin/Models with their CLR namespace preserved: these describe Ai-owned usage, not Admin ownership.
-- Domain: AiUsage/AiPromptTemplate and their IDs have no central inverse navigation and can depend one-way on central UserId. No invented events or empty layer.
-- Infrastructure/Model: four Ai configurations and internal quota ledger state (AiQuotaPeriod, AiQuotaReservation, AiQuotaReservationState). These persistence types currently consume the reservation request port; keep them in the persistence model, not a Domain-to-Application dependency. Preserve internal visibility using specific friend assemblies rather than widening public API.
-- Infrastructure: AiUsageRepository, AiPromptTemplateRepository, AiQuotaRepository, AiPromptProvider and complete module registration. Central context explicitly applies the model. Application registration remains usable independently of persistence.
-- Semantic administration interfaces currently live in Application/Common and expose existing aggregates/projections. Keep this compatible surface for Admin; do not invent new Contracts or redesign return types solely for extraction.
+## Service decisions
 
-## Runtime and safety evidence
+- OpenAiFoodService owns deadlines, consent, prompt/provider calls and quota reconciliation across three operations; retain this workflow.
+- FoodRecognitionProcessor owns the background claim/vision/nutrition/completion lifecycle; retain it.
+- FoodRecognitionResultReader validates ownership, completion and usable results for Meals; retain the public boundary.
+- AiPromptAdministrationService owns prompt mutation for Admin; retain the public boundary.
+- AiAdministrationReadService adapts internal read capabilities to the public Admin-facing API; its small forwarding methods do not justify exposing repositories to Admin.
+- ApplicationAiTelemetry owns shared application instrumentation, not a handler-forwarding service.
+- UserAiUsageSummaryReadService and AiUserContextService are retired. Do not reintroduce services solely to forward one handler or copy an identical owner DTO.
 
-OpenAiFoodService checks profile/consent before prompt lookup, provider budget calculation and ReserveAsync. Provider I/O occurs after reservation's independent database transaction. Success uses an independent five-second persistence token to reconcile actual usage (or conservative budget estimate). Provider failure/cancellation after reserve intentionally leaves pending state: no blind release, because processing may have occurred. Expiry charges pending reservations as orphaned; late success reconciles the estimate. Explicit ReleaseAsync is idempotent for non-pending state. Reserve serializes the user/month period with PostgreSQL FOR UPDATE; reconcile updates period, reservation and AiUsage in one transaction. Preserve existing lock order, retry strategy and all limits/timeouts.
+## Runtime invariants and verification ownership
 
-AiPromptProvider owns a singleton five-minute memory cache with scoped DB lookup, latest active version selection and unchanged fallback texts; administration currently has no immediate cache invalidation. Do not silently change this consistency policy. Preserve metric names/tags and sensitive-data restrictions.
+Scoped usage/template writes join the central connection and synchronize its live transaction before owner operations. Quotas and recognition jobs use independent short transactions with copied provider options. Preserve lock order, retry strategy and commit boundaries.
 
-## Central and external compatibility seams
+Provider I/O follows reservation. Success reconciles with an independent five-second persistence token. Failure/cancellation can leave pending state because the provider may have processed the request; do not blindly release it. Preserve orphan charging, idempotency, consent, image access and cancellation semantics.
 
-- User, UserId, UserAiQuotaState, UserAiTokenLimitUpdate and UserAdminAiQuotaUpdate remain central: User directly owns profile fields and calls their invariants. Ai owns quota enforcement/ledger, while IUserAiProfileReadService supplies limits and consent. Consent acceptance remains Users lifecycle behavior. No central-to-module Domain back edge.
-- Shared FoodDiaryDbContext, all DbSets, historical migrations/snapshot and user-deletion orchestration remain central. Internal quota DbSets require explicit friend access across the model/adapter seam.
-- InfrastructureTelemetry is a shared meter with existing quota-orphan instrumentation; retain its identity via narrow internal access rather than duplicate meters.
-- OpenAI HTTP client, SDK/transport options, parsing and retry/timeout/provider configuration remain FoodDiary.Integrations. No provider endpoint, model, price, prompt or actual external request changes.
-- MealAiSession/MealAiItem, IDs and enums remain Meals-owned. Image access/storage validation remains Images-owned. HTTP transport and host policy remain Presentation/Web.Api; composition roots alone acquire the persistence module.
-- Admin consumes IAiPromptAdministrationService and IAiAdministrationReadService; its own handlers/mappings remain Admin. Mixed Admin feature tests must stay with their owner.
+AiPromptProvider retains five-minute caching, active-version selection and existing fallbacks. Shared migrations remain central. Historical migration metadata is immutable; current model snapshot CLR names follow current owners without a schema change.
 
-## Tests and consumers
+Focused application/domain/infrastructure/presentation tests live under Modules/Ai/tests. Central PostgreSQL suites cover quota concurrency, usage projections, prompt persistence and shared transaction composition; central HTTP suites cover routes and snapshots. No live provider calls are required. Test discovery is not execution evidence.
 
-Module-owned: tests/FoodDiary.Application.Tests/Ai; AiUsageInvariantTests and AiPromptTemplateInvariantTests; Infrastructure unit AiQuotaRepositoryTests, AiPromptProviderTests and mocked OpenAiFoodServiceTests. Move focused suites into actual module test projects without duplication.
-
-Central/mixed: Users/AiConsentTests, Admin feature tests, Meals AI invariants, Infrastructure DI/telemetry tests, Presentation AiFoodController/AiHttpMappings/UserAiConsent tests and Web.Api HTTP suites. PostgreSQL AiQuotaRepositoryIntegrationTests and AiUsageRepositoryIntegrationTests share the central database fixture; retain that ownership and execute the entire central Infrastructure.IntegrationTests once, without a filter. These cover twenty-request concurrency, duplicate requests, reconciliation, usage aggregation and prompt persistence. Test discovery is not execution evidence.
-
-Initial Wiki manifest incorrectly calls Ai an orchestrator with no owned entities. Source proves two domain entities plus persistent quota ledger. Its persistence hint also needs verification against the actual Persistence/Configurations/Ai path.
+Architecture checks protect project layout, namespace alignment, module extraction, dependency references and controller convention discovery. See docs/adr/0038-read-model-composition.md and docs/ai/ai-persistence-boundary.md.

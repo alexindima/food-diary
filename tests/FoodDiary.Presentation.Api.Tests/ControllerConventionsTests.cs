@@ -341,7 +341,8 @@ public sealed class ControllerConventionsTests {
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
-                && !path.StartsWith(PresentationTestDiscovery.AdminPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                && !path.StartsWith(PresentationTestDiscovery.AdminPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                && !path.StartsWith(PresentationTestDiscovery.AiPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
             .Where(path => Path.GetFileName(path) is not nameof(ApiErrorHttpResponse) + ".cs"
                 and not "PagedHttpResponse.cs"
                 and not "PagedHttpResponseMappings.cs"
@@ -399,12 +400,18 @@ public sealed class ControllerConventionsTests {
         Assert.Contains(GetFeatureControllerTypes(), type => string.Equals(type.Name, "AdminUsersController", StringComparison.Ordinal));
         Assert.Contains(GetControllerSyntaxTrees(), tree => string.Equals(Path.GetFileName(tree.FilePath), "AdminUsersController.cs", StringComparison.Ordinal));
     }
+    [Fact]
+    public void AiControllers_RemainInConventionCoverage() {
+        Assert.Contains(GetFeatureControllerTypes(), type => string.Equals(type.Name, "AiFoodController", StringComparison.Ordinal));
+        Assert.Contains(GetControllerSyntaxTrees(), tree => string.Equals(Path.GetFileName(tree.FilePath), "AiFoodController.cs", StringComparison.Ordinal));
+    }
 
     private static Type[] GetFeatureControllerTypes() =>
         [.. PresentationTestDiscovery.GetTypes()
             .Where(type => type is { IsAbstract: false, IsClass: true })
             .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true
-                || string.Equals(type.Namespace, "FoodDiary.Modules.Admin.Presentation.Controllers", StringComparison.Ordinal))
+                || string.Equals(type.Namespace, "FoodDiary.Modules.Admin.Presentation.Controllers", StringComparison.Ordinal)
+                || string.Equals(type.Namespace, "FoodDiary.Modules.Ai.Presentation.Controllers", StringComparison.Ordinal))
             .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))];
 
     private static MethodInfo[] GetActionMethods(Type controllerType) =>

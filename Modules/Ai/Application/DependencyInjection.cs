@@ -1,11 +1,11 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Ai.Services;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Common;
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Ai;
+namespace FoodDiary.Modules.Ai.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddAiApplication(this IServiceCollection services) {
@@ -15,10 +15,8 @@ public static class DependencyInjection {
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddScoped<IFoodRecognitionProcessor, FoodRecognitionProcessor>();
         services.AddScoped<IFoodRecognitionResultReader, FoodRecognitionResultReader>();
-        services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IAiAdministrationReadService, AiAdministrationReadService>();
         services.AddScoped<IAiPromptAdministrationService, AiPromptAdministrationService>();
-        services.AddScoped<IUserAiUsageSummaryReadService, UserAiUsageSummaryReadService>();
         return services;
     }
 }

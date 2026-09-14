@@ -1,15 +1,17 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
 
-namespace FoodDiary.Application.Ai.Services;
+using FoodDiary.Results;
+
+namespace FoodDiary.Modules.Ai.Application.Services;
 
 public sealed class OpenAiFoodService(
     IOpenAiFoodClient openAiFoodClient,
     IAiQuotaRepository aiQuotaRepository,
-    IAiUserContextService aiUserContextService,
+    IUserAiProfileReadService userProfileReadService,
     TimeProvider dateTimeProvider,
     IAiPromptProvider aiPromptProvider,
     TimeSpan? overallOperationTimeout = null)
@@ -31,7 +33,7 @@ public sealed class OpenAiFoodService(
         const string operation = "vision";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
-            Result<AiUserContext> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
             if (contextResult.IsFailure) {
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
@@ -79,7 +81,7 @@ public sealed class OpenAiFoodService(
         const string operation = "text-parse";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
-            Result<AiUserContext> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
             if (contextResult.IsFailure) {
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
@@ -124,7 +126,7 @@ public sealed class OpenAiFoodService(
         const string operation = "nutrition";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
-            Result<AiUserContext> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
             if (contextResult.IsFailure) {
                 return Result.Failure<FoodNutritionModel>(contextResult.Error);
             }
@@ -165,14 +167,11 @@ public sealed class OpenAiFoodService(
         return deadline;
     }
 
-    private Task<Result<AiUserContext>> GetUserContextAsync(UserId userId, CancellationToken cancellationToken) =>
-        GetEligibleUserContextAsync(userId, cancellationToken);
-
-    private async Task<Result<AiUserContext>> GetEligibleUserContextAsync(
+    private async Task<Result<UserAiProfileModel>> GetUserContextAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<AiUserContext> contextResult = await aiUserContextService
-            .GetAsync(userId, cancellationToken)
+        Result<UserAiProfileModel> contextResult = await userProfileReadService
+            .GetAiProfileAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         if (contextResult.IsFailure) {
             return contextResult;
@@ -180,14 +179,14 @@ public sealed class OpenAiFoodService(
 
         return contextResult.Value.HasAcceptedAiConsent
             ? contextResult
-            : Result.Failure<AiUserContext>(AiErrors.ConsentRequired());
+            : Result.Failure<UserAiProfileModel>(AiErrors.ConsentRequired());
     }
 
     private async Task<Result> ReserveAsync(
         string requestId,
         UserId userId,
         string operation,
-        AiUserContext context,
+        UserAiProfileModel context,
         AiProviderTokenBudget budget,
         CancellationToken cancellationToken) {
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;

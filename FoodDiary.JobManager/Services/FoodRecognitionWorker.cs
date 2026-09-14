@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
 namespace FoodDiary.JobManager.Services;
 

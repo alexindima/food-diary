@@ -22,10 +22,13 @@ internal static class PresentationTestDiscovery {
     }
 
     internal static string GetFeatureSourceRoot(string presentationRoot) =>
-        File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Admin.Presentation.csproj"))
+        (File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Admin.Presentation.csproj"))
+            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Ai.Presentation.csproj")))
             ? presentationRoot : Path.Combine(presentationRoot, "Features");
 
     internal static string AdminPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Admin", "Presentation");
+
+    internal static string AiPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Ai", "Presentation");
 
     private static Assembly[] DiscoverAssemblies() => [
         typeof(BaseApiController).Assembly,

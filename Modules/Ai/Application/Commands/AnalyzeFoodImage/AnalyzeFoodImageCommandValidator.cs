@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
+namespace FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 
 public sealed class AnalyzeFoodImageCommandValidator : AbstractValidator<AnalyzeFoodImageCommand> {
     public AnalyzeFoodImageCommandValidator() {

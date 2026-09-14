@@ -1,18 +1,20 @@
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Contracts.Models;
 
-namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
+using FoodDiary.Application.Abstractions.Images.Common;
+
+namespace FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 
 public sealed class AnalyzeFoodImageCommandHandler(
     IImageAssetContentService imageAssetContentService,
-    IAiUserContextService aiUserContextService,
+    IUserAiProfileReadService userProfileReadService,
     IOpenAiFoodService openAiFoodService)
     : ICommandHandler<AnalyzeFoodImageCommand, Result<FoodVisionModel>> {
     public async Task<Result<FoodVisionModel>> Handle(
@@ -45,7 +47,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return Result.Failure<FoodVisionModel>(error);
         }
 
-        Result<AiUserContext> contextResult = await aiUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserAiProfileModel> contextResult = await userProfileReadService.GetAiProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (contextResult.IsFailure) {
             return Result.Failure<FoodVisionModel>(contextResult.Error);
         }

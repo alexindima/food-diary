@@ -1,13 +1,13 @@
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
 using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Modules.Admin.Application.Services;
-using FoodDiary.Application.Ai.Services;
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiPrompts;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingPayments;
@@ -24,7 +24,7 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -246,7 +246,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", isActive: true);
-        GetAdminAiPromptsQueryHandler handler = new(new AiAdministrationReadService(Substitute.For<IAiUsageReadRepository>(), new InMemoryAiPromptTemplateRepository(template)));
+        GetAdminAiPromptsQueryHandler handler = new(new AiAdministrationReadService(Substitute.For<IAiUsageQuery>(), new InMemoryAiPromptTemplateRepository(template)));
 
         Result<IReadOnlyList<AdminAiPromptModel>> result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
 

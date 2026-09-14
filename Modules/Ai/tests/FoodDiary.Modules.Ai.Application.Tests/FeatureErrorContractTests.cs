@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Ai.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FeatureErrorContractTests {
@@ -9,7 +9,7 @@ public sealed class FeatureErrorContractTests {
     public void AiErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Ai.Application.Abstractions", typeof(AiErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.Ai.Common", typeof(AiErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Ai.Application.Abstractions.Common", typeof(AiErrors).Namespace));
     }
 
     [Fact]

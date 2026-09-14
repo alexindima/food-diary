@@ -126,22 +126,22 @@
       "area": "FoodDiary",
       "name": "AiPromptRevision",
       "role": "entity",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptRevision.cs",
+      "path": "Modules/Ai/Domain/Entities/AiPromptRevision.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "AiPromptTemplate",
       "role": "entity",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "path": "Modules/Ai/Domain/Entities/AiPromptTemplate.cs",
       "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "AiUsage",
       "role": "entity",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiUsage.cs",
-      "line": 6
+      "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
+      "line": 7
     },
     {
       "area": "FoodDiary",
@@ -1626,57 +1626,57 @@
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Prompt template version limit has been reached.\")",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "path": "Modules/Ai/Domain/Entities/AiPromptTemplate.cs",
       "line": 55
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{paramName} is required.\", paramName)",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "path": "Modules/Ai/Domain/Entities/AiPromptTemplate.cs",
       "line": 61
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "path": "Modules/Ai/Domain/Entities/AiPromptTemplate.cs",
       "line": 66
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiUsage.cs",
-      "line": 51
+      "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
+      "line": 52
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiUsage.cs",
-      "line": 57
+      "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
+      "line": 58
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiUsage.cs",
-      "line": 62
+      "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
+      "line": 63
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value cannot be negative.\")",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiUsage.cs",
-      "line": 68
+      "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
+      "line": 69
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
-      "path": "Modules/Ai/Domain/Entities/Ai/AiUsage.cs",
-      "line": 75
+      "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
+      "line": 76
     },
     {
       "area": "FoodDiary",
@@ -5231,7 +5231,7 @@
         "e => new { e.Key, e.Locale }).IsUnique()"
       ],
       "relationships": [],
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiPromptTemplateConfiguration.cs"
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiPromptTemplateConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5239,7 +5239,7 @@
       "table": null,
       "indexes": [],
       "relationships": [],
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiQuotaPeriodConfiguration.cs"
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiQuotaPeriodConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5255,7 +5255,7 @@
           "expression": ")"
         }
       ],
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiQuotaReservationConfiguration.cs"
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiQuotaReservationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5267,7 +5267,7 @@
         "e => new { e.UserId, e.CreatedOnUtc })"
       ],
       "relationships": [],
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/AiUsageConfiguration.cs"
+      "path": "Modules/Ai/PersistenceModel/Configurations/AiUsageConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5649,7 +5649,7 @@
         "x => x.UpdatedOnUtc)"
       ],
       "relationships": [],
-      "path": "Modules/Ai/Infrastructure/Model/Configurations/Ai/FoodRecognitionJobConfiguration.cs"
+      "path": "Modules/Ai/PersistenceModel/Configurations/FoodRecognitionJobConfiguration.cs"
     },
     {
       "area": "FoodDiary",

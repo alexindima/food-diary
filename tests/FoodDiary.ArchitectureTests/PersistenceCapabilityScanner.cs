@@ -127,7 +127,8 @@ internal static class PersistenceCapabilityScanner {
 
     private static bool IsEntity(INamedTypeSymbol type) =>
         MappedEntityTypes.Contains(type.ToDisplayString())
-        || type.ContainingNamespace.ToDisplayString().StartsWith("FoodDiary.Domain.Entities.", StringComparison.Ordinal)
+        || type.ContainingNamespace.ToDisplayString().Split('.') is ["FoodDiary", "Domain", "Entities", ..]
+            or ["FoodDiary", "Modules", _, "Domain", "Entities", ..]
         || type.Name.EndsWith("OutboxMessage", StringComparison.Ordinal)
         || type.Name.Equals("AuditEntry", StringComparison.Ordinal);
 

@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Primitives;
 using System.Globalization;
 using System.Text.Json;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;

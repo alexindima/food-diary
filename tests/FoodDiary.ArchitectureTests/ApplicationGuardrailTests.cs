@@ -447,7 +447,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string persistenceRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts", "Common", "Interfaces", "Persistence");
         string[] forbiddenFiles = [
-            "IAiUsageRepository.cs",
+            "IAiUsageQuery.cs",
             "ICycleRepository.cs",
             "IDailyAdviceRepository.cs",
             "IEmailTemplateRepository.cs",
@@ -567,7 +567,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Theory]
-    [InlineData("Modules/Ai/Application/Abstractions/Ai/Common/AiErrors.cs", "AiErrors", "Ai")]
+    [InlineData("Modules/Ai/Application.Abstractions/Common/AiErrors.cs", "AiErrors", "Ai")]
     [InlineData("Modules/Billing/Application/Abstractions/Common/BillingErrors.cs", "BillingErrors", "Billing")]
     [InlineData("Modules/Cycles/Contracts/Common/CycleErrors.cs", "CycleErrors", "Cycle")]
     [InlineData("Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs", "CycleDayErrors", "CycleDay")]
@@ -1406,7 +1406,7 @@ public sealed class ApplicationGuardrailTests {
         string[] contractFiles = [
             Path.Combine(root, "Modules", "DailyAdvices", "Application", "Abstractions", "Common", "IDailyAdviceReadModelRepository.cs"),
             Path.Combine(root, "Modules", "Cycles", "Application", "Abstractions", "Common", "ICycleReadRepository.cs"),
-            Path.Combine(root, "Modules", "Ai", "Application", "Abstractions", "Ai", "Common", "IAiPromptTemplateReadRepository.cs"),
+            Path.Combine(root, "Modules", "Ai", "Application.Abstractions", "Common", "IAiPromptTemplateReadRepository.cs"),
         ];
 
         string[] violations = [
@@ -1652,7 +1652,7 @@ public sealed class ApplicationGuardrailTests {
         ];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, adminSummaryQueryFiles, "IAiUsageReadRepository"),
+            .. FindReferencesInFiles(root, adminSummaryQueryFiles, "IAiUsageQuery"),
             .. FindReferencesInFiles(root, adminSummaryQueryFiles, "IContentReportReadRepository"),
             .. FindReferencesInFiles(root, adminSummaryQueryFiles, "FoodDiary.Domain.Enums"),
         ];
@@ -1690,7 +1690,7 @@ public sealed class ApplicationGuardrailTests {
         Assert.All(serviceFiles, path => Assert.True(File.Exists(path), $"Missing query handler: {path}"));
 
         string[] violations = [
-            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Ai"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Modules.Ai.Domain.Entities"),
             .. FindReferencesInFiles(root, serviceFiles, "AiPromptTemplate>"),
             .. FindReferencesInFiles(root, serviceFiles, "aiPromptTemplateRepository.GetAllAsync"),
         ];
@@ -2353,14 +2353,15 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void AiQueries_UseReadServicesInsteadOfUsageRepositories() {
+    public void AiQueries_UseReadPortsWithoutUsageWriters() {
         string root = GetRepositoryRoot();
-        string aiQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Ai", "Queries");
+        string aiQueriesRoot = Path.Combine(root, "Modules", "Ai", "Application", "Queries");
         string[] aiQueryFiles = [.. SourceScanner.SourceFiles(aiQueriesRoot)];
+        Assert.NotEmpty(aiQueryFiles);
 
         string[] violations = [
-            .. FindReferencesInFiles(root, aiQueryFiles, "IAiUsageReadRepository"),
             .. FindReferencesInFiles(root, aiQueryFiles, "IAiUsageRepository"),
+            .. FindReferencesInFiles(root, aiQueryFiles, "IAiUsageWriteRepository"),
         ];
 
         Assert.Empty(violations);
@@ -2381,7 +2382,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, contentQueryFiles, "FoodDiary.Domain.Entities.Content"),
-            .. FindReferencesInFiles(root, contentQueryFiles, "FoodDiary.Domain.Entities.Ai"),
+            .. FindReferencesInFiles(root, contentQueryFiles, "FoodDiary.Modules.Ai.Domain.Entities"),
             .. FindReferencesInFiles(root, contentQueryFiles, "FoodDiary.Domain.Entities.Social"),
             .. FindReferencesInFiles(root, contentQueryFiles, "INutritionLessonReadRepository"),
             .. FindReferencesInFiles(root, contentQueryFiles, "IDailyAdviceReadRepository"),
@@ -2925,7 +2926,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         (string SliceRoot, string AllowedRelativePath)[] slices = [
-            (Path.Combine(root, "Modules", "Ai", "Application"), Path.Combine("Services", "AiUserContextService.cs")),
+            (Path.Combine(root, "Modules", "Ai", "Application"), string.Empty),
             (Path.Combine(root, "Modules/Dashboard/Application"), Path.Combine("Services", "DashboardUserContextService.cs")),
             (Path.Combine(root, "Modules", "Gamification", "Application"), Path.Combine("Services", "GamificationUserProfileService.cs")),
             (Path.Combine(root, "Modules", "Hydration", "Application"), Path.Combine("Services", "HydrationGoalService.cs")),
