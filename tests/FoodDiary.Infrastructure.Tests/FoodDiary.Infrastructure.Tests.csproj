@@ -89,6 +89,7 @@
     <ProjectReference Include="../../Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
     <ProjectReference Include="../../FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />
   </ItemGroup>
 </Project>

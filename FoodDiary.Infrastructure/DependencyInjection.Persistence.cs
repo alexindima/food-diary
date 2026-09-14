@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
@@ -21,6 +22,7 @@ public static partial class DependencyInjection {
     private static void AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<IModuleContextFactory>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, EmailOutboxReplayStream>());
         services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();

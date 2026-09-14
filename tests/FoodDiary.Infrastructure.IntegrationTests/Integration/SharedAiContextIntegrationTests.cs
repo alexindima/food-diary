@@ -26,7 +26,9 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
         IAiUsageWriteRepository usages = provider.GetRequiredService<IAiUsageWriteRepository>();
         Assert.Null(provider.GetService<IAiUsageQuery>());
-        IAiPromptTemplateRepository templates = provider.GetRequiredService<IAiPromptTemplateRepository>();
+        IAiPromptTemplateWriteRepository templates = provider.GetRequiredService<IAiPromptTemplateWriteRepository>();
+        IAiPromptTemplateReadModelRepository templateReads = provider.GetRequiredService<IAiPromptTemplateReadModelRepository>();
+        Assert.Same(templates, templateReads);
         var user = User.Create("ai-context@example.com", "hash");
         shared.Users.Add(user);
         await usages.AddAsync(AiUsage.Create(user.Id, "vision", "test", 2, 3, 5));
@@ -48,7 +50,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
             tracked.Update("Changed", isActive: true);
             await templates.UpdateAsync(tracked);
             await unitOfWork.SaveChangesAsync();
-            Assert.Single(await templates.GetRevisionsAsync("context-test", "en", CancellationToken.None));
+            Assert.Single(await templateReads.GetRevisionsAsync("context-test", "en", CancellationToken.None));
             await transaction.RollbackAsync();
         }
         Assert.Single(await database.Users.ToListAsync());

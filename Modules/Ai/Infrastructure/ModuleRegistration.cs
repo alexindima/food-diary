@@ -22,11 +22,10 @@ public static class ModuleRegistration {
             provider.GetRequiredService<AiDbContext>().AiUsages, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();
         services.AddScoped<IFoodRecognitionJobStore, FoodRecognitionJobStore>();
-        services.AddScoped<IAiPromptTemplateRepository>(provider => new AiPromptTemplateRepository(
+        services.AddScoped<AiPromptTemplateRepository>(provider => new AiPromptTemplateRepository(
             provider.GetRequiredService<AiDbContext>().AiPromptTemplates, CreateTransactionSynchronizer(provider)));
-        services.AddScoped<IAiPromptTemplateReadRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
-        services.AddScoped<IAiPromptTemplateReadModelRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
-        services.AddScoped<IAiPromptTemplateWriteRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
+        services.AddScoped<IAiPromptTemplateReadModelRepository>(static provider => provider.GetRequiredService<AiPromptTemplateRepository>());
+        services.AddScoped<IAiPromptTemplateWriteRepository>(static provider => provider.GetRequiredService<AiPromptTemplateRepository>());
 
         return services;
     }

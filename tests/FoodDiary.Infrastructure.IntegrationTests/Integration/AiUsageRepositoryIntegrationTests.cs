@@ -108,7 +108,6 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         await repository.AddAsync(AiPromptTemplate.Create("Vision", "ru", "Analyze image", isActive: false));
         await context.SaveChangesAsync();
 
-        IReadOnlyList<AiPromptTemplate> all = await repository.GetAllAsync();
         IReadOnlyList<AiPromptTemplateReadModel> allReadModels = await repository.GetAllReadModelsAsync();
         AiPromptTemplate? byKey = await repository.GetByKeyAsync("nutrition", "en");
         AiPromptTemplate? tracked = await repository.GetByIdAsync(nutrition.Id, asTracking: true);
@@ -118,7 +117,6 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         await context.SaveChangesAsync();
         AiPromptTemplate? updated = await repository.GetByIdAsync(nutrition.Id);
 
-        Assert.Equal(["nutrition", "vision"], [.. all.Select(template => template.Key)]);
         Assert.Equal(["nutrition", "vision"], [.. allReadModels.Select(template => template.Key)]);
         Assert.Equal(nutrition.Id, byKey?.Id);
         Assert.Equal(2, updated?.Version);

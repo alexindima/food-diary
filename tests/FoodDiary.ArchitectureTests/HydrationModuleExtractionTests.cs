@@ -6,12 +6,24 @@ public sealed class HydrationModuleExtractionTests {
     public void HydrationRuntimeContextAndCoordinatedSaveRemainExplicit() {
         string registration = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Hydration/Infrastructure/ModuleRegistration.cs"));
         Assert.Contains("CreateModuleContext<HydrationDbContext>", registration, StringComparison.Ordinal);
+        Assert.Contains("GetRequiredService<IModuleContextFactory>()", registration, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", registration, StringComparison.Ordinal);
         Assert.Contains("GetRequiredService<HydrationDbContext>().HydrationEntries", registration, StringComparison.Ordinal);
         Assert.DoesNotContain("GetRequiredService<FoodDiaryDbContext>().HydrationEntries", registration, StringComparison.Ordinal);
         string context = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Hydration/Infrastructure/Persistence/HydrationDbContext.cs"));
         Assert.Contains("ApplyHydrationPersistenceModel()", context, StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiaryDbContext", context, StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiary.Domain.Entities.Users", context, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ContextFactoryContract_HasNoProjectDependenciesOrSaveCapabilities() {
+        Assert.Empty(ProjectReferenceReader.ReadProjectReferences("Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"));
+        string contract = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared/FoodDiary.Persistence.Abstractions/IModuleContextFactory.cs"));
+        Assert.Contains("CreateModuleContext", contract, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", contract, StringComparison.Ordinal);
+        Assert.DoesNotContain("SaveChanges", contract, StringComparison.Ordinal);
+        Assert.DoesNotContain("BeginTransaction", contract, StringComparison.Ordinal);
     }
 
     [Fact]

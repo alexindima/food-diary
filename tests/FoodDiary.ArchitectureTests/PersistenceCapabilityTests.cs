@@ -7,6 +7,13 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class PersistenceCapabilityTests {
+    [Fact]
+    public void Scanner_TracksContextCreationThroughFactoryContract() {
+        const string source = "using FoodDiary.Persistence.Abstractions; using Microsoft.EntityFrameworkCore; class Owner(DbContextOptions<Owner> options) : DbContext(options); class Probe(IModuleContextFactory factory) { public Owner Create() => factory.CreateModuleContext<Owner>(options => new Owner(options)); }";
+        IReadOnlyDictionary<string, string[]> capabilities = PersistenceCapabilityScanner.Scan([("Probe.cs", source)]);
+        Assert.Contains("context:CreateModuleContext", capabilities["Probe.cs"], StringComparer.Ordinal);
+    }
+
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
     [Theory]

@@ -570,6 +570,18 @@ public sealed class DependencyInjectionTests {
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
+        FoodDiary.Persistence.Abstractions.IModuleContextFactory factory = scope.ServiceProvider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleContextFactory>();
+        FoodDiaryDbContext central = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext hydration = scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>();
+        Assert.Same(central, factory);
+        Assert.Contains(hydration, central.ModuleContexts);
+        Assert.Same(central.Database.GetDbConnection(), hydration.Database.GetDbConnection());
+        Assert.Same(hydration, scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>());
+        using (IServiceScope otherScope = provider.CreateScope()) {
+            Assert.NotSame(factory, otherScope.ServiceProvider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleContextFactory>());
+            Assert.NotSame(hydration, otherScope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>());
+        }
+
         IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
         IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
         IHydrationEntryReadModelRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryReadModelRepository>();
@@ -946,14 +958,6 @@ public sealed class DependencyInjectionTests {
             [
                 "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventReadRepository",
                 "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventWriteRepository",
-            ]
-        },
-        {
-            "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateRepository",
-            [
-                "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateReadRepository",
-                "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateReadModelRepository",
-                "FoodDiary.Modules.Ai.Application.Abstractions.Common.IAiPromptTemplateWriteRepository",
             ]
         },
         {

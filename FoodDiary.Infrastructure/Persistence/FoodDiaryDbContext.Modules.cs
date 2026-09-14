@@ -1,10 +1,11 @@
+using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public sealed partial class FoodDiaryDbContext {
+public sealed partial class FoodDiaryDbContext : IModuleContextFactory {
     private readonly List<DbContext> _moduleContexts = [];
     private readonly Dictionary<DbContext, int> _moduleSaveOrders = [];
 

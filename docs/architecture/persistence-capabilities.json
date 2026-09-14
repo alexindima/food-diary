@@ -759,7 +759,7 @@
         "tracked:HydrationOperationReceipt"
       ],
       "reason": "Hydration composition creates its owned runtime context through the shared provider/connection factory. Only its two owned sets reach repositories; IUnitOfWork coordinates transactions and saves. Central purge remains a separate reviewed bridge; see ADR 0040.",
-      "technicalSourceSha256": "d82a1bd156b63d81347f200883bda9ae72fbd0f402ab878e32607691effb8758"
+      "technicalSourceSha256": "6817c6452a18cd9e0afdf613f3a78afe103a1ffb553d57f3816fa640f394fc88"
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs": {
       "module": "Hydration",
@@ -1627,7 +1627,7 @@
         "tracked:AiUsage"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "431247cde2274e35dc44bdc9099db3250cd12531d191d78642430d79bf47cf99"
+      "technicalSourceSha256": "a6962ca9298165e039a3e8401c8a8ad50b3287158b0b7f82e56425da9822a767"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",

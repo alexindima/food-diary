@@ -25,7 +25,6 @@ public sealed class OpenAiFoodService(
 
     public async Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
         string imageUrl,
-        string? userLanguage,
         UserId userId,
         string? description,
         string requestId,
@@ -41,7 +40,7 @@ public sealed class OpenAiFoodService(
             string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetAnalyzeFoodImageTokenBudgetAsync(
                 imageUrl,
-                userLanguage,
+                contextResult.Value.Language,
                 description,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
@@ -56,7 +55,7 @@ public sealed class OpenAiFoodService(
 
             Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.AnalyzeFoodImageAsync(
                 imageUrl,
-                userLanguage,
+                contextResult.Value.Language,
                 description,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
@@ -74,7 +73,6 @@ public sealed class OpenAiFoodService(
 
     public async Task<Result<FoodVisionModel>> ParseFoodTextAsync(
         string text,
-        string? userLanguage,
         UserId userId,
         string requestId,
         CancellationToken cancellationToken) {
@@ -89,7 +87,7 @@ public sealed class OpenAiFoodService(
             string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetParseFoodTextTokenBudgetAsync(
                 text,
-                userLanguage,
+                contextResult.Value.Language,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
             if (budgetResult.IsFailure) {
@@ -103,7 +101,7 @@ public sealed class OpenAiFoodService(
 
             Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.ParseFoodTextAsync(
                 text,
-                userLanguage,
+                contextResult.Value.Language,
                 promptTemplate,
                 deadline.Token).ConfigureAwait(false);
             if (response.IsFailure) {

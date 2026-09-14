@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4049,
-    "symbols": 3990,
-    "interfaceImplementationLinks": 268,
+    "sourceFiles": 4048,
+    "symbols": 3989,
+    "interfaceImplementationLinks": 267,
     "dependencyInjectionRegistrations": 150,
     "kinds": {
       "class": 2097,
       "enum": 64,
-      "interface": 471,
+      "interface": 470,
       "record": 1237,
       "record struct": 121
     },
@@ -26,7 +26,7 @@
       "Controller": 104,
       "Entity": 98,
       "Event": 19,
-      "Factory": 11,
+      "Factory": 12,
       "Handler": 9,
       "LookupRepository": 3,
       "Mapper": 8,
@@ -36,8 +36,8 @@
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
-      "ReadRepository": 44,
-      "Repository": 106,
+      "ReadRepository": 43,
+      "Repository": 105,
       "Request": 150,
       "Response": 213,
       "Service": 300,
@@ -521,7 +521,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "DomainEventNotification",
@@ -836,7 +836,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Modules.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FoodDiaryDbContext",
@@ -4822,20 +4822,6 @@
       "line": 4
     },
     {
-      "name": "IAiPromptTemplateReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IAiPromptTemplateRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateRepository.cs",
-      "line": 2
-    },
-    {
       "name": "IAiPromptTemplateWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -4917,7 +4903,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "line": 14
+      "line": 12
     },
     {
       "name": "AnalyzeFoodImageCommandValidator",
@@ -4938,7 +4924,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-      "line": 12
+      "line": 10
     },
     {
       "name": "CalculateFoodNutritionCommandValidator",
@@ -4959,7 +4945,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "ParseFoodTextCommandValidator",
@@ -27950,6 +27936,13 @@
       "line": 2
     },
     {
+      "name": "IModuleContextFactory",
+      "kind": "interface",
+      "role": "Factory",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleContextFactory.cs",
+      "line": 6
+    },
+    {
       "name": "Error",
       "kind": "record",
       "role": "Other",
@@ -28110,13 +28103,6 @@
       "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs",
       "implementation": "AiPromptProvider",
       "implementationPath": "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAiPromptTemplateRepository",
-      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateRepository.cs",
-      "implementation": "AiPromptTemplateRepository",
-      "implementationPath": "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29925,21 +29911,21 @@
       "implementation": "EfUnitOfWork",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 23
+      "line": 24
     },
     {
       "service": "IOutboxDeadLetterReplayService",
       "implementation": "OutboxDeadLetterReplayService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 24
+      "line": 26
     },
     {
       "service": "IDomainEventPublisher",
       "implementation": "MediatorDomainEventPublisher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 26
+      "line": 28
     },
     {
       "service": "IEmailVerificationNotifier",

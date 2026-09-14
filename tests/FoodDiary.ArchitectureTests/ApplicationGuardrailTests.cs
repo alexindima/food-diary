@@ -1404,9 +1404,9 @@ public sealed class ApplicationGuardrailTests {
     public void ContentPromptAndCycleReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
+            Path.Combine(root, "Modules", "Ai", "Application.Abstractions", "Common", "IAiPromptTemplateReadModelRepository.cs"),
             Path.Combine(root, "Modules", "DailyAdvices", "Application", "Abstractions", "Common", "IDailyAdviceReadModelRepository.cs"),
             Path.Combine(root, "Modules", "Cycles", "Application", "Abstractions", "Common", "ICycleReadRepository.cs"),
-            Path.Combine(root, "Modules", "Ai", "Application.Abstractions", "Common", "IAiPromptTemplateReadRepository.cs"),
         ];
 
         string[] violations = [

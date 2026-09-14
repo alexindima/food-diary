@@ -1,5 +1,4 @@
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 
@@ -11,7 +10,6 @@ namespace FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
 
 public sealed class ParseFoodTextCommandHandler(
     IOpenAiFoodService openAiFoodService,
-    IUserAiProfileReadService userProfileReadService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<ParseFoodTextCommand, Result<FoodVisionModel>> {
     public async Task<Result<FoodVisionModel>> Handle(
@@ -26,14 +24,8 @@ public sealed class ParseFoodTextCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserAiProfileModel> contextResult = await userProfileReadService.GetAiProfileAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (contextResult.IsFailure) {
-            return Result.Failure<FoodVisionModel>(contextResult.Error);
-        }
-
         return await openAiFoodService.ParseFoodTextAsync(
             command.Text,
-            contextResult.Value.Language,
             userId,
             command.RequestId,
             cancellationToken).ConfigureAwait(false);

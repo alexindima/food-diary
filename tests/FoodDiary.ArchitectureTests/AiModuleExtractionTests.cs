@@ -3,6 +3,22 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class AiModuleExtractionTests {
     [Fact]
+    public void PromptPorts_ExposeOnlyUsedReadModelsAndOwnerWrites() {
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Ai", "Application.Abstractions", "Common");
+        Assert.False(File.Exists(Path.Combine(root, "IAiPromptTemplateRepository.cs")));
+        Assert.False(File.Exists(Path.Combine(root, "IAiPromptTemplateReadRepository.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "IAiPromptTemplateReadModelRepository.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "IAiPromptTemplateWriteRepository.cs")));
+    }
+
+    [Fact]
+    public void Infrastructure_ReferencesTheOwnersOfConsumedEntitiesAndImageIdsDirectly() {
+        string[] references = ProjectReferenceReader.ReadProjectReferences("Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj");
+        Assert.Contains("FoodDiary.Modules.Ai.Domain", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Modules.Images.Contracts", references, StringComparer.Ordinal);
+    }
+
+    [Fact]
     public void Admin_ConsumesSemanticAiCapabilitiesWithoutQuotaOrPromptRepositories() {
         string adminRoot = ArchitectureTestPaths.FromRoot("Modules", "Admin", "Application");
         Assert.NotEmpty(SourceScanner.SourceFiles(adminRoot));
@@ -55,7 +71,7 @@ public sealed class AiModuleExtractionTests {
     public void ExtractedAiAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Contracts", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Contracts", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

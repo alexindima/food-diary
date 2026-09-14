@@ -23,13 +23,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "378efed70c3fbe5a3ecb388a28d46505db9ccb511dcfc4668239404a76ca81ee"
+          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
         }
       ],
-      "reason": "Reviewed root guide links after AI sibling-project relocation; navigation and authority rules remain valid.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:03.2234854Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:36.3567661Z"
     },
     {
       "pageId": "module.frontend",
@@ -67,18 +67,14 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "130b59176952bee518436753b0039f80f666f42e104beabcdfee827982266548"
-        },
-        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "f82e35170b0dbef3d540c07f9ef9b64e7c656e91613624f9d2cfe95a96bb2ffe"
+          "sha256": "6aa10e30bdaf3c60f5f0e29e8b1b1f30bed635618d53370ae54fd208c8817613"
         }
       ],
-      "reason": "AI still owns prompts and usage; Users profile contracts and host read composition remain unchanged, as verified by consumer tests and SharedAiContextIntegrationTests.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:04.1531102Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:37.0710611Z"
     },
     {
       "pageId": "system.architecture",
@@ -86,22 +82,14 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "130b59176952bee518436753b0039f80f666f42e104beabcdfee827982266548"
-        },
-        {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "fe8ce55f44dd774c21cdf6da77c4b46c77fda4c614cb9cc2d4b827f41bab2316"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8a8246220a70ad2f1bac9c5d44383e4c86fedd7610580a1def37d1cc498931a3"
+          "sha256": "724ebf058ba819720598b51910a882671e5c1ae0c187bd71986cddc07ef98acb"
         }
       ],
-      "reason": "Reviewed sibling AI projects and exact dependency matrix: removed unused Presentation-to-Domain edge; ADR0038 read composition and mutation ownership remain valid.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:05.0877746Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:37.7379896Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -140,13 +128,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "378efed70c3fbe5a3ecb388a28d46505db9ccb511dcfc4668239404a76ca81ee"
+          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
         }
       ],
-      "reason": "Root changes update scoped AI guide paths only; source authority and review protocol remain valid.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:05.9119233Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:38.6706369Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -223,21 +211,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4739c636d2c951756ae920546e421ba7446bae1ab7a4343879fc511e0b0aa968"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "130b59176952bee518436753b0039f80f666f42e104beabcdfee827982266548"
+          "sha256": "a193e0f52ece2d3cf7a8b8efce07bca5bbc6fb4aa829993064441395da681035"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8a8246220a70ad2f1bac9c5d44383e4c86fedd7610580a1def37d1cc498931a3"
+          "sha256": "724ebf058ba819720598b51910a882671e5c1ae0c187bd71986cddc07ef98acb"
         }
       ],
-      "reason": "Reviewed removed services against callers and DI; 388 architecture tests passed with exact dependency matrix and physical-layout guards. The documented candidate-review policy remains valid.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:08.2290838Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:39.5059929Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -246,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "0c0c085278d87d24d72384c1c9c56ab3eb132864b9dabbce0432353abb4cec3b"
+          "sha256": "afe08be549e58bf168949770c3aadc84bf6ca4730014dadecf9b97fb8e3f1f21"
         }
       ],
-      "reason": "Removed duplicated Users profile adapter and summary service after updating consumers; Admin 245 and Meals 197 tests passed, as did solution compilation. Contract-review procedure remains valid.",
+      "reason": "Factory pilot review: shared EF contract has no project dependencies or write/transaction API; Hydration keeps existing provider/connection/tracker behavior. Docker source and restore copies added. Capability scanner retains context-creation review through interface. Ai registration diff only rebinds scoped prompt repository ports and was reviewed for unchanged persistence capabilities.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:09.2829403Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:33:36.6916787Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -516,18 +500,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "af6acea95919f4c295040033f5ce06ae2013a5c575ed7985b20446b9807b761b"
-        },
-        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "f82e35170b0dbef3d540c07f9ef9b64e7c656e91613624f9d2cfe95a96bb2ffe"
+          "sha256": "6aa10e30bdaf3c60f5f0e29e8b1b1f30bed635618d53370ae54fd208c8817613"
         }
       ],
-      "reason": "AI entity and mapping moves preserve schema and repository behavior; historical migrations untouched and shared AI commit/rollback tests passed. Domain review workflow remains valid.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:10.6998801Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:43.2058456Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -840,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "15a4b76c9948a25324c923fae66cdf17bb09c77f1a876c305a64725e9e10ea26"
+          "sha256": "1da3ed19dca6015d7c5f22638740004e05d366f881569c6fa17214a740a34a5b"
         }
       ],
-      "reason": "Reviewed service consumers and preserved provider orchestration; execution evidence comes from actual AI tests, not static test-reference signals. Workflow distinction remains valid.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:13.6337960Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:44.2375309Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -915,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "57e861b610932922d56c72b8b3fb6b073f0809920d2d89fea7252c4da264f336"
+          "sha256": "f3955a0229b9150e5ca1a99cc57d6cb228c0d8f0a49038b3b150b5d0a8b540c0"
         }
       ],
-      "reason": "Provider, quota and job repository bodies unchanged apart from namespaces; DI writer/read split retains shared transaction synchronization. Runtime review guidance remains valid.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:16.7424232Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:46.5844744Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -930,21 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "15a4b76c9948a25324c923fae66cdf17bb09c77f1a876c305a64725e9e10ea26"
+          "sha256": "1da3ed19dca6015d7c5f22638740004e05d366f881569c6fa17214a740a34a5b"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "57e861b610932922d56c72b8b3fb6b073f0809920d2d89fea7252c4da264f336"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3bb1f144ce881711ce1af0ece9753c1e8a5bc0019c92247c3d10d14cab09d71a"
+          "sha256": "f3955a0229b9150e5ca1a99cc57d6cb228c0d8f0a49038b3b150b5d0a8b540c0"
         }
       ],
-      "reason": "Regenerated navigation indexes reflect AI moves; consent and user-scoping behavior preserved and no security-scanner claims added. Evidence limitations remain accurate.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:17.8389762Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:47.7348062Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1126,13 +1102,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "378efed70c3fbe5a3ecb388a28d46505db9ccb511dcfc4668239404a76ca81ee"
+          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
         }
       ],
-      "reason": "AI path and namespace rules were added to scoped guidance and executable regression guards; change-policy engine semantics remain unchanged.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:09.9731609Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:42.2979378Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1190,17 +1166,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c324c70f0a7cbf19c585118bf394525427394e0be1841e28e61fe9135b57f13f"
+          "sha256": "37ec4c561cdc778bc721eda2d0a65bd5dd7fd229d2d37ac172c9e058d5545e3d"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "378efed70c3fbe5a3ecb388a28d46505db9ccb511dcfc4668239404a76ca81ee"
+          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
         }
       ],
-      "reason": "Regenerated catalog tracks moved AI paths; no resolver behavior or index schema changed, so query protocol remains accurate.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:14.6377508Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:45.2969775Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1209,13 +1185,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "378efed70c3fbe5a3ecb388a28d46505db9ccb511dcfc4668239404a76ca81ee"
+          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
         }
       ],
-      "reason": "Root guide changes only relocate AI source links; diff and source-review receipt semantics unchanged.",
+      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:15.7092040Z"
+      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
+      "reviewedAtUtc": "2026-09-14T02:13:46.0131560Z"
     }
   ]
 }

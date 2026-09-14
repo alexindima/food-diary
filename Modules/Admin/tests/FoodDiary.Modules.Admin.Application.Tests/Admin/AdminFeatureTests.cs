@@ -900,16 +900,13 @@ public partial class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryAiPromptTemplateRepository(params AiPromptTemplate[] templates) : IAiPromptTemplateRepository {
+    private sealed class InMemoryAiPromptTemplateRepository(params AiPromptTemplate[] templates) : IAiPromptTemplateWriteRepository, IAiPromptTemplateReadModelRepository {
         public Task<IReadOnlyList<AiPromptRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<AiPromptRevisionReadModel>>([]);
         private readonly List<AiPromptTemplate> _templates = [.. templates];
 
         public IReadOnlyList<AiPromptTemplate> Templates => _templates;
         public int UpdateCallCount { get; private set; }
-
-        public Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<AiPromptTemplate>>(_templates);
 
         public Task<IReadOnlyList<AiPromptTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<AiPromptTemplateReadModel>>([.. _templates.Select(ToReadModel)]);

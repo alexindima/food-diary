@@ -10,7 +10,7 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 |---|---:|
 | Audit bridge | 1 |
 | Connection/lock | 1 |
-| Context registration | 29 |
+| Context registration | 28 |
 | Transaction coordination | 6 |
 | User purge | 14 |
 
@@ -18,8 +18,9 @@ The presence of 29 owner contexts does not mean all runtime access has left the 
 
 ## Next changes, in order
 
-1. Extract a narrow shared persistence coordination seam for context creation, transactions, reset and connection access. Central Infrastructure must not become a dependency of that seam.
-2. Revisit purge and collaboration-audit bridges after transaction coordination is explicit. Preserve deletion order, FK behavior and audit atomicity.
+1. Continue the IModuleContextFactory pilot from Hydration to the remaining registrations. Shared/FoodDiary.Persistence.Abstractions has no project dependencies; FoodDiaryDbContext implements it with the existing scoped provider/connection and tracker registration.
+2. Extract transaction/reset/connection coordination separately after factory adoption; preserve current unit-of-work ownership.
+3. Revisit purge and collaboration-audit bridges after transaction coordination is explicit. Preserve deletion order, FK behavior and audit atomicity.
 
 The shared FoodDiaryDbContext partials and mapping composition remain necessary for the unified migration model and central read/purge integrations. Their removal is a separate architectural change, not part of a namespace rename.
 
@@ -47,7 +48,6 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 | [Modules/Fasting/Infrastructure/ModuleRegistration.cs](../../Modules/Fasting/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Favorites/Infrastructure/ModuleRegistration.cs](../../Modules/Favorites/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Gamification/Infrastructure/ModuleRegistration.cs](../../Modules/Gamification/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
-| [Modules/Hydration/Infrastructure/ModuleRegistration.cs](../../Modules/Hydration/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs](../../Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Identity/Infrastructure/IdentityModuleRegistration.cs](../../Modules/Identity/Infrastructure/IdentityModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs](../../Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |

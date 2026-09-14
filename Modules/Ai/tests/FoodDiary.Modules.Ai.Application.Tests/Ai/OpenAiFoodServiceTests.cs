@@ -28,15 +28,8 @@ public sealed class OpenAiFoodServiceTests {
         OpenAiFoodService service = CreateService(client, quotaRepository, user);
 
         Result result = operation switch {
-            "vision" => await service.AnalyzeFoodImageAsync(
-                imageUrl: "https://cdn.example.com/meal.webp",
-                userLanguage: "en",
-                userId: user.Id,
-                description: null,
-                requestId: RequestId,
-                cancellationToken: CancellationToken.None),
-            "text-parse" => await service.ParseFoodTextAsync(
-                "apple 100g", "en", user.Id, RequestId, CancellationToken.None),
+            "vision" => await service.AnalyzeFoodImageAsync(imageUrl: "https://cdn.example.com/meal.webp", userId: user.Id, description: null, requestId: RequestId, cancellationToken: CancellationToken.None),
+            "text-parse" => await service.ParseFoodTextAsync("apple 100g", user.Id, RequestId, CancellationToken.None),
             _ => await service.CalculateNutritionAsync(CreateItems(), user.Id, RequestId, CancellationToken.None),
         };
 
@@ -208,13 +201,7 @@ public sealed class OpenAiFoodServiceTests {
         };
         OpenAiFoodService service = CreateService(client, quotaRepository);
 
-        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
-            "https://cdn.example.com/meal.webp",
-            "en",
-            UserId.New(),
-            description: null,
-            RequestId,
-            CancellationToken.None);
+        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync("https://cdn.example.com/meal.webp", UserId.New(), description: null, RequestId, CancellationToken.None);
 
         ResultAssert.Success(result);
         AiQuotaUsage usage = Assert.Single(quotaRepository.Reconciliations);
@@ -227,12 +214,7 @@ public sealed class OpenAiFoodServiceTests {
         var client = new RecordingOpenAiFoodClient();
         OpenAiFoodService service = CreateService(client, quotaRepository);
 
-        Result<FoodVisionModel> result = await service.ParseFoodTextAsync(
-            "apple 100g",
-            "en",
-            UserId.New(),
-            RequestId,
-            CancellationToken.None);
+        Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", UserId.New(), RequestId, CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(RequestId, Assert.Single(quotaRepository.Reservations).RequestId);
@@ -280,19 +262,8 @@ public sealed class OpenAiFoodServiceTests {
             overallOperationTimeout: TimeSpan.FromMilliseconds(25));
 
         Result<FoodVisionModel> result = analyzeImage
-            ? await service.AnalyzeFoodImageAsync(
-                "https://cdn.example.com/meal.webp",
-                "en",
-                UserId.New(),
-                description: null,
-                RequestId,
-                CancellationToken.None)
-            : await service.ParseFoodTextAsync(
-                "apple 100g",
-                "en",
-                UserId.New(),
-                RequestId,
-                CancellationToken.None);
+            ? await service.AnalyzeFoodImageAsync("https://cdn.example.com/meal.webp", UserId.New(), description: null, RequestId, CancellationToken.None)
+            : await service.ParseFoodTextAsync("apple 100g", UserId.New(), RequestId, CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Multiple(
@@ -336,14 +307,8 @@ public sealed class OpenAiFoodServiceTests {
             returnNull: string.Equals(stage, "context", StringComparison.Ordinal));
 
         Result<FoodVisionModel> result = analyzeImage
-            ? await service.AnalyzeFoodImageAsync(
-                imageUrl: "https://cdn.example.com/meal.webp",
-                userLanguage: "en",
-                userId: UserId.New(),
-                description: null,
-                requestId: RequestId,
-                cancellationToken: CancellationToken.None)
-            : await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), RequestId, CancellationToken.None);
+            ? await service.AnalyzeFoodImageAsync(imageUrl: "https://cdn.example.com/meal.webp", userId: UserId.New(), description: null, requestId: RequestId, cancellationToken: CancellationToken.None)
+            : await service.ParseFoodTextAsync("apple 100g", UserId.New(), RequestId, CancellationToken.None);
 
         ResultAssert.Failure(result);
     }

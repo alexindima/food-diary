@@ -7,7 +7,6 @@ namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 public interface IOpenAiFoodService {
     Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
         string imageUrl,
-        string? userLanguage,
         UserId userId,
         string? description,
         string requestId,
@@ -15,7 +14,6 @@ public interface IOpenAiFoodService {
 
     Task<Result<FoodVisionModel>> ParseFoodTextAsync(
         string text,
-        string? userLanguage,
         UserId userId,
         string requestId,
         CancellationToken cancellationToken);

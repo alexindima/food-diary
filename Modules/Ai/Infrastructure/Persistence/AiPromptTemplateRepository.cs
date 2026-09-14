@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Persistence;
 
-internal sealed class AiPromptTemplateRepository(DbSet<AiPromptTemplate> templates, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IAiPromptTemplateRepository {
+internal sealed class AiPromptTemplateRepository(DbSet<AiPromptTemplate> templates, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IAiPromptTemplateReadModelRepository, IAiPromptTemplateWriteRepository {
     public async Task<IReadOnlyList<AiPromptRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
@@ -15,17 +15,6 @@ internal sealed class AiPromptTemplateRepository(DbSet<AiPromptTemplate> templat
             .SelectMany(template => template.Revisions).OrderByDescending(revision => revision.ArchivedOnUtc).ThenByDescending(revision => revision.Id).Take(50)
             .Select(revision => new AiPromptRevisionReadModel(revision.Id, revision.PromptText, revision.Version,
                 revision.IsActive, revision.SavedOnUtc, revision.ArchivedOnUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task<IReadOnlyList<AiPromptTemplate>> GetAllAsync(CancellationToken cancellationToken = default) {
-        if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
-        }
-        return await templates
-            .AsNoTracking()
-            .OrderBy(t => t.Key)
-            .ThenBy(t => t.Locale)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

@@ -15,3 +15,5 @@ Rules for `Modules/Ai/Application/`.
 
 - Build: `dotnet build Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj`
 - Tests: `dotnet test Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FoodDiary.Modules.Ai.Application.Tests.csproj`
+
+OpenAiFoodService reads the Users AI profile once per provider operation, inside its deadline; handlers do not reread it. The same profile supplies language, consent and quota limits. Preserve validation, image ownership and caller cancellation.

@@ -255,6 +255,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Telegram bot: `FoodDiary.Telegram.Bot/AGENTS.md`
 - Shared result primitives: `Shared/FoodDiary.Results/AGENTS.md`
 
+- Shared persistence coordination contracts: `Shared/FoodDiary.Persistence.Abstractions/AGENTS.md`
+
 ## Cross-Repo Rules
 
 - Identity consumer contracts: `Modules/Identity/Contracts/AGENTS.md`

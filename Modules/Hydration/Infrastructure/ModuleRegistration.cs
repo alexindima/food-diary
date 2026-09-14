@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Hydration;
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +12,7 @@ public static class ModuleRegistration {
     public static IServiceCollection AddHydrationModule(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, HydrationUserDataPurgeParticipant>());
         services.AddHydrationApplication();
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<HydrationDbContext>(static options => new HydrationDbContext(options)));
         services.AddScoped<FoodDiary.Application.Hydration.Common.IHydrationIntervalReadService>(static provider => new HydrationIntervalReadService(
             provider.GetRequiredService<HydrationDbContext>().HydrationEntries));

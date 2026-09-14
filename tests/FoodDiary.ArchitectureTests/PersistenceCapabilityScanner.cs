@@ -60,6 +60,9 @@ internal static class PersistenceCapabilityScanner {
                 ITypeSymbol? receiver = model.GetTypeInfo(access.Expression).Type;
                 string methodName = access.Name.Identifier.ValueText;
                 var method = model.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
+                if (receiver?.ToDisplayString().Equals("FoodDiary.Persistence.Abstractions.IModuleContextFactory", StringComparison.Ordinal) == true) {
+                    capabilities.Add($"context:{methodName}");
+                }
                 if (IsContext(receiver)) {
                     if (methodName.Equals("Set", StringComparison.Ordinal)) {
                         string? entity = QueryEntity(model.GetTypeInfo(invocation).Type);

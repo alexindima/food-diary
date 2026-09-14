@@ -11,6 +11,7 @@ COPY Shared/FoodDiary.Results/*.csproj Shared/FoodDiary.Results/
 COPY Shared/FoodDiary.Application.Contracts/*.csproj Shared/FoodDiary.Application.Contracts/
 COPY Shared/FoodDiary.Audit.Contracts/*.csproj Shared/FoodDiary.Audit.Contracts/
 COPY Shared/FoodDiary.Audit.PersistenceModel/*.csproj Shared/FoodDiary.Audit.PersistenceModel/
+COPY Shared/FoodDiary.Persistence.Abstractions/*.csproj Shared/FoodDiary.Persistence.Abstractions/
 COPY Shared/FoodDiary.Authentication.Contracts/*.csproj Shared/FoodDiary.Authentication.Contracts/
 COPY Shared/FoodDiary.Email.Contracts/*.csproj Shared/FoodDiary.Email.Contracts/
 COPY Shared/FoodDiary.Email.MailRelay/*.csproj Shared/FoodDiary.Email.MailRelay/
@@ -291,6 +292,7 @@ COPY Shared/FoodDiary.Results/ Shared/FoodDiary.Results/
 COPY Shared/FoodDiary.Application.Contracts/ Shared/FoodDiary.Application.Contracts/
 COPY Shared/FoodDiary.Audit.Contracts/ Shared/FoodDiary.Audit.Contracts/
 COPY Shared/FoodDiary.Audit.PersistenceModel/ Shared/FoodDiary.Audit.PersistenceModel/
+COPY Shared/FoodDiary.Persistence.Abstractions/ Shared/FoodDiary.Persistence.Abstractions/
 COPY Shared/FoodDiary.Authentication.Contracts/ Shared/FoodDiary.Authentication.Contracts/
 COPY Shared/FoodDiary.Email.Contracts/ Shared/FoodDiary.Email.Contracts/
 COPY Shared/FoodDiary.Email.MailRelay/ Shared/FoodDiary.Email.MailRelay/

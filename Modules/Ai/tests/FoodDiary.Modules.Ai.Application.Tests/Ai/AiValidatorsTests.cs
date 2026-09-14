@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Images.Services;
@@ -27,8 +28,8 @@ public class AiValidatorsTests {
         IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
         images.GetDataUrlAsync(Arg.Any<ImageAssetId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<string>(new Error("Image.Forbidden", "Denied", ErrorKind.Forbidden)));
-        IOpenAiFoodService provider = CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls);
-        var handler = new AnalyzeFoodImageCommandHandler(images, CreateUserAiProfileReadService(user: null), provider);
+        IOpenAiFoodClient provider = CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls);
+        var handler = new AnalyzeFoodImageCommandHandler(images, CreateOrchestration(provider, CreateUserAiProfileReadService(user: null)));
 
         Result<FoodVisionModel> result = await handler.Handle(new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), Description: null, RequestId), CancellationToken.None);
 
@@ -80,10 +81,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var user = User.Create("ai-handler@example.com", "hash");
-        var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageContentService(CreateImageAssetRepository()),
-            CreateUserAiProfileReadService(user),
-            CreateOpenAiFoodService());
+        var handler = new AnalyzeFoodImageCommandHandler(CreateImageContentService(CreateImageAssetRepository()), CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(user)));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, Description: null, RequestId),
@@ -96,10 +94,7 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task AnalyzeFoodImageHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageContentService(CreateImageAssetRepository()),
-            CreateUserAiProfileReadService(User.Create("ai-empty-image-user@example.com", "hash")),
-            CreateOpenAiFoodService());
+        var handler = new AnalyzeFoodImageCommandHandler(CreateImageContentService(CreateImageAssetRepository()), CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(User.Create("ai-empty-image-user@example.com", "hash"))));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), Description: null, RequestId),
@@ -113,10 +108,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageHandler_WhenImageAssetMissing_ReturnsImageNotFound() {
         var user = User.Create("ai-missing-image@example.com", "hash");
-        var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageContentService(CreateImageAssetRepository()),
-            CreateUserAiProfileReadService(user),
-            CreateOpenAiFoodService());
+        var handler = new AnalyzeFoodImageCommandHandler(CreateImageContentService(CreateImageAssetRepository()), CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(user)));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), Description: null, RequestId),
@@ -131,10 +123,7 @@ public class AiValidatorsTests {
         var owner = User.Create("ai-image-owner@example.com", "hash");
         var requester = User.Create("ai-image-requester@example.com", "hash");
         var asset = ImageAsset.Create(owner.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
-        var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateUserAiProfileReadService(requester),
-            CreateOpenAiFoodService());
+        var handler = new AnalyzeFoodImageCommandHandler(CreateImageContentService(CreateImageAssetRepository(asset)), CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(requester)));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, Description: null, RequestId),
@@ -148,10 +137,7 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WhenUploadedObjectInvalid_ReturnsImageInvalidData() {
         var user = User.Create("ai-invalid-image@example.com", "hash");
         var asset = ImageAsset.Create(user.Id, "images/invalid.jpg", "https://cdn.example.com/invalid.jpg");
-        var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateUserAiProfileReadService(user),
-            CreateOpenAiFoodService());
+        var handler = new AnalyzeFoodImageCommandHandler(CreateImageContentService(CreateImageAssetRepository(asset)), CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(user)));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, Description: null, RequestId),
@@ -167,11 +153,8 @@ public class AiValidatorsTests {
         var userId = UserId.New();
         var asset = ImageAsset.Create(userId, "images/orphan.jpg", "https://cdn.example.com/orphan.jpg");
         asset.Confirm();
-        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateUserAiProfileReadService(user: null),
-            openAiFoodService);
+        IOpenAiFoodClient openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new AnalyzeFoodImageCommandHandler(CreateImageContentService(CreateImageAssetRepository(asset)), CreateOrchestration(openAiFoodService, CreateUserAiProfileReadService(user: null)));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes", RequestId),
@@ -188,11 +171,8 @@ public class AiValidatorsTests {
         user.SetLanguage("ru");
         var asset = ImageAsset.Create(user.Id, "images/valid.jpg", "https://cdn.example.com/valid.jpg");
         asset.Confirm();
-        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new AnalyzeFoodImageCommandHandler(
-            CreateImageContentService(CreateImageAssetRepository(asset)),
-            CreateUserAiProfileReadService(user),
-            openAiFoodService);
+        IOpenAiFoodClient openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new AnalyzeFoodImageCommandHandler(CreateImageContentService(CreateImageAssetRepository(asset)), CreateOrchestration(openAiFoodService, CreateUserAiProfileReadService(user)));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner", RequestId),
@@ -290,9 +270,7 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new CalculateFoodNutritionCommandHandler(
-            CreateOpenAiFoodService(),
-            CreateUserAiProfileReadService(User.Create("ai-empty-nutrition@example.com", "hash")));
+        var handler = new CalculateFoodNutritionCommandHandler(CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(User.Create("ai-empty-nutrition@example.com", "hash"))));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -308,9 +286,7 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithEmptyItems_ReturnsEmptyItems() {
-        var handler = new CalculateFoodNutritionCommandHandler(
-            CreateOpenAiFoodService(),
-            CreateUserAiProfileReadService(User.Create("ai-empty-items@example.com", "hash")));
+        var handler = new CalculateFoodNutritionCommandHandler(CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(User.Create("ai-empty-items@example.com", "hash"))));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(Guid.NewGuid(), [], RequestId),
@@ -324,8 +300,8 @@ public class AiValidatorsTests {
     public async Task CalculateFoodNutritionHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive-ai-nutrition@example.com", "hash");
         user.Deactivate();
-        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateUserAiProfileReadService(user));
+        IOpenAiFoodClient openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new CalculateFoodNutritionCommandHandler(CreateOrchestration(openAiFoodService, CreateUserAiProfileReadService(user)));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -342,8 +318,8 @@ public class AiValidatorsTests {
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithActiveUser_CalculatesNutrition() {
         var user = User.Create("active-ai-nutrition@example.com", "hash");
-        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateUserAiProfileReadService(user));
+        IOpenAiFoodClient openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new CalculateFoodNutritionCommandHandler(CreateOrchestration(openAiFoodService, CreateUserAiProfileReadService(user)));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -358,10 +334,7 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task ParseFoodTextHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new ParseFoodTextCommandHandler(
-            CreateOpenAiFoodService(),
-            CreateUserAiProfileReadService(User.Create("ai-empty-text-user@example.com", "hash")),
-            CreateCurrentUserAccessService(User.Create("ai-empty-text-user@example.com", "hash")));
+        var handler = new ParseFoodTextCommandHandler(CreateOrchestration(CreateOpenAiFoodService(), CreateUserAiProfileReadService(User.Create("ai-empty-text-user@example.com", "hash"))), CreateCurrentUserAccessService(User.Create("ai-empty-text-user@example.com", "hash")));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple", RequestId), CancellationToken.None);
 
@@ -371,11 +344,8 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task ParseFoodTextHandler_WhenUserMissing_ReturnsInvalidToken() {
-        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new ParseFoodTextCommandHandler(
-            openAiFoodService,
-            CreateUserAiProfileReadService(user: null),
-            CreateCurrentUserAccessService(user: null));
+        IOpenAiFoodClient openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new ParseFoodTextCommandHandler(CreateOrchestration(openAiFoodService, CreateUserAiProfileReadService(user: null)), CreateCurrentUserAccessService(user: null));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple", RequestId), CancellationToken.None);
 
@@ -387,11 +357,8 @@ public class AiValidatorsTests {
     [Fact]
     public async Task ParseFoodTextHandler_WhenUserAiProfileModelFails_ReturnsFailureWithoutCallingOpenAi() {
         var user = User.Create("ai-context-fails@example.com", "hash");
-        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new ParseFoodTextCommandHandler(
-            openAiFoodService,
-            CreateUserAiProfileReadService(user: null),
-            CreateCurrentUserAccessService(user));
+        IOpenAiFoodClient openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new ParseFoodTextCommandHandler(CreateOrchestration(openAiFoodService, CreateUserAiProfileReadService(user: null)), CreateCurrentUserAccessService(user));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple", RequestId), CancellationToken.None);
 
@@ -404,8 +371,8 @@ public class AiValidatorsTests {
     public async Task ParseFoodTextHandler_WithActiveUser_ParsesText() {
         var user = User.Create("active-ai-text@example.com", "hash");
         user.SetLanguage("ru");
-        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
-        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateUserAiProfileReadService(user), CreateCurrentUserAccessService(user));
+        IOpenAiFoodClient openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new ParseFoodTextCommandHandler(CreateOrchestration(openAiFoodService, CreateUserAiProfileReadService(user)), CreateCurrentUserAccessService(user));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g", RequestId), CancellationToken.None);
 
@@ -446,6 +413,48 @@ public class AiValidatorsTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData("vision", true)]
+    [InlineData("text-parse", true)]
+    [InlineData("nutrition", true)]
+    [InlineData("vision", false)]
+    [InlineData("text-parse", false)]
+    [InlineData("nutrition", false)]
+    public async Task HandlerWorkflow_ReadsProfileOnceAndPreservesConsentAndLanguage(string operation, bool consent) {
+        var user = User.Create("single-profile@example.com", "hash");
+        IUserAiProfileReadService profiles = Substitute.For<IUserAiProfileReadService>();
+        profiles.GetAiProfileAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserAiProfileModel(user.Id, "ru", 1000, 2000, consent)));
+        IOpenAiFoodClient client = CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls);
+        IAiQuotaRepository quota = Substitute.For<IAiQuotaRepository>();
+        OpenAiFoodService service = CreateOrchestration(client, profiles, quota);
+        IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
+        images.GetDataUrlAsync(Arg.Any<ImageAssetId>(), user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(TestImageDataUrl));
+        using var cancellation = new CancellationTokenSource();
+        Result result = operation switch {
+            "vision" => await new AnalyzeFoodImageCommandHandler(images, service).Handle(
+                new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), "meal", RequestId), cancellation.Token),
+            "text-parse" => await new ParseFoodTextCommandHandler(service, CreateCurrentUserAccessService(user)).Handle(
+                new ParseFoodTextCommand(user.Id.Value, "apple", RequestId), cancellation.Token),
+            _ => await new CalculateFoodNutritionCommandHandler(service).Handle(
+                new CalculateFoodNutritionCommand(user.Id.Value, [new FoodVisionItemModel("apple", "apple", 100, "g", 1m)], RequestId), cancellation.Token),
+        };
+        await profiles.Received(1).GetAiProfileAsync(user.Id, Arg.Is<CancellationToken>(token => token.CanBeCanceled));
+        await quota.Received(consent ? 1 : 0).ReserveAsync(
+            Arg.Is<AiQuotaReservationRequest>(request => request.UserId == user.Id && request.InputTokenLimit == 1000 && request.OutputTokenLimit == 2000),
+            Arg.Any<CancellationToken>());
+        Assert.Equal(consent, result.IsSuccess);
+        if (!consent) {
+            Assert.Equal("Ai.ConsentRequired", result.Error.Code);
+            Assert.Multiple(
+                () => Assert.False(calls.WasAnalyzeFoodImageCalled),
+                () => Assert.False(calls.WasParseFoodTextCalled),
+                () => Assert.False(calls.WasCalculateNutritionCalled));
+        } else if (!string.Equals(operation, "nutrition", StringComparison.Ordinal)) {
+            Assert.Equal("ru", calls.LastLanguage);
+        }
+    }
+
     private static IUserAiProfileReadService CreateUserAiProfileReadService(User? user) {
         IUserAiProfileReadService service = Substitute.For<IUserAiProfileReadService>();
         service
@@ -465,7 +474,7 @@ public class AiValidatorsTests {
                     user.Language,
                     user.AiInputTokenLimit,
                     user.AiOutputTokenLimit,
-                    user.AiConsentAcceptedAt is not null)));
+                    HasAcceptedAiConsent: true)));
             });
         return service;
     }
@@ -509,65 +518,47 @@ public class AiValidatorsTests {
         return repository;
     }
 
-    private static IOpenAiFoodService CreateOpenAiFoodService() =>
-        CreateOpenAiFoodService(out _);
+    private static IOpenAiFoodClient CreateOpenAiFoodService() => CreateOpenAiFoodService(out _);
 
-    private static IOpenAiFoodService CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls) {
+    private static OpenAiFoodService CreateOrchestration(IOpenAiFoodClient client, IUserAiProfileReadService users, IAiQuotaRepository? quota = null) {
+        quota ??= Substitute.For<IAiQuotaRepository>();
+        quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(AiQuotaReservationStatus.Acquired);
+        IAiPromptProvider prompts = Substitute.For<IAiPromptProvider>();
+        prompts.GetPromptAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns("prompt");
+        return new OpenAiFoodService(client, quota, users, TimeProvider.System, prompts);
+    }
+
+    private static IOpenAiFoodClient CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls) {
         calls = new OpenAiFoodServiceCalls();
         OpenAiFoodServiceCalls capturedCalls = calls;
-
-        IOpenAiFoodService service = Substitute.For<IOpenAiFoodService>();
-        service
-            .AnalyzeFoodImageAsync(
-                Arg.Any<string>(),
-                Arg.Any<string?>(),
-                Arg.Any<UserId>(),
-                Arg.Any<string?>(),
-                Arg.Any<string>(),
-                Arg.Any<CancellationToken>())
+        IOpenAiFoodClient client = Substitute.For<IOpenAiFoodClient>();
+        var budget = Result.Success(new AiProviderTokenBudget(10, 10));
+        client.GetAnalyzeFoodImageTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(budget);
+        client.GetParseFoodTextTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(budget);
+        client.GetCalculateNutritionTokenBudgetAsync(Arg.Any<IReadOnlyList<FoodVisionItemModel>>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(budget);
+        var vision = new FoodVisionModel([new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)], Notes: null);
+        client.AnalyzeFoodImageAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 capturedCalls.WasAnalyzeFoodImageCalled = true;
                 capturedCalls.LastImageUrl = call.ArgAt<string>(0);
                 capturedCalls.LastLanguage = call.ArgAt<string?>(1);
-                capturedCalls.LastDescription = call.ArgAt<string?>(3);
-                return Task.FromResult(Result.Success(new FoodVisionModel(
-                    [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
-                    Notes: null)));
+                capturedCalls.LastDescription = call.ArgAt<string?>(2);
+                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "vision", "test", new AiUsageTokens(1, 1, 2)));
             });
-        service
-            .ParseFoodTextAsync(
-                Arg.Any<string>(),
-                Arg.Any<string?>(),
-                Arg.Any<UserId>(),
-                Arg.Any<string>(),
-                Arg.Any<CancellationToken>())
+        client.ParseFoodTextAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 capturedCalls.WasParseFoodTextCalled = true;
                 capturedCalls.LastText = call.ArgAt<string>(0);
                 capturedCalls.LastLanguage = call.ArgAt<string?>(1);
-                return Task.FromResult(Result.Success(new FoodVisionModel(
-                    [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
-                    Notes: null)));
+                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "text-parse", "test", new AiUsageTokens(1, 1, 2)));
             });
-        service
-            .CalculateNutritionAsync(
-                Arg.Any<IReadOnlyList<FoodVisionItemModel>>(),
-                Arg.Any<UserId>(),
-                Arg.Any<string>(),
-                Arg.Any<CancellationToken>())
+        client.CalculateNutritionAsync(Arg.Any<IReadOnlyList<FoodVisionItemModel>>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(_ => {
                 capturedCalls.WasCalculateNutritionCalled = true;
-                return Task.FromResult(Result.Success(new FoodNutritionModel(
-                    52,
-                    0,
-                    0,
-                    14,
-                    2,
-                    0,
-                    [new FoodNutritionItemModel("apple", 120, "g", 52, 0, 0, 14, 2, 0)])));
+                var nutrition = new FoodNutritionModel(52, 0, 0, 14, 2, 0, [new FoodNutritionItemModel("apple", 120, "g", 52, 0, 0, 14, 2, 0)]);
+                return Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(nutrition, "nutrition", "test", new AiUsageTokens(1, 1, 2)));
             });
-
-        return service;
+        return client;
     }
 
     private static IAiUsageQuery CreateAiUsageRepository() =>

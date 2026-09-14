@@ -1090,7 +1090,6 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Theory]
     [InlineData("ContentReports", "IContentReportWriteRepository")]
-    [InlineData("Ai", "IAiPromptTemplateRepository", "IAiPromptTemplateReadRepository", "IAiPromptTemplateWriteRepository")]
     [InlineData("Email", "IEmailTemplateRepository", "IEmailTemplateWriteRepository")]
     public void OtherApplicationModules_DoNotAcquireAdministrativeContentWriteRepositories(
         string ownerModule,

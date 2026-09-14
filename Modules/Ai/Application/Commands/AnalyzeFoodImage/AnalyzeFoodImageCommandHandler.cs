@@ -1,6 +1,4 @@
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -14,7 +12,6 @@ namespace FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 
 public sealed class AnalyzeFoodImageCommandHandler(
     IImageAssetContentService imageAssetContentService,
-    IUserAiProfileReadService userProfileReadService,
     IOpenAiFoodService openAiFoodService)
     : ICommandHandler<AnalyzeFoodImageCommand, Result<FoodVisionModel>> {
     public async Task<Result<FoodVisionModel>> Handle(
@@ -47,14 +44,8 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return Result.Failure<FoodVisionModel>(error);
         }
 
-        Result<UserAiProfileModel> contextResult = await userProfileReadService.GetAiProfileAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (contextResult.IsFailure) {
-            return Result.Failure<FoodVisionModel>(contextResult.Error);
-        }
-
         return await openAiFoodService.AnalyzeFoodImageAsync(
             assetResult.Value,
-            contextResult.Value.Language,
             userId,
             query.Description,
             query.RequestId,
