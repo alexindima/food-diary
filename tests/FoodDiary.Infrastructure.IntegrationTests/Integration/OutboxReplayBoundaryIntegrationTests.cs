@@ -31,13 +31,13 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
         string[] names = ["email", "image_object_deletion", "notification_web_push", "achievement_evaluation"];
         foreach (string name in names) {
             Assert.Null(await scope.Service.GetDeadLetterAsync(name, Guid.NewGuid()));
-            Assert.Empty(observer.ChangeTracker.Entries());
+            Assert.Empty(scope.Entries);
         }
 
         IOutboxMessage[] requested = await CreateLookupBatchAsync(seed, "requested", deadLettered: true);
         IOutboxMessage[] active = await CreateLookupBatchAsync(seed, "active", deadLettered: false);
         for (int index = 0; index < names.Length; index++) {
-            observer.ChangeTracker.Clear();
+            scope.ClearTracking();
             OutboxDeadLetterMessageModel? preview = await scope.Service.GetDeadLetterAsync(names[index], requested[index].Id);
             Assert.NotNull(preview);
             Assert.Multiple(
@@ -45,14 +45,14 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
                 () => Assert.Equal("failure-requested", preview.LastError),
                 () => Assert.Equal(1, preview.AttemptCount),
                 () => Assert.Equal(Now, preview.DeadLetteredOnUtc));
-            EntityEntry tracked = Assert.Single(observer.ChangeTracker.Entries());
+            EntityEntry tracked = Assert.Single(scope.Entries);
             Assert.Equal(requested[index].Id, Assert.IsAssignableFrom<IOutboxMessage>(tracked.Entity).Id);
             Assert.Equal(EntityState.Unchanged, tracked.State);
-            observer.ChangeTracker.Clear();
+            scope.ClearTracking();
             Assert.Null(await scope.Service.GetDeadLetterAsync(names[index], active[index].Id));
-            observer.ChangeTracker.Clear();
+            scope.ClearTracking();
             Assert.Null(await scope.Service.GetDeadLetterAsync(names[index], Guid.NewGuid()));
-            Assert.Empty(observer.ChangeTracker.Entries());
+            Assert.Empty(scope.Entries);
             Assert.Equal(2, (await scope.Service.ListDeadLettersAsync(names[index], 10)).Count);
         }
         Assert.Empty(await observer.OutboxReplayAudits.ToListAsync());
@@ -127,6 +127,53 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
         Assert.Equal("[]", storedEmail.ToAddressesJson);
         Assert.Empty(storedEmail.HtmlBody);
         Assert.NotNull(storedEmail.DeadLetteredOnUtc);
+    }
+
+    [RequiresDockerTheory]
+    [InlineData("image_object_deletion", 1)]
+    [InlineData("notification_web_push", 2)]
+    [InlineData("achievement_evaluation", 3)]
+    public async Task OwnerSaveFailure_RollsBackAuditAndResetsAllTrackers_ThenSameScopeRetries(string streamName, int index) {
+        await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
+        IOutboxMessage[] messages = await CreateLookupBatchAsync(seed, "owner-failure", deadLettered: true);
+        var fault = new OwnerUpdateFault();
+        await using FoodDiaryDbContext context = CreateContext(seed.Database.GetConnectionString()!, fault);
+        using var scope = new OutboxReplayTestScope(context, Clock);
+        IOutboxDeadLetterReplayService service = scope.Service;
+        await Assert.ThrowsAsync<DbUpdateException>(() => service.ReplayAsync(streamName, messages[index].Id, "operator", "retry", 1));
+        Assert.Multiple(
+            () => Assert.True(fault.AuditInsertSeen),
+            () => Assert.True(fault.OwnerUpdateSeen),
+            () => Assert.Null(context.Database.CurrentTransaction),
+            () => Assert.Empty(scope.Entries));
+        Assert.Empty(await seed.OutboxReplayAudits.AsNoTracking().ToListAsync());
+        OutboxDeadLetterMessageModel? unchanged = await service.GetDeadLetterAsync(streamName, messages[index].Id);
+        Assert.NotNull(unchanged);
+        Assert.Equal("failure-owner-failure", unchanged.LastError);
+        OutboxReplayAuditModel audit = await service.ReplayAsync(streamName, messages[index].Id, "operator", "retry", 1);
+        Assert.Equal("failure-owner-failure", audit.PreviousError);
+        Assert.Equal(audit.Id, (await seed.OutboxReplayAudits.AsNoTracking().SingleAsync()).Id);
+        Assert.Null(await service.GetDeadLetterAsync(streamName, messages[index].Id));
+        Assert.All(scope.Entries, entry => Assert.Equal(EntityState.Unchanged, entry.State));
+    }
+
+    [RequiresDockerTheory]
+    [InlineData("image_object_deletion", 1)]
+    [InlineData("notification_web_push", 2)]
+    [InlineData("achievement_evaluation", 3)]
+    public async Task Replay_RejectsPendingOwnerChangesWithoutDiscardingThem(string streamName, int index) {
+        await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
+        IOutboxMessage[] messages = await CreateLookupBatchAsync(seed, "pending", deadLettered: true);
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(seed.Database.GetConnectionString()!);
+        using var scope = new OutboxReplayTestScope(context, Clock);
+        IOutboxReplayStream stream = scope.Streams.Single(item => string.Equals(item.Name, streamName, StringComparison.Ordinal));
+        OutboxReplayEntry? entry = await stream.FindAsync(messages[index].Id, forUpdate: false);
+        Assert.NotNull(entry);
+        entry.Message.MarkProcessed(Now);
+        InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(() => scope.Service.ReplayAsync(streamName, entry.Message.Id, "operator", "retry", 1));
+        Assert.Contains("pending changes", error.Message, StringComparison.Ordinal);
+        Assert.Equal(EntityState.Modified, Assert.Single(scope.Entries).State);
+        Assert.Empty(await context.OutboxReplayAudits.AsNoTracking().ToListAsync());
     }
 
     [RequiresDockerFact]
@@ -276,6 +323,23 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
             if (command.CommandText.Contains("FOR UPDATE", StringComparison.Ordinal)) {
                 Commands.Add((command.CommandText, command.Transaction is not null));
                 Reached.TrySetResult();
+            }
+            return ValueTask.FromResult(result);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class OwnerUpdateFault : DbCommandInterceptor {
+        public bool AuditInsertSeen { get; private set; }
+        public bool OwnerUpdateSeen { get; private set; }
+        public override ValueTask<InterceptionResult<DbDataReader>> ReaderExecutingAsync(
+            DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result, CancellationToken cancellationToken = default) {
+            if (command.CommandText.Contains("INSERT INTO \"OutboxReplayAudits\"", StringComparison.Ordinal)) {
+                AuditInsertSeen = true;
+            }
+            if (!OwnerUpdateSeen && command.CommandText.Contains("UPDATE \"", StringComparison.Ordinal)) {
+                OwnerUpdateSeen = eventData.Context is not FoodDiaryDbContext;
+                throw new InvalidOperationException("Injected owner update failure after audit insert.");
             }
             return ValueTask.FromResult(result);
         }

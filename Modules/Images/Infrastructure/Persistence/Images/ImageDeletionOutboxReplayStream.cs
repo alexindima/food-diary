@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Images;
 
-internal sealed class ImageDeletionOutboxReplayStream(FoodDiaryDbContext context) : IOutboxReplayStream {
+internal sealed class ImageDeletionOutboxReplayStream(ImagesDbContext context) : IOutboxReplayStream {
     public string Name => "image_object_deletion";
     public int Order => 1;
     public string? ReplayRejectionReason => null;

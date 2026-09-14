@@ -181,3 +181,11 @@ comparison or HTTP snapshot change; this turn does not claim a new EF or HTTP
 suite execution. Native clean removed this run's build outputs successfully
 with zero warnings/errors, preserving logs/TRX and shared Wiki caches. Final
 Wiki, context and delivery receipts are retained beside the runtime evidence.
+
+## Owner runtime contexts
+
+Images, Notifications and Gamification replay adapters now use their registered owner DbContexts on the common connection. Their query text, FOR UPDATE, metadata and lifecycle policy are unchanged. Email remains central and non-replayable.
+
+The coordinator saves through IUnitOfWork: ModuleContextSaveCoordinator persists the central audit and tracked owner record inside the existing transaction/savepoint. SharedTransactionBoundary already checks and clears all registered trackers before attempts and on failures. No new engine, registry, assembly or independent transaction is introduced.
+
+PostgreSQL coverage verifies successful replay of every owner stream, concurrent replay, lock cancellation, transient commit retry, failures after audit insert during owner update, same-scope retry, and rejection of pending owner changes. Adapter/preview assertions now inspect the actual owner tracker. InMemory cannot prove cross-context atomic saving; its test explicitly verifies refusal without persisted partial state, while successful replay remains covered on PostgreSQL.

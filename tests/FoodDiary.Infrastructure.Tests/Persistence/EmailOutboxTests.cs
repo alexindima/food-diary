@@ -1,3 +1,4 @@
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Infrastructure.Persistence;
@@ -7,7 +8,6 @@ using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Achievements;
 using FoodDiary.Infrastructure.Options;
-using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -21,7 +21,7 @@ public sealed class EmailOutboxTests {
     [Fact]
     public async Task Processing_WhenClaimDisappearsDuringRevisionRelease_ReturnsLostClaim() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString("N")).Options;
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"), new InMemoryDatabaseRoot()).Options;
         await using var context = new FoodDiaryDbContext(options);
         var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
         context.Add(message);
@@ -430,7 +430,7 @@ public sealed class EmailOutboxTests {
     }
 
     [Fact]
-    public async Task ReplayTooling_PreviewsAndReplaysAchievementEvaluationDeadLetter() {
+    public async Task ReplayTooling_InMemoryRejectsNonAtomicAchievementReplay() {
         await using FoodDiaryDbContext context = CreateContext();
         var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now.AddMinutes(-2));
         message.MarkDeadLettered("achievement failure", Now.AddMinutes(-1));
@@ -443,21 +443,23 @@ public sealed class EmailOutboxTests {
             "achievement_evaluation",
             message.Id,
             CancellationToken.None);
-        OutboxReplayAuditModel audit = await service.ReplayAsync(
+        InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReplayAsync(
             "achievement_evaluation",
             message.Id,
             "operator@example.com",
             "Reconciliation recovered",
             expectedAttemptCount: 1,
-            CancellationToken.None);
+            CancellationToken.None));
 
         AchievementEvaluationOutboxMessage persisted = await context.AchievementEvaluationOutbox.AsNoTracking().SingleAsync();
         Assert.NotNull(preview);
         Assert.Multiple(
             () => Assert.Equal(message.UserId.Value.ToString(), preview.Summary),
             () => Assert.Equal("achievement failure", preview.LastError),
-            () => Assert.Equal("achievement failure", audit.PreviousError),
-            () => Assert.Null(persisted.DeadLetteredOnUtc));
+            () => Assert.Contains("Atomic saves across contexts", error.Message, StringComparison.Ordinal),
+            () => Assert.NotNull(persisted.DeadLetteredOnUtc),
+            () => Assert.Empty(replayScope.Entries));
+        Assert.Empty(await context.OutboxReplayAudits.ToListAsync());
     }
 
     [Fact]
@@ -600,7 +602,7 @@ public sealed class EmailOutboxTests {
 
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"), new InMemoryDatabaseRoot())
             .Options;
 
         return new FoodDiaryDbContext(options);

@@ -1,6 +1,6 @@
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
 using FoodDiary.Infrastructure.Persistence.Email;
@@ -30,10 +30,10 @@ public sealed class OutboxReplayLookupTests {
         other.MarkDeadLettered("failure-other", Now);
         context.Add(other);
         await context.SaveChangesAsync();
-        context.ChangeTracker.Clear();
+        scope.ClearTracking();
 
         Assert.Null(await scope.Service.GetDeadLetterAsync(streamName, missingId));
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(scope.Entries);
         Assert.Empty(await context.OutboxReplayAudits.ToListAsync());
     }
 
@@ -52,7 +52,7 @@ public sealed class OutboxReplayLookupTests {
         requested.MarkDeadLettered("failure-requested", Now);
         context.AddRange(other, requested, active);
         await context.SaveChangesAsync();
-        context.ChangeTracker.Clear();
+        scope.ClearTracking();
 
         OutboxDeadLetterMessageModel? preview = await scope.Service.GetDeadLetterAsync(streamName, requested.Id);
         Assert.NotNull(preview);
@@ -61,14 +61,14 @@ public sealed class OutboxReplayLookupTests {
             () => Assert.Equal("failure-requested", preview.LastError),
             () => Assert.Equal(1, preview.AttemptCount),
             () => Assert.Equal(Now, preview.DeadLetteredOnUtc));
-        EntityEntry tracked = Assert.Single(context.ChangeTracker.Entries());
+        EntityEntry tracked = Assert.Single(scope.Entries);
         Assert.Equal(requested.Id, Assert.IsAssignableFrom<IOutboxMessage>(tracked.Entity).Id);
         Assert.Equal(EntityState.Unchanged, tracked.State);
-        context.ChangeTracker.Clear();
+        scope.ClearTracking();
         Assert.Null(await scope.Service.GetDeadLetterAsync(streamName, active.Id));
-        context.ChangeTracker.Clear();
+        scope.ClearTracking();
         Assert.Null(await scope.Service.GetDeadLetterAsync(streamName, Guid.NewGuid()));
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(scope.Entries);
         Assert.Empty(await context.OutboxReplayAudits.ToListAsync());
     }
 
@@ -83,7 +83,7 @@ public sealed class OutboxReplayLookupTests {
         other.MarkDeadLettered("failure-other", Now);
         context.Add(other);
         await context.SaveChangesAsync();
-        context.ChangeTracker.Clear();
+        scope.ClearTracking();
 
         InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             scope.Service.ReplayAsync(streamName, Guid.NewGuid(), "operator", "reason", 1));
@@ -93,12 +93,12 @@ public sealed class OutboxReplayLookupTests {
             () => Assert.Equal(other.Id, remaining.MessageId),
             () => Assert.Equal("failure-other", remaining.LastError),
             () => Assert.Equal(1, remaining.AttemptCount));
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(scope.Entries);
         Assert.Empty(await context.OutboxReplayAudits.ToListAsync());
     }
 
     private static FoodDiaryDbContext CreateContext() =>
-        new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
+        new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString(), new Microsoft.EntityFrameworkCore.Storage.InMemoryDatabaseRoot()).Options);
 
     private static IOutboxMessage CreateMessage(string streamName, string marker) => streamName switch {
         "email" => EmailOutboxMessage.Create(new EmailMessage("from@example.com", "Sender", ["to@example.com"], marker, "body", TextBody: null), Now),

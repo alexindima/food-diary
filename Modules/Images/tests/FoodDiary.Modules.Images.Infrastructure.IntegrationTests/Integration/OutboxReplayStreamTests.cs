@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Images;
@@ -21,6 +22,7 @@ public sealed class OutboxReplayStreamTests(PostgresDatabaseFixture databaseFixt
         services.AddImagesInfrastructure();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IOutboxReplayStream stream = Assert.Single(provider.GetServices<IOutboxReplayStream>());
+        ImagesDbContext owned = provider.GetRequiredService<ImagesDbContext>();
         Assert.Equal(ServiceLifetime.Scoped, Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IOutboxReplayStream)).Lifetime);
         Assert.Equal("image_object_deletion", stream.Name);
         Assert.Equal(1, stream.Order);
@@ -30,20 +32,21 @@ public sealed class OutboxReplayStreamTests(PostgresDatabaseFixture databaseFixt
         context.Add(message);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
+        owned.ChangeTracker.Clear();
 
         OutboxDeadLetterMessageModel listed = Assert.Single(await stream.ListAsync(1));
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(owned.ChangeTracker.Entries());
         Assert.Multiple(
             () => Assert.Equal(message.Id, listed.MessageId),
             () => Assert.Equal(message.ObjectKey, listed.Summary),
             () => Assert.Equal("failure", listed.LastError),
             () => Assert.Equal(1, listed.AttemptCount));
         Assert.Null(await stream.FindAsync(Guid.NewGuid(), forUpdate: false));
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(owned.ChangeTracker.Entries());
         OutboxReplayEntry? found = await stream.FindAsync(message.Id, forUpdate: false);
         Assert.NotNull(found);
-        Assert.Same(context.ChangeTracker.Entries<ImageObjectDeletionOutboxMessage>().Single().Entity, found.Message);
-        Assert.Equal(EntityState.Unchanged, context.Entry(found.Message).State);
+        Assert.Same(owned.ChangeTracker.Entries<ImageObjectDeletionOutboxMessage>().Single().Entity, found.Message);
+        Assert.Equal(EntityState.Unchanged, owned.Entry(found.Message).State);
         Assert.Equal(listed.Summary, found.Summary);
         Assert.Equal(listed.LastError, found.LastError);
 
@@ -54,14 +57,16 @@ public sealed class OutboxReplayStreamTests(PostgresDatabaseFixture databaseFixt
         context.AddRange(active, processed);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
+        owned.ChangeTracker.Clear();
         Assert.Equal(message.Id, Assert.Single(await stream.ListAsync(1)).MessageId);
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(owned.ChangeTracker.Entries());
         OutboxReplayEntry? activeEntry = await stream.FindAsync(active.Id, forUpdate: false);
         Assert.NotNull(activeEntry);
         Assert.Equal(active.Id, activeEntry.Message.Id);
-        Assert.Equal(EntityState.Unchanged, context.Entry(activeEntry.Message).State);
+        Assert.Equal(EntityState.Unchanged, owned.Entry(activeEntry.Message).State);
         context.ChangeTracker.Clear();
+        owned.ChangeTracker.Clear();
         Assert.Null(await stream.FindAsync(Guid.NewGuid(), forUpdate: false));
-        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.Empty(owned.ChangeTracker.Entries());
     }
 }

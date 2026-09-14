@@ -49,3 +49,5 @@ CreateModuleContext. Processors retain a shared-scope clean-entry callback befor
 claiming. Replay streams keep the central context for the existing audit/reset
 transaction. User purge and image ownership reassignment retain their shared
 transaction scope; they are not ordinary runtime repository dependencies.
+
+Achievement replay uses GamificationDbContext registered through CreateModuleContext. The shared coordinator owns the transaction and saves the audit plus owner record through IUnitOfWork; keep stream adapters free of SaveChanges/commit and preserve revision on retry.

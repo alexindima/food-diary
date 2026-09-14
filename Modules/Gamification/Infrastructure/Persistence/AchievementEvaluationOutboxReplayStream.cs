@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
-internal sealed class AchievementEvaluationOutboxReplayStream(FoodDiaryDbContext context) : IOutboxReplayStream {
+internal sealed class AchievementEvaluationOutboxReplayStream(GamificationDbContext context) : IOutboxReplayStream {
     public string Name => "achievement_evaluation";
     public int Order => 3;
     public string? ReplayRejectionReason => null;

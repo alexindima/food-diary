@@ -9,6 +9,7 @@ public sealed class OutboxReplayOwnershipTests {
     public void Coordinator_HasNoConcreteStreamTypes_AndRetainsTransactionOwnership() {
         string code = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs"));
         string[] identifiers = Identifiers(code);
+        Assert.Contains("IUnitOfWork", identifiers, StringComparer.Ordinal);
         foreach (string concrete in new[] { "EmailOutboxMessage", "ImageObjectDeletionOutboxMessage", "NotificationWebPushOutboxMessage", "AchievementEvaluationOutboxMessage" }) {
             Assert.DoesNotContain(concrete, identifiers, StringComparer.Ordinal);
         }
@@ -34,6 +35,17 @@ public sealed class OutboxReplayOwnershipTests {
         foreach (string operation in new[] { "SaveChanges", "SaveChangesAsync", "BeginTransaction", "BeginTransactionAsync", "CommitAsync", "MarkReplayed" }) {
             Assert.DoesNotContain(operation, identifiers, StringComparer.Ordinal);
         }
+    }
+
+    [Theory]
+    [InlineData("Images/Images/ImageDeletionOutboxReplayStream", "Images")]
+    [InlineData("Notifications/WebPushOutboxReplayStream", "Notifications")]
+    [InlineData("Gamification/AchievementEvaluationOutboxReplayStream", "Gamification")]
+    public void ModuleStreams_UseOwnerContexts(string streamPath, string module) {
+        string relativePath = streamPath[(module.Length + 1)..];
+        string code = File.ReadAllText(ArchitectureTestPaths.FromRoot($"Modules/{module}/Infrastructure/Persistence/{relativePath}.cs"));
+        Assert.Contains($"{module}DbContext context", code, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", Identifiers(code), StringComparer.Ordinal);
     }
 
     private static string[] Identifiers(string code) => [.. CSharpSyntaxTree.ParseText(code).GetRoot().DescendantTokens()

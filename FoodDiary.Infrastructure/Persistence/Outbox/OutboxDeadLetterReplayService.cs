@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using System.Globalization;
@@ -9,7 +10,8 @@ namespace FoodDiary.Infrastructure.Persistence.Outbox;
 internal sealed class OutboxDeadLetterReplayService(
     FoodDiaryDbContext context,
     TimeProvider timeProvider,
-    IEnumerable<IOutboxReplayStream> streams) : IOutboxDeadLetterReplayService {
+    IEnumerable<IOutboxReplayStream> streams,
+    IUnitOfWork unitOfWork) : IOutboxDeadLetterReplayService {
     private const int MaximumListLimit = 200;
     private readonly IReadOnlyDictionary<string, IOutboxReplayStream> _streams =
         streams.ToDictionary(static stream => stream.Name, StringComparer.Ordinal);
@@ -103,6 +105,7 @@ internal sealed class OutboxDeadLetterReplayService(
                 ? await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false)
                 : null;
             try {
+                await BindOwnerTransactionAsync(transaction, cancellationToken).ConfigureAwait(false);
                 OutboxReplayEntry entry = await FindAsync(
                     normalizedName,
                     messageId,
@@ -131,17 +134,36 @@ internal sealed class OutboxDeadLetterReplayService(
                     entry.LastError);
                 context.OutboxReplayAudits.Add(audit);
                 message.MarkReplayed(nowUtc);
-                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 if (transaction is not null) {
                     await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 }
                 return ToModel(audit);
             } finally {
                 if (transaction is not null) {
-                    await transaction.DisposeAsync().ConfigureAwait(false);
+                    await ReleaseOwnerTransactionAsync(transaction).ConfigureAwait(false);
                 }
             }
         }, cancellationToken)).ConfigureAwait(false);
+    }
+
+    private async Task BindOwnerTransactionAsync(IDbContextTransaction? transaction, CancellationToken cancellationToken) {
+        if (transaction is null) {
+            return;
+        }
+        foreach (DbContext module in context.ModuleContexts) {
+            await module.Database.UseTransactionAsync(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ReleaseOwnerTransactionAsync(IDbContextTransaction transaction, CancellationToken cancellationToken = default) {
+        try {
+            foreach (DbContext module in context.ModuleContexts) {
+                await module.Database.UseTransactionAsync(transaction: null, cancellationToken).ConfigureAwait(false);
+            }
+        } finally {
+            await transaction.DisposeAsync().ConfigureAwait(false);
+        }
     }
 
     private Task<OutboxReplayEntry?> FindAsync(

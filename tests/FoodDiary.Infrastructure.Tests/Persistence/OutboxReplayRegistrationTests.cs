@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Gamification.Infrastructure;
@@ -45,7 +46,7 @@ public sealed class OutboxReplayRegistrationTests {
         using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
         IOutboxReplayStream stream = Substitute.For<IOutboxReplayStream>();
         stream.Name.Returns("duplicate");
-        Assert.Throws<ArgumentException>(() => new OutboxDeadLetterReplayService(context, TimeProvider.System, [stream, stream]));
+        Assert.Throws<ArgumentException>(() => new OutboxDeadLetterReplayService(context, TimeProvider.System, [stream, stream], Substitute.For<IUnitOfWork>()));
     }
 
     [Fact]
