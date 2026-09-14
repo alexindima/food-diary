@@ -358,18 +358,28 @@ public sealed class ControllerConventionsTests {
             .Select(static path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path));
     }
 
-    private static bool ReferencesApplicationTypes(SyntaxTree tree) {
-        SyntaxNode root = tree.GetRoot();
+    [Theory]
+    [InlineData("using FoodDiary.Application.Admin;", true)]
+    [InlineData("using FoodDiary.Modules.Admin.Application.Models;", true)]
+    [InlineData("using App = FoodDiary.Modules.Admin.Application;", true)]
+    [InlineData("using static FoodDiary.Modules.Admin.Application.Helper;", true)]
+    [InlineData("class C { global::FoodDiary.Modules.Admin.Application.Models.Model field; }", true)]
+    [InlineData("class C { FoodDiary.Application.Admin.Model field; }", true)]
+    [InlineData("using FoodDiary.Modules.Admin.Contracts;", false)]
+    [InlineData("using FoodDiary.Modules.Admin.Presentation.Requests;", false)]
+    [InlineData("using FoodDiary.Modules.Admin.ApplicationHelpers;", false)]
+    [InlineData("using FoodDiary.ApplicationHelpers;", false)]
+    public void ApplicationReferenceDetection_RecognizesLegacyAndModuleNamespaces(string source, bool expected) {
+        Assert.Equal(expected, ReferencesApplicationTypes(CSharpSyntaxTree.ParseText(source)));
+    }
 
-        if (root.DescendantNodes()
-            .OfType<UsingDirectiveSyntax>()
-            .Any(static directive => directive.Name?.ToString().StartsWith("FoodDiary.Application", StringComparison.Ordinal) is true)) {
-            return true;
-        }
+    private static bool ReferencesApplicationTypes(SyntaxTree tree) =>
+        tree.GetRoot().DescendantNodes().OfType<NameSyntax>()
+            .Any(static name => IsApplicationName(name.ToString()));
 
-        return root.DescendantNodes()
-            .OfType<QualifiedNameSyntax>()
-            .Any(static name => name.ToString().StartsWith("FoodDiary.Application.", StringComparison.Ordinal));
+    private static bool IsApplicationName(string name) {
+        string[] parts = name.Replace("global::", string.Empty, StringComparison.Ordinal).Split('.');
+        return parts is ["FoodDiary", "Application", ..] or ["FoodDiary", "Modules", _, "Application", ..];
     }
 
     private static bool IsAllowedApplicationAbstractionReference(string filePath) =>

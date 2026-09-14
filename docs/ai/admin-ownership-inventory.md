@@ -1,82 +1,74 @@
-# Admin extraction ownership inventory
+# Admin ownership inventory
 
-Baseline: `4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149`, clean detached
-worktree before branch `codex/admin-module-extraction` was created.
+This document describes the current module layout. Historical extraction steps and
+verification runs belong in Git history; they are not current ownership rules.
 
-## Physical ownership decision
+## Projects and namespaces
 
-| Source responsibility | Destination / retained owner and evidence |
+The seven production projects are siblings under `Modules/Admin`: Application,
+Application.Abstractions, Contracts, Domain, Infrastructure, PersistenceModel and
+Presentation. Each namespace follows the project filename and physical folders;
+there are no RootNamespace overrides. Application retains the assembly name
+`FoodDiary.Application.Admin`; its namespaces start with
+`FoodDiary.Modules.Admin.Application`.
+
+Presentation has Controllers, Requests, Responses, Mappings and Extensions folders.
+It owns HTTP transport and calls Application through request mappings. Application
+references its own Domain explicitly; Presentation has no direct Domain reference.
+
+## Ownership
+
+| Concern | Owner and boundary |
 | --- | --- |
-| 135 production C# files in FoodDiary.Application.Admin: commands, queries, validators, mappings, read orchestration and DI | Modules/Admin/Application; preserve FoodDiary.Application.Admin assembly and CLR namespaces. Other owners' capabilities are consumed unchanged. |
-| AdminBilling ports and six read/filter models | Modules/Admin/Application.Abstractions. AdminBillingRepository performs read-only joins over Billing and Users for administrative reports; it grants no Billing write ownership. |
-| AdminImpersonationSession repository ports and read model | Modules/Admin/Application.Abstractions. StartAdminImpersonationCommandHandler creates the session; AdminAuditReadService reads it. |
-| AdminImpersonationSession entity | Modules/Admin/Domain. It uses scalar UserId only. Its EF configuration has two HasOne<User>().WithMany() relationships, no inverse User navigation. No central Domain consumer was found. The dependency remains one-way toward central Domain. |
-| AdminImpersonationSessionConfiguration | Modules/Admin/PersistenceModel, explicitly registered by the shared context. Keep CLR namespace, keys, indexes, lengths, timestamp type and Restrict deletion unchanged. |
-| AdminBillingRepository and AdminImpersonationSessionRepository | Modules/Admin/Infrastructure. Preserve SQL, pagination, escaping, tracking, cancellation and scoped interface aliases. |
-| IAdminImpersonationHandoffService and specialized handoff implementation | Admin ports and Infrastructure respectively. The implementation preserves the imp_ / impersonation: namespaces, cryptographic code generation and two-minute TTL. IAdminSsoCodeStore and its memory/Redis providers, SSO service and JWT generator remain the central Identity runtime boundary. |
-| IAdminMailInboxReader, errors and four mail projection models | Admin application ports. MailInboxReader and approved supporting-service client references remain in Integrations. No provider, MIME, mail delivery or retention implementation moves. |
-| User, Role, UserRoleAuditEvent, administrative User projections/mutations and AdminUserRoleAuditRepository | Retain Users/central ownership. BACKEND_MODULE_OWNERSHIP assigns role audit to Users; UserAdministrationReadService and UserAdministrationMutationService own user behavior. The existing legacy Admin namespace of audit ports does not transfer ownership. |
-| EmailTemplate, EmailTemplateRepository/provider/configuration and template ports/models | Retain Identity/Email ownership. Identity/Email/Services/EmailTemplateAdministrationService directly implements template mutation; Admin calls that capability. No email-owned file moves simply because it lives under an Admin folder/namespace. |
-| Shared DbContext, DbSets, migration history/snapshot and UserCleanupService | Remain central. Cleanup deletes sessions for actor/target user as part of the existing personal-data lifecycle. Model registration is explicit; no schema migration is intended. |
-| HTTP authorization, consent, SSO/exchange routes, bootstrap, structured audit, jobs and outbox replay | Remain their current presentation, Identity, runtime and host responsibilities. No policy, token issuance, retry, transaction or delivery behavior redesign. |
+| Administrative commands and queries | Admin/Application. Foreign user, email, lesson and other operations use their owning module's contracts. |
+| ExchangeAdminImpersonationCommand | Admin/Contracts; consumed by Identity Presentation. Handlers remain in Admin/Application. |
+| Administrative read ports and projection models | Admin/Application.Abstractions. A port's location does not transfer ownership of foreign aggregates. |
+| AdminImpersonationSession | Admin/Domain. Actor and target are scalar UserId values from Users/Domain.Contracts; there are no foreign aggregate navigations. |
+| Session writes | Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository implements IAdminImpersonationSessionWriteRepository and receives only the owned DbSet. It neither reads projections nor saves independently. |
+| Session reads | IAdminImpersonationSessionQuery is implemented by FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery. GetAdminImpersonationSessionsQueryHandler consumes it directly. |
+| Billing and role-audit SQL projections | FoodDiary.ReadModel.Composition/Admin, including their DI registrations. Billing and Users retain aggregate ownership. |
+| Session and receipt EF model | Admin/PersistenceModel. AdminDbContext tracks the two owned entities; the central model also applies their configuration. Foreign User relationships are composed in FoodDiary.Infrastructure/Persistence/Composition/AdminCrossModuleRelationships.cs. |
+| BugAcknowledgementReceipt | Admin/PersistenceModel. Stores the inbox ID for deduplication. Admin Infrastructure handles receipt persistence; BugAcknowledgementService owns the application workflow. |
+| Shared persistence and migrations | FoodDiary.Infrastructure. Shared save/transaction coordination and user purge remain in the existing central lifecycle. |
+| Impersonation handoff | Admin Infrastructure owns the specialized adapter. Authentication token issuance and SSO storage remain behind their existing owner contracts. |
+| MailInbox bridge and acknowledgement worker | Admin Infrastructure. Supporting-service access uses the approved MailInbox client. The application depends on ports, not that client. |
+| Dashboard summary | AdminDashboardReadService is reused by the summary and overview handlers. |
 
-## Compatibility and composition
+## Composition
 
-Physical project identity is distinct from CLR namespaces and runtime composition.
-The application retains its legacy AssemblyName; relocated types retain namespaces.
-New assembly locations require coordinated host rebuilds, not an assertion that old
-binaries can run unchanged. Central Abstractions may reference Admin ports one-way
-for the existing Errors.MailInbox forwarding facade. Admin ports depend only on
-Admin Domain and shared Results, so this introduces no reverse dependency.
-Central Infrastructure directly references Admin PersistenceModel and consumes its transitive Admin Domain; it never references Admin Infrastructure.
-Hosts compose Admin persistence explicitly; JobManager must not acquire additional
-application handlers merely to preserve the old persistence registrations.
+AddAdminModule registers Application and Admin persistence. AddAdminPersistence
+registers the owned runtime context, the write-only session repository, purge
+participant and handoff service. Resolving the writer does not require a read
+projection or ReadModel.Composition. Hosts register AddReadModelComposition
+separately when they need administrative projections. MailInbox and background
+acknowledgement integrations retain explicit host registration.
 
-## Test ownership
+There is no combined session repository or separate legacy read-repository alias.
+Query and write contracts represent separate dependencies. Shared contexts still
+coordinate persistence; this split does not change transaction semantics or schema.
 
-Move Admin-only validator/query/handler tests which substitute foreign capabilities
-to Modules/Admin/tests. Keep the AdminFeatureTests partial family, AdminLessonFeatureTests,
-UserLoginActivityFeatureTests and UserAdministrationMutationServiceTests central:
-they exercise concrete Users/Identity/Lessons/Ai/ContentReports implementations.
-CreateAdminUserCommandHandlerTests uses Users mapping and remains mixed coverage.
-AdminInvariantTests belongs with Admin Domain. Handoff-service tests use the real
-central SSO store and compare both protocols, so stay central as mixed coverage. Existing PostgreSQL AdditionalPersistenceRepositoryIntegrationTests
-and UserCleanupServiceIntegrationTests use the shared fixture and cover multiple
-owners, so remain central. Presentation, HTTP, host, JobManager and mixed Gamification
-tests retain their owners and assertions.
+## Tests and guardrails
 
-Required execution evidence: module tests, real central donor/consumer suites,
-full ArchitectureTests, relevant HTTP/Swagger tests, unfiltered PostgreSQL
-Infrastructure.IntegrationTests and EF pending-model comparison. This inventory
-is source-review evidence, not a statement that those checks have run.
+Admin's five test projects live under Modules/Admin/tests. Application includes the
+AdminFeatureTests family and administrative user/lesson scenarios, even where they
+exercise another owner's public capability. Domain owns session invariants;
+Infrastructure owns handoff, MailInbox, worker and registration tests; Presentation
+owns Admin controller and mapping tests. Infrastructure.IntegrationTests owns the
+focused PostgreSQL role-audit projection cases.
 
-## Wiki discovery observations
+Central suites retain cross-module concerns, including
+SharedAdminContextCompositionIntegrationTests and
+AdditionalPersistenceRepositoryIntegrationTests, shared HTTP conventions and host
+composition. Linked PostgreSQL/support fixtures retain their original owners.
 
-The original Admin page finds all major source areas but labels the entity inventory
-unpopulated and treats legacy Admin-namespaced Email/User audit contracts as Admin's
-public surface. Its SSO and mixed-test listings are discovery leads, not ownership
-proof. Verify these with current code and the stronger ownership guide.
+AdminNamespaceTests and PhysicalProjectLayoutTests protect project/folder naming.
+ProjectDependencyMatrixTests protects direct project references.
+ControllerConventionsTests covers Admin controller discovery and rejects direct
+Application references for both legacy and module namespaces. Registration tests
+prove the session writer resolves without read composition and remains scoped.
 
-## Review of preserved behavior
+Use scoped test commands from AGENTS.md. Test execution results are reported per
+change; this inventory does not claim that a particular suite has been run.
 
-The normalized source audit compares each moved C# file with the exact base blob:
-163 unchanged bodies and two intentional application composition/assembly-access
-edits. SQL read projections, wildcard escaping, pagination, cancellation propagation,
-transaction ownership and EF field/index/delete definitions are unchanged. Module
-DI preserves scoped repository aliases and the singleton handoff lifetime.
-
-AdminImpersonationSession stores scalar actor/target IDs with no User inverse
-navigation. Central cleanup still removes those sessions through the shared context.
-Authentication, JWT issuance, SSO code storage/Redis, initial-admin bootstrap and
-structured audit are untouched. The specialized handoff retains random 32-byte
-codes, protocol-specific prefixes, single-use store consumption and a two-minute
-TTL. Email administration remains an Identity capability; role audit remains Users.
-No broader permission, provider retry, outbox or retention behavior is introduced.
-
-The new assembly placement requires a coordinated rebuild/publish of the hosts.
-The application AssemblyName and all moved CLR namespaces are retained; old compiled
-Domain/Infrastructure consumers are not claimed binary-compatible. No database
-migration, wire-contract change or deployment was performed. Rollback means restoring
-the complete prior host build, with no schema rollback needed if EF confirms the
-intended unchanged model. Production validation remains an integration/deployment
-responsibility and was not attempted from this worktree.
+See [ADR 0038](../adr/0038-read-model-composition.md) for composed reads and the scoped
+AGENTS.md files for implementation rules.

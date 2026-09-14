@@ -3155,7 +3155,6 @@ public sealed class ApplicationGuardrailTests {
         string abstractionsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts");
         string[] allowedRelativePaths = [
             Path.Combine("Admin", "Common", "IAdminBillingQuery.cs"),
-            Path.Combine("Admin", "Common", "IAdminImpersonationSessionReadRepository.cs"),
             Path.Combine("Admin", "Common", "IAdminUserRoleAuditQuery.cs"),
             Path.Combine("Authentication", "Common", "IUserLoginEventReadRepository.cs"),
             Path.Combine("Meals", "Common", "IMealProjectionReadRepository.cs"),

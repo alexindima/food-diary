@@ -460,8 +460,9 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         context.Users.AddRange(actor, target);
         await context.SaveChangesAsync();
 
+        var sessionQuery = new AdminImpersonationSessionQuery(context);
         DateTime started = new(2030, 1, 2, 12, 0, 0, DateTimeKind.Utc);
-        var sessionRepository = new AdminImpersonationSessionRepository(context.AdminImpersonationSessions, new AdminImpersonationSessionQuery(context));
+        var sessionRepository = new AdminImpersonationSessionRepository(context.AdminImpersonationSessions);
         await sessionRepository.AddAsync(AdminImpersonationSession.Start(
             actor.Id,
             target.Id,
@@ -472,15 +473,15 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         (IReadOnlyList<AdminImpersonationSessionReadModel> sessions, int totalSessions) =
-            await sessionRepository.GetPagedAsync(page: 0, limit: 500, search: "support");
+            await sessionQuery.GetPagedAsync(page: 0, limit: 500, search: "support");
 
         Assert.Single(sessions);
         Assert.Equal(1, totalSessions);
-        (IReadOnlyList<AdminImpersonationSessionReadModel> filtered, int filteredTotal) = await sessionRepository.GetPagedAsync(
+        (IReadOnlyList<AdminImpersonationSessionReadModel> filtered, int filteredTotal) = await sessionQuery.GetPagedAsync(
             1, 10, search: null, CancellationToken.None, new DateTimeOffset(started.AddSeconds(-1)), new DateTimeOffset(started.AddSeconds(1)), actor.Id.Value, target.Id.Value);
         Assert.Equal(1, filteredTotal);
         Assert.Equal(actor.Id.Value, Assert.Single(filtered).ActorUserId);
-        (IReadOnlyList<AdminImpersonationSessionReadModel> excluded, int excludedTotal) = await sessionRepository.GetPagedAsync(
+        (IReadOnlyList<AdminImpersonationSessionReadModel> excluded, int excludedTotal) = await sessionQuery.GetPagedAsync(
             1, 10, search: null, CancellationToken.None, toUtc: new DateTimeOffset(started));
         Assert.Empty(excluded);
         Assert.Equal(0, excludedTotal);

@@ -11,19 +11,17 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 | Audit bridge | 1 |
 | Connection/lock | 1 |
 | Context registration | 29 |
-| Image reassignment | 1 |
 | Outbox replay | 3 |
 | Transaction coordination | 6 |
 | User purge | 14 |
 
-The presence of 29 owner contexts does not mean all runtime access has left the shared context. Dashboard body reads now live in host ReadModel.Composition. Image reassignment, outbox replay and audit retain reviewed shared-context behavior.
+The presence of 29 owner contexts does not mean all runtime access has left the shared context. Dashboard body reads now live in host ReadModel.Composition. Image reassignment now uses ImagesDbContext on the caller connection. Outbox replay and audit retain reviewed shared-context behavior.
 
 ## Next changes, in order
 
-1. Move ImageAssetOwnershipService to an Images-owned set/context while preserving the cleanup transaction. Verify reassignment and rollback with real PostgreSQL tests.
-2. Review the three outbox replay streams together with the shared replay coordinator. Preserve row locks, tracked entry mutation, scope reset and all-or-nothing replay saves; switching the constructor alone is insufficient.
-3. Extract a narrow shared persistence coordination seam for context creation, transactions, reset and connection access. Central Infrastructure must not become a dependency of that seam.
-4. Revisit purge and collaboration-audit bridges after transaction coordination is explicit. Preserve deletion order, FK behavior and audit atomicity.
+1. Review the three outbox replay streams together with the shared replay coordinator. Preserve row locks, tracked entry mutation, scope reset and all-or-nothing replay saves; switching the constructor alone is insufficient.
+2. Extract a narrow shared persistence coordination seam for context creation, transactions, reset and connection access. Central Infrastructure must not become a dependency of that seam.
+3. Revisit purge and collaboration-audit bridges after transaction coordination is explicit. Preserve deletion order, FK behavior and audit atomicity.
 
 The shared FoodDiaryDbContext partials and mapping composition remain necessary for the unified migration model and central read/purge integrations. Their removal is a separate architectural change, not part of a namespace rename.
 
@@ -58,7 +56,6 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 | [Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs](../../Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Images/Infrastructure/DependencyInjection.cs](../../Modules/Images/Infrastructure/DependencyInjection.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs](../../Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
-| [Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs](../../Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs) | Image reassignment | ExecuteUpdate of ImageAsset.UserId in the caller cleanup transaction; candidate for owner context with transaction synchronization. |
 | [Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs](../../Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs) | Outbox replay | Tracked owner outbox lookup with optional FOR UPDATE and no-tracking dead-letter listing; caller coordinates save. |
 | [Modules/Lessons/Infrastructure/ModuleRegistration.cs](../../Modules/Lessons/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Marketing/Infrastructure/ModuleRegistration.cs](../../Modules/Marketing/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |

@@ -42,17 +42,17 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 40
+- Public contract files: 38
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 40
-- Interfaces: 15
+- Public contract types: 38
+- Interfaces: 13
 - DTO/read-model/projection types: 12
 - Enums: 0
-- Exported repository-shaped contracts: 5
+- Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
 - `class AdminMailInboxErrors`
 - `interface IAdminBillingQuery`
@@ -61,8 +61,6 @@ No literal attribute-routed controller was associated with this module.
 - `interface IAdminDashboardMetricsReader`
 - `interface IAdminImpersonationHandoffService`
 - `interface IAdminImpersonationSessionQuery`
-- `interface IAdminImpersonationSessionReadRepository`
-- `interface IAdminImpersonationSessionRepository`
 - `interface IAdminImpersonationSessionWriteRepository`
 - `interface IAdminMailInboxReader`
 - `interface IAdminRetentionReader`
@@ -84,7 +82,9 @@ No literal attribute-routed controller was associated with this module.
 - `record AdminDashboardTrend`
 - `record AdminImpersonationSessionReadModel`
 - `record AdminMailInboxDmarcRecordModel`
-- ... 10 more type(s)
+- `record AdminMailInboxDmarcReportModel`
+- `record AdminMailInboxMessageDetailsModel`
+- ... 8 more type(s)
 
 ## Focused Tests
 

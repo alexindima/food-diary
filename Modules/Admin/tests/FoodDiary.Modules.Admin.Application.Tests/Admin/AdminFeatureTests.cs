@@ -681,7 +681,7 @@ public partial class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingImpersonationSessionRepository : IAdminImpersonationSessionRepository, IAdminImpersonationSessionQuery {
+    private sealed class RecordingImpersonationSessionRepository : IAdminImpersonationSessionWriteRepository, IAdminImpersonationSessionQuery {
         public int AddCallCount { get; private set; }
         public FoodDiary.Modules.Admin.Domain.Entities.AdminImpersonationSession? LastSession { get; private set; }
         public (IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems) PagedResponse { get; set; } = ([], 0);

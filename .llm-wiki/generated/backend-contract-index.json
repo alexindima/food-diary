@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1221,
+    "contracts": 1219,
     "ambiguousContracts": 0,
-    "consumerEdges": 8857,
-    "productionConsumerEdges": 5167,
-    "testConsumerEdges": 3690,
-    "consumedContracts": 1221,
+    "consumerEdges": 8848,
+    "productionConsumerEdges": 5160,
+    "testConsumerEdges": 3688,
+    "consumedContracts": 1219,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -7860,40 +7860,6 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IAdminImpersonationSessionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IAdminImpersonationSessionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -50072,8 +50038,8 @@
         "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "isTest": false,
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -50085,8 +50051,8 @@
         "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
-      "isTest": false,
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -50096,166 +50062,10 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 3
-    },
-    {
-      "contract": "IAdminImpersonationSessionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAdminContextCompositionIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IAdminImpersonationSessionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
-      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -50293,6 +50103,45 @@
         "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IAdminImpersonationSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -50308,20 +50157,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAdminContextCompositionIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminImpersonationSessionWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "IAdminMailInboxReader",
@@ -76374,6 +76210,19 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/RetiredDomainAssemblyTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetOwnershipService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedDeliveryContextsIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IImageAssetReadRepository",

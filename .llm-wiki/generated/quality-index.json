@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5346,
+    "productionFiles": 5344,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -13962,27 +13962,11 @@
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionWriteRepository.cs",
@@ -15434,11 +15418,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
@@ -15530,11 +15514,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs",
@@ -29386,11 +29370,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.72
+      "structuralRiskScore": 1.74
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",

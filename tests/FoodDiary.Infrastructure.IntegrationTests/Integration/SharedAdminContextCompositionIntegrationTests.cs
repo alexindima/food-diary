@@ -34,12 +34,12 @@ public sealed class SharedAdminContextCompositionIntegrationTests(PostgresDataba
         var actor = User.Create($"admin-context-{Guid.NewGuid():N}@example.com", "hash");
         var target = User.Create($"admin-target-{Guid.NewGuid():N}@example.com", "hash");
         central.Users.AddRange(actor, target);
-        IAdminImpersonationSessionRepository repository = provider.GetRequiredService<IAdminImpersonationSessionRepository>();
+        IAdminImpersonationSessionWriteRepository repository = provider.GetRequiredService<IAdminImpersonationSessionWriteRepository>();
         await repository.AddAsync(AdminImpersonationSession.Start(actor.Id, target.Id, "Investigating support ticket",
             actorIpAddress: null, actorUserAgent: null, DateTime.UtcNow));
         Assert.Empty(central.ChangeTracker.Entries<AdminImpersonationSession>());
         await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
-        Assert.Equal(1, (await repository.GetPagedAsync(1, 10, search: null)).TotalItems);
+        Assert.Equal(1, (await provider.GetRequiredService<IAdminImpersonationSessionQuery>().GetPagedAsync(1, 10, search: null)).TotalItems);
         await using (IDbContextTransaction transaction = await central.Database.BeginTransactionAsync()) {
             foreach (IUserDataPurgeParticipant participant in provider.GetServices<IUserDataPurgeParticipant>()) {
                 await participant.PurgeAsync(target.Id, reassignTarget: null, CancellationToken.None);

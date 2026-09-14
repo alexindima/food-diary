@@ -7,6 +7,13 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class RuntimeContextNamespaceTests {
     [Fact]
+    public void ImageReassignment_UsesOwnerContext() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetOwnershipService.cs"));
+        Assert.Contains("ImagesDbContext context", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ModuleContexts_DeclareTheirOwningModuleNamespace() {
         string modulesRoot = ArchitectureTestPaths.FromRoot("Modules");
         var violations = new List<string>();

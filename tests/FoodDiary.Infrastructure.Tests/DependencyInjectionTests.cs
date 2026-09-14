@@ -1027,13 +1027,6 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminImpersonationSessionRepository",
-            [
-                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminImpersonationSessionReadRepository",
-                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminImpersonationSessionWriteRepository",
-            ]
-        },
-        {
             "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminUserRoleAuditRepository",
             [
                 "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminUserRoleAuditQuery",

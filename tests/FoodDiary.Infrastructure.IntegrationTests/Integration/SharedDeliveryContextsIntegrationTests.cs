@@ -63,6 +63,42 @@ public sealed class SharedDeliveryContextsIntegrationTests(PostgresDatabaseFixtu
         Assert.NotNull((await central.AchievementEvaluationOutbox.AsNoTracking().SingleAsync()).ProcessedOnUtc);
     }
 
+    [RequiresDockerTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ImageReassignmentFollowsCallerRollbackAndCommitAsync(bool resolveBeforeTransaction) {
+        await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"image-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var target = User.Create($"image-target-{Guid.NewGuid():N}@example.com", "hash");
+        var selected = ImageAsset.Create(owner.Id, "selected", "https://example.com/selected");
+        var untouched = ImageAsset.Create(owner.Id, "untouched", "https://example.com/untouched");
+        central.Users.AddRange(owner, target);
+        central.ImageAssets.AddRange(selected, untouched);
+        await central.SaveChangesAsync();
+        central.ChangeTracker.Clear();
+        await using ServiceProvider provider = CreateProvider(central);
+        IImageAssetOwnershipService? service = resolveBeforeTransaction
+            ? provider.GetRequiredService<IImageAssetOwnershipService>()
+            : null;
+        await using (IDbContextTransaction transaction = await central.Database.BeginTransactionAsync()) {
+            service ??= provider.GetRequiredService<IImageAssetOwnershipService>();
+            await service.ReassignAsync([selected.Id], target.Id, CancellationToken.None);
+            Assert.Equal(target.Id, await central.ImageAssets.Where(asset => asset.Id == selected.Id).Select(asset => asset.UserId).SingleAsync());
+            Assert.Equal(owner.Id, await central.ImageAssets.Where(asset => asset.Id == untouched.Id).Select(asset => asset.UserId).SingleAsync());
+            await transaction.RollbackAsync();
+        }
+        Assert.Equal(owner.Id, await central.ImageAssets.Where(asset => asset.Id == selected.Id).Select(asset => asset.UserId).SingleAsync());
+        await using (IDbContextTransaction transaction = await central.Database.BeginTransactionAsync()) {
+            await service.ReassignAsync([selected.Id], target.Id, CancellationToken.None);
+            await transaction.CommitAsync();
+        }
+        await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
+        Assert.Equal(target.Id, await read.ImageAssets.Where(asset => asset.Id == selected.Id).Select(asset => asset.UserId).SingleAsync());
+        Assert.Equal(owner.Id, await read.ImageAssets.Where(asset => asset.Id == untouched.Id).Select(asset => asset.UserId).SingleAsync());
+        Assert.Empty(central.ChangeTracker.Entries());
+        Assert.Empty(provider.GetRequiredService<ImagesDbContext>().ChangeTracker.Entries());
+    }
+
     [RequiresDockerFact]
     public async Task ReferencedImageRollsBackDeletionAndOutboxAsync() {
         await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();

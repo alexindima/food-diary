@@ -67,26 +67,14 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
-          "path": "docs/adr/0038-read-model-composition.md",
-          "sha256": "b36679fd5049b4396610d7999f800a20a4896f725d09937456331e8ea9c84022"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "a23d240da0c9f2944ec4c2ae4a1c6458a0c10e3d7969337cc3ed47da32511f39"
-        },
-        {
-          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "79c24042a35eff26874fcdd351f4c8f776facb5a8510f6ac6c25126dff0cf50e"
-        },
-        {
           "path": "Modules/Admin/Infrastructure/AGENTS.md",
-          "sha256": "a29b04c4987c2b0e9df8f885278f6d1ddd5cccb9b26fb71f147f29554c2b5eb2"
+          "sha256": "9339aa3ffec117e1c90d49ce6949dce6e87d6433b0b67044e8233ad88f1571f0"
         }
       ],
-      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
+      "reason": "Reviewed ImageAssetOwnershipService switch to ImagesDbContext with unchanged ID predicate, ExecuteUpdate and cancellation; no new save or commit. Shared connection ownership remains in existing composition; transaction lifecycle coverage adds pre/post-begin resolution, rollback, commit, non-selected assets and no tracking. Inventory removes only the direct shared-context dependency.",
       "baseRef": "HEAD",
-      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
-      "reviewedAtUtc": "2026-09-14T00:11:55.3967098Z"
+      "gitHead": "a73d6787f7feb231e26902aed4a1d7d5a15b955d",
+      "reviewedAtUtc": "2026-09-14T00:33:58.6111255Z"
     },
     {
       "pageId": "system.architecture",
@@ -246,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "0e709180fd400479a1904edfa5e163e8a154b1fb674f0e8fd52e68a69b248958"
+          "sha256": "e475156dba4205524430b1467b6047240df64f8760d1d2a8d8d31f739eceb571"
         }
       ],
-      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
+      "reason": "Reviewed ImageAssetOwnershipService switch to ImagesDbContext with unchanged ID predicate, ExecuteUpdate and cancellation; no new save or commit. Shared connection ownership remains in existing composition; transaction lifecycle coverage adds pre/post-begin resolution, rollback, commit, non-selected assets and no tracking. Inventory removes only the direct shared-context dependency.",
       "baseRef": "HEAD",
-      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
-      "reviewedAtUtc": "2026-09-14T00:12:00.5635316Z"
+      "gitHead": "a73d6787f7feb231e26902aed4a1d7d5a15b955d",
+      "reviewedAtUtc": "2026-09-14T00:34:02.3761065Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -836,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c6e839da5e189ced105ada1033be6581104c172aeb71ef55a20657ccc0c0bf4b"
+          "sha256": "3fa458afd6165ae3024f9eab76b922e1190c02b76fbd3271b05733da2de19d1a"
         }
       ],
-      "reason": "Refreshed quality navigation includes the added Dashboard registration-order and provider assertions; checked the moved reader against HEAD with identical query source, PostgreSQL tenant isolation and no tracking verified. Query port renames introduce no new persistence capability, data projection, logging or provider boundary.",
+      "reason": "Reviewed ImageAssetOwnershipService switch to ImagesDbContext with unchanged ID predicate, ExecuteUpdate and cancellation; no new save or commit. Shared connection ownership remains in existing composition; transaction lifecycle coverage adds pre/post-begin resolution, rollback, commit, non-selected assets and no tracking. Inventory removes only the direct shared-context dependency.",
       "baseRef": "HEAD",
-      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
-      "reviewedAtUtc": "2026-09-14T00:22:35.8307567Z"
+      "gitHead": "a73d6787f7feb231e26902aed4a1d7d5a15b955d",
+      "reviewedAtUtc": "2026-09-14T00:34:06.6421896Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -911,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6ea51bbca4e00be04f971a02660187e3e0811e139cfe7d8af3f84b60e4990af2"
+          "sha256": "c364e3e12c18dfa1558d4b56dc5d9792b7ee553a0551b6a5f649da64dc352d4a"
         }
       ],
-      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
+      "reason": "Reviewed ImageAssetOwnershipService switch to ImagesDbContext with unchanged ID predicate, ExecuteUpdate and cancellation; no new save or commit. Shared connection ownership remains in existing composition; transaction lifecycle coverage adds pre/post-begin resolution, rollback, commit, non-selected assets and no tracking. Inventory removes only the direct shared-context dependency.",
       "baseRef": "HEAD",
-      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
-      "reviewedAtUtc": "2026-09-14T00:12:04.6105168Z"
+      "gitHead": "a73d6787f7feb231e26902aed4a1d7d5a15b955d",
+      "reviewedAtUtc": "2026-09-14T00:34:12.3312592Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -926,21 +914,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c6e839da5e189ced105ada1033be6581104c172aeb71ef55a20657ccc0c0bf4b"
+          "sha256": "3fa458afd6165ae3024f9eab76b922e1190c02b76fbd3271b05733da2de19d1a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6ea51bbca4e00be04f971a02660187e3e0811e139cfe7d8af3f84b60e4990af2"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bc1812ed55b8054f2802080502586f1631fff09131bb4d437d5944b8d1f7b5fd"
+          "sha256": "c364e3e12c18dfa1558d4b56dc5d9792b7ee553a0551b6a5f649da64dc352d4a"
         }
       ],
-      "reason": "Refreshed quality navigation includes the added Dashboard registration-order and provider assertions; checked the moved reader against HEAD with identical query source, PostgreSQL tenant isolation and no tracking verified. Query port renames introduce no new persistence capability, data projection, logging or provider boundary.",
+      "reason": "Reviewed ImageAssetOwnershipService switch to ImagesDbContext with unchanged ID predicate, ExecuteUpdate and cancellation; no new save or commit. Shared connection ownership remains in existing composition; transaction lifecycle coverage adds pre/post-begin resolution, rollback, commit, non-selected assets and no tracking. Inventory removes only the direct shared-context dependency.",
       "baseRef": "HEAD",
-      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
-      "reviewedAtUtc": "2026-09-14T00:22:36.5682038Z"
+      "gitHead": "a73d6787f7feb231e26902aed4a1d7d5a15b955d",
+      "reviewedAtUtc": "2026-09-14T00:34:13.9973247Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -253,7 +253,7 @@
         "tracked:AdminImpersonationSession"
       ],
       "reason": "Admin composition supplies only the owned session set to its writer; composed reads stay behind the existing query port.",
-      "technicalSourceSha256": "b30f8a1db91396be13f72a2e4f11d167635a8a45b95cc31ecaf83c1e51aab2fd"
+      "technicalSourceSha256": "79db5cc06a36c8f3255afc0b4a6fdee287572f7074a187e009fbea105f5dd710"
     },
     "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs": {
       "module": "Admin",
@@ -262,7 +262,7 @@
         "tracked:AdminImpersonationSession",
         "write:AdminImpersonationSession"
       ],
-      "reason": "Admin writer receives only its owned impersonation session set. Composed reads delegate to an explicit read-only port (ADR 0038); no shared context is available to the repository."
+      "reason": "Admin writer receives only its owned impersonation session set. Read handlers consume the separate composed query directly (ADR 0038); the writer has no reader or shared-context dependency."
     },
     "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs": {
       "module": "Admin",
@@ -849,7 +849,7 @@
         "tracked:ImageAsset",
         "write:ImageAsset"
       ],
-      "reason": "Images reassigns only requested asset IDs for catalog-owner cleanup within the coordinator transaction; it does not save or commit."
+      "reason": "ImagesDbContext reassigns only requested asset IDs for catalog-owner cleanup on the shared connection within the caller transaction; it does not save or commit."
     },
     "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs": {
       "module": "Images",

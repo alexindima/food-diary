@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4058,
-    "symbols": 3999,
-    "interfaceImplementationLinks": 272,
+    "sourceFiles": 4056,
+    "symbols": 3997,
+    "interfaceImplementationLinks": 271,
     "dependencyInjectionRegistrations": 152,
     "kinds": {
       "class": 2099,
       "enum": 64,
-      "interface": 477,
+      "interface": 475,
       "record": 1238,
       "record struct": 121
     },
@@ -36,8 +36,8 @@
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
-      "ReadRepository": 46,
-      "Repository": 108,
+      "ReadRepository": 45,
+      "Repository": 107,
       "Request": 150,
       "Response": 213,
       "Service": 304,
@@ -2516,21 +2516,7 @@
       "kind": "interface",
       "role": "Query",
       "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs",
-      "line": 2
-    },
-    {
-      "name": "IAdminImpersonationSessionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionReadRepository.cs",
       "line": 4
-    },
-    {
-      "name": "IAdminImpersonationSessionRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
-      "line": 2
     },
     {
       "name": "IAdminImpersonationSessionWriteRepository",
@@ -3881,7 +3867,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "AdminUserDataPurgeParticipant",
@@ -15837,7 +15823,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ImageAssetRepository",
@@ -28131,13 +28117,6 @@
       "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionQuery.cs",
       "implementation": "AdminImpersonationSessionQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAdminImpersonationSessionRepository",
-      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminImpersonationSessionRepository.cs",
-      "implementation": "AdminImpersonationSessionRepository",
-      "implementationPath": "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs",
       "confidence": "naming-convention"
     },
     {
