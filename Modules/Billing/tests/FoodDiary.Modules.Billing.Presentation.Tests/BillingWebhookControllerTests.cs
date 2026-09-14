@@ -1,17 +1,18 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Text;
 using FoodDiary.Results;
-using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Responses;
-using FoodDiary.Presentation.Api.Features.Billing;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Billing.Presentation.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using System.Net;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Billing.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingWebhookControllerTests {

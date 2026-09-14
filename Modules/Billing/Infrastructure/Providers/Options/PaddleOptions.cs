@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 
 public sealed class PaddleOptions {
     public const string SectionName = "Paddle";

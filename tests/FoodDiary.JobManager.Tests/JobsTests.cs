@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -8,10 +8,9 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Application.Billing.Services;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Services;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -1500,7 +1499,7 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IBillingUserContextService {
+    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IUserBillingService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
@@ -1516,7 +1515,7 @@ public sealed class JobsTests {
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => IsAccessible(user) && user.Id == id));
 
-        public Task<Result<UserBillingProfileModel>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+        public Task<Result<UserBillingProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             return Task.FromResult(user is null
                 ? Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)
@@ -1524,23 +1523,11 @@ public sealed class JobsTests {
         }
 
         public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
-            Result<UserBillingProfileModel> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            Result<UserBillingProfileModel> result = await GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
             return result.IsFailure ? result.Error : null;
         }
 
-        public Task<Result<BillingUserProfileModel>> GetAccessibleUserProfileAsync(
-            UserId userId,
-            CancellationToken cancellationToken) {
-            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
-            return Task.FromResult(user is null
-                ? Result.Failure<BillingUserProfileModel>(Errors.Authentication.InvalidToken)
-                : Result.Success(new BillingUserProfileModel(
-                    user.HasRole(RoleNames.Premium),
-                    user.PremiumTrialStartedAtUtc,
-                    user.PremiumTrialEndsAtUtc)));
-        }
-
-        public async Task<UserBillingProfileModel?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) {
+        public async Task<UserBillingProfileModel?> GetProfileIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
             User? user = await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
             return user is null ? null : ToBillingProfile(user);
         }
@@ -1549,7 +1536,7 @@ public sealed class JobsTests {
             UserId userId,
             DateTime startedAtUtc,
             TimeSpan duration,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken = default) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             if (user is null) {
                 return Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken));
@@ -1559,7 +1546,7 @@ public sealed class JobsTests {
             return Task.FromResult(Result.Success(ToBillingProfile(user)));
         }
 
-        public Task EnsurePremiumRoleAsync(UserId userId, CancellationToken cancellationToken) {
+        public Task EnsurePremiumRoleAsync(UserId userId, CancellationToken cancellationToken = default) {
             User user = _users.Single(candidate => candidate.Id == userId);
             if (!user.HasRole(RoleNames.Premium)) {
                 user.ReplaceRoles([.. user.UserRoles.Select(userRole => userRole.Role), _premiumRole]);
@@ -1568,7 +1555,7 @@ public sealed class JobsTests {
             return Task.CompletedTask;
         }
 
-        public Task RemovePremiumRoleAsync(UserId userId, CancellationToken cancellationToken) {
+        public Task RemovePremiumRoleAsync(UserId userId, CancellationToken cancellationToken = default) {
             User user = _users.Single(candidate => candidate.Id == userId);
             if (user.HasRole(RoleNames.Premium)) {
                 user.ReplaceRoles([
@@ -1635,7 +1622,7 @@ public sealed class JobsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
-        : IBillingSubscriptionRepository {
+        : IBillingSubscriptionReadRepository, IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
         public List<BillingSubscription> Subscriptions { get; } = [.. subscriptions];
 
         public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
@@ -1710,7 +1697,7 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingBillingPaymentRepository : IBillingPaymentRepository {
+    private sealed class RecordingBillingPaymentRepository : IBillingPaymentReadRepository, IBillingPaymentWriteRepository {
         public List<BillingPayment> Payments { get; } = [];
 
         public Task<BillingPayment?> GetByExternalPaymentIdAsync(

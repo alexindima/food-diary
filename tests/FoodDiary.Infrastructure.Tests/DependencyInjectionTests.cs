@@ -1,4 +1,5 @@
-﻿using FoodDiary.Modules.Ai.Infrastructure;
+using FoodDiary.Modules.Billing.Infrastructure;
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition;
@@ -6,7 +7,6 @@ using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure;
-using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Wearables.Infrastructure;
@@ -15,7 +15,7 @@ using System.Net;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -31,7 +31,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
@@ -48,8 +48,9 @@ using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Integrations.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Integrations.Services;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
@@ -940,25 +941,25 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionRepository",
+            "FoodDiary.Modules.Billing.Infrastructure.Persistence.BillingSubscriptionRepository",
             [
-                "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionReadRepository",
-                "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionReadModelRepository",
-                "FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionWriteRepository",
+                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingSubscriptionReadRepository",
+                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingSubscriptionReadModelRepository",
+                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingSubscriptionWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentRepository",
+            "FoodDiary.Modules.Billing.Infrastructure.Persistence.BillingPaymentRepository",
             [
-                "FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentReadRepository",
-                "FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentWriteRepository",
+                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingPaymentReadRepository",
+                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingPaymentWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventRepository",
+            "FoodDiary.Modules.Billing.Infrastructure.Persistence.BillingWebhookEventRepository",
             [
-                "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventReadRepository",
-                "FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventWriteRepository",
+                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingWebhookEventReadRepository",
+                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingWebhookEventWriteRepository",
             ]
         },
         {

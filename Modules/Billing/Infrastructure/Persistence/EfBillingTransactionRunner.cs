@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence.Shared;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;

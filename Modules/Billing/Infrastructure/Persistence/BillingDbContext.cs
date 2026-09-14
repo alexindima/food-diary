@@ -1,4 +1,5 @@
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.PersistenceModel;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;

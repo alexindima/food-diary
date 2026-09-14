@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Infrastructure.Providers;
 using FoodDiary.Integrations;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using Microsoft.Extensions.Configuration;

@@ -1,38 +1,38 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Contracts.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
-using FoodDiary.Application.Billing.Queries.GetBillingOverview;
-using FoodDiary.Application.Billing.Services;
+using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
+using FoodDiary.Modules.Billing.Application.Queries.GetBillingOverview;
+using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Billing.Models;
 using System.Reflection;
 
-namespace FoodDiary.Application.Tests.Billing;
+namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 [ExcludeFromCodeCoverage]
 public partial class BillingFeatureTests {
     private static readonly DateTime Now = new(2026, 4, 28, 10, 0, 0, DateTimeKind.Utc);
 
     private static GetBillingOverviewQueryHandler CreateBillingOverviewHandler(
-        IBillingUserContextService billingUserContextService,
+        IUserBillingService billingUserContextService,
         IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
         IBillingPublicConfigProvider billingPublicConfigProvider,
         TimeProvider dateTimeProvider) =>
-        new(new BillingOverviewReadService(
+        new(
             billingUserContextService,
             billingSubscriptionRepository,
             billingPublicConfigProvider,
-            dateTimeProvider),
+            dateTimeProvider,
             billingUserContextService);
 
     [Fact]
@@ -252,7 +252,7 @@ public partial class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeUserRepository(params User[] users)
-        : IUserRepository, IUserContextService, IUserBillingService, IBillingUserContextService {
+        : IUserRepository, IUserContextService, IUserBillingService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
@@ -283,18 +283,6 @@ public partial class BillingFeatureTests {
             return result.IsFailure ? result.Error : null;
         }
 
-        public Task<Result<BillingUserProfileModel>> GetAccessibleUserProfileAsync(
-            UserId userId,
-            CancellationToken cancellationToken) {
-            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
-            return Task.FromResult(user is null
-                ? Result.Failure<BillingUserProfileModel>(Errors.Authentication.InvalidToken)
-                : Result.Success(new BillingUserProfileModel(
-                    user.HasRole(RoleNames.Premium),
-                    user.PremiumTrialStartedAtUtc,
-                    user.PremiumTrialEndsAtUtc)));
-        }
-
         public Task<Result<UserBillingProfileModel>> GetAccessibleProfileAsync(
             UserId userId,
             CancellationToken cancellationToken = default) {
@@ -307,22 +295,6 @@ public partial class BillingFeatureTests {
         public async Task<UserBillingProfileModel?> GetProfileIncludingDeletedAsync(
             UserId userId,
             CancellationToken cancellationToken = default) {
-            User? user = await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
-            return user is null ? null : ToBillingProfile(user);
-        }
-
-        Task<Result<UserBillingProfileModel>> IBillingUserContextService.GetAccessibleUserAsync(
-            UserId userId,
-            CancellationToken cancellationToken) {
-            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
-            return Task.FromResult(user is null
-                ? Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)
-                : Result.Success(ToBillingProfile(user)));
-        }
-
-        public async Task<UserBillingProfileModel?> GetUserIncludingDeletedAsync(
-            UserId userId,
-            CancellationToken cancellationToken) {
             User? user = await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
             return user is null ? null : ToBillingProfile(user);
         }
@@ -445,7 +417,7 @@ public partial class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
-        : IBillingSubscriptionRepository {
+        : IBillingSubscriptionReadRepository, IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
         public List<BillingSubscription> Subscriptions { get; } = [.. subscriptions];
         public int UpdateCount { get; private set; }
 
@@ -524,7 +496,7 @@ public partial class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingBillingPaymentRepository : IBillingPaymentRepository {
+    private sealed class RecordingBillingPaymentRepository : IBillingPaymentReadRepository, IBillingPaymentWriteRepository {
         public List<BillingPayment> Payments { get; } = [];
         public bool ThrowAlreadyExistsOnAdd { get; init; }
 
@@ -550,7 +522,7 @@ public partial class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingBillingWebhookEventRepository : IBillingWebhookEventRepository {
+    private sealed class RecordingBillingWebhookEventRepository : IBillingWebhookEventReadRepository, IBillingWebhookEventWriteRepository {
         public HashSet<string> ProcessedEventIds { get; } = new(StringComparer.Ordinal);
         public List<BillingWebhookEvent> Events { get; } = [];
         public bool ThrowAlreadyProcessedOnAdd { get; init; }

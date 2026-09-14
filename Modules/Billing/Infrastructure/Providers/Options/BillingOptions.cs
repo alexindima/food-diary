@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
 
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 
 public sealed class BillingOptions {
     public const string SectionName = "Billing";

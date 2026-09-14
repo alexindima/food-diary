@@ -14,6 +14,13 @@ public sealed class PersistenceCapabilityTests {
         Assert.Contains("context:CreateModuleContext", capabilities["Probe.cs"], StringComparer.Ordinal);
     }
 
+    [Fact]
+    public void Scanner_TracksCoordinatedTransactions() {
+        const string source = "using FoodDiary.Persistence.Abstractions; class Probe(IModuleTransactionCoordinator coordinator) { public async System.Threading.Tasks.Task Run() { _ = coordinator.CurrentTransaction; await coordinator.ExecuteAsync((transaction, token) => System.Threading.Tasks.Task.FromResult(true)); } }";
+        IReadOnlyDictionary<string, string[]> capabilities = PersistenceCapabilityScanner.Scan([("Probe.cs", source)]);
+        Assert.Equal(["context:CurrentTransaction", "context:ExecuteAsync"], capabilities["Probe.cs"]);
+    }
+
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
     [Theory]

@@ -1,12 +1,12 @@
 using System.Reflection;
 using FluentValidation;
-using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Services;
+using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
+using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Billing;
+namespace FoodDiary.Modules.Billing.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddBillingApplication(this IServiceCollection services) {
@@ -14,9 +14,7 @@ public static class DependencyInjection {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(assembly));
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
-        services.AddScoped<IBillingOverviewReadService, BillingOverviewReadService>();
         services.AddScoped<IBillingRenewalService, BillingRenewalService>();
-        services.AddScoped<IBillingUserContextService, BillingUserContextService>();
         services.AddScoped<BillingAccessService>();
         services.AddScoped<BillingWebhookContextResolver>();
         services.AddScoped<BillingWebhookPaymentRecorder>();

@@ -1,12 +1,30 @@
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests.Domain;
+namespace FoodDiary.Modules.Billing.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingInvariantTests {
     private static readonly UserId UserId = UserId.New();
     private static readonly DateTime Now = new(2026, 4, 28, 10, 0, 0, DateTimeKind.Utc);
+
+    [Theory]
+    [InlineData("active", null, true)]
+    [InlineData("past_due", null, false)]
+    [InlineData("past_due", -1, false)]
+    [InlineData("past_due", 0, false)]
+    [InlineData("past_due", 1, true)]
+    [InlineData(" PAST_DUE ", 1, true)]
+    [InlineData("trialing", null, false)]
+    [InlineData("trialing", 0, false)]
+    [InlineData("trialing", 1, true)]
+    [InlineData("canceled", 1, false)]
+    [InlineData(null, 1, false)]
+    public void PremiumAccess_RequiresUnexpiredPeriodForTrialAndPastDue(string? status, int? endOffsetTicks, bool expected) {
+        DateTime? end = endOffsetTicks.HasValue ? Now.AddTicks(endOffsetTicks.Value) : null;
+        Assert.Equal(expected, BillingPremiumAccessPolicy.GrantsPremiumAccess(status, end, Now));
+    }
 
     private static BillingSubscription CreatePendingSubscription() {
         return BillingSubscription.CreatePending(

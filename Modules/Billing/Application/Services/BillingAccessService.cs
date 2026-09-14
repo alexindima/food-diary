@@ -1,12 +1,13 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Entities;
 
-namespace FoodDiary.Application.Billing.Services;
+namespace FoodDiary.Modules.Billing.Application.Services;
 
 public sealed class BillingAccessService(
-    IBillingUserContextService billingUserContextService,
+    IUserBillingService billingUserContextService,
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     TimeProvider dateTimeProvider) {
     public async Task EnsurePremiumRoleAsync(
@@ -45,16 +46,6 @@ public sealed class BillingAccessService(
         }
     }
 
-    public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc) {
-        if (string.IsNullOrWhiteSpace(status)) {
-            return false;
-        }
-
-        return status.Trim().ToLowerInvariant() switch {
-            "trialing" => currentPeriodEndUtc.HasValue && currentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
-            "active" => true,
-            "past_due" => currentPeriodEndUtc.HasValue && currentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
-            _ => false,
-        };
-    }
+    public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc) =>
+        BillingPremiumAccessPolicy.GrantsPremiumAccess(status, currentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime);
 }

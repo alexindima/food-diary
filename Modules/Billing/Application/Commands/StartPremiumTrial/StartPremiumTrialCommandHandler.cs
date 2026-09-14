@@ -1,17 +1,19 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Modules.Billing.Application.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Billing.Commands.StartPremiumTrial;
+namespace FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
 
 public sealed class StartPremiumTrialCommandHandler(
-    IBillingUserContextService billingUserContextService,
+    IUserBillingService billingUserContextService,
     IBillingSubscriptionReadRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
@@ -30,7 +32,7 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(userResult.Error);
         }
@@ -77,22 +79,6 @@ public sealed class StartPremiumTrialCommandHandler(
             publicConfig.AvailableProviders));
     }
 
-    private bool IsPaidPremiumActive(BillingSubscription? subscription) {
-        if (subscription is null) {
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(subscription.Status)) {
-            return false;
-        }
-
-        return subscription.Status.Trim().ToLowerInvariant() switch {
-            "trialing" => subscription.CurrentPeriodEndUtc.HasValue &&
-                subscription.CurrentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
-            "active" => true,
-            "past_due" => !subscription.CurrentPeriodEndUtc.HasValue ||
-                subscription.CurrentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
-            _ => false,
-        };
-    }
+    private bool IsPaidPremiumActive(BillingSubscription? subscription) =>
+        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime);
 }

@@ -1,9 +1,9 @@
 using System.Net;
 using System.Text;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Integrations.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options.Options;

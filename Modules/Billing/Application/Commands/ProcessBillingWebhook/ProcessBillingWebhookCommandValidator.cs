@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
 public sealed class ProcessBillingWebhookCommandValidator : AbstractValidator<ProcessBillingWebhookCommand> {
     public ProcessBillingWebhookCommandValidator() {

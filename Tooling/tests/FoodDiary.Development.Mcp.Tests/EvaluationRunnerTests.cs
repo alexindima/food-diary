@@ -99,7 +99,7 @@ public sealed class EvaluationRunnerTests {
               "switchCriteria": { "minimumCaseCount": 3, "minimumTop1Rate": 1, "minimumTop10Rate": 1, "minimumMeanReciprocalRank": 1 },
               "cases": [
                 { "id": "hit", "query": "users", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Users/Handler.cs"] },
-                { "id": "second", "query": "billing", "expectedPaths": ["FoodDiary.Application.Billing/Handler.cs"], "acceptedPaths": ["Other.cs"] }
+                { "id": "second", "query": "billing", "expectedPaths": ["FoodDiary.Modules.Billing.Application/Handler.cs"], "acceptedPaths": ["Other.cs"] }
               ]
             }
             """);
@@ -109,7 +109,7 @@ public sealed class EvaluationRunnerTests {
             ]),
             CreateSearchResult([
                 new WikiContextSearchCandidate(1, "Other.cs", "symbol", "Other", 90, 1, []),
-                new WikiContextSearchCandidate(2, "FoodDiary.Application.Billing/Handler.cs", "symbol", "Application", 80, 0.5, []),
+                new WikiContextSearchCandidate(2, "FoodDiary.Modules.Billing.Application/Handler.cs", "symbol", "Application", 80, 0.5, []),
             ]),
         ]);
         await using var output = new StringWriter();

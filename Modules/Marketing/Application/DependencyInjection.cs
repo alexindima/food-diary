@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Contracts.Common;
 using FoodDiary.Application.Marketing.Common;
 using FoodDiary.Application.Marketing.Services;
 using FoodDiary.Mediator;

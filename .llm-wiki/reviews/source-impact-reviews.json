@@ -64,32 +64,64 @@
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
+      "pageSha256": "0fc804d45f07c02432c88c8953dd118f34751612c11b12a1b384288676a69825",
       "sources": [
         {
+          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
+          "sha256": "efb16148571a95653656673cc89e6dc0f4e1e4640aac95c7a50d409ecf076e19"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "015350d0d2ed431d8685e07747f6dc8cf0a7153c495105aaf37f32a3ae6587fb"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "41193f6dd586ad04ec1a44a7f2c4e5e9981284674c3e32d1031c1cfa25e2b456"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "320593b09624a9b5ca2a7f9a12ed2977a55e3938af3733f5327c9ebbc20f1b13"
+        },
+        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "6aa10e30bdaf3c60f5f0e29e8b1b1f30bed635618d53370ae54fd208c8817613"
+          "sha256": "78453dd0683d9ad470f659bb85407e7db2c84fc304f290669cb2303bcc383e82"
         }
       ],
-      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
+      "reason": "Verified WeeklyGoals owner registration and host coordinator against ADR 0040, module guides and passing PostgreSQL tests. Updated the EF ownership table and factory/transaction explanation to reflect all 29 owner contexts.",
       "baseRef": "HEAD",
-      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
-      "reviewedAtUtc": "2026-09-14T02:13:37.0710611Z"
+      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
+      "reviewedAtUtc": "2026-09-14T04:59:24.8098358Z"
     },
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
+      "pageSha256": "e6560a945723fcad655ee765ba460c3a093bd727873c52788f1d9bfda1d5a219",
       "sources": [
         {
+          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
+          "sha256": "efb16148571a95653656673cc89e6dc0f4e1e4640aac95c7a50d409ecf076e19"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "015350d0d2ed431d8685e07747f6dc8cf0a7153c495105aaf37f32a3ae6587fb"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "ca6ab2e92eba61d61f2be925443ad53e662711902564e889980e4e3fb156a393"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "41193f6dd586ad04ec1a44a7f2c4e5e9981284674c3e32d1031c1cfa25e2b456"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "4739b90a449086c4b395cd037f7ff0c29bc091c23b4ca1873cf6257d532e84d4"
+          "sha256": "e3ece78098f7ff0f58849bbbbd5c375b20f1810f57c9bfb85c6293a78da01063"
         }
       ],
-      "reason": "Reviewed AI internal reader/write ports and DI; no new project edges in this fix. 656 architecture checks passed and remaining persistence capability check passed on rerun.",
+      "reason": "Verified the narrow WeeklyGoals coordinator edge and removal of the central Infrastructure reference against the exact project matrix and passing architecture checks. Added ADR 0040 navigation; host-owned transactions and migrations remain.",
       "baseRef": "HEAD",
-      "gitHead": "cd2d144455f1a0a734e2207578303cbc7e90da19",
-      "reviewedAtUtc": "2026-09-14T02:55:57.9590859Z"
+      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
+      "reviewedAtUtc": "2026-09-14T04:59:26.5559342Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -211,17 +243,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "524fdc0861eb3ede937d3121d941aea26e6512b178dbe090506310cc97b5a6e6"
+          "sha256": "9d540343dad14bcb252cd05e24d0489e28d51864856d21388a70f287a6f03cae"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "015350d0d2ed431d8685e07747f6dc8cf0a7153c495105aaf37f32a3ae6587fb"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "4739b90a449086c4b395cd037f7ff0c29bc091c23b4ca1873cf6257d532e84d4"
+          "sha256": "e3ece78098f7ff0f58849bbbbd5c375b20f1810f57c9bfb85c6293a78da01063"
         }
       ],
-      "reason": "Reviewed AI internal reader/write ports and DI; no new project edges in this fix. 656 architecture checks passed and remaining persistence capability check passed on rerun.",
+      "reason": "The workflow still requires intentional matrix changes and treats coupling findings as review candidates. WeeklyGoals graph closure and the exact dependency matrix were tested; the coordinator introduces no cycle or automatic-removal exception.",
       "baseRef": "HEAD",
-      "gitHead": "cd2d144455f1a0a734e2207578303cbc7e90da19",
-      "reviewedAtUtc": "2026-09-14T02:55:59.4677938Z"
+      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
+      "reviewedAtUtc": "2026-09-14T04:59:28.2609967Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -500,14 +536,18 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "3f45ef8c7b768487cec822250e4c55c15264c2a0e8160962622090e4f2a12727"
+        },
+        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "6aa10e30bdaf3c60f5f0e29e8b1b1f30bed635618d53370ae54fd208c8817613"
+          "sha256": "78453dd0683d9ad470f659bb85407e7db2c84fc304f290669cb2303bcc383e82"
         }
       ],
-      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
+      "reason": "The workflow remains valid: this coordinator extraction changes no domain invariant, mapping or schema. Real PostgreSQL tests cover rollback, cancellation, concurrency and retries while the host retains migration composition.",
       "baseRef": "HEAD",
-      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
-      "reviewedAtUtc": "2026-09-14T02:13:43.2058456Z"
+      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
+      "reviewedAtUtc": "2026-09-14T04:59:30.0731242Z"
     },
     {
       "pageId": "workflow-durable-memory",

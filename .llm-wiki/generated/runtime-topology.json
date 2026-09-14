@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "f50b62e59a6c4fc3f1ddfcca172a0aa6cc460ca9edeab782643e7e1ed5853e48",
-    "sourceFileCount": 4048
+    "sourceFingerprint": "6502d1b1e35565477690b47597ba30894793e8b40cb6918d6dac1690207d5cf1",
+    "sourceFileCount": 4043
   },
   "summary": {
     "composeServices": 17,
@@ -809,7 +809,7 @@
     },
     {
       "name": "BillingWebhookController",
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs",
+      "path": "Modules/Billing/Presentation/Controllers/BillingWebhookController.cs",
       "securitySignals": [
         "request-authentication"
       ],
@@ -819,7 +819,7 @@
     },
     {
       "name": "BillingWebhookEvent",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "path": "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs",
       "securitySignals": [],
       "behaviorSignals": null,
       "behaviorSignalScope": "class-window",
@@ -827,7 +827,7 @@
     },
     {
       "name": "BillingWebhookEventAlreadyProcessedException",
-      "path": "Modules/Billing/Application/Abstractions/Common/BillingWebhookEventAlreadyProcessedException.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/BillingWebhookEventAlreadyProcessedException.cs",
       "securitySignals": [
         "replay-or-duplicate-control"
       ],
@@ -840,7 +840,7 @@
     },
     {
       "name": "BillingWebhookEventConfiguration",
-      "path": "Modules/Billing/Infrastructure/Model/BillingWebhookEventConfiguration.cs",
+      "path": "Modules/Billing/PersistenceModel/BillingWebhookEventConfiguration.cs",
       "securitySignals": [
         "freshness-validation",
         "replay-or-duplicate-control"
@@ -875,7 +875,7 @@
     },
     {
       "name": "BillingWebhookHttpProcessor",
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookHttpProcessor.cs",
+      "path": "Modules/Billing/Presentation/BillingWebhookHttpProcessor.cs",
       "securitySignals": [
         "signature-validation"
       ],
@@ -922,7 +922,7 @@
     },
     {
       "name": "BillingWebhookRequestLimits",
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookRequestLimits.cs",
+      "path": "Modules/Billing/Presentation/BillingWebhookRequestLimits.cs",
       "securitySignals": [],
       "behaviorSignals": null,
       "behaviorSignalScope": "class-window",

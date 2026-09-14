@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Billing.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FeatureErrorContractTests {
@@ -9,7 +9,7 @@ public sealed class FeatureErrorContractTests {
     public void BillingErrors_HasOwnerAssemblyAndNamespace() {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.Billing.Application.Abstractions", typeof(BillingErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.Billing.Common", typeof(BillingErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.Billing.Application.Abstractions.Common", typeof(BillingErrors).Namespace));
     }
 
     [Fact]

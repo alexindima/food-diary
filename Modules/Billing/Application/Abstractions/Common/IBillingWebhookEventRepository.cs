@@ -1,3 +1,0 @@
-namespace FoodDiary.Application.Abstractions.Billing.Common;
-
-public interface IBillingWebhookEventRepository : IBillingWebhookEventReadRepository, IBillingWebhookEventWriteRepository;

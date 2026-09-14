@@ -1,13 +1,13 @@
-using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
-using FoodDiary.Application.Billing.Commands.CreatePortalSession;
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Application.Billing.Queries.GetBillingOverview;
-using FoodDiary.Presentation.Api.Features.Billing.Mappings;
-using FoodDiary.Presentation.Api.Features.Billing.Requests;
-using FoodDiary.Presentation.Api.Features.Billing.Responses;
+using FoodDiary.Modules.Billing.Presentation.Mappings;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
+using FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
+using FoodDiary.Modules.Billing.Application.Commands.CreatePortalSession;
+using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Modules.Billing.Application.Queries.GetBillingOverview;
+using FoodDiary.Modules.Billing.Presentation.Requests;
+using FoodDiary.Modules.Billing.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Billing.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingHttpMappingsTests {

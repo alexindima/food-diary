@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Billing.Infrastructure.Persistence;
+using FoodDiary.Modules.Billing.PersistenceModel;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;

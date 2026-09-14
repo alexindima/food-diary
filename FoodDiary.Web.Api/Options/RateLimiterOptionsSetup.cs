@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Threading.RateLimiting;
 using FoodDiary.Presentation.Api.Extensions;
-using FoodDiary.Presentation.Api.Features.Billing;
+using FoodDiary.Modules.Billing.Presentation;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.RateLimiting;

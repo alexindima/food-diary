@@ -1,0 +1,63 @@
+using FoodDiary.Modules.Billing.Presentation.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Modules.Billing.Presentation.Requests;
+using FoodDiary.Modules.Billing.Presentation.Responses;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Security;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Billing.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/billing")]
+[Authorize]
+public sealed class BillingController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet("overview")]
+    [ProducesResponseType<BillingOverviewHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToBillingOverviewQuery(), static value => value.ToHttpResponse());
+
+    [HttpPost("trial")]
+    [ProducesResponseType<BillingOverviewHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [BlockImpersonatedAccess]
+    [EnableIdempotency]
+    public Task<IActionResult> StartPremiumTrial([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToStartPremiumTrialCommand(), static value => value.ToHttpResponse());
+
+    [HttpPost("checkout-session")]
+    [ProducesResponseType<CheckoutSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.BillingRateLimitPolicyName)]
+    [BlockImpersonatedAccess]
+    [EnableIdempotency(requireKey: true)]
+    public Task<IActionResult> CreateCheckoutSession(
+        [FromCurrentUser] Guid userId,
+        [FromBody] CreateCheckoutSessionHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
+
+    [HttpPost("portal-session")]
+    [ProducesResponseType<PortalSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.BillingRateLimitPolicyName)]
+    [BlockImpersonatedAccess]
+    [EnableIdempotency]
+    public Task<IActionResult> CreatePortalSession([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToPortalSessionCommand(), static value => value.ToHttpResponse());
+
+    private string GetRequestId() =>
+        IdempotencyRequestContext.GetRequestId(HttpContext) ??
+        throw new InvalidOperationException("Required idempotency context is unavailable.");
+}

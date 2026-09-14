@@ -3,7 +3,7 @@
 ## Boundary
 
 - Own billing application workflows, application-facing ports/models, `BillingSubscription`, `BillingPayment`, `BillingWebhookEvent`, persistence mappings/adapters, and focused tests.
-- Preserve the `FoodDiary.Application.Billing` assembly identity and existing CLR namespaces.
+- Use canonical `FoodDiary.Modules.Billing.<Project>` project and assembly names. Namespaces follow the project and physical folders; do not override RootNamespace.
 - Keep Billing provider HTTP adapters, options and public configuration inside Billing Infrastructure; keep JobManager as scheduler-only plumbing.
 - Keep the Billing-owned `IBillingMarketingConversionRecorder` consumer port in Billing Contracts; Marketing implements it through an explicit project reference.
 - Keep shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.

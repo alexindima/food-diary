@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
 internal static class BillingUrlValidator {
     public static bool IsAbsoluteHttps(string? value) =>

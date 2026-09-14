@@ -24,6 +24,6 @@ public sealed class ModuleSourceCatalogTests {
     public void BillingScope_DetectsAForbiddenReferenceInCurrentSources() {
         string root = ModuleSourceCatalog.ApplicationRoot("Billing");
         Assert.NotEmpty(ModuleSourceCatalog.ApplicationFiles(root));
-        Assert.NotEmpty(SourceScanner.FindLinePatternViolations(root, ["namespace FoodDiary.Application.Billing"]));
+        Assert.NotEmpty(SourceScanner.FindLinePatternViolations(root, ["namespace FoodDiary.Modules.Billing.Application"]));
     }
 }

@@ -21,11 +21,11 @@ COPY Shared/FoodDiary.Outbox.Management.Contracts/*.csproj Shared/FoodDiary.Outb
 COPY Modules/Export/Application/Abstractions/*.csproj Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/*.csproj Modules/Billing/Application/
-COPY Modules/Billing/Application/Abstractions/*.csproj Modules/Billing/Application/Abstractions/
+COPY Modules/Billing/Application.Abstractions/*.csproj Modules/Billing/Application.Abstractions/
 COPY Modules/Billing/Domain/*.csproj Modules/Billing/Domain/
 COPY Modules/Billing/Domain.Contracts/*.csproj Modules/Billing/Domain.Contracts/
 COPY Modules/Billing/Infrastructure/*.csproj Modules/Billing/Infrastructure/
-COPY Modules/Billing/Infrastructure/Model/*.csproj Modules/Billing/Infrastructure/Model/
+COPY Modules/Billing/PersistenceModel/*.csproj Modules/Billing/PersistenceModel/
 COPY Modules/Marketing/Application/*.csproj Modules/Marketing/Application/
 COPY Modules/Marketing/Application/Abstractions/*.csproj Modules/Marketing/Application/Abstractions/
 COPY Modules/Marketing/Domain/*.csproj Modules/Marketing/Domain/
@@ -241,11 +241,11 @@ COPY Shared/FoodDiary.Outbox.Management.Contracts/ Shared/FoodDiary.Outbox.Manag
 COPY Modules/Export/Application/Abstractions/ Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/ Modules/Billing/Application/
-COPY Modules/Billing/Application/Abstractions/ Modules/Billing/Application/Abstractions/
+COPY Modules/Billing/Application.Abstractions/ Modules/Billing/Application.Abstractions/
 COPY Modules/Billing/Domain/ Modules/Billing/Domain/
 COPY Modules/Billing/Domain.Contracts/ Modules/Billing/Domain.Contracts/
 COPY Modules/Billing/Infrastructure/ Modules/Billing/Infrastructure/
-COPY Modules/Billing/Infrastructure/Model/ Modules/Billing/Infrastructure/Model/
+COPY Modules/Billing/PersistenceModel/ Modules/Billing/PersistenceModel/
 COPY Modules/Marketing/ Modules/Marketing/
 COPY Modules/Marketing/Application/ Modules/Marketing/Application/
 COPY Modules/Marketing/Application/Abstractions/ Modules/Marketing/Application/Abstractions/

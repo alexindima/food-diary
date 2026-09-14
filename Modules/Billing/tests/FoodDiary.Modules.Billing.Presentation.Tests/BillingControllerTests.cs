@@ -1,20 +1,21 @@
+using FoodDiary.Presentation.Api.Tests;
 using System.Reflection;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
-using FoodDiary.Application.Billing.Commands.CreatePortalSession;
-using FoodDiary.Application.Billing.Commands.StartPremiumTrial;
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Application.Billing.Queries.GetBillingOverview;
+using FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
+using FoodDiary.Modules.Billing.Application.Commands.CreatePortalSession;
+using FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
+using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Modules.Billing.Application.Queries.GetBillingOverview;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Billing;
-using FoodDiary.Presentation.Api.Features.Billing.Requests;
-using FoodDiary.Presentation.Api.Features.Billing.Responses;
+using FoodDiary.Modules.Billing.Presentation.Controllers;
+using FoodDiary.Modules.Billing.Presentation.Requests;
+using FoodDiary.Modules.Billing.Presentation.Responses;
 using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Billing.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingControllerTests {

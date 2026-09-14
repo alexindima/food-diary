@@ -181,7 +181,7 @@ $billing = $billingJson | ConvertFrom-Json
 Assert-Wiki ($billing.module.name -eq 'Billing' -and $billing.module.origin -eq 'explicit-module') 'Billing context did not preserve the explicitly requested module.'
 $billingWikiPagePaths = @($billing.wikiPages | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path } })
 Assert-Wiki ($billingWikiPagePaths -contains '.llm-wiki/generated/modules/billing.md') 'Billing module page is missing from context.'
-Assert-Wiki (@($billing.controllers.path) -contains 'Modules/Billing/Presentation/Features/Billing/BillingController.cs') 'BillingController is missing from API context.'
+Assert-Wiki (@($billing.controllers.path) -contains 'Modules/Billing/Presentation/Controllers/BillingController.cs') 'BillingController is missing from API context.'
 Assert-Wiki (@($billing.implementationFiles.path | Where-Object { $_ -like 'Modules/Billing/Application/*' }).Count -gt 0) 'Billing application implementation is missing from context.'
 Assert-Wiki (@($billing.implementationFiles | Where-Object {
     $_.path -match '/Billing/' -and

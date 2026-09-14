@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FoodDiary.Integrations.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 using Hangfire;
 
 namespace FoodDiary.JobManager.Services;

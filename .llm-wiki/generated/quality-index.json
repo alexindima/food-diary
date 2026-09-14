@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5335,
+    "productionFiles": 5330,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -80,11 +80,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "nonBlankLines": 696,
+      "nonBlankLines": 697,
       "decisionPoints": 122,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 196.92
+      "structuralRiskScore": 196.94
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
@@ -151,6 +151,14 @@
       "structuralRiskScore": 149.98
     },
     {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "nonBlankLines": 544,
+      "decisionPoints": 92,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 148.88
+    },
+    {
       "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
       "nonBlankLines": 364,
       "decisionPoints": 90,
@@ -205,14 +213,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 136.16
-    },
-    {
-      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 528,
-      "decisionPoints": 83,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 135.06
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
@@ -535,6 +535,14 @@
       "structuralRiskScore": 99.98
     },
     {
+      "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
+      "nonBlankLines": 191,
+      "decisionPoints": 63,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 98.32
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
       "nonBlankLines": 310,
       "decisionPoints": 61,
@@ -605,14 +613,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 92.1
-    },
-    {
-      "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 177,
-      "decisionPoints": 59,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.04
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
@@ -2466,11 +2466,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 177,
-      "decisionPoints": 59,
+      "nonBlankLines": 191,
+      "decisionPoints": 63,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.04
+      "structuralRiskScore": 98.32
     },
     {
       "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
@@ -3002,11 +3002,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "nonBlankLines": 47,
+      "nonBlankLines": 49,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
+      "structuralRiskScore": 2.48
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -3505,6 +3505,14 @@
       "structuralRiskScore": 0.06
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.14
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/ModuleContextSaveCoordinator.cs",
       "nonBlankLines": 75,
       "decisionPoints": 11,
@@ -3522,11 +3530,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -3626,11 +3634,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 71,
+      "nonBlankLines": 72,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.92
+      "structuralRiskScore": 2.94
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -5002,11 +5010,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 183,
+      "nonBlankLines": 185,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.66
+      "structuralRiskScore": 6.7
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -16538,11 +16546,11 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/AiErrors.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 38,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
+      "structuralRiskScore": 2.26
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/AiProviderTokenBudget.cs",
@@ -17090,11 +17098,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
+      "nonBlankLines": 26,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 2.02
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs",
@@ -17154,11 +17162,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 528,
-      "decisionPoints": 83,
+      "nonBlankLines": 544,
+      "decisionPoints": 92,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 135.06
+      "structuralRiskScore": 148.88
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs",
@@ -17409,7 +17417,7 @@
       "structuralRiskScore": 6.7
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/BillingErrors.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/BillingErrors.cs",
       "nonBlankLines": 40,
       "decisionPoints": 4,
       "criticalSymbols": 0,
@@ -17417,7 +17425,7 @@
       "structuralRiskScore": 6.8
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/BillingInputLimits.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/BillingInputLimits.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17425,7 +17433,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/BillingPaymentAlreadyExistsException.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/BillingPaymentAlreadyExistsException.cs",
       "nonBlankLines": 6,
       "decisionPoints": 1,
       "criticalSymbols": 0,
@@ -17433,7 +17441,7 @@
       "structuralRiskScore": 1.62
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/BillingWebhookEventAlreadyProcessedException.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/BillingWebhookEventAlreadyProcessedException.cs",
       "nonBlankLines": 6,
       "decisionPoints": 1,
       "criticalSymbols": 0,
@@ -17441,7 +17449,7 @@
       "structuralRiskScore": 1.62
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17449,7 +17457,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17457,15 +17465,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17473,7 +17473,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17481,7 +17481,7 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17489,7 +17489,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17497,7 +17497,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17505,7 +17505,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17513,7 +17513,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17521,15 +17521,7 @@
       "structuralRiskScore": 0.34
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs",
       "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17537,7 +17529,7 @@
       "structuralRiskScore": 0.38
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17545,7 +17537,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17553,15 +17545,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17569,7 +17553,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17577,7 +17561,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17585,7 +17569,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingPortalSessionModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingPortalSessionModel.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17593,7 +17577,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingPortalSessionRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingPortalSessionRequestModel.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17601,7 +17585,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingPublicConfigModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingPublicConfigModel.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17609,7 +17593,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentModel.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17617,7 +17601,7 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17625,7 +17609,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17633,7 +17617,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17658,11 +17642,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "nonBlankLines": 153,
-      "decisionPoints": 21,
+      "nonBlankLines": 145,
+      "decisionPoints": 16,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.56
+      "structuralRiskScore": 28.9
     },
     {
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandValidator.cs",
@@ -17682,11 +17666,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
-      "nonBlankLines": 43,
+      "nonBlankLines": 44,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.36
+      "structuralRiskScore": 10.38
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
@@ -17722,11 +17706,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 34,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.66
+      "structuralRiskScore": 6.68
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookProcessingContext.cs",
@@ -17794,11 +17778,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "nonBlankLines": 86,
-      "decisionPoints": 12,
+      "nonBlankLines": 74,
+      "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.72
+      "structuralRiskScore": 13.98
     },
     {
       "path": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
@@ -17809,28 +17793,12 @@
       "structuralRiskScore": 3.48
     },
     {
-      "path": "Modules/Billing/Application/Common/IBillingOverviewReadService.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
       "path": "Modules/Billing/Application/Common/IBillingRenewalService.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Billing/Application/Common/IBillingUserContextService.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
@@ -17842,11 +17810,11 @@
     },
     {
       "path": "Modules/Billing/Application/DependencyInjection.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Billing/Application/Models/BillingOverviewModel.cs",
@@ -17863,14 +17831,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Billing/Application/Models/BillingUserProfileModel.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.24
     },
     {
       "path": "Modules/Billing/Application/Models/BillingWebhookInboxRunResult.cs",
@@ -17890,43 +17850,27 @@
     },
     {
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
+      "nonBlankLines": 112,
+      "decisionPoints": 21,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
+      "structuralRiskScore": 35.74
     },
     {
       "path": "Modules/Billing/Application/Services/BillingAccessService.cs",
-      "nonBlankLines": 52,
-      "decisionPoints": 10,
+      "nonBlankLines": 44,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.04
-    },
-    {
-      "path": "Modules/Billing/Application/Services/BillingOverviewReadService.cs",
-      "nonBlankLines": 108,
-      "decisionPoints": 23,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.66
+      "structuralRiskScore": 9.88
     },
     {
       "path": "Modules/Billing/Application/Services/BillingRenewalService.cs",
-      "nonBlankLines": 239,
+      "nonBlankLines": 240,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.28
-    },
-    {
-      "path": "Modules/Billing/Application/Services/BillingUserContextService.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 30.3
     },
     {
       "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
@@ -17945,7 +17889,15 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Billing/Domain.Contracts/Entities/Billing/BillingProviderNames.cs",
+      "path": "Modules/Billing/Domain.Contracts/BillingPremiumAccessPolicy.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.68
+    },
+    {
+      "path": "Modules/Billing/Domain.Contracts/BillingProviderNames.cs",
       "nonBlankLines": 10,
       "decisionPoints": 2,
       "criticalSymbols": 0,
@@ -17953,7 +17905,7 @@
       "structuralRiskScore": 3.2
     },
     {
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingDomainGuard.cs",
+      "path": "Modules/Billing/Domain/Entities/BillingDomainGuard.cs",
       "nonBlankLines": 27,
       "decisionPoints": 5,
       "criticalSymbols": 0,
@@ -17961,15 +17913,15 @@
       "structuralRiskScore": 8.04
     },
     {
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "nonBlankLines": 222,
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "nonBlankLines": 223,
       "decisionPoints": 27,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 44.94
+      "structuralRiskScore": 44.96
     },
     {
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPaymentKinds.cs",
+      "path": "Modules/Billing/Domain/Entities/BillingPaymentKinds.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17977,52 +17929,20 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "nonBlankLines": 225,
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "nonBlankLines": 226,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.5
+      "structuralRiskScore": 25.52
     },
     {
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "nonBlankLines": 149,
+      "path": "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs",
+      "nonBlankLines": 150,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.98
-    },
-    {
-      "path": "Modules/Billing/Infrastructure/Model/BillingPaymentConfiguration.cs",
-      "nonBlankLines": 73,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.46
-    },
-    {
-      "path": "Modules/Billing/Infrastructure/Model/BillingPersistenceModelRegistration.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Billing/Infrastructure/Model/BillingSubscriptionConfiguration.cs",
-      "nonBlankLines": 69,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.38
-    },
-    {
-      "path": "Modules/Billing/Infrastructure/Model/BillingWebhookEventConfiguration.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.8
+      "structuralRiskScore": 12
     },
     {
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -18034,11 +17954,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
@@ -18122,11 +18042,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "nonBlankLines": 696,
+      "nonBlankLines": 697,
       "decisionPoints": 122,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 196.92
+      "structuralRiskScore": 196.94
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryResult.cs",
@@ -18225,7 +18145,15 @@
       "structuralRiskScore": 15.6
     },
     {
-      "path": "Modules/Billing/Presentation/Extensions/BillingPresentationServiceCollectionExtensions.cs",
+      "path": "Modules/Billing/PersistenceModel/BillingPaymentConfiguration.cs",
+      "nonBlankLines": 73,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.46
+    },
+    {
+      "path": "Modules/Billing/PersistenceModel/BillingPersistenceModelRegistration.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18233,23 +18161,23 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingController.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.64
-    },
-    {
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs",
-      "nonBlankLines": 25,
+      "path": "Modules/Billing/PersistenceModel/BillingSubscriptionConfiguration.cs",
+      "nonBlankLines": 69,
       "decisionPoints": 0,
-      "criticalSymbols": 1,
+      "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.5
+      "structuralRiskScore": 1.38
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookHttpProcessor.cs",
+      "path": "Modules/Billing/PersistenceModel/BillingWebhookEventConfiguration.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.8
+    },
+    {
+      "path": "Modules/Billing/Presentation/BillingWebhookHttpProcessor.cs",
       "nonBlankLines": 82,
       "decisionPoints": 9,
       "criticalSymbols": 0,
@@ -18257,7 +18185,7 @@
       "structuralRiskScore": 15.14
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookRequestLimits.cs",
+      "path": "Modules/Billing/Presentation/BillingWebhookRequestLimits.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18265,7 +18193,31 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpMappings.cs",
+      "path": "Modules/Billing/Presentation/Controllers/BillingController.cs",
+      "nonBlankLines": 57,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.64
+    },
+    {
+      "path": "Modules/Billing/Presentation/Controllers/BillingWebhookController.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.5
+    },
+    {
+      "path": "Modules/Billing/Presentation/Extensions/BillingPresentationServiceCollectionExtensions.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
       "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18273,7 +18225,7 @@
       "structuralRiskScore": 0.44
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpResponseMappings.cs",
+      "path": "Modules/Billing/Presentation/Mappings/BillingHttpResponseMappings.cs",
       "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18281,7 +18233,7 @@
       "structuralRiskScore": 0.72
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/Requests/CreateCheckoutSessionHttpRequest.cs",
+      "path": "Modules/Billing/Presentation/Requests/CreateCheckoutSessionHttpRequest.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18289,7 +18241,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18297,7 +18249,7 @@
       "structuralRiskScore": 0.4
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/CheckoutSessionHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/CheckoutSessionHttpResponse.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18305,7 +18257,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/PortalSessionHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/PortalSessionHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -40130,19 +40082,19 @@
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
-      "nonBlankLines": 54,
-      "decisionPoints": 3,
+      "nonBlankLines": 37,
+      "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.58
+      "structuralRiskScore": 0.74
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
@@ -42850,11 +42802,11 @@
     },
     {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/ErrorKindResolver.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 40,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.32
+      "structuralRiskScore": 11.3
     },
     {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/Errors.Authentication.cs",
@@ -43473,6 +43425,14 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.8
+    },
+    {
       "path": "Shared/FoodDiary.Results/Error.cs",
       "nonBlankLines": 109,
       "decisionPoints": 17,
@@ -43872,7 +43832,7 @@
       "name": "CreateCheckoutSessionCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 16,
+      "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs"
@@ -43995,7 +43955,7 @@
       "name": "CreatePortalSessionCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs"
@@ -45131,7 +45091,7 @@
       "name": "StartPremiumTrialCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "line": 12,
+      "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs"
@@ -46094,12 +46054,13 @@
     {
       "name": "BillingController",
       "role": "Controller",
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingController.cs",
+      "path": "Modules/Billing/Presentation/Controllers/BillingController.cs",
       "line": 20,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/SensitiveMutationAndBillingContractTests.cs"
       ],
@@ -46109,7 +46070,7 @@
     {
       "name": "BillingWebhookController",
       "role": "Controller",
-      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs",
+      "path": "Modules/Billing/Presentation/Controllers/BillingWebhookController.cs",
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
@@ -47510,11 +47471,12 @@
       "name": "GetBillingOverviewQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
-      "line": 9,
-      "testReferenceCount": 2,
+      "line": 13,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
-        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs"
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -48966,7 +48928,7 @@
       "line": 2,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Infrastructure.Tests/Integrations/IntegrationOptionsTests.cs"
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

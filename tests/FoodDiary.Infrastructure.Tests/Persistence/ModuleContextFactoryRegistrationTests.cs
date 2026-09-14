@@ -1,4 +1,4 @@
-﻿using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +28,10 @@ public sealed class ModuleContextFactoryRegistrationTests {
         FoodDiaryDbContext coordinator = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         Assert.Same(coordinator, scope.ServiceProvider.GetRequiredService<IModuleContextFactory>());
         Assert.NotSame(coordinator, otherScope.ServiceProvider.GetRequiredService<IModuleContextFactory>());
+        IModuleTransactionCoordinator transactions = scope.ServiceProvider.GetRequiredService<IModuleTransactionCoordinator>();
+        Assert.Same(transactions, scope.ServiceProvider.GetRequiredService<IModuleTransactionCoordinator>());
+        Assert.NotSame(transactions, otherScope.ServiceProvider.GetRequiredService<IModuleTransactionCoordinator>());
+        Assert.Null(transactions.CurrentTransaction);
         foreach (Type type in ownerTypes) {
             var owner = (DbContext)scope.ServiceProvider.GetRequiredService(type);
             var otherOwner = (DbContext)otherScope.ServiceProvider.GetRequiredService(type);

@@ -1,114 +1,19 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Queries.GetBillingOverview;
-using FoodDiary.Application.Billing.Services;
+using FoodDiary.Modules.Billing.Application.Queries.GetBillingOverview;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Models;
 using System.Globalization;
 
-namespace FoodDiary.Application.Tests.Billing;
+namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
-
-    [Fact]
-    public async Task BillingUserContextService_WithAccessibleUser_ForwardsRepositoryOperations() {
-        var user = User.Create("billing-context@example.com", "hash");
-        var repository = new FakeUserRepository(user);
-        var service = new BillingUserContextService(repository);
-
-        Result<UserBillingProfileModel> accessible = await service.GetAccessibleUserAsync(user.Id, CancellationToken.None);
-        UserBillingProfileModel? includingDeleted = await service.GetUserIncludingDeletedAsync(user.Id, CancellationToken.None);
-        await service.EnsurePremiumRoleAsync(user.Id, CancellationToken.None);
-        await service.RemovePremiumRoleAsync(user.Id, CancellationToken.None);
-
-        Assert.Equal(user.Id, ResultAssert.Success(accessible).UserId);
-        Assert.Equal(user.Id, includingDeleted?.UserId);
-        Assert.Equal(2, repository.RoleMembershipWriteCount);
-    }
-
-    [Fact]
-    public async Task BillingUserContextService_WithMissingUser_ReturnsInvalidToken() {
-        var repository = new FakeUserRepository();
-        var service = new BillingUserContextService(repository);
-
-        Result<UserBillingProfileModel> result = await service.GetAccessibleUserAsync(UserId.New(), CancellationToken.None);
-
-        ResultAssert.Failure(result, "Authentication.InvalidToken");
-    }
-
-    [Fact]
-    public async Task BillingUserContextService_GetAccessibleUserProfileAsync_ReturnsPremiumTrialState() {
-        User user = CreatePremiumUser("billing-profile@example.com");
-        user.StartPremiumTrial(Now, TimeSpan.FromDays(7));
-        var repository = new FakeUserRepository(user);
-        var service = new BillingUserContextService(repository);
-
-        Result<BillingUserProfileModel> result = await service.GetAccessibleUserProfileAsync(user.Id, CancellationToken.None);
-
-        BillingUserProfileModel profile = ResultAssert.Success(result);
-        Assert.True(profile.HasPaidPremium);
-        Assert.Equal(Now, profile.PremiumTrialStartedAtUtc);
-        Assert.Equal(Now.AddDays(7), profile.PremiumTrialEndsAtUtc);
-    }
-
-    [Fact]
-    public async Task BillingUserContextService_GetAccessibleUserProfileAsync_WhenUserLoadFails_ReturnsFailure() {
-        var userId = UserId.New();
-        IUserBillingService userBillingService = Substitute.For<IUserBillingService>();
-        userBillingService
-            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
-        var service = new BillingUserContextService(userBillingService);
-
-        Result<BillingUserProfileModel> result = await service.GetAccessibleUserProfileAsync(userId, CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-    }
-
-    [Fact]
-    public async Task BillingUserContextService_EnsureCanAccessAsync_ForwardsAccessFailure() {
-        var user = User.Create("billing-access-deleted@example.com", "hash");
-        user.DeleteAccount(Now);
-        var repository = new FakeUserRepository(user);
-        var service = new BillingUserContextService(repository);
-
-        Error? error = await service.EnsureCanAccessAsync(user.Id, CancellationToken.None);
-
-        Assert.Equal("Authentication.InvalidToken", error?.Code);
-    }
-
-    [Fact]
-    public async Task BillingUserContextService_StartPremiumTrialAsync_ForwardsRequest() {
-        var userId = UserId.New();
-        IUserBillingService userBillingService = Substitute.For<IUserBillingService>();
-        UserBillingProfileModel profile = new(
-            UserId: userId,
-            Email: "trial@example.com",
-            IsActive: true,
-            IsDeleted: false,
-            HasPaidPremium: false,
-            PremiumTrialStartedAtUtc: null,
-            PremiumTrialEndsAtUtc: null);
-        userBillingService
-            .StartPremiumTrialAsync(userId, Now, TimeSpan.FromDays(7), Arg.Any<CancellationToken>())
-            .Returns(Result.Success(profile));
-        var service = new BillingUserContextService(userBillingService);
-
-        Result<UserBillingProfileModel> result = await service.StartPremiumTrialAsync(
-            userId,
-            Now,
-            TimeSpan.FromDays(7),
-            CancellationToken.None);
-
-        Assert.Same(profile, ResultAssert.Success(result));
-    }
 
     [Fact]
     public async Task GetBillingOverview_WithExistingSubscription_ReturnsBillingTimelineAndRenewalState() {
@@ -228,13 +133,13 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task GetBillingOverview_WhenProfileLoadFailsAfterAccessCheck_ReturnsFailure() {
         var userId = UserId.New();
-        IBillingUserContextService userContextService = Substitute.For<IBillingUserContextService>();
+        IUserBillingService userContextService = Substitute.For<IUserBillingService>();
         userContextService
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService
-            .GetAccessibleUserProfileAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<BillingUserProfileModel>(Errors.Authentication.InvalidToken)));
+            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
         GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             userContextService,
             new InMemoryBillingSubscriptionRepository(),
@@ -278,7 +183,9 @@ public partial class BillingFeatureTests {
 
     [Theory]
     [InlineData("trialing", 1, true, false)]
-    [InlineData("past_due", null, true, false)]
+    [InlineData("past_due", null, false, true)]
+    [InlineData("past_due", 0, false, true)]
+    [InlineData("past_due", 1, true, false)]
     [InlineData("past_due", -1, false, true)]
     [InlineData("canceled", 1, false, true)]
     public async Task GetBillingOverview_WithPaidSubscriptionStatuses_ReportsPremiumState(

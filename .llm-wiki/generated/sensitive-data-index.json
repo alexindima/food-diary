@@ -6,11 +6,11 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1457,
+    "candidateFields": 1458,
     "credential": 155,
     "identity": 174,
     "health": 685,
-    "financial": 124,
+    "financial": 125,
     "privateContent": 319,
     "boundaryFiles": 192,
     "potentialLoggingLeads": 1,
@@ -224,7 +224,7 @@
       "category": "credential",
       "name": "PaddleClientToken",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingPublicConfigModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingPublicConfigModel.cs",
       "line": 5
     },
     {
@@ -280,7 +280,7 @@
       "category": "credential",
       "name": "PaddleClientToken",
       "type": "string?",
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
       "line": 20
     },
     {
@@ -1400,147 +1400,147 @@
       "category": "financial",
       "name": "ExternalPaymentId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Common/BillingPaymentAlreadyExistsException.cs",
+      "path": "Modules/Billing/Application.Abstractions/Common/BillingPaymentAlreadyExistsException.cs",
       "line": 6
     },
     {
       "category": "financial",
       "name": "CustomerId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
       "line": 6
     },
     {
       "category": "financial",
       "name": "PriceId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
       "line": 7
     },
     {
       "category": "financial",
       "name": "ExistingCustomerId",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
       "line": 7
     },
     {
       "category": "financial",
       "name": "CustomerId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingPortalSessionRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingPortalSessionRequestModel.cs",
       "line": 3
     },
     {
       "category": "financial",
       "name": "PaymentId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentModel.cs",
       "line": 4
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentModel.cs",
       "line": 5
     },
     {
       "category": "financial",
       "name": "PriceId",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentModel.cs",
       "line": 6
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "decimal?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentModel.cs",
       "line": 12
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentModel.cs",
       "line": 13
     },
     {
       "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
       "line": 5
     },
     {
       "category": "financial",
       "name": "CustomerId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
       "line": 6
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
       "line": 7
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
       "line": 7
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
       "line": 13
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "line": 6
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "line": 7
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "line": 8
     },
     {
       "category": "financial",
       "name": "ExternalPriceId",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "line": 9
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "decimal?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "line": 18
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "line": 19
     },
     {
@@ -1610,176 +1610,176 @@
       "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 16
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 17
     },
     {
       "category": "financial",
       "name": "ExternalPaymentId",
       "type": "string",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 18
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 19
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 19
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 20
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 20
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 21
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 21
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 22
     },
     {
       "category": "financial",
       "name": "ExternalPriceId",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 22
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 23
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "decimal?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 26
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 27
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 27
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 28
     },
     {
       "category": "financial",
       "name": "Tax",
       "type": "decimal?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 28
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 29
     },
     {
       "category": "financial",
       "name": "PayoutCurrency",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 31
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 32
     },
     {
       "category": "financial",
       "name": "PayoutEarnings",
       "type": "decimal?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 32
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 33
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "decimal?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 187
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 188
     },
     {
       "category": "financial",
       "name": "Tax",
       "type": "decimal?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 188
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 189
     },
     {
       "category": "financial",
       "name": "PayoutEarnings",
       "type": "decimal?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 191
+      "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
+      "line": 192
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 17
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "line": 18
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 18
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "line": 19
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 19
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "line": 20
     },
     {
       "category": "financial",
       "name": "ExternalPriceId",
       "type": "string?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 20
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "line": 21
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 29
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "line": 30
     },
     {
       "category": "financial",
       "name": "PremiumRoleManagedByBilling",
       "type": "bool",
-      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 34
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "line": 35
     },
     {
       "category": "financial",
       "name": "CustomerId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 767
+      "line": 768
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutRequest",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 770
+      "line": 771
     },
     {
       "category": "financial",
       "name": "PriceId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 773
+      "line": 774
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 781
+      "line": 782
     },
     {
       "category": "financial",
       "name": "Price",
       "type": "TransactionPriceResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 788
+      "line": 789
     },
     {
       "category": "financial",
@@ -1904,21 +1904,21 @@
       "category": "financial",
       "name": "SubscriptionStatus",
       "type": "string?",
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
       "line": 5
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
       "line": 10
     },
     {
       "category": "financial",
       "name": "ManageBillingAvailable",
       "type": "bool",
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
       "line": 13
     },
     {
@@ -1969,6 +1969,13 @@
       "type": "IRequest<TResponse>,",
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs",
       "line": 5
+    },
+    {
+      "category": "financial",
+      "name": "CurrentTransaction",
+      "type": "DbTransaction?",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs",
+      "line": 8
     },
     {
       "category": "health",
@@ -7077,7 +7084,7 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
       "line": 5
     },
     {
@@ -7085,7 +7092,7 @@
       "name": "Email",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 757
+      "line": 758
     },
     {
       "category": "identity",
@@ -10465,7 +10472,7 @@
       "fieldCount": 4
     },
     {
-      "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
+      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
       "categories": [
         "credential",
         "financial"

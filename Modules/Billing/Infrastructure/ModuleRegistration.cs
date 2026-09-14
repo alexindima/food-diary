@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Billing.Application;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Billing;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,23 +14,23 @@ public static class ModuleRegistration {
         services.AddBillingApplication();
         services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<BillingDbContext>(options => new BillingDbContext(options)));
-        services.AddScoped<IBillingSubscriptionRepository>(static provider =>
+        services.AddScoped<BillingSubscriptionRepository>(static provider =>
             new BillingSubscriptionRepository(provider.GetRequiredService<BillingDbContext>().BillingSubscriptions,
                 CreateTransactionSynchronizer(provider)));
-        services.AddScoped<IBillingSubscriptionReadRepository>(static provider => provider.GetRequiredService<IBillingSubscriptionRepository>());
-        services.AddScoped<IBillingSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<IBillingSubscriptionRepository>());
-        services.AddScoped<IBillingSubscriptionWriteRepository>(static provider => provider.GetRequiredService<IBillingSubscriptionRepository>());
-        services.AddScoped<IBillingPaymentRepository>(static provider =>
+        services.AddScoped<IBillingSubscriptionReadRepository>(static provider => provider.GetRequiredService<BillingSubscriptionRepository>());
+        services.AddScoped<IBillingSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<BillingSubscriptionRepository>());
+        services.AddScoped<IBillingSubscriptionWriteRepository>(static provider => provider.GetRequiredService<BillingSubscriptionRepository>());
+        services.AddScoped<BillingPaymentRepository>(static provider =>
             new BillingPaymentRepository(provider.GetRequiredService<BillingDbContext>().BillingPayments,
                 CreateTransactionSynchronizer(provider)));
-        services.AddScoped<IBillingPaymentReadRepository>(static provider => provider.GetRequiredService<IBillingPaymentRepository>());
-        services.AddScoped<IBillingPaymentWriteRepository>(static provider => provider.GetRequiredService<IBillingPaymentRepository>());
-        services.AddScoped<IBillingWebhookEventRepository>(static provider =>
+        services.AddScoped<IBillingPaymentReadRepository>(static provider => provider.GetRequiredService<BillingPaymentRepository>());
+        services.AddScoped<IBillingPaymentWriteRepository>(static provider => provider.GetRequiredService<BillingPaymentRepository>());
+        services.AddScoped<BillingWebhookEventRepository>(static provider =>
             new BillingWebhookEventRepository(
                 provider.GetRequiredService<BillingDbContext>().BillingWebhookEvents,
                 provider.GetService<TimeProvider>(), CreateTransactionSynchronizer(provider)));
-        services.AddScoped<IBillingWebhookEventReadRepository>(static provider => provider.GetRequiredService<IBillingWebhookEventRepository>());
-        services.AddScoped<IBillingWebhookEventWriteRepository>(static provider => provider.GetRequiredService<IBillingWebhookEventRepository>());
+        services.AddScoped<IBillingWebhookEventReadRepository>(static provider => provider.GetRequiredService<BillingWebhookEventRepository>());
+        services.AddScoped<IBillingWebhookEventWriteRepository>(static provider => provider.GetRequiredService<BillingWebhookEventRepository>());
         services.AddScoped<IBillingTransactionRunner, EfBillingTransactionRunner>();
         services.AddScoped<IBillingCheckoutLock, PostgresBillingCheckoutLock>();
         return services;

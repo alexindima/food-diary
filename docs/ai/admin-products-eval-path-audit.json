@@ -15,11 +15,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
       "current": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
           "new": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -27,11 +27,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
       "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
           "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -39,11 +39,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
       "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
           "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -51,11 +51,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
       "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
           "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -63,11 +63,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
       "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
           "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -75,11 +75,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
       "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
           "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -87,11 +87,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
       "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
           "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -99,11 +99,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
       "current": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
           "new": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -111,11 +111,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Common/BillingCurrentUserAccessResolver.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Common/BillingCurrentUserAccessResolver.cs",
       "current": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Common/BillingCurrentUserAccessResolver.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Common/BillingCurrentUserAccessResolver.cs",
           "new": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -123,11 +123,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Services/BillingAccessService.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Services/BillingAccessService.cs",
       "current": "Modules/Billing/Application/Services/BillingAccessService.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Services/BillingAccessService.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Services/BillingAccessService.cs",
           "new": "Modules/Billing/Application/Services/BillingAccessService.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -135,11 +135,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Services/BillingRenewalService.cs",
       "current": "Modules/Billing/Application/Services/BillingRenewalService.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Services/BillingRenewalService.cs",
           "new": "Modules/Billing/Application/Services/BillingRenewalService.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
@@ -147,11 +147,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+      "old": "FoodDiary.Modules.Billing.Application/Services/BillingWebhookInboxService.cs",
       "current": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+          "old": "FoodDiary.Modules.Billing.Application/Services/BillingWebhookInboxService.cs",
           "new": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"

@@ -1,15 +1,15 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Integrations.Http;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Results;
 
-namespace FoodDiary.Integrations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
 internal sealed class YooKassaApiClient(HttpClient httpClient, YooKassaOptions options) {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {

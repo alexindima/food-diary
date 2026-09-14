@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Notifications;

@@ -23,6 +23,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "FoodRecognitionJobStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Admin", "Infrastructure", "Integrations", "MailInbox", "BugAcknowledgementReceipts.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiQuotaRepository.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiDbContext.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Persistence", "EfBillingTransactionRunner.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetCleanupBatch.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
@@ -37,7 +38,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Wearables", "Infrastructure", "Persistence", "EfWearableTransactionRunner.cs"),
-            ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Infrastructure", "Persistence", "EfWeeklyGoalTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -70,7 +71,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "Recipes", "EfRecipeMutationTransactionRunner.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Wearables", "Infrastructure", "Persistence", "EfWearableTransactionRunner.cs"),
-            ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Infrastructure", "Persistence", "EfWeeklyGoalTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
         string[] forbiddenPatterns = [
             "BeginTransaction(",

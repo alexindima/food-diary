@@ -1,21 +1,22 @@
+using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
+namespace FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
 
 public sealed class CreateCheckoutSessionCommandHandler(
-    IBillingUserContextService billingUserContextService,
+    IUserBillingService billingUserContextService,
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingPaymentWriteRepository billingPaymentRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
@@ -36,7 +37,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
             .AcquireAsync(userId.Value, cancellationToken)
             .ConfigureAwait(false);
         await using ConfiguredAsyncDisposable checkoutLock = lockHandle.ConfigureAwait(false);
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(userResult.Error);
         }
@@ -122,18 +123,8 @@ public sealed class CreateCheckoutSessionCommandHandler(
         return $"checkout-{Convert.ToHexString(fallbackHash).ToLowerInvariant()}";
     }
 
-    private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) {
-        if (subscription is null || string.IsNullOrWhiteSpace(subscription.Status)) {
-            return false;
-        }
-
-        return subscription.Status.Trim().ToLowerInvariant() switch {
-            "trialing" => subscription.CurrentPeriodEndUtc.HasValue && subscription.CurrentPeriodEndUtc > nowUtc,
-            "active" => true,
-            "past_due" => subscription.CurrentPeriodEndUtc.HasValue && subscription.CurrentPeriodEndUtc > nowUtc,
-            _ => false,
-        };
-    }
+    private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) =>
+        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, nowUtc);
 
     private static bool IsCheckoutInProgress(BillingSubscription? subscription, DateTime nowUtc) {
         if (subscription is null ||

@@ -1,5 +1,2 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>FoodDiary.Application.Abstractions.Billing</RootNamespace>
-  </PropertyGroup>
 </Project>

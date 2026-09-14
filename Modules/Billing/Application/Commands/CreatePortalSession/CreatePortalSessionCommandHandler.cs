@@ -1,16 +1,17 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Entities;
 
-namespace FoodDiary.Application.Billing.Commands.CreatePortalSession;
+namespace FoodDiary.Modules.Billing.Application.Commands.CreatePortalSession;
 
 public sealed class CreatePortalSessionCommandHandler(
-    IBillingUserContextService billingUserContextService,
+    IUserBillingService billingUserContextService,
     IBillingSubscriptionReadRepository billingSubscriptionRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor)
     : IRequestHandler<CreatePortalSessionCommand, Result<BillingPortalSessionModel>> {
@@ -26,7 +27,7 @@ public sealed class CreatePortalSessionCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingPortalSessionModel>(userResult.Error);
         }

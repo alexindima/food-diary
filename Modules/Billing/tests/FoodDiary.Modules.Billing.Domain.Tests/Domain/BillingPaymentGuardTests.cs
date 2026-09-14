@@ -1,8 +1,9 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests.Domain;
+namespace FoodDiary.Modules.Billing.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingPaymentGuardTests {

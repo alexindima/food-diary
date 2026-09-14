@@ -13,7 +13,7 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Billing;
+using FoodDiary.Modules.Billing.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Dashboard;
 using FoodDiary.Presentation.Api.Features.Images;
 using FoodDiary.Presentation.Api.Features.Hydration;

@@ -3,10 +3,10 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Integrations.Http;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
 public sealed class PaddleNotificationRecoveryService(
     HttpClient httpClient,

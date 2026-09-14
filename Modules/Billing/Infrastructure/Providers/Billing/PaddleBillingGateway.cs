@@ -4,14 +4,15 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
 public sealed class PaddleBillingGateway(
     HttpClient httpClient,

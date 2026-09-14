@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
 public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository billingPaymentRepository) {
     public async Task AddIfPresentAsync(

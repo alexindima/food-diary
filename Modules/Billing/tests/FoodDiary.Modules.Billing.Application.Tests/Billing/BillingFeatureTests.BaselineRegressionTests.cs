@@ -1,11 +1,12 @@
-using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
-using FoodDiary.Application.Billing.Services;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
+using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
+using FoodDiary.Modules.Billing.Application.Services;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Tests.Billing;
+namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
     [Fact]

@@ -106,11 +106,11 @@
   <Folder Name="/Modules/Billing/">
     <Project Path="Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj" />
     <Project Path="Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
-    <Project Path="Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
-    <Project Path="Modules/Billing/Application/FoodDiary.Application.Billing.csproj" />
+    <Project Path="Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <Project Path="Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj" />
     <Project Path="Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
     <Project Path="Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj" />
-    <Project Path="Modules/Billing/Infrastructure/Model/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
+    <Project Path="Modules/Billing/PersistenceModel/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
     <Project Path="Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Billing/tests/">

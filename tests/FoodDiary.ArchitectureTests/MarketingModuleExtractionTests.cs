@@ -41,7 +41,7 @@ public sealed class MarketingModuleExtractionTests {
 
     [Fact]
     public void Billing_DependsOnConsumerOwnedMarketingPort() {
-        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Billing");
+        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Modules.Billing.Application");
         string[] violations = [.. SourceScanner.SourceFiles(billingRoot)
             .SelectMany(path => File.ReadLines(path).Select((line, index) => new { path, line, index }))
             .Where(entry => entry.line.Contains("FoodDiary.Application.Marketing", StringComparison.Ordinal) ||

@@ -255,7 +255,7 @@
       "id": "billing-webhook-controller",
       "query": "HTTP endpoint receives billing provider webhooks",
       "changeType": "Api",
-      "expectedPaths": ["Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs"]
+      "expectedPaths": ["Modules/Billing/Presentation/Controllers/BillingWebhookController.cs"]
     },
     {
       "id": "telegram-bot-worker",

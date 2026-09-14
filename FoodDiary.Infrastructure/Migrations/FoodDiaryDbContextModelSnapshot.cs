@@ -295,7 +295,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ImageAssets");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Billing.BillingPayment", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingPayment", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -414,7 +414,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("BillingPayments", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Billing.BillingSubscription", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingSubscription", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -514,7 +514,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("BillingSubscriptions", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Billing.BillingWebhookEvent", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingWebhookEvent", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -4782,8 +4782,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Billing.BillingPayment", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Billing.BillingSubscription", null)
+            modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingPayment", b => {
+                b.HasOne("FoodDiary.Modules.Billing.Domain.Entities.BillingSubscription", null)
                     .WithMany()
                     .HasForeignKey("BillingSubscriptionId")
                     .OnDelete(DeleteBehavior.SetNull);
@@ -4795,7 +4795,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Billing.BillingSubscription", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingSubscription", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")

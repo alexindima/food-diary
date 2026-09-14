@@ -1,17 +1,18 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Commands.CreatePortalSession;
-using FoodDiary.Application.Billing.Commands.StartPremiumTrial;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Commands.CreatePortalSession;
+using FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Models;
 
-namespace FoodDiary.Application.Tests.Billing;
+namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
 
@@ -69,12 +70,12 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreatePortalSession_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
         var userId = UserId.New();
-        IBillingUserContextService userContextService = Substitute.For<IBillingUserContextService>();
+        IUserBillingService userContextService = Substitute.For<IUserBillingService>();
         userContextService
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService
-            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
         var handler = new CreatePortalSessionCommandHandler(
             userContextService,
@@ -215,12 +216,12 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task StartPremiumTrial_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
         var userId = UserId.New();
-        IBillingUserContextService userContextService = Substitute.For<IBillingUserContextService>();
+        IUserBillingService userContextService = Substitute.For<IUserBillingService>();
         userContextService
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService
-            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
         var handler = new StartPremiumTrialCommandHandler(
             userContextService,
@@ -245,12 +246,12 @@ public partial class BillingFeatureTests {
             HasPaidPremium: false,
             PremiumTrialStartedAtUtc: null,
             PremiumTrialEndsAtUtc: null);
-        IBillingUserContextService userContextService = Substitute.For<IBillingUserContextService>();
+        IUserBillingService userContextService = Substitute.For<IUserBillingService>();
         userContextService
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService
-            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Result.Success(profile));
         userContextService
             .StartPremiumTrialAsync(userId, Now, TimeSpan.FromDays(7), Arg.Any<CancellationToken>())
@@ -302,8 +303,10 @@ public partial class BillingFeatureTests {
     [Theory]
     [InlineData("trialing", -1)]
     [InlineData("past_due", -1)]
+    [InlineData("past_due", 0)]
+    [InlineData("past_due", null)]
     [InlineData("canceled", 1)]
-    public async Task StartPremiumTrial_WithInactivePaidSubscription_AllowsTrial(string status, int periodEndOffsetDays) {
+    public async Task StartPremiumTrial_WithInactivePaidSubscription_AllowsTrial(string status, int? periodEndOffsetDays) {
         var user = User.Create($"trial-inactive-{status}@example.com", "hash");
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
@@ -313,9 +316,12 @@ public partial class BillingFeatureTests {
             $"pm_trial_inactive_{status}",
             status,
             Now.AddDays(-2),
-            Now.AddDays(periodEndOffsetDays),
+            Now.AddDays(periodEndOffsetDays ?? 1),
             $"evt_trial_inactive_{status}",
             Now);
+        if (!periodEndOffsetDays.HasValue) {
+            SetPrivateProperty(subscription, nameof(BillingSubscription.CurrentPeriodEndUtc), (DateTime?)null);
+        }
         var userRepository = new FakeUserRepository(user);
         var handler = new StartPremiumTrialCommandHandler(
             userRepository,

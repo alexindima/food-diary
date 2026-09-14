@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Application.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Modules.Billing.Application.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

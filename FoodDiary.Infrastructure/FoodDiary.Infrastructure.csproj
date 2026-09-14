@@ -11,7 +11,7 @@
     <ProjectReference Include="../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
     <ProjectReference Include="../Modules/Ai/PersistenceModel/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
-    <ProjectReference Include="../Modules/Billing/Infrastructure/Model/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Billing/PersistenceModel/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
     <ProjectReference Include="../Modules/BodyMetrics/Infrastructure/Model/FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />

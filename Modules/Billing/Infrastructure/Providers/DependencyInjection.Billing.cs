@@ -1,12 +1,12 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Integrations.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Stripe;
 
-namespace FoodDiary.Integrations;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers;
 
 public static partial class DependencyInjection {
     public static IServiceCollection AddBillingIntegrations(

@@ -1,5 +1,5 @@
-using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using WebPush;
 
 namespace FoodDiary.Infrastructure.Tests.Integrations;
@@ -155,16 +155,6 @@ public sealed class IntegrationOptionsTests {
         };
 
         Assert.Equal(expected, YooKassaOptions.HasValidCheckoutConfiguration(options));
-    }
-
-    [Theory]
-    [InlineData("https://checkout.example/path", true)]
-    [InlineData("http://checkout.example/path", false)]
-    [InlineData("javascript:alert(1)", false)]
-    [InlineData("/relative", false)]
-    [InlineData("https://user:password@checkout.example/path", false)]
-    public void BillingUrlValidator_IsAbsoluteHttps_RejectsUnsafeNavigationUrls(string url, bool expected) {
-        Assert.Equal(expected, BillingUrlValidator.IsAbsoluteHttps(url));
     }
 
     [Theory]

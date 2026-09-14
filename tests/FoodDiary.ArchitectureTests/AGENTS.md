@@ -152,3 +152,5 @@ RecentItems, Billing and Dietologist. Favorites source ports/models belong to
 Contracts alongside its public read projections; repository models stay internal.
 
 ModuleContextFactoryBoundaryTests protects the nine factory-only adapters (DailyAdvices, ContentReports, Favorites, Exercises, RecipeCommunity, Fasting, Usda, Marketing, Lessons) from both direct and transitive central Infrastructure dependencies. Keep their direct factory contract reference and host-coordinated unit of work.
+
+WeeklyGoals joins the adapters without a central Infrastructure dependency. Coordinated transaction calls and live transaction access stay fingerprint-reviewed in the capability inventory and FD0016 (including method groups). The shared EfModuleTransactionCoordinator replaces WeeklyGoals in the save/transaction allowlists.

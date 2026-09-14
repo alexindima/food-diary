@@ -1,11 +1,11 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using FoodDiary.Integrations.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class PaddleNotificationRecoveryServiceTests {

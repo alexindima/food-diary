@@ -24,7 +24,7 @@ public sealed class AdminScalarBoundaryTests {
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Domain.Entities.Billing.BillingProviderNames), "Billing", "Entities/Billing")]
+    [InlineData(typeof(FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames), "Billing", "")]
     [InlineData(typeof(FoodDiary.Domain.Enums.ReportStatus), "ContentReports", "Enums")]
     [InlineData(typeof(FoodDiary.Domain.Enums.ReportTargetType), "ContentReports", "Enums")]
     [InlineData(typeof(FoodDiary.Domain.Enums.AchievementMetric), "Gamification", "Enums")]
@@ -43,7 +43,7 @@ public sealed class AdminScalarBoundaryTests {
             $"Modules/{owner}/Domain/{folder}/{type.Name}.cs")));
 
         string[] expectedTypes = owner switch {
-            "Billing" => ["FoodDiary.Domain.Entities.Billing.BillingProviderNames"],
+            "Billing" => ["FoodDiary.Modules.Billing.Domain.Contracts.BillingPremiumAccessPolicy", "FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames"],
             "ContentReports" => ["FoodDiary.Domain.Enums.ReportStatus", "FoodDiary.Domain.Enums.ReportTargetType", "FoodDiary.Domain.ValueObjects.Ids.ContentReportId"],
             "Gamification" => ["FoodDiary.Domain.Entities.Achievements.AchievementDefinitionLimits", "FoodDiary.Domain.Enums.AchievementMetric"],
             _ => throw new ArgumentOutOfRangeException(nameof(owner)),

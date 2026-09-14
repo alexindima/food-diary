@@ -1,11 +1,11 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Entities;
 
-namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
+namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
 public sealed class ProcessBillingWebhookCommandHandler(
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,

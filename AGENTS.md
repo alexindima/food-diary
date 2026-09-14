@@ -164,10 +164,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Application runtime: `FoodDiary.Application.Runtime/AGENTS.md`
 - Billing logical module: `Modules/Billing/AGENTS.md`
 - Billing application: `Modules/Billing/Application/AGENTS.md`
-- Billing application abstractions: `Modules/Billing/Application/Abstractions/AGENTS.md`
+- Billing application abstractions: `Modules/Billing/Application.Abstractions/AGENTS.md`
 - Billing domain: `Modules/Billing/Domain/AGENTS.md`
 - Billing infrastructure: `Modules/Billing/Infrastructure/AGENTS.md`
-- Billing persistence model: `Modules/Billing/Infrastructure/Model/AGENTS.md`
+- Billing persistence model: `Modules/Billing/PersistenceModel/AGENTS.md`
 - Marketing logical module: `Modules/Marketing/AGENTS.md`
 - Marketing Contracts: `Modules/Marketing/Contracts/AGENTS.md`
 - Marketing application: `Modules/Marketing/Application/AGENTS.md`

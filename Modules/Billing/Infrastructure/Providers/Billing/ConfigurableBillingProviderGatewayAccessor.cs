@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
 public sealed class ConfigurableBillingProviderGatewayAccessor(
     IEnumerable<IBillingProviderGateway> billingProviders,

@@ -1,9 +1,9 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers;
 
 public static partial class DependencyInjection {
     private static void AddBillingIntegrationOptions(
@@ -13,7 +13,7 @@ public static partial class DependencyInjection {
             .Bind(configuration.GetSection(BillingOptions.SectionName))
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Provider),
                 "Billing:Provider is required.")
-            .Validate(static options => Domain.Entities.Billing.BillingProviderNames.IsSupported(options.Provider),
+            .Validate(static options => global::FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames.IsSupported(options.Provider),
                 "Billing:Provider must be a supported billing provider.")
             .ValidateOnStart();
         services.AddOptions<StripeOptions>()
@@ -21,7 +21,7 @@ public static partial class DependencyInjection {
             .Validate<IOptions<BillingOptions>>(static (options, billingOptions) =>
                     !ShouldRequireProviderConfiguration(
                         billingOptions.Value,
-                        Domain.Entities.Billing.BillingProviderNames.Stripe,
+                        global::FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames.Stripe,
                         StripeOptions.HasAnyConfiguration(options)) ||
                     StripeOptions.HasValidConfiguration(options),
                 "Stripe configuration is incomplete for the active billing provider.")
@@ -31,7 +31,7 @@ public static partial class DependencyInjection {
             .Validate<IOptions<BillingOptions>>(static (options, billingOptions) =>
                     !ShouldRequireProviderConfiguration(
                         billingOptions.Value,
-                        Domain.Entities.Billing.BillingProviderNames.Paddle,
+                        global::FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames.Paddle,
                         PaddleOptions.HasAnyConfiguration(options)) ||
                     PaddleOptions.HasValidConfiguration(options),
                 "Paddle configuration is incomplete for the active billing provider.")
@@ -41,7 +41,7 @@ public static partial class DependencyInjection {
             .Validate<IOptions<BillingOptions>>(static (options, billingOptions) =>
                     !ShouldRequireProviderConfiguration(
                         billingOptions.Value,
-                        Domain.Entities.Billing.BillingProviderNames.YooKassa,
+                        global::FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames.YooKassa,
                         YooKassaOptions.HasAnyConfiguration(options)) ||
                     YooKassaOptions.HasValidCheckoutConfiguration(options),
                 "YooKassa configuration is incomplete for the active billing provider.")

@@ -139,13 +139,14 @@
           "Modules/Billing/Application"
         ],
         "abstractionAreas": [
-          "Modules/Billing/Application/Abstractions"
+          "Modules/Billing/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/Billing/Domain"
         ],
         "persistenceAreas": [
-          "Modules/Billing/Infrastructure"
+          "Modules/Billing/Infrastructure",
+          "Modules/Billing/PersistenceModel"
         ],
         "adapterAreas": [
           "Modules/Billing/Infrastructure/Providers"

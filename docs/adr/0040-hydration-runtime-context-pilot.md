@@ -341,3 +341,24 @@ The owner explicitly retains TelegramIdentityConflictInterceptor to translate un
 ### Runtime namespace ownership and remaining bridges
 
 All 29 owner contexts now use `FoodDiary.Modules.<Module>.Infrastructure.Persistence`. This normalizes the ten formerly shared namespaces without changing entity CLR names, assemblies, EF mappings or transaction boundaries. RuntimeContextNamespaceTests prevents regressions. The complete direct-reference inventory and next extraction candidates are recorded in [runtime-context-dependencies](../architecture/runtime-context-dependencies.md); context extraction does not imply that every runtime operation has left the shared context.
+
+### WeeklyGoals transaction coordination contract
+
+WeeklyGoals Infrastructure consumes `IModuleTransactionCoordinator` from the
+infrastructure-only `FoodDiary.Persistence.Abstractions` assembly. The host resolves
+its scoped implementation against the same central context and unit of work. This
+removes the module's direct and transitive central Infrastructure dependency without
+creating an independent save boundary or database connection.
+
+The coordinator retains the existing clean-entry check, provider execution strategy,
+tracker/event/post-commit reset, Result-failure rollback, save and commit order.
+WeeklyGoals retains the unchanged user/week advisory-lock SQL inside each attempt.
+The live transaction accessor also supports repositories resolved before transaction
+entry. Callbacks must not commit or dispose the supplied transaction. Exact reviewed
+source fingerprints and transaction guardrails protect use of this capability.
+
+The command pipeline still owns post-commit delivery. PostgreSQL coverage includes
+concurrent creation, rollback after saving both contexts, cancellation, caller-state
+rejection and failed-attempt callback discard; central reliability coverage exercises
+automatic retries. No SQL, mapping, schema or HTTP contract change is required. Deploy
+or revert the participating backend assemblies together.

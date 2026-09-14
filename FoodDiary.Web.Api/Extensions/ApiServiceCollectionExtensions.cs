@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Billing.Infrastructure.Providers;
+using FoodDiary.Modules.Billing.Infrastructure;
+using FoodDiary.Modules.Billing.Presentation.Extensions;
 using FoodDiary.Modules.Ai.Presentation.Extensions;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Presentation.Extensions;
@@ -7,7 +10,6 @@ using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
-using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Application.Dashboard;

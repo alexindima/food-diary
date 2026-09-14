@@ -1,12 +1,13 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Infrastructure;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,12 @@ public sealed class SharedBillingContextIntegrationTests(PostgresDatabaseFixture
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         await using ServiceProvider provider = CreateProvider(context);
         BillingDbContext owned = provider.GetRequiredService<BillingDbContext>();
+        Assert.Multiple(
+            () => Assert.Same(provider.GetRequiredService<IBillingSubscriptionReadRepository>(), provider.GetRequiredService<IBillingSubscriptionWriteRepository>()),
+            () => Assert.Same(provider.GetRequiredService<IBillingSubscriptionReadModelRepository>(), provider.GetRequiredService<IBillingSubscriptionWriteRepository>()),
+            () => Assert.Same(provider.GetRequiredService<IBillingPaymentReadRepository>(), provider.GetRequiredService<IBillingPaymentWriteRepository>()),
+            () => Assert.Same(provider.GetRequiredService<IBillingWebhookEventReadRepository>(), provider.GetRequiredService<IBillingWebhookEventWriteRepository>()),
+            () => Assert.False(context.Database.HasPendingModelChanges()));
         Assert.Equal(3, owned.Model.GetEntityTypes().Count());
         Assert.Same(context.Database.GetDbConnection(), owned.Database.GetDbConnection());
         var user = User.Create("billing-owner@example.com", "hash");

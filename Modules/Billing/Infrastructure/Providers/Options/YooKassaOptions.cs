@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 
 public sealed class YooKassaOptions {
     public const string SectionName = "YooKassa";
@@ -28,7 +28,7 @@ public sealed class YooKassaOptions {
         Billing.BillingUrlValidator.IsAbsoluteHttps(options.ReturnUrl);
 
     private static bool HasValidApiBaseUrl(string? value) =>
-        IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(value);
+        FoodDiary.Integrations.Options.IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(value);
 
     private static bool IsValidAmount(string? value) =>
         decimal.TryParse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) &&

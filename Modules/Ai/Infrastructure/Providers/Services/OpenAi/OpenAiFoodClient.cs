@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using FoodDiary.Integrations.Services;
 using System.Net;
 using System.Net.Http.Headers;
@@ -489,7 +489,14 @@ public sealed class OpenAiFoodClient(
 
         try {
             FoodVisionModel? parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
-            return parsed is null ? Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision response is empty.")) : Result.Success(parsed);
+            if (parsed is null) {
+                return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision response is empty."));
+            }
+            if (parsed.Items?.Any(item => item is null ||
+                string.IsNullOrWhiteSpace(item.NameEn) || string.IsNullOrWhiteSpace(item.Unit)) is not false) {
+                return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision items are invalid."));
+            }
+            return Result.Success(parsed);
         } catch (JsonException) {
             return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision JSON invalid."));
         }
@@ -503,7 +510,14 @@ public sealed class OpenAiFoodClient(
 
         try {
             FoodNutritionModel? parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
-            return parsed is null ? Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition response is empty.")) : Result.Success(parsed);
+            if (parsed is null) {
+                return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition response is empty."));
+            }
+            if (parsed.Items?.Any(item => item is null ||
+                string.IsNullOrWhiteSpace(item.Name) || string.IsNullOrWhiteSpace(item.Unit)) is not false) {
+                return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition items are invalid."));
+            }
+            return Result.Success(parsed);
         } catch (JsonException) {
             return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition JSON invalid."));
         }
@@ -517,7 +531,7 @@ public sealed class OpenAiFoodClient(
         }
 
         foreach (JsonElement item in output.EnumerateArray()) {
-            if (!item.TryGetProperty("content", out JsonElement content) || content.ValueKind != JsonValueKind.Array) {
+            if (item.ValueKind != JsonValueKind.Object || !item.TryGetProperty("content", out JsonElement content) || content.ValueKind != JsonValueKind.Array) {
                 continue;
             }
 
@@ -539,6 +553,8 @@ public sealed class OpenAiFoodClient(
     private static JsonSerializerOptions JsonOptions()
         => new() {
             PropertyNameCaseInsensitive = true,
+            RespectNullableAnnotations = true,
+            RespectRequiredConstructorParameters = true,
             MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
         };
 

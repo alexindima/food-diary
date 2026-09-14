@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FoodDiary.ArchitectureTests;
@@ -15,7 +15,8 @@ public sealed class ModuleContextFactoryBoundaryTests {
     [InlineData("Usda")]
     [InlineData("Marketing")]
     [InlineData("Lessons")]
-    public void FactoryOnlyAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
+    [InlineData("WeeklyGoals")]
+    public void CoordinatedAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
         string project = $"FoodDiary.Modules.{module}.Infrastructure";
         Assert.Contains("FoodDiary.Persistence.Abstractions", graph[project], StringComparer.Ordinal);

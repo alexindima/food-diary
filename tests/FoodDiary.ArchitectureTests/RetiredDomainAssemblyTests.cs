@@ -13,7 +13,7 @@ public sealed class RetiredDomainAssemblyTests {
     [InlineData(typeof(FoodDiary.Application.Abstractions.RecentItems.Common.IRecentItemUsageRecorder), "FoodDiary.Modules.RecentItems.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.RecentItems.Common.RecentProductUsage), "FoodDiary.Modules.RecentItems.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.RecentItems.Common.RecentRecipeUsage), "FoodDiary.Modules.RecentItems.Contracts")]
-    [InlineData(typeof(FoodDiary.Application.Abstractions.Billing.Common.IBillingMarketingConversionRecorder), "FoodDiary.Modules.Billing.Contracts")]
+    [InlineData(typeof(FoodDiary.Modules.Billing.Contracts.Common.IBillingMarketingConversionRecorder), "FoodDiary.Modules.Billing.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Dietologist.Common.IDietologistDashboardAccessService), "FoodDiary.Modules.Dietologist.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Dietologist.Models.DietologistPermissionsReadModel), "FoodDiary.Modules.Dietologist.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Usda.Common.IUsdaFoodSearchService), "FoodDiary.Modules.Usda.Contracts")]

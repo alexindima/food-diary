@@ -6,7 +6,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -52,7 +52,7 @@ public class CommonAbstractionsTests {
             .GetNestedTypes(BindingFlags.Public)
             .Concat([
                 typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
-                typeof(FoodDiary.Application.Abstractions.Billing.Common.BillingErrors),
+                typeof(FoodDiary.Modules.Billing.Application.Abstractions.Common.BillingErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),
                 typeof(FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors),
@@ -676,7 +676,7 @@ public class CommonAbstractionsTests {
             .GetNestedTypes(BindingFlags.Public)
             .Concat([
                 typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
-                typeof(FoodDiary.Application.Abstractions.Billing.Common.BillingErrors),
+                typeof(FoodDiary.Modules.Billing.Application.Abstractions.Common.BillingErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),
                 typeof(FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors),

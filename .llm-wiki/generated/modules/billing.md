@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Billing/Application/FoodDiary.Application.Billing.csproj`
+- Extracted project: `Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/Billing/Application`
-- `Modules/Billing/Application/Abstractions`
+- `Modules/Billing/Application.Abstractions`
 - `Modules/Billing/Infrastructure/Providers`
 - `Modules/Billing/Presentation`
 
@@ -38,25 +38,24 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 29
+- Public contract files: 26
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 29
-- Interfaces: 16
+- Public contract types: 26
+- Interfaces: 13
 - DTO/read-model/projection types: 9
 - Enums: 0
-- Exported repository-shaped contracts: 10
-- Contracts referencing domain entities: 5
+- Exported repository-shaped contracts: 7
+- Contracts referencing domain entities: 0
 - `class BillingErrors`
 - `class BillingInputLimits`
 - `class BillingPaymentAlreadyExistsException`
 - `class BillingWebhookEventAlreadyProcessedException`
 - `interface IBillingCheckoutLock`
 - `interface IBillingPaymentReadRepository`
-- `interface IBillingPaymentRepository`
 - `interface IBillingPaymentWriteRepository`
 - `interface IBillingProviderGateway`
 - `interface IBillingProviderGatewayAccessor`
@@ -64,11 +63,9 @@ No literal attribute-routed controller was associated with this module.
 - `interface IBillingRecurringProviderGateway`
 - `interface IBillingSubscriptionReadModelRepository`
 - `interface IBillingSubscriptionReadRepository`
-- `interface IBillingSubscriptionRepository`
 - `interface IBillingSubscriptionWriteRepository`
 - `interface IBillingTransactionRunner`
 - `interface IBillingWebhookEventReadRepository`
-- `interface IBillingWebhookEventRepository`
 - `interface IBillingWebhookEventWriteRepository`
 - `record BillingCheckoutSessionModel`
 - `record BillingCheckoutSessionRequestModel`
@@ -105,6 +102,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs`
 - [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingWebhookControllerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BillingModuleExtractionTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BillingNamespaceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
 - [integration] `tests/FoodDiary.Web.Api.IntegrationTests/BillingSecurityIntegrationTests.cs`
 

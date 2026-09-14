@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Billing.Infrastructure.Providers;
+using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.ReadModel.Composition;
@@ -6,7 +8,6 @@ using FoodDiary.Modules.Notifications.Infrastructure;
 using System.Diagnostics.Metrics;
 using OpenTelemetry;
 using FoodDiary.Application.Runtime;
-using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;

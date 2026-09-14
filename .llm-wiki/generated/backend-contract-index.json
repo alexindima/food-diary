@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1214,
+    "contracts": 1210,
     "ambiguousContracts": 0,
     "consumerEdges": 8888,
-    "productionConsumerEdges": 5172,
-    "testConsumerEdges": 3716,
-    "consumedContracts": 1214,
+    "productionConsumerEdges": 5164,
+    "testConsumerEdges": 3724,
+    "consumedContracts": 1210,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1569,7 +1569,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -1586,7 +1586,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -1858,7 +1858,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/CheckoutSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/CheckoutSessionHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2300,7 +2300,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Requests/CreateCheckoutSessionHttpRequest.cs"
+        "Modules/Billing/Presentation/Requests/CreateCheckoutSessionHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8301,7 +8301,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8324,23 +8324,6 @@
       "collisionClassification": "unique"
     },
     {
-      "name": "IBillingOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingOverviewReadService.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
       "name": "IBillingPaymentReadRepository",
       "roles": [
         "ReadRepository"
@@ -8352,24 +8335,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IBillingPaymentRepository",
-      "roles": [
-        "Repository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8386,7 +8352,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8403,7 +8369,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8420,7 +8386,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8437,7 +8403,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8454,7 +8420,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8488,7 +8454,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8505,24 +8471,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IBillingSubscriptionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8539,7 +8488,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8556,24 +8505,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8590,24 +8522,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IBillingWebhookEventRepository",
-      "roles": [
-        "Repository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8624,7 +8539,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11991,6 +11906,23 @@
       ],
       "definitionPaths": [
         "Shared/FoodDiary.Persistence.Abstractions/IModuleContextFactory.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "Shared"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -17146,7 +17078,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/PortalSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/PortalSessionHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -25666,10 +25598,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/BillingController.cs",
+      "consumerPath": "Modules/Billing/Presentation/Controllers/BillingController.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -25679,10 +25611,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpResponseMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -25692,7 +25624,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
@@ -25705,7 +25637,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs",
@@ -25718,7 +25650,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Billing.cs",
@@ -25731,7 +25663,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
@@ -25744,10 +25676,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs",
+      "consumerPath": "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs",
       "isTest": false,
       "referenceCount": 5
     },
@@ -25757,7 +25689,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
@@ -25770,7 +25702,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
@@ -25783,7 +25715,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
@@ -25796,7 +25728,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
@@ -25809,20 +25741,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Infrastructure/Model/BillingWebhookEventConfiguration.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "BillingWebhookEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
@@ -25835,7 +25754,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
@@ -25848,7 +25767,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
@@ -25861,7 +25780,20 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/PersistenceModel/BillingWebhookEventConfiguration.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -25874,7 +25806,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
@@ -25887,7 +25819,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingInvariantTests.cs",
@@ -25900,7 +25832,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/DatabaseNormalizationGuardrailTests.cs",
@@ -25913,7 +25845,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/PersistenceCapabilityTests.cs",
@@ -25926,7 +25858,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
@@ -25939,7 +25871,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/FourthPassDomainHardeningTests.cs",
@@ -25952,7 +25884,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/SecondPassDomainHardeningTests.cs",
@@ -25965,7 +25897,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/ThirdPassDomainHardeningTests.cs",
@@ -25978,7 +25910,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AdditionalPersistenceRepositoryIntegrationTests.cs",
@@ -25991,7 +25923,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
@@ -26004,7 +25936,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs"
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
@@ -26888,10 +26820,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/CheckoutSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/CheckoutSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/BillingController.cs",
+      "consumerPath": "Modules/Billing/Presentation/Controllers/BillingController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -26901,10 +26833,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/CheckoutSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/CheckoutSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpResponseMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -26914,7 +26846,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/CheckoutSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/CheckoutSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
@@ -26927,7 +26859,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/CheckoutSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/CheckoutSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs",
@@ -28321,7 +28253,7 @@
         "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28370,10 +28302,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Requests/CreateCheckoutSessionHttpRequest.cs"
+        "Modules/Billing/Presentation/Requests/CreateCheckoutSessionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/BillingController.cs",
+      "consumerPath": "Modules/Billing/Presentation/Controllers/BillingController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28383,10 +28315,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Requests/CreateCheckoutSessionHttpRequest.cs"
+        "Modules/Billing/Presentation/Requests/CreateCheckoutSessionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28396,7 +28328,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Requests/CreateCheckoutSessionHttpRequest.cs"
+        "Modules/Billing/Presentation/Requests/CreateCheckoutSessionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
@@ -28409,7 +28341,7 @@
         "Request"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Requests/CreateCheckoutSessionHttpRequest.cs"
+        "Modules/Billing/Presentation/Requests/CreateCheckoutSessionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs",
@@ -29751,7 +29683,7 @@
         "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -40034,7 +39966,7 @@
         "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -52420,7 +52352,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
@@ -52433,7 +52365,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -52446,7 +52378,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
@@ -52459,7 +52391,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/NoopBillingCheckoutLock.cs",
@@ -52571,64 +52503,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingOverviewReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingOverviewReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingOverviewReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingOverviewReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingOverviewReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
       "contract": "IBillingPaymentReadRepository",
       "roles": [
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingPaymentReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -52641,59 +52521,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingPaymentReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingPaymentReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingPaymentRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 3
-    },
-    {
-      "contract": "IBillingPaymentRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
@@ -52701,12 +52529,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingPaymentRepository",
+      "contract": "IBillingPaymentReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -52714,25 +52542,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingPaymentRepository",
+      "contract": "IBillingPaymentReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingPaymentRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -52740,12 +52555,25 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingPaymentRepository",
+      "contract": "IBillingPaymentReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IBillingPaymentReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -52753,12 +52581,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingPaymentRepository",
+      "contract": "IBillingPaymentReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -52771,20 +52599,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingPaymentWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
@@ -52797,7 +52612,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
@@ -52810,7 +52625,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
@@ -52823,7 +52638,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
@@ -52836,7 +52651,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -52849,7 +52664,33 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingPaymentWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingPaymentWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -52862,12 +52703,12 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IBillingPaymentWriteRepository",
@@ -52875,10 +52716,23 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingPaymentWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -52888,10 +52742,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs",
+      "consumerPath": "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -52901,7 +52755,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
@@ -52914,7 +52768,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
@@ -52927,7 +52781,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
@@ -52940,7 +52794,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/ConfigurableBillingProviderGatewayAccessor.cs",
@@ -52953,7 +52807,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -52966,7 +52820,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/StripeBillingGateway.cs",
@@ -52979,7 +52833,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
@@ -52992,7 +52846,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
@@ -53005,7 +52859,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -53018,7 +52872,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs",
@@ -53031,7 +52885,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs",
@@ -53044,7 +52898,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -53057,7 +52911,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
@@ -53070,7 +52924,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
@@ -53083,7 +52937,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
@@ -53096,7 +52950,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/ConfigurableBillingProviderGatewayAccessor.cs",
@@ -53109,7 +52963,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
@@ -53122,7 +52976,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -53135,7 +52989,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -53148,7 +53002,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
@@ -53161,10 +53015,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingOverviewReadService.cs",
+      "consumerPath": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -53174,7 +53028,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/BillingPublicConfigProvider.cs",
@@ -53187,7 +53041,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
@@ -53200,7 +53054,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -53213,7 +53067,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -53226,7 +53080,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
@@ -53239,7 +53093,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
@@ -53252,7 +53106,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
@@ -53265,7 +53119,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -53278,7 +53132,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -53291,7 +53145,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -53343,10 +53197,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs",
+      "consumerPath": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -53356,20 +53210,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingOverviewReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -53382,11 +53223,11 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
-      "isTest": true,
+      "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -53395,7 +53236,20 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IBillingSubscriptionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -53408,10 +53262,36 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -53421,20 +53301,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
@@ -53447,7 +53314,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
@@ -53460,7 +53327,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -53473,7 +53340,33 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -53486,7 +53379,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -53499,7 +53392,20 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -53507,90 +53413,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingSubscriptionRepository",
+      "contract": "IBillingSubscriptionReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IBillingSubscriptionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -53603,20 +53431,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
@@ -53629,7 +53444,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
@@ -53642,7 +53457,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
@@ -53655,7 +53470,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
@@ -53668,7 +53483,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingAccessService.cs",
@@ -53681,7 +53496,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
@@ -53694,7 +53509,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -53707,7 +53522,33 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -53720,10 +53561,23 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IBillingSubscriptionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -53733,10 +53587,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -53746,7 +53600,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
@@ -53759,7 +53613,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
@@ -53772,7 +53626,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
@@ -53785,7 +53639,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
@@ -53798,7 +53652,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -53811,7 +53665,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
@@ -53824,7 +53678,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -53837,7 +53691,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
@@ -53850,189 +53704,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingAccessService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingOverviewReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingUserContextService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs",
-      "isTest": true,
-      "referenceCount": 6
-    },
-    {
-      "contract": "IBillingUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Common/IBillingUserContextService.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -54045,20 +53717,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingWebhookEventReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -54071,59 +53730,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingWebhookEventReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IBillingWebhookEventReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingWebhookEventRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 3
-    },
-    {
-      "contract": "IBillingWebhookEventRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
@@ -54131,12 +53738,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingWebhookEventRepository",
+      "contract": "IBillingWebhookEventReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -54144,25 +53751,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingWebhookEventRepository",
+      "contract": "IBillingWebhookEventReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingWebhookEventRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -54170,12 +53764,25 @@
       "referenceCount": 1
     },
     {
-      "contract": "IBillingWebhookEventRepository",
+      "contract": "IBillingWebhookEventReadRepository",
       "roles": [
-        "Repository"
+        "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IBillingWebhookEventReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -54188,20 +53795,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingWebhookEventWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
@@ -54214,7 +53808,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
@@ -54227,7 +53821,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
@@ -54240,7 +53834,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -54253,7 +53847,33 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingWebhookEventWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingWebhookEventWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -54266,12 +53886,12 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "IBillingWebhookEventWriteRepository",
@@ -54279,7 +53899,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
+        "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -59860,19 +59480,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Common/IBillingUserContextService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -66423,6 +66030,19 @@
       "definitionPaths": [
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
       "consumerArea": "Shared",
       "consumerPath": "Shared/tests/FoodDiary.Domain.Primitives.Tests/EntityAndAggregateRootTests.cs",
       "isTest": true,
@@ -66892,6 +66512,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AdditionalPersistenceRepositoryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -66907,7 +66540,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BoundaryReliabilityIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IDomainEventPublisher",
@@ -82211,6 +81844,136 @@
       "referenceCount": 1
     },
     {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/PersistenceCapabilityScanner.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/PersistenceCapabilityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/ModuleContextFactoryRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.Analyzers.Tests/ModulePersistenceBoundaryAnalyzerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ImpersonationTokenRequest",
       "roles": [
         "Request"
@@ -88107,6 +87870,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
       "isTest": false,
       "referenceCount": 3
@@ -88380,19 +88156,6 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IPostCommitActionQueue",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -88487,6 +88250,19 @@
       "consumerPath": "Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IPostCommitActionQueue",
@@ -99612,7 +99388,7 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/BillingController.cs",
+      "consumerPath": "Modules/Billing/Presentation/Controllers/BillingController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -99625,7 +99401,7 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs",
+      "consumerPath": "Modules/Billing/Presentation/Controllers/BillingWebhookController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -103967,6 +103743,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
       "isTest": false,
       "referenceCount": 1
@@ -104202,19 +103991,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104474,6 +104250,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Behaviors/BehaviorTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -104515,7 +104304,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BoundaryReliabilityIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IUnitOfWork",
@@ -106710,7 +106499,85 @@
         "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Services/BillingUserContextService.cs",
+      "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Services/BillingAccessService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -106749,9 +106616,22 @@
         "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IUserBillingService",
@@ -106764,7 +106644,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "IUserBillingService",
@@ -106776,6 +106669,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserBillingService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -115953,6 +115859,19 @@
         "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IWeeklyGoalRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/WeeklyGoalReminderJobTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -116021,6 +115940,19 @@
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IWeightEntryReadModelRepository",
@@ -120791,7 +120723,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 32
+      "referenceCount": 34
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -122268,10 +122200,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/PortalSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/PortalSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/BillingController.cs",
+      "consumerPath": "Modules/Billing/Presentation/Controllers/BillingController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -122281,10 +122213,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/PortalSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/PortalSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpResponseMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -122294,7 +122226,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/PortalSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/PortalSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
@@ -122307,7 +122239,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "Modules/Billing/Presentation/Features/Billing/Responses/PortalSessionHttpResponse.cs"
+        "Modules/Billing/Presentation/Responses/PortalSessionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs",
@@ -122427,7 +122359,7 @@
         "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/BillingWebhookHttpProcessor.cs",
+      "consumerPath": "Modules/Billing/Presentation/BillingWebhookHttpProcessor.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -122440,7 +122372,7 @@
         "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -128368,7 +128300,7 @@
         "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Presentation/Features/Billing/Mappings/BillingHttpMappings.cs",
+      "consumerPath": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },

@@ -2,14 +2,14 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
 public sealed class YooKassaBillingGateway(
     HttpClient httpClient,
@@ -17,7 +17,7 @@ public sealed class YooKassaBillingGateway(
     : IBillingProviderGateway, IBillingRecurringProviderGateway {
     private const int MaximumPaymentIdLength = 128;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
-        MaxDepth = Http.BoundedHttpContentReader.DefaultJsonMaxDepth,
+        MaxDepth = FoodDiary.Integrations.Http.BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
     private readonly YooKassaOptions _options = options.Value;
     private readonly YooKassaApiClient _apiClient = new(httpClient, options.Value);

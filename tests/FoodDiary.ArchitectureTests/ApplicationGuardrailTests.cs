@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -568,7 +568,7 @@ public sealed class ApplicationGuardrailTests {
 
     [Theory]
     [InlineData("Modules/Ai/Application.Abstractions/Common/AiErrors.cs", "AiErrors", "Ai")]
-    [InlineData("Modules/Billing/Application/Abstractions/Common/BillingErrors.cs", "BillingErrors", "Billing")]
+    [InlineData("Modules/Billing/Application.Abstractions/Common/BillingErrors.cs", "BillingErrors", "Billing")]
     [InlineData("Modules/Cycles/Contracts/Common/CycleErrors.cs", "CycleErrors", "Cycle")]
     [InlineData("Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs", "CycleDayErrors", "CycleDay")]
     [InlineData("Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistErrors.cs", "DietologistErrors", "Dietologist")]
@@ -1432,7 +1432,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Exercises", "Application", "Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingOccurrenceReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingCheckInReadRepository.cs"),
-            Path.Combine(root, "Modules", "Billing", "Application", "Abstractions", "Common", "IBillingSubscriptionReadRepository.cs"),
+            Path.Combine(root, "Modules", "Billing", "Application.Abstractions", "Common", "IBillingSubscriptionReadRepository.cs"),
             Path.Combine(root, "Modules", "Users", "Application", "Abstractions", "Users", "Common", "IUserAdminReadRepository.cs"),
             Path.Combine(root, "Modules", "Notifications", "Application", "Abstractions", "Common", "INotificationReadRepository.cs"),
             Path.Combine(root, "Modules", "Notifications", "Application", "Abstractions", "Common", "IWebPushSubscriptionReadRepository.cs"),
@@ -1616,7 +1616,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, adminBillingQueryFiles, "IAdminBillingRepository"),
-            .. FindReferencesInFiles(root, adminBillingQueryFiles, "FoodDiary.Domain.Entities.Billing"),
+            .. FindReferencesInFiles(root, adminBillingQueryFiles, "FoodDiary.Modules.Billing.Domain.Entities"),
         ];
 
         Assert.Empty(violations);
@@ -1904,12 +1904,12 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void BillingQueries_UseBillingProfileModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
-        string billingQueriesRoot = Path.Combine(root, "FoodDiary.Application.Billing", "Queries");
-        string[] billingQueryFiles = [.. SourceScanner.SourceFiles(billingQueriesRoot)];
+        string billingQueriesRoot = Path.Combine(root, "Modules", "Billing", "Application", "Queries");
+        string[] billingQueryFiles = ModuleSourceCatalog.RequiredFiles(billingQueriesRoot);
 
         string[] violations = [
             .. FindReferencesInFiles(root, billingQueryFiles, "FoodDiary.Domain.Entities.Users"),
-            .. FindReferencesInFiles(root, billingQueryFiles, "FoodDiary.Domain.Entities.Billing"),
+            .. FindReferencesInFiles(root, billingQueryFiles, "FoodDiary.Modules.Billing.Domain.Entities"),
             .. FindReferencesInFiles(root, billingQueryFiles, "IBillingSubscriptionReadRepository"),
             .. FindReferencesInFiles(root, billingQueryFiles, "GetAccessibleUserAsync"),
         ];
@@ -2444,19 +2444,20 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void BillingOverviewReadService_UsesReadModelsInsteadOfBillingAggregates() {
+    public void BillingOverviewHandler_UsesReadModelsInsteadOfBillingAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
             "Modules",
             "Billing",
             "Application",
-            "Services",
-            "BillingOverviewReadService.cs");
+            "Queries",
+            "GetBillingOverview",
+            "GetBillingOverviewQueryHandler.cs");
         string[] serviceFiles = [servicePath];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Billing"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Modules.Billing.Domain.Entities"),
             .. FindReferencesInFiles(root, serviceFiles, "billingSubscriptionRepository.GetByUserIdAsync"),
             .. FindReferencesInFiles(root, serviceFiles, "BillingSubscription?"),
         ];
@@ -2907,16 +2908,11 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void BillingUserContextService_DelegatesUserAccessToUsersCapability() {
+    public void BillingApplication_UsesUsersCapabilityDirectly() {
         string root = GetRepositoryRoot();
-        string servicePath = Path.Combine(
-            root,
-            "Modules",
-            "Billing",
-            "Application",
-            "Services",
-            "BillingUserContextService.cs");
-        string source = File.ReadAllText(servicePath);
+        string source = string.Join(Environment.NewLine,
+            ModuleSourceCatalog.RequiredFiles(Path.Combine(root, "Modules", "Billing", "Application"))
+                .Select(File.ReadAllText));
 
         Assert.Contains("IUserBillingService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserLookupRepository", source, StringComparison.Ordinal);

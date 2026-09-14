@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Application.Marketing.Common;
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Contracts.Common;
 
 namespace FoodDiary.Application.Marketing.Services;
 

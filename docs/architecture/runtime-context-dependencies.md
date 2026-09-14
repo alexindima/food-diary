@@ -10,8 +10,8 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 |---|---:|
 | Audit bridge | 1 |
 | Connection/lock | 1 |
-| Transaction/provider registration | 13 |
-| Transaction coordination | 6 |
+| Transaction/provider registration | 12 |
+| Transaction coordination | 5 |
 | User purge | 14 |
 
 The presence of 29 owner contexts does not mean all runtime access has left the shared context. Dashboard body reads now live in host ReadModel.Composition. Image reassignment now uses ImagesDbContext on the caller connection. The three module replay streams also use owner contexts; their coordinator saves through IUnitOfWork. Audit retains reviewed shared-context behavior.
@@ -61,5 +61,5 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 | [Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs](../../Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs) | User purge | User cleanup orchestration, user/role deletion, locks and profile-image unlinking. |
 | [Modules/Users/Infrastructure/UsersModuleRegistration.cs](../../Modules/Users/Infrastructure/UsersModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 | [Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs](../../Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs) | Transaction coordination | Existing transaction/retry/reset boundary; owner writes are coordinated through the shared unit of work. |
-| [Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs](../../Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
-| [Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs](../../Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs) | Transaction coordination | Existing transaction/retry/reset boundary; owner writes are coordinated through the shared unit of work. |
+
+WeeklyGoals no longer consumes FoodDiaryDbContext or central Infrastructure. Its live transaction accessor and advisory-lock runner use IModuleTransactionCoordinator; shared clean-entry/retry/reset/save/commit behavior remains in EfModuleTransactionCoordinator.

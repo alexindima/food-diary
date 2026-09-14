@@ -3,19 +3,29 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Integrations.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Stripe;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingGatewayTests {
+    [Theory]
+    [InlineData("https://checkout.example/path", true)]
+    [InlineData("http://checkout.example/path", false)]
+    [InlineData("javascript:alert(1)", false)]
+    [InlineData("/relative", false)]
+    [InlineData("https://user:password@checkout.example/path", false)]
+    public void BillingUrlValidator_IsAbsoluteHttps_RejectsUnsafeNavigationUrls(string url, bool expected) {
+        Assert.Equal(expected, BillingUrlValidator.IsAbsoluteHttps(url));
+    }
+
     private static readonly DateTimeOffset PaddleRecoveryNow = new(2026, 8, 19, 0, 0, 0, TimeSpan.Zero);
     private const string StripeTestApiKey = "stripe-test-api-key";
 

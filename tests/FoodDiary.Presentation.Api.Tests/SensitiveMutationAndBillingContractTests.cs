@@ -1,5 +1,5 @@
 using System.Reflection;
-using FoodDiary.Presentation.Api.Features.Billing;
+using FoodDiary.Modules.Billing.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Cycles;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Responses;

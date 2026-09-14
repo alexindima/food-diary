@@ -8,6 +8,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -22,6 +23,7 @@ public static partial class DependencyInjection {
     private static void AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<IModuleTransactionCoordinator, EfModuleTransactionCoordinator>();
         services.AddScoped<IModuleContextFactory>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, EmailOutboxReplayStream>());

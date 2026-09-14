@@ -1,13 +1,13 @@
 using System.Net;
 using System.Text;
-using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Integrations.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Results;
 using Stripe;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingGatewayResilienceTests {

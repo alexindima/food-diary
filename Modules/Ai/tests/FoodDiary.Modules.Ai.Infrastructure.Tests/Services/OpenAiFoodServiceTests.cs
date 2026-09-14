@@ -1,8 +1,9 @@
-using System.Diagnostics.Metrics;
+﻿using System.Diagnostics.Metrics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
@@ -1179,6 +1180,97 @@ public sealed class OpenAiFoodServiceTests {
             () => Assert.True(result.IsFailure),
             () => Assert.Equal("Ai.InvalidResponse", result.Error.Code),
             () => Assert.Contains("read deadline", result.Error.Message, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static TheoryData<string, string> InvalidProviderPayloads() {
+        var cases = new TheoryData<string, string>();
+        foreach (string operation in new[] { "vision", "text-parse", "nutrition" }) {
+            bool nutrition = string.Equals(operation, "nutrition", StringComparison.Ordinal);
+            string item = nutrition
+                ? """{"name":"Apple","amount":100,"unit":"g","calories":52,"protein":0.3,"fat":0.2,"carbs":14,"fiber":2.4,"alcohol":0}"""
+                : """{"nameEn":"Apple","nameLocal":null,"amount":100,"unit":"g","confidence":0.9}""";
+            JsonObject valid = JsonNode.Parse(nutrition
+                ? """{"calories":52,"protein":0.3,"fat":0.2,"carbs":14,"fiber":2.4,"alcohol":0,"items":[]}"""
+                : """{"items":[]}""")!.AsObject();
+            valid["items"]!.AsArray().Add(JsonNode.Parse(item));
+            cases.Add(operation, "{}");
+            cases.Add(operation, "[]");
+            foreach (JsonNode? items in new JsonNode?[] { null, JsonValue.Create(7), new JsonArray((JsonNode?)null) }) {
+                JsonObject invalid = valid.DeepClone().AsObject();
+                invalid["items"] = items;
+                cases.Add(operation, invalid.ToJsonString());
+            }
+            foreach (string property in new[] { nutrition ? "name" : "nameEn", "unit", "amount" }) {
+                JsonObject invalid = valid.DeepClone().AsObject();
+                invalid["items"]!.AsArray()[0]!.AsObject().Remove(property);
+                cases.Add(operation, invalid.ToJsonString());
+            }
+            foreach (string property in new[] { nutrition ? "name" : "nameEn", "unit" }) {
+                foreach (string? value in new string?[] { null, " " }) {
+                    JsonObject invalid = valid.DeepClone().AsObject();
+                    invalid["items"]!.AsArray()[0]![property] = value;
+                    cases.Add(operation, invalid.ToJsonString());
+                }
+            }
+            if (nutrition) {
+                valid.Remove("calories");
+                cases.Add(operation, valid.ToJsonString());
+            }
+        }
+        return cases;
+    }
+
+    [Theory]
+    [MemberData(nameof(InvalidProviderPayloads))]
+    public async Task ProviderResponse_WhenStructureInvalid_ReturnsInvalidResponse(string operation, string payload) {
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
+            CreateOpenAiSuccessResponse(payload),
+        ])));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key", VisionModel = "test-model", TextModel = "test-model",
+        });
+        Result result = operation switch {
+            "vision" => await client.AnalyzeFoodImageAsync("data:image/png;base64,AA==", "en", description: null, VisionPrompt, CancellationToken.None),
+            "text-parse" => await client.ParseFoodTextAsync("apple", "en", TextPrompt, CancellationToken.None),
+            _ => await client.CalculateNutritionAsync([new FoodVisionItemModel("Apple", NameLocal: null, 100, "g", 0.9m)], NutritionPrompt, CancellationToken.None),
+        };
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.InvalidResponse", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task VisionResponse_WhenItemsEmpty_RemainsSuccessful(bool textParse) {
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
+            CreateOpenAiSuccessResponse("""{"items":[]}"""),
+        ])));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key", VisionModel = "test-model", TextModel = "test-model",
+        });
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = textParse
+            ? await client.ParseFoodTextAsync("no food", "en", TextPrompt, CancellationToken.None)
+            : await client.AnalyzeFoodImageAsync("data:image/png;base64,AA==", "en", description: null, VisionPrompt, CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Empty(result.Value.Value.Items);
+    }
+
+    [Theory]
+    [InlineData("null")]
+    [InlineData("1")]
+    [InlineData("[]")]
+    public async Task ProviderResponse_WhenOutputEntryIsNotObject_ReturnsInvalidResponse(string entry) {
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
+            new(HttpStatusCode.OK) { Content = new StringContent("{\"output\":[" + entry + "]}") },
+        ])));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
+
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.ParseFoodTextAsync("apple", "en", TextPrompt, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.InvalidResponse", result.Error.Code);
     }
 
     private static OpenAiFoodClient CreateClient(

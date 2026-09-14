@@ -1,6 +1,6 @@
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Models;
 
-namespace FoodDiary.Application.Billing.Common;
+namespace FoodDiary.Modules.Billing.Application.Common;
 
 public interface IBillingRenewalService {
     Task<BillingRenewalRunResult> RenewDueSubscriptionsAsync(

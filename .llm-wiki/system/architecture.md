@@ -7,6 +7,7 @@ sources:
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
   - docs/adr/0038-read-model-composition.md
+  - docs/adr/0040-hydration-runtime-context-pilot.md
   - docs/architecture/module-dependencies.json
   - docs/architecture/backend-modules.json
   - tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs
@@ -62,6 +63,11 @@ enforceability for the current folder and extracted modules live in
 [`backend-modules.json`](../../docs/architecture/backend-modules.json). Generated
 module pages keep business API edges, abstraction contracts and host/composition
 consumers separate and explicitly label analysis limitations.
+
+Owner runtime contexts join the scoped host unit of work through
+`IModuleContextFactory`. WeeklyGoals consumes `IModuleTransactionCoordinator`
+without referencing central Infrastructure. This preserves shared transactions and
+migrations; it does not introduce independent databases. See ADR 0040.
 
 ## Placement Rule
 

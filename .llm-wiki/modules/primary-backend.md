@@ -15,6 +15,7 @@ sources:
   - Shared/FoodDiary.Domain.Primitives/AGENTS.md
   - docs/adr/0027-retire-shared-domain-assemblies.md
   - FoodDiary.Infrastructure/AGENTS.md
+  - docs/adr/0040-hydration-runtime-context-pilot.md
   - FoodDiary.ReadModel.Composition/AGENTS.md
   - docs/adr/0038-read-model-composition.md
   - Shared/FoodDiary.Integrations.Http/AGENTS.md
@@ -49,7 +50,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 
 | Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; the narrow Products FoodQuality assembly owns the reusable formula. Products/Recipes mutation uses Serializable transactions with whole-attempt retries under ADR 0035. |
 | Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items and meal-only value types; scalar IDs/enums use Domain.Contracts, external EF relationships use central composition, and shared context/migrations remain central |
-| EF Core and technical implementations | `FoodDiary.Infrastructure` |
+| EF Core persistence | Owner module Infrastructure contains runtime contexts and adapters; `FoodDiary.Infrastructure` retains coordinated transactions, the shared unit of work and migration composition |
 | Cross-module SQL read projections | `FoodDiary.ReadModel.Composition`, registered by API, JobManager and Initializer through module read ports; no module references this assembly |
 | External providers and service clients | Owner module Infrastructure; MailRelay transport in `Shared/FoodDiary.Email.MailRelay`; provider-neutral HTTP primitives in `Shared/FoodDiary.Integrations.Http` |
 | HTTP and SignalR transport | Owning module Presentation projects; reusable transport primitives in `FoodDiary.Presentation.Api` |
@@ -71,8 +72,10 @@ the generated module page to distinguish business API dependencies,
 abstraction-contract dependencies, host consumers and boundary enforceability.
 
 Adapter capabilities are reviewed in `docs/architecture/persistence-capabilities.json`.
-Hydration receives its scoped entity set while preserving the central transaction
-and migration model. BCL-only transport helpers live in
+All 29 owner contexts participate in the shared scoped unit of work through
+`IModuleContextFactory`. WeeklyGoals uses `IModuleTransactionCoordinator` for
+top-level transactions while retaining its owner lock; central migration composition
+and foreign-write restrictions remain. See ADR 0040. BCL-only transport helpers live in
 `Shared/FoodDiary.Integrations.Http`; consult the canonical architecture document
 and ADR 0029 for the remaining isolation limits.
 

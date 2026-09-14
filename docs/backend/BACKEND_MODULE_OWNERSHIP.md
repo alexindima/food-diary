@@ -188,7 +188,7 @@ Fasting and Dietologist client refreshes now use the semantic `INotificationClie
 
 ## Billing boundary
 
-Billing is physically owned under `Modules/Billing` and protected by executable vertical-boundary guardrails. The application project preserves the `FoodDiary.Application.Billing` assembly identity; the shared `FoodDiaryDbContext`, migration history and snapshot remain central.
+Billing is physically owned under `Modules/Billing` and protected by executable vertical-boundary guardrails. The application project preserves the `FoodDiary.Modules.Billing.Application` assembly identity; the shared `FoodDiaryDbContext`, migration history and snapshot remain central.
 
 ### Ownership
 

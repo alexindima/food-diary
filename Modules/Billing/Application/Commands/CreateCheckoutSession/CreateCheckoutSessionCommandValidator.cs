@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Domain.Contracts;
 
-namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
+namespace FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
 
 public sealed class CreateCheckoutSessionCommandValidator : AbstractValidator<CreateCheckoutSessionCommand> {
     public CreateCheckoutSessionCommandValidator() {

@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using Microsoft.Extensions.Options;
 using Stripe;
 using BillingPortalSessionCreateOptions = Stripe.BillingPortal.SessionCreateOptions;
@@ -14,7 +14,7 @@ using CheckoutSessionLineItemOptions = Stripe.Checkout.SessionLineItemOptions;
 using CheckoutSessionService = Stripe.Checkout.SessionService;
 using CheckoutSessionSubscriptionDataOptions = Stripe.Checkout.SessionSubscriptionDataOptions;
 
-namespace FoodDiary.Integrations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
 public sealed class StripeBillingGateway(
     IOptions<StripeOptions> options,
@@ -27,7 +27,7 @@ public sealed class StripeBillingGateway(
             : options.Value.SecretKey)) {
     }
 
-    public string Provider => Domain.Entities.Billing.BillingProviderNames.Stripe;
+    public string Provider => global::FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames.Stripe;
 
     public async Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(
         BillingCheckoutSessionRequestModel request,

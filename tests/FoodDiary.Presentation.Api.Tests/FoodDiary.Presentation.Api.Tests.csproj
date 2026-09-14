@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Modules/Billing/Application/FoodDiary.Application.Billing.csproj" />
     <ProjectReference Include="../../Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj" />
@@ -43,7 +42,8 @@
     <ProjectReference Include="../../Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="../../Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj" />
-    <ProjectReference Include="../../Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj" />
     <ProjectReference Include="../../Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj" />
     <ProjectReference Include="../../Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/BodyMetrics/Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />

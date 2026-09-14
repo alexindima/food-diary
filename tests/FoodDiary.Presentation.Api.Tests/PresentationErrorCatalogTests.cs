@@ -60,7 +60,7 @@ public sealed class PresentationErrorCatalogTests {
             .GetNestedTypes(BindingFlags.Public)
             .Concat([
                 typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
-                typeof(FoodDiary.Application.Abstractions.Billing.Common.BillingErrors),
+                typeof(FoodDiary.Modules.Billing.Application.Abstractions.Common.BillingErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
                 typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),
                 typeof(FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors),

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Billing.Models;
+namespace FoodDiary.Modules.Billing.Application.Models;
 
 public sealed record BillingOverviewModel(
     bool IsPremium,

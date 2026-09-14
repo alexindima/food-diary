@@ -1,10 +1,11 @@
-using FoodDiary.Application.Billing.Services;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Services;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Models;
 
-namespace FoodDiary.Application.Tests.Billing;
+namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
 

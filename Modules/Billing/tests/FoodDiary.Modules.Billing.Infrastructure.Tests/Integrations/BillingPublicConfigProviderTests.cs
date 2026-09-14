@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Integrations.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingPublicConfigProviderTests {

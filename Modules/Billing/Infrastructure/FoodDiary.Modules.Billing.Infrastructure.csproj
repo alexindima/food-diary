@@ -1,20 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.Billing.Infrastructure</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.Billing.Infrastructure</RootNamespace>
-    <NoWarn>$(NoWarn);IDE0130</NoWarn>
-  </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Application.Billing.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Billing.Application.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Billing.Domain.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />

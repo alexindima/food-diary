@@ -1,19 +1,20 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using System.Globalization;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Modules.Billing.Domain.Entities;
 
-namespace FoodDiary.Application.Billing.Services;
+namespace FoodDiary.Modules.Billing.Application.Services;
 
 public sealed class BillingRenewalService(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingPaymentWriteRepository billingPaymentRepository,
-    IBillingUserContextService billingUserContextService,
+    IUserBillingService billingUserContextService,
     IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,
     BillingAccessService billingAccessService,
@@ -88,7 +89,7 @@ public sealed class BillingRenewalService(
             return RenewalOutcome.Failed;
         }
 
-        UserBillingProfileModel? user = await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
+        UserBillingProfileModel? user = await billingUserContextService.GetProfileIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
         if (user is not { IsActive: true, IsDeleted: false }) {
             await SkipRenewalForInaccessibleUserAsync(subscription, now, cancellationToken).ConfigureAwait(false);
             return RenewalOutcome.Failed;
@@ -252,7 +253,7 @@ public sealed class BillingRenewalService(
                 SerializeReason(reason));
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
 
-            UserBillingProfileModel? failedRenewalUser = await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, ct).ConfigureAwait(false);
+            UserBillingProfileModel? failedRenewalUser = await billingUserContextService.GetProfileIncludingDeletedAsync(subscription.UserId, ct).ConfigureAwait(false);
             if (failedRenewalUser is { IsActive: true, IsDeleted: false }) {
                 bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
                     subscription.Status,

@@ -10,6 +10,18 @@ namespace FoodDiary.Analyzers.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ModulePersistenceBoundaryAnalyzerTests {
+    [Theory]
+    [InlineData("coordinator.ExecuteAsync();")]
+    [InlineData("_ = coordinator.CurrentTransaction;")]
+    [InlineData("Action execute = coordinator.ExecuteAsync;")]
+    public async Task TransactionCoordinatorRequiresExactReviewAsync(string access) {
+        string body = "FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator coordinator = null!; " + access;
+        Assert.Contains(await AnalyzeAsync(body), diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Empty(await AnalyzeAsync(body, reviewedBody: body));
+        Assert.Contains(await AnalyzeAsync(body + " ;", reviewedBody: body), diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Empty(await AnalyzeAsync(body, assembly: "FoodDiary.Web.Api"));
+    }
+
     private const string SourcePath = "C:/FD/Modules/Products/Infrastructure/Probe.cs";
 
     [Theory]
@@ -94,7 +106,7 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
     [Fact]
     public async Task Fingerprints_IgnoreMalformedNonModuleAndDuplicateEntries() {
         const string body = "db.SaveChanges();";
-        string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Source(body).Trim())));
+        string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Source(body).Replace("\r\n", "\n", StringComparison.Ordinal).Trim())));
         const string path = "Modules/Products/Infrastructure/Probe.cs";
         string content = $"\n# comment\ninvalid\n{hash} Services/Probe.cs\n{hash} {path}\n{new string('0', 64)} {path}\n";
         Assert.Empty(await AnalyzeAsync(body, fingerprintContent: content));
@@ -125,7 +137,7 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
         Assert.Empty(compilation.GetDiagnostics().Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error));
         ImmutableArray<AdditionalText> files = [];
         if (reviewedBody is not null) {
-            string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Source(reviewedBody).Trim())));
+            string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Source(reviewedBody).Replace("\r\n", "\n", StringComparison.Ordinal).Trim())));
             files = [new InMemoryAdditionalText("C:/FD/docs/architecture/persistence-technical-sources.txt",
                 hash + " Modules/Products/Infrastructure/Probe.cs")];
         }
@@ -151,6 +163,12 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
         public sealed class Database : DbContext {
             public DbSet<User> Users => new();
             public DbSet<Product> Products => new();
+        }
+        namespace FoodDiary.Persistence.Abstractions {
+            public interface IModuleTransactionCoordinator {
+                object CurrentTransaction { get; }
+                void ExecuteAsync();
+            }
         }
         namespace Microsoft.EntityFrameworkCore {
             public class DbContext {

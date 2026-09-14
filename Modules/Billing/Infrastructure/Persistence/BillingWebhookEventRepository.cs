@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> webhookEvents, TimeProvider? timeProvider = null, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingWebhookEventRepository {
+public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> webhookEvents, TimeProvider? timeProvider = null, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingWebhookEventReadRepository, IBillingWebhookEventWriteRepository {
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
     public async Task<bool> ExistsAsync(
         string provider,

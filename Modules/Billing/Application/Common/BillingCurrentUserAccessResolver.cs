@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Billing.Common;
+namespace FoodDiary.Modules.Billing.Application.Common;
 
 internal static class BillingCurrentUserAccessResolver {
     public static async Task<Result<UserId>> ResolveAsync(

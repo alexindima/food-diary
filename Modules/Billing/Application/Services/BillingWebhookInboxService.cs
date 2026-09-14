@@ -1,13 +1,13 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Models;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
+using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
+using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Billing.Services;
+namespace FoodDiary.Modules.Billing.Application.Services;
 
 public sealed class BillingWebhookInboxService(
     IBillingWebhookEventWriteRepository billingWebhookEventRepository,

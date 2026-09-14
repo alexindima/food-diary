@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Tests.Billing;
+namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 [ExcludeFromCodeCoverage]
 internal sealed class NoopBillingCheckoutLock : IBillingCheckoutLock {

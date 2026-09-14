@@ -43,7 +43,7 @@ public sealed class BusinessModuleBoundaryTests {
         string source = File.ReadAllText(dependencyInjectionPath);
 
         Assert.DoesNotContain("using FoodDiary.Application.Admin", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("using FoodDiary.Application.Billing", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("using FoodDiary.Modules.Billing.Application", source, StringComparison.Ordinal);
         Assert.DoesNotContain("using FoodDiary.Application.Notifications", source, StringComparison.Ordinal);
         Assert.DoesNotContain("AddValidatorsFromAssembly", source, StringComparison.Ordinal);
         Assert.DoesNotContain("RegisterServicesFromAssembly", source, StringComparison.Ordinal);
@@ -268,10 +268,11 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedBillingApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Billing",
+        "FoodDiary.Modules.Billing.Application.Abstractions",
+        "FoodDiary.Modules.Billing.Contracts",
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Users",
-        "FoodDiary.Application.Billing",
+        "FoodDiary.Modules.Billing.Application",
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Marketing.Common",
         "FoodDiary.Application.Users.Common",
@@ -608,7 +609,7 @@ public sealed class BusinessModuleBoundaryTests {
         string[] violations = SourceScanner.FindLinePatternViolations(
             jobManagerRoot,
             [
-                "FoodDiary.Application.Billing.Services",
+                "FoodDiary.Modules.Billing.Application.Services",
                 "    BillingRenewalService ",
             ]);
 

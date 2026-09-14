@@ -19,7 +19,7 @@ Rules for `Modules/Billing/Application/`.
 
 ## Commands
 
-- Build: `dotnet build Modules/Billing/Application/FoodDiary.Application.Billing.csproj`
+- Build: `dotnet build Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj`
 - Tests: `dotnet test Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FoodDiary.Modules.Billing.Application.Tests.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
@@ -28,3 +28,5 @@ Transaction callbacks must reload previously captured subscription and inbox ent
 Application consumes scalar Users types through Users.Domain.Contracts and semantic
 capabilities through Users.Contracts. Do not reference the aggregate-bearing
 Users.Domain assembly for these types.
+
+Use Users.Contracts IUserBillingService directly; do not recreate a forwarding user-context service or duplicate profile. Keep overview logic in GetBillingOverviewQueryHandler. Subscription eligibility is defined by BillingPremiumAccessPolicy.GrantsPremiumAccess: past_due and trialing require an end strictly after the current instant.

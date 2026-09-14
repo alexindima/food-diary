@@ -44,6 +44,10 @@ internal static class PersistenceCapabilityScanner {
                     capabilities.Add($"entity:{accessedEntity.Name}");
                 }
                 ITypeSymbol? receiver = model.GetTypeInfo(access.Expression).Type;
+                if (receiver?.ToDisplayString().Equals("FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator", StringComparison.Ordinal) == true
+                    && model.GetSymbolInfo(access).Symbol is IPropertySymbol) {
+                    capabilities.Add($"context:{access.Name.Identifier.ValueText}");
+                }
                 if (!IsContext(receiver)) { continue; }
                 string? entity = QueryEntity(model.GetTypeInfo(access).Type);
                 if (entity is not null) {
@@ -60,7 +64,7 @@ internal static class PersistenceCapabilityScanner {
                 ITypeSymbol? receiver = model.GetTypeInfo(access.Expression).Type;
                 string methodName = access.Name.Identifier.ValueText;
                 var method = model.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
-                if (receiver?.ToDisplayString().Equals("FoodDiary.Persistence.Abstractions.IModuleContextFactory", StringComparison.Ordinal) == true) {
+                if (receiver?.ToDisplayString() is "FoodDiary.Persistence.Abstractions.IModuleContextFactory" or "FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator") {
                     capabilities.Add($"context:{methodName}");
                 }
                 if (IsContext(receiver)) {

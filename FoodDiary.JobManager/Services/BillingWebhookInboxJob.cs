@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Modules.Billing.Application.Models;
 using Hangfire;
 
 namespace FoodDiary.JobManager.Services;

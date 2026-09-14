@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "description": "Executable acyclic Application API and direct service-contract graphs. Domain IDs/values are separate project dependencies; Images.Contracts is verified ID-only.",
   "modules": {
-    "Admin": ["Ai", "ContentReports", "Gamification", "Lessons"],
+    "Admin": ["Ai", "Billing", "ContentReports", "Gamification", "Lessons"],
     "Ai": [],
     "Identity": [],
     "Billing": [],
@@ -32,7 +32,7 @@
     "Hydration": [],
     "Images": [],
     "Lessons": [],
-    "Marketing": [],
+    "Marketing": ["Billing"],
     "MealPlanning": [],
     "Notifications": [],
     "OpenFoodFacts": [],

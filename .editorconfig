@@ -509,7 +509,7 @@ dotnet_diagnostic.RCS1194.severity = none
 dotnet_diagnostic.RCS1194.severity = none
 
 # Billing conflict exceptions require provider identifiers and must not expose context-free constructors.
-[FoodDiary.Application.Abstractions/Billing/Common/*Exception.cs]
+[Modules/Billing/Application.Abstractions/Common/*Exception.cs]
 dotnet_diagnostic.RCS1194.severity = none
 
 # This file contains a ReSharper control comment, not member documentation.

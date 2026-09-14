@@ -1,19 +1,20 @@
-using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Billing.Common;
-using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
-using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.TestHelper;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FoodDiary.Application.Tests.Billing;
+namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
 
@@ -201,12 +202,12 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
         var userId = UserId.New();
-        IBillingUserContextService userContextService = Substitute.For<IBillingUserContextService>();
+        IUserBillingService userContextService = Substitute.For<IUserBillingService>();
         userContextService
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService
-            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
         var handler = new CreateCheckoutSessionCommandHandler(
             userContextService,

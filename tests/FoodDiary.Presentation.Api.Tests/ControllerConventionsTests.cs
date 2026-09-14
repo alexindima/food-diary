@@ -342,7 +342,8 @@ public sealed class ControllerConventionsTests {
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
                 && !path.StartsWith(PresentationTestDiscovery.AdminPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
-                && !path.StartsWith(PresentationTestDiscovery.AiPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                && !path.StartsWith(PresentationTestDiscovery.AiPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                && !path.StartsWith(PresentationTestDiscovery.BillingPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
             .Where(path => Path.GetFileName(path) is not nameof(ApiErrorHttpResponse) + ".cs"
                 and not "PagedHttpResponse.cs"
                 and not "PagedHttpResponseMappings.cs"
@@ -396,8 +397,10 @@ public sealed class ControllerConventionsTests {
             .Select(static method => method.Identifier.ValueText);
 
     [Fact]
-    public void AdminControllers_RemainInConventionCoverage() {
+    public void NormalizedModuleControllers_RemainInConventionCoverage() {
         Assert.Contains(GetFeatureControllerTypes(), type => string.Equals(type.Name, "AdminUsersController", StringComparison.Ordinal));
+        Assert.Contains(GetFeatureControllerTypes(), type => string.Equals(type.Name, "BillingController", StringComparison.Ordinal));
+        Assert.Contains(GetFeatureControllerTypes(), type => string.Equals(type.Name, "BillingWebhookController", StringComparison.Ordinal));
         Assert.Contains(GetControllerSyntaxTrees(), tree => string.Equals(Path.GetFileName(tree.FilePath), "AdminUsersController.cs", StringComparison.Ordinal));
     }
     [Fact]
@@ -411,7 +414,8 @@ public sealed class ControllerConventionsTests {
             .Where(type => type is { IsAbstract: false, IsClass: true })
             .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true
                 || string.Equals(type.Namespace, "FoodDiary.Modules.Admin.Presentation.Controllers", StringComparison.Ordinal)
-                || string.Equals(type.Namespace, "FoodDiary.Modules.Ai.Presentation.Controllers", StringComparison.Ordinal))
+                || string.Equals(type.Namespace, "FoodDiary.Modules.Ai.Presentation.Controllers", StringComparison.Ordinal)
+                || string.Equals(type.Namespace, "FoodDiary.Modules.Billing.Presentation.Controllers", StringComparison.Ordinal))
             .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))];
 
     private static MethodInfo[] GetActionMethods(Type controllerType) =>
@@ -444,7 +448,7 @@ public sealed class ControllerConventionsTests {
 
     private static bool IsAnonymousInfrastructureController(Type? type) =>
         type?.FullName is
-            "FoodDiary.Presentation.Api.Features.Billing.BillingWebhookController" or
+            "FoodDiary.Modules.Billing.Presentation.Controllers.BillingWebhookController" or
             "FoodDiary.Presentation.Api.Features.Logs.LogsController" or
             "FoodDiary.Presentation.Api.Features.Marketing.MarketingAttributionController" or
             "FoodDiary.Presentation.Api.Features.Version.VersionController";

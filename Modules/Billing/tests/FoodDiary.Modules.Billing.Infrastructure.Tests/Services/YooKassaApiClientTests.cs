@@ -1,10 +1,10 @@
 using System.Net;
 using System.Text;
-using FoodDiary.Integrations.Billing;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Results;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class YooKassaApiClientTests {
