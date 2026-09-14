@@ -1,8 +1,8 @@
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
 using FoodDiary.Modules.Billing.Contracts.Models;
 using FoodDiary.Modules.Billing.Application.Services;
-using FoodDiary.Application.Abstractions.Users.Common;
 using System.Globalization;
 using System.Text.Json;
 using System.Security.Cryptography;
@@ -20,7 +20,7 @@ namespace FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
 public sealed class RenewDueSubscriptionsCommandHandler(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingPaymentWriteRepository billingPaymentRepository,
-    IUserBillingService billingUserContextService,
+    ISender billingUserContextService,
     IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,
     BillingAccessService billingAccessService,
@@ -112,7 +112,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
             return RenewalOutcome.Failed;
         }
 
-        UserBillingProfileModel? user = await billingUserContextService.GetProfileIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
+        UserBillingProfileModel? user = await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: subscription.UserId), cancellationToken).ConfigureAwait(false);
         if (user is not { IsActive: true, IsDeleted: false }) {
             await SkipRenewalForInaccessibleUserAsync(snapshot, now, cancellationToken).ConfigureAwait(false);
             return RenewalOutcome.Failed;
@@ -227,7 +227,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
             }
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
 
-            UserBillingProfileModel? user = await billingUserContextService.GetProfileIncludingDeletedAsync(subscription.UserId, ct).ConfigureAwait(false);
+            UserBillingProfileModel? user = await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: subscription.UserId), ct).ConfigureAwait(false);
             if (user is not { IsActive: true, IsDeleted: false }) {
                 subscription.MarkRenewalSkippedForInaccessibleUser(
                     BuildRenewalSkippedEventId(subscription, renewedAtUtc),
@@ -321,7 +321,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
                 SerializeReason(reason));
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
 
-            UserBillingProfileModel? failedRenewalUser = await billingUserContextService.GetProfileIncludingDeletedAsync(subscription.UserId, ct).ConfigureAwait(false);
+            UserBillingProfileModel? failedRenewalUser = await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: subscription.UserId), ct).ConfigureAwait(false);
             if (failedRenewalUser is { IsActive: true, IsDeleted: false }) {
                 bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
                     subscription.Status,

@@ -1,6 +1,8 @@
-﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Ai.Application.Queries.GetCompletedFoodRecognition;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
@@ -13,7 +15,7 @@ public sealed class FoodRecognitionResultReaderTests {
         FoodRecognitionJobModel job = CompleteJob();
         var caller = Guid.NewGuid();
         jobs.GetAsync(caller, job.Id, Arg.Any<CancellationToken>()).Returns(job);
-        Result<FoodRecognitionJobModel> result = await new FoodRecognitionResultReader(jobs).GetCompletedAsync(caller, job.Id, CancellationToken.None);
+        Result<FoodRecognitionJobModel> result = await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: caller, JobId: job.Id), CancellationToken.None);
         Assert.Equal("Ai.RecognitionNotFound", result.Error.Code);
     }
 
@@ -26,7 +28,7 @@ public sealed class FoodRecognitionResultReaderTests {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob() with { Status = status, NutritionErrorCode = nutritionError };
         jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
-        Result<FoodRecognitionJobModel> result = await new FoodRecognitionResultReader(jobs).GetCompletedAsync(job.UserId, job.Id, CancellationToken.None);
+        Result<FoodRecognitionJobModel> result = await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None);
         Assert.Equal(expectedError, result.Error.Code);
     }
 
@@ -35,7 +37,7 @@ public sealed class FoodRecognitionResultReaderTests {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob() with { Vision = new FoodVisionModel([]) };
         jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
-        Assert.True((await new FoodRecognitionResultReader(jobs).GetCompletedAsync(job.UserId, job.Id, CancellationToken.None)).IsFailure);
+        Assert.True((await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None)).IsFailure);
     }
 
     [Fact]
@@ -43,7 +45,7 @@ public sealed class FoodRecognitionResultReaderTests {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob();
         jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
-        Result<FoodRecognitionJobModel> result = await new FoodRecognitionResultReader(jobs).GetCompletedAsync(job.UserId, job.Id, CancellationToken.None);
+        Result<FoodRecognitionJobModel> result = await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None);
         Assert.True(result.IsSuccess);
         Assert.Equal(job, result.Value);
     }
@@ -56,7 +58,7 @@ public sealed class FoodRecognitionResultReaderTests {
                 new FoodVisionItemModel("Pear", NameLocal: null, 100, "g", 0.9m)]),
         };
         jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
-        Assert.True((await new FoodRecognitionResultReader(jobs).GetCompletedAsync(job.UserId, job.Id, CancellationToken.None)).IsFailure);
+        Assert.True((await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None)).IsFailure);
     }
 
     private static FoodRecognitionJobModel CompleteJob() => new(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "image", Description: null,

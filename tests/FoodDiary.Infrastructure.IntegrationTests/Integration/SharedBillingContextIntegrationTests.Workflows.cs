@@ -1,5 +1,7 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Marketing.Commands.RecordPremiumConversion;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
@@ -9,7 +11,6 @@ using FoodDiary.Modules.Billing.Application.Commands.ProcessQueuedBillingWebhook
 using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
 using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
-using FoodDiary.Modules.Billing.Contracts.Common;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
@@ -40,14 +41,14 @@ public sealed partial class SharedBillingContextIntegrationTests {
             await events.AddAsync(failed, token);
             await events.AddAsync(healthy, token);
         });
-        IUserBillingService users = WorkflowUsers(user);
-        IBillingMarketingConversionRecorder marketing = Substitute.For<IBillingMarketingConversionRecorder>();
+        ISender users = WorkflowUsers(user);
+        ISender marketing = Substitute.For<ISender>();
         int attempts = 0;
-        marketing.RecordPremiumStartedAsync(user.Id.Value, Arg.Any<CancellationToken>()).Returns(_ => {
+        marketing.Send(new RecordPremiumConversionCommand(UserId: user.Id.Value), Arg.Any<CancellationToken>()).Returns(_ => {
             if (++attempts == 1) {
                 throw new InvalidOperationException("Sensitive provider failure after subscription mutation");
             }
-            return Task.CompletedTask;
+            return Task.FromResult(Unit.Value);
         });
         var resolver = new BillingWebhookContextResolver(provider.GetRequiredService<IBillingSubscriptionWriteRepository>(), users);
         var handler = new ProcessQueuedBillingWebhookCommandHandler(events, runner,
@@ -91,12 +92,12 @@ public sealed partial class SharedBillingContextIntegrationTests {
         await runner.ExecuteAsync(async token => await subscriptions.AddAsync(initial, token));
         await using FoodDiaryDbContext otherContext = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
         await using ServiceProvider otherProvider = CreateProvider(otherContext);
-        IUserBillingService users = WorkflowUsers(user);
+        ISender users = WorkflowUsers(user);
         IBillingRecurringProviderGateway gateway = Substitute.For<IBillingRecurringProviderGateway>();
         gateway.Provider.Returns(BillingProviderNames.YooKassa);
         gateway.CreateRecurringPaymentAsync(Arg.Any<BillingRecurringPaymentRequestModel>(), Arg.Any<CancellationToken>())
             .Returns(async _ => {
-                Result webhookResult = await WorkflowProcessor(otherProvider, users, Substitute.For<IBillingMarketingConversionRecorder>())
+                Result webhookResult = await WorkflowProcessor(otherProvider, users, Substitute.For<ISender>())
                     .ProcessAsync(BillingProviderNames.YooKassa, "{}",
                         WorkflowWebhook(user, "newer", "payment_newer", now) with { CancelAtPeriodEnd = true },
                         inboxEvent: null, CancellationToken.None);
@@ -143,8 +144,8 @@ public sealed partial class SharedBillingContextIntegrationTests {
         await runner.ExecuteAsync(async token => await subscriptions.AddAsync(initial, token));
         await using FoodDiaryDbContext otherContext = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
         await using ServiceProvider otherProvider = CreateProvider(otherContext);
-        IUserBillingService users = WorkflowUsers(user);
-        BillingWebhookEventProcessor processor = WorkflowProcessor(otherProvider, users, Substitute.For<IBillingMarketingConversionRecorder>());
+        ISender users = WorkflowUsers(user);
+        BillingWebhookEventProcessor processor = WorkflowProcessor(otherProvider, users, Substitute.For<ISender>());
         BillingWebhookEventModel webhook = WorkflowWebhook(user, "webhook_final", "payment_final", now) with {
             Status = status,
             IsRenewal = true,
@@ -208,8 +209,8 @@ public sealed partial class SharedBillingContextIntegrationTests {
         }
         await using FoodDiaryDbContext otherContext = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
         await using ServiceProvider otherProvider = CreateProvider(otherContext);
-        IUserBillingService users = WorkflowUsers(first);
-        users.GetProfileIncludingDeletedAsync(second.Id, Arg.Any<CancellationToken>()).Returns(new UserBillingProfileModel(
+        ISender users = WorkflowUsers(first);
+        users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: second.Id), Arg.Any<CancellationToken>()).Returns(new UserBillingProfileModel(
             second.Id, second.Email, IsActive: true, IsDeleted: false, HasPaidPremium: true,
             PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null, IsEmailConfirmed: true));
         IBillingRecurringProviderGateway gateway = Substitute.For<IBillingRecurringProviderGateway>();
@@ -221,7 +222,7 @@ public sealed partial class SharedBillingContextIntegrationTests {
                 BillingWebhookEventModel webhook = WorkflowWebhook(second, "second_renewed", "second_payment", now) with {
                     ExternalPaymentMethodId = $"pm_{second.Id.Value:N}",
                 };
-                Assert.True((await WorkflowProcessor(otherProvider, users, Substitute.For<IBillingMarketingConversionRecorder>())
+                Assert.True((await WorkflowProcessor(otherProvider, users, Substitute.For<ISender>())
                     .ProcessAsync(BillingProviderNames.YooKassa, "{}", webhook, inboxEvent: null, CancellationToken.None)).IsSuccess);
                 return Result.Success(new BillingRecurringPaymentModel("first_payment", request.PaymentMethodId, "price", "monthly", "active",
                     now, now.AddMonths(1), "first_renewed", 299m, "RUB", ProviderMetadataJson: null, OccurredAtUtc: now));
@@ -236,9 +237,9 @@ public sealed partial class SharedBillingContextIntegrationTests {
         Assert.Equal("second_renewed", (await verification.BillingSubscriptions.AsNoTracking().SingleAsync(item => item.UserId == second.Id)).LastWebhookEventId);
     }
 
-    private static IUserBillingService WorkflowUsers(User user) {
-        IUserBillingService users = Substitute.For<IUserBillingService>();
-        users.GetProfileIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>()).Returns(new UserBillingProfileModel(
+    private static ISender WorkflowUsers(User user) {
+        ISender users = Substitute.For<ISender>();
+        users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: user.Id), Arg.Any<CancellationToken>()).Returns(new UserBillingProfileModel(
             user.Id, user.Email, IsActive: true, IsDeleted: false, HasPaidPremium: true,
             PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null, IsEmailConfirmed: true));
         return users;
@@ -249,8 +250,8 @@ public sealed partial class SharedBillingContextIntegrationTests {
             now, now.AddMonths(1), CancelAtPeriodEnd: false, CanceledAtUtc: null, TrialStartUtc: null, TrialEndUtc: null,
             299m, "RUB", ProviderMetadataJson: null, user.Id.Value, OccurredAtUtc: now, IsAuthoritativeSnapshot: true);
 
-    private static BillingWebhookEventProcessor WorkflowProcessor(ServiceProvider provider, IUserBillingService users,
-        IBillingMarketingConversionRecorder marketing) {
+    private static BillingWebhookEventProcessor WorkflowProcessor(ServiceProvider provider, ISender users,
+        ISender marketing) {
         IBillingSubscriptionWriteRepository subscriptions = provider.GetRequiredService<IBillingSubscriptionWriteRepository>();
         IBillingPaymentWriteRepository payments = provider.GetRequiredService<IBillingPaymentWriteRepository>();
         return new BillingWebhookEventProcessor(provider.GetRequiredService<IBillingWebhookEventWriteRepository>(),

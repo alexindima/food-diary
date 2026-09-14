@@ -1,9 +1,10 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Lessons.Contracts.Commands.UpdateLesson;
 using FoodDiary.Modules.Admin.Application.Common;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
@@ -11,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
 
-public sealed class UpdateAdminLessonCommandHandler(ILessonAdministrationService lessonAdministrationService)
+public sealed class UpdateAdminLessonCommandHandler(ISender lessonAdministrationService)
     : ICommandHandler<UpdateAdminLessonCommand, Result<AdminLessonModel>> {
     public async Task<Result<AdminLessonModel>> Handle(
         UpdateAdminLessonCommand command,
@@ -35,17 +36,7 @@ public sealed class UpdateAdminLessonCommandHandler(ILessonAdministrationService
             return RequiredIdParser.ToFailure<AdminLessonModel, NutritionLessonId>(lessonIdResult);
         }
 
-        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.UpdateAsync(
-            lessonIdResult.Value,
-            command.Title,
-            command.Content,
-            command.Summary,
-            command.Locale,
-            categoryResult.Value,
-            difficultyResult.Value,
-            command.EstimatedReadMinutes,
-            command.SortOrder,
-            cancellationToken, command.IsPublished).ConfigureAwait(false);
+        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.Send(new UpdateLessonCommand(LessonId: lessonIdResult.Value, Title: command.Title, Content: command.Content, Summary: command.Summary, Locale: command.Locale, Category: categoryResult.Value, Difficulty: difficultyResult.Value, EstimatedReadMinutes: command.EstimatedReadMinutes, SortOrder: command.SortOrder, IsPublished: command.IsPublished), cancellationToken).ConfigureAwait(false);
 
         return lessonResult.IsSuccess
             ? Result.Success(lessonResult.Value.ToAdminModel())

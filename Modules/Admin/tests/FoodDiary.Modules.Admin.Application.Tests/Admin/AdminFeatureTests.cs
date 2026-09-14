@@ -1,4 +1,16 @@
-﻿using FoodDiary.Application.Abstractions.Users.Models;
+using OwnerDismissContentReportCommandHandler = FoodDiary.Application.ContentReports.Commands.DismissContentReport.DismissContentReportCommandHandler;
+using OwnerReviewContentReportCommandHandler = FoodDiary.Application.ContentReports.Commands.ReviewContentReport.ReviewContentReportCommandHandler;
+using FoodDiary.Application.Identity.Email.Commands.UpsertEmailTemplate;
+using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
+using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
+using FoodDiary.Application.Users.Commands.UpdateUserByAdministrator;
+using FoodDiary.Modules.Ai.Application.Commands.UpsertAiPrompt;
+using FoodDiary.Application.Abstractions.Queries.GetFilteredUsersForAdministration;
+using FoodDiary.Application.Abstractions.Queries.GetUserAdministrationSummary;
+using FoodDiary.Application.Abstractions.Queries.GetUserForAdministration;
+using FoodDiary.Application.Abstractions.Queries.GetUsersForAdministration;
+using FoodDiary.Testing;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
@@ -8,9 +20,6 @@ using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
-using FoodDiary.Modules.Ai.Application.Services;
-using FoodDiary.Application.ContentReports.Services;
-using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
@@ -257,7 +266,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpsertAdminEmailTemplateHandler_WithInvalidLocale_ReturnsValidationFailure() {
         var handler = new UpsertAdminEmailTemplateCommandHandler(
-            new EmailTemplateAdministrationService(new InMemoryEmailTemplateRepository()));
+            RequestTestSender.Create(new UpsertEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository())));
 
         Result<AdminEmailTemplateModel> result = await handler.Handle(
             new UpsertAdminEmailTemplateCommand(
@@ -277,7 +286,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpsertAdminEmailTemplateHandler_WithValidCommand_UpsertsTemplate() {
         var handler = new UpsertAdminEmailTemplateCommandHandler(
-            new EmailTemplateAdministrationService(new InMemoryEmailTemplateRepository()));
+            RequestTestSender.Create(new UpsertEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository())));
 
         Result<AdminEmailTemplateModel> result = await handler.Handle(
             new UpsertAdminEmailTemplateCommand(
@@ -342,7 +351,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpsertAdminAiPromptHandler_WhenPromptMissing_CreatesTemplate() {
         var repository = new InMemoryAiPromptTemplateRepository();
-        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
+        var handler = new UpsertAdminAiPromptCommandHandler(RequestTestSender.Create(new UpsertAiPromptCommandHandler(repository)));
 
         Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand(" Meal_Summary ", " EN ", " Prompt text ", IsActive: true),
@@ -360,7 +369,7 @@ public partial class AdminFeatureTests {
     public async Task UpsertAdminAiPromptHandler_WhenPromptExists_UpdatesTrackedTemplate() {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Old prompt", isActive: true);
         var repository = new InMemoryAiPromptTemplateRepository(template);
-        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
+        var handler = new UpsertAdminAiPromptCommandHandler(RequestTestSender.Create(new UpsertAiPromptCommandHandler(repository)));
 
         Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand("MEAL_SUMMARY", "EN", "New prompt", IsActive: false),
@@ -377,7 +386,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpsertAdminAiPromptHandler_WithInvalidLocale_ReturnsValidationFailure() {
         var repository = new InMemoryAiPromptTemplateRepository();
-        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
+        var handler = new UpsertAdminAiPromptCommandHandler(RequestTestSender.Create(new UpsertAiPromptCommandHandler(repository)));
 
         Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand("meal_summary", "xx", "Prompt text", IsActive: true),
@@ -416,7 +425,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task ReviewContentReportHandler_WhenReportMissing_ReturnsNotFound() {
         var handler = new ReviewContentReportCommandHandler(
-            new ContentReportAdministrationService(new CountingContentReportRepository(0)));
+            RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(new CountingContentReportRepository(0)), new OwnerDismissContentReportCommandHandler(new CountingContentReportRepository(0))));
         var reportId = Guid.NewGuid();
 
         Result result = await handler.Handle(new ReviewContentReportCommand(reportId, Guid.NewGuid(), "handled"), CancellationToken.None);
@@ -433,7 +442,7 @@ public partial class AdminFeatureTests {
             Guid.NewGuid(),
             "Incorrect content");
         var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new ReviewContentReportCommandHandler(new ContentReportAdministrationService(repository));
+        var handler = new ReviewContentReportCommandHandler(RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(repository), new OwnerDismissContentReportCommandHandler(repository)));
 
         var reviewerUserId = UserId.New();
         Result result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, reviewerUserId.Value, "  verified  "), CancellationToken.None);
@@ -448,7 +457,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task DismissContentReportHandler_WhenReportMissing_ReturnsNotFound() {
         var handler = new DismissContentReportCommandHandler(
-            new ContentReportAdministrationService(new CountingContentReportRepository(0)));
+            RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(new CountingContentReportRepository(0)), new OwnerDismissContentReportCommandHandler(new CountingContentReportRepository(0))));
         var reportId = Guid.NewGuid();
 
         Result result = await handler.Handle(new DismissContentReportCommand(reportId, Guid.NewGuid(), "duplicate"), CancellationToken.None);
@@ -465,7 +474,7 @@ public partial class AdminFeatureTests {
             Guid.NewGuid(),
             "Incorrect content");
         var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new DismissContentReportCommandHandler(new ContentReportAdministrationService(repository));
+        var handler = new DismissContentReportCommandHandler(RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(repository), new OwnerDismissContentReportCommandHandler(repository)));
 
         var reviewerUserId = UserId.New();
         Result result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, reviewerUserId.Value, "  duplicate  "), CancellationToken.None);
@@ -482,7 +491,7 @@ public partial class AdminFeatureTests {
         var report = ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Incorrect content");
         report.MarkReviewed(UserId.New(), "verified");
         var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new DismissContentReportCommandHandler(new ContentReportAdministrationService(repository));
+        var handler = new DismissContentReportCommandHandler(RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(repository), new OwnerDismissContentReportCommandHandler(repository)));
 
         Result result = await handler.Handle(
             new DismissContentReportCommand(report.Id.Value, Guid.NewGuid(), "overwrite"),
@@ -504,7 +513,7 @@ public partial class AdminFeatureTests {
 
     private static UpdateAdminUserCommandHandler CreateUpdateAdminUserHandler(InMemoryUserRepository userRepository) =>
         new(
-            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             new NullAuditLogger(),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
@@ -548,7 +557,7 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles)
-        : IUserRepository, IUserRoleCatalogService, IUserAdministrationReadService {
+: RequestTestSender, IUserRepository, IUserRoleCatalogService {
         private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
             name => name,
             name => user.UserRoles
@@ -568,7 +577,7 @@ public partial class AdminFeatureTests {
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
 
-        async Task<UserAdminReadModel?> IUserAdministrationReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+        private async Task<UserAdminReadModel?> GetByIdIncludingDeletedForRequestAsync(UserId userId, CancellationToken cancellationToken) =>
             (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel();
 
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -588,7 +597,7 @@ public partial class AdminFeatureTests {
 
         public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
 
-        Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> IUserAdministrationReadService.GetPagedAsync(
+        private Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetPagedForRequestAsync(
             string? search,
             int page,
             int limit,
@@ -602,7 +611,7 @@ public partial class AdminFeatureTests {
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 
-        Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)> IUserAdministrationReadService.GetDashboardSummaryAsync(
+        private Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)> GetDashboardSummaryForRequestAsync(
             int recentLimit,
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
@@ -630,6 +639,14 @@ public partial class AdminFeatureTests {
             RoleAuditEvents.AddRange(roleAuditEvents);
             return Task.CompletedTask;
         }
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            GetFilteredUsersForAdministrationQuery r => (Task<TResponse>)(object)GetFilteredPagedAsync(r.Search, r.Page, r.Limit, r.Status, r.Filter, cancellationToken),
+            GetUserForAdministrationQuery r => (Task<TResponse>)(object)GetByIdIncludingDeletedForRequestAsync(r.UserId, cancellationToken),
+            GetUsersForAdministrationQuery r => (Task<TResponse>)(object)GetPagedForRequestAsync(r.Search, r.Page, r.Limit, r.Status, cancellationToken),
+            GetUserAdministrationSummaryQuery r => (Task<TResponse>)(object)GetDashboardSummaryForRequestAsync(r.RecentLimit, cancellationToken),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
     }
 
     [ExcludeFromCodeCoverage]
@@ -737,7 +754,7 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class SummaryUserRepository(
-        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) response) : IUserRepository, IUserAdministrationReadService {
+        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) response) : RequestTestSender, IUserRepository {
         public int LastRecentLimit { get; private set; }
 
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(
@@ -752,7 +769,7 @@ public partial class AdminFeatureTests {
             CancellationToken cancellationToken = default) =>
             GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 
-        async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)> IUserAdministrationReadService.GetDashboardSummaryAsync(
+        private async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)> GetDashboardSummaryForRequestAsync(
             int recentLimit,
             CancellationToken cancellationToken) {
             (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) =
@@ -765,7 +782,7 @@ public partial class AdminFeatureTests {
         public Task<User?> GetByEmailIncludingDeletedAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        async Task<UserAdminReadModel?> IUserAdministrationReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+        private async Task<UserAdminReadModel?> GetByIdIncludingDeletedForRequestAsync(UserId userId, CancellationToken cancellationToken) =>
             (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -779,7 +796,7 @@ public partial class AdminFeatureTests {
             throw new NotSupportedException();
         public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
 
-        Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> IUserAdministrationReadService.GetPagedAsync(
+        private Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetPagedForRequestAsync(
             string? search,
             int page,
             int limit,
@@ -791,6 +808,14 @@ public partial class AdminFeatureTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            GetFilteredUsersForAdministrationQuery r => (Task<TResponse>)(object)GetFilteredPagedAsync(r.Search, r.Page, r.Limit, r.Status, r.Filter, cancellationToken),
+            GetUserForAdministrationQuery r => (Task<TResponse>)(object)GetByIdIncludingDeletedForRequestAsync(r.UserId, cancellationToken),
+            GetUsersForAdministrationQuery r => (Task<TResponse>)(object)GetPagedForRequestAsync(r.Search, r.Page, r.Limit, r.Status, cancellationToken),
+            GetUserAdministrationSummaryQuery r => (Task<TResponse>)(object)GetDashboardSummaryForRequestAsync(r.RecentLimit, cancellationToken),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
     }
 
     [ExcludeFromCodeCoverage]

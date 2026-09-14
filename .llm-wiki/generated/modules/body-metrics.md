@@ -39,14 +39,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: WaistEntry, WeightEntry
-- Public contract files: 14
+- Public contract files: 18
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 14
-- Interfaces: 6
+- Public contract types: 18
+- Interfaces: 4
 - DTO/read-model/projection types: 6
 - Enums: 0
 - Exported repository-shaped contracts: 4
@@ -54,11 +54,15 @@ No literal attribute-routed controller was associated with this module.
 - `class WaistEntryErrors`
 - `class WeightEntryErrors`
 - `interface IWaistEntryReadModelRepository`
-- `interface IWaistEntryReadService`
 - `interface IWaistEntryWriteRepository`
 - `interface IWeightEntryReadModelRepository`
-- `interface IWeightEntryReadService`
 - `interface IWeightEntryWriteRepository`
+- `record ReadLatestWaistEntryQuery`
+- `record ReadLatestWeightEntryQuery`
+- `record ReadWaistEntriesQuery`
+- `record ReadWaistSummariesQuery`
+- `record ReadWeightEntriesQuery`
+- `record ReadWeightSummariesQuery`
 - `record WaistEntryModel`
 - `record WaistEntryReadModel`
 - `record WaistEntrySummaryModel`

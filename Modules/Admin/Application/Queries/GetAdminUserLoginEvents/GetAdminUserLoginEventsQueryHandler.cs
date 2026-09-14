@@ -1,4 +1,5 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Queries.GetLoginEvents;
+using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
@@ -8,13 +9,13 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
 
-public sealed class GetAdminUserLoginEventsQueryHandler(IAuthenticationLoginEventReadService readService)
+public sealed class GetAdminUserLoginEventsQueryHandler(ISender sender)
     : IQueryHandler<GetAdminUserLoginEventsQuery, Result<PagedResponse<AdminUserLoginEventModel>>> {
     public async Task<Result<PagedResponse<AdminUserLoginEventModel>>> Handle(GetAdminUserLoginEventsQuery query, CancellationToken cancellationToken) {
         int normalizedPage = PaginationPolicy.NormalizePage(query.Page);
         int normalizedLimit = PaginationPolicy.NormalizePageSizeOrDefault(query.Limit);
         (IReadOnlyList<UserLoginEventReadModel> items, int totalItems) =
-            await readService.GetEventsAsync(normalizedPage, normalizedLimit, query.UserId, query.Search, cancellationToken, query.FromUtc, query.ToUtc, query.Provider, query.Device).ConfigureAwait(false);
+            await sender.Send(new GetLoginEventsQuery(normalizedPage, normalizedLimit, query.UserId, query.Search, query.FromUtc, query.ToUtc, query.Provider, query.Device), cancellationToken).ConfigureAwait(false);
         AdminUserLoginEventModel[] models = [.. items.Select(ToModel)];
         int totalPages = (int)Math.Ceiling(totalItems / (double)normalizedLimit);
         return Result.Success(new PagedResponse<AdminUserLoginEventModel>(

@@ -1,7 +1,10 @@
-﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Ai.Application.Commands.UpsertAiPrompt;
+using FoodDiary.Modules.Ai.Contracts.Commands.UpsertAiPrompt;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Modules.Ai.Domain.Entities;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
@@ -12,9 +15,9 @@ public sealed class AiPromptAdministrationServiceTests {
         var template = AiPromptTemplate.Create("system", "en", "original", isActive: true);
         IAiPromptTemplateWriteRepository repository = Substitute.For<IAiPromptTemplateWriteRepository>();
         repository.GetByKeyAsync("system", "en", Arg.Any<CancellationToken>()).Returns(template);
-        var service = new AiPromptAdministrationService(repository);
+        ISender service = RequestTestSender.Create(new UpsertAiPromptCommandHandler(repository));
 
-        AiPromptTemplateReadModel model = ResultAssert.Success(await service.UpsertAsync("system", "en", "updated", isActive: true, CancellationToken.None));
+        AiPromptTemplateReadModel model = ResultAssert.Success(await service.Send(new UpsertAiPromptCommand(Key: "system", Locale: "en", PromptText: "updated", IsActive: true), CancellationToken.None));
         template.Update("later owner edit", isActive: false);
 
         Assert.Multiple(

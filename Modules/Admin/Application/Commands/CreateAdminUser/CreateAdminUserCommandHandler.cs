@@ -1,6 +1,7 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Commands.CreateUserByAdministrator;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -13,7 +14,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
 
 public sealed class CreateAdminUserCommandHandler(
-    IUserAdministrationMutationService userManagementService,
+    ISender userManagementService,
     IEmailSender emailSender,
     IAuditLogger auditLogger,
     TimeProvider timeProvider)
@@ -29,9 +30,7 @@ public sealed class CreateAdminUserCommandHandler(
         }
 
         string temporaryPassword = ResolveTemporaryPassword(command);
-        Result<UserAdminReadModel> creationResult = await userManagementService
-            .CreateAsync(
-                new UserAdminCreateModel(
+        Result<UserAdminReadModel> creationResult = await userManagementService.Send(new CreateUserByAdministratorCommand(Request: new UserAdminCreateModel(
                     command.Email,
                     command.FirstName,
                     command.LastName,
@@ -41,8 +40,7 @@ public sealed class CreateAdminUserCommandHandler(
                     command.IsEmailConfirmed,
                     command.RequirePasswordChange,
                     actorIdResult.Value,
-                    timeProvider.GetUtcNow().UtcDateTime),
-                cancellationToken)
+                    timeProvider.GetUtcNow().UtcDateTime)), cancellationToken)
             .ConfigureAwait(false);
         if (creationResult.IsFailure) {
             return Result.Failure<AdminUserCreationModel>(creationResult.Error);

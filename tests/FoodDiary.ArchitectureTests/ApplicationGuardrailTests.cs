@@ -2179,12 +2179,16 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void TrackingEntryReadServices_UseReadModelsInsteadOfTrackingAggregates() {
+    public void TrackingEntryReaders_UseReadModelsInsteadOfTrackingAggregates() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] serviceFiles = [
-            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WeightEntries", "Services", "WeightEntryReadService.cs"),
-            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WaistEntries", "Services", "WaistEntryReadService.cs"),
+            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WeightEntries", "Queries", "ReadWeightEntries", "ReadWeightEntriesQueryHandler.cs"),
+            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WeightEntries", "Queries", "ReadLatestWeightEntry", "ReadLatestWeightEntryQueryHandler.cs"),
+            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WeightEntries", "Queries", "ReadWeightSummaries", "ReadWeightSummariesQueryHandler.cs"),
+            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WaistEntries", "Queries", "ReadWaistEntries", "ReadWaistEntriesQueryHandler.cs"),
+            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WaistEntries", "Queries", "ReadLatestWaistEntry", "ReadLatestWaistEntryQueryHandler.cs"),
+            Path.Combine(root, "Modules", "BodyMetrics", "Application", "WaistEntries", "Queries", "ReadWaistSummaries", "ReadWaistSummariesQueryHandler.cs"),
             Path.Combine(root, "Modules", "Hydration", "Application", "Services", "HydrationEntryReadService.cs"),
         ];
 
@@ -2355,7 +2359,6 @@ public sealed class ApplicationGuardrailTests {
         string aiQueriesRoot = Path.Combine(root, "Modules", "Ai", "Application", "Queries");
         string[] aiQueryFiles = [
             .. SourceScanner.SourceFiles(aiQueriesRoot),
-            Path.Combine(root, "Modules", "Ai", "Application", "Services", "FoodRecognitionResultReader.cs"),
             Path.Combine(root, "Modules", "Ai", "Presentation", "Services", "FoodRecognitionNotifier.cs"),
         ];
         Assert.NotEmpty(aiQueryFiles);
@@ -2905,13 +2908,15 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void BillingApplication_UsesUsersCapabilityDirectly() {
+    public void BillingApplication_UsesUsersRequestsWithoutAggregateAccess() {
         string root = GetRepositoryRoot();
         string source = string.Join(Environment.NewLine,
             ModuleSourceCatalog.RequiredFiles(Path.Combine(root, "Modules", "Billing", "Application"))
                 .Select(File.ReadAllText));
 
-        Assert.Contains("IUserBillingService", source, StringComparison.Ordinal);
+        Assert.Contains("GetUserBillingProfileQuery", source, StringComparison.Ordinal);
+        Assert.Contains("EnsureUserPremiumRoleCommand", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUserBillingService", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserLookupRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserWriteRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiary.Domain.Entities.Users", source, StringComparison.Ordinal);

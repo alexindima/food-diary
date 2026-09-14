@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Queries.GetUserForAdministration;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -10,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
 
-public sealed class GetAdminUserQueryHandler(IUserAdministrationReadService userReadService)
+public sealed class GetAdminUserQueryHandler(ISender userReadService)
     : IQueryHandler<GetAdminUserQuery, Result<AdminUserModel>> {
     public async Task<Result<AdminUserModel>> Handle(
         GetAdminUserQuery query,
@@ -23,7 +25,7 @@ public sealed class GetAdminUserQueryHandler(IUserAdministrationReadService user
         }
 
         UserId userId = userIdResult.Value;
-        UserAdminReadModel? user = await userReadService.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+        UserAdminReadModel? user = await userReadService.Send(new GetUserForAdministrationQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
         return user is null
             ? Result.Failure<AdminUserModel>(UserErrors.NotFound(userId))
             : Result.Success(user.ToAdminModel());

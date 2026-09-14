@@ -13,18 +13,6 @@
       "reason": "Identity removes its Telegram operation payloads and receipts for the purged owner; Users retains transaction ownership and rollback. See ADR 0037 and UserCleanupServiceIntegrationTests."
     },
     {
-      "contract": "IBillingMarketingConversionRecorder",
-      "contractOwner": "Billing",
-      "provider": "Marketing",
-      "implementation": "MarketingConversionRecorder",
-      "source": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
-      "consumers": [
-        "Billing"
-      ],
-      "transaction": "caller-unit-of-work",
-      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
-    },
-    {
       "contract": "IFavoriteMealSourceReadService",
       "contractOwner": "Favorites",
       "provider": "Meals",

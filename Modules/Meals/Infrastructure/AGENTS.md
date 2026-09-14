@@ -1,7 +1,7 @@
 # Meals Infrastructure
 
-Own MealRepository, persistence registration and complete Meals DI. Use IModuleTransactionCoordinator for coordinated transactions; the user-purge
-participant still requires central Infrastructure. MealsDbContext owns the runtime meal graph and recognition receipts. Central Infrastructure must not
+Own MealRepository, persistence registration and complete Meals DI. Use IModuleTransactionCoordinator for coordinated transactions and live purge enlistment;
+this adapter no longer references central Infrastructure. MealsDbContext owns the runtime meal graph and recognition receipts. Central Infrastructure must not
 reference this adapter project. Preserve query ordering, access predicates,
 tracking behavior and cancellation.
 
@@ -17,4 +17,4 @@ ADR 0038: reviewed cross-module SQL read implementations now live in FoodDiary.R
 
 MealRepository obtains AI-session image URLs and legacy recipe fallback fields through IMealSourceSnapshotQuery. The host composition implementation returns immutable scalar snapshots and preserves existing source-ID lookup semantics. Keep snapshot precedence and the one-serving rule for snapshotted recipes; do not reintroduce foreign aggregate materialization. Meals owns graph loading and projection policy.
 
-Meals repositories use the owner context or its narrow DbSet. The transaction runner delegates top-level execution and live transaction access to IModuleTransactionCoordinator and captures xmin from the owner tracker through the existing IUnitOfWork flush. Synchronize the current shared transaction before every owner query, especially after intermediate unit-of-work flushes. Keep migrations and the ordered user-purge bridge central.
+Meals repositories use the owner context or its narrow DbSet. The transaction runner delegates top-level execution and live transaction access to IModuleTransactionCoordinator and captures xmin from the owner tracker through the existing IUnitOfWork flush. Synchronize the current shared transaction before every owner query, especially after intermediate unit-of-work flushes. Purge retains order 50, deleting MealItems before Meals through MealsDbContext. Preserve AI graph cascades and recognition receipts until the final User FK cascade; Users owns the encompassing transaction. Migrations remain central.

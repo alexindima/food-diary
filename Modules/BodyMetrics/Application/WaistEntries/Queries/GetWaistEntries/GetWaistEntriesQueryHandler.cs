@@ -1,16 +1,17 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistEntries;
 
 public sealed class GetWaistEntriesQueryHandler(
-    IWaistEntryReadService waistEntryReadService,
+    ISender waistEntryReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistEntriesQuery, Result<IReadOnlyList<WaistEntryModel>>> {
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
@@ -32,13 +33,7 @@ public sealed class GetWaistEntriesQueryHandler(
             ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        IReadOnlyList<WaistEntryModel> response = await waistEntryReadService.GetEntriesAsync(
-            userId,
-            normalizedFrom,
-            normalizedTo,
-            PaginationPolicy.NormalizeCollectionLimit(query.Limit),
-            query.Descending,
-            cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntryModel> response = await waistEntryReadService.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, Limit: PaginationPolicy.NormalizeCollectionLimit(query.Limit), Descending: query.Descending), cancellationToken).ConfigureAwait(false);
 
         return Result.Success<IReadOnlyList<WaistEntryModel>>(response);
     }

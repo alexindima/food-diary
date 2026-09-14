@@ -14,3 +14,5 @@ Ai runtime persistence uses AiDbContext; shared migrations and purge coordinatio
 All seven production projects are siblings. Do not nest projects or repeat an Ai grouping folder inside them. Use namespaces matching project filenames and physical folders, without RootNamespace overrides; retain only the legacy Application assembly name. AiNamespaceTests and AiProjectLayoutTests enforce this structure.
 
 Presentation uses Controllers, Requests, Responses, Models, Mappings, Hubs, Services and Extensions directly; do not add a Features/Ai wrapper. Keep public owner capabilities distinct from internal provider/repository ports. Use Users.Contracts profile types directly and keep usage-summary logic in its handler.
+
+Administration, prompt mutation and completed-recognition consumer entrypoints now use owner Contracts requests. Each implementation lives in its Application slice; do not restore the retired service interfaces or DI aliases.

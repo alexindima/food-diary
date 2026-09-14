@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Queries.GetUserForAdministration;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -9,7 +11,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
 
-public sealed class GetAdminUserRoleAuditQueryHandler(IUserAdministrationReadService userReadService, IAdminUserRoleAuditQuery roleAuditRepository)
+public sealed class GetAdminUserRoleAuditQueryHandler(ISender userReadService, IAdminUserRoleAuditQuery roleAuditRepository)
     : IQueryHandler<GetAdminUserRoleAuditQuery, Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>>> {
     public async Task<Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>>> Handle(GetAdminUserRoleAuditQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(
@@ -19,7 +21,7 @@ public sealed class GetAdminUserRoleAuditQueryHandler(IUserAdministrationReadSer
             return UserIdParser.ToFailure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(userIdResult);
         }
 
-        bool userExists = await userReadService.GetByIdIncludingDeletedAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false) is not null;
+        bool userExists = await userReadService.Send(new GetUserForAdministrationQuery(UserId: userIdResult.Value), cancellationToken).ConfigureAwait(false) is not null;
         if (!userExists) {
             return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(UserErrors.NotFound(query.UserId));
         }

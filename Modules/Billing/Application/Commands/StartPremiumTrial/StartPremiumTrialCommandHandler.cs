@@ -1,5 +1,6 @@
+using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Domain.Contracts;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -12,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
 
 public sealed class StartPremiumTrialCommandHandler(
-    IUserBillingService billingUserContextService,
+    ISender billingUserContextService,
     IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
@@ -31,7 +32,7 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(userResult.Error);
         }
@@ -47,8 +48,7 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        Result<UserBillingProfileModel> startedTrialResult = await billingUserContextService
-            .StartPremiumTrialAsync(userId, nowUtc, TrialDuration, cancellationToken)
+        Result<UserBillingProfileModel> startedTrialResult = await billingUserContextService.Send(new StartUserPremiumTrialCommand(UserId: userId, StartedAtUtc: nowUtc, Duration: TrialDuration), cancellationToken)
             .ConfigureAwait(false);
         if (startedTrialResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(startedTrialResult.Error);

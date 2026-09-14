@@ -49,5 +49,7 @@ Dietologist contexts during the central save, before owner persistence. Pending
 audit entries are reused across retries; successful saves/reset release their
 tracking state. Coordinated saves always invoke central interception, including
 when only an owner changed. Audit and owner writes require a relational provider;
-non-relational coordinated audit is rejected before persistence. User purge remains
-an explicit shared coordination bridge. See ADR 0040 and shared PostgreSQL tests.
+non-relational coordinated audit is rejected before persistence. User purge uses
+DietologistDbContext and rebinds the live coordinator transaction on each call.
+Preserve order 40 and both client/dietologist predicates. Only the audit interceptor
+retains direct central context access. See ADR 0040 and shared PostgreSQL tests.

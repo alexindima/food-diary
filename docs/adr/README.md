@@ -64,3 +64,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0039: Separate HTTP contracts and response mappings](0039-presentation-contracts-and-mappings.md)
 
 - [0040: Hydration runtime context pilot](0040-hydration-runtime-context-pilot.md)
+
+- [0041: Owner requests for cross-module use cases](0041-owner-requests-for-module-use-cases.md)

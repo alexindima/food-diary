@@ -63,10 +63,12 @@ public sealed class MigratedModuleNamespaceTests {
         string[] actual = [.. Directory.GetFiles(ports, "I*Repository.cs")
             .Select(path => Path.GetFileName(path)).Order(StringComparer.Ordinal)];
         Assert.Equal([$"I{measurement}EntryReadModelRepository.cs", $"I{measurement}EntryWriteRepository.cs"], actual);
-        string servicePath = ArchitectureTestPaths.FromRoot("Modules", "BodyMetrics", "Application", measurement + "Entries", "Services", measurement + "EntryReadService.cs");
-        string service = File.ReadAllText(servicePath);
-        Assert.Contains($"I{measurement}EntryReadModelRepository", service, StringComparison.Ordinal);
-        Assert.DoesNotContain("FoodDiary.Modules.BodyMetrics.Domain", service, StringComparison.Ordinal);
+        foreach (string feature in new[] { $"Read{measurement}Entries", $"ReadLatest{measurement}Entry", $"Read{measurement}Summaries" }) {
+            string handlerPath = ArchitectureTestPaths.FromRoot("Modules", "BodyMetrics", "Application", measurement + "Entries", "Queries", feature, feature + "QueryHandler.cs");
+            string handler = File.ReadAllText(handlerPath);
+            Assert.Contains($"I{measurement}EntryReadModelRepository", handler, StringComparison.Ordinal);
+            Assert.DoesNotContain("FoodDiary.Modules.BodyMetrics.Domain", handler, StringComparison.Ordinal);
+        }
     }
 
     [Theory]

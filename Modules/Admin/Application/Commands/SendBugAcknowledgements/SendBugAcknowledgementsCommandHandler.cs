@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplates;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using System.Net;
@@ -8,9 +8,9 @@ using FoodDiary.Modules.Admin.Contracts.Commands.SendBugAcknowledgements;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.SendBugAcknowledgements;
 
-public sealed class SendBugAcknowledgementsCommandHandler(IBugAcknowledgementSource source, IEmailTemplateAdministrationReadService templates, IEmailTransport transport, IBugAcknowledgementReceipts receipts) : IRequestHandler<SendBugAcknowledgementsCommand, Unit> {
+public sealed class SendBugAcknowledgementsCommandHandler(IBugAcknowledgementSource source, ISender templates, IEmailTransport transport, IBugAcknowledgementReceipts receipts) : IRequestHandler<SendBugAcknowledgementsCommand, Unit> {
     public async Task<Unit> Handle(SendBugAcknowledgementsCommand request, CancellationToken cancellationToken) {
-        IReadOnlyList<EmailTemplateReadModel> available = await templates.GetTemplatesAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<EmailTemplateReadModel> available = await templates.Send(new GetEmailTemplatesQuery(), cancellationToken).ConfigureAwait(false);
         await foreach (BugAcknowledgementCandidate candidate in source.ReadAsync(request.Since, cancellationToken).ConfigureAwait(false)) {
             EmailTemplateReadModel? template = available.FirstOrDefault(x => string.Equals(x.Key, "bug_report_received", StringComparison.Ordinal) && string.Equals(x.Locale, candidate.Locale, StringComparison.Ordinal))
                 ?? available.FirstOrDefault(x => string.Equals(x.Key, "bug_report_received", StringComparison.Ordinal) && string.Equals(x.Locale, "en", StringComparison.Ordinal));

@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Mediator;
@@ -29,12 +29,12 @@ public partial class BillingFeatureTests {
         BillingWebhookEvent first = CreateReceivedEvent(CreateWebhookPaymentEvent(firstUser, "evt_fail", "pay_fail"));
         BillingWebhookEvent second = CreateReceivedEvent(CreateWebhookPaymentEvent(secondUser, "evt_ok", "pay_ok"));
         events.Events.AddRange([first, second]);
-        IUserBillingService users = Substitute.For<IUserBillingService>();
-        users.GetProfileIncludingDeletedAsync(firstUser.Id, Arg.Any<CancellationToken>())
+        ISender users = Substitute.For<ISender>();
+        users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: firstUser.Id), Arg.Any<CancellationToken>())
             .Returns<Task<UserBillingProfileModel?>>(_ => throw (canceled
                 ? new OperationCanceledException("Interrupted")
                 : new InvalidOperationException("sensitive provider payload")));
-        users.GetProfileIncludingDeletedAsync(secondUser.Id, Arg.Any<CancellationToken>())
+        users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: secondUser.Id), Arg.Any<CancellationToken>())
             .Returns(CreateBillingProfile(secondUser));
         ProcessQueuedBillingWebhookCommandHandler handler = CreateResilientInboxHandler(events, users);
         await using ServiceProvider provider = new ServiceCollection().AddFoodDiaryMediator(_ => { })
@@ -48,7 +48,7 @@ public partial class BillingFeatureTests {
                 () => Assert.Equal(0, first.AttemptCount),
                 () => Assert.Equal(BillingWebhookEvent.ReceivedStatus, first.Status),
                 () => Assert.Equal(BillingWebhookEvent.ReceivedStatus, second.Status));
-            await users.DidNotReceive().GetProfileIncludingDeletedAsync(secondUser.Id, Arg.Any<CancellationToken>());
+            await users.DidNotReceive().Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: secondUser.Id), Arg.Any<CancellationToken>());
         } else {
             BillingWebhookInboxRunResult result = await batch.Handle(command, CancellationToken.None);
             Assert.Multiple(
@@ -70,8 +70,8 @@ public partial class BillingFeatureTests {
         events.GetByIdAsync(inbox.Id, Arg.Any<CancellationToken>()).Returns(inbox);
         var failure = new InvalidOperationException("Cannot persist retry");
         events.UpdateAsync(inbox, Arg.Any<CancellationToken>()).Returns<Task>(_ => throw failure);
-        IUserBillingService users = Substitute.For<IUserBillingService>();
-        users.GetProfileIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>())
+        ISender users = Substitute.For<ISender>();
+        users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: user.Id), Arg.Any<CancellationToken>())
             .Returns<Task<UserBillingProfileModel?>>(_ => throw new InvalidOperationException("Processing failed"));
         ProcessQueuedBillingWebhookCommandHandler handler = CreateResilientInboxHandler(events, users);
 
@@ -87,8 +87,8 @@ public partial class BillingFeatureTests {
         BillingWebhookEvent inbox = CreateReceivedEvent(CreateWebhookPaymentEvent(user, "evt_concurrent", "pay_concurrent"));
         IBillingWebhookEventWriteRepository events = Substitute.For<IBillingWebhookEventWriteRepository>();
         events.GetByIdAsync(inbox.Id, Arg.Any<CancellationToken>()).Returns(inbox);
-        IUserBillingService users = Substitute.For<IUserBillingService>();
-        users.GetProfileIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>())
+        ISender users = Substitute.For<ISender>();
+        users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: user.Id), Arg.Any<CancellationToken>())
             .Returns<Task<UserBillingProfileModel?>>(_ => {
                 inbox.MarkProcessed(Now);
                 throw new InvalidOperationException("Another worker completed the event");
@@ -107,7 +107,7 @@ public partial class BillingFeatureTests {
             model.ExternalSubscriptionId, Now, "{}", JsonSerializer.Serialize(model));
 
     private static ProcessQueuedBillingWebhookCommandHandler CreateResilientInboxHandler(
-        IBillingWebhookEventWriteRepository events, IUserBillingService users) {
+        IBillingWebhookEventWriteRepository events, ISender users) {
         var subscriptions = new InMemoryBillingSubscriptionRepository();
         var transactions = new NoOpBillingTransactionRunner();
         var clock = new FixedDateTimeProvider(Now);

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
+using FoodDiary.Mediator;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -8,15 +9,15 @@ namespace FoodDiary.Modules.Billing.Application.Common;
 internal static class BillingCurrentUserAccessResolver {
     public static async Task<Result<UserId>> ResolveAsync(
         Guid? userId,
-        ICurrentUserAccessService currentUserAccessService,
+        ISender sender,
         CancellationToken cancellationToken) {
         if (!userId.HasValue || userId.Value == Guid.Empty) {
             return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
         }
 
         var parsedUserId = new UserId(userId.Value);
-        Error? accessError = await currentUserAccessService
-            .EnsureCanAccessAsync(parsedUserId, cancellationToken)
+        Error? accessError = await sender
+            .Send(new CheckUserAccessQuery(parsedUserId), cancellationToken)
             .ConfigureAwait(false);
         return accessError is null
             ? Result.Success(parsedUserId)

@@ -38,20 +38,19 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: AchievementDefinition, UserAchievement, AchievementEvaluationOutboxMessage
-- Public contract files: 12
+- Public contract files: 14
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 12
-- Interfaces: 7
+- Public contract types: 14
+- Interfaces: 6
 - DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 2
 - Contracts referencing domain entities: 2
 - `class AchievementDefinitionErrors`
-- `interface IAchievementDefinitionAdministrationService`
 - `interface IAchievementDefinitionStore`
 - `interface IAchievementEvaluationOutbox`
 - `interface IAchievementEvaluationOutboxProcessor`
@@ -62,6 +61,9 @@ No literal attribute-routed controller was associated with this module.
 - `record AchievementDefinitionCreateInput`
 - `record AchievementDefinitionUpdateInput`
 - `record AchievementGrantModel`
+- `record CreateAchievementDefinitionCommand`
+- `record GetAchievementDefinitionsForAdministrationQuery`
+- `record UpdateAchievementDefinitionCommand`
 
 ## Focused Tests
 

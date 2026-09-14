@@ -1,4 +1,5 @@
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -13,7 +14,7 @@ namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
 public sealed class BillingWebhookContextResolver(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
-    IUserBillingService billingUserContextService,
+    ISender billingUserContextService,
     IBillingPaymentWriteRepository? billingPaymentRepository = null) {
     public async Task<string> GetSerializationKeyAsync(string provider, BillingWebhookEventModel webhookEvent, CancellationToken cancellationToken) {
         BillingSubscription? subscription = await ResolveSubscriptionAsync(provider, webhookEvent, cancellationToken).ConfigureAwait(false);
@@ -178,19 +179,15 @@ public sealed class BillingWebhookContextResolver(
         UserId? relatedPaymentUserId,
         CancellationToken cancellationToken) {
         if (subscription is not null) {
-            return await billingUserContextService.GetProfileIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
+            return await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: subscription.UserId), cancellationToken).ConfigureAwait(false);
         }
 
         if (webhookUserId.HasValue && webhookUserId.Value != Guid.Empty) {
-            return await billingUserContextService.GetProfileIncludingDeletedAsync(
-                new UserId(webhookUserId.Value),
-                cancellationToken).ConfigureAwait(false);
+            return await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: new UserId(webhookUserId.Value)), cancellationToken).ConfigureAwait(false);
         }
 
         return relatedPaymentUserId is null || relatedPaymentUserId == UserId.Empty
             ? null
-            : await billingUserContextService.GetProfileIncludingDeletedAsync(
-                relatedPaymentUserId.Value,
-                cancellationToken).ConfigureAwait(false);
+            : await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: relatedPaymentUserId.Value), cancellationToken).ConfigureAwait(false);
     }
 }

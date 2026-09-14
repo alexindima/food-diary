@@ -12,5 +12,4 @@ MealPlanRepository receives only its owned DbSet and IMealPlanCompositionReader.
 Cross-module SQL joins and immutable recipe snapshots are implemented by the host
 ReadModel.Composition adapter. Keep aggregate loading and snapshot attachment in
 this owner. Never reference the composition implementation from this assembly.
-ShoppingList repositories receive only their owned set; user purge continues on
-the central transaction participant.
+ShoppingList repositories receive only their owned set. User purge uses MealPlanningDbContext and binds the live coordinator transaction on every call, preserving order 60 and ShoppingList child cascades. Users owns saving and transaction completion; this adapter no longer references central Infrastructure.

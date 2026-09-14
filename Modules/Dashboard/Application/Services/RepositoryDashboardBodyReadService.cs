@@ -1,18 +1,19 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Hydration.Common;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
 internal sealed class RepositoryDashboardBodyReadService(
-    IWeightEntryReadService weightEntryReadService,
-    IWaistEntryReadService waistEntryReadService,
-    IHydrationEntryReadService hydrationEntryReadService) : IDashboardBodyReadService {
+    ISender sender, IHydrationEntryReadService hydrationEntryReadService) : IDashboardBodyReadService {
     public async Task<DashboardBodyReadModel> GetBodyAsync(
         UserId userId,
         DateTime dayStart,
@@ -25,20 +26,16 @@ internal sealed class RepositoryDashboardBodyReadService(
         CancellationToken cancellationToken = default) {
         int normalizedTrendQuantizationDays = Math.Max(1, trendQuantizationDays);
         IReadOnlyList<WeightEntryModel> latestWeightEntries = includeWeight
-            ? await weightEntryReadService.GetEntriesAsync(
-                userId, dateFrom: null, dayEndStart, 2, descending: true, cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: dayEndStart, Limit: 2, Descending: true), cancellationToken).ConfigureAwait(false)
             : [];
         IReadOnlyList<WaistEntryModel> latestWaistEntries = includeWaist
-            ? await waistEntryReadService.GetEntriesAsync(
-                userId, dateFrom: null, dayEndStart, 2, descending: true, cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: dayEndStart, Limit: 2, Descending: true), cancellationToken).ConfigureAwait(false)
             : [];
         IReadOnlyList<WeightEntrySummaryModel> weightTrend = includeWeight
-            ? await weightEntryReadService.GetSummariesAsync(
-                userId, trendStart, dayStart, normalizedTrendQuantizationDays, cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: trendStart, DateTo: dayStart, QuantizationDays: normalizedTrendQuantizationDays), cancellationToken).ConfigureAwait(false)
             : [];
         IReadOnlyList<WaistEntrySummaryModel> waistTrend = includeWaist
-            ? await waistEntryReadService.GetSummariesAsync(
-                userId, trendStart, dayStart, normalizedTrendQuantizationDays, cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: trendStart, DateTo: dayStart, QuantizationDays: normalizedTrendQuantizationDays), cancellationToken).ConfigureAwait(false)
             : [];
         IReadOnlyList<(DateTime Date, int TotalMl)> hydrationTotals = includeHydration
             ? await hydrationEntryReadService.GetDailyTotalsAsync(

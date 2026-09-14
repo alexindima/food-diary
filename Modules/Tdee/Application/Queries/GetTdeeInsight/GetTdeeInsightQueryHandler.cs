@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -8,7 +10,6 @@ using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -16,7 +17,7 @@ namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 
 public sealed class GetTdeeInsightQueryHandler(
     ITdeeUserProfileService tdeeUserProfileService,
-    IWeightEntryReadService weightEntryReadService,
+    ISender weightEntryReadService,
     IMealDailyCalorieReadService statisticsReadService,
     IExerciseEntryReadService exerciseEntryReadService,
     TimeProvider dateTimeProvider,
@@ -46,8 +47,7 @@ public sealed class GetTdeeInsightQueryHandler(
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime periodStart = today.AddDays(-AnalysisPeriodDays);
 
-        IReadOnlyList<WeightEntryModel> weights = await weightEntryReadService
-            .GetEntriesAsync(userId, periodStart, today, limit: null, descending: false, cancellationToken)
+        IReadOnlyList<WeightEntryModel> weights = await weightEntryReadService.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: periodStart, DateTo: today, Limit: null, Descending: false), cancellationToken)
             .ConfigureAwait(false);
         Result<IReadOnlyList<MealDailyCalories>> dailyCaloriesResult = await statisticsReadService.GetDailyCaloriesAsync(
             userId,

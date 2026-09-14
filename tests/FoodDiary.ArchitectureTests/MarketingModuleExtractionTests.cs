@@ -40,14 +40,10 @@ public sealed class MarketingModuleExtractionTests {
     }
 
     [Fact]
-    public void Billing_DependsOnConsumerOwnedMarketingPort() {
-        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Modules.Billing.Application");
-        string[] violations = [.. SourceScanner.SourceFiles(billingRoot)
-            .SelectMany(path => File.ReadLines(path).Select((line, index) => new { path, line, index }))
-            .Where(entry => entry.line.Contains("FoodDiary.Application.Marketing", StringComparison.Ordinal) ||
-                            entry.line.Contains("IMarketingConversionRecorder", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}")];
-
-        Assert.Empty(violations);
+    public void Billing_DependsOnMarketingContractsWithoutImplementationReference() {
+        string[] references = ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj");
+        Assert.Contains("FoodDiary.Modules.Marketing.Contracts", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Application.Marketing", references, StringComparer.Ordinal);
     }
 }

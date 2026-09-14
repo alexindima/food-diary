@@ -1,10 +1,11 @@
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
-using FoodDiary.Modules.Billing.Contracts.Common;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
@@ -23,10 +24,10 @@ public sealed partial class SharedBillingContextIntegrationTests {
         context.Users.Add(user);
         await context.SaveChangesAsync();
         await using ServiceProvider provider = CreateProvider(context);
-        IUserBillingService users = WorkflowUsers(user);
+        ISender users = WorkflowUsers(user);
         var profile = new UserBillingProfileModel(user.Id, user.Email, IsActive: true, IsDeleted: false, HasPaidPremium: false,
             PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null, IsEmailConfirmed: true);
-        users.GetAccessibleProfileAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(profile));
+        users.Send(new GetUserBillingProfileQuery(UserId: user.Id), Arg.Any<CancellationToken>()).Returns(Result.Success(profile));
         IBillingProviderGateway gateway = Substitute.For<IBillingProviderGateway>();
         gateway.Provider.Returns(BillingProviderNames.Stripe);
         var session = new BillingCheckoutSessionModel("cs_replayed", "https://checkout.example/replayed", "cus_replayed", "price", "monthly");
@@ -87,17 +88,17 @@ public sealed partial class SharedBillingContextIntegrationTests {
         provider.GetRequiredService<FoodDiary.Modules.Billing.Infrastructure.Persistence.BillingDbContext>().ChangeTracker.Clear();
         await using FoodDiaryDbContext otherContext = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
         await using ServiceProvider otherProvider = CreateProvider(otherContext);
-        IUserBillingService users = WorkflowUsers(user);
+        ISender users = WorkflowUsers(user);
         var profile = new UserBillingProfileModel(user.Id, user.Email, IsActive: true, IsDeleted: false, HasPaidPremium: false,
             PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null, IsEmailConfirmed: true);
-        users.GetProfileIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>()).Returns(profile);
-        users.GetAccessibleProfileAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(profile));
+        users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: user.Id), Arg.Any<CancellationToken>()).Returns(profile);
+        users.Send(new GetUserBillingProfileQuery(UserId: user.Id), Arg.Any<CancellationToken>()).Returns(Result.Success(profile));
         IBillingProviderGateway gateway = Substitute.For<IBillingProviderGateway>();
         gateway.Provider.Returns(BillingProviderNames.YooKassa);
         gateway.CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>()).Returns(async _ => {
             if (webhookStatus is not null) {
                 BillingWebhookEventModel webhook = WorkflowWebhook(user, "concurrent_webhook", "paid_old_session", now) with { Status = webhookStatus };
-                Assert.True((await WorkflowProcessor(otherProvider, users, Substitute.For<IBillingMarketingConversionRecorder>())
+                Assert.True((await WorkflowProcessor(otherProvider, users, Substitute.For<ISender>())
                     .ProcessAsync(BillingProviderNames.YooKassa, "{}", webhook, inboxEvent: null, CancellationToken.None)).IsSuccess);
             }
             return Result.Success(new BillingCheckoutSessionModel("new_checkout", "https://checkout.example/new", user.Id.Value.ToString(), "price", "monthly"));

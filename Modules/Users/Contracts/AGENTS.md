@@ -21,3 +21,5 @@ read-only dictionaries keyed by UserId, containing only reminder hours or author
 names. Missing users are omitted. These preserve existing related-data reads for
 all account states; they do not grant authentication/access or filter inactive
 and soft-deleted accounts. No IQueryable or aggregate escapes these contracts.
+
+Administration reads/mutations and billing access/profile/trial/Premium operations use public requests. Their handlers remain in Users Application. Mutations participate in the caller unit of work. Billing dispatches CheckUserAccessQuery; the existing narrow ICurrentUserAccessService capability remains valid for other callers.

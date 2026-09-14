@@ -1,7 +1,10 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Gamification.Commands.CreateAchievementDefinition;
+using FoodDiary.Application.Gamification.Commands.UpdateAchievementDefinition;
+using FoodDiary.Application.Gamification.Queries.GetAchievementDefinitionsForAdministration;
 using FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
-using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Results;
 
@@ -11,7 +14,7 @@ namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 public sealed class AdminAchievementDefinitionHandlerTests {
     [Fact]
     public async Task Handlers_DelegateToAdministrationService() {
-        IAchievementDefinitionAdministrationService service = Substitute.For<IAchievementDefinitionAdministrationService>();
+        ISender service = Substitute.For<ISender>();
         var model = new AchievementDefinitionAdminModel(
             Id: Guid.NewGuid(), Key: "key", Category: "category", Metric: "metric", Threshold: 1,
             TitleRu: "ru", TitleEn: "en", DescriptionRu: "ru", DescriptionEn: "en", Icon: "icon",
@@ -24,9 +27,9 @@ public sealed class AdminAchievementDefinitionHandlerTests {
             Category: "category", Metric: "metric", Threshold: 2,
             TitleRu: "ru2", TitleEn: "en2", DescriptionRu: "ru2", DescriptionEn: "en2", Icon: "icon2",
             SortOrder: 2, IsActive: false, Version: 1);
-        service.CreateAsync(createInput, Arg.Any<CancellationToken>()).Returns(Result.Success(model));
-        service.UpdateAsync(model.Id, updateInput, Arg.Any<CancellationToken>()).Returns(Result.Success(model));
-        service.GetAllAsync(Arg.Any<CancellationToken>()).Returns([model]);
+        service.Send(new CreateAchievementDefinitionCommand(Input: createInput), Arg.Any<CancellationToken>()).Returns(Result.Success(model));
+        service.Send(new UpdateAchievementDefinitionCommand(Id: model.Id, Input: updateInput), Arg.Any<CancellationToken>()).Returns(Result.Success(model));
+        service.Send(new GetAchievementDefinitionsForAdministrationQuery(), Arg.Any<CancellationToken>()).Returns([model]);
 
         AchievementDefinitionAdminModel created = ResultAssert.Success(await new CreateAdminAchievementDefinitionCommandHandler(service)
             .Handle(new CreateAdminAchievementDefinitionCommand(createInput), CancellationToken.None));

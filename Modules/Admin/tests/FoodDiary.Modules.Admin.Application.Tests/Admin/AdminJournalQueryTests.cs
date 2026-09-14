@@ -1,8 +1,10 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Testing;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions;
+using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Modules.Ai.Contracts.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
@@ -90,19 +92,19 @@ public class AdminJournalQueryTests {
     [InlineData(false)]
     public async Task Revisions_NormalizesKeyAndLocale(bool ai) {
         using var cancellation = new CancellationTokenSource();
-        IEmailTemplateAdministrationReadService email = Substitute.For<IEmailTemplateAdministrationReadService>();
-        IAiAdministrationReadService prompts = Substitute.For<IAiAdministrationReadService>();
+        ISender email = Substitute.For<ISender>();
+        ISender prompts = Substitute.For<ISender>();
         var id = Guid.NewGuid();
-        email.GetRevisionsAsync("welcome", "en", cancellation.Token).Returns([new EmailTemplateRevisionReadModel(id, "subject", "html", "text", IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
-        prompts.GetPromptRevisionsAsync("welcome", "en", cancellation.Token).Returns([new AiPromptRevisionReadModel(id, "text", 2, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
-        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(email, prompts).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
+        email.Send(new GetEmailTemplateRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token).Returns([new EmailTemplateRevisionReadModel(id, "subject", "html", "text", IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
+        prompts.Send(new GetAiPromptRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token).Returns([new AiPromptRevisionReadModel(id, "text", 2, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
+        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (prompts, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)]))).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
         ResultAssert.Success(result);
         Assert.Equal(id, Assert.Single(result.Value).Id);
         if (ai) {
-            await prompts.Received(1).GetPromptRevisionsAsync("welcome", "en", cancellation.Token);
+            await prompts.Received(1).Send(new GetAiPromptRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token);
             Assert.Empty(email.ReceivedCalls());
         } else {
-            await email.Received(1).GetRevisionsAsync("welcome", "en", cancellation.Token);
+            await email.Received(1).Send(new GetEmailTemplateRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token);
             Assert.Empty(prompts.ReceivedCalls());
         }
     }

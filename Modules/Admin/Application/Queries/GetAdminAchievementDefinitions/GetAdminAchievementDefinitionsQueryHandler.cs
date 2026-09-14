@@ -1,14 +1,15 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Gamification.Queries.GetAchievementDefinitionsForAdministration;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
 
-public sealed class GetAdminAchievementDefinitionsQueryHandler(IAchievementDefinitionAdministrationService service)
+public sealed class GetAdminAchievementDefinitionsQueryHandler(ISender service)
     : IQueryHandler<GetAdminAchievementDefinitionsQuery, Result<IReadOnlyList<AchievementDefinitionAdminModel>>> {
     public async Task<Result<IReadOnlyList<AchievementDefinitionAdminModel>>> Handle(
         GetAdminAchievementDefinitionsQuery query,
         CancellationToken cancellationToken) =>
-        Result.Success(await service.GetAllAsync(cancellationToken).ConfigureAwait(false));
+        Result.Success(await service.Send(new GetAchievementDefinitionsForAdministrationQuery(), cancellationToken).ConfigureAwait(false));
 }

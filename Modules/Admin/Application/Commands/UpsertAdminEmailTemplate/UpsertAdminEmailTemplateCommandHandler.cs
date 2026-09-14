@@ -1,44 +1,24 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Email.Commands.UpsertEmailTemplate;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
-using FoodDiary.Modules.Admin.Application.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
 
 public sealed class UpsertAdminEmailTemplateCommandHandler(
-    IEmailTemplateAdministrationService administrationService)
+    ISender administrationService)
     : ICommandHandler<UpsertAdminEmailTemplateCommand, Result<AdminEmailTemplateModel>> {
     public async Task<Result<AdminEmailTemplateModel>> Handle(
         UpsertAdminEmailTemplateCommand command,
         CancellationToken cancellationToken) {
-        string key = NormalizeKey(command.Key);
-        Result<string> localeResult = AdminLocaleParser.ParseRequiredLanguage(
-            command.Locale,
-            nameof(command.Locale),
-            "Locale must be one of the supported codes.");
-        if (localeResult.IsFailure) {
-            return Result.Failure<AdminEmailTemplateModel>(localeResult.Error);
-        }
-
-        Result<EmailTemplateReadModel> templateResult = await administrationService.UpsertAsync(
-            key,
-            localeResult.Value,
-            command.Subject,
-            command.HtmlBody,
-            command.TextBody,
-            command.IsActive,
-            cancellationToken).ConfigureAwait(false);
+        Result<EmailTemplateReadModel> templateResult = await administrationService.Send(new UpsertEmailTemplateCommand(Key: command.Key, Locale: command.Locale, Subject: command.Subject, HtmlBody: command.HtmlBody, TextBody: command.TextBody, IsActive: command.IsActive), cancellationToken).ConfigureAwait(false);
 
         return templateResult.IsSuccess
             ? Result.Success(templateResult.Value.ToAdminModel())
             : Result.Failure<AdminEmailTemplateModel>(templateResult.Error);
     }
 
-    private static string NormalizeKey(string value) {
-        string trimmed = value.Trim();
-        return trimmed.ToLowerInvariant();
-    }
 }

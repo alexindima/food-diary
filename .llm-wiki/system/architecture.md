@@ -3,6 +3,7 @@ id: system.architecture
 kind: system
 status: current
 sources:
+  - docs/adr/0041-owner-requests-for-module-use-cases.md
   - docs/adr/0039-presentation-contracts-and-mappings.md
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
@@ -68,7 +69,7 @@ Owner runtime contexts join the scoped host unit of work through
 `IModuleContextFactory`. WeeklyGoals consumes `IModuleTransactionCoordinator`
 without referencing central Infrastructure. Meals also delegates recognition
 transactions to this contract while retaining its intermediate receipt flush and
-remaining purge bridge. Products and Recipes delegate Serializable mutations and live
+owner-context purge. Products and Recipes delegate Serializable mutations and live
 transaction access to the same coordinator, retaining their purge bridges. This preserves shared transactions and
 migrations; it does not introduce independent databases. See ADR 0040.
 
@@ -88,3 +89,10 @@ to IModuleTransactionCoordinator; it retains owner duplicate translation before
 cleanup and its separate checkout lease. See ADR 0040.
 
 Wearables consumes the narrow IModuleSessionCoordinator and has no direct or transitive central Infrastructure dependency. The central session coordinator retains a separate advisory lease, one provider callback, durable intermediate saves and final unit-of-work persistence. Transaction retries must never replay provider calls. See ADR 0040 and the runtime-context dependency inventory.
+
+ADR 0041 makes owner Contracts requests the public boundary for the migrated
+Admin, Ai, Billing and BodyMetrics use cases. Consumers dispatch through ISender;
+owner Application handlers implement the operations. Technical ports remain
+explicit exceptions. Nested mutations preserve caller-owned commits, and Billing
+references Marketing.Contracts for conversion recording. Request-boundary and
+transaction tests complement the project-reference matrix.

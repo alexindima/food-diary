@@ -22,3 +22,5 @@ ContentReports owns a single-entity runtime context and report writes. The host
 composition implements its existing read-model and target-read ports, preserving
 visibility predicates, SQL paging and bounded title/comment excerpts. No module
 references the composition implementation; central migrations remain (ADR 0040).
+
+Admin dispatches moderation and administration-read requests from Contracts. Review/dismiss handlers preserve pending-state checks and caller-owned saving; queries retain paging and filters.

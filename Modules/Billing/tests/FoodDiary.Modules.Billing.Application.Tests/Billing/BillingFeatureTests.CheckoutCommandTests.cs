@@ -1,4 +1,6 @@
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
@@ -201,12 +203,10 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
         var userId = UserId.New();
-        IUserBillingService userContextService = Substitute.For<IUserBillingService>();
-        userContextService
-            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+        ISender userContextService = Substitute.For<ISender>();
+        userContextService.Send(new CheckUserAccessQuery(UserId: userId), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
-        userContextService
-            .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
+        userContextService.Send(new GetUserBillingProfileQuery(UserId: userId), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
         var handler = new CreateCheckoutSessionCommandHandler(
             userContextService,

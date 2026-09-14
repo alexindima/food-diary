@@ -1,10 +1,12 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +15,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
 
 public sealed class GetWeightHistoryPageSummaryQueryHandler(
-    IWeightEntryReadService readService,
+    ISender readService,
     IUserProfileReadService userProfileReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWeightHistoryPageSummaryQuery, Result<WeightHistoryPageSummaryModel>> {
@@ -43,15 +45,8 @@ public sealed class GetWeightHistoryPageSummaryQueryHandler(
             return Result.Failure<WeightHistoryPageSummaryModel>(profileResult.Error);
         }
 
-        IReadOnlyList<WeightEntryModel> entries = await readService.GetEntriesAsync(
-            userId,
-            dateFrom: null,
-            dateTo: null,
-            limit: query.EntriesLimit,
-            descending: true,
-            cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WeightEntrySummaryModel> summary = await readService.GetSummariesAsync(
-            userId, dateFrom, dateTo, query.QuantizationDays, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntryModel> entries = await readService.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntrySummaryModel> summary = await readService.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
         WeightHistoryProfileModel profile = profileResult.Value;
         return Result.Success(new WeightHistoryPageSummaryModel(entries, summary, profile.HeightCm, profile.Goal, profile.GoalHistory));
     }

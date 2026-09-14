@@ -1,3 +1,7 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Exercises.Common;
@@ -8,7 +12,6 @@ using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -114,7 +117,7 @@ public class TdeeFeatureTests {
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(
             profileService ?? CreateProfileService(user: null),
-            new WeightEntryReadService(CreateWeightEntryRepository()),
+            RequestTestSender.Create(new ReadWeightEntriesQueryHandler(CreateWeightEntryRepository()), new ReadLatestWeightEntryQueryHandler(CreateWeightEntryRepository()), new ReadWeightSummariesQueryHandler(CreateWeightEntryRepository())),
             statisticsReadService ?? CreateStatisticsReadService(),
             CreateExerciseEntryReadService(),
             new StubDateTimeProvider(),

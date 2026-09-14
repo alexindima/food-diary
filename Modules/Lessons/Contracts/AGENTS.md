@@ -1,5 +1,5 @@
 # Lessons consumer contracts
 
-Expose administration capabilities and immutable results. Consume Lessons scalar
+Expose administration commands/queries and immutable results through the shared Mediator. Consume Lessons scalar
 types through Domain.Contracts, never the aggregate-bearing Domain assembly.
-Preserve existing signatures, defaults, cancellation and result semantics.
+Preserve defaults, cancellation, publication flags, import deduplication and result semantics. Mutating owner requests stage changes in the caller unit of work; they do not save independently.

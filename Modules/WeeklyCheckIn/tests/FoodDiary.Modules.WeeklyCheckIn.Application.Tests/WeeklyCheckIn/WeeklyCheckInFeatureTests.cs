@@ -1,14 +1,16 @@
+using FoodDiary.Testing;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -334,17 +336,13 @@ public class WeeklyCheckInFeatureTests {
     private static GetWeeklyCheckInQueryHandler CreateHandler(
         IMealActivityReadService? mealActivityReadService = null,
         IDashboardStatisticsReadService? statisticsReadService = null,
-        IWeightEntryReadService? weightEntryReadService = null,
-        IWaistEntryReadService? waistEntryReadService = null,
+        ISender? weightEntryReadService = null,
+        ISender? waistEntryReadService = null,
         IHydrationEntryReadService? hydrationEntryReadService = null,
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
             new WeeklyCheckInReadService(
-                mealActivityReadService ?? CreateMealActivityReadService(),
-                statisticsReadService ?? CreateStatisticsReadService(),
-                weightEntryReadService ?? CreateWeightEntryReadService(),
-                waistEntryReadService ?? CreateWaistEntryReadService(),
-                hydrationEntryReadService ?? CreateHydrationEntryReadService()),
+                mealActivityReadService ?? CreateMealActivityReadService(), statisticsReadService ?? CreateStatisticsReadService(), RequestTestSender.Route((weightEntryReadService ?? CreateWeightEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery)]), (waistEntryReadService ?? CreateWaistEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery)])), hydrationEntryReadService ?? CreateHydrationEntryReadService()),
             profileService ?? CreateProfileService(user: null),
             new StubDateTimeProvider());
 
@@ -365,18 +363,16 @@ public class WeeklyCheckInFeatureTests {
         return service;
     }
 
-    private static IWeightEntryReadService CreateWeightEntryReadService() {
-        IWeightEntryReadService service = Substitute.For<IWeightEntryReadService>();
-        service
-            .GetEntriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int?>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+    private static ISender CreateWeightEntryReadService() {
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Any<ReadWeightEntriesQuery>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<WeightEntryModel>>([]));
         return service;
     }
 
-    private static IWaistEntryReadService CreateWaistEntryReadService() {
-        IWaistEntryReadService service = Substitute.For<IWaistEntryReadService>();
-        service
-            .GetEntriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int?>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+    private static ISender CreateWaistEntryReadService() {
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Any<ReadWaistEntriesQuery>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<WaistEntryModel>>([]));
         return service;
     }

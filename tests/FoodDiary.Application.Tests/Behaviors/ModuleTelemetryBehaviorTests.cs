@@ -32,6 +32,11 @@ public sealed class ModuleTelemetryBehaviorTests {
         Assert.Equal("Products", ModuleOperationTelemetry.ResolveModule(
             typeof(FoodDiary.Application.Products.Queries.GetProducts.GetProductsQuery).Assembly.GetName().Name));
 
+    [Fact]
+    public void ResolveModule_RecognizesAnOwnerContractsRequestAssembly() =>
+        Assert.Equal("Ai", ModuleOperationTelemetry.ResolveModule(
+            typeof(FoodDiary.Modules.Ai.Contracts.Commands.UpsertAiPrompt.UpsertAiPromptCommand).Assembly.GetName().Name));
+
     [Theory]
     [InlineData("success")]
     [InlineData("failure")]
@@ -95,12 +100,21 @@ public sealed class ModuleTelemetryBehaviorTests {
     [Theory]
     [InlineData("FoodDiary.Application.Meals", "Meals")]
     [InlineData("FoodDiary.Modules.BodyMetrics.Application", "BodyMetrics")]
+    [InlineData("FoodDiary.Modules.BodyMetrics.Contracts", "BodyMetrics")]
+    [InlineData("FoodDiary.Modules.Users.Contracts", "Users")]
+    [InlineData("FoodDiary.Modules.Identity.Contracts", "Identity")]
+    [InlineData("FoodDiary.Modules.Marketing.Contracts", "Marketing")]
+    [InlineData("FoodDiary.Modules.Users.Domain.Contracts", "Other")]
+    [InlineData("FoodDiary.Modules.Users.Application.Abstractions", "Other")]
+    [InlineData("FoodDiary.Modules.Users.Application.Tests", "Other")]
+    [InlineData("FoodDiary.Modules..Contracts", "Other")]
+    [InlineData("FoodDiary.Modules.Users.Infrastructure", "Other")]
     [InlineData("FoodDiary.Application.Tests", "Other")]
     [InlineData("FoodDiary.Application.Contracts", "Other")]
     [InlineData("FoodDiary.Application.", "Other")]
     [InlineData("Unrelated.Assembly", "Other")]
     [InlineData(null, "Other")]
-    public void ResolveModule_UsesOnlyApplicationAssemblyOwnership(string? assembly, string expected) =>
+    public void ResolveModule_UsesRequestAssemblyOwnership(string? assembly, string expected) =>
         Assert.Equal(expected, ModuleOperationTelemetry.ResolveModule(assembly));
 
     private static MeterListener Listen(ConcurrentQueue<Measurement> measurements) {

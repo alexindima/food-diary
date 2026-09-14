@@ -29,7 +29,7 @@ Application consumes scalar Users types through Users.Domain.Contracts and seman
 capabilities through Users.Contracts. Do not reference the aggregate-bearing
 Users.Domain assembly for these types.
 
-Use Users.Contracts IUserBillingService directly; do not recreate a forwarding user-context service or duplicate profile. Keep overview logic in GetBillingOverviewQueryHandler. Subscription eligibility is defined by BillingPremiumAccessPolicy.GrantsPremiumAccess: past_due and trialing require an end strictly after the current instant.
+Dispatch Users.Contracts billing profile, access, trial and Premium-role requests through ISender; do not recreate a forwarding user-context service or duplicate profile. Keep overview logic in GetBillingOverviewQueryHandler. Subscription eligibility is defined by BillingPremiumAccessPolicy.GrantsPremiumAccess: past_due and trialing require an end strictly after the current instant.
 
 Renewal responses use a captured subscription snapshot and the same per-user transaction lock as webhooks. Record financial results even when the snapshot is stale, but never overwrite newer subscription/access state. Pending recurring payments are verified by payment ID after backoff; only a confirmed decline permits a new stable idempotency key. Transport failures reuse the current attempt key.
 

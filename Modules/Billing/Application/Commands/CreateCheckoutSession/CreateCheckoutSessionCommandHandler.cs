@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
@@ -15,7 +16,7 @@ using System.Text;
 namespace FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
 
 public sealed class CreateCheckoutSessionCommandHandler(
-    IUserBillingService billingUserContextService,
+    ISender billingUserContextService,
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingPaymentWriteRepository billingPaymentRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
@@ -36,7 +37,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
             .AcquireAsync(userId.Value, cancellationToken)
             .ConfigureAwait(false);
         await using ConfiguredAsyncDisposable checkoutLock = lockHandle.ConfigureAwait(false);
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(userResult.Error);
         }
@@ -81,7 +82,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
         var result = Result.Success(session);
         await transactionRunner.ExecuteSerializedAsync(BillingOperationLockKeys.ForUser(userId.Value), async token => {
             // The transaction resets tracking; never save the entity read before provider HTTP.
-            Result<UserBillingProfileModel> currentUser = await billingUserContextService.GetAccessibleProfileAsync(userId, token).ConfigureAwait(false);
+            Result<UserBillingProfileModel> currentUser = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), token).ConfigureAwait(false);
             if (currentUser.IsFailure) {
                 result = Result.Failure<BillingCheckoutSessionModel>(currentUser.Error);
                 return;

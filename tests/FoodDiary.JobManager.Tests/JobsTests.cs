@@ -1,3 +1,10 @@
+using FoodDiary.Application.Abstractions.Commands.EnsureUserPremiumRole;
+using FoodDiary.Application.Abstractions.Commands.RemoveUserPremiumRole;
+using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Testing;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
@@ -1540,7 +1547,7 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IUserBillingService {
+    private sealed class FakeUserRepository(params User[] users) : RequestTestSender, IUserRepository {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
@@ -1659,6 +1666,16 @@ public sealed class JobsTests {
                 user.HasRole(RoleNames.Premium),
                 user.PremiumTrialStartedAtUtc,
                 user.PremiumTrialEndsAtUtc);
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            GetUserBillingProfileQuery r => (Task<TResponse>)(object)GetAccessibleProfileAsync(r.UserId, cancellationToken),
+            GetUserBillingProfileIncludingDeletedQuery r => (Task<TResponse>)(object)GetProfileIncludingDeletedAsync(r.UserId, cancellationToken),
+            StartUserPremiumTrialCommand r => (Task<TResponse>)(object)StartPremiumTrialAsync(r.UserId, r.StartedAtUtc, r.Duration, cancellationToken),
+            EnsureUserPremiumRoleCommand r => (Task<TResponse>)(object)AsUnitAsync(EnsurePremiumRoleAsync(r.UserId, cancellationToken)),
+            RemoveUserPremiumRoleCommand r => (Task<TResponse>)(object)AsUnitAsync(RemovePremiumRoleAsync(r.UserId, cancellationToken)),
+            CheckUserAccessQuery r => (Task<TResponse>)(object)EnsureCanAccessAsync(r.UserId, cancellationToken),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
     }
 
     [ExcludeFromCodeCoverage]

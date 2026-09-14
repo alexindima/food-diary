@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Commands.SetUserPasswordByAdministrator;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -9,7 +11,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 namespace FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 
 public sealed class SetAdminUserPasswordCommandHandler(
-    IUserAdministrationMutationService userManagementService,
+    ISender userManagementService,
     IUserSessionRevocationService sessionRevocationService,
     TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)
@@ -29,8 +31,7 @@ public sealed class SetAdminUserPasswordCommandHandler(
             return Result.Failure(actorUserIdResult.Error);
         }
 
-        Result passwordResult = await userManagementService
-            .SetPasswordAsync(userIdResult.Value, actorUserIdResult.Value, command.NewPassword, cancellationToken)
+        Result passwordResult = await userManagementService.Send(new SetUserPasswordByAdministratorCommand(UserId: userIdResult.Value, ActorUserId: actorUserIdResult.Value, NewPassword: command.NewPassword), cancellationToken)
             .ConfigureAwait(false);
         if (passwordResult.IsFailure) {
             return passwordResult;

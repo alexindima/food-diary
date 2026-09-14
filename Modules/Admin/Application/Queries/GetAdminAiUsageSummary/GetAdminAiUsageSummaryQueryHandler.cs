@@ -1,4 +1,6 @@
-using FoodDiary.Modules.Ai.Contracts.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetAiUsageForUser;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetAiUsageSummary;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
@@ -8,7 +10,7 @@ using FoodDiary.Modules.Admin.Application.Models;
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
 
 public sealed class GetAdminAiUsageSummaryQueryHandler(
-    IAiAdministrationReadService aiReadService,
+    ISender aiReadService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetAdminAiUsageSummaryQuery, Result<AdminAiUsageSummaryModel>> {
     public async Task<Result<AdminAiUsageSummaryModel>> Handle(GetAdminAiUsageSummaryQuery query, CancellationToken cancellationToken) {
@@ -24,8 +26,8 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(
         var toUtc = periodTo.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 
         AiUsageSummary summary = query.UserId.HasValue
-            ? await aiReadService.GetUsageSummaryForUserAsync(fromUtc, toUtc, query.UserId.Value, cancellationToken).ConfigureAwait(false)
-            : await aiReadService.GetUsageSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
+            ? await aiReadService.Send(new GetAiUsageForUserQuery(FromUtc: fromUtc, ToUtc: toUtc, UserId: query.UserId.Value), cancellationToken).ConfigureAwait(false)
+            : await aiReadService.Send(new GetAiUsageSummaryQuery(FromUtc: fromUtc, ToUtc: toUtc), cancellationToken).ConfigureAwait(false);
 
         var response = new AdminAiUsageSummaryModel(
             summary.TotalTokens,

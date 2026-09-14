@@ -16,7 +16,6 @@ public static class DependencyInjection {
         services.AddScoped<IGamificationUserProfileService, GamificationUserProfileService>();
         services.AddScoped<IAchievementAwardService, AchievementAwardService>();
         services.AddScoped<IAchievementReconciliationHandler, AchievementReconciliationHandler>();
-        services.AddScoped<IAchievementDefinitionAdministrationService, AchievementDefinitionAdministrationService>();
         return services;
     }
 }

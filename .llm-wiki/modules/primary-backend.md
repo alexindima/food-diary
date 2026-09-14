@@ -118,3 +118,9 @@ to IModuleTransactionCoordinator; it retains owner duplicate translation before
 cleanup and its separate checkout lease. See ADR 0040.
 
 Wearables consumes the narrow IModuleSessionCoordinator and has no direct or transitive central Infrastructure dependency. The central session coordinator retains a separate advisory lease, one provider callback, durable intermediate saves and final unit-of-work persistence. Transaction retries must never replay provider calls. See ADR 0040 and the runtime-context dependency inventory.
+
+Admin, Dietologist, Meals, MealPlanning, RecentItems, Ai and Identity user-purge adapters
+use owner contexts and bind the live coordinated transaction on each invocation.
+Admin, Meals, MealPlanning and RecentItems no longer reference central Infrastructure.
+Ai telemetry, Identity JWT configuration and Dietologist audit retain existing central dependencies.
+Users still owns final deletion and transaction completion.

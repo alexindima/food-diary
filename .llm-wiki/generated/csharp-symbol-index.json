@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4051,
-    "symbols": 3992,
-    "interfaceImplementationLinks": 257,
-    "dependencyInjectionRegistrations": 150,
+    "sourceFiles": 4101,
+    "symbols": 4042,
+    "interfaceImplementationLinks": 240,
+    "dependencyInjectionRegistrations": 134,
     "kinds": {
-      "class": 2102,
+      "class": 2127,
       "enum": 64,
-      "interface": 464,
-      "record": 1241,
+      "interface": 446,
+      "record": 1284,
       "record struct": 121
     },
     "roles": {
-      "Command": 183,
-      "CommandHandler": 179,
+      "Command": 200,
+      "CommandHandler": 196,
       "Configuration": 95,
       "Controller": 104,
       "Entity": 97,
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1650,
-      "Query": 211,
-      "QueryHandler": 139,
+      "Other": 1644,
+      "Query": 237,
+      "QueryHandler": 165,
       "ReadModelRepository": 30,
       "ReadRepository": 41,
       "Repository": 99,
       "Request": 150,
       "Response": 213,
-      "Service": 291,
+      "Service": 261,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 45
@@ -2768,7 +2768,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "CreateAdminAchievementDefinitionCommandValidator",
@@ -2789,7 +2789,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/CreateAdminLesson/CreateAdminLessonCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "CreateAdminLessonCommandValidator",
@@ -2810,7 +2810,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CreateAdminUserCommandValidator",
@@ -2831,7 +2831,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/DeleteAdminLesson/DeleteAdminLessonCommandHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "DismissContentReportCommand",
@@ -2845,7 +2845,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ExchangeAdminImpersonationCommandHandler",
@@ -2880,7 +2880,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonsCommandHandler.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "ImportAdminLessonsCommandValidator",
@@ -2922,7 +2922,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "SendAdminEmailTemplateTestCommand",
@@ -2964,7 +2964,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "SetAdminUserPasswordCommandValidator",
@@ -3006,7 +3006,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UpdateAdminAchievementDefinitionCommandValidator",
@@ -3027,7 +3027,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/UpdateAdminLesson/UpdateAdminLessonCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "UpdateAdminLessonCommandValidator",
@@ -3048,7 +3048,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UpdateAdminUserCommandValidator",
@@ -3097,13 +3097,6 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Application/Common/AdminLessonValueParser.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminLocaleParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Admin/Application/Common/AdminLocaleParser.cs",
       "line": 6
     },
     {
@@ -3335,7 +3328,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "GetAdminAiPromptsQuery",
@@ -3349,7 +3342,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetAdminAiUsageSummaryQuery",
@@ -3363,7 +3356,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryHandler.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "GetAdminAiUsageSummaryQueryValidator",
@@ -3482,7 +3475,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GetAdminContentReportsQueryValidator",
@@ -3531,7 +3524,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetAdminImpersonationSessionsQuery",
@@ -3566,7 +3559,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetAdminMailInboxMessageDetailsQuery",
@@ -3678,7 +3671,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetAdminTemplateRevisionsQueryValidator",
@@ -3699,7 +3692,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "GetAdminUserLoginEventsQuery",
@@ -3713,7 +3706,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetAdminUserLoginEventsQueryValidator",
@@ -3734,7 +3727,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQueryHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "GetAdminUserRoleAuditQuery",
@@ -3748,7 +3741,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "GetAdminUsersQuery",
@@ -3762,7 +3755,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "GetAdminUsersQueryValidator",
@@ -3797,7 +3790,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ExchangeAdminImpersonationCommand",
@@ -5018,11 +5011,53 @@
       "line": 4
     },
     {
+      "name": "UpsertAiPromptCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/UpsertAiPrompt/UpsertAiPromptCommandHandler.cs",
+      "line": 11
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 9
+      "line": 8
+    },
+    {
+      "name": "GetAiPromptRevisionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAiPromptTemplatesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetAiPromptTemplates/GetAiPromptTemplatesQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAiUsageForUserQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetAiUsageForUser/GetAiUsageForUserQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAiUsageSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetAiUsageSummary/GetAiUsageSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetCompletedFoodRecognitionQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Ai/Application/Queries/GetCompletedFoodRecognition/GetCompletedFoodRecognitionQueryHandler.cs",
+      "line": 8
     },
     {
       "name": "GetFoodRecognitionQuery",
@@ -5074,32 +5109,11 @@
       "line": 7
     },
     {
-      "name": "AiAdministrationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
-      "line": 7
-    },
-    {
-      "name": "AiPromptAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
-      "line": 8
-    },
-    {
       "name": "ApplicationAiTelemetry",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Application/Services/ApplicationAiTelemetry.cs",
       "line": 5
-    },
-    {
-      "name": "FoodRecognitionResultReader",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
-      "line": 7
     },
     {
       "name": "OpenAiFoodService",
@@ -5116,25 +5130,11 @@
       "line": 6
     },
     {
-      "name": "IAiAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Contracts/Common/IAiAdministrationReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IAiPromptAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Contracts/Common/IAiPromptAdministrationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IFoodRecognitionResultReader",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Ai/Contracts/Common/IFoodRecognitionResultReader.cs",
-      "line": 5
+      "name": "UpsertAiPromptCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Ai/Contracts/Commands/UpsertAiPrompt/UpsertAiPromptCommand.cs",
+      "line": 8
     },
     {
       "name": "AiPromptRevisionReadModel",
@@ -5212,6 +5212,41 @@
       "role": "Other",
       "path": "Modules/Ai/Contracts/Models/FoodVisionModel.cs",
       "line": 2
+    },
+    {
+      "name": "GetAiPromptRevisionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Contracts/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetAiPromptTemplatesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Contracts/Queries/GetAiPromptTemplates/GetAiPromptTemplatesQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetAiUsageForUserQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Contracts/Queries/GetAiUsageForUser/GetAiUsageForUserQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetAiUsageSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Contracts/Queries/GetAiUsageSummary/GetAiUsageSummaryQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetCompletedFoodRecognitionQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Ai/Contracts/Queries/GetCompletedFoodRecognition/GetCompletedFoodRecognitionQuery.cs",
+      "line": 6
     },
     {
       "name": "AiPromptRevision",
@@ -5729,7 +5764,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -5757,7 +5792,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "BillingWebhookEventProcessor",
@@ -5785,7 +5820,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "BillingWebhookProcessingContext",
@@ -5869,14 +5904,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "BillingCurrentUserAccessResolver",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BillingOperationLockKeys",
@@ -5918,7 +5953,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Billing/Application/Services/BillingAccessService.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "ProcessBillingWebhookInboxCommand",
@@ -5940,13 +5975,6 @@
       "role": "Command",
       "path": "Modules/Billing/Contracts/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommand.cs",
       "line": 5
-    },
-    {
-      "name": "IBillingMarketingConversionRecorder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs",
-      "line": 2
     },
     {
       "name": "BillingRenewalRunResult",
@@ -6359,7 +6387,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Application/DependencyInjection.cs",
-      "line": 10
+      "line": 6
     },
     {
       "name": "CreateWaistEntryCommand",
@@ -6450,7 +6478,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetLatestWaistEntryQueryValidator",
@@ -6471,7 +6499,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetWaistEntriesQueryValidator",
@@ -6492,7 +6520,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "GetWaistSummariesQuery",
@@ -6506,7 +6534,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetWaistSummariesQueryValidator",
@@ -6516,10 +6544,24 @@
       "line": 5
     },
     {
-      "name": "WaistEntryReadService",
+      "name": "ReadLatestWaistEntryQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/ReadLatestWaistEntry/ReadLatestWaistEntryQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ReadWaistEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/ReadWaistEntries/ReadWaistEntriesQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "ReadWaistSummariesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/ReadWaistSummaries/ReadWaistSummariesQueryHandler.cs",
       "line": 10
     },
     {
@@ -6611,7 +6653,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "GetLatestWeightEntryQueryValidator",
@@ -6632,7 +6674,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetWeightEntriesQueryValidator",
@@ -6653,7 +6695,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "GetWeightSummariesQuery",
@@ -6667,7 +6709,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetWeightSummariesQueryValidator",
@@ -6677,18 +6719,25 @@
       "line": 5
     },
     {
-      "name": "WeightEntryReadService",
+      "name": "ReadLatestWeightEntryQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/ReadLatestWeightEntry/ReadLatestWeightEntryQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ReadWeightEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/ReadWeightEntries/ReadWeightEntriesQueryHandler.cs",
       "line": 10
     },
     {
-      "name": "IWaistEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Common/IWaistEntryReadService.cs",
-      "line": 5
+      "name": "ReadWeightSummariesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/ReadWeightSummaries/ReadWeightSummariesQueryHandler.cs",
+      "line": 10
     },
     {
       "name": "WaistEntryModel",
@@ -6705,11 +6754,25 @@
       "line": 2
     },
     {
-      "name": "IWeightEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Common/IWeightEntryReadService.cs",
-      "line": 5
+      "name": "ReadLatestWaistEntryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Queries/ReadLatestWaistEntry/ReadLatestWaistEntryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ReadWaistEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Queries/ReadWaistEntries/ReadWaistEntriesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ReadWaistSummariesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Contracts/WaistEntries/Queries/ReadWaistSummaries/ReadWaistSummariesQuery.cs",
+      "line": 6
     },
     {
       "name": "WeightEntryModel",
@@ -6724,6 +6787,27 @@
       "role": "Other",
       "path": "Modules/BodyMetrics/Contracts/WeightEntries/Models/WeightEntrySummaryModel.cs",
       "line": 2
+    },
+    {
+      "name": "ReadLatestWeightEntryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Queries/ReadLatestWeightEntry/ReadLatestWeightEntryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ReadWeightEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Queries/ReadWeightEntries/ReadWeightEntriesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ReadWeightSummariesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Contracts/WeightEntries/Queries/ReadWeightSummaries/ReadWeightSummariesQuery.cs",
+      "line": 6
     },
     {
       "name": "WaistEntry",
@@ -7048,6 +7132,20 @@
       "line": 4
     },
     {
+      "name": "DismissContentReportCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "ReviewContentReportCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
+      "line": 8
+    },
+    {
       "name": "ContentReportTargetTypeParser",
       "kind": "class",
       "role": "Other",
@@ -7059,7 +7157,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/ContentReports/Application/DependencyInjection.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "ContentReportModel",
@@ -7069,32 +7167,32 @@
       "line": 2
     },
     {
-      "name": "ContentReportAdministrationReadService",
+      "name": "CountContentReportsQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/ContentReports/Application/Services/ContentReportAdministrationReadService.cs",
+      "role": "QueryHandler",
+      "path": "Modules/ContentReports/Application/Queries/CountContentReports/CountContentReportsQueryHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "GetContentReportsForAdministrationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/ContentReports/Application/Queries/GetContentReportsForAdministration/GetContentReportsForAdministrationQueryHandler.cs",
       "line": 7
     },
     {
-      "name": "ContentReportAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs",
+      "name": "DismissContentReportCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/ContentReports/Contracts/Commands/DismissContentReport/DismissContentReportCommand.cs",
       "line": 8
     },
     {
-      "name": "IContentReportAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IContentReportAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationService.cs",
-      "line": 5
+      "name": "ReviewContentReportCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/ContentReports/Contracts/Commands/ReviewContentReport/ReviewContentReportCommand.cs",
+      "line": 8
     },
     {
       "name": "ContentReportAdminFilter",
@@ -7108,6 +7206,20 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/ContentReports/Contracts/Models/ContentReportAdminReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "CountContentReportsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/ContentReports/Contracts/Queries/CountContentReports/CountContentReportsQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetContentReportsForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/ContentReports/Contracts/Queries/GetContentReportsForAdministration/GetContentReportsForAdministrationQuery.cs",
       "line": 6
     },
     {
@@ -8606,7 +8718,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
-      "line": 11
+      "line": 14
     },
     {
       "name": "IDashboardStatisticsReadService",
@@ -12921,6 +13033,20 @@
       "line": 2
     },
     {
+      "name": "CreateAchievementDefinitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Gamification/Application/Commands/CreateAchievementDefinition/CreateAchievementDefinitionCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "UpdateAchievementDefinitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Gamification/Application/Commands/UpdateAchievementDefinition/UpdateAchievementDefinitionCommandHandler.cs",
+      "line": 12
+    },
+    {
       "name": "IAchievementAwardService",
       "kind": "interface",
       "role": "Service",
@@ -12977,6 +13103,13 @@
       "line": 2
     },
     {
+      "name": "GetAchievementDefinitionsForAdministrationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
+      "line": 7
+    },
+    {
       "name": "GetGamificationQuery",
       "kind": "record",
       "role": "Query",
@@ -12996,13 +13129,6 @@
       "role": "Service",
       "path": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
       "line": 9
-    },
-    {
-      "name": "AchievementDefinitionAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
-      "line": 12
     },
     {
       "name": "AchievementReconciliationHandler",
@@ -13040,11 +13166,18 @@
       "line": 4
     },
     {
-      "name": "IAchievementDefinitionAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs",
-      "line": 5
+      "name": "CreateAchievementDefinitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Gamification/Contracts/Commands/CreateAchievementDefinition/CreateAchievementDefinitionCommand.cs",
+      "line": 8
+    },
+    {
+      "name": "UpdateAchievementDefinitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Gamification/Contracts/Commands/UpdateAchievementDefinition/UpdateAchievementDefinitionCommand.cs",
+      "line": 8
     },
     {
       "name": "AchievementDefinitionAdminModel",
@@ -13066,6 +13199,13 @@
       "role": "Other",
       "path": "Modules/Gamification/Contracts/Models/AchievementDefinitionUpdateInput.cs",
       "line": 2
+    },
+    {
+      "name": "GetAchievementDefinitionsForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Gamification/Contracts/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQuery.cs",
+      "line": 5
     },
     {
       "name": "AchievementDefinitionLimits",
@@ -14580,6 +14720,20 @@
       "line": 11
     },
     {
+      "name": "GetLoginDeviceSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetLoginDeviceSummary/GetLoginDeviceSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetLoginEventsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetLoginEvents/GetLoginEventsQueryHandler.cs",
+      "line": 7
+    },
+    {
       "name": "GetTelegramConfigurationQuery",
       "kind": "record",
       "role": "Query",
@@ -14620,13 +14774,6 @@
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
       "line": 4
-    },
-    {
-      "name": "AuthenticationLoginEventReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
-      "line": 5
     },
     {
       "name": "AuthenticationTokenService",
@@ -14703,35 +14850,28 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 12
+      "line": 10
     },
     {
-      "name": "EmailTemplateAdministrationReadService",
+      "name": "UpsertEmailTemplateCommandHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
-      "line": 5
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommandHandler.cs",
+      "line": 11
     },
     {
-      "name": "EmailTemplateAdministrationService",
+      "name": "GetEmailTemplateRevisionsQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplateRevisions/GetEmailTemplateRevisionsQueryHandler.cs",
       "line": 7
     },
     {
-      "name": "IEmailTemplateAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IEmailTemplateAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationService.cs",
-      "line": 5
+      "name": "GetEmailTemplatesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatesQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "EmailTemplateReadModel",
@@ -14767,13 +14907,6 @@
       "role": "Other",
       "path": "Modules/Identity/Contracts/Authentication/Common/EmailVerificationMessage.cs",
       "line": 2
-    },
-    {
-      "name": "IAuthenticationLoginEventReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Contracts/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-      "line": 4
     },
     {
       "name": "IEmailSender",
@@ -14832,11 +14965,46 @@
       "line": 2
     },
     {
+      "name": "GetLoginDeviceSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Contracts/Authentication/Queries/GetLoginDeviceSummary/GetLoginDeviceSummaryQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetLoginEventsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Contracts/Authentication/Queries/GetLoginEvents/GetLoginEventsQuery.cs",
+      "line": 5
+    },
+    {
       "name": "IImpersonationTokenIssuer",
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Identity/Contracts/Authentication/Services/IImpersonationTokenIssuer.cs",
       "line": 4
+    },
+    {
+      "name": "UpsertEmailTemplateCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Contracts/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommand.cs",
+      "line": 8
+    },
+    {
+      "name": "GetEmailTemplateRevisionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Contracts/Email/Queries/GetEmailTemplateRevisions/GetEmailTemplateRevisionsQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetEmailTemplatesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Contracts/Email/Queries/GetEmailTemplates/GetEmailTemplatesQuery.cs",
+      "line": 5
     },
     {
       "name": "EmailTemplate",
@@ -14990,7 +15158,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "TelegramAssertionReplayGuard",
@@ -16008,6 +16176,27 @@
       "line": 2
     },
     {
+      "name": "CreateLessonCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Lessons/Application/Commands/CreateLesson/CreateLessonCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "DeleteLessonCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Lessons/Application/Commands/DeleteLesson/DeleteLessonCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ImportLessonsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Lessons/Application/Commands/ImportLessons/ImportLessonsCommandHandler.cs",
+      "line": 13
+    },
+    {
       "name": "MarkLessonReadCommand",
       "kind": "record",
       "role": "Command",
@@ -16022,6 +16211,13 @@
       "line": 11
     },
     {
+      "name": "UpdateLessonCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Lessons/Application/Commands/UpdateLesson/UpdateLessonCommandHandler.cs",
+      "line": 11
+    },
+    {
       "name": "ILessonReadService",
       "kind": "interface",
       "role": "Service",
@@ -16033,7 +16229,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Lessons/Application/DependencyInjection.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "LessonMappings",
@@ -16099,18 +16295,11 @@
       "line": 5
     },
     {
-      "name": "LessonAdministrationReadService",
+      "name": "GetLessonsForAdministrationQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "LessonAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
-      "line": 12
+      "role": "QueryHandler",
+      "path": "Modules/Lessons/Application/Queries/GetLessonsForAdministration/GetLessonsForAdministrationQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "LessonReadService",
@@ -16120,18 +16309,32 @@
       "line": 10
     },
     {
-      "name": "ILessonAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs",
-      "line": 4
+      "name": "CreateLessonCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Lessons/Contracts/Commands/CreateLesson/CreateLessonCommand.cs",
+      "line": 9
     },
     {
-      "name": "ILessonAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs",
-      "line": 7
+      "name": "DeleteLessonCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Lessons/Contracts/Commands/DeleteLesson/DeleteLessonCommand.cs",
+      "line": 8
+    },
+    {
+      "name": "ImportLessonsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Lessons/Contracts/Commands/ImportLessons/ImportLessonsCommand.cs",
+      "line": 9
+    },
+    {
+      "name": "UpdateLessonCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Lessons/Contracts/Commands/UpdateLesson/UpdateLessonCommand.cs",
+      "line": 10
     },
     {
       "name": "LessonAdministrationItem",
@@ -16146,6 +16349,13 @@
       "role": "Other",
       "path": "Modules/Lessons/Contracts/Models/LessonAdminReadModel.cs",
       "line": 6
+    },
+    {
+      "name": "GetLessonsForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Lessons/Contracts/Queries/GetLessonsForAdministration/GetLessonsForAdministrationQuery.cs",
+      "line": 5
     },
     {
       "name": "LessonCategory",
@@ -16372,6 +16582,13 @@
       "line": 9
     },
     {
+      "name": "RecordPremiumConversionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
+      "line": 6
+    },
+    {
       "name": "IMarketingAttributionCleanupService",
       "kind": "interface",
       "role": "Service",
@@ -16393,13 +16610,6 @@
       "line": 5
     },
     {
-      "name": "IMarketingConversionRecorder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Marketing/Application/Common/IMarketingConversionRecorder.cs",
-      "line": 2
-    },
-    {
       "name": "MarketingAttributionEventTypes",
       "kind": "class",
       "role": "Other",
@@ -16411,7 +16621,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Application/DependencyInjection.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "GetMarketingAttributionRangeQueryHandler",
@@ -16449,10 +16659,10 @@
       "line": 7
     },
     {
-      "name": "MarketingConversionRecorder",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+      "name": "RecordPremiumConversionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Marketing/Contracts/Commands/RecordPremiumConversion/RecordPremiumConversionCommand.cs",
       "line": 6
     },
     {
@@ -17615,7 +17825,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "DeleteMealCommand",
@@ -18329,7 +18539,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "MealAiItemHttpResponse",
@@ -20562,7 +20772,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "IRecipeCommentReadModelRepository",
@@ -21815,7 +22025,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "GetStatisticsSummaryQueryValidator",
@@ -21927,7 +22137,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "GetTdeeInsightQueryValidator",
@@ -22630,6 +22840,13 @@
       "line": 5
     },
     {
+      "name": "CreateUserByAdministratorCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommandHandler.cs",
+      "line": 14
+    },
+    {
       "name": "DeleteUserCommand",
       "kind": "record",
       "role": "Command",
@@ -22649,6 +22866,20 @@
       "role": "Validator",
       "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "EnsureUserPremiumRoleCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommandHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "RemoveUserPremiumRoleCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommandHandler.cs",
+      "line": 8
     },
     {
       "name": "RevokeAiConsentCommand",
@@ -22684,6 +22915,20 @@
       "role": "Validator",
       "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "SetUserPasswordByAdministratorCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "StartUserPremiumTrialCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
+      "line": 12
     },
     {
       "name": "UpdateDesiredWaistCommand",
@@ -22791,6 +23036,13 @@
       "line": 4
     },
     {
+      "name": "UpdateUserByAdministratorCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommandHandler.cs",
+      "line": 14
+    },
+    {
       "name": "CurrentUserAccessPolicy",
       "kind": "class",
       "role": "Other",
@@ -22875,6 +23127,13 @@
       "line": 6
     },
     {
+      "name": "CheckUserAccessQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/CheckUserAccess/CheckUserAccessQueryHandler.cs",
+      "line": 10
+    },
+    {
       "name": "GetDesiredWaistQuery",
       "kind": "record",
       "role": "Query",
@@ -22917,6 +23176,13 @@
       "line": 4
     },
     {
+      "name": "GetFilteredUsersForAdministrationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQueryHandler.cs",
+      "line": 7
+    },
+    {
       "name": "GetProfileOverviewQuery",
       "kind": "record",
       "role": "Query",
@@ -22936,6 +23202,27 @@
       "role": "Validator",
       "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "GetUserAdministrationSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetUserBillingProfileQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetUserBillingProfileIncludingDeletedQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQueryHandler.cs",
+      "line": 8
     },
     {
       "name": "GetUserByIdQuery",
@@ -22959,6 +23246,13 @@
       "line": 4
     },
     {
+      "name": "GetUserForAdministrationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserForAdministration/GetUserForAdministrationQueryHandler.cs",
+      "line": 8
+    },
+    {
       "name": "GetUserGoalsQuery",
       "kind": "record",
       "role": "Query",
@@ -22978,6 +23272,13 @@
       "role": "Validator",
       "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "GetUsersForAdministrationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUsersForAdministration/GetUsersForAdministrationQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "GetWaistGoalHistoryQuery",
@@ -23015,20 +23316,6 @@
       "line": 8
     },
     {
-      "name": "UserAdministrationMutationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Users/Application/Services/UserAdministrationMutationService.cs",
-      "line": 13
-    },
-    {
-      "name": "UserAdministrationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
-      "line": 6
-    },
-    {
       "name": "UserAuthenticationIdentityService",
       "kind": "class",
       "role": "Service",
@@ -23040,13 +23327,6 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
-      "line": 10
-    },
-    {
-      "name": "UserBillingService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Users/Application/Services/UserBillingService.cs",
       "line": 10
     },
     {
@@ -23078,10 +23358,101 @@
       "line": 12
     },
     {
+      "name": "CreateUserByAdministratorCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
+      "line": 8
+    },
+    {
+      "name": "EnsureUserPremiumRoleCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "RemoveUserPremiumRoleCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "SetUserPasswordByAdministratorCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "StartUserPremiumTrialCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs",
+      "line": 9
+    },
+    {
+      "name": "UpdateUserByAdministratorCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs",
+      "line": 8
+    },
+    {
       "name": "UserIdParser",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Contracts/Common/Validation/UserIdParser.cs",
+      "line": 6
+    },
+    {
+      "name": "CheckUserAccessQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetFilteredUsersForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserAdministrationSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetUserBillingProfileQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetUserBillingProfileIncludingDeletedQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUsersForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
       "line": 6
     },
     {
@@ -23120,20 +23491,6 @@
       "line": 2
     },
     {
-      "name": "IUserAdministrationMutationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Users/Contracts/Users/Common/IUserAdministrationMutationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs",
-      "line": 5
-    },
-    {
       "name": "IUserAiProfileReadService",
       "kind": "interface",
       "role": "Service",
@@ -23153,13 +23510,6 @@
       "role": "Service",
       "path": "Modules/Users/Contracts/Users/Common/IUserAuthenticationRegistrationService.cs",
       "line": 5
-    },
-    {
-      "name": "IUserBillingService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Users/Contracts/Users/Common/IUserBillingService.cs",
-      "line": 6
     },
     {
       "name": "IUserCleanupService",
@@ -24818,7 +25168,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "WeeklyCheckInUserProfileService",
@@ -28001,13 +28351,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IAchievementDefinitionAdministrationService",
-      "interfacePath": "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs",
-      "implementation": "AchievementDefinitionAdministrationService",
-      "implementationPath": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IAchievementDefinitionStore",
       "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
       "implementation": "AchievementDefinitionStore",
@@ -28106,20 +28449,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IAiAdministrationReadService",
-      "interfacePath": "Modules/Ai/Contracts/Common/IAiAdministrationReadService.cs",
-      "implementation": "AiAdministrationReadService",
-      "implementationPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAiPromptAdministrationService",
-      "interfacePath": "Modules/Ai/Contracts/Common/IAiPromptAdministrationService.cs",
-      "implementation": "AiPromptAdministrationService",
-      "implementationPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IAiPromptProvider",
       "interfacePath": "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs",
       "implementation": "AiPromptProvider",
@@ -28152,13 +28481,6 @@
       "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "implementation": "AuthenticationLoginEventCleanupService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAuthenticationLoginEventReadService",
-      "interfacePath": "Modules/Identity/Contracts/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-      "implementation": "AuthenticationLoginEventReadService",
-      "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28201,20 +28523,6 @@
       "interfacePath": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskRepository.cs",
       "implementation": "ClientTaskRepository",
       "implementationPath": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IContentReportAdministrationReadService",
-      "interfacePath": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationReadService.cs",
-      "implementation": "ContentReportAdministrationReadService",
-      "implementationPath": "Modules/ContentReports/Application/Services/ContentReportAdministrationReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IContentReportAdministrationService",
-      "interfacePath": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationService.cs",
-      "implementation": "ContentReportAdministrationService",
-      "implementationPath": "Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28484,20 +28792,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IEmailTemplateAdministrationReadService",
-      "interfacePath": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationReadService.cs",
-      "implementation": "EmailTemplateAdministrationReadService",
-      "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IEmailTemplateAdministrationService",
-      "interfacePath": "Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationService.cs",
-      "implementation": "EmailTemplateAdministrationService",
-      "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IEmailTemplateProvider",
       "interfacePath": "Modules/Identity/Contracts/Authentication/Common/IEmailTemplateProvider.cs",
       "implementation": "EmailTemplateProvider",
@@ -28694,13 +28988,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IFoodRecognitionResultReader",
-      "interfacePath": "Modules/Ai/Contracts/Common/IFoodRecognitionResultReader.cs",
-      "implementation": "FoodRecognitionResultReader",
-      "implementationPath": "Modules/Ai/Application/Services/FoodRecognitionResultReader.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IGamificationReadService",
       "interfacePath": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
       "implementation": "GamificationReadService",
@@ -28841,20 +29128,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "ILessonAdministrationReadService",
-      "interfacePath": "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs",
-      "implementation": "LessonAdministrationReadService",
-      "implementationPath": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "ILessonAdministrationService",
-      "interfacePath": "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs",
-      "implementation": "LessonAdministrationService",
-      "implementationPath": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "ILessonReadService",
       "interfacePath": "Modules/Lessons/Application/Common/ILessonReadService.cs",
       "implementation": "LessonReadService",
@@ -28978,13 +29251,6 @@
       "interfacePath": "Modules/Marketing/Application/Common/IMarketingAttributionSummaryReadService.cs",
       "implementation": "MarketingAttributionSummaryReadService",
       "implementationPath": "Modules/Marketing/Application/Services/MarketingAttributionSummaryReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IMarketingConversionRecorder",
-      "interfacePath": "Modules/Marketing/Application/Common/IMarketingConversionRecorder.cs",
-      "implementation": "MarketingConversionRecorder",
-      "implementationPath": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29548,20 +29814,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IUserAdministrationMutationService",
-      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAdministrationMutationService.cs",
-      "implementation": "UserAdministrationMutationService",
-      "implementationPath": "Modules/Users/Application/Services/UserAdministrationMutationService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IUserAdministrationReadService",
-      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs",
-      "implementation": "UserAdministrationReadService",
-      "implementationPath": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IUserAuthenticationIdentityService",
       "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAuthenticationIdentityService.cs",
       "implementation": "UserAuthenticationIdentityService",
@@ -29573,13 +29825,6 @@
       "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAuthenticationRegistrationService.cs",
       "implementation": "UserAuthenticationRegistrationService",
       "implementationPath": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IUserBillingService",
-      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserBillingService.cs",
-      "implementation": "UserBillingService",
-      "implementationPath": "Modules/Users/Application/Services/UserBillingService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29681,13 +29926,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IWaistEntryReadService",
-      "interfacePath": "Modules/BodyMetrics/Contracts/WaistEntries/Common/IWaistEntryReadService.cs",
-      "implementation": "WaistEntryReadService",
-      "implementationPath": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IWearableConnectionRepository",
       "interfacePath": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionRepository.cs",
       "implementation": "WearableConnectionRepository",
@@ -29783,13 +30021,6 @@
       "interfacePath": "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs",
       "implementation": "WeeklyGoalRepository",
       "implementationPath": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IWeightEntryReadService",
-      "interfacePath": "Modules/BodyMetrics/Contracts/WeightEntries/Common/IWeightEntryReadService.cs",
-      "implementation": "WeightEntryReadService",
-      "implementationPath": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
       "confidence": "naming-convention"
     }
   ],
@@ -30002,28 +30233,7 @@
       "implementation": "OpenAiFoodService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IFoodRecognitionResultReader",
-      "implementation": "FoodRecognitionResultReader",
-      "lifetime": "Scoped",
-      "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IAiAdministrationReadService",
-      "implementation": "AiAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IAiPromptAdministrationService",
-      "implementation": "AiPromptAdministrationService",
-      "lifetime": "Scoped",
-      "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 14
     },
     {
       "service": "IBillingPublicConfigProvider",
@@ -30045,34 +30255,6 @@
       "lifetime": "Scoped",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
       "line": 35
-    },
-    {
-      "service": "IWeightEntryReadService",
-      "implementation": "WeightEntryReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/BodyMetrics/Application/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IWaistEntryReadService",
-      "implementation": "WaistEntryReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/BodyMetrics/Application/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IContentReportAdministrationService",
-      "implementation": "ContentReportAdministrationService",
-      "lifetime": "Scoped",
-      "path": "Modules/ContentReports/Application/DependencyInjection.cs",
-      "line": 14
-    },
-    {
-      "service": "IContentReportAdministrationReadService",
-      "implementation": "ContentReportAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/ContentReports/Application/DependencyInjection.cs",
-      "line": 15
     },
     {
       "service": "ICycleReadService",
@@ -30292,13 +30474,6 @@
       "line": 18
     },
     {
-      "service": "IAchievementDefinitionAdministrationService",
-      "implementation": "AchievementDefinitionAdministrationService",
-      "lifetime": "Scoped",
-      "path": "Modules/Gamification/Application/DependencyInjection.cs",
-      "line": 19
-    },
-    {
       "service": "IHydrationEntryReadService",
       "implementation": "HydrationEntryReadService",
       "lifetime": "Scoped",
@@ -30317,49 +30492,28 @@
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IAuthenticationLoginEventReadService",
-      "implementation": "AuthenticationLoginEventReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 17
     },
     {
       "service": "IAuthenticationTokenService",
       "implementation": "AuthenticationTokenService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 18
     },
     {
       "service": "IInitialAdminBootstrapService",
       "implementation": "InitialAdminBootstrapService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 26
+      "line": 23
     },
     {
       "service": "IEmailSender",
       "implementation": "EmailSender",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 27
-    },
-    {
-      "service": "IEmailTemplateAdministrationService",
-      "implementation": "EmailTemplateAdministrationService",
-      "lifetime": "Scoped",
-      "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 28
-    },
-    {
-      "service": "IEmailTemplateAdministrationReadService",
-      "implementation": "EmailTemplateAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 29
+      "line": 24
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -30415,42 +30569,28 @@
       "implementation": "LessonReadService",
       "lifetime": "Scoped",
       "path": "Modules/Lessons/Application/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "ILessonAdministrationService",
-      "implementation": "LessonAdministrationService",
-      "lifetime": "Scoped",
-      "path": "Modules/Lessons/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "ILessonAdministrationReadService",
-      "implementation": "LessonAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Lessons/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 14
     },
     {
       "service": "IMarketingAttributionCleanupService",
       "implementation": "MarketingAttributionCleanupService",
       "lifetime": "Scoped",
       "path": "Modules/Marketing/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 12
     },
     {
       "service": "IMarketingAttributionSummaryReadService",
       "implementation": "MarketingAttributionSummaryReadService",
       "lifetime": "Scoped",
       "path": "Modules/Marketing/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 13
     },
     {
       "service": "IMarketingAttributionRangeReadService",
       "implementation": "MarketingAttributionRangeReadService",
       "lifetime": "Scoped",
       "path": "Modules/Marketing/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 15
     },
     {
       "service": "IMealPlanReadService",
@@ -30663,74 +30803,53 @@
       "line": 17
     },
     {
-      "service": "IUserAdministrationMutationService",
-      "implementation": "UserAdministrationMutationService",
-      "lifetime": "Scoped",
-      "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IUserAdministrationReadService",
-      "implementation": "UserAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 17
-    },
-    {
       "service": "IUserIdentityMutationService",
       "implementation": "UserIdentityMutationService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 15
     },
     {
       "service": "IUserAuthenticationIdentityService",
       "implementation": "UserAuthenticationIdentityService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 16
     },
     {
       "service": "IUserAuthenticationRegistrationService",
       "implementation": "UserAuthenticationRegistrationService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 17
     },
     {
       "service": "IUserTelegramAccountService",
       "implementation": "UserTelegramAccountService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 18
     },
     {
       "service": "IUserCredentialVerificationService",
       "implementation": "UserCredentialVerificationService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 22
-    },
-    {
-      "service": "IUserBillingService",
-      "implementation": "UserBillingService",
-      "lifetime": "Scoped",
-      "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 23
+      "line": 19
     },
     {
       "service": "IUserNotificationProfileService",
       "implementation": "UserNotificationProfileService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 24
+      "line": 20
     },
     {
       "service": "IProfileOverviewReadService",
       "implementation": "ProfileOverviewReadService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 28
+      "line": 24
     },
     {
       "service": "IWearableReadService",

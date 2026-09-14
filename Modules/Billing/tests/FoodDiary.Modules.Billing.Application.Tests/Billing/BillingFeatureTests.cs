@@ -1,7 +1,15 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Marketing.Commands.RecordPremiumConversion;
+using FoodDiary.Application.Abstractions.Commands.EnsureUserPremiumRole;
+using FoodDiary.Application.Abstractions.Commands.RemoveUserPremiumRole;
+using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Testing;
 using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
-using FoodDiary.Modules.Billing.Contracts.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Results;
@@ -25,7 +33,7 @@ public partial class BillingFeatureTests {
     private static readonly DateTime Now = new(2026, 4, 28, 10, 0, 0, DateTimeKind.Utc);
 
     private static GetBillingOverviewQueryHandler CreateBillingOverviewHandler(
-        IUserBillingService billingUserContextService,
+        ISender billingUserContextService,
         IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
         IBillingPublicConfigProvider billingPublicConfigProvider,
         TimeProvider dateTimeProvider) =>
@@ -33,8 +41,7 @@ public partial class BillingFeatureTests {
             billingUserContextService,
             billingSubscriptionRepository,
             billingPublicConfigProvider,
-            dateTimeProvider,
-            billingUserContextService);
+            dateTimeProvider);
 
     [Fact]
     public async Task BillingWebhookContextResolver_WithoutSubscriptionOrUserId_ReturnsValidationFailure() {
@@ -110,7 +117,7 @@ public partial class BillingFeatureTests {
         InMemoryBillingSubscriptionRepository subscriptionRepository,
         RecordingBillingPaymentRepository paymentRepository,
         RecordingBillingWebhookEventRepository webhookEventRepository,
-        IBillingMarketingConversionRecorder? marketingConversionRecorder = null) {
+        ISender? marketingConversionRecorder = null) {
         var dateTimeProvider = new FixedDateTimeProvider(Now);
         var billingAccessService = new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider);
         var contextResolver = new BillingWebhookContextResolver(subscriptionRepository, userRepository, paymentRepository);
@@ -254,7 +261,7 @@ public partial class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeUserRepository(params User[] users)
-        : IUserRepository, IUserContextService, IUserBillingService {
+: RequestTestSender, IUserRepository, IUserContextService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
@@ -397,6 +404,16 @@ public partial class BillingFeatureTests {
                 user.PremiumTrialStartedAtUtc,
                 user.PremiumTrialEndsAtUtc,
                 user.IsEmailConfirmed);
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            GetUserBillingProfileQuery r => (Task<TResponse>)(object)GetAccessibleProfileAsync(r.UserId, cancellationToken),
+            GetUserBillingProfileIncludingDeletedQuery r => (Task<TResponse>)(object)GetProfileIncludingDeletedAsync(r.UserId, cancellationToken),
+            StartUserPremiumTrialCommand r => (Task<TResponse>)(object)StartPremiumTrialAsync(r.UserId, r.StartedAtUtc, r.Duration, cancellationToken),
+            EnsureUserPremiumRoleCommand r => (Task<TResponse>)(object)AsUnitAsync(EnsurePremiumRoleAsync(r.UserId, cancellationToken)),
+            RemoveUserPremiumRoleCommand r => (Task<TResponse>)(object)AsUnitAsync(RemovePremiumRoleAsync(r.UserId, cancellationToken)),
+            CheckUserAccessQuery r => (Task<TResponse>)(object)EnsureCanAccessAsync(r.UserId, cancellationToken),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
     }
 
     [ExcludeFromCodeCoverage]
@@ -719,19 +736,29 @@ public partial class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class NoOpMarketingConversionRecorder : IBillingMarketingConversionRecorder {
+    private sealed class NoOpMarketingConversionRecorder : RequestTestSender {
         public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            RecordPremiumConversionCommand r => (Task<TResponse>)(object)AsUnitAsync(RecordPremiumStartedAsync(r.UserId, cancellationToken)),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingMarketingConversionRecorder : IBillingMarketingConversionRecorder {
+    private sealed class RecordingMarketingConversionRecorder : RequestTestSender {
         public List<Guid> PremiumStartedUserIds { get; } = [];
 
         public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) {
             PremiumStartedUserIds.Add(userId);
             return Task.CompletedTask;
         }
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            RecordPremiumConversionCommand r => (Task<TResponse>)(object)AsUnitAsync(RecordPremiumStartedAsync(r.UserId, cancellationToken)),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
     }
 
     [ExcludeFromCodeCoverage]

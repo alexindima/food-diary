@@ -1,5 +1,7 @@
+using FoodDiary.Testing;
+using FoodDiary.Application.Marketing.Commands.RecordPremiumConversion;
 using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Application.Marketing.Services;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Tests.Marketing;
 
@@ -10,9 +12,9 @@ public sealed class MarketingConversionRecorderTests {
     [Fact]
     public async Task RecordPremiumStartedAsync_WithEmptyUserId_DoesNotReadOrWriteAttribution() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var recorder = new MarketingConversionRecorder(repository, repository, new FixedDateTimeProvider(Now));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
 
-        await recorder.RecordPremiumStartedAsync(Guid.Empty, CancellationToken.None);
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.Empty), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(0, repository.ExistsForUserCallCount),
@@ -23,9 +25,9 @@ public sealed class MarketingConversionRecorderTests {
     [Fact]
     public async Task RecordPremiumStartedAsync_WithoutUserAttribution_DoesNotRecordEvent() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var recorder = new MarketingConversionRecorder(repository, repository, new FixedDateTimeProvider(Now));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
 
-        await recorder.RecordPremiumStartedAsync(Guid.NewGuid(), CancellationToken.None);
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.NewGuid()), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(1, repository.ExistsForUserCallCount),
@@ -51,9 +53,9 @@ public sealed class MarketingConversionRecorderTests {
                 "story",
                 "food",
                 "1.2.3"));
-        var recorder = new MarketingConversionRecorder(repository, repository, new FixedDateTimeProvider(Now));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
 
-        await recorder.RecordPremiumStartedAsync(userId, CancellationToken.None);
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
 
         MarketingAttributionEventRecord premiumEvent = Assert.Single(repository.Records, record =>
             string.Equals(record.EventType, "premium_started", StringComparison.Ordinal));
@@ -84,9 +86,9 @@ public sealed class MarketingConversionRecorderTests {
                 UtmContent: null,
                 UtmTerm: null,
                 BuildVersion: null));
-        var recorder = new MarketingConversionRecorder(repository, repository, new FixedDateTimeProvider(Now));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
 
-        await recorder.RecordPremiumStartedAsync(userId, CancellationToken.None);
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
 
         Assert.Single(repository.Records);
     }

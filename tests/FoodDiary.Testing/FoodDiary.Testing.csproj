@@ -12,4 +12,7 @@
     <PackageReference Include="xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+  </ItemGroup>
 </Project>

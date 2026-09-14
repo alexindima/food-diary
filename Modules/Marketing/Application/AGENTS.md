@@ -8,7 +8,7 @@ Rules for `Modules/Marketing/Application/`.
 
 - Own marketing attribution commands, queries, models, and semantic services.
 - Register module handlers and services through `AddMarketingApplication`; Infrastructure exposes the complete `AddMarketingModule` facade.
-- Implement consumer-owned ports such as `IBillingMarketingConversionRecorder` without exposing persistence contracts.
+- Implement RecordPremiumConversionCommand in its owner handler without exposing persistence contracts or saving the caller unit of work.
 
 ## Rules
 

@@ -5,7 +5,7 @@
 Statistics owns two mediator query slices (`GetStatistics` and `GetStatisticsSummary`), their validators and response models, and UTC/date normalization. The handlers compose these existing read capabilities:
 
 - `IDashboardStatisticsReadService` for nutrition buckets;
-- `IWeightEntryReadService` and `IWaistEntryReadService` for body-measurement summaries;
+- BodyMetrics.Contracts weight/waist summary queries dispatched through ISender for body-measurement summaries;
 - `ICurrentUserAccessService` for access checks.
 
 Code, project references, EF registrations, and tests show no Statistics-owned aggregate, value object, domain event, repository port, EF configuration, provider adapter, job, migration, or model-snapshot entry. The proven target is therefore application-only: `Modules/Statistics/Application` plus its focused application tests. Dashboard and Body Metrics retain their projection contracts and implementations; central Infrastructure retains the optimized dashboard query, shared `FoodDiaryDbContext`, migrations, and snapshot. Presentation and hosts remain adapters/composition roots.

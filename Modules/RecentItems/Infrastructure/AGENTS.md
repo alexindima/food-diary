@@ -10,4 +10,4 @@ relational reads or usage upserts, synchronize that transaction, including null
 after commit/rollback. Keep SQL conflict handling, timestamp monotonicity,
 saturating counters and 100-per-type retention unchanged. The InMemory fallback
 tracks only owned rows and uses the shared UnitOfWork in post-commit callbacks.
-User purge retains its immediate central-context deletion in the caller transaction.
+User purge uses RecentItemsDbContext, binding the live coordinator transaction on every invocation. Keep the immediate delete and order 70; it never saves or commits. This adapter no longer references central Infrastructure.

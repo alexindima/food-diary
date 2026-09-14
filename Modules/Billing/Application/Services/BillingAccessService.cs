@@ -1,5 +1,7 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Commands.EnsureUserPremiumRole;
+using FoodDiary.Application.Abstractions.Commands.RemoveUserPremiumRole;
 using FoodDiary.Modules.Billing.Domain.Contracts;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Billing.Domain.Entities;
@@ -7,7 +9,7 @@ using FoodDiary.Modules.Billing.Domain.Entities;
 namespace FoodDiary.Modules.Billing.Application.Services;
 
 public sealed class BillingAccessService(
-    IUserBillingService billingUserContextService,
+    ISender billingUserContextService,
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     TimeProvider dateTimeProvider) {
     public async Task EnsurePremiumRoleAsync(
@@ -32,7 +34,7 @@ public sealed class BillingAccessService(
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (shouldHavePremium) {
-            await billingUserContextService.EnsurePremiumRoleAsync(user.UserId, cancellationToken).ConfigureAwait(false);
+            await billingUserContextService.Send(new EnsureUserPremiumRoleCommand(UserId: user.UserId), cancellationToken).ConfigureAwait(false);
             subscription.MarkPremiumRoleManagedByBilling(value: true, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         } else {
@@ -40,7 +42,7 @@ public sealed class BillingAccessService(
                 return;
             }
 
-            await billingUserContextService.RemovePremiumRoleAsync(user.UserId, cancellationToken).ConfigureAwait(false);
+            await billingUserContextService.Send(new RemoveUserPremiumRoleCommand(UserId: user.UserId), cancellationToken).ConfigureAwait(false);
             subscription.MarkPremiumRoleManagedByBilling(value: false, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         }

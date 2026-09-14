@@ -1,4 +1,5 @@
-using FoodDiary.Modules.Ai.Contracts.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -32,8 +33,8 @@ public sealed class CreateMealFromRecognitionTests {
         } else if (Is("locked-access")) {
             access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns((Error?)null, new Error("User.Denied", "Denied"));
         }
-        IFoodRecognitionResultReader reader = Substitute.For<IFoodRecognitionResultReader>();
-        reader.GetCompletedAsync(owner.Value, job.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(Is("foreign-result") ? job with { UserId = Guid.NewGuid() } : job));
+        ISender reader = Substitute.For<ISender>();
+        reader.Send(new GetCompletedFoodRecognitionQuery(UserId: owner.Value, JobId: job.Id), Arg.Any<CancellationToken>()).Returns(Result.Success(Is("foreign-result") ? job with { UserId = Guid.NewGuid() } : job));
         FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>> create = Substitute.For<FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>>>();
         create.Handle(Arg.Any<CreateMealCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Failure<MealModel>(new Error("Meal.CreateFailed", "Failed")));
         IMealRecognitionReceiptRepository receipts = Substitute.For<IMealRecognitionReceiptRepository>();
@@ -59,8 +60,8 @@ public sealed class CreateMealFromRecognitionTests {
         FoodRecognitionJobModel job = CreateJob(owner, now);
         var meal = Meal.Create(owner, now);
         IMealRecognitionReceiptRepository receipts = Substitute.For<IMealRecognitionReceiptRepository>();
-        IFoodRecognitionResultReader reader = Substitute.For<IFoodRecognitionResultReader>();
-        reader.GetCompletedAsync(owner.Value, job.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(job));
+        ISender reader = Substitute.For<ISender>();
+        reader.Send(new GetCompletedFoodRecognitionQuery(UserId: owner.Value, JobId: job.Id), Arg.Any<CancellationToken>()).Returns(Result.Success(job));
         FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>> create = Substitute.For<FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>>>();
         create.Handle(Arg.Any<CreateMealCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(meal.ToModel()));
         var handler = new CreateMealFromRecognitionCommandHandler(new InlineTransactions(), receipts, reader, create,
@@ -95,7 +96,7 @@ public sealed class CreateMealFromRecognitionTests {
         if (!deleted) {
             receipts.LockMealForUndoAsync(owner, receipt.MealId, Arg.Any<CancellationToken>()).Returns((Meal.Create(owner, now), 8u));
         }
-        IFoodRecognitionResultReader reader = Substitute.For<IFoodRecognitionResultReader>();
+        ISender reader = Substitute.For<ISender>();
         FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>> create = Substitute.For<FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>>>();
         var handler = new CreateMealFromRecognitionCommandHandler(new InlineTransactions(), receipts, reader, create,
             Substitute.For<ICurrentUserAccessService>(), TimeProvider.System);
@@ -106,7 +107,7 @@ public sealed class CreateMealFromRecognitionTests {
         Assert.Equal(receipt.MealId.Value, result.Value.MealId);
         Assert.Equal(undone || deleted, result.Value.Undone);
         Assert.Equal(undone || deleted, receipt.UndoneAtUtc.HasValue);
-        await reader.DidNotReceive().GetCompletedAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await reader.DidNotReceive().Send(Arg.Any<GetCompletedFoodRecognitionQuery>(), Arg.Any<CancellationToken>());
         await create.DidNotReceive().Handle(Arg.Any<CreateMealCommand>(), Arg.Any<CancellationToken>());
     }
 
@@ -118,14 +119,14 @@ public sealed class CreateMealFromRecognitionTests {
         var receipt = MealRecognitionReceipt.Create(id, owner, id, new MealId(Guid.NewGuid()), 7, now, now, TimeSpan.FromHours(24));
         IMealRecognitionReceiptRepository receipts = Substitute.For<IMealRecognitionReceiptRepository>();
         receipts.FindByRecognitionAsync(owner, id, Arg.Any<CancellationToken>()).Returns(receipt);
-        IFoodRecognitionResultReader reader = Substitute.For<IFoodRecognitionResultReader>();
+        ISender reader = Substitute.For<ISender>();
         var handler = new CreateMealFromRecognitionCommandHandler(new InlineTransactions(), receipts, reader,
             Substitute.For<FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>>>(), Substitute.For<ICurrentUserAccessService>(), TimeProvider.System);
 
         Result<RecognizedMealCreationModel> result = await handler.Handle(new CreateMealFromRecognitionCommand(owner.Value, id, now.AddMinutes(1)), CancellationToken.None);
 
         Assert.Equal("Meal.RecognitionConflict", result.Error.Code);
-        await reader.DidNotReceive().GetCompletedAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await reader.DidNotReceive().Send(Arg.Any<GetCompletedFoodRecognitionQuery>(), Arg.Any<CancellationToken>());
     }
 
     [Theory]
@@ -135,8 +136,8 @@ public sealed class CreateMealFromRecognitionTests {
         var owner = new UserId(Guid.NewGuid());
         DateTime now = DateTime.UtcNow;
         FoodRecognitionJobModel job = CreateJob(owner, now);
-        IFoodRecognitionResultReader reader = Substitute.For<IFoodRecognitionResultReader>();
-        reader.GetCompletedAsync(owner.Value, job.Id, Arg.Any<CancellationToken>()).Returns(unavailable
+        ISender reader = Substitute.For<ISender>();
+        reader.Send(new GetCompletedFoodRecognitionQuery(UserId: owner.Value, JobId: job.Id), Arg.Any<CancellationToken>()).Returns(unavailable
             ? Result.Failure<FoodRecognitionJobModel>(new Error("Ai.RecognitionNotReady", "Not ready.", ErrorKind.Conflict))
             : Result.Success(job with { Nutrition = job.Nutrition! with { Items = [new FoodNutritionItemModel("Apple", -1, "g", 52, 0, 0, 14, 2, 0)] } }));
         FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>> create = Substitute.For<FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>>>();

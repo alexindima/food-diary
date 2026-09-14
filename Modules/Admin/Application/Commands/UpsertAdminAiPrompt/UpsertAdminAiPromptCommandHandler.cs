@@ -1,6 +1,6 @@
-using FoodDiary.Modules.Ai.Contracts.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Commands.UpsertAiPrompt;
 using FoodDiary.Modules.Admin.Application.Mappings;
-using FoodDiary.Modules.Admin.Application.Common;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -8,26 +8,12 @@ using FoodDiary.Modules.Ai.Contracts.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
 
-public sealed class UpsertAdminAiPromptCommandHandler(IAiPromptAdministrationService administrationService)
+public sealed class UpsertAdminAiPromptCommandHandler(ISender administrationService)
     : ICommandHandler<UpsertAdminAiPromptCommand, Result<AdminAiPromptModel>> {
     public async Task<Result<AdminAiPromptModel>> Handle(
         UpsertAdminAiPromptCommand command,
         CancellationToken cancellationToken) {
-        string key = command.Key.Trim().ToLowerInvariant();
-        Result<string> localeResult = AdminLocaleParser.ParseRequiredLanguage(
-            command.Locale,
-            nameof(command.Locale),
-            "Locale must be one of the supported codes.");
-        if (localeResult.IsFailure) {
-            return Result.Failure<AdminAiPromptModel>(localeResult.Error);
-        }
-
-        Result<AiPromptTemplateReadModel> templateResult = await administrationService.UpsertAsync(
-            key,
-            localeResult.Value,
-            command.PromptText,
-            command.IsActive,
-            cancellationToken).ConfigureAwait(false);
+        Result<AiPromptTemplateReadModel> templateResult = await administrationService.Send(new UpsertAiPromptCommand(Key: command.Key, Locale: command.Locale, PromptText: command.PromptText, IsActive: command.IsActive), cancellationToken).ConfigureAwait(false);
 
         return templateResult.IsSuccess
             ? Result.Success(templateResult.Value.ToAdminModel())

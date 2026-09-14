@@ -1,3 +1,10 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadLatestWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
@@ -7,8 +14,6 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Exercises.Services;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Hydration.Services;
-using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Services;
-using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Application.Abstractions.Hydration.Common;
@@ -599,9 +604,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new ComposedDashboardReadService(
                 new SenderStatisticsFixture(sender),
                 new RepositoryDashboardBodyReadService(
-                    new WeightEntryReadService(weightEntryRepository),
-                    new WaistEntryReadService(waistEntryRepository),
-                    new HydrationEntryReadService(hydrationEntryRepository)),
+RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightEntryRepository), new ReadLatestWeightEntryQueryHandler(weightEntryRepository), new ReadWeightSummariesQueryHandler(weightEntryRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(waistEntryRepository), new ReadLatestWaistEntryQueryHandler(waistEntryRepository), new ReadWaistSummariesQueryHandler(waistEntryRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), new HydrationEntryReadService(hydrationEntryRepository)),
                 new MediatorDashboardMealsReadService(sender)),
             logger);
 

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1589,
+    "productionProjectEdges": 1591,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 1,
-    "ambiguousBackendContracts": 0,
+    "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 62,
@@ -260,7 +260,44 @@
       "role": "aggregate-owner"
     }
   ],
-  "ambiguousBackendContracts": [],
+  "ambiguousBackendContracts": [
+    {
+      "name": "DismissContentReportCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommand.cs",
+        "Modules/ContentReports/Contracts/Commands/DismissContentReport/DismissContentReportCommand.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "ReviewContentReportCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommand.cs",
+        "Modules/ContentReports/Contracts/Commands/ReviewContentReport/ReviewContentReportCommand.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    }
+  ],
   "unconsumedBackendContracts": [],
   "selectorUnreferencedComponents": [
     {

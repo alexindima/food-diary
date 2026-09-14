@@ -22,6 +22,10 @@ public sealed class ModuleContextFactoryBoundaryTests {
     [InlineData("BodyMetrics")]
     [InlineData("Cycles")]
     [InlineData("OpenFoodFacts")]
+    [InlineData("Admin")]
+    [InlineData("Meals")]
+    [InlineData("MealPlanning")]
+    [InlineData("RecentItems")]
     public void CoordinatedAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
         string project = $"FoodDiary.Modules.{module}.Infrastructure";

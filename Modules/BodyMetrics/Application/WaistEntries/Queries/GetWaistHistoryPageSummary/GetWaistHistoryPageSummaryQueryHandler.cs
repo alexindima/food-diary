@@ -1,10 +1,12 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +15,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
 
 public sealed class GetWaistHistoryPageSummaryQueryHandler(
-    IWaistEntryReadService readService,
+    ISender readService,
     IUserProfileReadService userProfileReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistHistoryPageSummaryQuery, Result<WaistHistoryPageSummaryModel>> {
@@ -43,15 +45,8 @@ public sealed class GetWaistHistoryPageSummaryQueryHandler(
             return Result.Failure<WaistHistoryPageSummaryModel>(profileResult.Error);
         }
 
-        IReadOnlyList<WaistEntryModel> entries = await readService.GetEntriesAsync(
-            userId,
-            dateFrom: null,
-            dateTo: null,
-            limit: query.EntriesLimit,
-            descending: true,
-            cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WaistEntrySummaryModel> summary = await readService.GetSummariesAsync(
-            userId, dateFrom, dateTo, query.QuantizationDays, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntryModel> entries = await readService.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntrySummaryModel> summary = await readService.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
         WaistHistoryProfileModel profile = profileResult.Value;
         return Result.Success(new WaistHistoryPageSummaryModel(entries, summary, profile.HeightCm, profile.Goal, profile.GoalHistory));
     }

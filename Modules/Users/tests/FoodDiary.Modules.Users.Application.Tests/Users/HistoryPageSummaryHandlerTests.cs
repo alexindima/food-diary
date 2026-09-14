@@ -1,11 +1,14 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Models;
@@ -84,8 +87,8 @@ public sealed class HistoryPageSummaryHandlerTests {
     [Fact]
     public async Task Handlers_WhenProfileReadFails_ReturnFailureWithoutReadingEntries() {
         IUserProfileReadService profiles = CreateProfiles(fail: true);
-        IWeightEntryReadService weightEntries = Substitute.For<IWeightEntryReadService>();
-        IWaistEntryReadService waistEntries = Substitute.For<IWaistEntryReadService>();
+        ISender weightEntries = Substitute.For<ISender>();
+        ISender waistEntries = Substitute.For<ISender>();
 
         Result<WeightHistoryPageSummaryModel> weight = await CreateWeightHandler(weightEntries, profiles)
             .Handle(new GetWeightHistoryPageSummaryQuery(UserId.Value, DateFrom, DateTo, 3, 500), CancellationToken.None);
@@ -94,46 +97,22 @@ public sealed class HistoryPageSummaryHandlerTests {
 
         ResultAssert.Failure(weight);
         ResultAssert.Failure(waist);
-        await weightEntries.DidNotReceiveWithAnyArgs().GetEntriesAsync(
-            userId: default,
-            dateFrom: default,
-            dateTo: default,
-            limit: default,
-            descending: default,
-            cancellationToken: default);
-        await waistEntries.DidNotReceiveWithAnyArgs().GetEntriesAsync(
-            userId: default,
-            dateFrom: default,
-            dateTo: default,
-            limit: default,
-            descending: default,
-            cancellationToken: default);
+        await weightEntries.DidNotReceiveWithAnyArgs().Send(new ReadWeightEntriesQuery(UserId: default, DateFrom: default, DateTo: default, Limit: default, Descending: default), default);
+        await waistEntries.DidNotReceiveWithAnyArgs().Send(new ReadWaistEntriesQuery(UserId: default, DateFrom: default, DateTo: default, Limit: default, Descending: default), default);
     }
 
     [Fact]
     public async Task Handlers_WithValidQuery_ReturnAggregatedPageSummaries() {
         IUserProfileReadService profiles = CreateProfiles(fail: false);
-        IWeightEntryReadService weightEntries = Substitute.For<IWeightEntryReadService>();
-        weightEntries.GetEntriesAsync(
-                UserId,
-                dateFrom: null,
-                dateTo: null,
-                limit: 25,
-                descending: true,
-                cancellationToken: Arg.Any<CancellationToken>())
+        ISender weightEntries = Substitute.For<ISender>();
+        weightEntries.Send(new ReadWeightEntriesQuery(UserId: UserId, DateFrom: null, DateTo: null, Limit: 25, Descending: true), Arg.Any<CancellationToken>())
             .Returns([new WeightEntryModel(Guid.NewGuid(), UserId.Value, DateTo, 75)]);
-        weightEntries.GetSummariesAsync(UserId, DateFrom, DateTo, 5, Arg.Any<CancellationToken>())
+        weightEntries.Send(new ReadWeightSummariesQuery(UserId: UserId, DateFrom: DateFrom, DateTo: DateTo, QuantizationDays: 5), Arg.Any<CancellationToken>())
             .Returns([new WeightEntrySummaryModel(DateFrom, DateTo, 75)]);
-        IWaistEntryReadService waistEntries = Substitute.For<IWaistEntryReadService>();
-        waistEntries.GetEntriesAsync(
-                UserId,
-                dateFrom: null,
-                dateTo: null,
-                limit: 25,
-                descending: true,
-                cancellationToken: Arg.Any<CancellationToken>())
+        ISender waistEntries = Substitute.For<ISender>();
+        waistEntries.Send(new ReadWaistEntriesQuery(UserId: UserId, DateFrom: null, DateTo: null, Limit: 25, Descending: true), Arg.Any<CancellationToken>())
             .Returns([new WaistEntryModel(Guid.NewGuid(), UserId.Value, DateTo, 80)]);
-        waistEntries.GetSummariesAsync(UserId, DateFrom, DateTo, 5, Arg.Any<CancellationToken>())
+        waistEntries.Send(new ReadWaistSummariesQuery(UserId: UserId, DateFrom: DateFrom, DateTo: DateTo, QuantizationDays: 5), Arg.Any<CancellationToken>())
             .Returns([new WaistEntrySummaryModel(DateFrom, DateTo, 80)]);
 
         Result<WeightHistoryPageSummaryModel> weight = await CreateWeightHandler(weightEntries, profiles)
@@ -153,14 +132,14 @@ public sealed class HistoryPageSummaryHandlerTests {
     }
 
     private static GetWeightHistoryPageSummaryQueryHandler CreateWeightHandler(
-        IWeightEntryReadService? entries = null,
+        ISender? entries = null,
         IUserProfileReadService? profiles = null) =>
-        new(entries ?? Substitute.For<IWeightEntryReadService>(), profiles ?? CreateProfiles(fail: false), CreateAccess());
+        new(entries ?? Substitute.For<ISender>(), profiles ?? CreateProfiles(fail: false), CreateAccess());
 
     private static GetWaistHistoryPageSummaryQueryHandler CreateWaistHandler(
-        IWaistEntryReadService? entries = null,
+        ISender? entries = null,
         IUserProfileReadService? profiles = null) =>
-        new(entries ?? Substitute.For<IWaistEntryReadService>(), profiles ?? CreateProfiles(fail: false), CreateAccess());
+        new(entries ?? Substitute.For<ISender>(), profiles ?? CreateProfiles(fail: false), CreateAccess());
 
     private static ICurrentUserAccessService CreateAccess() {
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();

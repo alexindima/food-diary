@@ -1,15 +1,16 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Lessons.Contracts.Commands.CreateLesson;
 using FoodDiary.Modules.Admin.Application.Common;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.CreateAdminLesson;
 
-public sealed class CreateAdminLessonCommandHandler(ILessonAdministrationService lessonAdministrationService)
+public sealed class CreateAdminLessonCommandHandler(ISender lessonAdministrationService)
     : ICommandHandler<CreateAdminLessonCommand, Result<AdminLessonModel>> {
     public async Task<Result<AdminLessonModel>> Handle(
         CreateAdminLessonCommand command,
@@ -24,16 +25,7 @@ public sealed class CreateAdminLessonCommandHandler(ILessonAdministrationService
             return Result.Failure<AdminLessonModel>(difficultyResult.Error);
         }
 
-        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.CreateAsync(
-            command.Title,
-            command.Content,
-            command.Summary,
-            command.Locale,
-            categoryResult.Value,
-            difficultyResult.Value,
-            command.EstimatedReadMinutes,
-            command.SortOrder,
-            cancellationToken, command.IsPublished).ConfigureAwait(false);
+        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.Send(new CreateLessonCommand(Title: command.Title, Content: command.Content, Summary: command.Summary, Locale: command.Locale, Category: categoryResult.Value, Difficulty: difficultyResult.Value, EstimatedReadMinutes: command.EstimatedReadMinutes, SortOrder: command.SortOrder, IsPublished: command.IsPublished), cancellationToken).ConfigureAwait(false);
 
         return lessonResult.IsSuccess
             ? Result.Success(lessonResult.Value.ToAdminModel())

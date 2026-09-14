@@ -185,11 +185,14 @@
     "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs": {
       "module": "Identity",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:TelegramOperation",
         "tracked:TelegramOperation",
         "write:TelegramOperation"
       ],
-      "reason": "Deletes only Identity-owned Telegram operations for the purged user inside the Users-owned purge transaction. No foreign aggregate access, SaveChanges or transaction ownership; rollback and survivor isolation are covered by UserCleanupServiceIntegrationTests."
+      "reason": "Identity purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
+      "technicalSourceSha256": "f4f3933ff6063d165543854cec3917839147a0c274f7294be918799f4a1a774f"
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs": {
       "module": "Hydration",
@@ -276,11 +279,14 @@
     "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs": {
       "module": "Admin",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:AdminImpersonationSession",
         "tracked:AdminImpersonationSession",
         "write:AdminImpersonationSession"
       ],
-      "reason": "Admin owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Admin purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
+      "technicalSourceSha256": "d2044d35c1b699f196f2e4f9f659004a32dfee92577a7281b0539b3c7e72376b"
     },
     "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs": {
       "module": "Ai",
@@ -332,6 +338,8 @@
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:AiUsage",
         "entity:FoodRecognitionJob",
         "tracked:AiUsage",
@@ -339,7 +347,8 @@
         "write:AiUsage",
         "write:FoodRecognitionJob"
       ],
-      "reason": "Ai owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Ai purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
+      "technicalSourceSha256": "66abf635a315979af9e19e8099aa5390db5473800786f296cd320a2bec16ef03"
     },
     "Modules/Billing/Infrastructure/ModuleRegistration.cs": {
       "module": "Billing",
@@ -519,11 +528,14 @@
     "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs": {
       "module": "Dietologist",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:ClientTask",
         "tracked:ClientTask",
         "write:ClientTask"
       ],
-      "reason": "Dietologist owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Dietologist purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
+      "technicalSourceSha256": "d93ecd8044809a410bba3e619e933079d33b6da41fe1350ea76498c8999cebca"
     },
     "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs": {
       "module": "Dietologist",
@@ -900,11 +912,14 @@
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs": {
       "module": "MealPlanning",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:ShoppingList",
         "tracked:ShoppingList",
         "write:ShoppingList"
       ],
-      "reason": "MealPlanning owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "MealPlanning purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
+      "technicalSourceSha256": "d981fefdba52d787239c5157b6eb4b3402db92e0a15ebe5fed9932e6bdf5002d"
     },
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs": {
       "module": "MealPlanning",
@@ -944,6 +959,8 @@
     "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs": {
       "module": "Meals",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:Meal",
         "entity:MealItem",
         "tracked:Meal",
@@ -951,7 +968,8 @@
         "write:Meal",
         "write:MealItem"
       ],
-      "reason": "Meals owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Meals purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
+      "technicalSourceSha256": "7c2e0fe94680f11f5d32787e87bc32799a768f2623dfdf5091c204c1421a734d"
     },
     "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
       "module": "Notifications",
@@ -1067,11 +1085,14 @@
     "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs": {
       "module": "RecentItems",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:RecentItem",
         "tracked:RecentItem",
         "write:RecentItem"
       ],
-      "reason": "RecentItems owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "RecentItems purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
+      "technicalSourceSha256": "6dd80421072f63dded7b8bf4d3ca1d12299f86ff4b1eeee325a3a8b8f6b2d045"
     },
     "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs": {
       "module": "RecipeCommunity",

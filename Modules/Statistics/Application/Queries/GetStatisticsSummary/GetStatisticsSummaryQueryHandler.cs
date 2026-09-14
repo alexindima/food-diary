@@ -1,3 +1,6 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
@@ -6,9 +9,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Statistics.Common;
 using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -16,10 +17,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
 
 public sealed class GetStatisticsSummaryQueryHandler(
-    IDashboardStatisticsReadService statisticsReadService,
-    IWeightEntryReadService weightEntryReadService,
-    IWaistEntryReadService waistEntryReadService,
-    ICurrentUserAccessService currentUserAccessService)
+    IDashboardStatisticsReadService statisticsReadService, ISender sender, ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetStatisticsSummaryQuery, Result<StatisticsSummaryModel>> {
     public async Task<Result<StatisticsSummaryModel>> Handle(
         GetStatisticsSummaryQuery request,
@@ -67,18 +65,8 @@ public sealed class GetStatisticsSummaryQueryHandler(
             return Result.Failure<StatisticsSummaryModel>(statisticsResult.Error);
         }
 
-        IReadOnlyList<WeightEntrySummaryModel> weight = await weightEntryReadService.GetSummariesAsync(
-            userId,
-            bodyFrom,
-            bodyTo,
-            request.QuantizationDays,
-            cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WaistEntrySummaryModel> waist = await waistEntryReadService.GetSummariesAsync(
-            userId,
-            bodyFrom,
-            bodyTo,
-            request.QuantizationDays,
-            cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntrySummaryModel> weight = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: bodyFrom, DateTo: bodyTo, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntrySummaryModel> waist = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: bodyFrom, DateTo: bodyTo, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new StatisticsSummaryModel(
             [.. statisticsResult.Value.Select(ToModel)],

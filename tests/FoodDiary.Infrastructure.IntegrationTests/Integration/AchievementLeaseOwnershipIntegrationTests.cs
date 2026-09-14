@@ -1,3 +1,7 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Infrastructure.Persistence.Shared;
+using FoodDiary.Persistence.Abstractions;
+using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -28,7 +32,8 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton(worker);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(worker);
+        services.AddSingleton<IModuleContextFactory>(worker);
+        services.AddSingleton<IModuleScopeGuard>(new EfModuleScopeGuard(worker));
         services.AddSingleton(TimeProvider.System);
         services.AddGamificationModule();
         services.AddSingleton<IAchievementReconciliationHandler>(new ReplaceClaimHandler(seed, updateRevision, failDispatch));
@@ -62,7 +67,8 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton(worker);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(worker);
+        services.AddSingleton<IModuleContextFactory>(worker);
+        services.AddSingleton<IModuleScopeGuard>(new EfModuleScopeGuard(worker));
         services.AddSingleton(TimeProvider.System);
         services.AddGamificationModule();
         services.AddSingleton<IAchievementReconciliationHandler>(new RequestNewRevisionHandler(seed, failDispatch));
@@ -91,7 +97,9 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddSingleton(context);
-            services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+            services.AddSingleton<IModuleContextFactory>(context);
+            services.AddSingleton<IModuleTransactionCoordinator>(new EfModuleTransactionCoordinator(context,
+                new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
             services.AddSingleton(TimeProvider.System);
             services.AddGamificationModule();
             await using ServiceProvider provider = services.BuildServiceProvider();

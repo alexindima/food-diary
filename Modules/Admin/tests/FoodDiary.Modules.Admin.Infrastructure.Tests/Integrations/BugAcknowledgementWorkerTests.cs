@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplates;
 using System.Runtime.CompilerServices;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -30,7 +30,7 @@ public sealed class BugAcknowledgementWorkerTests {
         var source = new WaitingSource();
         var services = new ServiceCollection();
         services.AddSingleton<IBugAcknowledgementSource>(source);
-        services.AddSingleton(Substitute.For<IEmailTemplateAdministrationReadService>());
+        services.AddSingleton(CreateTemplateReader());
         services.AddSingleton(Substitute.For<IEmailTransport>());
         services.AddSingleton(Substitute.For<IBugAcknowledgementReceipts>());
         services.AddFoodDiaryMediator(configuration => configuration.RegisterServicesFromAssembly(typeof(SendBugAcknowledgementsCommandHandler).Assembly));
@@ -47,8 +47,8 @@ public sealed class BugAcknowledgementWorkerTests {
     [Fact]
     public async Task SuccessfulScans_RepeatUntilStopped() {
         var source = new CompletingSource();
-        IEmailTemplateAdministrationReadService templates = Substitute.For<IEmailTemplateAdministrationReadService>();
-        templates.GetTemplatesAsync(Arg.Any<CancellationToken>()).Returns(Array.Empty<EmailTemplateReadModel>());
+        IRequestHandler<GetEmailTemplatesQuery, IReadOnlyList<EmailTemplateReadModel>> templates = CreateTemplateReader();
+        templates.Handle(new GetEmailTemplatesQuery(), Arg.Any<CancellationToken>()).Returns(Array.Empty<EmailTemplateReadModel>());
         var services = new ServiceCollection();
         services.AddSingleton<IBugAcknowledgementSource>(source);
         services.AddSingleton(templates);
@@ -69,8 +69,8 @@ public sealed class BugAcknowledgementWorkerTests {
     [Fact]
     public async Task ScanFailure_DoesNotTerminateWorker() {
         var signal = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        IEmailTemplateAdministrationReadService templates = Substitute.For<IEmailTemplateAdministrationReadService>();
-        templates.GetTemplatesAsync(Arg.Any<CancellationToken>()).Returns(_ => {
+        IRequestHandler<GetEmailTemplatesQuery, IReadOnlyList<EmailTemplateReadModel>> templates = CreateTemplateReader();
+        templates.Handle(new GetEmailTemplatesQuery(), Arg.Any<CancellationToken>()).Returns(_ => {
             signal.TrySetResult();
             return Task.FromException<IReadOnlyList<EmailTemplateReadModel>>(new InvalidOperationException("failure"));
         });
@@ -86,6 +86,12 @@ public sealed class BugAcknowledgementWorkerTests {
         await signal.Task.WaitAsync(TimeSpan.FromSeconds(10));
         Assert.False(worker.ExecuteTask!.IsCompleted);
         await worker.StopAsync(CancellationToken.None);
+    }
+
+    private static IRequestHandler<GetEmailTemplatesQuery, IReadOnlyList<EmailTemplateReadModel>> CreateTemplateReader() {
+        IRequestHandler<GetEmailTemplatesQuery, IReadOnlyList<EmailTemplateReadModel>> templates = Substitute.For<IRequestHandler<GetEmailTemplatesQuery, IReadOnlyList<EmailTemplateReadModel>>>();
+        templates.Handle(Arg.Any<GetEmailTemplatesQuery>(), Arg.Any<CancellationToken>()).Returns(Array.Empty<EmailTemplateReadModel>());
+        return templates;
     }
 
     [ExcludeFromCodeCoverage]

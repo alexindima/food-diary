@@ -1,6 +1,4 @@
 using FluentValidation;
-using FoodDiary.Application.ContentReports.Common;
-using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,8 +9,6 @@ public static class DependencyInjection {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
-        services.AddScoped<IContentReportAdministrationService, ContentReportAdministrationService>();
-        services.AddScoped<IContentReportAdministrationReadService, ContentReportAdministrationReadService>();
         return services;
     }
 }

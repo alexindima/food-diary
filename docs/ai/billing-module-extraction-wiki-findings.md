@@ -5,7 +5,7 @@
 The extraction verified current source, project references, EF mappings, focused tests and the Marketing extraction precedents (`bc73bbf2b0`, `2b11a94160`) before editing.
 
 - Application owner: checkout, portal, trial, overview, webhook inbox/processing, renewal and entitlement services.
-- Application ports/models: provider gateways, repositories, checkout lock, transaction runner and provider-facing models. `IBillingMarketingConversionRecorder` belongs to Billing Contracts because it is Billing's consumer-owned cross-module port implemented by Marketing.
+- Application ports/models: provider gateways, repositories, checkout lock, transaction runner and provider-facing models. `RecordPremiumConversionCommand` belongs to Marketing.Contracts; Billing dispatches it through ISender while retaining the caller unit of work.
 - Domain owner: `BillingSubscription`, `BillingPayment`, `BillingWebhookEvent`, provider names and payment kinds.
 - Persistence owner: three EF configurations, three repositories, `EfBillingTransactionRunner` and `PostgresBillingCheckoutLock`.
 - Central seams: `FoodDiaryDbContext` Billing partial, migrations and snapshot; Users' `IUserBillingService`; Admin projections; Integrations provider adapters/options; Presentation HTTP transport; JobManager scheduling; Marketing conversion implementation.

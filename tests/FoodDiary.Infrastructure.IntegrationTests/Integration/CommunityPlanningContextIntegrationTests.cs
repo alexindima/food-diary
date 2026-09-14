@@ -73,7 +73,9 @@ public sealed class CommunityPlanningContextIntegrationTests(PostgresDatabaseFix
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         Assert.Equal("Updated", (await read.ShoppingLists.SingleAsync(item => item.Id == list.Id)).Name);
         Assert.Equal("Updated item", (await read.ShoppingListItems.SingleAsync(item => item.ShoppingListId == list.Id)).Name);
-        await new MealPlanningUserDataPurgeParticipant(central).PurgeAsync(user.Id, reassignTarget: null, CancellationToken.None);
+        await new MealPlanningUserDataPurgeParticipant(planning,
+            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>())
+            .PurgeAsync(user.Id, reassignTarget: null, CancellationToken.None);
         Assert.False(await read.ShoppingListItems.AnyAsync(item => item.ShoppingListId == list.Id));
         planning.MealPlans.Remove(await planning.MealPlans.SingleAsync(item => item.Id == plan.Id));
         await unitOfWork.SaveChangesAsync();

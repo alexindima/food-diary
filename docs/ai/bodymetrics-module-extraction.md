@@ -26,7 +26,7 @@ The extraction preserves `FoodDiary.Modules.BodyMetrics.Application` AssemblyNam
 
 - Dashboard: `RepositoryDashboardBodyReadService` and snapshot composition consume the two read capabilities; optimized central `DashboardBodyReadService` reads entry DbSets as a consumer-owned batch projection.
 - Statistics: `GetStatisticsSummaryQueryHandler` consumes both read services and summary models.
-- TDEE: insight/calculator consumes weight-entry projections through `IWeightEntryReadService`.
+- TDEE: insight/calculator consumes weight-entry projections through BodyMetrics.Contracts weight-entry queries dispatched through ISender.
 - WeeklyCheckIn: read service/calculator consumes both projection capabilities.
 - Users: `UserCurrentWeightProvider` and `UserCurrentWaistProvider` read scoped entry DbSets; goal lifecycle remains User-owned. BodyMetrics history-page queries compose Users projection contracts, not User aggregate mutations.
 - Dietologist: `AttentionSignalMetricsReadService` retains its approved batch weight projection and existing access boundary.

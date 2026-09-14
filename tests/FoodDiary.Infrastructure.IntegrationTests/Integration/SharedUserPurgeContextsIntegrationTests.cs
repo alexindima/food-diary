@@ -1,16 +1,30 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Recents;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Admin.Domain.Entities;
+using FoodDiary.Modules.Admin.Infrastructure;
+using FoodDiary.Modules.Ai.Domain.Entities;
+using FoodDiary.Modules.Ai.Infrastructure;
+using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Modules.Cycles.Infrastructure;
+using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.MealPlanning.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
@@ -53,6 +67,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         Assert.True(await verification.Users.AnyAsync(user => user.Id == target.User.Id));
         // Entry cleanup preserves replay receipts until the Users owner deletes the user row.
         Assert.True(await verification.Set<HydrationOperationReceipt>().AnyAsync(item => item.UserId == target.User.Id));
+        Assert.True(await verification.Set<MealRecognitionReceipt>().AnyAsync(item => item.UserId == target.User.Id));
     }
 
     [RequiresDockerFact]
@@ -79,6 +94,8 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         Assert.False(await verification.Users.AnyAsync(user => user.Id == removed.User.Id));
         Assert.True(await verification.Set<HydrationOperationReceipt>().AnyAsync(item => item.UserId == failed.User.Id));
         Assert.False(await verification.Set<HydrationOperationReceipt>().AnyAsync(item => item.UserId == removed.User.Id));
+        Assert.True(await verification.Set<MealRecognitionReceipt>().AnyAsync(item => item.UserId == failed.User.Id));
+        Assert.False(await verification.Set<MealRecognitionReceipt>().AnyAsync(item => item.UserId == removed.User.Id));
     }
 
     [RequiresDockerFact]
@@ -104,6 +121,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
 
     private static SeededUser Seed(FoodDiaryDbContext context, string name) {
         var user = User.Create($"purge-{name}@example.com", "hash");
+        var peer = User.Create($"purge-{name}-peer@example.com", "hash");
         DateTime now = DateTime.UtcNow;
         var today = DateOnly.FromDateTime(now);
         var entry = HydrationEntry.Create(user.Id, now, 250);
@@ -114,9 +132,34 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         profile.GrantConsent(CycleConsentPurpose.FertilitySignals, now);
         profile.UpsertFertilitySignal(today, 36.7, OvulationTestResult.Negative, "sticky", hadSex: false, notes: "signal");
         profile.ConfirmPeriodStart(today.AddDays(-3));
+        var recipe = Recipe.Create(peer.Id, "Shared recipe", servings: 1);
+        var meal = Meal.Create(user.Id, now);
+        meal.AddRecipe(recipe.Id, 1);
+        MealAiSession session = meal.AddAiSession(imageAssetId: null, AiRecognitionSource.Photo, now, notes: null,
+            [new MealAiItemData("Apple", nameLocal: null, 100, "g", 52, 0.3, 0.2, 14, 2.4, 0)]);
+        var list = ShoppingList.Create(user.Id, "Purge list");
+        list.AddItem("Apple", productId: null, amount: 100, MeasurementUnit.G, category: null, isChecked: false, sortOrder: 0);
+        var image = ImageAsset.Create(user.Id, $"purge/{name}.jpg", "https://example.com/purge.jpg");
         context.AddRange(user, entry, HydrationOperationReceipt.Create(Guid.NewGuid(), entry),
             WeightEntry.Create(user.Id, now, 72.5), WaistEntry.Create(user.Id, now, 84), profile);
-        return new SeededUser(user, profile.Id);
+        context.AddRange(peer, recipe, meal, list, image,
+            AdminImpersonationSession.Start(user.Id, peer.Id, "Purge actor test", actorIpAddress: null, actorUserAgent: null, now),
+            AdminImpersonationSession.Start(peer.Id, user.Id, "Purge target test", actorIpAddress: null, actorUserAgent: null, now),
+            ClientTask.Create(user.Id, peer.Id, "Dietologist task", details: null, dueAtUtc: null),
+            ClientTask.Create(peer.Id, user.Id, "Client task", details: null, dueAtUtc: null),
+            RecentItem.Create(user.Id, RecentItemType.Recipe, recipe.Id.Value, now),
+            AiUsage.Create(user.Id, "food", "offline-test", 10, 5, 15),
+            new FoodRecognitionJob {
+                Id = Guid.NewGuid(), UserId = user.Id, ImageAssetId = image.Id,
+                ImageUrl = image.Url, CreatedOnUtc = now, UpdatedOnUtc = now,
+            },
+            new TelegramOperation {
+                Id = Guid.NewGuid(), BotId = 1, UpdateId = now.Ticks + user.Id.Value.GetHashCode(),
+                UserId = user.Id.Value, PayloadHash = "test-hash", ProtectedPayload = "test-payload",
+                CreatedAtUtc = now, NextAttemptAtUtc = now, Completed = true,
+            },
+            MealRecognitionReceipt.Create(Guid.NewGuid(), user.Id, Guid.NewGuid(), meal.Id, 1, now, now, TimeSpan.FromMinutes(5)));
+        return new SeededUser(user, profile.Id, peer.Id, recipe.Id, meal.Id, session.Id, list.Id);
     }
 
     private static async Task AssertDataAsync(FoodDiaryDbContext context, SeededUser seeded, bool exists) {
@@ -130,6 +173,22 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         Assert.Equal(exists, await context.FertilitySignals.AnyAsync(item => item.CycleProfileId == seeded.ProfileId));
         Assert.Equal(exists, await context.CycleMenstrualEpisodes.AnyAsync(item => item.CycleProfileId == seeded.ProfileId));
         Assert.Equal(exists, await context.Set<CycleConsent>().AnyAsync(item => item.CycleProfileId == seeded.ProfileId));
+        Assert.Equal(exists ? 2 : 0, await context.AdminImpersonationSessions.CountAsync(item =>
+            item.ActorUserId == seeded.User.Id || item.TargetUserId == seeded.User.Id));
+        Assert.Equal(exists ? 2 : 0, await context.ClientTasks.CountAsync(item =>
+            item.DietologistUserId == seeded.User.Id || item.ClientUserId == seeded.User.Id));
+        Assert.Equal(exists, await context.Meals.AnyAsync(item => item.Id == seeded.MealId));
+        Assert.Equal(exists, await context.MealItems.AnyAsync(item => item.MealId == seeded.MealId));
+        Assert.Equal(exists, await context.MealAiSessions.AnyAsync(item => item.MealId == seeded.MealId));
+        Assert.Equal(exists, await context.MealAiItems.AnyAsync(item => item.MealAiSessionId == seeded.SessionId));
+        Assert.Equal(exists, await context.ShoppingLists.AnyAsync(item => item.Id == seeded.ListId));
+        Assert.Equal(exists, await context.ShoppingListItems.AnyAsync(item => item.ShoppingListId == seeded.ListId));
+        Assert.Equal(exists, await context.RecentItems.AnyAsync(item => item.UserId == seeded.User.Id));
+        Assert.Equal(exists, await context.AiUsages.AnyAsync(item => item.UserId == seeded.User.Id));
+        Assert.Equal(exists, await context.Set<FoodRecognitionJob>().AnyAsync(item => item.UserId == seeded.User.Id));
+        Assert.Equal(exists, await context.Set<TelegramOperation>().AnyAsync(item => item.UserId == seeded.User.Id.Value));
+        Assert.True(await context.Users.AnyAsync(item => item.Id == seeded.PeerId));
+        Assert.True(await context.Recipes.AnyAsync(item => item.Id == seeded.RecipeId));
     }
 
     private static async Task PurgeAsync(IEnumerable<IUserDataPurgeParticipant> participants, UserId userId) {
@@ -140,7 +199,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
 
     private static IUserDataPurgeParticipant[] Participants(ServiceProvider provider) {
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>().OrderBy(item => item.Order)];
-        Assert.Equal([80, 90, 100], participants.Select(item => item.Order));
+        Assert.Equal([30, 40, 50, 60, 70, 80, 90, 100, 120, 130], participants.Select(item => item.Order));
         return participants;
     }
 
@@ -150,15 +209,18 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         services.AddSingleton(central);
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddHydrationModule().AddBodyMetricsModule().AddCyclesModule();
+        services.AddAdminPersistence().AddDietologistModule().AddMealsPersistence().AddMealPlanningModule()
+            .AddRecentItemsModule().AddAiPersistence().AddIdentityPersistence();
         return services.BuildServiceProvider();
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record SeededUser(User User, CycleProfileId ProfileId);
+    private sealed record SeededUser(User User, CycleProfileId ProfileId, UserId PeerId, RecipeId RecipeId, MealId MealId,
+        MealAiSessionId SessionId, ShoppingListId ListId);
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingParticipant(UserId target) : IUserDataPurgeParticipant {
-        public int Order => 110;
+        public int Order => 140;
 
         public Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) =>
             userId == target ? throw new InvalidOperationException("Injected failure after the owner deletions.") : Task.CompletedTask;

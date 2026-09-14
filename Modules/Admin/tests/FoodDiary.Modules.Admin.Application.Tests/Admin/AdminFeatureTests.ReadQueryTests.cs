@@ -1,9 +1,18 @@
+using FoodDiary.Testing;
+using FoodDiary.Application.ContentReports.Queries.CountContentReports;
+using FoodDiary.Application.ContentReports.Queries.GetContentReportsForAdministration;
+using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplateRevisions;
+using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplates;
+using FoodDiary.Application.Users.Queries.GetFilteredUsersForAdministration;
+using FoodDiary.Application.Users.Queries.GetUserAdministrationSummary;
+using FoodDiary.Application.Users.Queries.GetUserForAdministration;
+using FoodDiary.Application.Users.Queries.GetUsersForAdministration;
+using FoodDiary.Modules.Ai.Application.Queries.GetAiPromptRevisions;
+using FoodDiary.Modules.Ai.Application.Queries.GetAiPromptTemplates;
+using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageForUser;
+using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
-using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Modules.Admin.Application.Services;
-using FoodDiary.Modules.Ai.Application.Services;
-using FoodDiary.Application.ContentReports.Services;
-using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
@@ -46,7 +55,7 @@ public partial class AdminFeatureTests {
         var filter = new UserAdministrationFilter(Role: "Admin", EmailConfirmed: true);
         repository.GetFilteredPagedReadModelsAsync("filtered", 2, 10, UserAccountStatusFilter.All, filter, cancellation.Token)
             .Returns((new[] { user.ToAdminReadModel() }, 31));
-        var handler = new GetAdminUsersQueryHandler(new UserAdministrationReadService(repository));
+        var handler = new GetAdminUsersQueryHandler(RequestTestSender.Create(new GetFilteredUsersForAdministrationQueryHandler(repository), new GetUserForAdministrationQueryHandler(repository), new GetUsersForAdministrationQueryHandler(repository), new GetUserAdministrationSummaryQueryHandler(repository)));
         Result<PagedResponse<AdminUserModel>> result = await handler.Handle(new GetAdminUsersQuery(2, 10, "filtered", UserAccountStatusFilter.All, filter), cancellation.Token);
         ResultAssert.Success(result);
         AdminUserModel actual = Assert.Single(result.Value.Data);
@@ -237,7 +246,7 @@ public partial class AdminFeatureTests {
         IUserAdminReadModelRepository repository = Substitute.For<IUserAdminReadModelRepository>();
         repository.GetByIdIncludingDeletedReadModelAsync(user.Id, Arg.Any<CancellationToken>())
             .Returns(user.ToAdminReadModel());
-        var handler = new GetAdminUserRoleAuditQueryHandler(new UserAdministrationReadService(repository), new RecordingUserRoleAuditRepository());
+        var handler = new GetAdminUserRoleAuditQueryHandler(RequestTestSender.Create(new GetFilteredUsersForAdministrationQueryHandler(repository), new GetUserForAdministrationQueryHandler(repository), new GetUsersForAdministrationQueryHandler(repository), new GetUserAdministrationSummaryQueryHandler(repository)), new RecordingUserRoleAuditRepository());
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 10), CancellationToken.None);
         ResultAssert.Success(result);
         await repository.Received(1).GetByIdIncludingDeletedReadModelAsync(user.Id, CancellationToken.None);
@@ -246,7 +255,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", isActive: true);
-        GetAdminAiPromptsQueryHandler handler = new(new AiAdministrationReadService(Substitute.For<IAiUsageQuery>(), new InMemoryAiPromptTemplateRepository(template)));
+        GetAdminAiPromptsQueryHandler handler = new(RequestTestSender.Create(new GetAiPromptRevisionsQueryHandler(new InMemoryAiPromptTemplateRepository(template)), new GetAiUsageForUserQueryHandler(Substitute.For<IAiUsageQuery>()), new GetAiUsageSummaryQueryHandler(Substitute.For<IAiUsageQuery>()), new GetAiPromptTemplatesQueryHandler(new InMemoryAiPromptTemplateRepository(template))));
 
         Result<IReadOnlyList<AdminAiPromptModel>> result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
 
@@ -289,7 +298,7 @@ public partial class AdminFeatureTests {
     public async Task GetAdminAiUsageSummaryQueryHandler_WithInvertedRange_ReturnsValidationFailure() {
         var repository = new RecordingAiUsageRepository();
         var handler = new GetAdminAiUsageSummaryQueryHandler(
-            new AiAdministrationReadService(repository, Substitute.For<IAiPromptTemplateReadModelRepository>()),
+            RequestTestSender.Create(new GetAiPromptRevisionsQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>()), new GetAiUsageForUserQueryHandler(repository), new GetAiUsageSummaryQueryHandler(repository), new GetAiPromptTemplatesQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>())),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
@@ -307,7 +316,7 @@ public partial class AdminFeatureTests {
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc));
         var aiUsageRepository = new RecordingAiUsageRepository();
         var handler = new GetAdminAiUsageSummaryQueryHandler(
-            new AiAdministrationReadService(aiUsageRepository, Substitute.For<IAiPromptTemplateReadModelRepository>()),
+            RequestTestSender.Create(new GetAiPromptRevisionsQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>()), new GetAiUsageForUserQueryHandler(aiUsageRepository), new GetAiUsageSummaryQueryHandler(aiUsageRepository), new GetAiPromptTemplatesQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>())),
             dateTimeProvider);
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(From: null, To: null), CancellationToken.None);
@@ -329,9 +338,7 @@ public partial class AdminFeatureTests {
             ByModel: [new AiUsageBreakdown("gpt-test", 30, 12, 18)],
             ByUser: [new AiUsageUserSummary(userId, "user@example.com", 40, 16, 24)]);
         var handler = new GetAdminAiUsageSummaryQueryHandler(
-            new AiAdministrationReadService(
-                new RecordingAiUsageRepository(summary),
-                Substitute.For<IAiPromptTemplateReadModelRepository>()),
+            RequestTestSender.Create(new GetAiPromptRevisionsQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>()), new GetAiUsageForUserQueryHandler(new RecordingAiUsageRepository(summary)), new GetAiUsageSummaryQueryHandler(new RecordingAiUsageRepository(summary)), new GetAiPromptTemplatesQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>())),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(
@@ -449,9 +456,7 @@ public partial class AdminFeatureTests {
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
         var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(
-            userRepository,
-            new ContentReportAdministrationReadService(
-                contentReportRepository)));
+RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Application.Abstractions.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)]))));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 
@@ -474,7 +479,7 @@ public partial class AdminFeatureTests {
             "Incorrect content");
         report.MarkDismissed(UserId.New(), "  resolved  ");
         var repository = new CountingContentReportRepository(0, [report]);
-        GetAdminContentReportsQueryHandler handler = new(new ContentReportAdministrationReadService(repository));
+        GetAdminContentReportsQueryHandler handler = new(RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(repository), new CountContentReportsQueryHandler(repository)));
 
         Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(new GetAdminContentReportsQuery("dismissed", 0, 0), CancellationToken.None);
 
@@ -491,7 +496,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task GetAdminContentReportsQueryHandler_WithExtremePaging_BoundsLimitAndPreventsOffsetOverflow() {
         var repository = new CountingContentReportRepository(0);
-        GetAdminContentReportsQueryHandler handler = new(new ContentReportAdministrationReadService(repository));
+        GetAdminContentReportsQueryHandler handler = new(RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(repository), new CountContentReportsQueryHandler(repository)));
 
         Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(
             new GetAdminContentReportsQuery(Status: null, int.MaxValue, int.MaxValue),
@@ -514,7 +519,7 @@ public partial class AdminFeatureTests {
             "<b>Body</b>",
             "Body",
             isActive: true);
-        GetAdminEmailTemplatesQueryHandler handler = new(new EmailTemplateAdministrationReadService(new InMemoryEmailTemplateRepository(template)));
+        GetAdminEmailTemplatesQueryHandler handler = new(RequestTestSender.Create(new GetEmailTemplateRevisionsQueryHandler(new InMemoryEmailTemplateRepository(template)), new GetEmailTemplatesQueryHandler(new InMemoryEmailTemplateRepository(template))));
 
         Result<IReadOnlyList<AdminEmailTemplateModel>> result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
 

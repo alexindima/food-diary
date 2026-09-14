@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Commands.CreateUserByAdministrator;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -17,14 +19,12 @@ namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 public sealed class CreateAdminUserCommandHandlerTests {
     [Fact]
     public async Task Handle_WithGeneratedPassword_CreatesConfirmedUserAndQueuesCredentialsEmail() {
-        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
+        ISender userManagementService = Substitute.For<ISender>();
         IEmailSender emailSender = Substitute.For<IEmailSender>();
         IAuditLogger auditLogger = Substitute.For<IAuditLogger>();
         UserAdminCreateModel? capturedRequest = null;
-        userManagementService.CreateAsync(
-                Arg.Do<UserAdminCreateModel>(request => capturedRequest = request),
-                Arg.Any<CancellationToken>())
-            .Returns(call => Result.Success(ToReadModel(call.Arg<UserAdminCreateModel>())));
+        userManagementService.Send(Arg.Do<CreateUserByAdministratorCommand>(command => capturedRequest = command.Request), Arg.Any<CancellationToken>())
+            .Returns(call => Result.Success(ToReadModel(call.Arg<CreateUserByAdministratorCommand>().Request)));
 
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
@@ -50,14 +50,13 @@ public sealed class CreateAdminUserCommandHandlerTests {
                 string.Equals(message.TemporaryPassword, creation.TemporaryPassword, StringComparison.Ordinal) &&
                 string.Equals(message.Language, "ru", StringComparison.Ordinal)),
             Arg.Any<CancellationToken>());
-        await userManagementService.Received(1).CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>());
+        await userManagementService.Received(1).Send(Arg.Any<CreateUserByAdministratorCommand>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_WhenEmailAlreadyExists_ReturnsConflictWithoutCreatingUser() {
-        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
-        userManagementService
-            .CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>())
+        ISender userManagementService = Substitute.For<ISender>();
+        userManagementService.Send(Arg.Any<CreateUserByAdministratorCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<UserAdminReadModel>(UserErrors.EmailAlreadyExists));
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
@@ -75,7 +74,7 @@ public sealed class CreateAdminUserCommandHandlerTests {
 
     [Fact]
     public async Task Handle_WithEmptyActorId_ReturnsValidationFailure() {
-        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
+        ISender userManagementService = Substitute.For<ISender>();
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
             Substitute.For<IEmailSender>(),
@@ -87,14 +86,13 @@ public sealed class CreateAdminUserCommandHandlerTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        await userManagementService.DidNotReceive().CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>());
+        await userManagementService.DidNotReceive().Send(Arg.Any<CreateUserByAdministratorCommand>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_WithUnknownRole_ReturnsValidationFailure() {
-        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
-        userManagementService
-            .CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>())
+        ISender userManagementService = Substitute.For<ISender>();
+        userManagementService.Send(Arg.Any<CreateUserByAdministratorCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<UserAdminReadModel>(Errors.Validation.Invalid("Roles", "Unknown role.")));
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
@@ -111,11 +109,10 @@ public sealed class CreateAdminUserCommandHandlerTests {
 
     [Fact]
     public async Task Handle_WithExplicitPasswordAndNoEmail_CreatesUserWithoutPasswordChange() {
-        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
+        ISender userManagementService = Substitute.For<ISender>();
         IEmailSender emailSender = Substitute.For<IEmailSender>();
-        userManagementService
-            .CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>())
-            .Returns(call => Result.Success(ToReadModel(call.Arg<UserAdminCreateModel>())));
+        userManagementService.Send(Arg.Any<CreateUserByAdministratorCommand>(), Arg.Any<CancellationToken>())
+            .Returns(call => Result.Success(ToReadModel(call.Arg<CreateUserByAdministratorCommand>().Request)));
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
             emailSender,

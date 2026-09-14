@@ -1,24 +1,21 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Models;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
 public sealed class WeeklyCheckInReadService(
-    IMealActivityReadService mealActivityReadService,
-    IDashboardStatisticsReadService statisticsReadService,
-    IWeightEntryReadService weightEntryReadService,
-    IWaistEntryReadService waistEntryReadService,
-    IHydrationEntryReadService hydrationEntryReadService)
+    IMealActivityReadService mealActivityReadService, IDashboardStatisticsReadService statisticsReadService, ISender sender, IHydrationEntryReadService hydrationEntryReadService)
     : IWeeklyCheckInReadService {
     public async Task<Result<WeekSummaryModel>> LoadWeekSummaryAsync(
         UserId userId,
@@ -40,11 +37,9 @@ public sealed class WeeklyCheckInReadService(
             new MealQueryFilters(DateFrom: dateFrom, DateTo: dateTo),
             cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyList<WeightEntryModel> weights = await weightEntryReadService
-            .GetEntriesAsync(userId, dateFrom, dateTo, limit: null, descending: false, cancellationToken)
+        IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken)
             .ConfigureAwait(false);
-        IReadOnlyList<WaistEntryModel> waists = await waistEntryReadService
-            .GetEntriesAsync(userId, dateFrom, dateTo, limit: null, descending: false, cancellationToken)
+        IReadOnlyList<WaistEntryModel> waists = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken)
             .ConfigureAwait(false);
         IReadOnlyList<(DateTime Date, int TotalMl)> hydration = await hydrationEntryReadService
             .GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken)

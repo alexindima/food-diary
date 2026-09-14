@@ -1,4 +1,5 @@
-using FoodDiary.Modules.Ai.Contracts.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptTemplates;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Mappings;
@@ -7,11 +8,10 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAiPrompts;
 
-public sealed class GetAdminAiPromptsQueryHandler(IAiAdministrationReadService aiReadService)
+public sealed class GetAdminAiPromptsQueryHandler(ISender aiReadService)
     : IQueryHandler<GetAdminAiPromptsQuery, Result<IReadOnlyList<AdminAiPromptModel>>> {
     public async Task<Result<IReadOnlyList<AdminAiPromptModel>>> Handle(GetAdminAiPromptsQuery query, CancellationToken cancellationToken) {
-        IReadOnlyList<AiPromptTemplateReadModel> templates = await aiReadService
-            .GetPromptTemplatesAsync(cancellationToken)
+        IReadOnlyList<AiPromptTemplateReadModel> templates = await aiReadService.Send(new GetAiPromptTemplatesQuery(), cancellationToken)
             .ConfigureAwait(false);
         return Result.Success<IReadOnlyList<AdminAiPromptModel>>(templates.Select(static template => template.ToAdminModel()).ToList());
     }

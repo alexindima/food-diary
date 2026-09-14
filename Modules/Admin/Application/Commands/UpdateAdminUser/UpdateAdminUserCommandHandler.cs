@@ -1,7 +1,8 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Commands.UpdateUserByAdministrator;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
@@ -13,7 +14,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 
 public sealed class UpdateAdminUserCommandHandler(
-    IUserAdministrationMutationService userManagementService,
+    ISender userManagementService,
     IAuditLogger auditLogger,
     TimeProvider dateTimeProvider)
     : ICommandHandler<UpdateAdminUserCommand, Result<AdminUserModel>> {
@@ -36,9 +37,7 @@ public sealed class UpdateAdminUserCommandHandler(
             return Result.Failure<AdminUserModel>(actorUserIdResult.Error);
         }
 
-        Result<UserAdminReadModel> updateResult = await userManagementService
-            .UpdateAsync(
-                new UserAdminUpdateModel(
+        Result<UserAdminReadModel> updateResult = await userManagementService.Send(new UpdateUserByAdministratorCommand(Request: new UserAdminUpdateModel(
                     userIdResult.Value,
                     command.IsActive,
                     command.IsEmailConfirmed,
@@ -47,8 +46,7 @@ public sealed class UpdateAdminUserCommandHandler(
                     command.AiInputTokenLimit,
                     command.AiOutputTokenLimit,
                     actorUserIdResult.Value,
-                    dateTimeProvider.GetUtcNow().UtcDateTime),
-                cancellationToken)
+                    dateTimeProvider.GetUtcNow().UtcDateTime)), cancellationToken)
             .ConfigureAwait(false);
         if (updateResult.IsFailure) {
             return Result.Failure<AdminUserModel>(updateResult.Error);

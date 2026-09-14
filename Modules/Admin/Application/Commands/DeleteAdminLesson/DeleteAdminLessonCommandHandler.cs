@@ -1,12 +1,13 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Lessons.Contracts.Commands.DeleteLesson;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
 
-public sealed class DeleteAdminLessonCommandHandler(ILessonAdministrationService lessonAdministrationService)
+public sealed class DeleteAdminLessonCommandHandler(ISender lessonAdministrationService)
     : ICommandHandler<DeleteAdminLessonCommand, Result> {
     public async Task<Result> Handle(
         DeleteAdminLessonCommand command,
@@ -20,8 +21,7 @@ public sealed class DeleteAdminLessonCommandHandler(ILessonAdministrationService
             return RequiredIdParser.ToFailure(lessonIdResult);
         }
 
-        return await lessonAdministrationService
-            .DeleteAsync(lessonIdResult.Value, cancellationToken)
+        return await lessonAdministrationService.Send(new DeleteLessonCommand(LessonId: lessonIdResult.Value), cancellationToken)
             .ConfigureAwait(false);
     }
 }

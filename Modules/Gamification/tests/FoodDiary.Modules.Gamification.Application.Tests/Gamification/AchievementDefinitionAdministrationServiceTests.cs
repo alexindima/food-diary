@@ -1,11 +1,15 @@
+using FoodDiary.Testing;
+using FoodDiary.Application.Gamification.Commands.CreateAchievementDefinition;
+using FoodDiary.Application.Gamification.Commands.UpdateAchievementDefinition;
+using FoodDiary.Application.Gamification.Queries.GetAchievementDefinitionsForAdministration;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
 using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
@@ -19,9 +23,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.GetAllAsync(Arg.Any<CancellationToken>()).Returns([definition]);
         store.GetAwardCountsAsync(Arg.Any<CancellationToken>()).Returns(new Dictionary<string, int>(StringComparer.Ordinal) { [definition.Key] = 3 });
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
-        AchievementDefinitionAdminModel model = Assert.Single(await service.GetAllAsync(CancellationToken.None));
+        AchievementDefinitionAdminModel model = Assert.Single(await service.Send(new GetAchievementDefinitionsForAdministrationQuery(), CancellationToken.None));
         Assert.Equal(3, model.AwardedUsers);
 
         Assert.Multiple(
@@ -34,10 +38,10 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
     public async Task CreateAsync_WithValidInput_AddsAndReturnsDefinition() {
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.TryAddAsync(Arg.Any<AchievementDefinition>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult(true));
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
         AchievementDefinitionAdminModel model = ResultAssert.Success(
-            await service.CreateAsync(CreateInput(), CancellationToken.None));
+            await service.Send(new CreateAchievementDefinitionCommand(Input: CreateInput()), CancellationToken.None));
 
         Assert.Equal("custom_20", model.Key);
         await store.Received(1).TryAddAsync(Arg.Any<AchievementDefinition>(), Arg.Any<CancellationToken>());
@@ -46,10 +50,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
     [Fact]
     public async Task CreateAsync_WithUnknownMetric_ReturnsValidationFailure() {
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
-        Result<AchievementDefinitionAdminModel> result = await service.CreateAsync(
-            CreateInput() with { Metric = "unknown" }, CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new CreateAchievementDefinitionCommand(Input: CreateInput() with { Metric = "unknown" }), CancellationToken.None);
 
         ResultAssert.Failure(result, "Validation.Invalid");
         await store.DidNotReceiveWithAnyArgs().TryAddAsync(default!, default);
@@ -57,10 +60,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
 
     [Fact]
     public async Task CreateAsync_WithInvalidDefinition_ReturnsValidationFailure() {
-        var service = new AchievementDefinitionAdministrationService(Substitute.For<IAchievementDefinitionStore>());
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(Substitute.For<IAchievementDefinitionStore>()), new CreateAchievementDefinitionCommandHandler(Substitute.For<IAchievementDefinitionStore>()), new UpdateAchievementDefinitionCommandHandler(Substitute.For<IAchievementDefinitionStore>()));
 
-        Result<AchievementDefinitionAdminModel> result = await service.CreateAsync(
-            CreateInput() with { Key = " " }, CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new CreateAchievementDefinitionCommand(Input: CreateInput() with { Key = " " }), CancellationToken.None);
 
         ResultAssert.Failure(result, "Validation.Invalid");
     }
@@ -68,9 +70,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
     public async Task CreateAsync_WhenKeyAlreadyExists_ReturnsConflict() {
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.TryAddAsync(Arg.Any<AchievementDefinition>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult(false));
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
-        Result<AchievementDefinitionAdminModel> result = await service.CreateAsync(CreateInput(), CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new CreateAchievementDefinitionCommand(Input: CreateInput()), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.True(result.IsFailure),
@@ -83,12 +85,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         AchievementDefinition definition = CreateDefinition();
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.GetByIdTrackingAsync(definition.Id, Arg.Any<CancellationToken>()).Returns(definition);
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
-        Result<AchievementDefinitionAdminModel> result = await service.UpdateAsync(
-            definition.Id.Value,
-            UpdateInput(version: definition.Version + 1),
-            CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new UpdateAchievementDefinitionCommand(Id: definition.Id.Value, Input: UpdateInput(version: definition.Version + 1)), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.True(result.IsFailure),
@@ -100,10 +99,10 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
     [Fact]
     public async Task UpdateAsync_WhenDefinitionDoesNotExist_ReturnsNotFound() {
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
         var id = Guid.NewGuid();
 
-        Result<AchievementDefinitionAdminModel> result = await service.UpdateAsync(id, UpdateInput(1), CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new UpdateAchievementDefinitionCommand(Id: id, Input: UpdateInput(1)), CancellationToken.None);
 
         Assert.Multiple(
             () => ResultAssert.Failure(result, "AchievementDefinition.NotFound"),
@@ -116,10 +115,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         AchievementDefinition definition = CreateDefinition();
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.GetByIdTrackingAsync(definition.Id, Arg.Any<CancellationToken>()).Returns(definition);
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
-        Result<AchievementDefinitionAdminModel> result = await service.UpdateAsync(
-            definition.Id.Value, UpdateInput(definition.Version) with { Metric = "unknown" }, CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new UpdateAchievementDefinitionCommand(Id: definition.Id.Value, Input: UpdateInput(definition.Version) with { Metric = "unknown" }), CancellationToken.None);
 
         ResultAssert.Failure(result, "Validation.Invalid");
         await store.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
@@ -130,10 +128,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         AchievementDefinition definition = CreateDefinition();
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.GetByIdTrackingAsync(definition.Id, Arg.Any<CancellationToken>()).Returns(definition);
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
-        Result<AchievementDefinitionAdminModel> result = await service.UpdateAsync(
-            definition.Id.Value, UpdateInput(definition.Version) with { Threshold = 0 }, CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new UpdateAchievementDefinitionCommand(Id: definition.Id.Value, Input: UpdateInput(definition.Version) with { Threshold = 0 }), CancellationToken.None);
 
         ResultAssert.Failure(result, "Validation.Invalid");
     }
@@ -143,12 +140,9 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         AchievementDefinition definition = CreateDefinition();
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.GetByIdTrackingAsync(definition.Id, Arg.Any<CancellationToken>()).Returns(definition);
-        var service = new AchievementDefinitionAdministrationService(store);
+        ISender service = RequestTestSender.Create(new GetAchievementDefinitionsForAdministrationQueryHandler(store), new CreateAchievementDefinitionCommandHandler(store), new UpdateAchievementDefinitionCommandHandler(store));
 
-        Result<AchievementDefinitionAdminModel> result = await service.UpdateAsync(
-            definition.Id.Value,
-            UpdateInput(definition.Version),
-            CancellationToken.None);
+        Result<AchievementDefinitionAdminModel> result = await service.Send(new UpdateAchievementDefinitionCommand(Id: definition.Id.Value, Input: UpdateInput(definition.Version)), CancellationToken.None);
 
         AchievementDefinitionAdminModel model = ResultAssert.Success(result);
         Assert.Multiple(

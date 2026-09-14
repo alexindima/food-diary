@@ -1,14 +1,15 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetLatestWeightEntry;
 
 public sealed class GetLatestWeightEntryQueryHandler(
-    IWeightEntryReadService weightEntryReadService,
+    ISender weightEntryReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWeightEntryQuery, Result<WeightEntryModel?>> {
     public async Task<Result<WeightEntryModel?>> Handle(
@@ -23,7 +24,7 @@ public sealed class GetLatestWeightEntryQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        WeightEntryModel? latest = await weightEntryReadService.GetLatestAsync(userId, cancellationToken).ConfigureAwait(false);
+        WeightEntryModel? latest = await weightEntryReadService.Send(new ReadLatestWeightEntryQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
         return Result.Success(latest);
     }
 }

@@ -1,11 +1,11 @@
 # Identity consumer contracts
 
-Own public email delivery/template capabilities, administrative template results,
-login-event read capabilities and the narrow impersonation-token issuer request.
+Own public email delivery capabilities, administrative template commands/queries and results,
+login-event queries and the narrow impersonation-token issuer request.
 Keep legacy FoodDiary.Application.Abstractions namespaces, email formats, error
 semantics and cancellation unchanged. SecurityTokenGenerator retains its exact
 algorithm as a shared owner helper. No aggregate, repository, provider or whole
-Application dependencies are permitted. Depend only on Results and scalar UserId.
+Application dependencies are permitted. Depend on Mediator, Results and scalar UserId. Template mutations retain the caller unit of work; generic transport and token capabilities remain ports.
 
 Admin owns impersonation authorization, target filtering, audit and session flow.
 Identity owns JWT construction through IImpersonationTokenIssuer. Never expose

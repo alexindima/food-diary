@@ -1,10 +1,10 @@
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Billing.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -12,16 +12,15 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Billing.Application.Queries.GetBillingOverview;
 
 public sealed class GetBillingOverviewQueryHandler(
-    IUserBillingService billingUserContextService,
+    ISender billingUserContextService,
     IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
-    TimeProvider dateTimeProvider,
-    ICurrentUserAccessService currentUserAccessService)
+    TimeProvider dateTimeProvider)
     : IRequestHandler<GetBillingOverviewQuery, Result<BillingOverviewModel>> {
     public async Task<Result<BillingOverviewModel>> Handle(GetBillingOverviewQuery request, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await BillingCurrentUserAccessResolver.ResolveAsync(
             request.UserId,
-            currentUserAccessService,
+            billingUserContextService,
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return BillingCurrentUserAccessResolver.ToFailure<BillingOverviewModel>(userIdResult);
@@ -29,8 +28,7 @@ public sealed class GetBillingOverviewQueryHandler(
 
         UserId userId = userIdResult.Value;
 
-        Result<UserBillingProfileModel> userProfileResult = await billingUserContextService
-            .GetAccessibleProfileAsync(userId, cancellationToken)
+        Result<UserBillingProfileModel> userProfileResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken)
             .ConfigureAwait(false);
         if (userProfileResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(userProfileResult.Error);

@@ -18,7 +18,7 @@ AI owns food analysis, prompt administration, usage reporting contracts, quotas 
 - ProcessNextFoodRecognitionCommandHandler owns the background claim/vision/nutrition/completion lifecycle. The worker sends its Contracts request through ISender; preserve independent commits and protection against redispatch after uncertain provider outcomes.
 - FoodRecognitionResultReader validates ownership, completion and usable results for Meals; retain the public boundary.
 - AiPromptAdministrationService owns prompt mutation for Admin; retain the public boundary.
-- AiAdministrationReadService adapts internal read capabilities to the public Admin-facing API; its small forwarding methods do not justify exposing repositories to Admin.
+- Administration reads are owner Contracts queries dispatched through ISender; their Application handlers use internal projection ports. Prompt mutation and completed-recognition checks likewise remain in dedicated AI handlers.
 - ApplicationAiTelemetry owns shared application instrumentation, not a handler-forwarding service.
 - UserAiUsageSummaryReadService and AiUserContextService are retired. Do not reintroduce services solely to forward one handler or copy an identical owner DTO.
 

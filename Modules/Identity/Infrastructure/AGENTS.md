@@ -47,4 +47,7 @@ IdentityDbContext owns six root types plus EmailTemplate owned revisions, using 
 
 Registration obtains the live transaction from IModuleTransactionCoordinator,
 without resolving FoodDiaryDbContext. Preserve the relational guard and pass the
-operation cancellation token to UseTransactionAsync. Purge remains a separate bridge.
+operation cancellation token to UseTransactionAsync. Purge uses IdentityDbContext
+and binds the live coordinator transaction on every invocation. Preserve order 130,
+scalar user filtering and journal/deduplication deletion. Users retains transaction
+completion; The remaining central reference supplies shared JwtOptions and authentication framework dependencies.

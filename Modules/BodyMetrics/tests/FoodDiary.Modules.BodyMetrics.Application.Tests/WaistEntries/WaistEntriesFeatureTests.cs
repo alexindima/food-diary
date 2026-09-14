@@ -1,3 +1,10 @@
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadLatestWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadLatestWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Testing;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -5,7 +12,6 @@ using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.CreateWais
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.DeleteWaistEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.UpdateWaistEntry;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetLatestWaistEntry;
@@ -18,7 +24,7 @@ using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Services;
+using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.Tests.WaistEntries;
 
@@ -599,22 +605,11 @@ public class WaistEntriesFeatureTests {
         var repository = new InMemoryWaistEntryRepository();
         WaistEntry older = await repository.AddAsync(WaistEntry.Create(userId, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 81.23));
         WaistEntry newer = await repository.AddAsync(WaistEntry.Create(userId, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 82.78));
-        var service = new WaistEntryReadService(repository);
+        ISender service = RequestTestSender.Create(new ReadWaistEntriesQueryHandler(repository), new ReadLatestWaistEntryQueryHandler(repository), new ReadWaistSummariesQueryHandler(repository));
 
-        IReadOnlyList<WaistEntryModel> entries = await service.GetEntriesAsync(
-            userId,
-            dateFrom: null,
-            dateTo: null,
-            limit: null,
-            descending: true,
-            CancellationToken.None);
-        WaistEntryModel? latest = await service.GetLatestAsync(userId, CancellationToken.None);
-        IReadOnlyList<WaistEntrySummaryModel> summaries = await service.GetSummariesAsync(
-            userId,
-            new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
-            new DateTime(2026, 5, 22, 0, 0, 0, DateTimeKind.Utc),
-            quantizationDays: 2,
-            CancellationToken.None);
+        IReadOnlyList<WaistEntryModel> entries = await service.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: null, Descending: true), CancellationToken.None);
+        WaistEntryModel? latest = await service.Send(new ReadLatestWaistEntryQuery(UserId: userId), CancellationToken.None);
+        IReadOnlyList<WaistEntrySummaryModel> summaries = await service.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), DateTo: new DateTime(2026, 5, 22, 0, 0, 0, DateTimeKind.Utc), QuantizationDays: 2), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal([newer.Id.Value, older.Id.Value], entries.Select(entry => entry.Id)),
@@ -633,7 +628,7 @@ public class WaistEntriesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryWaistEntryRepository : IWaistEntryReadModelRepository, IWaistEntryWriteRepository, IWaistEntryReadService {
+    private sealed class InMemoryWaistEntryRepository : RequestTestSender, IWaistEntryReadModelRepository, IWaistEntryWriteRepository {
         private readonly List<WaistEntry> _entries = [];
 
         public DateTime LastGetByDateDate { get; private set; }
@@ -738,7 +733,7 @@ public class WaistEntriesFeatureTests {
             return [.. entries.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))];
         }
 
-        async Task<IReadOnlyList<WaistEntryModel>> IWaistEntryReadService.GetEntriesAsync(
+        private async Task<IReadOnlyList<WaistEntryModel>> GetEntriesForRequestAsync(
             UserId userId,
             DateTime? dateFrom,
             DateTime? dateTo,
@@ -756,15 +751,14 @@ public class WaistEntriesFeatureTests {
             return [.. entries.Select(entry => entry.ToModel())];
         }
 
-        async Task<WaistEntryModel?> IWaistEntryReadService.GetLatestAsync(UserId userId, CancellationToken cancellationToken) {
-            IReadOnlyList<WaistEntryModel> entries = await ((IWaistEntryReadService)this)
-                .GetEntriesAsync(userId, dateFrom: null, dateTo: null, limit: 1, descending: true, cancellationToken)
+        private async Task<WaistEntryModel?> GetLatestForRequestAsync(UserId userId, CancellationToken cancellationToken) {
+            IReadOnlyList<WaistEntryModel> entries = await GetEntriesForRequestAsync(userId, dateFrom: null, dateTo: null, limit: 1, descending: true, cancellationToken)
                 .ConfigureAwait(false);
 
             return entries.Count > 0 ? entries[0] : null;
         }
 
-        async Task<IReadOnlyList<WaistEntrySummaryModel>> IWaistEntryReadService.GetSummariesAsync(
+        private async Task<IReadOnlyList<WaistEntrySummaryModel>> GetSummariesForRequestAsync(
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
@@ -788,6 +782,13 @@ public class WaistEntriesFeatureTests {
             double avg = bucketEntries.Average(entry => entry.CircumferenceCm);
             return new WaistEntrySummaryModel(start, end, Math.Round(avg, 2, MidpointRounding.ToEven));
         }
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            ReadWaistEntriesQuery r => (Task<TResponse>)(object)GetEntriesForRequestAsync(r.UserId, r.DateFrom, r.DateTo, r.Limit, r.Descending, cancellationToken),
+            ReadLatestWaistEntryQuery r => (Task<TResponse>)(object)GetLatestForRequestAsync(r.UserId, cancellationToken),
+            ReadWaistSummariesQuery r => (Task<TResponse>)(object)GetSummariesForRequestAsync(r.UserId, r.DateFrom, r.DateTo, r.QuantizationDays, cancellationToken),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {

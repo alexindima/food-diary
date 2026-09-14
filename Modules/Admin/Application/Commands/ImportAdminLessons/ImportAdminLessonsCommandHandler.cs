@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Lessons.Contracts.Commands.ImportLessons;
 using System.Globalization;
 using FoodDiary.Modules.Admin.Application.Common;
 using FoodDiary.Modules.Admin.Application.Mappings;
@@ -10,7 +12,7 @@ using FoodDiary.Modules.Lessons.Contracts.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
 
-public sealed class ImportAdminLessonsCommandHandler(ILessonAdministrationService lessonAdministrationService)
+public sealed class ImportAdminLessonsCommandHandler(ISender lessonAdministrationService)
     : ICommandHandler<ImportAdminLessonsCommand, Result<AdminLessonsImportModel>> {
     public async Task<Result<AdminLessonsImportModel>> Handle(
         ImportAdminLessonsCommand command,
@@ -45,8 +47,7 @@ public sealed class ImportAdminLessonsCommandHandler(ILessonAdministrationServic
                 item.SortOrder, item.IsPublished));
         }
 
-        Result<IReadOnlyList<LessonAdminReadModel>> importResult = await lessonAdministrationService
-            .ImportAsync(lessons, cancellationToken)
+        Result<IReadOnlyList<LessonAdminReadModel>> importResult = await lessonAdministrationService.Send(new ImportLessonsCommand(Items: lessons), cancellationToken)
             .ConfigureAwait(false);
         if (importResult.IsFailure) {
             return Result.Failure<AdminLessonsImportModel>(importResult.Error);

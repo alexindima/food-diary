@@ -1,5 +1,8 @@
-﻿using FoodDiary.Modules.Ai.Infrastructure;
+using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
+using FoodDiary.Modules.Ai.Application;
+using FoodDiary.Modules.Ai.Contracts.Commands.UpsertAiPrompt;
+using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -45,8 +48,10 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
             AiPromptTemplate? tracked = await provider.GetRequiredService<IAiPromptTemplateWriteRepository>().GetByKeyAsync("context-test", "en");
             Assert.NotNull(tracked);
             Assert.Same(transaction.GetDbTransaction(), owned.Database.CurrentTransaction!.GetDbTransaction());
-            tracked.Update("Changed", isActive: true);
-            await templates.UpdateAsync(tracked);
+            FoodDiary.Results.Result<AiPromptTemplateReadModel> changed = await provider.GetRequiredService<ISender>()
+                .Send(new UpsertAiPromptCommand("context-test", "en", "Changed", IsActive: true));
+            Assert.True(changed.IsSuccess);
+            Assert.Equal(EntityState.Modified, owned.Entry(tracked).State);
             await unitOfWork.SaveChangesAsync();
             Assert.Single(await templateReads.GetRevisionsAsync("context-test", "en", CancellationToken.None));
             await transaction.RollbackAsync();
@@ -127,6 +132,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
             ["Database:EnableRetries"] = "false",
         }).Build());
         services.AddAiPersistence();
+        services.AddAiApplication();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         return services.BuildServiceProvider();
     }

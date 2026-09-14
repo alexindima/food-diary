@@ -1,17 +1,18 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
 
 public sealed class GetWaistSummariesQueryHandler(
-    IWaistEntryReadService waistEntryReadService,
+    ISender waistEntryReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistSummariesQuery, Result<IReadOnlyList<WaistEntrySummaryModel>>> {
     public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
@@ -48,12 +49,7 @@ public sealed class GetWaistSummariesQueryHandler(
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
-        IReadOnlyList<WaistEntrySummaryModel> response = await waistEntryReadService.GetSummariesAsync(
-            userId,
-            normalizedFrom,
-            normalizedTo,
-            query.QuantizationDays,
-            cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntrySummaryModel> response = await waistEntryReadService.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
 
         return Result.Success<IReadOnlyList<WaistEntrySummaryModel>>(response);
     }

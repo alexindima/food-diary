@@ -1,7 +1,20 @@
+using FoodDiary.Testing;
+using FoodDiary.Application.Users.Queries.CheckUserAccess;
+using FoodDiary.Application.Users.Commands.RemoveUserPremiumRole;
+using FoodDiary.Application.Users.Commands.EnsureUserPremiumRole;
+using FoodDiary.Application.Users.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Users.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Application.Users.Queries.GetUserBillingProfile;
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Commands.EnsureUserPremiumRole;
+using FoodDiary.Application.Abstractions.Commands.RemoveUserPremiumRole;
+using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -19,9 +32,9 @@ public sealed class UserBillingServiceTests {
         user.ReplaceRoles([Role.Create(RoleNames.Premium)]);
         user.StartPremiumTrial(Now, TimeSpan.FromDays(7));
         IUserLookupRepository reader = CreateReader(user);
-        UserBillingService service = CreateService(reader);
+        ISender service = CreateService(reader);
 
-        Result<UserBillingProfileModel> result = await service.GetAccessibleProfileAsync(user.Id, CancellationToken.None);
+        Result<UserBillingProfileModel> result = await service.Send(new GetUserBillingProfileQuery(UserId: user.Id), CancellationToken.None);
 
         UserBillingProfileModel profile = ResultAssert.Success(result);
         Assert.Multiple(
@@ -36,9 +49,9 @@ public sealed class UserBillingServiceTests {
     public async Task GetAccessibleProfileAsync_WhenUserDeleted_ReturnsAccountDeleted() {
         User user = CreateUser();
         user.DeleteAccount(Now);
-        UserBillingService service = CreateService(CreateReader(user));
+        ISender service = CreateService(CreateReader(user));
 
-        Result<UserBillingProfileModel> result = await service.GetAccessibleProfileAsync(user.Id, CancellationToken.None);
+        Result<UserBillingProfileModel> result = await service.Send(new GetUserBillingProfileQuery(UserId: user.Id), CancellationToken.None);
 
         ResultAssert.Failure(result, Errors.Authentication.AccountDeleted.Code);
     }
@@ -52,9 +65,9 @@ public sealed class UserBillingServiceTests {
         var expected = new UserBillingProfileModel(user.Id, user.Email, IsActive: false, IsDeleted: true,
             HasPaidPremium: false, PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null);
         reader.GetBillingProfileIncludingDeletedAsync(user.Id, CancellationToken.None).Returns(expected);
-        UserBillingService service = CreateService(trackedReader, billingProfileReader: reader);
+        ISender service = CreateService(trackedReader, billingProfileReader: reader);
 
-        UserBillingProfileModel? result = await service.GetProfileIncludingDeletedAsync(user.Id, CancellationToken.None);
+        UserBillingProfileModel? result = await service.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: user.Id), CancellationToken.None);
 
         Assert.Same(expected, result);
         await trackedReader.DidNotReceiveWithAnyArgs().GetByIdIncludingDeletedAsync(default, default);
@@ -64,13 +77,9 @@ public sealed class UserBillingServiceTests {
     public async Task StartPremiumTrialAsync_MutatesInsideUsersBoundaryAndPersists() {
         User user = CreateUser();
         IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
-        UserBillingService service = CreateService(CreateReader(user), writer);
+        ISender service = CreateService(CreateReader(user), writer);
 
-        Result<UserBillingProfileModel> result = await service.StartPremiumTrialAsync(
-            user.Id,
-            Now,
-            TimeSpan.FromDays(7),
-            CancellationToken.None);
+        Result<UserBillingProfileModel> result = await service.Send(new StartUserPremiumTrialCommand(UserId: user.Id, StartedAtUtc: Now, Duration: TimeSpan.FromDays(7)), CancellationToken.None);
 
         UserBillingProfileModel profile = ResultAssert.Success(result);
         Assert.Equal(Now.AddDays(7), profile.PremiumTrialEndsAtUtc);
@@ -80,13 +89,9 @@ public sealed class UserBillingServiceTests {
     [Fact]
     public async Task StartPremiumTrialAsync_WhenUserIsMissing_ReturnsAccessFailureWithoutWriting() {
         IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
-        UserBillingService service = CreateService(Substitute.For<IUserLookupRepository>(), writer);
+        ISender service = CreateService(Substitute.For<IUserLookupRepository>(), writer);
 
-        Result<UserBillingProfileModel> result = await service.StartPremiumTrialAsync(
-            UserId.New(),
-            Now,
-            TimeSpan.FromDays(7),
-            CancellationToken.None);
+        Result<UserBillingProfileModel> result = await service.Send(new StartUserPremiumTrialCommand(UserId: UserId.New(), StartedAtUtc: Now, Duration: TimeSpan.FromDays(7)), CancellationToken.None);
 
         ResultAssert.Failure(result, "Authentication.InvalidToken");
         await writer.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
@@ -95,11 +100,11 @@ public sealed class UserBillingServiceTests {
     [Fact]
     public async Task EnsureCanAccessAsync_ReturnsPolicyResult() {
         User user = CreateUser();
-        UserBillingService accessibleService = CreateService(CreateReader(user));
-        UserBillingService missingService = CreateService(Substitute.For<IUserLookupRepository>());
+        ISender accessibleService = CreateService(CreateReader(user));
+        ISender missingService = CreateService(Substitute.For<IUserLookupRepository>());
 
-        Error? accessible = await accessibleService.EnsureCanAccessAsync(user.Id, CancellationToken.None);
-        Error? missing = await missingService.EnsureCanAccessAsync(UserId.New(), CancellationToken.None);
+        Error? accessible = await accessibleService.Send(new CheckUserAccessQuery(UserId: user.Id), CancellationToken.None);
+        Error? missing = await missingService.Send(new CheckUserAccessQuery(UserId: UserId.New()), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Null(accessible),
@@ -109,26 +114,28 @@ public sealed class UserBillingServiceTests {
     [Fact]
     public async Task PremiumRoleMethods_DelegateByUserId() {
         IUserRoleMembershipService roles = Substitute.For<IUserRoleMembershipService>();
-        UserBillingService service = CreateService(Substitute.For<IUserLookupRepository>(), roleMembershipService: roles);
+        ISender service = CreateService(Substitute.For<IUserLookupRepository>(), roleMembershipService: roles);
         var userId = UserId.New();
 
-        await service.EnsurePremiumRoleAsync(userId, CancellationToken.None);
-        await service.RemovePremiumRoleAsync(userId, CancellationToken.None);
+        await service.Send(new EnsureUserPremiumRoleCommand(UserId: userId), CancellationToken.None);
+        await service.Send(new RemoveUserPremiumRoleCommand(UserId: userId), CancellationToken.None);
 
         await roles.Received(1).EnsureRoleAsync(userId, RoleNames.Premium, CancellationToken.None);
         await roles.Received(1).RemoveRoleAsync(userId, RoleNames.Premium, CancellationToken.None);
     }
 
-    private static UserBillingService CreateService(
+    private static ISender CreateService(
         IUserLookupRepository reader,
         IUserWriteRepository? writer = null,
         IUserRoleMembershipService? roleMembershipService = null,
         IUserBillingProfileReadRepository? billingProfileReader = null) =>
-        new(
-            reader,
-            writer ?? Substitute.For<IUserWriteRepository>(),
-            roleMembershipService ?? Substitute.For<IUserRoleMembershipService>(),
-            billingProfileReader ?? Substitute.For<IUserBillingProfileReadRepository>());
+        RequestTestSender.Create(
+            new GetUserBillingProfileQueryHandler(reader),
+            new GetUserBillingProfileIncludingDeletedQueryHandler(billingProfileReader ?? Substitute.For<IUserBillingProfileReadRepository>()),
+            new StartUserPremiumTrialCommandHandler(reader, writer ?? Substitute.For<IUserWriteRepository>()),
+            new EnsureUserPremiumRoleCommandHandler(roleMembershipService ?? Substitute.For<IUserRoleMembershipService>()),
+            new RemoveUserPremiumRoleCommandHandler(roleMembershipService ?? Substitute.For<IUserRoleMembershipService>()),
+            new CheckUserAccessQueryHandler(reader));
 
     private static IUserLookupRepository CreateReader(User user) {
         IUserLookupRepository reader = Substitute.For<IUserLookupRepository>();

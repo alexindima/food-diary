@@ -1,7 +1,12 @@
+using FoodDiary.Testing;
+using FoodDiary.Application.Abstractions.Commands.CreateUserByAdministrator;
+using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
+using FoodDiary.Application.Users.Commands.UpdateUserByAdministrator;
+using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
+using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -19,7 +24,7 @@ public sealed class UserAdministrationMutationServiceTests {
         IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
         IUserRoleCatalogService roles = Substitute.For<IUserRoleCatalogService>();
 
-        Result<UserAdminReadModel> result = await CreateService(lookup, writer, roles).CreateAsync(CreateRequest() with { Roles = [role] });
+        Result<UserAdminReadModel> result = await CreateService(lookup, writer, roles).Send(new CreateUserByAdministratorCommand(CreateRequest() with { Roles = [role] }));
 
         ResultAssert.Failure(result, "Validation.Invalid");
         Assert.Empty(roles.ReceivedCalls());
@@ -34,7 +39,7 @@ public sealed class UserAdministrationMutationServiceTests {
             .Returns(User.Create("admin@example.com", "hash"));
 
         Result<UserAdminReadModel> result = await CreateService(lookup, writer, roles)
-            .CreateAsync(CreateRequest(), CancellationToken.None);
+            .Send(new CreateUserByAdministratorCommand(CreateRequest()), CancellationToken.None);
 
         ResultAssert.Failure(result, "User.EmailAlreadyExists");
         await writer.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
@@ -51,7 +56,7 @@ public sealed class UserAdministrationMutationServiceTests {
             .Returns<IReadOnlyList<Role>>([]);
 
         Result<UserAdminReadModel> result = await CreateService(lookup, writer, roles)
-            .CreateAsync(CreateRequest(), CancellationToken.None);
+            .Send(new CreateUserByAdministratorCommand(CreateRequest()), CancellationToken.None);
 
         ResultAssert.Failure(result, "Validation.Invalid");
         await writer.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
@@ -78,7 +83,7 @@ public sealed class UserAdministrationMutationServiceTests {
             .Returns(Task.CompletedTask);
 
         UserAdminReadModel model = ResultAssert.Success(await CreateService(lookup, writer, roles)
-            .CreateAsync(CreateRequest(), CancellationToken.None));
+            .Send(new CreateUserByAdministratorCommand(CreateRequest()), CancellationToken.None));
 
         Assert.NotNull(writtenUser);
         UserRoleAuditEvent audit = Assert.Single(writtenAudit!);
@@ -93,10 +98,14 @@ public sealed class UserAdministrationMutationServiceTests {
             () => Assert.Equal("AdminUserCreator", audit.Source));
     }
 
-    private static UserAdministrationMutationService CreateService(
+    private static ISender CreateService(
         IUserLookupRepository lookup,
         IUserWriteRepository writer,
-        IUserRoleCatalogService roles) => new(lookup, writer, roles, new PrefixPasswordHasher());
+        IUserRoleCatalogService roles) =>
+        RequestTestSender.Create(
+            new CreateUserByAdministratorCommandHandler(lookup, writer, roles, new PrefixPasswordHasher()),
+            new UpdateUserByAdministratorCommandHandler(lookup, writer, roles),
+            new SetUserPasswordByAdministratorCommandHandler(lookup, writer, new PrefixPasswordHasher()));
 
     private static UserAdminCreateModel CreateRequest() => new(
         "admin@example.com",

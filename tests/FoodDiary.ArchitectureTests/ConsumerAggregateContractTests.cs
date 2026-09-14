@@ -9,9 +9,12 @@ public sealed class ConsumerAggregateContractTests {
     [Theory]
     [InlineData("Modules/Notifications/Contracts/Common/INotificationWriter.cs")]
     [InlineData("Modules/Notifications/Contracts/Common/NotificationRequest.cs")]
-    [InlineData("Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs")]
+    [InlineData("Modules/Lessons/Contracts/Commands/CreateLesson/CreateLessonCommand.cs")]
+    [InlineData("Modules/Lessons/Contracts/Commands/UpdateLesson/UpdateLessonCommand.cs")]
+    [InlineData("Modules/Lessons/Contracts/Commands/DeleteLesson/DeleteLessonCommand.cs")]
+    [InlineData("Modules/Lessons/Contracts/Commands/ImportLessons/ImportLessonsCommand.cs")]
     [InlineData("Modules/Lessons/Contracts/Models/LessonAdminReadModel.cs")]
-    [InlineData("Modules/Identity/Contracts/Admin/Common/IEmailTemplateAdministrationService.cs")]
+    [InlineData("Modules/Identity/Contracts/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommand.cs")]
     [InlineData("Modules/Identity/Contracts/Admin/Models/EmailTemplateReadModel.cs")]
     public void ConsumerContract_DoesNotExposeDomainEntities(string relativePath) {
         var entityNames = new HashSet<string>(StringComparer.Ordinal);

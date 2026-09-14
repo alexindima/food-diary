@@ -1,3 +1,7 @@
+using FoodDiary.Testing;
+using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
+using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
+using FoodDiary.Application.Users.Commands.UpdateUserByAdministrator;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
@@ -7,7 +11,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FluentValidation.Results;
 using FoodDiary.Modules.Admin.Application.Models;
-using FoodDiary.Application.Users.Services;
 
 namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 
@@ -29,7 +32,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
@@ -52,7 +55,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
@@ -76,7 +79,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: [roleName]);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
@@ -99,7 +102,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
@@ -120,7 +123,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
@@ -522,7 +525,7 @@ public partial class AdminFeatureTests {
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
         var handler = new UpdateAdminUserCommandHandler(
-            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             new NullAuditLogger(),
             new FixedDateTimeProvider(timestamp));
 

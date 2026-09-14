@@ -28,3 +28,5 @@ Password reset requests session revocation through Users Contracts IUserSessionR
 Consume RoleNames through Users Domain.Contracts; do not reference Users Domain for role constants. User mutation remains behind Users capabilities.
 
 Use AchievementDefinitionLimits for validation. Content report mappings accept the owner read model; do not add an aggregate mapping overload.
+
+Dispatch AI, lesson, achievement, content moderation, email-template and user-administration use cases through ISender and the supplying owner Contracts. Admin retains HTTP-facing normalization, authorization and orchestration. Nested owner mutations do not commit; Admin transactional commands retain final saving and post-commit actions.

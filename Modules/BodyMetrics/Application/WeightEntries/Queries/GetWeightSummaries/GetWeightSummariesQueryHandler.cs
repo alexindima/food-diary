@@ -1,17 +1,18 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
 
 public sealed class GetWeightSummariesQueryHandler(
-    IWeightEntryReadService weightEntryReadService,
+    ISender weightEntryReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWeightSummariesQuery, Result<IReadOnlyList<WeightEntrySummaryModel>>> {
     public async Task<Result<IReadOnlyList<WeightEntrySummaryModel>>> Handle(
@@ -48,12 +49,7 @@ public sealed class GetWeightSummariesQueryHandler(
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
-        IReadOnlyList<WeightEntrySummaryModel> response = await weightEntryReadService.GetSummariesAsync(
-            userId,
-            normalizedFrom,
-            normalizedTo,
-            query.QuantizationDays,
-            cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntrySummaryModel> response = await weightEntryReadService.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
 
         return Result.Success<IReadOnlyList<WeightEntrySummaryModel>>(response);
     }

@@ -1,4 +1,3 @@
-using FoodDiary.Modules.Billing.Contracts.Common;
 using FoodDiary.Application.Marketing.Common;
 using FoodDiary.Application.Marketing.Services;
 using FoodDiary.Mediator;
@@ -10,11 +9,6 @@ public static class DependencyInjection {
     public static IServiceCollection AddMarketingApplication(this IServiceCollection services) {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
-        services.AddScoped<MarketingConversionRecorder>();
-        services.AddScoped<IMarketingConversionRecorder>(static provider =>
-            provider.GetRequiredService<MarketingConversionRecorder>());
-        services.AddScoped<IBillingMarketingConversionRecorder>(static provider =>
-            provider.GetRequiredService<MarketingConversionRecorder>());
         services.AddScoped<IMarketingAttributionCleanupService, MarketingAttributionCleanupService>();
         services.AddScoped<IMarketingAttributionSummaryReadService, MarketingAttributionSummaryReadService>();
 

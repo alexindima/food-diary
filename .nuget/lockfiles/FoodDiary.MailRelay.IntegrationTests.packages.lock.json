@@ -549,6 +549,7 @@
       "fooddiary.testing": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )",
           "xunit": "[2.9.3, )"
         }
       },

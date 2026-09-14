@@ -8,7 +8,7 @@ Rules for `Modules/BodyMetrics/`.
 
 - Own weight and waist entry use cases, application contracts, persistence adapters, and EF entry configurations.
 - Preserve `WeightEntries` and `WaistEntries` as the two cohesive feature groups.
-- External read services and immutable entry/summary results live in BodyMetrics.Contracts, which cannot reference aggregate-bearing Domain or repository ports.
+- External read requests and immutable entry/summary results live in BodyMetrics.Contracts, which cannot reference aggregate-bearing Domain or repository ports.
 - WeightEntryErrors and WaistEntryErrors stay in the corresponding owner Abstractions groups. Call them directly; central Errors.WeightEntry/Errors.WaistEntry facades and the central BodyMetrics ports reference are retired. Preserve error codes/messages/kinds and invariant date formatting; see docs/ai/measurement-error-facades.md.
 - Use `FoodDiary.Modules.BodyMetrics.<Project>` assembly names and namespaces matching project-relative folders, including tests. Do not override RootNamespace or AssemblyName to retain donor identities.
 - Keep all projects in sibling directories, including Application.Abstractions and PersistenceModel; do not restore nested projects or Compile Remove exclusions.
@@ -17,7 +17,7 @@ Rules for `Modules/BodyMetrics/`.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
 - Runtime measurement repositories use BodyMetricsDbContext, sharing the scoped connection and atomic IUnitOfWork with Hydration and central Infrastructure (ADR 0040). Central mappings remain for migration and composed reads; owner purge uses the live shared transaction and goals remain Users-owned.
 - Register application and persistence through Infrastructure's `AddBodyMetricsModule` facade.
-- Expose separate write and read-model repository ports backed by one scoped implementation; do not restore unused combined/read-entity ports. Preserve the shared weight/waist read services consumed by local handlers and other modules.
+- Expose separate write and read-model repository ports backed by one scoped implementation; do not restore unused combined/read-entity ports. ReadWeightEntries/ReadWaistEntries, latest-entry and summary requests are dispatched through ISender; their owner handlers use the narrow projection repositories. Do not restore exported read-service interfaces.
 - Treat body measurements as private health data: preserve current-user authorization and user-scoped repository predicates.
 
 ## Tests

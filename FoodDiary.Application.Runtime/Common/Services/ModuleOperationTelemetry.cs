@@ -36,6 +36,15 @@ internal static class ModuleOperationTelemetry {
             }
         }
 
+        const string modulePrefix = "FoodDiary.Modules.";
+        if (assemblyName?.StartsWith(modulePrefix, StringComparison.Ordinal) == true) {
+            string ownedAssembly = assemblyName[modulePrefix.Length..];
+            int separator = ownedAssembly.IndexOf('.', StringComparison.Ordinal);
+            if (separator > 0 && ownedAssembly[(separator + 1)..] is "Application" or "Contracts") {
+                return ownedAssembly[..separator];
+            }
+        }
+
         return "Other";
     }
 }

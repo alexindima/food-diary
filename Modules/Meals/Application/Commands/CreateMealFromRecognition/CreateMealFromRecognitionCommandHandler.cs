@@ -1,5 +1,6 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
 using FluentValidation.Results;
-using FoodDiary.Modules.Ai.Contracts.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -16,7 +17,7 @@ namespace FoodDiary.Application.Meals.Commands.CreateMealFromRecognition;
 public sealed class CreateMealFromRecognitionCommandHandler(
     IMealRecognitionTransactionRunner transactions,
     IMealRecognitionReceiptRepository receipts,
-    IFoodRecognitionResultReader recognitionResults,
+    ISender recognitionResults,
     FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>> createMeal,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider) : ICommandHandler<CreateMealFromRecognitionCommand, Result<RecognizedMealCreationModel>> {
@@ -40,7 +41,7 @@ public sealed class CreateMealFromRecognitionCommandHandler(
             if (existing is not null) {
                 return await ReplayAsync(existing, owner.Value, command.RecognitionId, occurredAt, token).ConfigureAwait(false);
             }
-            Result<FoodRecognitionJobModel> recognized = await recognitionResults.GetCompletedAsync(owner.Value.Value, command.RecognitionId, token).ConfigureAwait(false);
+            Result<FoodRecognitionJobModel> recognized = await recognitionResults.Send(new GetCompletedFoodRecognitionQuery(UserId: owner.Value.Value, JobId: command.RecognitionId), token).ConfigureAwait(false);
             if (recognized.IsFailure) {
                 return Result.Failure<RecognizedMealCreationModel>(recognized.Error);
             }

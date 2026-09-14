@@ -15,3 +15,5 @@ Rules for `Modules/BodyMetrics/Application/`.
 Application consumes scalar Users types through Users.Domain.Contracts and semantic
 capabilities through Users.Contracts. Do not reference the aggregate-bearing
 Users.Domain assembly for these types.
+
+Public ReadWeight*/ReadWaist* request handlers own projection and aggregation logic. Existing user-facing handlers retain their access checks and date normalization and dispatch these composition queries; foreign modules do not consume projection repository ports.

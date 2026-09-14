@@ -1,5 +1,6 @@
+using FoodDiary.Mediator;
+using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplates;
 using System.Runtime.CompilerServices;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -15,8 +16,8 @@ public sealed class SendBugAcknowledgementsCommandHandlerTests {
         var candidate = new BugAcknowledgementCandidate(Guid.NewGuid(), "reporter@example.com", "original@example.com", "bug-ack:123", "ru");
         IBugAcknowledgementSource source = Substitute.For<IBugAcknowledgementSource>();
         source.ReadAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(Candidates(candidate));
-        IEmailTemplateAdministrationReadService templates = Substitute.For<IEmailTemplateAdministrationReadService>();
-        templates.GetTemplatesAsync(Arg.Any<CancellationToken>()).Returns([new EmailTemplateReadModel(Guid.NewGuid(), "bug_report_received", "ru", "Custom {{brand}}", "<p>Custom</p>", "Custom text", IsActive: true, DateTime.UtcNow, ModifiedOnUtc: null)]);
+        ISender templates = Substitute.For<ISender>();
+        templates.Send(new GetEmailTemplatesQuery(), Arg.Any<CancellationToken>()).Returns([new EmailTemplateReadModel(Guid.NewGuid(), "bug_report_received", "ru", "Custom {{brand}}", "<p>Custom</p>", "Custom text", IsActive: true, DateTime.UtcNow, ModifiedOnUtc: null)]);
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         IBugAcknowledgementReceipts receipts = Substitute.For<IBugAcknowledgementReceipts>();
         var service = new SendBugAcknowledgementsCommandHandler(source, templates, transport, receipts);
@@ -30,8 +31,8 @@ public sealed class SendBugAcknowledgementsCommandHandlerTests {
         var candidate = new BugAcknowledgementCandidate(Guid.NewGuid(), "reporter@example.com", MessageId: null, "bug-ack:123", "en");
         IBugAcknowledgementSource source = Substitute.For<IBugAcknowledgementSource>();
         source.ReadAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(Candidates(candidate));
-        IEmailTemplateAdministrationReadService templates = Substitute.For<IEmailTemplateAdministrationReadService>();
-        templates.GetTemplatesAsync(Arg.Any<CancellationToken>()).Returns([new EmailTemplateReadModel(Guid.NewGuid(), "bug_report_received", "en", "Subject", "<p>Text</p>", "Text", IsActive: true, DateTime.UtcNow, ModifiedOnUtc: null)]);
+        ISender templates = Substitute.For<ISender>();
+        templates.Send(new GetEmailTemplatesQuery(), Arg.Any<CancellationToken>()).Returns([new EmailTemplateReadModel(Guid.NewGuid(), "bug_report_received", "en", "Subject", "<p>Text</p>", "Text", IsActive: true, DateTime.UtcNow, ModifiedOnUtc: null)]);
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         transport.SendAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>()).Returns(Task.FromException(new HttpRequestException("Unavailable")));
         IBugAcknowledgementReceipts receipts = Substitute.For<IBugAcknowledgementReceipts>();
@@ -48,8 +49,8 @@ public sealed class SendBugAcknowledgementsCommandHandlerTests {
         var candidate = new BugAcknowledgementCandidate(Guid.NewGuid(), "reporter@example.com", MessageId: null, "bug-ack:123", "ru");
         IBugAcknowledgementSource source = Substitute.For<IBugAcknowledgementSource>();
         source.ReadAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(Candidates(candidate));
-        IEmailTemplateAdministrationReadService templates = Substitute.For<IEmailTemplateAdministrationReadService>();
-        templates.GetTemplatesAsync(Arg.Any<CancellationToken>()).Returns(templateExists
+        ISender templates = Substitute.For<ISender>();
+        templates.Send(new GetEmailTemplatesQuery(), Arg.Any<CancellationToken>()).Returns(templateExists
             ? [new EmailTemplateReadModel(Guid.NewGuid(), "bug_report_received", "en", "Subject", "Html", "Text", active, DateTime.UnixEpoch, ModifiedOnUtc: null)]
             : []);
         IEmailTransport transport = Substitute.For<IEmailTransport>();

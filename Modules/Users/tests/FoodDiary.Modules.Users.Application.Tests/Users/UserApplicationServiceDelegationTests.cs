@@ -1,4 +1,12 @@
-using FoodDiary.Application.ContentReports.Common;
+using FoodDiary.Testing;
+using FoodDiary.Application.Users.Queries.GetFilteredUsersForAdministration;
+using FoodDiary.Application.Users.Queries.GetUserAdministrationSummary;
+using FoodDiary.Application.Users.Queries.GetUserForAdministration;
+using FoodDiary.Application.Users.Queries.GetUsersForAdministration;
+using FoodDiary.Mediator;
+using FoodDiary.Application.ContentReports.Queries.CountContentReports;
+using FoodDiary.Application.Abstractions.Queries.GetUserForAdministration;
+using FoodDiary.Application.Abstractions.Queries.GetUsersForAdministration;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Admin.Application.Models;
@@ -42,7 +50,7 @@ public sealed class UserApplicationServiceDelegationTests {
     [Fact]
     public async Task UserAdministrationReadService_DelegatesReadsAndFeedsAdminSummary() {
         IUserAdminReadModelRepository adminReadRepository = Substitute.For<IUserAdminReadModelRepository>();
-        var service = new UserAdministrationReadService(adminReadRepository);
+        ISender service = RequestTestSender.Create(new GetFilteredUsersForAdministrationQueryHandler(adminReadRepository), new GetUserForAdministrationQueryHandler(adminReadRepository), new GetUsersForAdministrationQueryHandler(adminReadRepository), new GetUserAdministrationSummaryQueryHandler(adminReadRepository));
         var userId = UserId.New();
         var user = User.Create("admin@test.com", "hashed-password");
         UserAdminReadModel userReadModel = ToAdminReadModel(user);
@@ -56,11 +64,11 @@ public sealed class UserApplicationServiceDelegationTests {
             .GetAdminDashboardSummaryReadModelsAsync(recentLimit: 3, cancellationTokenSource.Token)
             .Returns((TotalUsers: 10, ActiveUsers: 8, PremiumUsers: 2, DeletedUsers: 1, RecentUsers: users));
 
-        UserAdminReadModel? byId = await service.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
-        (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await service.GetPagedAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
-        IContentReportAdministrationReadService reports = Substitute.For<IContentReportAdministrationReadService>();
-        reports.CountAsync(FoodDiary.Domain.Enums.ReportStatus.Pending, cancellationTokenSource.Token).Returns(4);
-        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(service, reports)
+        UserAdminReadModel? byId = await service.Send(new GetUserForAdministrationQuery(UserId: userId), cancellationTokenSource.Token);
+        (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await service.Send(new GetUsersForAdministrationQuery(Search: "adm", Page: 2, Limit: 5, Status: UserAccountStatusFilter.Deleted), cancellationTokenSource.Token);
+        ISender reports = Substitute.For<ISender>();
+        reports.Send(new CountContentReportsQuery(Status: FoodDiary.Domain.Enums.ReportStatus.Pending), cancellationTokenSource.Token).Returns(4);
+        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(RequestTestSender.Route((service, [typeof(global::FoodDiary.Application.Abstractions.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (reports, [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)])))
             .GetSummaryAsync(3, cancellationTokenSource.Token)).Value;
 
         Assert.Multiple(
