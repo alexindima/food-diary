@@ -202,7 +202,7 @@
       "reason": "81 HTTP and Swagger tests passed including full contract snapshot; controller namespace discovery changed without wire-contract changes.",
       "baseRef": "HEAD",
       "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:07.4796460Z"
+      "reviewedAtUtc": "2026-09-14T01:51:07.479646Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "194a563f3bbfff90001da67de634929d3692a0b28ec8bb9a9789960ffd1f2870"
+          "sha256": "118eccbf8e808d20a6fe57a27299e64a72290fff2cd768e5d45d5412efaf8b29"
         }
       ],
-      "reason": "Reviewed the three new owner Contracts IRequest messages, their Application handlers, worker consumers, DI registrations and plain response types. Project dependency checks and registration-order tests pass. This refactor preserves HTTP payloads and routes; no snapshot changes are needed.",
+      "reason": "Reviewed the workflow against the refreshed Billing coordinator contract index. Constructor and DI consumers were updated, the full solution builds, and HTTP snapshots pass. In-process interface compatibility guidance remains accurate; no transport contract was changed.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:46:14.2506652Z"
+      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
+      "reviewedAtUtc": "2026-09-14T14:59:04.526011Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -500,18 +500,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "3f45ef8c7b768487cec822250e4c55c15264c2a0e8160962622090e4f2a12727"
-        },
-        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "78453dd0683d9ad470f659bb85407e7db2c84fc304f290669cb2303bcc383e82"
+          "sha256": "17e83fec734724b353d4d77aa7134332d1492b6ca45e859d8da3d251641389b8"
         }
       ],
-      "reason": "The workflow remains valid: this coordinator extraction changes no domain invariant, mapping or schema. Real PostgreSQL tests cover rollback, cancellation, concurrency and retries while the host retains migration composition.",
+      "reason": "Reviewed FoodDiary.Infrastructure/AGENTS.md against the workflow: coordinator extraction changes transaction ownership and before-reset exception translation, not domain construction, mappings, keys, relationships or migration policy. The workflow remains accurate; provider rollback and duplicate tests exercise the changed persistence boundary.",
       "baseRef": "HEAD",
-      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
-      "reviewedAtUtc": "2026-09-14T04:59:30.0731242Z"
+      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
+      "reviewedAtUtc": "2026-09-14T14:21:34.6093803Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -691,7 +687,7 @@
       "reason": "Reviewed the sole cases.json edit: it corrects the static billing-security source path after module extraction, while retaining all expected classifications. No promoted case, event chain, approval state, retrospective or evaluation lifecycle behavior changes.",
       "baseRef": "HEAD",
       "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:58:06.7626850Z"
+      "reviewedAtUtc": "2026-09-14T13:58:06.762685Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -785,7 +781,7 @@
       "reason": "The new scheduler requests contain provider and batch settings, a timestamp, or no fields. They do not carry email bodies, images or payment details and do not enter Result-constrained logging. Existing provider sharing, receipt storage, retention and ErrorType-only worker logging remain unchanged by moving the workflows.",
       "baseRef": "HEAD",
       "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:46:25.3967180Z"
+      "reviewedAtUtc": "2026-09-14T13:46:25.396718Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "288ea11931f9770f544064a08d2267906f06bdd7922f7b2997f85e4e1e18ad1e"
+          "sha256": "9fa0c4a90825ee3782bbb35646a4bcb7fb90535f9e3f137bb02a803774cc5fde"
         }
       ],
-      "reason": "Reviewed all Admin and Ai application services for single-use orchestration. Moved the two background workflows and Billing renewal into handlers; retained shared readers, owner APIs and provider capabilities with real consumers. Executed 692 module/worker tests, 247 architecture tests after corrections and one PostgreSQL HTTP journey; static reference counts are not presented as coverage.",
+      "reason": "Reviewed refreshed quality metadata for the Billing transaction extraction. The workflow correctly treats static references as leads, not coverage. Actual coverage is supported separately by 218 central PostgreSQL and 1506 architecture tests; no quality-query behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:46:20.1138222Z"
+      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
+      "reviewedAtUtc": "2026-09-14T14:59:05.4138322Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +895,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a09b66c932c4b13d27aad4b59d2c3eb35db87554921ff15de8d8e51dfe6d9472"
+          "sha256": "6377c52e6e244156a04a7bc03ed7715f3c4743b453e3cec0c4a8ea0cd6f33be8"
         }
       ],
-      "reason": "Compared the moved Billing renewal, AI recognition and Admin acknowledgement implementations with their prior services: explicit commit boundaries, provider calls, claim finality, per-message receipts, worker scopes, cancellation, timeouts, schedules and telemetry are preserved. New IRequest contracts avoid automatic unit-of-work saves; focused worker tests and the PostgreSQL recognition journey pass.",
+      "reason": "Reviewed the refreshed topology and current transaction implementation. The workflow still correctly requires rollback tracker cleanup and provider-backed retry tests. Billing now delegates to the shared coordinator; real rollback, duplicate and cancellation cases passed. Worker and provider delivery behavior was not changed.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:46:16.9821280Z"
+      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
+      "reviewedAtUtc": "2026-09-14T14:59:06.211088Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,25 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "288ea11931f9770f544064a08d2267906f06bdd7922f7b2997f85e4e1e18ad1e"
+          "sha256": "9fa0c4a90825ee3782bbb35646a4bcb7fb90535f9e3f137bb02a803774cc5fde"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a09b66c932c4b13d27aad4b59d2c3eb35db87554921ff15de8d8e51dfe6d9472"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "45787020eda31c27c4f94d60852dd9a63404f099d4ec91483016654fae3380ef"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "b2c7a4aeaa492ae3740162f16a5b2eaec89c6156746d942e66106a3a060bd482"
+          "sha256": "6377c52e6e244156a04a7bc03ed7715f3c4743b453e3cec0c4a8ea0cd6f33be8"
         }
       ],
-      "reason": "Reviewed current workflow and ranking sources. Moving Billing, Ai and Admin workflows preserves provider boundaries, cancellation, claim/receipt idempotency and existing logging. The only retrieval-policy edit retargets the Billing renewal identity to its renamed handler; it changes navigation ranking, not security controls or any production runtime behavior.",
+      "reason": "Reviewed the workflow with regenerated quality and topology sources. Its distinction between navigation signals and validated security evidence remains correct. Billing transaction ownership changed without new authentication, authorization, provider trust, data sharing or logging behavior.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:56:13.3180057Z"
+      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
+      "reviewedAtUtc": "2026-09-14T14:59:07.3788434Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1195,7 +1183,7 @@
       "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
       "baseRef": "HEAD",
       "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
-      "reviewedAtUtc": "2026-09-14T02:13:46.0131560Z"
+      "reviewedAtUtc": "2026-09-14T02:13:46.013156Z"
     }
   ]
 }

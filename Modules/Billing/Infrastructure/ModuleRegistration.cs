@@ -1,10 +1,8 @@
 using FoodDiary.Modules.Billing.Application;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.Billing.Infrastructure;
@@ -36,11 +34,11 @@ public static class ModuleRegistration {
     }
 
     private static Func<CancellationToken, Task> CreateTransactionSynchronizer(IServiceProvider provider) {
-        FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+        IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
         BillingDbContext owned = provider.GetRequiredService<BillingDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(shared.Database.CurrentTransaction?.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
             }
         };
     }

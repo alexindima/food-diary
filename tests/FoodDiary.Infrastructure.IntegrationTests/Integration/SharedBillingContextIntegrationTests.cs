@@ -104,6 +104,44 @@ public sealed class SharedBillingContextIntegrationTests(PostgresDatabaseFixture
         Assert.Equal(1, await context.BillingWebhookEvents.CountAsync());
     }
 
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task FailedAttemptPreservesExceptionAndResetsOwnedStateAsync(bool canceled) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        BillingDbContext owned = provider.GetRequiredService<BillingDbContext>();
+        IBillingTransactionRunner runner = provider.GetRequiredService<IBillingTransactionRunner>();
+        using var cancellation = new CancellationTokenSource();
+        Exception failure = canceled ? new OperationCanceledException(cancellation.Token) : new InvalidOperationException("Injected failure.");
+        Exception? actual = await Record.ExceptionAsync(() => runner.ExecuteAsync(async token => {
+            context.Users.Add(User.Create("failed-attempt@example.com", "hash"));
+            await provider.GetRequiredService<IBillingWebhookEventWriteRepository>().AddAsync(CreateWebhook("failed-attempt"), token);
+            if (canceled) { await cancellation.CancelAsync(); }
+            throw failure;
+        }, cancellation.Token));
+        User[] users = await context.Users.AsNoTracking().ToArrayAsync();
+        BillingWebhookEvent[] events = await context.BillingWebhookEvents.AsNoTracking().ToArrayAsync();
+        Assert.Multiple(
+            () => Assert.Same(failure, actual),
+            () => Assert.Empty(context.ChangeTracker.Entries()),
+            () => Assert.Empty(owned.ChangeTracker.Entries()),
+            () => Assert.Empty(users),
+            () => Assert.Empty(events));
+        await runner.ExecuteAsync(async token => await provider.GetRequiredService<IBillingWebhookEventWriteRepository>().AddAsync(CreateWebhook("next-attempt"), token));
+        Assert.Single(await context.BillingWebhookEvents.ToListAsync());
+    }
+
+    [RequiresDockerFact]
+    public async Task EmptyBillingCommandStillInvokesUnitOfWorkOnceAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        var coordinator = new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork);
+        var runner = new EfBillingTransactionRunner(coordinator);
+        await runner.ExecuteAsync(_ => Task.CompletedTask);
+        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
     private static async Task RegisterAsync(ServiceProvider provider) {
         IBillingWebhookEventReadRepository reads = provider.GetRequiredService<IBillingWebhookEventReadRepository>();
         IBillingWebhookEventWriteRepository writes = provider.GetRequiredService<IBillingWebhookEventWriteRepository>();

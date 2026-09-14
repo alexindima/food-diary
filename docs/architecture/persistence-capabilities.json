@@ -345,6 +345,7 @@
       "module": "Billing",
       "capabilities": [
         "context:CreateModuleContext",
+        "context:CurrentTransaction",
         "context:Database",
         "entity:BillingPayment",
         "entity:BillingSubscription",
@@ -353,8 +354,8 @@
         "tracked:BillingSubscription",
         "tracked:BillingWebhookEvent"
       ],
-      "reason": "Creates Billing owner context and supplies only owner sets plus a live shared transaction synchronization callback to repositories.",
-      "technicalSourceSha256": "7852d23eef9e3fd4c34e080ca143361efa6e0ae1fb723650e68b325e9b68c3d2"
+      "reason": "Creates Billing owner context and synchronizes repository reads with the live coordinator transaction; no concrete shared-context dependency.",
+      "technicalSourceSha256": "ae09efe9ed2b0f7fd711d5df4236a888116077d820bd671a27eeb371e1eb7826"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
@@ -386,10 +387,10 @@
     "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs": {
       "module": "Billing",
       "capabilities": [
-        "context:Database"
+        "context:ExecuteAsync"
       ],
-      "reason": "Retains shared advisory-lock transaction, retry and commit coordination; saves through IUnitOfWork and maps owner duplicate entries reported by EF.",
-      "technicalSourceSha256": "b7232c0ed4b6f266895477ddb9b0b40840861cfbe553c403dee34c83a8486228"
+      "reason": "Delegates save, retry, commit and reset to the scoped coordinator; owns advisory-lock SQL and duplicate payment/webhook translation before tracker cleanup.",
+      "technicalSourceSha256": "7c8accd2e12d68a04be5d0ec49210680947f24a23e8e572247670de262f39ab0"
     },
     "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs": {
       "module": "Billing",

@@ -1,73 +1,48 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Infrastructure.Persistence.Shared;
+using System.Data.Common;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Domain.Entities;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context, IUnitOfWork unitOfWork, IPostCommitActionQueue? postCommitActionQueue = null) : IBillingTransactionRunner {
+public sealed class EfBillingTransactionRunner(IModuleTransactionCoordinator coordinator) : IBillingTransactionRunner {
     public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
         ExecuteCoreAsync(serializationKey: null, operation, cancellationToken);
 
-    public Task ExecuteSerializedAsync(
-        string serializationKey,
-        Func<CancellationToken, Task> operation,
-        CancellationToken cancellationToken = default) {
+    public Task ExecuteSerializedAsync(string serializationKey, Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrWhiteSpace(serializationKey);
         return ExecuteCoreAsync(serializationKey, operation, cancellationToken);
     }
 
-    private async Task ExecuteCoreAsync(
-        string? serializationKey,
-        Func<CancellationToken, Task> operation,
-        CancellationToken cancellationToken) {
+    private async Task ExecuteCoreAsync(string? serializationKey, Func<CancellationToken, Task> operation, CancellationToken cancellationToken) {
         ArgumentNullException.ThrowIfNull(operation);
-        SharedTransactionBoundary.EnsureCleanEntry(context, postCommitActionQueue);
-        IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
-        await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue, async () => {
-            try {
-                IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-                await using (transaction.ConfigureAwait(false)) {
-                    if (serializationKey is not null) {
-                        await AcquireTransactionLockAsync(serializationKey, transaction, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    await operation(cancellationToken).ConfigureAwait(false);
-                    await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                }
-            } catch (DbUpdateException ex) when (IsDuplicatePayment(ex)) {
-                BillingPayment? payment = DetachAddedPayment(ex);
-                if (payment is null) {
-                    throw;
-                }
-
-                throw new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
-            } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
-                BillingWebhookEvent? webhookEvent = DetachAddedWebhookEvent(ex);
-                if (webhookEvent is null) {
-                    throw;
-                }
-
-                throw new BillingWebhookEventAlreadyProcessedException(webhookEvent.Provider, webhookEvent.EventId);
+        await coordinator.ExecuteAsync(async (transaction, token) => {
+            if (serializationKey is not null) {
+                await AcquireTransactionLockAsync(serializationKey, transaction, token).ConfigureAwait(false);
             }
-            return true;
-        }, cancellationToken)).ConfigureAwait(false);
+            await operation(token).ConfigureAwait(false);
+        }, TranslateException, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task AcquireTransactionLockAsync(
-        string serializationKey,
-        IDbContextTransaction transaction,
-        CancellationToken cancellationToken) {
-        var connection = (NpgsqlConnection)context.Database.GetDbConnection();
+    private static Exception TranslateException(Exception exception) {
+        if (exception is DbUpdateException update) {
+            if (IsDuplicatePayment(update) && DetachAddedPayment(update) is { } payment) {
+                return new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
+            }
+            if (IsDuplicateWebhookEvent(update) && DetachAddedWebhookEvent(update) is { } webhookEvent) {
+                return new BillingWebhookEventAlreadyProcessedException(webhookEvent.Provider, webhookEvent.EventId);
+            }
+        }
+        return exception;
+    }
+
+    private static async Task AcquireTransactionLockAsync(string serializationKey, DbTransaction transaction, CancellationToken cancellationToken) {
+        var connection = (NpgsqlConnection)transaction.Connection!;
         var command = new NpgsqlCommand(
             "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
-            connection,
-            (NpgsqlTransaction)transaction.GetDbTransaction());
+            connection, (NpgsqlTransaction)transaction);
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue("serialization_key", NpgsqlTypes.NpgsqlDbType.Text, serializationKey);
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);

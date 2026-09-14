@@ -112,3 +112,7 @@ Consumer email/template and login-event APIs are in Identity.Contracts; weight a
 waist reads are in BodyMetrics.Contracts. Admin uses an impersonation-only token
 issuer. Image cleanup/ownership and product/recipe/cycle errors use existing narrow
 owner contracts. See [the extraction](../../docs/ai/remaining-consumer-boundaries.md).
+
+Billing delegates command transaction/save/retry/reset and live transaction access
+to IModuleTransactionCoordinator; it retains owner duplicate translation before
+cleanup and its separate checkout lease. See ADR 0040.

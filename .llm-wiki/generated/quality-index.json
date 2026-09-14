@@ -3506,11 +3506,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 6,
+      "nonBlankLines": 79,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.14
+      "structuralRiskScore": 15.08
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/ModuleContextSaveCoordinator.cs",
@@ -17946,11 +17946,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 42,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.38
+      "structuralRiskScore": 2.34
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
@@ -17986,11 +17986,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
-      "nonBlankLines": 98,
-      "decisionPoints": 9,
+      "nonBlankLines": 75,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.46
+      "structuralRiskScore": 16.5
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
@@ -43434,11 +43434,11 @@
     },
     {
       "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 32,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.46
+      "structuralRiskScore": 3.64
     },
     {
       "path": "Shared/FoodDiary.Results/Error.cs",

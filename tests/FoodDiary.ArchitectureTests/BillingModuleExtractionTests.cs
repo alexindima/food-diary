@@ -60,4 +60,18 @@ public sealed class BillingModuleExtractionTests {
 
         Assert.Contains("AddBillingModule()", source, StringComparison.Ordinal);
     }
+    [Fact]
+    public void BillingTransactions_UseScopedCoordinatorAndKeepOwnerErrorTranslation() {
+        string runner = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs"));
+        string registration = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Billing/Infrastructure/ModuleRegistration.cs"));
+        foreach (string source in new[] { runner, registration }) {
+            Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("SaveChangesAsync(", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("BeginTransactionAsync(", source, StringComparison.Ordinal);
+        }
+        Assert.Contains("coordinator.ExecuteAsync(", runner, StringComparison.Ordinal);
+        Assert.Contains("coordinator.CurrentTransaction", registration, StringComparison.Ordinal);
+        Assert.Contains("IX_BillingPayments_Provider_ExternalPaymentId", runner, StringComparison.Ordinal);
+        Assert.Contains("IX_BillingWebhookEvents_Provider_EventId", runner, StringComparison.Ordinal);
+    }
 }

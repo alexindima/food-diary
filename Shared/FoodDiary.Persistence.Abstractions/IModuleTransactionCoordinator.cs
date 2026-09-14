@@ -16,6 +16,16 @@ public interface IModuleTransactionCoordinator {
         Func<DbTransaction, CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default);
     /// <summary>
+    /// Runs a command with an unconditional unit-of-work save, including domain-event dispatch.
+    /// Translates attempt failures after transaction disposal but before trackers and callbacks are reset.
+    /// The translator must preserve unknown exceptions and must not perform external side effects.
+    /// </summary>
+    Task ExecuteAsync(
+        Func<DbTransaction, CancellationToken, Task> operation,
+        Func<Exception, Exception> translateException,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Runs a mutation with Serializable isolation and whole-attempt retries on relational providers.
     /// Retains the existing single-attempt, unit-of-work save behavior for nonrelational test providers.
     /// The same clean-entry, failure reset and post-commit rules apply; external calls must stay outside retries.

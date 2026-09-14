@@ -392,3 +392,19 @@ after intermediate saves. Composition queries continue to share this transaction
 lock ordering, SQL, snapshot hydration and purge participants are unchanged. The
 module runners no longer hold permission to save or begin/commit transactions.
 Central references remain for the purge bridges; no schema or API change is required.
+
+## Billing command transaction coordination
+
+Billing now supplies its advisory-lock SQL and operation to the command overload of
+IModuleTransactionCoordinator. Unlike the existing generic overload, this command
+policy always calls the unit of work, preserving event dispatch and no-op save
+interceptors. Its owner exception translator runs after transaction disposal and
+before failed-attempt reset; exact payment/webhook unique constraints and Added
+entry inspection remain in Billing. Unknown exceptions retain their identity and
+stack; translated exceptions retain existing whole-attempt retry behavior.
+
+Repository reads synchronize through the live CurrentTransaction property. Default
+isolation, rollback, cancellation, lock SQL, schema and HTTP contracts are unchanged.
+The separate checkout lease still retains its central connection dependency. This
+is a coordinated application rebuild; the public adapter constructor changes are
+not a separately versioned consumer contract.

@@ -95,7 +95,7 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         context.Users.Add(user);
         await context.SaveChangesAsync();
         user.MarkDeleted(DateTime.UtcNow);
-        var runner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
+        var runner = new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
         bool invoked = false;
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => runner.ExecuteAsync(_ => {

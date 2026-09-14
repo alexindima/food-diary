@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using FoodDiary.Modules.Products.Infrastructure.Persistence;
@@ -1172,7 +1173,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverBillingTransactionRunnerAsync(FoodDiaryDbContext context) {
-        var runner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
+        var runner = new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
         bool executed = false;
 
         await runner.ExecuteAsync(token => {
@@ -1519,7 +1520,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             "{}");
         await webhookRepository.AddAsync(inboxEvent);
         await context.SaveChangesAsync();
-        var billingTransactionRunner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
+        var billingTransactionRunner = new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
 
         await Assert.ThrowsAsync<BillingPaymentAlreadyExistsException>(
             () => billingTransactionRunner.ExecuteAsync(
@@ -1555,7 +1556,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await webhookRepository.AddAsync(webhookEvent);
         await context.SaveChangesAsync();
         Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, "evt_test"));
-        var billingTransactionRunner = new EfBillingTransactionRunner(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
+        var billingTransactionRunner = new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
 
         await Assert.ThrowsAsync<BillingWebhookEventAlreadyProcessedException>(
             () => billingTransactionRunner.ExecuteAsync(

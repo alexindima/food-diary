@@ -82,3 +82,7 @@ integrations owns external adapters, and domain owns business invariants.
 ## Reusable HTTP contract boundary
 
 ADR 0039 separates owner Presentation.Contracts (wire DTOs) from Presentation.Mappings (pure response transformations). Module Presentation assemblies no longer reference foreign controller assemblies. Mappers consume narrow application/scalar contracts and DTOs; Dashboard public snapshot/query declarations now live in Dashboard.Contracts. The exact project matrix and PresentationContractBoundaryTests enforce these boundaries.
+
+Billing delegates command transaction/save/retry/reset and live transaction access
+to IModuleTransactionCoordinator; it retains owner duplicate translation before
+cleanup and its separate checkout lease. See ADR 0040.

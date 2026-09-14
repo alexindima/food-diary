@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -572,8 +573,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await using FoodDiaryDbContext firstContext = await databaseFixture.CreateDbContextAsync();
         string connectionString = firstContext.Database.GetConnectionString()!;
         await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString);
-        var firstRunner = new EfBillingTransactionRunner(firstContext, new EfUnitOfWork(firstContext, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
-        var secondRunner = new EfBillingTransactionRunner(secondContext, new EfUnitOfWork(secondContext, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance));
+        var firstRunner = new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(firstContext, new EfUnitOfWork(firstContext, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
+        var secondRunner = new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(secondContext, new EfUnitOfWork(secondContext, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
         var firstEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var secondEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

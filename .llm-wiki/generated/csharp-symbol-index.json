@@ -5960,7 +5960,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "BillingDbContext",
@@ -5995,7 +5995,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "PostgresBillingCheckoutLock",

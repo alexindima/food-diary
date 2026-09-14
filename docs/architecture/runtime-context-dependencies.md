@@ -10,8 +10,8 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 |---|---:|
 | Audit bridge | 1 |
 | Connection/lock | 1 |
-| Transaction/provider registration | 9 |
-| Transaction coordination | 2 |
+| Transaction/provider registration | 8 |
+| Transaction coordination | 1 |
 | User purge | 14 |
 
 The presence of 29 owner contexts does not mean all runtime access has left the shared context. Dashboard body reads now live in host ReadModel.Composition. Image reassignment now uses ImagesDbContext on the caller connection. The three module replay streams also use owner contexts; their coordinator saves through IUnitOfWork. Audit retains reviewed shared-context behavior.
@@ -31,8 +31,6 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 | [Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs](../../Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Ai/Infrastructure/ModuleRegistration.cs](../../Modules/Ai/Infrastructure/ModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 | [Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs](../../Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
-| [Modules/Billing/Infrastructure/ModuleRegistration.cs](../../Modules/Billing/Infrastructure/ModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
-| [Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs](../../Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs) | Transaction coordination | Existing transaction/retry/reset boundary; owner writes are coordinated through the shared unit of work. |
 | [Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs](../../Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs) | Connection/lock | Obtains a connection string for a separate session advisory lease; no entity access. |
 | [Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs](../../Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs](../../Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
@@ -61,3 +59,5 @@ WeeklyGoals no longer consumes FoodDiaryDbContext or central Infrastructure. Its
 Meals recognition now also uses IModuleTransactionCoordinator. Its intermediate IUnitOfWork flush retains the owned Meal xmin and receipt atomicity. The Meals purge participant still consumes FoodDiaryDbContext.
 
 Products and Recipes delegate Serializable mutations and live transaction access to IModuleTransactionCoordinator. Their ordered purge participants still retain central context access.
+
+Billing delegates transaction/save/retry/reset and live transaction access to IModuleTransactionCoordinator; duplicate translation remains owner-side before cleanup. Its separate checkout-session advisory lease still uses the central connection.

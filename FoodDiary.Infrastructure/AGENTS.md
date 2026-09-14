@@ -29,8 +29,8 @@ Rules for `FoodDiary.Infrastructure/`.
 - Dead-letter replay uses scoped `IOutboxReplayStream` extensions in this existing Infrastructure assembly. Images, Notifications and Gamification own their list/find SQL and metadata; only the purged, non-replayable email adapter remains central. The coordinator owns validation, audit/reset/transaction and saves through IUnitOfWork so the audit and owner record commit atomically; it knows no concrete stream types. Module adapters use their owner contexts registered through CreateModuleContext on the shared connection and must not save or commit. Preserve explicit stream ordering and replay eligibility; see `docs/ai/outbox-replay-stream-boundary.md`.
 - Keep repository-owned `SaveChangesAsync` and manual transactions inside the architecture-test allowlist. `AiQuotaRepository` is an explicit exception: its short PostgreSQL transactions atomically reserve or reconcile quota independently of the request transaction, and must never contain an external provider call.
 - `EfModuleTransactionCoordinator` owns the existing top-level default-isolation transaction, clean-entry check, retry/reset and shared unit-of-work save/commit. WeeklyGoals supplies its user/week advisory-lock operation through IModuleTransactionCoordinator; keep notification delivery and external calls outside the transaction.
-- `EfProductMutationTransactionRunner` is an explicit exception: it uses Serializable isolation with whole-attempt retries and keeps the Product row lock, usage check, and mutation in one short transaction.
-- `EfRecipeMutationTransactionRunner` is an explicit exception: it uses Serializable isolation with whole-attempt retries and keeps graph/usage checks and mutation in one short transaction.
+- Products delegates Serializable transaction ownership to IModuleTransactionCoordinator while retaining its Product row lock, usage check and mutation in one short transaction.
+- Recipes delegates Serializable transaction ownership to IModuleTransactionCoordinator while retaining graph/usage checks and mutation in one short transaction.
 - Do not reintroduce direct SMTP delivery configuration into the primary API/infrastructure path; MailRelay owns mail delivery runtime configuration.
 - Keep retries/logging policies consistent with API composition.
 
@@ -195,3 +195,5 @@ Coordinated module saves invoke central SaveChanges even when its tracker starts
 UsersDbContext saves at priority -100, before central priority 0 and other module contexts at default 100. Preserve stable ordering among peers and resolution-order domain-event discovery. Bind and release transactions for every non-central participant by identity; never assume central is array element zero. Users explicitly installs its Telegram conflict interceptor on the owner context. Central migrations, FK composition and technical purge bridges remain.
 
 IModuleContextFactory is scoped to the same FoodDiaryDbContext instance by AddInfrastructure. Its implementation remains the existing CreateModuleContext method; preserve provider options, common connection, command interceptors and participant save order.
+
+Billing uses the coordinator command overload to preserve unconditional unit-of-work save and owner exception translation before shared tracker reset. Never move Billing constraint names or entities into the shared coordinator.
