@@ -16,6 +16,48 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class WearableRetryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task FailedProviderIsNotReplayedAndReleasesSessionAsync(bool canceled) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("wearable-provider-failure@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        await using ServiceProvider provider = WearableTestComposition.CreateProvider(context);
+        WearablesDbContext owned = provider.GetRequiredService<WearablesDbContext>();
+        IWearableTransactionRunner runner = provider.GetRequiredService<IWearableTransactionRunner>();
+        using var cancellation = new CancellationTokenSource();
+        Exception failure = canceled ? new OperationCanceledException(cancellation.Token) : new TimeoutException("Provider failed");
+        string key = $"provider-failure:{user.Id.Value:N}";
+        int calls = 0;
+
+        Exception? actual = await Record.ExceptionAsync(() => runner.ExecuteSerializedAsync<bool>(key, async _ => {
+            calls++;
+            owned.WearableSyncEntries.Add(WearableSyncEntry.Create(user.Id, WearableProvider.Fitbit,
+                WearableDataType.Steps, new DateTime(2026, 9, 6, 0, 0, 0, DateTimeKind.Utc), 100));
+            if (canceled) {
+                await cancellation.CancelAsync();
+            }
+            throw failure;
+        }, cancellation.Token));
+
+        Assert.Multiple(
+            () => Assert.Same(failure, actual),
+            () => Assert.Equal(1, calls),
+            () => Assert.Empty(owned.ChangeTracker.Entries()),
+            () => Assert.Empty(context.ChangeTracker.Entries()));
+        Assert.False(await owned.WearableSyncEntries.AsNoTracking().AnyAsync());
+
+        bool recovered = await runner.ExecuteSerializedAsync(key, _ => {
+            owned.WearableSyncEntries.Add(WearableSyncEntry.Create(user.Id, WearableProvider.Fitbit,
+                WearableDataType.Steps, new DateTime(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc), 200));
+            return Task.FromResult(true);
+        }).WaitAsync(TimeSpan.FromSeconds(10));
+        Assert.True(recovered);
+        Assert.Equal(200, (await owned.WearableSyncEntries.AsNoTracking().SingleAsync()).Value);
+    }
+
     [RequiresDockerFact]
     public async Task TransientSave_RetriesPersistenceWithoutRepeatingProviderOperation() {
         await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();

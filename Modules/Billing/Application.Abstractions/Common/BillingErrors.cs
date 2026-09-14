@@ -3,6 +3,11 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Billing.Application.Abstractions.Common;
 
 public static class BillingErrors {
+    public static Error WebhookProcessingFailed => new(
+        "Billing.WebhookProcessingFailed",
+        "Stored webhook processing failed.",
+        Kind: ErrorKind.ExternalFailure);
+
     public static Error InvalidPlan => new(
         "Billing.InvalidPlan",
         "Billing plan is invalid.",

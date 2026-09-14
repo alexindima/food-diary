@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "c2767e204184c07d26f0b143cdb2efadf42998b7e97e2c06abb8864f9b191052",
-    "sourceFileCount": 4044
+    "sourceFingerprint": "3d632603180003e346487781198be9ef0f0982c928d004d483a52b4d41cca348",
+    "sourceFileCount": 4050
   },
   "summary": {
     "composeServices": 17,
@@ -897,14 +897,6 @@
       "evidenceStatus": "inferred-from-code"
     },
     {
-      "name": "BillingWebhookInboxService",
-      "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
-      "securitySignals": [],
-      "behaviorSignals": "cancellation-propagation-candidate",
-      "behaviorSignalScope": "class-window",
-      "evidenceStatus": "inferred-from-code"
-    },
-    {
       "name": "BillingWebhookPaymentRecorder",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
       "securitySignals": [],
@@ -971,8 +963,16 @@
       "evidenceStatus": "inferred-from-code"
     },
     {
+      "name": "ProcessBillingWebhookInboxCommandHandler",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommandHandler.cs",
+      "securitySignals": [],
+      "behaviorSignals": "cancellation-propagation-candidate",
+      "behaviorSignalScope": "class-window",
+      "evidenceStatus": "inferred-from-code"
+    },
+    {
       "name": "ProcessQueuedBillingWebhookCommandHandler",
-      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",

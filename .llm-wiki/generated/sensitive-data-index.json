@@ -6,11 +6,11 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1459,
+    "candidateFields": 1460,
     "credential": 155,
     "identity": 174,
     "health": 685,
-    "financial": 126,
+    "financial": 127,
     "privateContent": 319,
     "boundaryFiles": 192,
     "potentialLoggingLeads": 1,
@@ -1580,10 +1580,17 @@
     },
     {
       "category": "financial",
-      "name": "ITransactionalCommand",
-      "type": "IRequest<Result>,",
-      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
-      "line": 8
+      "name": "ExternalSubscriptionId",
+      "type": "string?",
+      "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
+      "line": 330
+    },
+    {
+      "category": "financial",
+      "name": "NextBillingAttemptUtc",
+      "type": "DateTime?",
+      "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
+      "line": 336
     },
     {
       "category": "financial",
@@ -1793,56 +1800,56 @@
       "name": "Amount",
       "type": "AmountRequest",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 294
+      "line": 327
     },
     {
       "category": "financial",
       "name": "SavePaymentMethod",
       "type": "bool",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 297
+      "line": 330
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountRequest",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 302
+      "line": 335
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 304
+      "line": 337
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 310
+      "line": 343
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 324
+      "line": 357
     },
     {
       "category": "financial",
       "name": "PaymentMethod",
       "type": "PaymentMethodResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 326
+      "line": 359
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 333
+      "line": 366
     },
     {
       "category": "financial",

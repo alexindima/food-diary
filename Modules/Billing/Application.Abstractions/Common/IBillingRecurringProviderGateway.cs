@@ -9,4 +9,9 @@ public interface IBillingRecurringProviderGateway {
     Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
         BillingRecurringPaymentRequestModel request,
         CancellationToken cancellationToken = default);
+
+    Task<Result<BillingRecurringPaymentModel>> GetRecurringPaymentAsync(
+        string paymentId,
+        BillingRecurringPaymentRequestModel request,
+        CancellationToken cancellationToken = default);
 }

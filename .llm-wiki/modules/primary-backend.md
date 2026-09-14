@@ -116,3 +116,5 @@ owner contracts. See [the extraction](../../docs/ai/remaining-consumer-boundarie
 Billing delegates command transaction/save/retry/reset and live transaction access
 to IModuleTransactionCoordinator; it retains owner duplicate translation before
 cleanup and its separate checkout lease. See ADR 0040.
+
+Wearables consumes the narrow IModuleSessionCoordinator and has no direct or transitive central Infrastructure dependency. The central session coordinator retains a separate advisory lease, one provider callback, durable intermediate saves and final unit-of-work persistence. Transaction retries must never replay provider calls. See ADR 0040 and the runtime-context dependency inventory.

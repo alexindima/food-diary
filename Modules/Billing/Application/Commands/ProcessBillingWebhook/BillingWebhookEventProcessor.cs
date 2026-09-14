@@ -20,8 +20,17 @@ public sealed class BillingWebhookEventProcessor(
         BillingWebhookEvent? inboxEvent,
         CancellationToken cancellationToken) {
         var processingResult = Result.Success();
+        string serializationKey = await billingWebhookContextResolver.GetSerializationKeyAsync(provider, webhookEvent, cancellationToken).ConfigureAwait(false);
         try {
-            await billingTransactionRunner.ExecuteSerializedAsync(CreateSerializationKey(provider, webhookEvent), async ct => {
+            await billingTransactionRunner.ExecuteSerializedAsync(serializationKey, async ct => {
+                processingResult = Result.Success();
+                if (inboxEvent is not null) {
+                    inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.Id, ct).ConfigureAwait(false)
+                        ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
+                    if (string.Equals(inboxEvent.Status, BillingWebhookEvent.ProcessedStatus, StringComparison.Ordinal)) {
+                        return;
+                    }
+                }
                 Result<BillingWebhookProcessingContext?> contextResult = await billingWebhookContextResolver.ResolveAsync(
                     provider,
                     webhookEvent,
@@ -31,10 +40,6 @@ public sealed class BillingWebhookEventProcessor(
                     return;
                 }
 
-                if (inboxEvent is not null) {
-                    inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.Id, ct).ConfigureAwait(false)
-                        ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
-                }
                 BillingWebhookEvent persistedEvent = inboxEvent ??
                     billingWebhookSubscriptionWriter.CreateProcessedEvent(provider, webhookEvent, payload);
                 if (inboxEvent is null) {
@@ -70,15 +75,6 @@ public sealed class BillingWebhookEventProcessor(
         }
 
         return processingResult;
-    }
-
-    private static string CreateSerializationKey(string provider, BillingWebhookEventModel webhookEvent) {
-        string externalObjectId = webhookEvent.ExternalPaymentMethodId
-            ?? webhookEvent.ExternalSubscriptionId
-            ?? webhookEvent.ExternalCustomerId
-            ?? webhookEvent.RelatedTransactionId
-            ?? webhookEvent.EventId;
-        return $"billing-webhook:{provider.Trim().ToLowerInvariant()}:{externalObjectId}";
     }
 
     private async Task ApplyBusinessEffectsAsync(

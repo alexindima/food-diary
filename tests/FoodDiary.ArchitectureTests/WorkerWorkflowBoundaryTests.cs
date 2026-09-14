@@ -7,6 +7,8 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class WorkerWorkflowBoundaryTests {
     [Theory]
     [InlineData("Billing", "RenewDueSubscriptions", "BillingRenewalRunResult")]
+    [InlineData("Billing", "ProcessBillingWebhookInbox", "BillingWebhookInboxRunResult")]
+    [InlineData("Billing", "ReplayFailedPaddleNotifications", "PaddleNotificationRecoveryResult")]
     [InlineData("Ai", "ProcessNextFoodRecognition", "bool")]
     [InlineData("Admin", "SendBugAcknowledgements", "Unit")]
     public void WorkflowsWithIndependentCommits_DoNotEnableAutomaticUnitOfWorkSave(string module, string command, string response) {
@@ -16,6 +18,33 @@ public sealed class WorkerWorkflowBoundaryTests {
 
         Assert.NotNull(declaration.BaseList);
         Assert.Equal($"IRequest<{response}>", Assert.Single(declaration.BaseList.Types).Type.ToString());
+    }
+
+    [Fact]
+    public void QueuedWebhook_WithSeparateFailureCommit_DoesNotEnableAutomaticUnitOfWorkSave() {
+        string path = ArchitectureTestPaths.FromRoot("Modules", "Billing", "Application", "Commands",
+            "ProcessQueuedBillingWebhook", "ProcessQueuedBillingWebhookCommand.cs");
+        RecordDeclarationSyntax declaration = Assert.Single(CSharpSyntaxTree.ParseText(File.ReadAllText(path))
+            .GetRoot().DescendantNodes().OfType<RecordDeclarationSyntax>());
+
+        Assert.NotNull(declaration.BaseList);
+        Assert.Equal("IRequest<Result>", Assert.Single(declaration.BaseList.Types).Type.ToString());
+    }
+
+    [Theory]
+    [InlineData("BillingWebhookInboxJob", "ProcessBillingWebhookInboxCommand")]
+    [InlineData("PaddleNotificationRecoveryJob", "ReplayFailedPaddleNotificationsCommand")]
+    [InlineData("BillingRenewalJob", "RenewDueSubscriptionsCommand")]
+    public void BillingSchedulerAdapters_DispatchConsumerCommands(string job, string command) {
+        string path = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "Services", job + ".cs");
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetCompilationUnitRoot();
+
+        Assert.DoesNotContain(root.Usings, directive => directive.Name?.ToString().StartsWith(
+            "FoodDiary.Modules.Billing.Application", StringComparison.Ordinal) is true);
+        Assert.DoesNotContain(root.Usings, directive => directive.Name?.ToString().StartsWith(
+            "FoodDiary.Modules.Billing.Infrastructure", StringComparison.Ordinal) is true);
+        Assert.Contains(root.DescendantNodes().OfType<ObjectCreationExpressionSyntax>(), creation =>
+            string.Equals(creation.Type.ToString(), command, StringComparison.Ordinal));
     }
 
     [Theory]

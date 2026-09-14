@@ -11,7 +11,7 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 | Audit bridge | 1 |
 | Connection/lock | 1 |
 | Transaction/provider registration | 8 |
-| Transaction coordination | 1 |
+| Transaction coordination | 0 |
 | User purge | 14 |
 
 The presence of 29 owner contexts does not mean all runtime access has left the shared context. Dashboard body reads now live in host ReadModel.Composition. Image reassignment now uses ImagesDbContext on the caller connection. The three module replay streams also use owner contexts; their coordinator saves through IUnitOfWork. Audit retains reviewed shared-context behavior.
@@ -52,7 +52,6 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 | [Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs](../../Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs](../../Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs) | User purge | User cleanup orchestration, user/role deletion, locks and profile-image unlinking. |
 | [Modules/Users/Infrastructure/UsersModuleRegistration.cs](../../Modules/Users/Infrastructure/UsersModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
-| [Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs](../../Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs) | Transaction coordination | Existing transaction/retry/reset boundary; owner writes are coordinated through the shared unit of work. |
 
 WeeklyGoals no longer consumes FoodDiaryDbContext or central Infrastructure. Its live transaction accessor and advisory-lock runner use IModuleTransactionCoordinator; shared clean-entry/retry/reset/save/commit behavior remains in EfModuleTransactionCoordinator.
 
@@ -61,3 +60,5 @@ Meals recognition now also uses IModuleTransactionCoordinator. Its intermediate 
 Products and Recipes delegate Serializable mutations and live transaction access to IModuleTransactionCoordinator. Their ordered purge participants still retain central context access.
 
 Billing delegates transaction/save/retry/reset and live transaction access to IModuleTransactionCoordinator; duplicate translation remains owner-side before cleanup. Its separate checkout-session advisory lease still uses the central connection.
+
+Wearables no longer references FoodDiaryDbContext or central Infrastructure. IModuleSessionCoordinator owns its separate session advisory lease, single callback execution and clean/reset/final-save boundary. Intermediate saves remain durable and provider calls are never replayed.

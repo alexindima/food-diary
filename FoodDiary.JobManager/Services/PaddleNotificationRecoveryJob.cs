@@ -1,11 +1,13 @@
 using System.Diagnostics;
-using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Billing.Contracts.Commands.ReplayFailedPaddleNotifications;
+using FoodDiary.Modules.Billing.Contracts.Models;
 using Hangfire;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class PaddleNotificationRecoveryJob(
-    PaddleNotificationRecoveryService recoveryService,
+    ISender sender,
     JobExecutionObserver observer,
     ILogger<PaddleNotificationRecoveryJob> logger) {
     private const string JobName = "billing.paddle-notification-recovery";
@@ -15,8 +17,8 @@ public sealed class PaddleNotificationRecoveryJob(
     public async Task Execute(CancellationToken cancellationToken = default) {
         Stopwatch stopwatch = observer.Start(JobName);
         try {
-            PaddleNotificationRecoveryResult result = await recoveryService
-                .ReplayFailedAsync(cancellationToken)
+            PaddleNotificationRecoveryResult result = await sender
+                .Send(new ReplayFailedPaddleNotificationsCommand(), cancellationToken)
                 .ConfigureAwait(false);
             if (result.Replayed > 0) {
                 logger.LogWarning(

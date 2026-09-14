@@ -1,7 +1,6 @@
 using System.Reflection;
 using FluentValidation;
 using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
-using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +19,6 @@ public static class DependencyInjection {
         services.AddScoped<BillingWebhookPremiumRoleSyncer>();
         services.AddScoped<BillingWebhookSubscriptionWriter>();
         services.AddScoped<BillingWebhookEventProcessor>();
-        services.AddScoped<IBillingWebhookInboxService, BillingWebhookInboxService>();
         return services;
     }
 }

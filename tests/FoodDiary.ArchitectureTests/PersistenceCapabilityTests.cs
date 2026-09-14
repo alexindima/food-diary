@@ -8,6 +8,13 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class PersistenceCapabilityTests {
     [Fact]
+    public void Scanner_TracksSerializedSessions() {
+        const string source = "using FoodDiary.Persistence.Abstractions; class Probe(IModuleSessionCoordinator coordinator) { public System.Threading.Tasks.Task Run() => coordinator.ExecuteSerializedAsync(\"key\", token => System.Threading.Tasks.Task.FromResult(true)); }";
+        IReadOnlyDictionary<string, string[]> capabilities = PersistenceCapabilityScanner.Scan([("Probe.cs", source)]);
+        Assert.Equal(["context:ExecuteSerializedAsync"], capabilities["Probe.cs"]);
+    }
+
+    [Fact]
     public void Scanner_TracksContextCreationThroughFactoryContract() {
         const string source = "using FoodDiary.Persistence.Abstractions; using Microsoft.EntityFrameworkCore; class Owner(DbContextOptions<Owner> options) : DbContext(options); class Probe(IModuleContextFactory factory) { public Owner Create() => factory.CreateModuleContext<Owner>(options => new Owner(options)); }";
         IReadOnlyDictionary<string, string[]> capabilities = PersistenceCapabilityScanner.Scan([("Probe.cs", source)]);

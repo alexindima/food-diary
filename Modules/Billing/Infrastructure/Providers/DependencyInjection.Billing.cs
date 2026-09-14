@@ -26,6 +26,7 @@ public static partial class DependencyInjection {
             .RemoveAllLoggers();
         services.AddHttpClient<PaddleNotificationRecoveryService>(client => client.Timeout = TimeSpan.FromSeconds(30))
             .RemoveAllLoggers();
+        services.AddScoped<IPaddleNotificationRecoveryGateway>(sp => sp.GetRequiredService<PaddleNotificationRecoveryService>());
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<PaddleBillingGateway>());
         services.AddHttpClient<YooKassaBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30))
             .RemoveAllLoggers();

@@ -1,34 +1,12 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Infrastructure.Persistence.Locking;
-using Microsoft.EntityFrameworkCore;
+using FoodDiary.Persistence.Abstractions;
 
 namespace FoodDiary.Infrastructure.Persistence.Wearables;
 
-internal sealed class EfWearableTransactionRunner(FoodDiaryDbContext context, IUnitOfWork unitOfWork) : IWearableTransactionRunner {
-    public async Task<TResult> ExecuteSerializedAsync<TResult>(
+internal sealed class EfWearableTransactionRunner(IModuleSessionCoordinator coordinator) : IWearableTransactionRunner {
+    public Task<TResult> ExecuteSerializedAsync<TResult>(
         string serializationKey,
         Func<CancellationToken, Task<TResult>> operation,
-        CancellationToken cancellationToken = default) {
-        ArgumentException.ThrowIfNullOrWhiteSpace(serializationKey);
-        ArgumentNullException.ThrowIfNull(operation);
-        SharedTransactionBoundary.EnsureCleanEntry(context);
-
-        string connectionString = context.Database.GetConnectionString()
-            ?? throw new InvalidOperationException("The wearable transaction runner requires a relational connection string.");
-        PostgresAdvisoryLockLease advisoryLock = await PostgresAdvisoryLockLease
-            .AcquireAsync(connectionString, serializationKey, cancellationToken)
-            .ConfigureAwait(false);
-        await using (advisoryLock.ConfigureAwait(false)) {
-            // SaveChanges owns its atomic transaction and retries. Never replay provider calls.
-            return await SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
-                TResult result = await operation(cancellationToken).ConfigureAwait(false);
-                if (result is not FoodDiary.Results.Result { IsFailure: true }) {
-                    await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                }
-                return result;
-            }, cancellationToken).ConfigureAwait(false);
-        }
-    }
+        CancellationToken cancellationToken = default) =>
+        coordinator.ExecuteSerializedAsync(serializationKey, operation, cancellationToken);
 }

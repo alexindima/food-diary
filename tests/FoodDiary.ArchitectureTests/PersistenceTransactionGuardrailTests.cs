@@ -28,13 +28,13 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "FoodDiaryDbContext.Modules.cs"),
             Path.Combine(persistenceRoot, "Shared", "ModuleContextSaveCoordinator.cs"),
+            Path.Combine(persistenceRoot, "Shared", "EfModuleSessionCoordinator.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Meals", "Infrastructure", "Persistence", "Meals", "EfMealRecognitionTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxProcessingEngine.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxMessageClaimer.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxDeadLetterReplayService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
-            ArchitectureTestPaths.FromRoot("Modules", "Wearables", "Infrastructure", "Persistence", "EfWearableTransactionRunner.cs"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
 
@@ -63,7 +63,6 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
-            ArchitectureTestPaths.FromRoot("Modules", "Wearables", "Infrastructure", "Persistence", "EfWearableTransactionRunner.cs"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
         string[] forbiddenPatterns = [

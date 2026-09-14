@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4043,
-    "symbols": 3984,
-    "interfaceImplementationLinks": 260,
+    "sourceFiles": 4049,
+    "symbols": 3990,
+    "interfaceImplementationLinks": 259,
     "dependencyInjectionRegistrations": 147,
     "kinds": {
-      "class": 2096,
+      "class": 2099,
       "enum": 64,
-      "interface": 464,
-      "record": 1239,
+      "interface": 465,
+      "record": 1241,
       "record struct": 121
     },
     "roles": {
-      "Command": 181,
-      "CommandHandler": 177,
+      "Command": 183,
+      "CommandHandler": 179,
       "Configuration": 95,
       "Controller": 104,
       "Entity": 97,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1642,
+      "Other": 1646,
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -40,7 +40,7 @@
       "Repository": 101,
       "Request": 150,
       "Response": 213,
-      "Service": 293,
+      "Service": 291,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 45
@@ -951,6 +951,13 @@
       "line": 4
     },
     {
+      "name": "EfModuleSessionCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleSessionCoordinator.cs",
+      "line": 7
+    },
+    {
       "name": "EfModuleTransactionCoordinator",
       "kind": "class",
       "role": "Other",
@@ -1088,7 +1095,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ClientTaskReminderJob",
@@ -1305,7 +1312,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/PaddleNotificationRecoveryJob.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "RecurringJobExecutionPolicy",
@@ -5620,6 +5627,13 @@
       "line": 4
     },
     {
+      "name": "IPaddleNotificationRecoveryGateway",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Common/IPaddleNotificationRecoveryGateway.cs",
+      "line": 4
+    },
+    {
       "name": "BillingCheckoutSessionModel",
       "kind": "record",
       "role": "Other",
@@ -5722,7 +5736,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "BillingWebhookEventProcessor",
@@ -5788,25 +5802,39 @@
       "line": 5
     },
     {
+      "name": "ProcessBillingWebhookInboxCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommandHandler.cs",
+      "line": 10
+    },
+    {
       "name": "ProcessQueuedBillingWebhookCommand",
       "kind": "record",
       "role": "Command",
-      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
-      "line": 6
+      "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+      "line": 7
     },
     {
       "name": "ProcessQueuedBillingWebhookCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
-      "line": 6
+      "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+      "line": 10
     },
     {
       "name": "RenewDueSubscriptionsCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
-      "line": 15
+      "line": 19
+    },
+    {
+      "name": "ReplayFailedPaddleNotificationsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommandHandler.cs",
+      "line": 7
     },
     {
       "name": "StartPremiumTrialCommand",
@@ -5830,31 +5858,24 @@
       "line": 7
     },
     {
-      "name": "IBillingWebhookInboxService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
-      "line": 5
+      "name": "BillingOperationLockKeys",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Common/BillingOperationLockKeys.cs",
+      "line": 2
     },
     {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/DependencyInjection.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "BillingOverviewModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Application/Models/BillingOverviewModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingWebhookInboxRunResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Billing/Application/Models/BillingWebhookInboxRunResult.cs",
       "line": 2
     },
     {
@@ -5879,11 +5900,11 @@
       "line": 8
     },
     {
-      "name": "BillingWebhookInboxService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
-      "line": 11
+      "name": "ProcessBillingWebhookInboxCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Contracts/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommand.cs",
+      "line": 7
     },
     {
       "name": "RenewDueSubscriptionsCommand",
@@ -5891,6 +5912,13 @@
       "role": "Command",
       "path": "Modules/Billing/Contracts/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommand.cs",
       "line": 7
+    },
+    {
+      "name": "ReplayFailedPaddleNotificationsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Contracts/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommand.cs",
+      "line": 5
     },
     {
       "name": "IBillingMarketingConversionRecorder",
@@ -5904,6 +5932,20 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Contracts/Models/BillingRenewalRunResult.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingWebhookInboxRunResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Contracts/Models/BillingWebhookInboxRunResult.cs",
+      "line": 2
+    },
+    {
+      "name": "PaddleNotificationRecoveryResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Contracts/Models/PaddleNotificationRecoveryResult.cs",
       "line": 2
     },
     {
@@ -6040,18 +6082,11 @@
       "line": 16
     },
     {
-      "name": "PaddleNotificationRecoveryResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryResult.cs",
-      "line": 2
-    },
-    {
       "name": "PaddleNotificationRecoveryService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "PaddlePage",
@@ -24608,7 +24643,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
-      "line": 8
+      "line": 5
     },
     {
       "name": "WearableConnectionRepository",
@@ -27901,6 +27936,13 @@
       "line": 6
     },
     {
+      "name": "IModuleSessionCoordinator",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleSessionCoordinator.cs",
+      "line": 4
+    },
+    {
       "name": "IModuleTransactionCoordinator",
       "kind": "interface",
       "role": "Other",
@@ -28117,13 +28159,6 @@
       "interfacePath": "Modules/Billing/Application.Abstractions/Common/IBillingPublicConfigProvider.cs",
       "implementation": "BillingPublicConfigProvider",
       "implementationPath": "Modules/Billing/Infrastructure/Providers/Billing/BillingPublicConfigProvider.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IBillingWebhookInboxService",
-      "interfacePath": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
-      "implementation": "BillingWebhookInboxService",
-      "implementationPath": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29837,18 +29872,25 @@
       "line": 26
     },
     {
+      "service": "IModuleSessionCoordinator",
+      "implementation": "EfModuleSessionCoordinator",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
+      "line": 27
+    },
+    {
       "service": "IOutboxDeadLetterReplayService",
       "implementation": "OutboxDeadLetterReplayService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 28
+      "line": 29
     },
     {
       "service": "IDomainEventPublisher",
       "implementation": "MediatorDomainEventPublisher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 30
+      "line": 31
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -29963,13 +30005,6 @@
       "line": 18
     },
     {
-      "service": "IBillingWebhookInboxService",
-      "implementation": "BillingWebhookInboxService",
-      "lifetime": "Scoped",
-      "path": "Modules/Billing/Application/DependencyInjection.cs",
-      "line": 23
-    },
-    {
       "service": "IBillingPublicConfigProvider",
       "implementation": "BillingPublicConfigProvider",
       "lifetime": "Singleton",
@@ -29988,7 +30023,7 @@
       "implementation": "ConfigurableBillingProviderGatewayAccessor",
       "lifetime": "Scoped",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "line": 34
+      "line": 35
     },
     {
       "service": "IWeightEntryReadService",

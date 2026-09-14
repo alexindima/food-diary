@@ -197,3 +197,5 @@ UsersDbContext saves at priority -100, before central priority 0 and other modul
 IModuleContextFactory is scoped to the same FoodDiaryDbContext instance by AddInfrastructure. Its implementation remains the existing CreateModuleContext method; preserve provider options, common connection, command interceptors and participant save order.
 
 Billing uses the coordinator command overload to preserve unconditional unit-of-work save and owner exception translation before shared tracker reset. Never move Billing constraint names or entities into the shared coordinator.
+
+EfModuleSessionCoordinator owns the separate session lease and single-attempt clean/reset/save boundary used by Wearables. It runs provider callbacks without a database transaction or execution-strategy replay; intermediate saves remain durable and only final persistence retries. Keep it distinct from EfModuleTransactionCoordinator.

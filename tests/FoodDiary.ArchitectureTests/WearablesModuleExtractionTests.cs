@@ -3,6 +3,18 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class WearablesModuleExtractionTests {
     [Fact]
+    public void WearablesRunner_DelegatesToSessionCoordinator() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules", "Wearables", "Infrastructure", "Persistence", "EfWearableTransactionRunner.cs"));
+        Assert.Multiple(
+            () => Assert.Contains("IModuleSessionCoordinator", source, StringComparison.Ordinal),
+            () => Assert.Contains("coordinator.ExecuteSerializedAsync", source, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("IModuleTransactionCoordinator", source, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("SaveChangesAsync", source, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void CoreApplicationProject_DoesNotContainWearablesImplementation() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Wearables");
 

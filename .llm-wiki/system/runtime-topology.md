@@ -7,7 +7,7 @@ sources:
   - .llm-wiki/generated/runtime-topology.json
   - docker-compose.yml
   - Modules/Billing/Presentation/Controllers/BillingWebhookController.cs
-  - Modules/Billing/Application/Services/BillingWebhookInboxService.cs
+  - Modules/Billing/Application/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommandHandler.cs
   - Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs
   - Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs
   - FoodDiary.JobManager/Services/RecurringJobsHostedService.cs
@@ -36,7 +36,8 @@ stopping at the HTTP handler:
 
 `BillingWebhookController` -> `ProcessBillingWebhookCommandHandler` -> queued
 `BillingWebhookEvent` -> `RecurringJobIds.BillingWebhookInbox` ->
-`BillingWebhookInboxService` -> `BillingWebhookEventProcessor` ->
+`ProcessBillingWebhookInboxCommandHandler` -> `ProcessQueuedBillingWebhookCommandHandler` ->
+`BillingWebhookEventProcessor` ->
 `EfBillingTransactionRunner` -> PostgreSQL unique constraints for provider event
 and external payment identifiers.
 

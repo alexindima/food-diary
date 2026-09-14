@@ -1514,6 +1514,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
+          "Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
@@ -1614,6 +1615,7 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
           "Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj",
+          "Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj",
           "Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
           "Modules/Billing/PersistenceModel/FoodDiary.Modules.Billing.PersistenceModel.csproj",
@@ -1734,6 +1736,10 @@
             "version": null
           },
           {
+            "name": "Microsoft.Extensions.DependencyInjection",
+            "version": null
+          },
+          {
             "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
@@ -1797,6 +1803,7 @@
         "isTestProject": true,
         "projectReferences": [
           "Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
+          "Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj",
           "Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj",
           "Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
@@ -11069,7 +11076,6 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
           "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
@@ -11298,8 +11304,10 @@
         ],
         "isTestProject": true,
         "projectReferences": [
+          "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
           "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj",
           "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
@@ -13543,6 +13551,8 @@
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
           "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj",
           "Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
+          "Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj",
+          "Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj",
           "Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
           "Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj",

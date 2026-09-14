@@ -24,6 +24,7 @@ public static partial class DependencyInjection {
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IModuleTransactionCoordinator, EfModuleTransactionCoordinator>();
+        services.AddScoped<IModuleSessionCoordinator, EfModuleSessionCoordinator>();
         services.AddScoped<IModuleContextFactory>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, EmailOutboxReplayStream>());

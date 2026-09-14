@@ -64,7 +64,7 @@ internal static class PersistenceCapabilityScanner {
                 ITypeSymbol? receiver = model.GetTypeInfo(access.Expression).Type;
                 string methodName = access.Name.Identifier.ValueText;
                 var method = model.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
-                if (receiver?.ToDisplayString() is "FoodDiary.Persistence.Abstractions.IModuleContextFactory" or "FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator") {
+                if (receiver?.ToDisplayString() is "FoodDiary.Persistence.Abstractions.IModuleContextFactory" or "FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator" or "FoodDiary.Persistence.Abstractions.IModuleSessionCoordinator") {
                     capabilities.Add($"context:{methodName}");
                 }
                 if (IsContext(receiver)) {

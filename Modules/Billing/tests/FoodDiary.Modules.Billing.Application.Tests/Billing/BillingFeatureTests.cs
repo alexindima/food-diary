@@ -644,6 +644,10 @@ public partial class BillingFeatureTests {
         Action? onPayment = null)
         : IBillingRecurringProviderGateway {
         public string Provider { get; } = provider;
+
+        public Task<Result<BillingRecurringPaymentModel>> GetRecurringPaymentAsync(string paymentId,
+            BillingRecurringPaymentRequestModel request, CancellationToken cancellationToken = default) =>
+            CreateRecurringPaymentAsync(request, cancellationToken);
         public int CreatePaymentCallCount { get; private set; }
 
         public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
@@ -658,6 +662,10 @@ public partial class BillingFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class FailingRecurringBillingGateway(string providerName) : IBillingRecurringProviderGateway {
         public string Provider { get; } = providerName;
+
+        public Task<Result<BillingRecurringPaymentModel>> GetRecurringPaymentAsync(string paymentId,
+            BillingRecurringPaymentRequestModel request, CancellationToken cancellationToken = default) =>
+            CreateRecurringPaymentAsync(request, cancellationToken);
         public int CreatePaymentCallCount { get; private set; }
 
         public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(

@@ -50,7 +50,8 @@ public sealed class ModulePersistenceBoundaryAnalyzer : DiagnosticAnalyzer {
     }
 
     private static bool IsTransactionCoordinator(ITypeSymbol type) =>
-        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator", StringComparison.Ordinal);
+        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator", StringComparison.Ordinal) ||
+        string.Equals(type.ToDisplayString(), "FoodDiary.Persistence.Abstractions.IModuleSessionCoordinator", StringComparison.Ordinal);
 
     private static void AnalyzeMethodReference(OperationAnalysisContext context, string module,
         ImmutableDictionary<string, string> reviewed, ConcurrentDictionary<SyntaxTree, bool> verified) {

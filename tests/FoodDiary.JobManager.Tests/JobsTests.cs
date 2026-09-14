@@ -1765,6 +1765,10 @@ public sealed class JobsTests {
         : IBillingRecurringProviderGateway {
         public string Provider { get; } = provider;
 
+        public Task<Result<BillingRecurringPaymentModel>> GetRecurringPaymentAsync(string paymentId,
+            BillingRecurringPaymentRequestModel request, CancellationToken cancellationToken = default) =>
+            CreateRecurringPaymentAsync(request, cancellationToken);
+
         public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
             BillingRecurringPaymentRequestModel request,
             CancellationToken cancellationToken = default) =>

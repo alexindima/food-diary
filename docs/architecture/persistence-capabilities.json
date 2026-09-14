@@ -1225,10 +1225,10 @@
     "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs": {
       "module": "Wearables",
       "capabilities": [
-        "context:Database"
+        "context:ExecuteSerializedAsync"
       ],
-      "reason": "Retains separate session advisory lock and clean shared boundary; callback executes once and IUnitOfWork owns atomic persistence retries.",
-      "technicalSourceSha256": "eaf9619b47d88bc8e6d9ef0d6e586eb00e6683c138a547da2f72f5b74d5f76ad"
+      "reason": "Delegates session serialization to IModuleSessionCoordinator; provider callback executes once, intermediate saves remain durable, and shared persistence owns final save/reset.",
+      "technicalSourceSha256": "5e2aa5b90e2664b08483f587d51f7e5984211c996c8323f3a887fffec8676fac"
     },
     "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs": {
       "module": "Wearables",

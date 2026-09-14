@@ -1559,6 +1559,7 @@
       "fooddiary.modules.billing.application.abstractions": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Modules.Billing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
@@ -1589,6 +1590,7 @@
           "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Billing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Billing.PersistenceModel": "[1.0.0, )",
@@ -2838,7 +2840,6 @@
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Wearables": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",

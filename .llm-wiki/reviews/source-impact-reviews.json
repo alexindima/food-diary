@@ -79,17 +79,17 @@
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "118da177c216a206ef5643e0b11ebf4354d3ebc59c71ccab76e77419a2f397ed",
+      "pageSha256": "93e278ab0e2116bc4f98bd4efa1f8924ae0986d8a35459f96f434a4acd151d2b",
       "sources": [
         {
-          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
-          "sha256": "11cec3b8ae9f15e8c692ccb506f21492bd482e7c1bc74c2b3a821062a041dc61"
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "aed1eeb1e879371c81537f048e446604758bbea03e9d48d5005bbacf5561c82c"
         }
       ],
-      "reason": "Verified the Meals coordinator follow-up and unchanged project references. The page now distinguishes Meals transaction delegation from complete central Infrastructure isolation; no schema, transport or deployment boundary changed.",
+      "reason": "Reviewed Billing scheduler migration against current handlers, gateway ports and project manifests. Direct Billing.Contracts references expose scheduler requests/results without foreign aggregate access; integration tests reference owning Application/Contracts explicitly. The dependency matrix and removal guidance remain accurate. Solution build passed, all architecture cases passed including the focused formatter retry, and 10 PostgreSQL tests verified shared transaction rollback and webhook/renewal ordering. Provider HTTP calls remain outside replayable transactions; no schema or HTTP wire contract changes.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T12:41:13.6310623Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T16:25:19.6852270Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -210,22 +210,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "9d540343dad14bcb252cd05e24d0489e28d51864856d21388a70f287a6f03cae"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "015350d0d2ed431d8685e07747f6dc8cf0a7153c495105aaf37f32a3ae6587fb"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e3ece78098f7ff0f58849bbbbd5c375b20f1810f57c9bfb85c6293a78da01063"
+          "sha256": "aed1eeb1e879371c81537f048e446604758bbea03e9d48d5005bbacf5561c82c"
         }
       ],
-      "reason": "The workflow still requires intentional matrix changes and treats coupling findings as review candidates. WeeklyGoals graph closure and the exact dependency matrix were tested; the coordinator introduces no cycle or automatic-removal exception.",
+      "reason": "Reviewed Billing scheduler migration against current handlers, gateway ports and project manifests. Direct Billing.Contracts references expose scheduler requests/results without foreign aggregate access; integration tests reference owning Application/Contracts explicitly. The dependency matrix and removal guidance remain accurate. Solution build passed, all architecture cases passed including the focused formatter retry, and 10 PostgreSQL tests verified shared transaction rollback and webhook/renewal ordering. Provider HTTP calls remain outside replayable transactions; no schema or HTTP wire contract changes.",
       "baseRef": "HEAD",
-      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
-      "reviewedAtUtc": "2026-09-14T04:59:28.2609967Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T16:25:19.9130676Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "118eccbf8e808d20a6fe57a27299e64a72290fff2cd768e5d45d5412efaf8b29"
+          "sha256": "a45a948d72af392f1863d69ddbb14efffeb3824185d67f3d9581a5494cfdf755"
         }
       ],
-      "reason": "Reviewed the workflow against the refreshed Billing coordinator contract index. Constructor and DI consumers were updated, the full solution builds, and HTTP snapshots pass. In-process interface compatibility guidance remains accurate; no transport contract was changed.",
+      "reason": "Refreshed contract metadata includes the session seam and parallel Billing handler/contract moves. Existing guidance for constructor, DI and in-process consumer compatibility still applies; no workflow tool behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
-      "reviewedAtUtc": "2026-09-14T14:59:04.526011Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T16:01:25.184904Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -501,13 +493,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "17e83fec734724b353d4d77aa7134332d1492b6ca45e859d8da3d251641389b8"
+          "sha256": "e3863cae3a6eca45d35b70c5ef564778c3244d205a1eeffcde6e14c93cf0ed48"
         }
       ],
-      "reason": "Reviewed FoodDiary.Infrastructure/AGENTS.md against the workflow: coordinator extraction changes transaction ownership and before-reset exception translation, not domain construction, mappings, keys, relationships or migration policy. The workflow remains accurate; provider rollback and duplicate tests exercise the changed persistence boundary.",
+      "reason": "Reviewed the Infrastructure guidance against the extracted session algorithm: owner models and relational mappings are unchanged, while persistence retry and durable intermediate-save behavior is preserved by PostgreSQL tests. No workflow mapping guidance needs changes.",
       "baseRef": "HEAD",
-      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
-      "reviewedAtUtc": "2026-09-14T14:21:34.6093803Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T15:31:01.5234152Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -820,13 +812,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9fa0c4a90825ee3782bbb35646a4bcb7fb90535f9e3f137bb02a803774cc5fde"
+          "sha256": "c9fb50708d550771f4ee4d95223dd8ec8e0f1f0178d5243b931bfcce59102939"
         }
       ],
-      "reason": "Reviewed refreshed quality metadata for the Billing transaction extraction. The workflow correctly treats static references as leads, not coverage. Actual coverage is supported separately by 218 central PostgreSQL and 1506 architecture tests; no quality-query behavior changed.",
+      "reason": "The regenerated quality metadata reflects source moves and new session tests. The workflow still correctly treats static references as investigation leads, separate from executed test results; no matching or query policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
-      "reviewedAtUtc": "2026-09-14T14:59:05.4138322Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T16:01:26.0516703Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +887,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6377c52e6e244156a04a7bc03ed7715f3c4743b453e3cec0c4a8ea0cd6f33be8"
+          "sha256": "70ab3d8315913c43d46e9ca33c88bc3f64cc5a33180a625faacca4527a43a542"
         }
       ],
-      "reason": "Reviewed the refreshed topology and current transaction implementation. The workflow still correctly requires rollback tracker cleanup and provider-backed retry tests. Billing now delegates to the shared coordinator; real rollback, duplicate and cancellation cases passed. Worker and provider delivery behavior was not changed.",
+      "reason": "The refreshed topology contains the extracted shared session coordinator and current Billing entrypoint names. Runtime guidance about callback replay, failure reset and independent provider evidence remains correct; the stale Billing service pointer was repaired separately.",
       "baseRef": "HEAD",
-      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
-      "reviewedAtUtc": "2026-09-14T14:59:06.211088Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T16:01:27.4618442Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,17 +902,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9fa0c4a90825ee3782bbb35646a4bcb7fb90535f9e3f137bb02a803774cc5fde"
+          "sha256": "c9fb50708d550771f4ee4d95223dd8ec8e0f1f0178d5243b931bfcce59102939"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6377c52e6e244156a04a7bc03ed7715f3c4743b453e3cec0c4a8ea0cd6f33be8"
+          "sha256": "70ab3d8315913c43d46e9ca33c88bc3f64cc5a33180a625faacca4527a43a542"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "41d803dd30a7a8968492361148e06591efd5866c5bf332a4823560246d82fbc5"
         }
       ],
-      "reason": "Reviewed the workflow with regenerated quality and topology sources. Its distinction between navigation signals and validated security evidence remains correct. Billing transaction ownership changed without new authentication, authorization, provider trust, data sharing or logging behavior.",
+      "reason": "Regenerated static quality/topology metadata does not change this workflow contract. It remains correct to treat inferred boundaries as leads and require current-source/runtime verification; this receipt is not a security assessment of parallel Billing changes.",
       "baseRef": "HEAD",
-      "gitHead": "eaa83b2eb7b71c12ae061511ddf4037d0c36047d",
-      "reviewedAtUtc": "2026-09-14T14:59:07.3788434Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T16:01:28.3029090Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1162,13 +1158,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "8523bb3aeee72d522a8912d1f79cc8d8c7837bc5bca768e888d80f5aff12eff8"
+          "sha256": "2c69b6f367851b50d359cd7b5c869ffd0a23fefce006a5005ba80528acbf6642"
         }
       ],
-      "reason": "Read current navigation guidance and verified regenerated indexes; AI 197 tests and DI 69 passed. Static references remain navigation rather than execution coverage.",
+      "reason": "Catalog metadata changed for the session seam and parallel Billing moves. The context workflow still accurately describes ranked navigation and freshness checks; graph-build refreshed the current projection without changing resolver behavior.",
       "baseRef": "HEAD",
-      "gitHead": "cd2d144455f1a0a734e2207578303cbc7e90da19",
-      "reviewedAtUtc": "2026-09-14T02:56:03.4057982Z"
+      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
+      "reviewedAtUtc": "2026-09-14T16:01:26.7852338Z"
     },
     {
       "pageId": "workflow.review-diff",

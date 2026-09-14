@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Billing.Application.Common;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
@@ -12,6 +13,15 @@ public sealed class BillingWebhookContextResolver(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IUserBillingService billingUserContextService,
     IBillingPaymentWriteRepository? billingPaymentRepository = null) {
+    public async Task<string> GetSerializationKeyAsync(string provider, BillingWebhookEventModel webhookEvent, CancellationToken cancellationToken) {
+        BillingSubscription? subscription = await ResolveSubscriptionAsync(provider, webhookEvent, cancellationToken).ConfigureAwait(false);
+        BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(provider, webhookEvent.RelatedTransactionId, cancellationToken).ConfigureAwait(false);
+        Guid? userId = subscription?.UserId.Value ?? (webhookEvent.UserId is { } metadataUserId && metadataUserId != Guid.Empty ? metadataUserId : relatedPayment?.UserId.Value);
+        return userId is { } id && id != Guid.Empty
+            ? BillingOperationLockKeys.ForUser(id)
+            : $"billing-webhook:{provider.Trim().ToLowerInvariant()}:{webhookEvent.EventId}";
+    }
+
     public async Task<Result<BillingWebhookProcessingContext?>> ResolveAsync(
         string provider,
         BillingWebhookEventModel webhookEvent,

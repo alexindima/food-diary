@@ -671,6 +671,7 @@
       "fooddiary.modules.billing.application.abstractions": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Modules.Billing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"

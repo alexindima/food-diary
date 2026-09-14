@@ -1,7 +1,11 @@
 using System.Net;
 using System.Text;
-using FoodDiary.Modules.Billing.Application.Common;
-using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Mediator;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Modules.Billing.Application.Commands.ReplayFailedPaddleNotifications;
+using FoodDiary.Modules.Billing.Contracts.Commands.ReplayFailedPaddleNotifications;
+using FoodDiary.Modules.Billing.Contracts.Commands.ProcessBillingWebhookInbox;
+using FoodDiary.Modules.Billing.Contracts.Models;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.JobManager.Services;
@@ -16,10 +20,11 @@ public sealed class BillingRecoveryJobsTests {
     [InlineData(0, 0)]
     [InlineData(2, 1)]
     public async Task BillingWebhookInboxJob_WhenServiceSucceeds_RecordsProcessedCount(int processed, int failed) {
-        var service = new StubBillingWebhookInboxService(new BillingWebhookInboxRunResult(processed, failed));
+        var service = new StubInboxHandler(new BillingWebhookInboxRunResult(processed, failed));
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateInboxProvider(service);
         var job = new BillingWebhookInboxJob(
-            service,
+            provider.GetRequiredService<ISender>(),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<BillingWebhookInboxJob>.Instance);
 
@@ -31,10 +36,11 @@ public sealed class BillingRecoveryJobsTests {
 
     [Fact]
     public async Task BillingWebhookInboxJob_WhenServiceFails_RecordsFailureAndRethrows() {
-        var service = new StubBillingWebhookInboxService(new InvalidOperationException("inbox failed"));
+        var service = new StubInboxHandler(new InvalidOperationException("inbox failed"));
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateInboxProvider(service);
         var job = new BillingWebhookInboxJob(
-            service,
+            provider.GetRequiredService<ISender>(),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<BillingWebhookInboxJob>.Instance);
 
@@ -45,10 +51,11 @@ public sealed class BillingRecoveryJobsTests {
 
     [Fact]
     public async Task BillingWebhookInboxJob_WhenCanceled_RecordsCancellationAndRethrows() {
-        var service = new StubBillingWebhookInboxService(cancel: true);
+        var service = new StubInboxHandler(cancel: true);
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateInboxProvider(service);
         var job = new BillingWebhookInboxJob(
-            service,
+            provider.GetRequiredService<ISender>(),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<BillingWebhookInboxJob>.Instance);
         using var cancellationTokenSource = new CancellationTokenSource();
@@ -70,8 +77,9 @@ public sealed class BillingRecoveryJobsTests {
             JsonResponse(json),
             new HttpResponseMessage(HttpStatusCode.Accepted));
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateRecoveryProvider(CreateRecoveryService(handler));
         var job = new PaddleNotificationRecoveryJob(
-            CreateRecoveryService(handler),
+            provider.GetRequiredService<ISender>(),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<PaddleNotificationRecoveryJob>.Instance);
 
@@ -85,8 +93,9 @@ public sealed class BillingRecoveryJobsTests {
         const string json = """{"data":[{"id":"ntf_failed","origin":"event","replayed_at":null}],"meta":{"pagination":{"next":null}}}""";
         var handler = new QueueHandler(JsonResponse(json), new HttpResponseMessage(HttpStatusCode.Accepted));
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateRecoveryProvider(CreateRecoveryService(handler, maximumReplaysPerRun: 1));
         var job = new PaddleNotificationRecoveryJob(
-            CreateRecoveryService(handler, maximumReplaysPerRun: 1),
+            provider.GetRequiredService<ISender>(),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<PaddleNotificationRecoveryJob>.Instance);
 
@@ -98,8 +107,9 @@ public sealed class BillingRecoveryJobsTests {
     [Fact]
     public async Task PaddleNotificationRecoveryJob_WhenServiceFails_RecordsFailureAndRethrows() {
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateRecoveryProvider(CreateRecoveryService(new ThrowingHandler(new HttpRequestException("Paddle failed"))));
         var job = new PaddleNotificationRecoveryJob(
-            CreateRecoveryService(new ThrowingHandler(new HttpRequestException("Paddle failed"))),
+            provider.GetRequiredService<ISender>(),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<PaddleNotificationRecoveryJob>.Instance);
 
@@ -111,8 +121,9 @@ public sealed class BillingRecoveryJobsTests {
     [Fact]
     public async Task PaddleNotificationRecoveryJob_WhenCanceled_RecordsCancellationAndRethrows() {
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateRecoveryProvider(CreateRecoveryService(new ThrowingHandler(new OperationCanceledException())));
         var job = new PaddleNotificationRecoveryJob(
-            CreateRecoveryService(new ThrowingHandler(new OperationCanceledException())),
+            provider.GetRequiredService<ISender>(),
             new JobExecutionObserver(TimeProvider.System, tracker),
             NullLogger<PaddleNotificationRecoveryJob>.Instance);
         using var cancellationTokenSource = new CancellationTokenSource();
@@ -122,6 +133,17 @@ public sealed class BillingRecoveryJobsTests {
 
         Assert.Equal(0, tracker.GetSnapshot("billing.paddle-notification-recovery")?.ConsecutiveFailures);
     }
+
+    private static ServiceProvider CreateInboxProvider(StubInboxHandler handler) => new ServiceCollection()
+        .AddFoodDiaryMediator(_ => { })
+        .AddSingleton<IRequestHandler<ProcessBillingWebhookInboxCommand, BillingWebhookInboxRunResult>>(handler)
+        .BuildServiceProvider();
+
+    private static ServiceProvider CreateRecoveryProvider(PaddleNotificationRecoveryService gateway) => new ServiceCollection()
+        .AddFoodDiaryMediator(_ => { })
+        .AddSingleton<IRequestHandler<ReplayFailedPaddleNotificationsCommand, PaddleNotificationRecoveryResult>>(
+            new ReplayFailedPaddleNotificationsCommandHandler(gateway))
+        .BuildServiceProvider();
 
     private static PaddleNotificationRecoveryService CreateRecoveryService(
         HttpMessageHandler handler,
@@ -145,23 +167,20 @@ public sealed class BillingRecoveryJobsTests {
         new(HttpStatusCode.OK) { Content = new StringContent(json, Encoding.UTF8, "application/json") };
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubBillingWebhookInboxService : IBillingWebhookInboxService {
+    private sealed class StubInboxHandler : IRequestHandler<ProcessBillingWebhookInboxCommand, BillingWebhookInboxRunResult> {
         private readonly BillingWebhookInboxRunResult? _result;
         private readonly Exception? _exception;
         private readonly bool _cancel;
 
-        public StubBillingWebhookInboxService(BillingWebhookInboxRunResult result) => _result = result;
-        public StubBillingWebhookInboxService(Exception exception) => _exception = exception;
-        public StubBillingWebhookInboxService(bool cancel) => _cancel = cancel;
+        public StubInboxHandler(BillingWebhookInboxRunResult result) => _result = result;
+        public StubInboxHandler(Exception exception) => _exception = exception;
+        public StubInboxHandler(bool cancel) => _cancel = cancel;
         public int LastBatchSize { get; private set; }
 
-        public Task<FoodDiary.Results.Result> ProcessAsync(Guid webhookEventId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<BillingWebhookInboxRunResult> ProcessPendingAsync(
-            int batchSize,
-            CancellationToken cancellationToken = default) {
-            LastBatchSize = batchSize;
+        public Task<BillingWebhookInboxRunResult> Handle(
+            ProcessBillingWebhookInboxCommand request,
+            CancellationToken cancellationToken) {
+            LastBatchSize = request.BatchSize;
             if (_cancel) {
                 return Task.FromCanceled<BillingWebhookInboxRunResult>(cancellationToken);
             }

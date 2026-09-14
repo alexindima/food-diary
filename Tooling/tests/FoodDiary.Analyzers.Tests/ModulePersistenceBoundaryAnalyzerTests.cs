@@ -11,6 +11,17 @@ namespace FoodDiary.Analyzers.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ModulePersistenceBoundaryAnalyzerTests {
     [Theory]
+    [InlineData("coordinator.ExecuteSerializedAsync();")]
+    [InlineData("Action execute = coordinator.ExecuteSerializedAsync;")]
+    public async Task SessionCoordinatorRequiresExactReviewAsync(string access) {
+        string body = "FoodDiary.Persistence.Abstractions.IModuleSessionCoordinator coordinator = null!; " + access;
+        Assert.Contains(await AnalyzeAsync(body), diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Empty(await AnalyzeAsync(body, reviewedBody: body));
+        Assert.Contains(await AnalyzeAsync(body + " ;", reviewedBody: body), diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Empty(await AnalyzeAsync(body, assembly: "FoodDiary.Web.Api"));
+    }
+
+    [Theory]
     [InlineData("coordinator.ExecuteAsync();")]
     [InlineData("_ = coordinator.CurrentTransaction;")]
     [InlineData("Action execute = coordinator.ExecuteAsync;")]
@@ -165,6 +176,9 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
             public DbSet<Product> Products => new();
         }
         namespace FoodDiary.Persistence.Abstractions {
+            public interface IModuleSessionCoordinator {
+                void ExecuteSerializedAsync();
+            }
             public interface IModuleTransactionCoordinator {
                 object CurrentTransaction { get; }
                 void ExecuteAsync();

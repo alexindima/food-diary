@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5331,
+    "productionFiles": 5337,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 847,
-    "criticalSymbolsWithTestReferences": 816,
+    "criticalSymbols": 849,
+    "criticalSymbolsWithTestReferences": 818,
     "criticalSymbolsWithoutTestReferences": 31,
     "debtMarkers": 11
   },
@@ -536,11 +536,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 191,
-      "decisionPoints": 63,
+      "nonBlankLines": 192,
+      "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 98.32
+      "structuralRiskScore": 99.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
@@ -775,6 +775,14 @@
       "structuralRiskScore": 78.72
     },
     {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "nonBlankLines": 320,
+      "decisionPoints": 48,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 78.4
+    },
+    {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
       "nonBlankLines": 281,
       "decisionPoints": 47,
@@ -805,14 +813,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 77.08
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "nonBlankLines": 627,
-      "decisionPoints": 43,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 77.04
     }
   ],
   "files": [
@@ -2466,11 +2466,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 191,
-      "decisionPoints": 63,
+      "nonBlankLines": 192,
+      "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 98.32
+      "structuralRiskScore": 99.84
     },
     {
       "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
@@ -3002,11 +3002,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "nonBlankLines": 49,
+      "nonBlankLines": 50,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.48
+      "structuralRiskScore": 2.5
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -3505,6 +3505,14 @@
       "structuralRiskScore": 0.06
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleSessionCoordinator.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.6
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
       "nonBlankLines": 79,
       "decisionPoints": 9,
@@ -3674,11 +3682,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 39,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.76
+      "structuralRiskScore": 6.78
     },
     {
       "path": "FoodDiary.JobManager/Services/ClientTaskReminderJob.cs",
@@ -3922,11 +3930,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/PaddleNotificationRecoveryJob.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 44,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.84
+      "structuralRiskScore": 6.88
     },
     {
       "path": "FoodDiary.JobManager/Services/RecurringJobExecutionPolicy.cs",
@@ -17426,11 +17434,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/BillingErrors.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 44,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.8
+      "structuralRiskScore": 6.88
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/BillingInputLimits.cs",
@@ -17506,11 +17514,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs",
@@ -17551,6 +17559,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Billing/Application.Abstractions/Common/IPaddleNotificationRecoveryGateway.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
@@ -17674,19 +17690,19 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "nonBlankLines": 110,
-      "decisionPoints": 21,
+      "nonBlankLines": 119,
+      "decisionPoints": 24,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.7
+      "structuralRiskScore": 38.38
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
-      "nonBlankLines": 100,
-      "decisionPoints": 16,
+      "nonBlankLines": 97,
+      "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26
+      "structuralRiskScore": 21.44
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
@@ -17753,28 +17769,44 @@
       "structuralRiskScore": 2.2
     },
     {
-      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
-      "nonBlankLines": 6,
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommandHandler.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.54
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
+      "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 10,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 18.02
     },
     {
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
-      "nonBlankLines": 249,
-      "decisionPoints": 19,
+      "nonBlankLines": 303,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.48
+      "structuralRiskScore": 50.06
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommandHandler.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.2
     },
     {
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
@@ -17801,20 +17833,20 @@
       "structuralRiskScore": 3.48
     },
     {
-      "path": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
-      "nonBlankLines": 7,
+      "path": "Modules/Billing/Application/Common/BillingOperationLockKeys.cs",
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Billing/Application/DependencyInjection.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/Billing/Application/Models/BillingOverviewModel.cs",
@@ -17823,14 +17855,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
-    },
-    {
-      "path": "Modules/Billing/Application/Models/BillingWebhookInboxRunResult.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQuery.cs",
@@ -17857,12 +17881,12 @@
       "structuralRiskScore": 9.88
     },
     {
-      "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
-      "nonBlankLines": 73,
-      "decisionPoints": 11,
+      "path": "Modules/Billing/Contracts/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommand.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.96
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Billing/Contracts/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommand.cs",
@@ -17871,6 +17895,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Billing/Contracts/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs",
@@ -17882,6 +17914,22 @@
     },
     {
       "path": "Modules/Billing/Contracts/Models/BillingRenewalRunResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Contracts/Models/BillingWebhookInboxRunResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Contracts/Models/PaddleNotificationRecoveryResult.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18049,20 +18097,12 @@
       "structuralRiskScore": 196.94
     },
     {
-      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryResult.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
-      "nonBlankLines": 115,
+      "nonBlankLines": 117,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.8
+      "structuralRiskScore": 27.84
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddlePage.cs",
@@ -18090,19 +18130,19 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "nonBlankLines": 290,
-      "decisionPoints": 43,
+      "nonBlankLines": 320,
+      "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.3
+      "structuralRiskScore": 78.4
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
+      "structuralRiskScore": 0.72
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Options.cs",
@@ -39626,11 +39666,11 @@
     },
     {
       "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 2,
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.62
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
@@ -43433,6 +43473,14 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleSessionCoordinator.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
       "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs",
       "nonBlankLines": 32,
       "decisionPoints": 2,
@@ -44700,6 +44748,19 @@
       "coveredThrough": []
     },
     {
+      "name": "ProcessBillingWebhookInboxCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommandHandler.cs",
+      "line": 10,
+      "testReferenceCount": 2,
+      "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.InboxResilienceTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ProcessNextFoodRecognitionCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommandHandler.cs",
@@ -44714,11 +44775,13 @@
     {
       "name": "ProcessQueuedBillingWebhookCommandHandler",
       "role": "CommandHandler",
-      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
-      "line": 6,
-      "testReferenceCount": 1,
+      "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+      "line": 10,
+      "testReferenceCount": 3,
       "testReferences": [
-        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs"
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.InboxResilienceTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
+        "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Workflows.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44860,12 +44923,14 @@
       "name": "RenewDueSubscriptionsCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
-      "line": 15,
-      "testReferenceCount": 4,
+      "line": 19,
+      "testReferenceCount": 6,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OrderingRegressionTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalSchedulingTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+        "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Workflows.cs",
         "tests/FoodDiary.JobManager.Tests/JobsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44880,6 +44945,18 @@
       "testReferences": [
         "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.RepeatAndDeleteCommandTests.cs",
         "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "ReplayFailedPaddleNotificationsCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

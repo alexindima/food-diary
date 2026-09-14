@@ -104,15 +104,43 @@ public sealed class YooKassaBillingGateway(
             return Result.Failure<BillingRecurringPaymentModel>(paymentResponse.Error);
         }
 
-        YooKassaPayment payment = paymentResponse.Value;
+        return MapRecurringPayment(paymentResponse.Value, request);
+    }
+
+    public async Task<Result<BillingRecurringPaymentModel>> GetRecurringPaymentAsync(
+        string paymentId,
+        BillingRecurringPaymentRequestModel request,
+        CancellationToken cancellationToken = default) {
+        if (!IsConfiguredForWebhook()) {
+            return Result.Failure<BillingRecurringPaymentModel>(BillingErrors.ProviderNotConfigured(Provider));
+        }
+        if (!IsValidPaymentId(paymentId)) {
+            return Result.Failure<BillingRecurringPaymentModel>(BillingErrors.ProviderOperationFailed(Provider, "Invalid payment identifier."));
+        }
+        Result<YooKassaPayment> response = await FetchPaymentAsync(paymentId, cancellationToken).ConfigureAwait(false);
+        if (response.IsFailure) {
+            return Result.Failure<BillingRecurringPaymentModel>(response.Error);
+        }
+        return string.Equals(response.Value.Id, paymentId, StringComparison.Ordinal)
+            ? MapRecurringPayment(response.Value, request)
+            : Result.Failure<BillingRecurringPaymentModel>(BillingErrors.ProviderOperationFailed(Provider, "Payment verification returned a different payment."));
+    }
+
+    private Result<BillingRecurringPaymentModel> MapRecurringPayment(YooKassaPayment payment, BillingRecurringPaymentRequestModel request) {
         if (string.IsNullOrWhiteSpace(payment.Id)) {
             return Result.Failure<BillingRecurringPaymentModel>(
                 BillingErrors.ProviderOperationFailed(Provider, "YooKassa payment identifier is missing."));
         }
 
-        string status = payment.Paid && string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase)
-            ? "active"
-            : "past_due";
+        string? status = payment.Status?.ToLowerInvariant() switch {
+            "succeeded" when payment.Paid => "active",
+            "pending" or "waiting_for_capture" => "pending",
+            "canceled" => "canceled",
+            _ => null,
+        };
+        if (status is null) {
+            return Result.Failure<BillingRecurringPaymentModel>(BillingErrors.ProviderOperationFailed(Provider, "Unexpected payment state."));
+        }
         DateTime? periodStart = string.Equals(status, "active", StringComparison.Ordinal) ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
             : null;
         DateTime? periodEnd = ResolvePeriodEnd(periodStart, request.Plan);
@@ -120,7 +148,7 @@ public sealed class YooKassaBillingGateway(
         return Result.Success(new BillingRecurringPaymentModel(
             payment.Id,
             payment.PaymentMethod?.Id ?? request.PaymentMethodId,
-            payment.Amount?.Value ?? amount,
+            payment.Amount?.Value ?? ResolveAmount(request.Plan),
             request.Plan,
             status,
             periodStart,
@@ -171,6 +199,11 @@ public sealed class YooKassaBillingGateway(
         if (!string.Equals(payment.Id, notification.Object.Id, StringComparison.Ordinal)) {
             return Result.Failure<BillingWebhookEventModel?>(
                 BillingErrors.WebhookValidationFailed("YooKassa payment verification returned a different payment."));
+        }
+
+        // An unfinished payment is not a subscription cancellation. Renewal polling or a final webhook will resolve it.
+        if (payment.Status is "pending" or "waiting_for_capture") {
+            return Result.Success<BillingWebhookEventModel?>(value: null);
         }
 
         return Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(payment));

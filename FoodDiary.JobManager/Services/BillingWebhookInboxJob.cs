@@ -1,12 +1,13 @@
 using System.Diagnostics;
-using FoodDiary.Modules.Billing.Application.Common;
-using FoodDiary.Modules.Billing.Application.Models;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Billing.Contracts.Commands.ProcessBillingWebhookInbox;
+using FoodDiary.Modules.Billing.Contracts.Models;
 using Hangfire;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class BillingWebhookInboxJob(
-    IBillingWebhookInboxService billingWebhookInboxService,
+    ISender sender,
     JobExecutionObserver observer,
     ILogger<BillingWebhookInboxJob> logger) {
     private const string JobName = "billing.webhook-inbox";
@@ -17,8 +18,8 @@ public sealed class BillingWebhookInboxJob(
     public async Task Execute(CancellationToken cancellationToken = default) {
         Stopwatch stopwatch = observer.Start(JobName);
         try {
-            BillingWebhookInboxRunResult result = await billingWebhookInboxService
-                .ProcessPendingAsync(BatchSize, cancellationToken)
+            BillingWebhookInboxRunResult result = await sender
+                .Send(new ProcessBillingWebhookInboxCommand(BatchSize), cancellationToken)
                 .ConfigureAwait(false);
 
             if (result.Processed > 0 || result.Failed > 0) {

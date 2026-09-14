@@ -17,7 +17,7 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
-public sealed class SharedBillingContextIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+public sealed partial class SharedBillingContextIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task SharedSavePersistsUserAndOwnerRecordsAsync() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -58,17 +58,14 @@ public sealed class SharedBillingContextIntegrationTests(PostgresDatabaseFixture
         IBillingWebhookEventWriteRepository events = provider.GetRequiredService<IBillingWebhookEventWriteRepository>();
         IBillingTransactionRunner runner = provider.GetRequiredService<IBillingTransactionRunner>();
         await runner.ExecuteAsync(async token => {
-            if (webhook) { await events.AddAsync(CreateWebhook("duplicate"), token); }
-            else { await payments.AddAsync(CreatePayment(user.Id, "duplicate"), token); }
+            if (webhook) { await events.AddAsync(CreateWebhook("duplicate"), token); } else { await payments.AddAsync(CreatePayment(user.Id, "duplicate"), token); }
         });
         var rolledBackUser = User.Create("billing-rollback@example.com", "hash");
         Task AttemptAsync() => runner.ExecuteAsync(async token => {
             context.Users.Add(rolledBackUser);
-            if (webhook) { await events.AddAsync(CreateWebhook("duplicate"), token); }
-            else { await payments.AddAsync(CreatePayment(user.Id, "duplicate"), token); }
+            if (webhook) { await events.AddAsync(CreateWebhook("duplicate"), token); } else { await payments.AddAsync(CreatePayment(user.Id, "duplicate"), token); }
         });
-        if (webhook) { await Assert.ThrowsAsync<BillingWebhookEventAlreadyProcessedException>(AttemptAsync); }
-        else { await Assert.ThrowsAsync<BillingPaymentAlreadyExistsException>(AttemptAsync); }
+        if (webhook) { await Assert.ThrowsAsync<BillingWebhookEventAlreadyProcessedException>(AttemptAsync); } else { await Assert.ThrowsAsync<BillingPaymentAlreadyExistsException>(AttemptAsync); }
         Assert.Empty(context.ChangeTracker.Entries());
         Assert.Empty(provider.GetRequiredService<BillingDbContext>().ChangeTracker.Entries());
         Assert.False(await context.Users.AnyAsync(candidate => candidate.Id == rolledBackUser.Id));

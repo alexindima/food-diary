@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Billing.Contracts.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -13,7 +15,7 @@ public sealed class PaddleNotificationRecoveryService(
     IOptions<PaddleOptions> options,
     TimeProvider? timeProvider = null,
     TimeSpan? overallTimeout = null,
-    int maximumReplaysPerRun = 100) {
+    int maximumReplaysPerRun = 100) : IPaddleNotificationRecoveryGateway {
     private const int MaximumPages = 100;
     private static readonly TimeSpan DefaultOverallTimeout = TimeSpan.FromMinutes(5);
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {

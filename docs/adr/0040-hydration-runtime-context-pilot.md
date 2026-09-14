@@ -408,3 +408,20 @@ isolation, rollback, cancellation, lock SQL, schema and HTTP contracts are uncha
 The separate checkout lease still retains its central connection dependency. This
 is a coordinated application rebuild; the public adapter constructor changes are
 not a separately versioned consumer contract.
+
+## Wearables session coordination
+
+Wearables consumes IModuleSessionCoordinator and no longer references central
+Infrastructure. EfModuleSessionCoordinator preserves the former runner algorithm:
+clean entry, a separate session advisory lease, one callback invocation, and an
+unconditional shared unit-of-work save on success. No transaction surrounds the
+provider callback; only persistence retries. Failure Results and exceptions reset
+unsaved owner/shared tracking without undoing intentional intermediate saves.
+The existing null post-commit queue policy and advisory-lock SQL are unchanged.
+
+A separate interface distinguishes this lifecycle from whole-attempt transaction
+retries. FD0016 and capability inventory require review of the owner adapter call.
+The dependency matrix and transitive graph tests prohibit the removed central
+reference. Owner PostgreSQL tests cover concurrent serialization, transient saves,
+provider timeout/cancellation, durable intermediate saves and scope reuse.
+Deploy as a coordinated application rebuild; no schema or HTTP change is required.
