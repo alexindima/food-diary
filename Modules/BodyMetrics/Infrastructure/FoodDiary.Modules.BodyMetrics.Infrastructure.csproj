@@ -1,22 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.BodyMetrics.Infrastructure</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.BodyMetrics.Infrastructure</RootNamespace>
-  </PropertyGroup>
-
   <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Application.BodyMetrics.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
 

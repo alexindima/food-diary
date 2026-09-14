@@ -1,12 +1,12 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.UpdateWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetLatestWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightEntries;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.DeleteWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.UpdateWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
 
-namespace FoodDiary.Application.Tests.WeightEntries;
+namespace FoodDiary.Modules.BodyMetrics.Application.Tests.WeightEntries;
 
 [ExcludeFromCodeCoverage]
 public class WeightEntriesValidatorTests {

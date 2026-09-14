@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests.Domain;
+namespace FoodDiary.Modules.BodyMetrics.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public class WeightEntryInvariantTests {

@@ -1,8 +1,9 @@
-using FoodDiary.Application.BodyMetrics.WeightEntries.Models;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WeightEntries.Mappings;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
 
-namespace FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Mappings;
 
 public static class WeightEntryHttpResponseMappings {
     extension(WeightHistoryPageSummaryModel model) {

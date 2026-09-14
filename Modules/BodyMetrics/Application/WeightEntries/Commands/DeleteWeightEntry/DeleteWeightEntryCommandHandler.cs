@@ -1,13 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.BodyMetrics.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
+namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.DeleteWeightEntry;
 
 public sealed class DeleteWeightEntryCommandHandler(
     IWeightEntryWriteRepository weightEntryRepository,

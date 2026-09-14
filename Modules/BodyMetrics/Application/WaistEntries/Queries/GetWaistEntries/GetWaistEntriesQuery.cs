@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 
-namespace FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistEntries;
+namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistEntries;
 
 public record GetWaistEntriesQuery(
     Guid? UserId,

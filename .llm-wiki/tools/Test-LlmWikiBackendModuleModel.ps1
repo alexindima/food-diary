@@ -102,7 +102,7 @@ if ($null -eq $resolver) { throw 'Module-page abstraction path resolver is missi
 foreach ($case in @(
     @{ area = 'Users'; expected = 'Modules/Users/Application/Abstractions' }
     @{ area = 'Authentication/Abstractions'; expected = 'Authentication/Abstractions' }
-    @{ area = 'Modules/BodyMetrics/Application/Abstractions'; expected = 'Modules/BodyMetrics/Application/Abstractions' }
+    @{ area = 'Modules/BodyMetrics/Application.Abstractions'; expected = 'Modules/BodyMetrics/Application.Abstractions' }
     @{ area = '.\Modules\Billing\Application.Abstractions\'; expected = 'Modules/Billing/Application.Abstractions' }
     @{ area = 'FoodDiary.Application.Abstractions/Users'; expected = 'FoodDiary.Application.Abstractions/Users' }
 )) {

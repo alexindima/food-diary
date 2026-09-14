@@ -2,7 +2,7 @@ using System.Globalization;
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.BodyMetrics.WaistEntries.Commands.CreateWaistEntry;
+namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.CreateWaistEntry;
 
 public sealed class CreateWaistEntryCommandValidator : AbstractValidator<CreateWaistEntryCommand> {
     public CreateWaistEntryCommandValidator() {

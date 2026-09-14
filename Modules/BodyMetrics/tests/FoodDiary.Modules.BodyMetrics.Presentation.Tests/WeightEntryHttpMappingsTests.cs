@@ -1,19 +1,21 @@
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.UpdateWeightEntry;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Models;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetLatestWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightEntries;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightSummaries;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightHistoryPageSummary;
+using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WeightEntries.Mappings;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Mappings;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.DeleteWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.UpdateWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WeightEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WeightEntryHttpMappingsTests {

@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
 namespace FoodDiary.Application.Statistics.Models;
 

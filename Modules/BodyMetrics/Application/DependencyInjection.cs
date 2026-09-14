@@ -1,12 +1,12 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Services;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.BodyMetrics;
+namespace FoodDiary.Modules.BodyMetrics.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddBodyMetricsApplication(this IServiceCollection services) {

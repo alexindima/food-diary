@@ -28,6 +28,8 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Current Guardrails
 
+- `MigratedModuleNamespaceTests` enforces canonical project names and folder namespaces across Billing and BodyMetrics, including tests. BodyMetrics keeps only separate write and read-model repository ports. PhysicalProjectLayoutTests has no remaining BodyMetrics nesting exceptions.
+
 - `PhysicalProjectLayoutTests` scans physical `.csproj` paths, including projects not yet in the solution, while pruning build caches and package folders. It rejects new nesting and stale entries in the exact legacy baseline. Move projects to sibling folders and remove resolved baseline entries; do not extend the baseline for new projects.
 
 - PresentationContractBoundaryTests prohibits module-to-foreign-Presentation references. Reusable Presentation.Contracts contain wire DTOs only; Presentation.Mappings depend on narrow contracts and pure mappings, never controllers, handlers, framework/provider packages or persistence. Dashboard public snapshot/query declarations belong to Contracts; see ADR 0039.

@@ -6,10 +6,10 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Statistics.Common;
 using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 

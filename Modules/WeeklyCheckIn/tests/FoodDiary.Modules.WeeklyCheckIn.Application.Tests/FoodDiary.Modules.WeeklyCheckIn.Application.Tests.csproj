@@ -21,13 +21,13 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />
-    <ProjectReference Include="../../../BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../BodyMetrics/Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Application/FoodDiary.Modules.Users.Application.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../../Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj" />
   </ItemGroup>
 </Project>

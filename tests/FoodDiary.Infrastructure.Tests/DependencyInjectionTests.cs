@@ -1,3 +1,4 @@
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
@@ -28,8 +29,8 @@ using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Modules.Exercises.Infrastructure;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Domain.Enums;
@@ -38,7 +39,6 @@ using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
 using FoodDiary.Modules.Hydration.Infrastructure;
-using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
@@ -583,8 +583,8 @@ public sealed class DependencyInjectionTests {
             Assert.NotSame(hydration, otherScope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>());
         }
 
-        IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
-        IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
+        IWeightEntryReadModelRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryReadModelRepository>();
+        IWaistEntryReadModelRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryReadModelRepository>();
         IHydrationEntryReadModelRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryReadModelRepository>();
         Assert.IsType<HydrationOperationReceiptRepository>(scope.ServiceProvider.GetRequiredService<IHydrationOperationReceiptRepository>());
         Assert.IsType<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationIntervalReadService>(
@@ -593,10 +593,8 @@ public sealed class DependencyInjectionTests {
 
         Assert.Multiple(
             () => Assert.IsType<WeightEntryRepository>(weightRepository),
-            () => Assert.Same(weightRepository, scope.ServiceProvider.GetRequiredService<IWeightEntryReadRepository>()),
             () => Assert.Same(weightRepository, scope.ServiceProvider.GetRequiredService<IWeightEntryWriteRepository>()),
             () => Assert.IsType<WaistEntryRepository>(waistRepository),
-            () => Assert.Same(waistRepository, scope.ServiceProvider.GetRequiredService<IWaistEntryReadRepository>()),
             () => Assert.Same(waistRepository, scope.ServiceProvider.GetRequiredService<IWaistEntryWriteRepository>()),
             () => Assert.IsType<HydrationEntryRepository>(hydrationRepository),
             () => Assert.Same(hydrationRepository, scope.ServiceProvider.GetRequiredService<IHydrationEntryWriteRepository>()),
@@ -991,11 +989,9 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryRepository",
+            "FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common.IWaistEntryReadModelRepository",
             [
-                "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryReadRepository",
-                "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryReadModelRepository",
-                "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryWriteRepository",
+                "FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common.IWaistEntryWriteRepository",
             ]
         },
         {

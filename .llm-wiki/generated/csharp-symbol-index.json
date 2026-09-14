@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4055,
-    "symbols": 3996,
-    "interfaceImplementationLinks": 259,
+    "sourceFiles": 4051,
+    "symbols": 3992,
+    "interfaceImplementationLinks": 257,
     "dependencyInjectionRegistrations": 150,
     "kinds": {
       "class": 2102,
       "enum": 64,
-      "interface": 468,
+      "interface": 464,
       "record": 1241,
       "record struct": 121
     },
@@ -36,8 +36,8 @@
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
-      "ReadRepository": 43,
-      "Repository": 101,
+      "ReadRepository": 41,
+      "Repository": 99,
       "Request": 150,
       "Response": 213,
       "Service": 291,
@@ -850,7 +850,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FoodDiaryDbContext",
@@ -2264,7 +2264,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 53
+      "line": 54
     },
     {
       "name": "ApiTelemetry",
@@ -6288,84 +6288,56 @@
       "name": "IWaistEntryReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs",
       "line": 5
-    },
-    {
-      "name": "IWaistEntryReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWaistEntryRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
-      "line": 2
     },
     {
       "name": "IWaistEntryWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs",
-      "line": 5
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "WaistEntryErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/WaistEntryErrors.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/WaistEntryErrors.cs",
       "line": 5
     },
     {
       "name": "WaistEntryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
       "line": 2
     },
     {
       "name": "IWeightEntryReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
       "line": 5
-    },
-    {
-      "name": "IWeightEntryReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWeightEntryRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
-      "line": 2
     },
     {
       "name": "IWeightEntryWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs",
-      "line": 5
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "WeightEntryErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/WeightEntryErrors.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/WeightEntryErrors.cs",
       "line": 5
     },
     {
       "name": "WeightEntryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
       "line": 2
     },
     {
@@ -6422,7 +6394,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "DeleteWaistEntryCommandValidator",
@@ -6443,7 +6415,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "UpdateWaistEntryCommandValidator",
@@ -6457,7 +6429,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Mappings/WaistEntryMappings.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "WaistHistoryPageSummaryModel",
@@ -6548,7 +6520,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "CreateWeightEntryCommand",
@@ -6583,7 +6555,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "DeleteWeightEntryCommandValidator",
@@ -6604,7 +6576,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "UpdateWeightEntryCommandValidator",
@@ -6618,7 +6590,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Mappings/WeightEntryMappings.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "WeightHistoryPageSummaryModel",
@@ -6709,7 +6681,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "IWaistEntryReadService",
@@ -6758,14 +6730,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WeightEntry",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WaistEntryId",
@@ -6782,27 +6754,6 @@
       "line": 4
     },
     {
-      "name": "BodyMetricsPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/BodyMetrics/Infrastructure/Model/BodyMetricsPersistenceModelRegistration.cs",
-      "line": 4
-    },
-    {
-      "name": "WaistEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "WeightEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
@@ -6814,7 +6765,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "BodyMetricsUserDataPurgeParticipant",
@@ -6828,13 +6779,34 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "WeightEntryRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "BodyMetricsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/PersistenceModel/BodyMetricsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "WaistEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/BodyMetrics/PersistenceModel/Configurations/WaistEntryConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "WeightEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/BodyMetrics/PersistenceModel/Configurations/WeightEntryConfiguration.cs",
       "line": 8
     },
     {
@@ -6884,7 +6856,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Presentation/Extensions/BodyMetricsPresentationServiceCollectionExtensions.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "WaistEntryHttpMappings",
@@ -6905,7 +6877,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "CreateWaistEntryHttpRequest",
@@ -6947,14 +6919,14 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "WaistEntriesController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/WaistEntriesController.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "WeightEntryHttpMappings",
@@ -6975,7 +6947,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "CreateWeightEntryHttpRequest",
@@ -7017,14 +6989,14 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "WeightEntriesController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "ContentReportErrors",
@@ -8032,7 +8004,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BleedingEntryHttpResponse",
@@ -29716,13 +29688,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IWaistEntryRepository",
-      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
-      "implementation": "WaistEntryRepository",
-      "implementationPath": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IWearableConnectionRepository",
       "interfacePath": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionRepository.cs",
       "implementation": "WearableConnectionRepository",
@@ -29825,13 +29790,6 @@
       "interfacePath": "Modules/BodyMetrics/Contracts/WeightEntries/Common/IWeightEntryReadService.cs",
       "implementation": "WeightEntryReadService",
       "implementationPath": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IWeightEntryRepository",
-      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
-      "implementation": "WeightEntryRepository",
-      "implementationPath": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
       "confidence": "naming-convention"
     }
   ],
@@ -30030,7 +29988,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 184
+      "line": 185
     },
     {
       "service": "IAdminDashboardReadService",

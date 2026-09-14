@@ -15,9 +15,9 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj`
+- Extracted project: `Modules/BodyMetrics/Application/FoodDiary.Modules.BodyMetrics.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Users, WaistEntries, WeightEntries
+- Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,7 +25,9 @@ sources:
 ## Source Areas
 
 - `Modules/BodyMetrics/Application`
-- `Modules/BodyMetrics/Application/Abstractions`
+- `Modules/BodyMetrics/Application.Abstractions`
+- `Modules/BodyMetrics/Contracts`
+- `Modules/BodyMetrics/PersistenceModel`
 - `Modules/BodyMetrics/Presentation`
 
 ## HTTP Surface
@@ -37,30 +39,32 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: WaistEntry, WeightEntry
-- Public contract files: 12
+- Public contract files: 14
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 12
-- Interfaces: 8
-- DTO/read-model/projection types: 2
+- Public contract types: 14
+- Interfaces: 6
+- DTO/read-model/projection types: 6
 - Enums: 0
-- Exported repository-shaped contracts: 8
-- Contracts referencing domain entities: 4
+- Exported repository-shaped contracts: 4
+- Contracts referencing domain entities: 0
 - `class WaistEntryErrors`
 - `class WeightEntryErrors`
 - `interface IWaistEntryReadModelRepository`
-- `interface IWaistEntryReadRepository`
-- `interface IWaistEntryRepository`
+- `interface IWaistEntryReadService`
 - `interface IWaistEntryWriteRepository`
 - `interface IWeightEntryReadModelRepository`
-- `interface IWeightEntryReadRepository`
-- `interface IWeightEntryRepository`
+- `interface IWeightEntryReadService`
 - `interface IWeightEntryWriteRepository`
+- `record WaistEntryModel`
 - `record WaistEntryReadModel`
+- `record WaistEntrySummaryModel`
+- `record WeightEntryModel`
 - `record WeightEntryReadModel`
+- `record WeightEntrySummaryModel`
 
 ## Focused Tests
 

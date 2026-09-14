@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
+namespace FoodDiary.Modules.BodyMetrics.PersistenceModel;
 
 public static class BodyMetricsPersistenceModelRegistration {
     public static ModelBuilder ApplyBodyMetricsPersistenceModel(this ModelBuilder modelBuilder) {

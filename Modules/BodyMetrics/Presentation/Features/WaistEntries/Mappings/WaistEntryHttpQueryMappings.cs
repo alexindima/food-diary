@@ -1,10 +1,10 @@
-using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistEntries;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetLatestWaistEntry;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistSummaries;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistHistoryPageSummary;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetLatestWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Mappings;
 
 public static class WaistEntryHttpQueryMappings {
     extension(GetWaistHistoryPageSummaryHttpQuery query) {

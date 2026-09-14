@@ -86,14 +86,18 @@
       "pageSha256": "93e278ab0e2116bc4f98bd4efa1f8924ae0986d8a35459f96f434a4acd151d2b",
       "sources": [
         {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "5f82ab3e698119aa014a21f17e9b3b66176e37d5c942bef6415476b86948be10"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "631617cdc97ad8a63f6ddde7967bccc1e500929ed7466b1f3657eaf38ce7f886"
+          "sha256": "7689f8da72200b6d93497d8f143f124a6d31a1f00b85e96ccb07e39961febac2"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:07.0574215Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:25.4168108Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -146,18 +150,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "130b59176952bee518436753b0039f80f666f42e104beabcdfee827982266548"
-        },
-        {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "fe8ce55f44dd774c21cdf6da77c4b46c77fda4c614cb9cc2d4b827f41bab2316"
+          "sha256": "5f82ab3e698119aa014a21f17e9b3b66176e37d5c942bef6415476b86948be10"
         }
       ],
-      "reason": "Regenerated catalog includes sibling AI ports and persistence projects; inventory and stated static-analysis limitations remain valid.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:06.7498928Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:25.6538451Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -215,17 +215,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "b53f9729ababbb8e6275faf3ce56efd37bf67c69c739de8acc4165f159273cfa"
+          "sha256": "b4ed87b913635798568ca3f2880f618bbefaf2ec1170fb0a7d360edc04e22356"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "631617cdc97ad8a63f6ddde7967bccc1e500929ed7466b1f3657eaf38ce7f886"
+          "sha256": "7689f8da72200b6d93497d8f143f124a6d31a1f00b85e96ccb07e39961febac2"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:07.3963897Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:25.9529307Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "93619586e99553365554f8c8149a203789f8d9a21fdabd9957cbae6f914a2493"
+          "sha256": "6aaee4588636cc5d5a31cea452b155b9d053253239222945911343f6b468f258"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:08.2151031Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:26.6184839Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -282,18 +282,14 @@
       "pageSha256": "302053473c79245b3486eebd10e393115d8e635c0206910a2901e3ea03c9d655",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "413a1fd3c34221220575f70abfd65e19ed742262da5ecaf8eac9f43d89eaafeb"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "b2c7a4aeaa492ae3740162f16a5b2eaec89c6156746d942e66106a3a060bd482"
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "5b9ea206e1ece9d170c5926c9b1734e1754172ee3811dc00e8effe67e9520945"
         }
       ],
-      "reason": "Reviewed the Billing rename impact on retrieval. The existing renewal intent rule now identifies renew/subscriptions/handler instead of billing/renewal/service, and the held-out expected path points to the actual Application handler. The original broad ownership query again selects Billing Application. Query engines, graph schema and read-only guarantees are unchanged; historical benchmark snapshots remain explicitly stale.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:56:09.1826411Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:26.9558009Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -501,17 +497,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d63cd17b798d880c038d72a09ab992e18ca57d20ef8b2eafeda2e3fd5a34f14a"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "ed3d088a858200660c3a8ac94a9464762b8244b57700755e45f08cf48e60905d"
+          "sha256": "771e947503b026e01d7b017ba0f52ef655daacb798554940e0e48d46fc75fe3e"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:08.6246356Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:27.2860485Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -719,13 +711,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "fe8ce55f44dd774c21cdf6da77c4b46c77fda4c614cb9cc2d4b827f41bab2316"
+          "sha256": "5f82ab3e698119aa014a21f17e9b3b66176e37d5c942bef6415476b86948be10"
         }
       ],
-      "reason": "Module graph now reflects existing Admin and Meals consumption of AI contracts under canonical namespaces; ownership and transitive-impact interpretation unchanged.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:11.6587596Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:27.6937693Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -779,13 +771,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "f68606df378ffdbfafef3413199caddf57761fc48908145f5f98716124adce21"
+          "sha256": "be53d2682009955204df0191b45eee0a0520a13b34c28480530308f4752d7e10"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:09.1198629Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:28.1148943Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -824,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "23bc1d63fa666696e21bc08e84142a968edcc4724b70d7e59b5c5eef7f18acc4"
+          "sha256": "eb5e243e2ca004faf145ecf2ed1e224c2e83737e561bdab2271e4150fd462e80"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:09.8269093Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:28.7507196Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ef322c8c2702f12f494ea2d3ec16b274df4ed1cccb25cb20c090d18ec2bada4b"
+          "sha256": "94733de9e57c525a2e5ed76ad9a8c23e27fc8b91c4ffc17106e1a3bc282032b7"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:10.8400703Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:29.8263147Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,21 +906,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "23bc1d63fa666696e21bc08e84142a968edcc4724b70d7e59b5c5eef7f18acc4"
+          "sha256": "eb5e243e2ca004faf145ecf2ed1e224c2e83737e561bdab2271e4150fd462e80"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ef322c8c2702f12f494ea2d3ec16b274df4ed1cccb25cb20c090d18ec2bada4b"
+          "sha256": "94733de9e57c525a2e5ed76ad9a8c23e27fc8b91c4ffc17106e1a3bc282032b7"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "f68606df378ffdbfafef3413199caddf57761fc48908145f5f98716124adce21"
+          "sha256": "be53d2682009955204df0191b45eee0a0520a13b34c28480530308f4752d7e10"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:11.5847253Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:30.5764797Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1165,14 +1157,18 @@
       "pageSha256": "e5c1c45cba2de6a789ce3cf71d779111b5c3925c6bdc3157e319c4bfac9cc3eb",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "5b9ea206e1ece9d170c5926c9b1734e1754172ee3811dc00e8effe67e9520945"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "936d197a5907b6438128a09ebae8ac5a1ede1eb7059a329e86c4bb8a2499fa19"
+          "sha256": "297888c57004d3bda6fe1e3271133387f937db12d0d7e5cfd0df20963492ebaa"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:10.408817Z"
+      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
+      "reviewedAtUtc": "2026-09-14T20:29:29.2635306Z"
     },
     {
       "pageId": "workflow.review-diff",

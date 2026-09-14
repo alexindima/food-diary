@@ -13,6 +13,63 @@ namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
     [Theory]
+    [InlineData("active", 0, null, "active")]
+    [InlineData("canceled", 0, null, "canceled")]
+    [InlineData("active", 0, "past_due", "active")]
+    [InlineData("active", -1, null, "pending")]
+    [InlineData("active", null, null, "pending")]
+    [InlineData("active", 1, "pending", "pending")]
+    [InlineData("active", 1, "canceled", "canceled")]
+    [InlineData("pending", 1, "active", "active")]
+    public async Task PendingRenewal_AfterProviderSwitch_UsesPaymentOrdering(
+        string responseStatus, int? responseSeconds, string? concurrentPaymentStatus, string expectedStatus) {
+        var user = User.Create("renewal-switch@example.com", "hash");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(user, BillingProviderNames.YooKassa,
+            "old_customer", "pay_pending", "old_method", "past_due", Now.AddMonths(-1), Now.AddHours(-1), "initial", Now.AddHours(-1));
+        var subscriptions = new InMemoryBillingSubscriptionRepository(subscription);
+        var payments = new RecordingBillingPaymentRepository();
+        var users = new FakeUserRepository(user);
+        var payment = BillingPayment.Create(user.Id, subscription.Id, BillingProviderNames.YooKassa,
+            "pay_pending", "old_customer", "pay_pending", "old_method", "price_monthly", "monthly", "pending",
+            BillingPaymentKinds.Renewal, 7.99m, "USD", currentPeriodStartUtc: null, currentPeriodEndUtc: null,
+            "initial", providerMetadataJson: null, occurredAtUtc: Now);
+        await payments.AddAsync(payment, CancellationToken.None);
+        IBillingRecurringProviderGateway gateway = Substitute.For<IBillingRecurringProviderGateway>();
+        gateway.Provider.Returns(BillingProviderNames.YooKassa);
+        gateway.GetRecurringPaymentAsync("pay_pending", Arg.Any<BillingRecurringPaymentRequestModel>(), Arg.Any<CancellationToken>())
+            .Returns(_ => {
+                subscription.UpdateCheckoutContext(BillingProviderNames.Stripe, "new_customer", "new_price", "yearly");
+                if (concurrentPaymentStatus is not null) {
+                    payment.ApplyProviderResult(subscription.Id, "old_customer", "pay_pending", "old_method", "price_monthly", "monthly",
+                        concurrentPaymentStatus, BillingPaymentKinds.Renewal, 7.99m, "USD", currentPeriodStartUtc: null,
+                        currentPeriodEndUtc: null, "concurrent_payment", providerMetadataJson: null,
+                        occurredAtUtc: string.Equals(concurrentPaymentStatus, "past_due", StringComparison.Ordinal) ? Now : Now.AddSeconds(2));
+                }
+                return Result.Success(CreateRenewalPayment("pay_pending", "old_method", "provider_response") with {
+                    Status = responseStatus,
+                    OccurredAtUtc = responseSeconds is { } seconds ? Now.AddSeconds(seconds) : null,
+                });
+            });
+
+        await CreateRenewalHandler(subscriptions, payments, users, gateway)
+            .Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
+
+        Assert.Same(payment, Assert.Single(payments.Payments));
+        Assert.Multiple(
+            () => Assert.Equal(expectedStatus, payment.Status),
+            () => Assert.Equal(BillingProviderNames.YooKassa, payment.Provider),
+            () => Assert.Equal("old_customer", payment.ExternalCustomerId),
+            () => Assert.Equal(BillingProviderNames.Stripe, subscription.Provider),
+            () => Assert.Equal("new_customer", subscription.ExternalCustomerId),
+            () => Assert.Equal("yearly", subscription.Plan),
+            () => Assert.Equal(BillingSubscription.PendingCheckoutStatus, subscription.Status),
+            () => Assert.Null(subscription.NextBillingAttemptUtc),
+            () => Assert.Equal(0, subscriptions.UpdateCount),
+            () => Assert.Equal(0, users.RoleMembershipWriteCount));
+        await gateway.DidNotReceive().CreateRecurringPaymentAsync(Arg.Any<BillingRecurringPaymentRequestModel>(), Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
     [InlineData("active")]
     [InlineData("pending")]
     [InlineData("canceled")]

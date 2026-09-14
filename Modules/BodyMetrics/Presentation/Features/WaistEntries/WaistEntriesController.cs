@@ -1,14 +1,16 @@
+using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WaistEntries.Mappings;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Mappings;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Features.WaistEntries;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/waist-entries")]

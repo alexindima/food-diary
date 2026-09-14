@@ -1,13 +1,13 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.BodyMetrics.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistEntries;
+namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistEntries;
 
 public sealed class GetWaistEntriesQueryHandler(
     IWaistEntryReadService waistEntryReadService,

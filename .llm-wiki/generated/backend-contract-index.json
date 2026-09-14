@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1217,
+    "contracts": 1213,
     "ambiguousContracts": 0,
-    "consumerEdges": 9018,
-    "productionConsumerEdges": 5209,
-    "testConsumerEdges": 3809,
-    "consumedContracts": 1217,
+    "consumerEdges": 9008,
+    "productionConsumerEdges": 5204,
+    "testConsumerEdges": 3804,
+    "consumedContracts": 1213,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -15309,24 +15309,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IWaistEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15349,23 +15332,6 @@
       "collisionClassification": "unique"
     },
     {
-      "name": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
       "name": "IWaistEntryWriteRepository",
       "roles": [
         "WriteRepository"
@@ -15377,7 +15343,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15836,24 +15802,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IWeightEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15876,23 +15825,6 @@
       "collisionClassification": "unique"
     },
     {
-      "name": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
       "name": "IWeightEntryWriteRepository",
       "roles": [
         "WriteRepository"
@@ -15904,7 +15836,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -53477,7 +53409,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalSchedulingTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 8
     },
     {
       "contract": "IBillingRecurringProviderGateway",
@@ -67193,6 +67125,19 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedReportsContextCompositionIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedUserPurgeContextsIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IDomainEventPublisher",
@@ -82595,9 +82540,48 @@
         "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 6
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "IModuleTransactionCoordinator",
@@ -82895,6 +82879,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeUsageCompositionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserCleanupServiceIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -105838,6 +105835,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedUserPurgeContextsIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedUsersContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -109182,6 +109192,19 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedDeliveryContextsIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserDataPurgeParticipant.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedUserPurgeContextsIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 10
     },
     {
       "contract": "IUserDataPurgeParticipant",
@@ -114623,20 +114646,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
@@ -114649,7 +114659,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
@@ -114662,12 +114672,51 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "IWaistEntryReadModelRepository",
@@ -114675,7 +114724,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -114688,77 +114737,25 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IWaistEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleContextCompositionIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IWaistEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IWaistEntryReadService",
@@ -114943,142 +114940,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleContextCompositionIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
       "contract": "IWaistEntryWriteRepository",
       "roles": [
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
@@ -115091,7 +114958,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
@@ -115104,7 +114971,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
@@ -115117,7 +114984,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
@@ -115130,7 +114997,46 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IWaistEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -115143,12 +115049,12 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleContextCompositionIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IWaistEntryWriteRepository",
@@ -115156,7 +115062,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -117327,20 +117233,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
@@ -117353,7 +117246,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
@@ -117366,11 +117259,76 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IWeightEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IWeightEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IWeightEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -117379,77 +117337,25 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleContextCompositionIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
-      "contract": "IWeightEntryReadRepository",
+      "contract": "IWeightEntryReadModelRepository",
       "roles": [
-        "ReadRepository"
+        "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 5
-    },
-    {
-      "contract": "IWeightEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IWeightEntryReadService",
@@ -117647,155 +117553,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleContextCompositionIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
       "contract": "IWeightEntryWriteRepository",
       "roles": [
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
@@ -117808,7 +117571,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
@@ -117821,7 +117584,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
@@ -117834,7 +117597,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
@@ -117847,7 +117610,46 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IWeightEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -117860,12 +117662,12 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ModuleContextCompositionIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IWeightEntryWriteRepository",
@@ -117873,7 +117675,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -126913,7 +126715,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalSchedulingTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "RenewDueSubscriptionsCommand",

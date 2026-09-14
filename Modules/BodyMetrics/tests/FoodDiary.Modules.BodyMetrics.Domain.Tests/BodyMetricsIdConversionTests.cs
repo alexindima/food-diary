@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.BodyMetrics.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BodyMetricsIdConversionTests {

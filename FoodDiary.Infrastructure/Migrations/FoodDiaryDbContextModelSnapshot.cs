@@ -3223,7 +3223,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("CycleMenstrualEpisodes", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WaistEntry", b => {
+            modelBuilder.Entity("FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking.WaistEntry", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -3292,7 +3292,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("WaistGoals");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WeightEntry", b => {
+            modelBuilder.Entity("FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking.WeightEntry", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -5390,7 +5390,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("CycleProfile");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WaistEntry", b => {
+            modelBuilder.Entity("FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking.WaistEntry", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5406,7 +5406,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WeightEntry", b => {
+            modelBuilder.Entity("FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking.WeightEntry", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")

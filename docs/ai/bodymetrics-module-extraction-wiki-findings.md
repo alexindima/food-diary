@@ -10,7 +10,7 @@
 ## Reproducible limitations and false negatives
 
 1. On a cold checkout without frontend TypeScript prerequisites, planning automatically uses the committed JSON baseline. `research` initially reported `relevant-workspace-paths=0`; its later seven grounded paths were broad caller-supplied paths, not a complete ownership inventory. This is navigation confidence, not implementation coverage.
-2. `ownership -PlannedPath @('FoodDiary.Application.BodyMetrics','FoodDiary.Domain','FoodDiary.Infrastructure','Modules/BodyMetrics','tests','FoodDiary.slnx','docs')` returned no direct/downstream modules or scoped guides. Code confirms BodyMetrics and multiple projection consumers.
+2. `ownership -PlannedPath @('FoodDiary.Modules.BodyMetrics.Application','FoodDiary.Domain','FoodDiary.Infrastructure','Modules/BodyMetrics','tests','FoodDiary.slnx','docs')` returned no direct/downstream modules or scoped guides. Code confirms BodyMetrics and multiple projection consumers.
 3. The generated BodyMetrics module page reported no HTTP surface and no business consumers; current Presentation WeightEntries/WaistEntries controllers, Dashboard, Statistics, TDEE and WeeklyCheckIn prove those seams exist.
 4. Focused `test-plan` initially listed only BodyMetricsModuleExtractionTests, omitting four owned application test files, central entry/goal invariants, Dashboard/Users history-page coverage and persistence/HTTP tests. Test discovery must be checked against source references.
 5. Focused health `privacy` returned 12 projection candidates, mostly Statistics/Users fields, and did not surface entry entities or user-scoped repository predicates. Its bounded output is not a complete health-data inventory.

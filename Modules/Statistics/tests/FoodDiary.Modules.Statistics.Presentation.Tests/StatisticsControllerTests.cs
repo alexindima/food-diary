@@ -1,7 +1,7 @@
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Statistics;
 using FoodDiary.Presentation.Api.Features.Statistics.Requests;

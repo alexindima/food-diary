@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Infrastructure.Persistence;

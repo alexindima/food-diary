@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Users.Models;
 
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 
-namespace FoodDiary.Application.BodyMetrics.WaistEntries.Models;
+namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Models;
 
 public sealed record WaistHistoryPageSummaryModel(
     IReadOnlyList<WaistEntryModel> Entries,

@@ -1,14 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Application.BodyMetrics</AssemblyName>
-    <RootNamespace>FoodDiary.Application.BodyMetrics</RootNamespace>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Abstractions/**/*.cs" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
@@ -16,7 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />

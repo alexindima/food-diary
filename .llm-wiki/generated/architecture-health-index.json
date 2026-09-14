@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1594,
+    "productionProjectEdges": 1589,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
-    "moduleHotspotReviewCandidates": 0,
+    "moduleHotspotReviewCandidates": 1,
     "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 97,
@@ -24,8 +24,8 @@
     {
       "module": "Dashboard",
       "fanIn": 0,
-      "fanOut": 7,
-      "level": "informational",
+      "fanOut": 8,
+      "level": "review-candidate",
       "role": "read-composer"
     },
     {
@@ -34,6 +34,13 @@
       "fanOut": 5,
       "level": "informational",
       "role": "orchestrator"
+    },
+    {
+      "module": "BodyMetrics",
+      "fanIn": 4,
+      "fanOut": 0,
+      "level": "informational",
+      "role": "aggregate-owner"
     },
     {
       "module": "Meals",
@@ -55,6 +62,13 @@
       "fanOut": 0,
       "level": "informational",
       "role": "aggregate-owner"
+    },
+    {
+      "module": "Tdee",
+      "fanIn": 1,
+      "fanOut": 2,
+      "level": "informational",
+      "role": "read-composer"
     },
     {
       "module": "Ai",
@@ -99,9 +113,16 @@
       "role": "aggregate-owner"
     },
     {
-      "module": "Tdee",
-      "fanIn": 1,
-      "fanOut": 1,
+      "module": "Statistics",
+      "fanIn": 0,
+      "fanOut": 2,
+      "level": "informational",
+      "role": "read-composer"
+    },
+    {
+      "module": "WeeklyCheckIn",
+      "fanIn": 0,
+      "fanOut": 2,
       "level": "informational",
       "role": "read-composer"
     },
@@ -158,27 +179,6 @@
       "module": "Recipes",
       "fanIn": 0,
       "fanOut": 1,
-      "level": "informational",
-      "role": "aggregate-owner"
-    },
-    {
-      "module": "Statistics",
-      "fanIn": 0,
-      "fanOut": 1,
-      "level": "informational",
-      "role": "read-composer"
-    },
-    {
-      "module": "WeeklyCheckIn",
-      "fanIn": 0,
-      "fanOut": 1,
-      "level": "informational",
-      "role": "read-composer"
-    },
-    {
-      "module": "BodyMetrics",
-      "fanIn": 0,
-      "fanOut": 0,
       "level": "informational",
       "role": "aggregate-owner"
     },

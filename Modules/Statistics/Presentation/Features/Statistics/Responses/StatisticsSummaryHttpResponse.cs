@@ -1,5 +1,5 @@
-using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WeightEntries.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Statistics.Responses;
 

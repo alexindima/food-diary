@@ -1,14 +1,16 @@
+using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WeightEntries.Mappings;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Mappings;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WeightEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Features.WeightEntries;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/weight-entries")]

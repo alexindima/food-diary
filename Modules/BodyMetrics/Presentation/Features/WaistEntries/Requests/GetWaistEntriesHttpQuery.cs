@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Policies;
 
-namespace FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
 
 public sealed record GetWaistEntriesHttpQuery(
     DateTime? DateFrom = null,

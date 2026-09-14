@@ -1,23 +1,26 @@
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.UpdateWeightEntry;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetLatestWeightEntry;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightEntries;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightSummaries;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.DeleteWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.UpdateWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Mappings;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 
-namespace FoodDiary.Application.Tests.WeightEntries;
+namespace FoodDiary.Modules.BodyMetrics.Application.Tests.WeightEntries;
 
 [ExcludeFromCodeCoverage]
 public class WeightEntriesFeatureTests {
@@ -599,7 +602,7 @@ public class WeightEntriesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryWeightEntryRepository : IWeightEntryRepository, IWeightEntryReadService {
+    private sealed class InMemoryWeightEntryRepository : IWeightEntryReadModelRepository, IWeightEntryWriteRepository, IWeightEntryReadService {
         private readonly List<WeightEntry> _entries = [];
 
         public DateTime LastGetByDateDate { get; private set; }

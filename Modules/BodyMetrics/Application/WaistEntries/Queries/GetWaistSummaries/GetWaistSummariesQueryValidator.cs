@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 
-namespace FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistSummaries;
+namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
 
 public sealed class GetWaistSummariesQueryValidator : AbstractValidator<GetWaistSummariesQuery> {
     public GetWaistSummariesQueryValidator() {

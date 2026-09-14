@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using Microsoft.EntityFrameworkCore;

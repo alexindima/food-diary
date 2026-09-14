@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WeightEntries.Responses;
 
 public sealed record WeightEntryHttpResponse(
     Guid Id,

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistHistoryPageSummary;
+namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
 
 public sealed record GetWaistHistoryPageSummaryQuery(
     Guid? UserId,

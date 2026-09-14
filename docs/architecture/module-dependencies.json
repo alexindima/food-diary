@@ -11,6 +11,7 @@
     "ContentReports": [],
     "Cycles": [],
     "Dashboard": [
+      "BodyMetrics",
       "Cycles",
       "DailyAdvices",
       "Exercises",
@@ -46,15 +47,18 @@
       "Images"
     ],
     "Statistics": [
+      "BodyMetrics",
       "Hydration"
     ],
     "Tdee": [
+      "BodyMetrics",
       "Exercises"
     ],
     "Usda": [],
     "Users": [],
     "Wearables": [],
     "WeeklyCheckIn": [
+      "BodyMetrics",
       "Hydration"
     ],
     "WeeklyGoals": []

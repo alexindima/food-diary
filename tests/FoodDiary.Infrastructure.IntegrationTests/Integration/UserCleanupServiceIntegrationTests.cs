@@ -1,3 +1,4 @@
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
@@ -8,7 +9,6 @@ using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Cycles.Infrastructure;
-using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Application.Abstractions.Users.Common;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Modules.Ai.Domain.Entities;
@@ -20,6 +20,7 @@ using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -277,6 +278,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(
+            new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context,
+                new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance)));
         services.AddAdminPersistence();
         services.AddAiPersistence();
         services.AddBodyMetricsModule();

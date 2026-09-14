@@ -18,6 +18,9 @@ public sealed class ModuleContextFactoryBoundaryTests {
     [InlineData("WeeklyGoals")]
     [InlineData("Wearables")]
     [InlineData("Billing")]
+    [InlineData("Hydration")]
+    [InlineData("BodyMetrics")]
+    [InlineData("Cycles")]
     [InlineData("OpenFoodFacts")]
     public void CoordinatedAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();

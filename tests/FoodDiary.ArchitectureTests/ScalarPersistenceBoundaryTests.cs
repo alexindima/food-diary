@@ -3,7 +3,7 @@ using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure.Model;
-using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
+using FoodDiary.Modules.BodyMetrics.PersistenceModel;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Ai.PersistenceModel;

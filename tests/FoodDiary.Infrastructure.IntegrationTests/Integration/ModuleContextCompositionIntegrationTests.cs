@@ -1,15 +1,16 @@
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
@@ -48,8 +49,10 @@ public sealed class ModuleContextCompositionIntegrationTests(PostgresDatabaseFix
         await using ServiceProvider provider = CreateProvider(central);
         HydrationDbContext hydration = provider.GetRequiredService<HydrationDbContext>();
         BodyMetricsDbContext metrics = provider.GetRequiredService<BodyMetricsDbContext>();
-        IWeightEntryRepository weights = provider.GetRequiredService<IWeightEntryRepository>();
-        IWaistEntryRepository waists = provider.GetRequiredService<IWaistEntryRepository>();
+        IWeightEntryWriteRepository weights = provider.GetRequiredService<IWeightEntryWriteRepository>();
+        IWeightEntryReadModelRepository weightsRead = provider.GetRequiredService<IWeightEntryReadModelRepository>();
+        IWaistEntryWriteRepository waists = provider.GetRequiredService<IWaistEntryWriteRepository>();
+        IWaistEntryReadModelRepository waistsRead = provider.GetRequiredService<IWaistEntryReadModelRepository>();
         IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
         var user = User.Create($"contexts-{Guid.NewGuid():N}@example.com", "hash");
         ExercisesDbContext exercises = provider.GetRequiredService<ExercisesDbContext>();
@@ -70,10 +73,10 @@ public sealed class ModuleContextCompositionIntegrationTests(PostgresDatabaseFix
         await unitOfWork.SaveChangesAsync();
         Assert.False(unitOfWork.HasPendingChanges);
 
-        Assert.Null(await ((IWeightEntryWriteRepository)weights).GetByIdAsync(weight.Id, UserId.New(), asTracking: true));
-        Assert.Null(await ((IWaistEntryWriteRepository)waists).GetByIdAsync(waist.Id, UserId.New(), asTracking: true));
-        Assert.Empty(await weights.GetEntryReadModelsAsync(UserId.New(), dateFrom: null, dateTo: null, limit: null, descending: true));
-        Assert.Empty(await waists.GetEntryReadModelsAsync(UserId.New(), dateFrom: null, dateTo: null, limit: null, descending: true));
+        Assert.Null(await weights.GetByIdAsync(weight.Id, UserId.New(), asTracking: true));
+        Assert.Null(await waists.GetByIdAsync(waist.Id, UserId.New(), asTracking: true));
+        Assert.Empty(await weightsRead.GetEntryReadModelsAsync(UserId.New(), dateFrom: null, dateTo: null, limit: null, descending: true));
+        Assert.Empty(await waistsRead.GetEntryReadModelsAsync(UserId.New(), dateFrom: null, dateTo: null, limit: null, descending: true));
         Assert.Null(await exerciseWrites.GetByIdAsync(exercise.Id, UserId.New(), asTracking: true));
         Assert.Empty(await exerciseReads.GetByDateRangeReadModelsAsync(UserId.New(), DateTime.UtcNow.Date, DateTime.UtcNow.Date));
 

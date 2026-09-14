@@ -1,10 +1,12 @@
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Mappings;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Mappings;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.BodyMetrics.WeightEntries.Services;
+namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 
 internal sealed class WeightEntryReadService(IWeightEntryReadModelRepository weightEntryRepository) : IWeightEntryReadService {
     public async Task<IReadOnlyList<WeightEntryModel>> GetEntriesAsync(

@@ -189,20 +189,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.application.bodymetrics": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
-        }
-      },
       "FoodDiary.Application.ContentReports": {
         "type": "Project",
         "dependencies": {
@@ -825,6 +811,20 @@
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.bodymetrics.application": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.bodymetrics.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -851,7 +851,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
-          "FoodDiary.Application.BodyMetrics": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Application": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Presentation.Contracts": "[1.0.0, )",
@@ -867,7 +867,6 @@
       "fooddiary.modules.bodymetrics.presentation.mappings": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Presentation.Contracts": "[1.0.0, )"
         }

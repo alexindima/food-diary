@@ -1,6 +1,7 @@
+using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Extensions;
 
 public static class BodyMetricsPresentationServiceCollectionExtensions {
     public static IServiceCollection AddBodyMetricsPresentation(this IServiceCollection services) {

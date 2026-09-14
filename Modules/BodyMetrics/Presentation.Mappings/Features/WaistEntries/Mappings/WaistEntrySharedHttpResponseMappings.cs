@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WaistEntries.Mappings;
 
 public static class WaistEntrySharedHttpResponseMappings {
     extension(WaistEntryModel model) {

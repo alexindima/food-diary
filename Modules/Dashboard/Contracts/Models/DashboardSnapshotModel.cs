@@ -4,8 +4,8 @@ using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
 namespace FoodDiary.Application.Dashboard.Models;
 

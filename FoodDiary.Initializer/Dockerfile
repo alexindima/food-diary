@@ -82,10 +82,10 @@ COPY Modules/Wearables/Domain/*.csproj Modules/Wearables/Domain/
 COPY Modules/Wearables/Infrastructure/*.csproj Modules/Wearables/Infrastructure/
 COPY Modules/Wearables/Infrastructure/Model/*.csproj Modules/Wearables/Infrastructure/Model/
 COPY Modules/BodyMetrics/Application/*.csproj Modules/BodyMetrics/Application/
-COPY Modules/BodyMetrics/Application/Abstractions/*.csproj Modules/BodyMetrics/Application/Abstractions/
+COPY Modules/BodyMetrics/Application.Abstractions/*.csproj Modules/BodyMetrics/Application.Abstractions/
 COPY Modules/BodyMetrics/Domain/*.csproj Modules/BodyMetrics/Domain/
 COPY Modules/BodyMetrics/Infrastructure/*.csproj Modules/BodyMetrics/Infrastructure/
-COPY Modules/BodyMetrics/Infrastructure/Model/*.csproj Modules/BodyMetrics/Infrastructure/Model/
+COPY Modules/BodyMetrics/PersistenceModel/*.csproj Modules/BodyMetrics/PersistenceModel/
 COPY Modules/Notifications/Application/*.csproj Modules/Notifications/Application/
 COPY Modules/Notifications/Application/Abstractions/*.csproj Modules/Notifications/Application/Abstractions/
 COPY Modules/Notifications/Contracts/*.csproj Modules/Notifications/Contracts/
@@ -313,10 +313,10 @@ COPY Modules/Wearables/Domain/ Modules/Wearables/Domain/
 COPY Modules/Wearables/Infrastructure/ Modules/Wearables/Infrastructure/
 COPY Modules/Wearables/Infrastructure/Model/ Modules/Wearables/Infrastructure/Model/
 COPY Modules/BodyMetrics/Application/ Modules/BodyMetrics/Application/
-COPY Modules/BodyMetrics/Application/Abstractions/ Modules/BodyMetrics/Application/Abstractions/
+COPY Modules/BodyMetrics/Application.Abstractions/ Modules/BodyMetrics/Application.Abstractions/
 COPY Modules/BodyMetrics/Domain/ Modules/BodyMetrics/Domain/
 COPY Modules/BodyMetrics/Infrastructure/ Modules/BodyMetrics/Infrastructure/
-COPY Modules/BodyMetrics/Infrastructure/Model/ Modules/BodyMetrics/Infrastructure/Model/
+COPY Modules/BodyMetrics/PersistenceModel/ Modules/BodyMetrics/PersistenceModel/
 COPY Modules/Notifications/Application/ Modules/Notifications/Application/
 COPY Modules/Notifications/Application/Abstractions/ Modules/Notifications/Application/Abstractions/
 COPY Modules/Notifications/Contracts/ Modules/Notifications/Contracts/

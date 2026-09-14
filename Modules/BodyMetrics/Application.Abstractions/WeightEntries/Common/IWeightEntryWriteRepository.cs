@@ -1,7 +1,8 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.WeightEntries.Common;
+namespace FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 
 public interface IWeightEntryWriteRepository {
     Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default);

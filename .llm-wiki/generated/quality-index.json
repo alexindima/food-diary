@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5343,
+    "productionFiles": 5339,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 849,
@@ -3378,11 +3378,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Users.cs",
@@ -5042,11 +5042,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 185,
+      "nonBlankLines": 186,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.7
+      "structuralRiskScore": 6.72
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -17818,11 +17818,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
-      "nonBlankLines": 322,
-      "decisionPoints": 35,
+      "nonBlankLines": 324,
+      "decisionPoints": 38,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 60.94
+      "structuralRiskScore": 65.48
     },
     {
       "path": "Modules/Billing/Application/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommandHandler.cs",
@@ -18329,7 +18329,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18337,31 +18337,15 @@
       "structuralRiskScore": 0.34
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs",
-      "nonBlankLines": 26,
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs",
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.36
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/WaistEntryErrors.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/WaistEntryErrors.cs",
       "nonBlankLines": 17,
       "decisionPoints": 1,
       "criticalSymbols": 0,
@@ -18369,7 +18353,7 @@
       "structuralRiskScore": 1.84
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18377,7 +18361,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18385,31 +18369,15 @@
       "structuralRiskScore": 0.34
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs",
-      "nonBlankLines": 26,
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs",
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.36
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/WeightEntryErrors.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/WeightEntryErrors.cs",
       "nonBlankLines": 17,
       "decisionPoints": 1,
       "criticalSymbols": 0,
@@ -18417,7 +18385,7 @@
       "structuralRiskScore": 1.84
     },
     {
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18426,11 +18394,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs",
@@ -18490,11 +18458,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "nonBlankLines": 43,
+      "nonBlankLines": 44,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.36
+      "structuralRiskScore": 7.38
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
@@ -18514,11 +18482,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "nonBlankLines": 57,
+      "nonBlankLines": 58,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.64
+      "structuralRiskScore": 10.66
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
@@ -18530,11 +18498,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Mappings/WaistEntryMappings.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
@@ -18634,11 +18602,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 61,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.18
+      "structuralRiskScore": 4.22
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
@@ -18674,11 +18642,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "nonBlankLines": 43,
+      "nonBlankLines": 44,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.36
+      "structuralRiskScore": 7.38
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
@@ -18698,11 +18666,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "nonBlankLines": 57,
+      "nonBlankLines": 58,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.64
+      "structuralRiskScore": 10.66
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
@@ -18714,11 +18682,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Mappings/WeightEntryMappings.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
@@ -18818,11 +18786,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 61,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.18
+      "structuralRiskScore": 4.22
     },
     {
       "path": "Modules/BodyMetrics/Contracts/WaistEntries/Common/IWaistEntryReadService.cs",
@@ -18874,19 +18842,19 @@
     },
     {
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "nonBlankLines": 69,
+      "nonBlankLines": 70,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.88
+      "structuralRiskScore": 14.9
     },
     {
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "nonBlankLines": 69,
+      "nonBlankLines": 70,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.88
+      "structuralRiskScore": 14.9
     },
     {
       "path": "Modules/BodyMetrics/Domain/ValueObjects/Ids/WaistEntryId.cs",
@@ -18905,7 +18873,47 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/BodyMetrics/Infrastructure/Model/BodyMetricsPersistenceModelRegistration.cs",
+      "path": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
+    },
+    {
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
+      "nonBlankLines": 87,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.24
+    },
+    {
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
+      "nonBlankLines": 87,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.24
+    },
+    {
+      "path": "Modules/BodyMetrics/PersistenceModel/BodyMetricsPersistenceModelRegistration.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18913,60 +18921,20 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs",
-      "nonBlankLines": 18,
+      "path": "Modules/BodyMetrics/PersistenceModel/Configurations/WaistEntryConfiguration.cs",
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.38
     },
     {
-      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs",
-      "nonBlankLines": 18,
+      "path": "Modules/BodyMetrics/PersistenceModel/Configurations/WeightEntryConfiguration.cs",
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
-    },
-    {
-      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
-      "nonBlankLines": 126,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.52
-    },
-    {
-      "path": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
-      "nonBlankLines": 126,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.52
+      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/BodyMetrics/Presentation.Contracts/Features/WaistEntries/Responses/WaistEntryHttpResponse.cs",
@@ -19018,11 +18986,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Extensions/BodyMetricsPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpMappings.cs",
@@ -19042,11 +19010,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Requests/CreateWaistEntryHttpRequest.cs",
@@ -19090,19 +19058,19 @@
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/WaistEntriesController.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 57,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.1
+      "structuralRiskScore": 3.14
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpMappings.cs",
@@ -19122,11 +19090,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Requests/CreateWeightEntryHttpRequest.cs",
@@ -19170,19 +19138,19 @@
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 57,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.1
+      "structuralRiskScore": 3.14
     },
     {
       "path": "Modules/ContentReports/Application/Abstractions/Common/ContentReportErrors.cs",
@@ -20346,11 +20314,11 @@
     },
     {
       "path": "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
@@ -26802,11 +26770,11 @@
     },
     {
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs",
@@ -44371,7 +44339,7 @@
       "name": "DeleteWaistEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
@@ -44384,7 +44352,7 @@
       "name": "DeleteWeightEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
@@ -45707,7 +45675,7 @@
       "name": "UpdateWaistEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 13,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
@@ -45720,7 +45688,7 @@
       "name": "UpdateWeightEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 13,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
@@ -47086,7 +47054,7 @@
       "name": "WaistEntriesController",
       "role": "Controller",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/WaistEntriesController.cs",
-      "line": 15,
+      "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -47150,7 +47118,7 @@
       "name": "WeightEntriesController",
       "role": "Controller",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs",
-      "line": 15,
+      "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs"

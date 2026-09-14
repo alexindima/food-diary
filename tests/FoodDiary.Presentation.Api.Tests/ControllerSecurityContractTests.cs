@@ -28,7 +28,7 @@ using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Features.RecipeLikes;
 using FoodDiary.Presentation.Api.Features.Version;
-using FoodDiary.Presentation.Api.Features.WaistEntries;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries;
 using FoodDiary.Presentation.Api.Features.Wearables;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Usda;
@@ -312,8 +312,8 @@ public sealed class ControllerSecurityContractTests {
             (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
             (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
             (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
-            (typeof(global::FoodDiary.Presentation.Api.Features.WaistEntries.Requests.GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
-            (typeof(global::FoodDiary.Presentation.Api.Features.WeightEntries.Requests.GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
+            (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests.GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
+            (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests.GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
         ];
 
         foreach ((Type queryType, string parameterName, string acceptedValue) in expectations) {

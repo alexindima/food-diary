@@ -7,9 +7,9 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Meals.Queries.GetMeals;
@@ -19,8 +19,8 @@ using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Hydration.Services;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Services;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -185,7 +185,7 @@ public class DashboardFeatureTests {
         var userId = UserId.New();
         DateTime dayStart = new(2026, 4, 5, 0, 0, 0, DateTimeKind.Utc);
         DateTime trendStart = dayStart.AddDays(-4);
-        IWeightEntryRepository weightRepository = Substitute.For<IWeightEntryRepository>();
+        IWeightEntryReadModelRepository weightRepository = Substitute.For<IWeightEntryReadModelRepository>();
         weightRepository.GetEntryReadModelsAsync(
                 userId,
                 Arg.Any<DateTime?>(),
@@ -201,7 +201,7 @@ public class DashboardFeatureTests {
             ]));
         RepositoryDashboardBodyReadService service = new(
             new WeightEntryReadService(weightRepository),
-            new WaistEntryReadService(Substitute.For<IWaistEntryRepository>()),
+            new WaistEntryReadService(Substitute.For<IWaistEntryReadModelRepository>()),
             new HydrationEntryReadService(Substitute.For<IHydrationEntryReadModelRepository>()));
 
         DashboardBodyReadModel result = await service.GetBodyAsync(

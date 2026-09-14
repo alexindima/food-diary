@@ -33,6 +33,8 @@ Use Users.Contracts IUserBillingService directly; do not recreate a forwarding u
 
 Renewal responses use a captured subscription snapshot and the same per-user transaction lock as webhooks. Record financial results even when the snapshot is stale, but never overwrite newer subscription/access state. Pending recurring payments are verified by payment ID after backoff; only a confirmed decline permits a new stable idempotency key. Transport failures reuse the current attempt key.
 
+Use the payment's own occurrence timestamp and terminal status when applying a response to an existing pending renewal. A changed subscription must not prevent its payment history from advancing; an older or undated response must not replace a dated payment observation.
+
 Reload and recheck provider, renewal status, cancellation and due time under the user lock for each selected batch item before calling the provider. Batch membership alone is not payment authorization. Provider HTTP stays outside replayable database callbacks. Apply provider occurrence timestamps to both subscription ordering and payment history; equal-time authoritative renewal updates may advance only the same payment. A verified declined renewal records a canceled payment but leaves the subscription past_due with retry backoff. Keep payment occurrence separate from subscription periods and preserve the same payment's period across HTTP and webhook arrival orders.
 
 Checkout may reuse a customer identifier only for the same provider. Provider switches clear old subscription/method identifiers and ordering state; late notifications from the previous provider may update payment history but must not replace the current subscription.

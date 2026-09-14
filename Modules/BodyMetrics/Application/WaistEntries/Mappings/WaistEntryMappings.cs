@@ -1,7 +1,8 @@
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.BodyMetrics.WaistEntries.Mappings;
+namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Mappings;
 
 public static class WaistEntryMappings {
     public static WaistEntryModel ToModel(this WaistEntry entry) =>

@@ -1,4 +1,5 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.PersistenceModel;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;

@@ -94,7 +94,7 @@ public sealed class ModuleTelemetryBehaviorTests {
 
     [Theory]
     [InlineData("FoodDiary.Application.Meals", "Meals")]
-    [InlineData("FoodDiary.Application.BodyMetrics", "BodyMetrics")]
+    [InlineData("FoodDiary.Modules.BodyMetrics.Application", "BodyMetrics")]
     [InlineData("FoodDiary.Application.Tests", "Other")]
     [InlineData("FoodDiary.Application.Contracts", "Other")]
     [InlineData("FoodDiary.Application.", "Other")]

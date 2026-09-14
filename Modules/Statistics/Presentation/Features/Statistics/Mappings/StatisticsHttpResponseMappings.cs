@@ -1,7 +1,7 @@
+using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WeightEntries.Mappings;
+using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WaistEntries.Mappings;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Presentation.Api.Features.Statistics.Responses;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 
 namespace FoodDiary.Presentation.Api.Features.Statistics.Mappings;
 

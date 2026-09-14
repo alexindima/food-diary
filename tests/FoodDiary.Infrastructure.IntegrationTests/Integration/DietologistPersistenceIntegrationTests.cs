@@ -1,7 +1,7 @@
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;

@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="../Modules/Images/Application/FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj" />
@@ -37,6 +36,7 @@
     <ProjectReference Include="../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj" />
     <ProjectReference Include="../Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/BodyMetrics/Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
     <ProjectReference Include="../Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />

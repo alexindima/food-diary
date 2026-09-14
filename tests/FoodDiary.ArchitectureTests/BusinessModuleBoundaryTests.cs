@@ -973,8 +973,8 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("WeightEntryConfiguration.cs", "Modules/BodyMetrics/Infrastructure/Model/Configurations")]
-    [InlineData("WaistEntryConfiguration.cs", "Modules/BodyMetrics/Infrastructure/Model/Configurations")]
+    [InlineData("WeightEntryConfiguration.cs", "Modules/BodyMetrics/PersistenceModel/Configurations")]
+    [InlineData("WaistEntryConfiguration.cs", "Modules/BodyMetrics/PersistenceModel/Configurations")]
     [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
     [InlineData("ExerciseEntryConfiguration.cs", "Modules/Exercises/Infrastructure/Model/Configurations/Exercises")]
     [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]

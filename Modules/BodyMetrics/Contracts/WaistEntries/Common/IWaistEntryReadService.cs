@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.WaistEntries.Common;
+namespace FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Common;
 
 public interface IWaistEntryReadService {
     Task<IReadOnlyList<WaistEntryModel>> GetEntriesAsync(

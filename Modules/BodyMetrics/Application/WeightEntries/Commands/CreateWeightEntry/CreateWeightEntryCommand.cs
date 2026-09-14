@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
-namespace FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightEntry;
+namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.CreateWeightEntry;
 
 public record CreateWeightEntryCommand(
     Guid? UserId,

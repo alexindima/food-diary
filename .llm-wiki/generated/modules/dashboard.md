@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Audit, Authentication, Dietologist, Fasting, Users, WaistEntries, WeightEntries
+- Abstraction-contract dependencies: Audit, Authentication, BodyMetrics, Dietologist, Fasting, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.

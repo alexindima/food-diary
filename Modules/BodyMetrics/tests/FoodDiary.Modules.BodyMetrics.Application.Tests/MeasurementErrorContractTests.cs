@@ -1,9 +1,9 @@
 using System.Globalization;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.BodyMetrics.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MeasurementErrorContractTests {
@@ -12,8 +12,8 @@ public sealed class MeasurementErrorContractTests {
         Assert.Multiple(
             () => Assert.Equal("FoodDiary.Modules.BodyMetrics.Application.Abstractions", typeof(WeightEntryErrors).Assembly.GetName().Name),
             () => Assert.Equal("FoodDiary.Modules.BodyMetrics.Application.Abstractions", typeof(WaistEntryErrors).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.WeightEntries.Common", typeof(WeightEntryErrors).Namespace),
-            () => Assert.Equal("FoodDiary.Application.Abstractions.WaistEntries.Common", typeof(WaistEntryErrors).Namespace));
+            () => Assert.Equal("FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common", typeof(WeightEntryErrors).Namespace),
+            () => Assert.Equal("FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common", typeof(WaistEntryErrors).Namespace));
     }
 
     [Fact]

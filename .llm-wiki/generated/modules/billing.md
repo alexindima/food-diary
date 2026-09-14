@@ -109,8 +109,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs`
 - [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingWebhookControllerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BillingModuleExtractionTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BillingNamespaceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
+- [integration] `tests/FoodDiary.Web.Api.IntegrationTests/BillingSecurityIntegrationTests.cs`
 
 ## Working Rule
 

@@ -1,12 +1,13 @@
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 
-public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntryRepository {
+public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntryReadModelRepository, IWaistEntryWriteRepository {
     public async Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
         await entries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return entry;
@@ -48,38 +49,6 @@ public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntr
                 cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<IReadOnlyList<WaistEntry>> GetEntriesAsync(
-        UserId userId,
-        DateTime? dateFrom,
-        DateTime? dateTo,
-        int? limit,
-        bool descending,
-        CancellationToken cancellationToken = default) {
-        IQueryable<WaistEntry> query = entries
-            .AsNoTracking()
-            .Where(entry => entry.UserId == userId);
-
-        if (dateFrom.HasValue) {
-            DateTime from = dateFrom.Value.Date;
-            query = query.Where(entry => entry.Date >= from);
-        }
-
-        if (dateTo.HasValue) {
-            DateTime to = dateTo.Value.Date;
-            query = query.Where(entry => entry.Date <= to);
-        }
-
-        query = descending
-            ? query.OrderByDescending(entry => entry.Date).ThenByDescending(entry => entry.CreatedOnUtc)
-            : query.OrderBy(entry => entry.Date).ThenBy(entry => entry.CreatedOnUtc);
-
-        if (limit > 0) {
-            query = query.Take(limit.Value);
-        }
-
-        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     public async Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(
         UserId userId,
         DateTime? dateFrom,
@@ -111,22 +80,6 @@ public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntr
 
         return await query
             .Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(
-        UserId userId,
-        DateTime dateFrom,
-        DateTime dateTo,
-        CancellationToken cancellationToken = default) {
-        var from = DateTime.SpecifyKind(dateFrom, DateTimeKind.Utc);
-        var to = DateTime.SpecifyKind(dateTo, DateTimeKind.Utc);
-
-        return await entries
-            .AsNoTracking()
-            .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
-            .OrderBy(entry => entry.Date)
-            .ThenBy(entry => entry.CreatedOnUtc)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

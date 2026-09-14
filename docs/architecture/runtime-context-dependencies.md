@@ -12,7 +12,7 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 | Connection/lock | 0 |
 | Transaction/provider registration | 0 |
 | Transaction coordination | 0 |
-| User purge | 14 |
+| User purge | 11 |
 
 The presence of 29 owner contexts does not mean all runtime access has left the shared context. Dashboard body reads now live in host ReadModel.Composition. Image reassignment now uses ImagesDbContext on the caller connection. The three module replay streams also use owner contexts; their coordinator saves through IUnitOfWork. Audit retains reviewed shared-context behavior.
 
@@ -30,11 +30,8 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 |---|---|---|
 | [Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs](../../Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs](../../Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
-| [Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs](../../Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
-| [Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs](../../Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs](../../Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs](../../Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs) | Audit bridge | Inspects shared and Dietologist trackers, stages shared AuditEntry rows; preserve atomic save and event deduplication. |
-| [Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs](../../Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs](../../Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs](../../Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs](../../Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
@@ -60,4 +57,6 @@ Users and Identity registrations now synchronize through IModuleTransactionCoord
 
 Outbox registration guards in Gamification, Images and Notifications now use IModuleScopeGuard. Its scoped central adapter checks the same live shared transaction and all registered trackers without saving or clearing them. The three modules retain the generic outbox engine dependency, but no longer resolve FoodDiaryDbContext in registration.
 
-Ai registration now gets independent options through IIndependentModuleContextOptionsFactory. Central infrastructure copies the same configured provider/core extensions without reading the live scoped context or registering a participant. Quota and job operations retain independent contexts and commits; prompt writes still join the shared transaction. No registration source now references FoodDiaryDbContext. The direct module inventory contains 15 files: fourteen purge sources and the collaboration audit interceptor.
+Ai registration now gets independent options through IIndependentModuleContextOptionsFactory. Central infrastructure copies the same configured provider/core extensions without reading the live scoped context or registering a participant. Quota and job operations retain independent contexts and commits; prompt writes still join the shared transaction. No registration source now references FoodDiaryDbContext. The direct module inventory contains 12 files: eleven purge sources and the collaboration audit interceptor.
+
+Hydration, BodyMetrics and Cycles purge participants now use their owner contexts and rebind the live IModuleTransactionCoordinator.CurrentTransaction on every call. Existing orders 80/90/100, user predicates and Cycles child-first deletes are unchanged. Users still owns the encompassing transaction, final user-row deletion and receipt FK cascades. All three adapter projects no longer reference central Infrastructure; PostgreSQL tests cover rollback, scope reuse, cancellation, continuation after a failed user and survivor isolation.

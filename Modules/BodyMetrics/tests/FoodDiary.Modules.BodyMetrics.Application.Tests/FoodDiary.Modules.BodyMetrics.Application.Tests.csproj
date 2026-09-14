@@ -1,8 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Application.Tests</AssemblyName>
-    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -13,14 +9,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Modules.BodyMetrics.Application.Tests.Support" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application/FoodDiary.Application.BodyMetrics.csproj" />
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />

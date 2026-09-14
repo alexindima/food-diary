@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.WeightEntries.Models;
+namespace FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
 public sealed record WeightEntrySummaryModel(
     DateTime StartDate,

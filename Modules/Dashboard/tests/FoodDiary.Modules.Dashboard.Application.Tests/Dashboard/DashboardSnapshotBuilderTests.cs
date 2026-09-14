@@ -7,28 +7,32 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Exercises.Services;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Hydration.Services;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Services;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Hydration.Models;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Meals.Queries.GetMeals;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistSummaries;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Dashboard.Models;
@@ -779,7 +783,7 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FilteringWeightEntryRepository(IReadOnlyList<WeightEntry> entries) : IWeightEntryRepository {
+    private sealed class FilteringWeightEntryRepository(IReadOnlyList<WeightEntry> entries) : IWeightEntryReadModelRepository, IWeightEntryWriteRepository {
         public DateTime? LastDateTo { get; private set; }
 
         public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -840,7 +844,7 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FilteringWaistEntryRepository(IReadOnlyList<WaistEntry> entries) : IWaistEntryRepository {
+    private sealed class FilteringWaistEntryRepository(IReadOnlyList<WaistEntry> entries) : IWaistEntryReadModelRepository, IWaistEntryWriteRepository {
         public DateTime? LastDateTo { get; private set; }
 
         public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -954,7 +958,7 @@ public sealed class DashboardSnapshotBuilderTests {
                 user.SundayCalories));
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubWeightEntryRepository : IWeightEntryRepository {
+    private sealed class StubWeightEntryRepository : IWeightEntryReadModelRepository, IWeightEntryWriteRepository {
         public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1008,7 +1012,7 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubWaistEntryRepository : IWaistEntryRepository {
+    private sealed class StubWaistEntryRepository : IWaistEntryReadModelRepository, IWaistEntryWriteRepository {
         public Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();

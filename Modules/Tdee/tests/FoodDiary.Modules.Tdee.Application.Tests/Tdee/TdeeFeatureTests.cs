@@ -1,3 +1,4 @@
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -6,8 +7,8 @@ using FoodDiary.Application.Exercises.Services;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Services;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -166,11 +167,11 @@ public class TdeeFeatureTests {
         return service;
     }
 
-    private static IWeightEntryRepository CreateWeightEntryRepository() {
-        IWeightEntryRepository repository = Substitute.For<IWeightEntryRepository>();
+    private static IWeightEntryReadModelRepository CreateWeightEntryRepository() {
+        IWeightEntryReadModelRepository repository = Substitute.For<IWeightEntryReadModelRepository>();
         repository
-            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<WeightEntry>>([]));
+            .GetByPeriodReadModelsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntryReadModel>>([]));
         return repository;
     }
 

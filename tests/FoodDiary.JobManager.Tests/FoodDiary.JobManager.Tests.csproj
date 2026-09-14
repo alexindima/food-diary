@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="../../Modules/Images/Application/FoodDiary.Application.Images.csproj" />
@@ -36,6 +35,7 @@
     <ProjectReference Include="../../Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj" />
+    <ProjectReference Include="../../Modules/BodyMetrics/Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj" />

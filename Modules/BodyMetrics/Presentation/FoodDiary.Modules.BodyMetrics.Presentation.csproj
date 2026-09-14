@@ -1,9 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <RootNamespace>FoodDiary.Presentation.Api</RootNamespace>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" />
   </ItemGroup>
@@ -13,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application/FoodDiary.Application.BodyMetrics.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj" />
     <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.BodyMetrics.Presentation.Mappings.csproj" />

@@ -9,7 +9,7 @@ Rules for `Modules/BodyMetrics/Application/`.
 - Own weight and waist commands, queries, handlers, validation, mappings, and read services.
 - Consume shared user access only through application abstractions.
 - Preserve calculation, date normalization, authorization, and user-scoping semantics.
-- Preserve the legacy `FoodDiary.Application.BodyMetrics` assembly name and CLR namespaces.
+- Use `FoodDiary.Modules.BodyMetrics.Application` with project-relative namespaces; keep ports in the sibling Application.Abstractions project.
 - Keep persistence implementations and HTTP transport outside this project.
 
 Application consumes scalar Users types through Users.Domain.Contracts and semantic

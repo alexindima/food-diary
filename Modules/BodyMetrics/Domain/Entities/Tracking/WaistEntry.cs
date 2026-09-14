@@ -2,8 +2,9 @@ using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking;
+namespace FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
 public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
     private const double MaxCircumference = DesiredWaistCm.MaxValue;

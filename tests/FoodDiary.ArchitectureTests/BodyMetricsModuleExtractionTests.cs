@@ -29,7 +29,7 @@ public sealed class BodyMetricsModuleExtractionTests {
             "Modules",
             "BodyMetrics",
             "Application",
-            "FoodDiary.Application.BodyMetrics.csproj")));
+            "FoodDiary.Modules.BodyMetrics.Application.csproj")));
     }
 
     [Fact]
@@ -37,13 +37,13 @@ public sealed class BodyMetricsModuleExtractionTests {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.BodyMetrics", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.BodyMetrics.Application", references, StringComparer.Ordinal);
     }
 
     [Fact]
     public void ExtractedBodyMetricsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj");
+            "Modules/BodyMetrics/Application/FoodDiary.Modules.BodyMetrics.Application.csproj");
         string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Contracts", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
@@ -77,7 +77,7 @@ public sealed class BodyMetricsModuleExtractionTests {
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", "WeightEntries")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", "WaistEntries")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
-            "Modules", "BodyMetrics", "Application", "Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj")));
+            "Modules", "BodyMetrics", "Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj")));
     }
 
     [Theory]
@@ -85,7 +85,7 @@ public sealed class BodyMetricsModuleExtractionTests {
     [InlineData("WaistEntryConfiguration.cs")]
     public void BodyMetricsEntryConfigurations_LiveInModulePersistenceModel(string fileName) {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
-            "Modules", "BodyMetrics", "Infrastructure", "Model", "Configurations", fileName)));
+            "Modules", "BodyMetrics", "PersistenceModel", "Configurations", fileName)));
     }
 
     [Theory]

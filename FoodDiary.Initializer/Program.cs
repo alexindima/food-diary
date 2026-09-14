@@ -1,3 +1,4 @@
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
@@ -8,7 +9,6 @@ using FoodDiary.Modules.Notifications.Infrastructure;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using FoodDiary.Application.Runtime;
-using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Application.Dashboard;
 using FoodDiary.Modules.Hydration.Infrastructure;

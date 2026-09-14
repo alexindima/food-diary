@@ -45,6 +45,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -787,10 +788,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await weightRepository.GetByIdAsync(weight.Id, userId));
         Assert.NotNull(await weightRepository.GetByIdAsync(weight.Id, userId, asTracking: true));
         Assert.NotNull(await weightRepository.GetByDateAsync(userId, today.AddDays(-1)));
-        Assert.Single(await weightRepository.GetEntriesAsync(userId, today.AddDays(-2), today, limit: 1, descending: true));
-        Assert.NotEmpty(await weightRepository.GetEntriesAsync(userId, dateFrom: null, dateTo: null, limit: null, descending: false));
+        Assert.NotEmpty(await weightRepository.GetEntryReadModelsAsync(userId, dateFrom: null, dateTo: null, limit: null, descending: false));
         Assert.Single(await weightRepository.GetEntryReadModelsAsync(userId, today.AddDays(-2), today, limit: 1, descending: true));
-        Assert.Single(await weightRepository.GetByPeriodAsync(userId, today.AddDays(-2), today));
         Assert.Single(await weightRepository.GetByPeriodReadModelsAsync(userId, today.AddDays(-2), today));
 
         var waistRepository = new WaistEntryRepository(context.WaistEntries);
@@ -802,10 +801,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await waistRepository.GetByIdAsync(waist.Id, userId));
         Assert.NotNull(await waistRepository.GetByIdAsync(waist.Id, userId, asTracking: true));
         Assert.NotNull(await waistRepository.GetByDateAsync(userId, today.AddDays(-1)));
-        Assert.Single(await waistRepository.GetEntriesAsync(userId, today.AddDays(-2), today, limit: 1, descending: false));
-        Assert.NotEmpty(await waistRepository.GetEntriesAsync(userId, dateFrom: null, dateTo: null, limit: null, descending: true));
+        Assert.NotEmpty(await waistRepository.GetEntryReadModelsAsync(userId, dateFrom: null, dateTo: null, limit: null, descending: true));
         Assert.Single(await waistRepository.GetEntryReadModelsAsync(userId, today.AddDays(-2), today, limit: 1, descending: false));
-        Assert.Single(await waistRepository.GetByPeriodAsync(userId, today.AddDays(-2), today));
         Assert.Single(await waistRepository.GetByPeriodReadModelsAsync(userId, today.AddDays(-2), today));
 
         return (weight, waist);

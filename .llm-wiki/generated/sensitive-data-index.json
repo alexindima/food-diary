@@ -1576,14 +1576,14 @@
       "name": "ExternalSubscriptionId",
       "type": "string?",
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
-      "line": 349
+      "line": 351
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
-      "line": 355
+      "line": 357
     },
     {
       "category": "financial",
@@ -2443,7 +2443,7 @@
       "category": "health",
       "name": "WeightKg",
       "type": "double",
-      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
+      "path": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
       "line": 3
     },
     {
@@ -2521,7 +2521,7 @@
       "name": "WeightKg",
       "type": "double",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "health",
@@ -2542,7 +2542,7 @@
       "name": "HeightCm",
       "type": "double?",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Responses/WaistHistoryPageSummaryHttpResponse.cs",
-      "line": 8
+      "line": 10
     },
     {
       "category": "health",
@@ -2563,7 +2563,7 @@
       "name": "HeightCm",
       "type": "double?",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
-      "line": 8
+      "line": 10
     },
     {
       "category": "health",

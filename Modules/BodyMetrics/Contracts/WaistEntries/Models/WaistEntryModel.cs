@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.WaistEntries.Models;
+namespace FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 
 public sealed record WaistEntryModel(
     Guid Id,

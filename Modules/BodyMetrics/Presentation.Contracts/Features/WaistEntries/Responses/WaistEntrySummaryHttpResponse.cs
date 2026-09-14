@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;
 
 public sealed record WaistEntrySummaryHttpResponse(
     DateTime StartDate,

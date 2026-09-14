@@ -21,9 +21,9 @@
   <ItemGroup>
     <ProjectReference Include="../../Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
-    <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../../../Exercises/Application/FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="../../../BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../BodyMetrics/Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../../../Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />

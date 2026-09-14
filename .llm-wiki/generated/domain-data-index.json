@@ -659,7 +659,7 @@
       "name": "WaistEntry",
       "role": "entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "area": "FoodDiary",
@@ -701,7 +701,7 @@
       "name": "WeightEntry",
       "role": "entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "area": "FoodDiary",
@@ -1872,42 +1872,42 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), \"CircumferenceCm must be a finite number.\")",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 72
+      "line": 73
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"CircumferenceCm must be in range (0, {MaxCircumference}].\"))",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 76
+      "line": 77
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 82
+      "line": 83
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), \"WeightKg must be a finite number.\")",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 72
+      "line": 73
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"WeightKg must be in range (0, {MaxWeight}].\"))",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 76
+      "line": 77
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 82
+      "line": 83
     },
     {
       "area": "FoodDiary",
@@ -6285,7 +6285,7 @@
         "e => new { e.UserId, e.Date }).IsUnique()"
       ],
       "relationships": [],
-      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs"
+      "path": "Modules/BodyMetrics/PersistenceModel/Configurations/WaistEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6348,7 +6348,7 @@
         "e => new { e.UserId, e.Date }).IsUnique()"
       ],
       "relationships": [],
-      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs"
+      "path": "Modules/BodyMetrics/PersistenceModel/Configurations/WeightEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",

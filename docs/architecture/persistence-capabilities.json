@@ -402,11 +402,13 @@
         "tracked:WeightEntry"
       ],
       "reason": "BodyMetrics registration supplies only owned sets from its runtime context. The shared factory preserves connection and coordinated UoW saves; central migration/read/purge bridges remain. See ADR 0040.",
-      "technicalSourceSha256": "5543a0aa57c2edeb3c01be05048810de4fdce660da1a7accdfde1b3549287a28"
+      "technicalSourceSha256": "afc5e24275539d2256a0a5fe526a0f4bddd8d1eff7f36fa5b7101b34e46fa157"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs": {
       "module": "BodyMetrics",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:WaistEntry",
         "entity:WeightEntry",
         "tracked:WaistEntry",
@@ -414,7 +416,8 @@
         "write:WaistEntry",
         "write:WeightEntry"
       ],
-      "reason": "BodyMetrics owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
+      "technicalSourceSha256": "1619426da00cca3d32df12e2b283407200fd16f01cf8b07c4d931fafeb51b5bb"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs": {
       "module": "BodyMetrics",
@@ -465,6 +468,8 @@
     "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs": {
       "module": "Cycles",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:BleedingEntry",
         "entity:CycleFactor",
         "entity:CycleProfile",
@@ -481,7 +486,8 @@
         "write:CycleSymptomEntry",
         "write:FertilitySignal"
       ],
-      "reason": "Cycles owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
+      "technicalSourceSha256": "fa8daa4dcb4da1ea9afece7f58270d5f2a9acc4129f0ebbca70477e22f042db8"
     },
     "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs": {
       "module": "DailyAdvices",
@@ -751,11 +757,14 @@
     "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs": {
       "module": "Hydration",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:HydrationEntry",
         "tracked:HydrationEntry",
         "write:HydrationEntry"
       ],
-      "reason": "Hydration owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
+      "technicalSourceSha256": "b13cf7617fed273957d340a98a46c4994e48c47762a114b365373f58b22a3970"
     },
     "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs": {
       "module": "Identity",

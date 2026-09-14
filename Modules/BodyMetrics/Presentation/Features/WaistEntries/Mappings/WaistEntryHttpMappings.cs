@@ -1,9 +1,9 @@
-using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.CreateWaistEntry;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.DeleteWaistEntry;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.UpdateWaistEntry;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.CreateWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.DeleteWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.UpdateWaistEntry;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
+namespace FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Mappings;
 
 public static class WaistEntryHttpMappings {
     extension(Guid id) {

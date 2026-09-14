@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.WeightEntries.Common;
+namespace FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 
 public interface IWeightEntryReadModelRepository {
     Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(

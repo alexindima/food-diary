@@ -5,25 +5,37 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
-public sealed class BillingNamespaceTests {
+public sealed class MigratedModuleNamespaceTests {
     [Theory]
-    [InlineData("Application")]
-    [InlineData("Application.Abstractions")]
-    [InlineData("Contracts")]
-    [InlineData("Domain")]
-    [InlineData("Domain.Contracts")]
-    [InlineData("Infrastructure")]
-    [InlineData("PersistenceModel")]
-    [InlineData("Presentation")]
-    [InlineData("tests/FoodDiary.Modules.Billing.Application.Tests")]
-    [InlineData("tests/FoodDiary.Modules.Billing.Domain.Tests")]
-    [InlineData("tests/FoodDiary.Modules.Billing.Infrastructure.Tests")]
-    [InlineData("tests/FoodDiary.Modules.Billing.Presentation.Tests")]
-    public void Projects_UseProjectNamesAndFolderNamespaces(string project) {
-        string directory = ArchitectureTestPaths.FromRoot("Modules", "Billing", project);
+    [InlineData("Billing", "Application")]
+    [InlineData("Billing", "Application.Abstractions")]
+    [InlineData("Billing", "Contracts")]
+    [InlineData("Billing", "Domain")]
+    [InlineData("Billing", "Domain.Contracts")]
+    [InlineData("Billing", "Infrastructure")]
+    [InlineData("Billing", "PersistenceModel")]
+    [InlineData("Billing", "Presentation")]
+    [InlineData("Billing", "tests/FoodDiary.Modules.Billing.Application.Tests")]
+    [InlineData("Billing", "tests/FoodDiary.Modules.Billing.Domain.Tests")]
+    [InlineData("Billing", "tests/FoodDiary.Modules.Billing.Infrastructure.Tests")]
+    [InlineData("Billing", "tests/FoodDiary.Modules.Billing.Presentation.Tests")]
+    [InlineData("BodyMetrics", "Application")]
+    [InlineData("BodyMetrics", "Application.Abstractions")]
+    [InlineData("BodyMetrics", "Contracts")]
+    [InlineData("BodyMetrics", "Domain")]
+    [InlineData("BodyMetrics", "Infrastructure")]
+    [InlineData("BodyMetrics", "PersistenceModel")]
+    [InlineData("BodyMetrics", "Presentation")]
+    [InlineData("BodyMetrics", "Presentation.Contracts")]
+    [InlineData("BodyMetrics", "Presentation.Mappings")]
+    [InlineData("BodyMetrics", "tests/FoodDiary.Modules.BodyMetrics.Application.Tests")]
+    [InlineData("BodyMetrics", "tests/FoodDiary.Modules.BodyMetrics.Domain.Tests")]
+    [InlineData("BodyMetrics", "tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests")]
+    public void Projects_UseProjectNamesAndFolderNamespaces(string module, string project) {
+        string directory = ArchitectureTestPaths.FromRoot("Modules", module, project);
         string projectFile = Assert.Single(Directory.EnumerateFiles(directory, "*.csproj"));
         string expectedRoot = project.StartsWith("tests/", StringComparison.Ordinal)
-            ? project[6..] : "FoodDiary.Modules.Billing." + project;
+            ? project[6..] : $"FoodDiary.Modules.{module}." + project;
         Assert.Equal(expectedRoot, Path.GetFileNameWithoutExtension(projectFile));
         var document = XDocument.Load(projectFile);
         Assert.Empty(document.Descendants("RootNamespace"));
@@ -41,6 +53,20 @@ public sealed class BillingNamespaceTests {
             }
         }
         Assert.True(violations.Count == 0, string.Join(Environment.NewLine, violations));
+    }
+
+    [Theory]
+    [InlineData("Weight")]
+    [InlineData("Waist")]
+    public void BodyMetrics_ExposesOnlyWriteAndProjectionRepositoryPorts(string measurement) {
+        string ports = ArchitectureTestPaths.FromRoot("Modules", "BodyMetrics", "Application.Abstractions", measurement + "Entries", "Common");
+        string[] actual = [.. Directory.GetFiles(ports, "I*Repository.cs")
+            .Select(path => Path.GetFileName(path)).Order(StringComparer.Ordinal)];
+        Assert.Equal([$"I{measurement}EntryReadModelRepository.cs", $"I{measurement}EntryWriteRepository.cs"], actual);
+        string servicePath = ArchitectureTestPaths.FromRoot("Modules", "BodyMetrics", "Application", measurement + "Entries", "Services", measurement + "EntryReadService.cs");
+        string service = File.ReadAllText(servicePath);
+        Assert.Contains($"I{measurement}EntryReadModelRepository", service, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.BodyMetrics.Domain", service, StringComparison.Ordinal);
     }
 
     [Theory]

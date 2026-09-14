@@ -1,3 +1,3 @@
-namespace FoodDiary.Application.Abstractions.WeightEntries.Models;
+namespace FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 
 public sealed record WeightEntryReadModel(Guid Id, Guid UserId, DateTime Date, double WeightKg);

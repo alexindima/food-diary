@@ -29,10 +29,10 @@
     <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
-    <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../../../Notifications/Application/FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="../../../Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
-    <ProjectReference Include="../../../BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../BodyMetrics/Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../../../ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="../../../ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />

@@ -1341,7 +1341,6 @@
       "fooddiary.jobmanager": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.BodyMetrics": "[1.0.0, )",
           "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
           "FoodDiary.Application.Dashboard": "[1.0.0, )",
           "FoodDiary.Application.Exercises": "[1.0.0, )",
@@ -1368,6 +1367,7 @@
           "FoodDiary.Modules.Ai.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Application": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Export.Infrastructure": "[1.0.0, )",
@@ -1586,7 +1586,6 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
@@ -1613,6 +1612,21 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.bodymetrics.application": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
       "fooddiary.modules.bodymetrics.application.abstractions": {
@@ -2460,7 +2474,6 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.OpenFoodFacts": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",

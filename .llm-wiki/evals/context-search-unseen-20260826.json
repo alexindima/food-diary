@@ -163,7 +163,7 @@
       "query": "implementation contract for common i weight entry read service",
       "changeType": "Any",
       "expectedPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
       ]
     },
     {

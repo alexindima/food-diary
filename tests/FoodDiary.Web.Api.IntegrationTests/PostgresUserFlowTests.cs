@@ -8,7 +8,7 @@ using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;

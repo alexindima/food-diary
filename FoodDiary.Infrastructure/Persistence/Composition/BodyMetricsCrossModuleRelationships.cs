@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 

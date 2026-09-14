@@ -198,7 +198,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
             BillingSubscription subscription = await billingSubscriptionRepository.GetByUserIdAsync(new UserId(snapshot.Request.UserId), ct).ConfigureAwait(false)
                 ?? throw new InvalidOperationException("The subscription no longer exists.");
             bool isCurrent = Capture(subscription) == snapshot;
-            await RecordRenewalPaymentAsync(snapshot, subscription, renewal, provider, isCurrent, ct).ConfigureAwait(false);
+            await RecordRenewalPaymentAsync(snapshot, subscription, renewal, provider, ct).ConfigureAwait(false);
             if (!isCurrent) {
                 return;
             }
@@ -250,14 +250,16 @@ public sealed class RenewDueSubscriptionsCommandHandler(
         BillingSubscription subscription,
         BillingRecurringPaymentModel renewal,
         string provider,
-        bool isCurrent,
         CancellationToken cancellationToken) {
         BillingPayment? existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
             provider,
             renewal.PaymentId,
             cancellationToken).ConfigureAwait(false);
         if (existingPayment is not null) {
-            if (isCurrent && existingPayment.Status is "pending" or "past_due") {
+            // Payment history has its own ordering; a provider switch must not discard a verified payment outcome.
+            bool isCurrentPayment = existingPayment.OccurredAtUtc is not { } recordedAt ||
+                (renewal.OccurredAtUtc is { } receivedAt && receivedAt >= recordedAt);
+            if (isCurrentPayment && existingPayment.Status is "pending" or "past_due") {
                 existingPayment.ApplyProviderResult(existingPayment.BillingSubscriptionId,
                     snapshot.Request.CustomerId, renewal.PaymentId, renewal.PaymentMethodId,
                     renewal.PriceId, renewal.Plan, renewal.Status, BillingPaymentKinds.Renewal,

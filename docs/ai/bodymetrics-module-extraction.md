@@ -4,7 +4,7 @@
 
 Baseline: `037bbc254b` (`refactor: extract billing module`), the local master tip used by this worktree. No push is part of this task.
 
-The extraction preserves `FoodDiary.Application.BodyMetrics` AssemblyName/RootNamespace, every application CLR namespace, all HTTP requests/responses/routes, calculations, date normalization, authorization, repository predicates, and EF entity identity. The two proven feature groups remain `WeightEntries` and `WaistEntries`.
+The extraction preserves `FoodDiary.Modules.BodyMetrics.Application` AssemblyName/RootNamespace, every application CLR namespace, all HTTP requests/responses/routes, calculations, date normalization, authorization, repository predicates, and EF entity identity. The two proven feature groups remain `WeightEntries` and `WaistEntries`.
 
 `User` publicly exposes `IReadOnlyCollection<WeightEntry>` and `IReadOnlyCollection<WaistEntry>` and entry entities navigate back to `User`. Moving these types into a module Domain assembly would require a cyclic project reference or a CLR/EF navigation change. As in the accepted Hydration precedent, entry entities/IDs/invariants remain central. `WeightGoal` and `WaistGoal` are User-owned lifecycle children mutated by `User.Start*Goal`/`Cancel*Goal`, not BodyMetrics measurement aggregates; their IDs, statuses, value objects, EF mappings, and tests stay central. No empty Domain or Contracts layer is created.
 

@@ -4,11 +4,11 @@
   "mappings": [
     {
       "old": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
-      "current": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+      "current": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
       "gitRenameChain": [
         {
           "old": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
-          "new": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+          "new": "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
           "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
           "score": "R100"
         }
@@ -159,11 +159,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs",
+      "old": "FoodDiary.Modules.BodyMetrics.Application/Common/RequiredIdParser.cs",
       "current": "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs",
+          "old": "FoodDiary.Modules.BodyMetrics.Application/Common/RequiredIdParser.cs",
           "new": "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs",
           "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
           "score": "R100"
@@ -171,11 +171,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+      "old": "FoodDiary.Modules.BodyMetrics.Application/Common/UtcDateNormalizer.cs",
       "current": "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+          "old": "FoodDiary.Modules.BodyMetrics.Application/Common/UtcDateNormalizer.cs",
           "new": "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
           "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
           "score": "R100"
@@ -183,11 +183,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
+      "old": "FoodDiary.Modules.BodyMetrics.Application/WaistEntries/Services/WaistEntryReadService.cs",
       "current": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
+          "old": "FoodDiary.Modules.BodyMetrics.Application/WaistEntries/Services/WaistEntryReadService.cs",
           "new": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
           "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
           "score": "R100"
@@ -195,11 +195,11 @@
       ]
     },
     {
-      "old": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
+      "old": "FoodDiary.Modules.BodyMetrics.Application/WeightEntries/Services/WeightEntryReadService.cs",
       "current": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
       "gitRenameChain": [
         {
-          "old": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
+          "old": "FoodDiary.Modules.BodyMetrics.Application/WeightEntries/Services/WeightEntryReadService.cs",
           "new": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
           "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
           "score": "R100"

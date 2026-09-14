@@ -10,12 +10,14 @@ Rules for `Modules/BodyMetrics/`.
 - Preserve `WeightEntries` and `WaistEntries` as the two cohesive feature groups.
 - External read services and immutable entry/summary results live in BodyMetrics.Contracts, which cannot reference aggregate-bearing Domain or repository ports.
 - WeightEntryErrors and WaistEntryErrors stay in the corresponding owner Abstractions groups. Call them directly; central Errors.WeightEntry/Errors.WaistEntry facades and the central BodyMetrics ports reference are retired. Preserve error codes/messages/kinds and invariant date formatting; see docs/ai/measurement-error-facades.md.
-- Preserve the legacy `FoodDiary.Application.BodyMetrics` assembly name and CLR namespaces.
-- Keep `WeightEntry`, `WaistEntry`, and their IDs in module-owned `Domain` with their legacy CLR namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse measurement navigations.
+- Use `FoodDiary.Modules.BodyMetrics.<Project>` assembly names and namespaces matching project-relative folders, including tests. Do not override RootNamespace or AssemblyName to retain donor identities.
+- Keep all projects in sibling directories, including Application.Abstractions and PersistenceModel; do not restore nested projects or Compile Remove exclusions.
+- Keep `WeightEntry`, `WaistEntry`, and their IDs in module-owned `Domain` under `FoodDiary.Modules.BodyMetrics.Domain` with project-relative namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse measurement navigations.
 - Keep `WeightGoal`, `WaistGoal`, their IDs and lifecycle/status behavior, and the public goal navigations in Users Domain as User-owned responsibilities.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
-- Runtime measurement repositories use BodyMetricsDbContext, sharing the scoped connection and atomic IUnitOfWork with Hydration and central Infrastructure (ADR 0040). Central mappings remain for migration, composed reads and purge; goals remain Users-owned.
+- Runtime measurement repositories use BodyMetricsDbContext, sharing the scoped connection and atomic IUnitOfWork with Hydration and central Infrastructure (ADR 0040). Central mappings remain for migration and composed reads; owner purge uses the live shared transaction and goals remain Users-owned.
 - Register application and persistence through Infrastructure's `AddBodyMetricsModule` facade.
+- Expose separate write and read-model repository ports backed by one scoped implementation; do not restore unused combined/read-entity ports. Preserve the shared weight/waist read services consumed by local handlers and other modules.
 - Treat body measurements as private health data: preserve current-user authorization and user-scoped repository predicates.
 
 ## Tests

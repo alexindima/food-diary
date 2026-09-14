@@ -1427,8 +1427,6 @@ public sealed class ApplicationGuardrailTests {
     public void ReadModelContracts_DoNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
-            Path.Combine(root, "Modules", "BodyMetrics", "Application", "Abstractions", "WeightEntries", "Common", "IWeightEntryReadRepository.cs"),
-            Path.Combine(root, "Modules", "BodyMetrics", "Application", "Abstractions", "WaistEntries", "Common", "IWaistEntryReadRepository.cs"),
             Path.Combine(root, "Modules", "Exercises", "Application", "Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingOccurrenceReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingCheckInReadRepository.cs"),

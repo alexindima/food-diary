@@ -3,8 +3,8 @@ using FoodDiary.Presentation.Api.Features.Cycles.Responses;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 using FoodDiary.Presentation.Api.Features.Tdee.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Models;
-using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;
+using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WeightEntries.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 

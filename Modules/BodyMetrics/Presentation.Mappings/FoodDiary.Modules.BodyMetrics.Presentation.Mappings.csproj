@@ -1,10 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>FoodDiary.Presentation.Api</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj" />
   </ItemGroup>

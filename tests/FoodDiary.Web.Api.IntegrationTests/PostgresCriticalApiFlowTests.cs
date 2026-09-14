@@ -11,7 +11,7 @@ using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
-using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 

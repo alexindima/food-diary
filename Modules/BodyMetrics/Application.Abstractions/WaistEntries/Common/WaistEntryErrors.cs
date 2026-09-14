@@ -1,7 +1,7 @@
 using System.Globalization;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.WaistEntries.Common;
+namespace FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 
 public static class WaistEntryErrors {
     public static Error NotFound(Guid id) => new(

@@ -1,15 +1,16 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence.Configurations;
+namespace FoodDiary.Modules.BodyMetrics.PersistenceModel.Configurations;
 
-internal sealed class WeightEntryConfiguration : IEntityTypeConfiguration<WeightEntry> {
-    public void Configure(EntityTypeBuilder<WeightEntry> builder) {
+internal sealed class WaistEntryConfiguration : IEntityTypeConfiguration<WaistEntry> {
+    public void Configure(EntityTypeBuilder<WaistEntry> builder) {
         builder.Property(e => e.Id).HasConversion(
             id => id.Value,
-            value => new WeightEntryId(value));
+            value => new WaistEntryId(value));
 
         builder.Property(e => e.UserId).HasConversion(
             id => id.Value,

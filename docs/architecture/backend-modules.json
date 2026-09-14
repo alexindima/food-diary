@@ -167,13 +167,20 @@
           "Modules/BodyMetrics/Application"
         ],
         "abstractionAreas": [
-          "Modules/BodyMetrics/Application/Abstractions"
+          "Modules/BodyMetrics/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/BodyMetrics/Domain"
         ],
         "persistenceAreas": [
-          "Modules/BodyMetrics/Infrastructure"
+          "Modules/BodyMetrics/Infrastructure",
+          "Modules/BodyMetrics/PersistenceModel"
+        ],
+        "persistenceModelProjects": [
+          "Modules/BodyMetrics/PersistenceModel"
+        ],
+        "contractProjects": [
+          "Modules/BodyMetrics/Contracts"
         ]
       }
     },
