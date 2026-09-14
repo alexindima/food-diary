@@ -150,3 +150,5 @@ ApplicationDomainBoundaryTests prevents foreign aggregate Domain project referen
 Narrow consumer closure and foreign internal-port guards also cover Favorites,
 RecentItems, Billing and Dietologist. Favorites source ports/models belong to
 Contracts alongside its public read projections; repository models stay internal.
+
+ModuleContextFactoryBoundaryTests protects the nine factory-only adapters (DailyAdvices, ContentReports, Favorites, Exercises, RecipeCommunity, Fasting, Usda, Marketing, Lessons) from both direct and transitive central Infrastructure dependencies. Keep their direct factory contract reference and host-coordinated unit of work.

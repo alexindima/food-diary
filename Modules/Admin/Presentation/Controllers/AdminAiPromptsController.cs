@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Authorization;
+﻿using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
@@ -31,6 +31,7 @@ public sealed class AdminAiPromptsController(ISender mediator) : BaseApiControll
     [HttpPut("{key:maxlength(64)}/{locale:maxlength(10)}")]
     [ProducesResponseType<AdminAiPromptHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> Upsert(
         string key,
         string locale,

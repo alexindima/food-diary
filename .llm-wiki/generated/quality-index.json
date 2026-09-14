@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5337,
+    "productionFiles": 5335,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 844,
@@ -15578,11 +15578,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.7
+      "structuralRiskScore": 2.72
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminAiUsageController.cs",
@@ -16618,11 +16618,11 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateWriteRepository.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IAiQuotaRepository.cs",
@@ -16639,14 +16639,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.3
-    },
-    {
-      "path": "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobReader.cs",
@@ -16882,11 +16874,11 @@
     },
     {
       "path": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
-      "nonBlankLines": 34,
-      "decisionPoints": 2,
+      "nonBlankLines": 28,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.68
+      "structuralRiskScore": 2.06
     },
     {
       "path": "Modules/Ai/Application/Services/ApplicationAiTelemetry.cs",
@@ -17090,11 +17082,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 45,
+      "nonBlankLines": 43,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.4
+      "structuralRiskScore": 2.36
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs",
@@ -17114,11 +17106,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs",
-      "nonBlankLines": 72,
-      "decisionPoints": 8,
+      "nonBlankLines": 59,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.44
+      "structuralRiskScore": 11.68
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs",
@@ -17127,14 +17119,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 58.66
-    },
-    {
-      "path": "Modules/Ai/Infrastructure/Persistence/AiUsageRepository.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.74
     },
     {
       "path": "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs",
@@ -17226,11 +17210,11 @@
     },
     {
       "path": "Modules/Ai/PersistenceModel/Configurations/AiPromptTemplateConfiguration.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.54
     },
     {
       "path": "Modules/Ai/PersistenceModel/Configurations/AiQuotaPeriodConfiguration.cs",

@@ -5,6 +5,36 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ModuleContextFactoryBoundaryTests {
+    [Theory]
+    [InlineData("DailyAdvices")]
+    [InlineData("ContentReports")]
+    [InlineData("Favorites")]
+    [InlineData("Exercises")]
+    [InlineData("RecipeCommunity")]
+    [InlineData("Fasting")]
+    [InlineData("Usda")]
+    [InlineData("Marketing")]
+    [InlineData("Lessons")]
+    public void FactoryOnlyAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
+        IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
+        string project = $"FoodDiary.Modules.{module}.Infrastructure";
+        Assert.Contains("FoodDiary.Persistence.Abstractions", graph[project], StringComparer.Ordinal);
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        var pending = new Queue<string>();
+        pending.Enqueue(project);
+        while (pending.TryDequeue(out string? current)) {
+            if (!visited.Add(current)) {
+                continue;
+            }
+
+            foreach (string dependency in graph[current]) {
+                Assert.False(string.Equals(dependency, "FoodDiary.Infrastructure", StringComparison.Ordinal),
+                    $"{project} depends on central Infrastructure through {current} -> {dependency}");
+                pending.Enqueue(dependency);
+            }
+        }
+    }
+
     [Fact]
     public void EveryModuleContext_IsCreatedThroughFactoryContract() {
         string modules = ArchitectureTestPaths.FromRoot("Modules");

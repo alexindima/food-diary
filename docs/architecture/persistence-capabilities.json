@@ -2,6 +2,14 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "context:SaveChangesAsync"
+      ],
+      "reason": "Owner context delegates saving to EF and translates only the public AiPromptTemplates key/locale unique constraint into a concurrency conflict. No retry or additional writes; shared unit of work retains rollback ownership.",
+      "technicalSourceSha256": "6e1a94b9fefd482dae54f84796989318e570fc6d8e2687f91c7750368e9b4cf4"
+    },
     "Modules/Gamification/Infrastructure/ModuleRegistration.cs": {
       "module": "Gamification",
       "capabilities": [
@@ -320,15 +328,7 @@
       "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
       "technicalSourceSha256": "899297f7749b790a9a718e7c7316078652e577dc51bf66d8e3fb1b3cfe346834"
     },
-    "Modules/Ai/Infrastructure/Persistence/AiUsageRepository.cs": {
-      "module": "Ai",
-      "capabilities": [
-        "entity:AiUsage",
-        "tracked:AiUsage",
-        "write:AiUsage"
-      ],
-      "reason": "AI stages usage writes through its own DbSet and transaction synchronizer. Immutable reporting uses IAiUsageQuery directly; the writer has no query dependency."
-    },
+
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
       "capabilities": [
@@ -1622,12 +1622,10 @@
         "context:CreateModuleContext",
         "context:Database",
         "entity:AiPromptTemplate",
-        "entity:AiUsage",
-        "tracked:AiPromptTemplate",
-        "tracked:AiUsage"
+        "tracked:AiPromptTemplate"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "c7ff37492063d12865a0f86f5a25b9ad4f64b9493c07102fd7badbc2149ed663"
+      "technicalSourceSha256": "2278bcc6a2ba056d760d5d8b8859c2437e48dcb38f1b3b1c3ad7a784756bb88c"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",

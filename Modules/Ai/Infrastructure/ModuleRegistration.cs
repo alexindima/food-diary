@@ -19,8 +19,6 @@ public static class ModuleRegistration {
             .Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AiUserDataPurgeParticipant>());
         services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
-        services.AddScoped<IAiUsageWriteRepository>(provider => new AiUsageRepository(
-            provider.GetRequiredService<AiDbContext>().AiUsages, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();
         services.AddScoped<FoodRecognitionJobStore>();
         services.AddScoped<IFoodRecognitionJobStore>(provider => provider.GetRequiredService<FoodRecognitionJobStore>());

@@ -1,10 +1,12 @@
-namespace FoodDiary.ArchitectureTests;
+﻿namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiModuleExtractionTests {
     [Fact]
     public void PromptPorts_ExposeOnlyUsedReadModelsAndOwnerWrites() {
         string root = ArchitectureTestPaths.FromRoot("Modules", "Ai", "Application.Abstractions", "Common");
+        Assert.False(File.Exists(Path.Combine(root, "IAiUsageWriteRepository.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiUsageRepository.cs")));
         Assert.False(File.Exists(Path.Combine(root, "IAiPromptTemplateRepository.cs")));
         Assert.False(File.Exists(Path.Combine(root, "IAiPromptTemplateReadRepository.cs")));
         Assert.True(File.Exists(Path.Combine(root, "IAiPromptTemplateReadModelRepository.cs")));

@@ -1,4 +1,4 @@
-using FoodDiary.Results;
+﻿using FoodDiary.Results;
 
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
@@ -12,7 +12,6 @@ public static class ErrorKindResolver {
         ["Ai.QuotaExceeded"] = ErrorKind.RateLimited,
         ["Ai.OpenAiFailed"] = ErrorKind.ExternalFailure,
         ["Ai.InvalidResponse"] = ErrorKind.ExternalFailure,
-        ["Ai.PromptTemplateNotFound"] = ErrorKind.NotFound,
         ["Image.Forbidden"] = ErrorKind.Forbidden,
         ["Image.InUse"] = ErrorKind.Conflict,
         ["Image.StorageError"] = ErrorKind.ExternalFailure,

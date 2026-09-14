@@ -41,17 +41,17 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
-- Public contract files: 21
+- Public contract files: 20
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 21
-- Interfaces: 11
+- Public contract types: 20
+- Interfaces: 10
 - DTO/read-model/projection types: 3
 - Enums: 1
-- Exported repository-shaped contracts: 5
+- Exported repository-shaped contracts: 4
 - Contracts referencing domain entities: 0
 - `class AiErrors`
 - `enum AiQuotaReservationStatus`
@@ -60,7 +60,6 @@ No literal attribute-routed controller was associated with this module.
 - `interface IAiPromptTemplateWriteRepository`
 - `interface IAiQuotaRepository`
 - `interface IAiUsageQuery`
-- `interface IAiUsageWriteRepository`
 - `interface IFoodRecognitionJobReader`
 - `interface IFoodRecognitionJobStore`
 - `interface IFoodRecognitionProcessor`

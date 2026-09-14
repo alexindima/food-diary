@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1215,
+    "contracts": 1214,
     "ambiguousContracts": 0,
-    "consumerEdges": 8893,
-    "productionConsumerEdges": 5174,
-    "testConsumerEdges": 3719,
-    "consumedContracts": 1215,
+    "consumerEdges": 8888,
+    "productionConsumerEdges": 5172,
+    "testConsumerEdges": 3716,
+    "consumedContracts": 1214,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -8115,23 +8115,6 @@
       ],
       "definitionPaths": [
         "Modules/Ai/Application.Abstractions/Common/IAiUsageQuery.cs"
-      ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
-    },
-    {
-      "name": "IAiUsageWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -51155,7 +51138,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 1
     },
     {
       "contract": "IAiPromptTemplateWriteRepository",
@@ -51442,71 +51425,6 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAiContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IAiUsageWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAiUsageWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Ai/Infrastructure/Persistence/AiUsageRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAiUsageWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAiUsageWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAiUsageWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAiContextIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IApiVersionInfo",
@@ -133353,7 +133271,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 3
     },
     {
       "contract": "UpsertAdminAiPromptCommand",

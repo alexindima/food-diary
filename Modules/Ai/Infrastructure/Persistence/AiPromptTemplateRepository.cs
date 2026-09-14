@@ -1,5 +1,4 @@
-using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -46,22 +45,8 @@ internal sealed class AiPromptTemplateRepository(DbSet<AiPromptTemplate> templat
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         return await templates
-            .AsNoTracking()
+            .AsTracking()
             .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task<AiPromptTemplate?> GetByIdAsync(
-        AiPromptTemplateId id,
-        bool asTracking = false,
-        CancellationToken cancellationToken = default) {
-        if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
-        }
-        IQueryable<AiPromptTemplate> query = asTracking
-            ? templates.AsTracking()
-            : templates.AsNoTracking();
-
-        return await query.FirstOrDefaultAsync(t => t.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {

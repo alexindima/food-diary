@@ -11,3 +11,5 @@ Verification covers factory identity, same-scope context reuse, separate-scope i
 Next: extract transaction/reset/connection coordination independently before revisiting purge and audit bridges. Ai independent quota/job options remain separate from scoped owner contexts; Users retains its interceptor and saveOrder -100.
 
 An all-module DI test resolves each owner context twice within a scope and in a second scope, proving shared connection/coordinator membership and scope isolation for all 29 owners. Standalone test containers register their supplied central context as IModuleContextFactory explicitly.
+
+DailyAdvices, ContentReports, Favorites, Exercises, RecipeCommunity, Fasting, Usda, Marketing and Lessons no longer reference FoodDiary.Infrastructure, directly or transitively. ModuleContextFactoryBoundaryTests protects this closed dependency graph. Their contexts still join the host-provided scoped factory and unit of work; central migrations and composed relationships remain unchanged. Legacy FoodDiary.Infrastructure namespaces inside owner assemblies do not imply a central assembly dependency.

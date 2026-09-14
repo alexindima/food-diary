@@ -1,6 +1,6 @@
 # RecipeCommunity Infrastructure
 
-Own repository adapters and full AddRecipeCommunityModule registration. Preserve scoped repository aliases and request transaction behavior. Reference central DbContext one-way; never add repository SaveChanges or provider calls.
+Own repository adapters and full AddRecipeCommunityModule registration. Preserve scoped repository aliases and request transaction behavior. Consume the scoped IModuleContextFactory contract without referencing central Infrastructure; never add repository SaveChanges or provider calls.
 
 Read comment authors through Users.Contracts IUserCommentAuthorReadService after
 selecting the ordered page. Batch distinct page user IDs; preserve total count,

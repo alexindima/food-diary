@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Modules.Ai.Domain.Entities;
@@ -12,7 +12,6 @@ public sealed class AiPromptAdministrationServiceTests {
         var template = AiPromptTemplate.Create("system", "en", "original", isActive: true);
         IAiPromptTemplateWriteRepository repository = Substitute.For<IAiPromptTemplateWriteRepository>();
         repository.GetByKeyAsync("system", "en", Arg.Any<CancellationToken>()).Returns(template);
-        repository.GetByIdAsync(template.Id, asTracking: true, Arg.Any<CancellationToken>()).Returns(template);
         var service = new AiPromptAdministrationService(repository);
 
         AiPromptTemplateReadModel model = ResultAssert.Success(await service.UpsertAsync("system", "en", "updated", isActive: true, CancellationToken.None));
@@ -23,6 +22,7 @@ public sealed class AiPromptAdministrationServiceTests {
             () => Assert.Equal("updated", model.PromptText),
             () => Assert.True(model.IsActive),
             () => Assert.Equal(2, model.Version));
+        await repository.Received(1).GetByKeyAsync("system", "en", Arg.Any<CancellationToken>());
         await repository.Received(1).UpdateAsync(template, Arg.Any<CancellationToken>());
     }
 }

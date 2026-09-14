@@ -1,3 +1,4 @@
+﻿using Microsoft.EntityFrameworkCore;
 using FoodDiary.ReadModel.Composition.Ai;
 using System.Reflection;
 using FoodDiary.Modules.Ai.Contracts.Models;
@@ -75,14 +76,13 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
     }
 
     [RequiresDockerFact]
-    public async Task AddAsyncAndTotals_WhenNoRows_ReturnZeroes() {
+    public async Task Totals_WhenNoRows_ReturnZeroes() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"ai-empty-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
         var repository = new AiUsageQuery(context);
-        await new AiUsageRepository(context.AiUsages).AddAsync(AiUsage.Create(user.Id, "vision", "gpt-test", 1, 2, 3));
 
         AiUsageSummary emptySummary = await repository.GetSummaryAsync(
             new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -110,12 +110,12 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
 
         IReadOnlyList<AiPromptTemplateReadModel> allReadModels = await repository.GetAllReadModelsAsync();
         AiPromptTemplate? byKey = await repository.GetByKeyAsync("nutrition", "en");
-        AiPromptTemplate? tracked = await repository.GetByIdAsync(nutrition.Id, asTracking: true);
+        AiPromptTemplate? tracked = await repository.GetByKeyAsync("nutrition", "en");
         Assert.NotNull(tracked);
         tracked.Update("Estimate nutrients precisely", isActive: false);
         await repository.UpdateAsync(tracked);
         await context.SaveChangesAsync();
-        AiPromptTemplate? updated = await repository.GetByIdAsync(nutrition.Id);
+        AiPromptTemplate? updated = await repository.GetByKeyAsync("nutrition", "en");
 
         Assert.Equal(["nutrition", "vision"], [.. allReadModels.Select(template => template.Key)]);
         Assert.Equal(nutrition.Id, byKey?.Id);
@@ -125,12 +125,78 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         Assert.Equal("Estimate nutrients", revision.PromptText);
         Assert.Equal(1, revision.Version);
         context.ChangeTracker.Clear();
-        AiPromptTemplate? restored = await repository.GetByIdAsync(nutrition.Id, asTracking: true);
+        AiPromptTemplate? restored = await repository.GetByKeyAsync("nutrition", "en");
         Assert.NotNull(restored);
         restored.Update(revision.PromptText, revision.IsActive);
         await context.SaveChangesAsync();
         Assert.Equal(3, restored.Version);
         Assert.Equal(2, (await repository.GetRevisionsAsync("nutrition", "en", CancellationToken.None)).Count);
+    }
+
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task PromptConcurrentUpdate_RejectsStaleWriteAndPreservesRevision(bool activationOnly) {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        database.AiPromptTemplates.Add(AiPromptTemplate.Create("concurrent", "en", "Original"));
+        await database.SaveChangesAsync();
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
+            .UseNpgsql(database.Database.GetConnectionString()).Options;
+        await using var first = new AiDbContext(options);
+        await using var second = new AiDbContext(options);
+        var firstRepository = new AiPromptTemplateRepository(first.AiPromptTemplates);
+        var secondRepository = new AiPromptTemplateRepository(second.AiPromptTemplates);
+        AiPromptTemplate winner = Assert.IsType<AiPromptTemplate>(await firstRepository.GetByKeyAsync("concurrent", "en"));
+        AiPromptTemplate stale = Assert.IsType<AiPromptTemplate>(await secondRepository.GetByKeyAsync("concurrent", "en"));
+        Assert.Single(first.ChangeTracker.Entries<AiPromptTemplate>());
+        winner.Update(activationOnly ? "Original" : "First edit", isActive: false);
+        stale.Update("Stale edit", isActive: true);
+        await first.SaveChangesAsync();
+
+        await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => second.SaveChangesAsync());
+
+        database.ChangeTracker.Clear();
+        AiPromptTemplate saved = await database.AiPromptTemplates.SingleAsync();
+        Assert.Equal(activationOnly ? "Original" : "First edit", saved.PromptText);
+        Assert.False(saved.IsActive);
+        Assert.Equal(activationOnly ? 1 : 2, saved.Version);
+        AiPromptRevisionReadModel revision = Assert.Single(await firstRepository.GetRevisionsAsync("concurrent", "en", CancellationToken.None));
+        Assert.Equal("Original", revision.PromptText);
+        Assert.True(revision.IsActive);
+    }
+
+    [RequiresDockerTheory]
+    [InlineData("en", true)]
+    [InlineData("ru", false)]
+    public async Task PromptConcurrentCreate_ConflictsOnlyForSameKeyAndLocale(string secondLocale, bool conflicts) {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
+            .UseNpgsql(database.Database.GetConnectionString()).Options;
+        await using var first = new AiDbContext(options);
+        await using var second = new AiDbContext(options);
+        var firstRepository = new AiPromptTemplateRepository(first.AiPromptTemplates);
+        var secondRepository = new AiPromptTemplateRepository(second.AiPromptTemplates);
+        Assert.Null(await firstRepository.GetByKeyAsync("create-race", "en"));
+        Assert.Null(await secondRepository.GetByKeyAsync("create-race", secondLocale));
+        await firstRepository.AddAsync(AiPromptTemplate.Create("create-race", "en", "First"));
+        await secondRepository.AddAsync(AiPromptTemplate.Create("create-race", secondLocale, "Second"));
+
+        Exception?[] results = await Task.WhenAll(
+            Record.ExceptionAsync(() => first.SaveChangesAsync(acceptAllChangesOnSuccess: false)),
+            Record.ExceptionAsync(() => second.SaveChangesAsync(acceptAllChangesOnSuccess: false)));
+
+        if (conflicts) {
+            Assert.Single(results, result => result is null);
+            DbUpdateConcurrencyException conflict = Assert.IsType<DbUpdateConcurrencyException>(Assert.Single(results, result => result is not null));
+            Assert.IsType<DbUpdateException>(conflict.InnerException);
+            AiPromptTemplate saved = await database.AiPromptTemplates.SingleAsync();
+            Assert.Equal(results[0] is null ? "First" : "Second", saved.PromptText);
+            Assert.Equal(1, saved.Version);
+        } else {
+            Assert.All(results, Assert.Null);
+            Assert.Equal(2, await database.AiPromptTemplates.CountAsync());
+        }
+        Assert.Empty(await database.AiPromptTemplates.AsNoTracking().SelectMany(template => template.Revisions).ToListAsync());
     }
 
     private static void SetCreatedOnUtc(AiUsage usage, DateTime createdOnUtc) {

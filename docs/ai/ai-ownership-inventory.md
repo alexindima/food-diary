@@ -1,11 +1,11 @@
-# AI ownership inventory
+﻿# AI ownership inventory
 
 AI owns food analysis, prompt administration, usage reporting contracts, quotas and asynchronous recognition. All seven production projects are sibling directories under `Modules/Ai`: Application, Application.Abstractions, Contracts, Domain, Infrastructure, PersistenceModel and Presentation. Namespaces follow the project filename and relative folders. The Application assembly name remains `FoodDiary.Application.Ai` for existing assembly discovery.
 
 ## Boundaries
 
 - Contracts exposes administration reads, prompt administration and completed recognition reads with their DTOs. Admin and Meals consume these public capabilities; they do not acquire quota, provider or job-store ports.
-- Application.Abstractions owns provider, quota, job-store and repository ports. IAiUsageQuery is implemented by FoodDiary.ReadModel.Composition. IAiUsageWriteRepository stages owner writes independently of query registration.
+- Application.Abstractions owns provider, quota, job-store and repository ports. IAiUsageQuery is implemented by FoodDiary.ReadModel.Composition. AiQuotaRepository writes usage during quota reconciliation; there is no standalone usage writer.
 - Application owns command/query handlers, provider/quota orchestration, completed-result validation and background recognition processing. GetUserAiUsageSummary computes its result in the handler. Profile consumers use the existing Users.Contracts IUserAiProfileReadService and UserAiProfileModel directly; no duplicate AI profile adapter or model is needed.
 - Domain owns AI usage and prompt entities and IDs. UserId comes from Users.Domain.Contracts; no foreign aggregate navigation is permitted.
 - PersistenceModel owns EF mappings and internal quota/job records. Four foreign User/ImageAsset relationships are composed centrally by AiCrossModuleRelationships. Preserve indexes, conversions and delete behavior.
@@ -24,7 +24,7 @@ AI owns food analysis, prompt administration, usage reporting contracts, quotas 
 
 ## Runtime invariants and verification ownership
 
-Scoped usage/template writes join the central connection and synchronize its live transaction before owner operations. Quotas and recognition jobs use independent short transactions with copied provider options. Preserve lock order, retry strategy and commit boundaries.
+Scoped template writes join the central connection and synchronize its live transaction before owner operations. Quotas and recognition jobs use independent short transactions with copied provider options. Preserve lock order, retry strategy and commit boundaries.
 
 Provider I/O follows reservation. Success reconciles with an independent five-second persistence token. Failure/cancellation can leave pending state because the provider may have processed the request; do not blindly release it. Preserve orphan charging, idempotency, consent, image access and cancellation semantics.
 

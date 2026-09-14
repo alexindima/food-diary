@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4049,
-    "symbols": 3990,
+    "sourceFiles": 4047,
+    "symbols": 3988,
     "interfaceImplementationLinks": 267,
     "dependencyInjectionRegistrations": 150,
     "kinds": {
-      "class": 2097,
+      "class": 2096,
       "enum": 64,
-      "interface": 471,
+      "interface": 470,
       "record": 1237,
       "record struct": 121
     },
@@ -37,13 +37,13 @@
       "QueryHandler": 139,
       "ReadModelRepository": 30,
       "ReadRepository": 43,
-      "Repository": 105,
+      "Repository": 104,
       "Request": 150,
       "Response": 213,
       "Service": 300,
       "Validator": 223,
       "ValueObject": 115,
-      "WriteRepository": 46
+      "WriteRepository": 45
     }
   },
   "symbols": [
@@ -4826,7 +4826,7 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/Ai/Application.Abstractions/Common/IAiPromptTemplateWriteRepository.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "IAiQuotaRepository",
@@ -4841,13 +4841,6 @@
       "role": "Query",
       "path": "Modules/Ai/Application.Abstractions/Common/IAiUsageQuery.cs",
       "line": 5
-    },
-    {
-      "name": "IAiUsageWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "Modules/Ai/Application.Abstractions/Common/IAiUsageWriteRepository.cs",
-      "line": 4
     },
     {
       "name": "IFoodRecognitionJobReader",
@@ -5246,7 +5239,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Ai/Infrastructure/Persistence/AiPromptTemplateRepository.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "AiQuotaRepository",
@@ -5254,13 +5247,6 @@
       "role": "Repository",
       "path": "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs",
       "line": 10
-    },
-    {
-      "name": "AiUsageRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "Modules/Ai/Infrastructure/Persistence/AiUsageRepository.cs",
-      "line": 6
     },
     {
       "name": "AiUserDataPurgeParticipant",

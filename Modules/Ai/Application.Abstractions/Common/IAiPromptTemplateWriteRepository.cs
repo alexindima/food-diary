@@ -1,5 +1,4 @@
-using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
-using FoodDiary.Modules.Ai.Domain.Entities;
+﻿using FoodDiary.Modules.Ai.Domain.Entities;
 
 namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
@@ -7,11 +6,6 @@ public interface IAiPromptTemplateWriteRepository {
     Task<AiPromptTemplate?> GetByKeyAsync(
         string key,
         string locale,
-        CancellationToken cancellationToken = default);
-
-    Task<AiPromptTemplate?> GetByIdAsync(
-        AiPromptTemplateId id,
-        bool asTracking = false,
         CancellationToken cancellationToken = default);
 
     Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken = default);

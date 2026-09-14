@@ -12,7 +12,7 @@ Rules for `Modules/Fasting/Infrastructure/` except the scoped `Model/` guide.
 
 ## Boundaries
 
-- Depend on Fasting Application/Domain and the shared Infrastructure project only in this outward adapter layer.
+- Depend on Fasting Application/Domain and the narrow FoodDiary.Persistence.Abstractions factory contract. Do not reference central Infrastructure directly or transitively.
 - The shared Infrastructure project must never reference this project; that would create a cycle.
 - Register the complete runtime slice through `AddFastingModule`.
 - Keep migrations and the shared model snapshot in `FoodDiary.Infrastructure`.

@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Domain.Entities;
@@ -21,16 +21,9 @@ public sealed class AiPromptAdministrationService(IAiPromptTemplateWriteReposito
             return Result.Success(ToReadModel(created));
         }
 
-        AiPromptTemplate? tracked = await repository
-            .GetByIdAsync(existing.Id, asTracking: true, cancellationToken)
-            .ConfigureAwait(false);
-        if (tracked is null) {
-            return Result.Failure<AiPromptTemplateReadModel>(AiErrors.PromptTemplateNotFound());
-        }
-
-        tracked.Update(promptText, isActive);
-        await repository.UpdateAsync(tracked, cancellationToken).ConfigureAwait(false);
-        return Result.Success(ToReadModel(tracked));
+        existing.Update(promptText, isActive);
+        await repository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
+        return Result.Success(ToReadModel(existing));
     }
     private static AiPromptTemplateReadModel ToReadModel(AiPromptTemplate template) =>
         new(template.Id.Value, template.Key, template.Locale, template.PromptText, template.Version,

@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Ai.Application.Tests;
@@ -21,7 +21,6 @@ public sealed class FeatureErrorContractTests {
         AssertError(AiErrors.OpenAiFailed("sample"), "Ai.OpenAiFailed", "sample", ErrorKind.ExternalFailure);
         AssertError(AiErrors.InvalidResponse("sample"), "Ai.InvalidResponse", "sample", ErrorKind.ExternalFailure);
         AssertError(AiErrors.QuotaExceeded(), "Ai.QuotaExceeded", "AI token quota exceeded for the current month.", ErrorKind.RateLimited);
-        AssertError(AiErrors.PromptTemplateNotFound(), "Ai.PromptTemplateNotFound", "AI prompt template disappeared during update.", ErrorKind.NotFound);
     }
 
     private static void AssertError(Error error, string code, string message, ErrorKind kind) {

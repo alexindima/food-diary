@@ -11,3 +11,5 @@ IAiUsageQuery is the internal immutable usage-reporting port implemented in host
 Prompt persistence exposes only IAiPromptTemplateReadModelRepository and IAiPromptTemplateWriteRepository. Do not restore an unused aggregate read port or a composite alias solely for DI.
 
 Recognition queries, completed-result readers and notifications consume IFoodRecognitionJobReader. IFoodRecognitionJobStore owns only creation and worker mutations; do not expose a combined read/write port.
+
+Prompt writes load the tracked aggregate once through GetByKeyAsync. Do not add tracking switches or a second ID lookup. PostgreSQL xmin protects concurrent text and activation changes.

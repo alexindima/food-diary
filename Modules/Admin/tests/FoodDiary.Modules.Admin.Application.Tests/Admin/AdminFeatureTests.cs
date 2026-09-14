@@ -1,5 +1,4 @@
-using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Users.Models;
+﻿using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
@@ -373,25 +372,6 @@ public partial class AdminFeatureTests {
         Assert.False(result.Value.IsActive);
         Assert.Equal(2, result.Value.Version);
         Assert.Equal(1, repository.UpdateCallCount);
-    }
-
-    [Fact]
-    public async Task UpsertAdminAiPromptHandler_WhenTrackedPromptDisappears_ReturnsNotFound() {
-        var existing = AiPromptTemplate.Create("meal_summary", "en", "Old prompt", isActive: true);
-        IAiPromptTemplateWriteRepository repository = Substitute.For<IAiPromptTemplateWriteRepository>();
-        repository.GetByKeyAsync("meal_summary", "en", Arg.Any<CancellationToken>()).Returns(existing);
-        repository
-            .GetByIdAsync(existing.Id, asTracking: true, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<AiPromptTemplate?>(null));
-        var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
-
-        Result<AdminAiPromptModel> result = await handler.Handle(
-            new UpsertAdminAiPromptCommand("meal_summary", "en", "New prompt", IsActive: true),
-            CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Ai.PromptTemplateNotFound", result.Error.Code);
-        await repository.DidNotReceive().UpdateAsync(Arg.Any<AiPromptTemplate>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -915,12 +895,6 @@ public partial class AdminFeatureTests {
             Task.FromResult(_templates.FirstOrDefault(template =>
                 string.Equals(template.Key, key, StringComparison.Ordinal) &&
                 string.Equals(template.Locale, locale, StringComparison.Ordinal)));
-
-        public Task<AiPromptTemplate?> GetByIdAsync(
-            AiPromptTemplateId id,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(_templates.FirstOrDefault(template => template.Id == id));
 
         public Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
             _templates.Add(template);

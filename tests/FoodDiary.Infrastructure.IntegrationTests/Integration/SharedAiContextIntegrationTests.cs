@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Infrastructure;
+﻿using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -18,20 +18,18 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
-    public async Task UsageAndPromptRevisionsShareSaveAndRollbackAsync() {
+    public async Task PromptRevisionsShareSaveAndRollbackAsync() {
         await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
         await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!);
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         AiDbContext owned = provider.GetRequiredService<AiDbContext>();
         IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
-        IAiUsageWriteRepository usages = provider.GetRequiredService<IAiUsageWriteRepository>();
         Assert.Null(provider.GetService<IAiUsageQuery>());
         IAiPromptTemplateWriteRepository templates = provider.GetRequiredService<IAiPromptTemplateWriteRepository>();
         IAiPromptTemplateReadModelRepository templateReads = provider.GetRequiredService<IAiPromptTemplateReadModelRepository>();
         Assert.Same(templates, templateReads);
         var user = User.Create("ai-context@example.com", "hash");
         shared.Users.Add(user);
-        await usages.AddAsync(AiUsage.Create(user.Id, "vision", "test", 2, 3, 5));
         AiPromptTemplate prompt = await templates.AddAsync(AiPromptTemplate.Create("context-test", "en", "Original"));
         Assert.Equal(6, owned.Model.GetEntityTypes().Count());
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
@@ -39,12 +37,10 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         Assert.Empty(shared.ChangeTracker.Entries<AiPromptTemplate>());
         await Assert.ThrowsAsync<InvalidOperationException>(() => shared.SaveChangesAsync());
         await unitOfWork.SaveChangesAsync();
-        Assert.Single(await database.AiUsages.ToListAsync());
         await using (IDbContextTransaction transaction = await shared.Database.BeginTransactionAsync()) {
             shared.Users.Add(User.Create("ai-rollback@example.com", "hash"));
-            await usages.AddAsync(AiUsage.Create(user.Id, "vision", "test", 10, 20, 30));
             await unitOfWork.SaveChangesAsync();
-            AiPromptTemplate? tracked = await provider.GetRequiredService<IAiPromptTemplateWriteRepository>().GetByIdAsync(prompt.Id, asTracking: true);
+            AiPromptTemplate? tracked = await provider.GetRequiredService<IAiPromptTemplateWriteRepository>().GetByKeyAsync("context-test", "en");
             Assert.NotNull(tracked);
             Assert.Same(transaction.GetDbTransaction(), owned.Database.CurrentTransaction!.GetDbTransaction());
             tracked.Update("Changed", isActive: true);
@@ -54,7 +50,6 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
             await transaction.RollbackAsync();
         }
         Assert.Single(await database.Users.ToListAsync());
-        Assert.Single(await database.AiUsages.ToListAsync());
         Assert.Equal("Original", (await database.AiPromptTemplates.SingleAsync(item => item.Id == prompt.Id)).PromptText);
         Assert.Empty(await database.AiPromptTemplates.AsNoTracking().Where(item => item.Id == prompt.Id).SelectMany(item => item.Revisions).ToListAsync());
         Assert.False(database.Database.HasPendingModelChanges());

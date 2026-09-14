@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
+﻿using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,6 +7,7 @@ namespace FoodDiary.Modules.Ai.PersistenceModel.Configurations;
 
 internal sealed class AiPromptTemplateConfiguration : IEntityTypeConfiguration<AiPromptTemplate> {
     public void Configure(EntityTypeBuilder<AiPromptTemplate> builder) {
+        builder.Property<uint>("xmin").IsRowVersion();
         builder.OwnsMany(e => e.Revisions, revisions => {
             revisions.ToTable("AiPromptRevisions");
             revisions.WithOwner().HasForeignKey("TemplateId");
