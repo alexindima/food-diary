@@ -15,3 +15,7 @@ Register the concrete scoped AiPromptTemplateRepository once and map its read-mo
 Prompt selection uses LanguageCode.FromPreferred: active requested locale, active English, then the built-in fallback. Cache keys include normalized locale; retain the five-minute TTL. Register one scoped FoodRecognitionJobStore and map its reader and writer ports to the same instance.
 
 AiDbContext translates only unique violations for public.AiPromptTemplates / IX_AiPromptTemplates_Key_Locale into DbUpdateConcurrencyException. Keep other database errors unchanged. Failed inserts are rolled back by the caller; never retry the failed tracked scope.
+
+Prompt transaction synchronization reads IModuleTransactionCoordinator.CurrentTransaction
+inside the existing relational callback. Do not replace the separate copied provider
+options for quota/job contexts with the scoped context or its shared connection.

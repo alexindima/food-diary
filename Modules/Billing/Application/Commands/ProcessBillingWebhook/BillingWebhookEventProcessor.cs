@@ -48,7 +48,7 @@ public sealed class BillingWebhookEventProcessor(
 
                 BillingWebhookProcessingContext? context = contextResult.Value;
                 if (context is not null) {
-                    await ApplyBusinessEffectsAsync(provider, webhookEvent, context, ct).ConfigureAwait(false);
+                    await ApplyBusinessEffectsAsync(provider, context.EffectiveEvent, context, ct).ConfigureAwait(false);
                 }
 
                 if (inboxEvent is not null) {

@@ -97,6 +97,7 @@ public sealed class YooKassaBillingGateway(
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                     ["renewal"] = "true",
+                    ["renewal_period_start"] = request.CurrentPeriodEndUtc?.ToString("O", CultureInfo.InvariantCulture) ?? string.Empty,
                 }),
             request.IdempotenceKey,
             cancellationToken).ConfigureAwait(false);
@@ -141,7 +142,7 @@ public sealed class YooKassaBillingGateway(
         if (status is null) {
             return Result.Failure<BillingRecurringPaymentModel>(BillingErrors.ProviderOperationFailed(Provider, "Unexpected payment state."));
         }
-        DateTime? periodStart = string.Equals(status, "active", StringComparison.Ordinal) ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
+        DateTime? periodStart = string.Equals(status, "active", StringComparison.Ordinal) ? ReadRenewalPeriodStart(payment.Metadata) ?? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
             : null;
         DateTime? periodEnd = ResolvePeriodEnd(periodStart, request.Plan);
 
@@ -152,11 +153,12 @@ public sealed class YooKassaBillingGateway(
             request.Plan,
             status,
             periodStart,
-            string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : request.CurrentPeriodEndUtc,
+            periodEnd,
             $"yookassa-renewal:{payment.Id}:{payment.Status}",
             ParseAmount(payment.Amount?.Value),
             payment.Amount?.Currency ?? _options.Currency,
-            JsonSerializer.Serialize(payment, JsonOptions)));
+            JsonSerializer.Serialize(payment, JsonOptions),
+            payment.CapturedAt ?? payment.CreatedAt));
     }
 
     public async Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
@@ -206,6 +208,10 @@ public sealed class YooKassaBillingGateway(
             return Result.Success<BillingWebhookEventModel?>(value: null);
         }
 
+        if (payment.Status is not "canceled" && !(payment.Status is "succeeded" && payment.Paid)) {
+            return Result.Failure<BillingWebhookEventModel?>(BillingErrors.WebhookValidationFailed("Unexpected payment state."));
+        }
+
         return Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(payment));
     }
 
@@ -213,7 +219,9 @@ public sealed class YooKassaBillingGateway(
         IReadOnlyDictionary<string, string>? metadata = payment.Metadata;
         Guid? userId = ParseUserId(ReadMetadata(metadata, "user_id"));
         string? plan = ReadMetadata(metadata, "plan");
-        DateTime? periodStart = payment.CapturedAt ?? payment.CreatedAt;
+        bool isRenewal = string.Equals(ReadMetadata(metadata, "renewal"), "true", StringComparison.OrdinalIgnoreCase);
+        // Legacy renewals without the anchor are resolved from the stored payment/subscription by the application.
+        DateTime? periodStart = isRenewal ? ReadRenewalPeriodStart(metadata) : payment.CapturedAt ?? payment.CreatedAt;
         DateTime? periodEnd = ResolvePeriodEnd(periodStart, plan);
         string verifiedEventType = ResolveVerifiedEventType(payment);
         string status = MapStatus(payment);
@@ -228,7 +236,7 @@ public sealed class YooKassaBillingGateway(
             payment.Amount?.Value,
             plan,
             status,
-            periodStart,
+            string.Equals(status, "active", StringComparison.Ordinal) ? periodStart : null,
             string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
             CancelAtPeriodEnd: false,
             CanceledAtUtc: null,
@@ -239,8 +247,15 @@ public sealed class YooKassaBillingGateway(
             JsonSerializer.Serialize(payment, JsonOptions),
             userId,
             payment.CapturedAt ?? payment.CreatedAt,
-            IsAuthoritativeSnapshot: true);
+            IsAuthoritativeSnapshot: true,
+            IsRenewal: isRenewal);
     }
+
+    private static DateTime? ReadRenewalPeriodStart(IReadOnlyDictionary<string, string>? metadata) =>
+        DateTime.TryParse(ReadMetadata(metadata, "renewal_period_start"), CultureInfo.InvariantCulture,
+            DateTimeStyles.RoundtripKind, out DateTime anchor) && anchor.Kind != DateTimeKind.Unspecified
+            ? anchor.ToUniversalTime()
+            : null;
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {
         return await _apiClient.SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", body: null, idempotenceKey: null, cancellationToken).ConfigureAwait(false);

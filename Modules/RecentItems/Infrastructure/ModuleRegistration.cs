@@ -6,7 +6,6 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Infrastructure.Persistence.RecentItems;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FoodDiary.Infrastructure;
 
@@ -16,9 +15,9 @@ public static class ModuleRegistration {
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<RecentItemsDbContext>(static options => new RecentItemsDbContext(options)));
         services.AddScoped<IRecentItemRepository>(static provider => {
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
             return new RecentItemRepository(provider.GetRequiredService<RecentItemsDbContext>(),
-                () => shared.Database.CurrentTransaction?.GetDbTransaction(), provider.GetRequiredService<TimeProvider>());
+                () => coordinator.CurrentTransaction, provider.GetRequiredService<TimeProvider>());
         });
         services.AddScoped<IRecentItemReadRepository>(static provider => provider.GetRequiredService<IRecentItemRepository>());
         services.AddScoped<IRecentItemUsageReadService>(static provider => provider.GetRequiredService<IRecentItemRepository>());

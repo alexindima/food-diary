@@ -1774,21 +1774,14 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Unsupported billing provider.\", nameof(provider))",
       "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
-      "line": 185
+      "line": 200
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
-      "line": 201
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
-      "line": 204
+      "line": 216
     },
     {
       "area": "FoodDiary",
@@ -1800,16 +1793,23 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
+      "line": 234
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
       "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
-      "line": 225
+      "line": 240
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Start timestamp cannot be after end timestamp.\", paramName)",
       "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
-      "line": 253
+      "line": 268
     },
     {
       "area": "FoodDiary",

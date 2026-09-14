@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Domain.Entities.OpenFoodFacts;
 using FoodDiary.Infrastructure.Persistence;
@@ -7,6 +8,7 @@ using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
@@ -27,9 +29,9 @@ public sealed class SharedProductCacheContextIntegrationTests(PostgresDatabaseFi
     public async Task CacheFollowsTransactionOpenedAfterResolutionAndResetsAfterCompletionAsync(bool commit) {
         await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
         var services = new ServiceCollection();
+        services.AddInfrastructure(new ConfigurationBuilder().Build());
         services.AddSingleton(central);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(central);
-        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddOpenFoodFactsModule();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IOpenFoodFactsProductCacheRepository repository = provider.GetRequiredService<IOpenFoodFactsProductCacheRepository>();

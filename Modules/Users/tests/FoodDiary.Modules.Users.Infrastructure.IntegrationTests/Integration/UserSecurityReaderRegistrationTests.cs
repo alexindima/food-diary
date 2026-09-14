@@ -1,4 +1,6 @@
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using NSubstitute;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,7 @@ public sealed class UserSecurityReaderRegistrationTests {
         }
 
         services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         if (!moduleFirst) {
             Assert.Same(services, services.AddUsersPersistence());
         }

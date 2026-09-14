@@ -33,6 +33,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
     private enum RenewalOutcome {
         Renewed = 0,
         Failed = 1,
+        Skipped = 2,
     }
 
     public async Task<BillingRenewalRunResult> Handle(
@@ -61,7 +62,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
                 cancellationToken).ConfigureAwait(false);
             if (outcome == RenewalOutcome.Renewed) {
                 renewed++;
-            } else {
+            } else if (outcome == RenewalOutcome.Failed) {
                 failed++;
             }
         }
@@ -86,7 +87,23 @@ public sealed class RenewDueSubscriptionsCommandHandler(
         IBillingRecurringProviderGateway recurringGateway,
         DateTime now,
         CancellationToken cancellationToken) {
-        RenewalSnapshot snapshot = Capture(subscription);
+        UserId userId = subscription.UserId;
+        RenewalSnapshot? snapshot = null;
+        await billingTransactionRunner.ExecuteSerializedAsync(BillingOperationLockKeys.ForUser(userId.Value), async ct => {
+            // The batch may be stale after another payment or cancellation. Reload after acquiring the user lock.
+            snapshot = null;
+            BillingSubscription? current = await billingSubscriptionRepository.GetByUserIdAsync(userId, ct).ConfigureAwait(false);
+            if (current is not null &&
+                string.Equals(current.Provider, recurringGateway.Provider, StringComparison.OrdinalIgnoreCase) &&
+                current.Status is "active" or "trialing" or "past_due" &&
+                !current.CancelAtPeriodEnd && current.NextBillingAttemptUtc <= now) {
+                subscription = current;
+                snapshot = Capture(current);
+            }
+        }, cancellationToken).ConfigureAwait(false);
+        if (snapshot is null) {
+            return RenewalOutcome.Skipped;
+        }
         if (HasIncompleteBillingDetails(subscription)) {
             await MarkRenewalFailedAsync(
                     snapshot,
@@ -194,15 +211,16 @@ public sealed class RenewDueSubscriptionsCommandHandler(
                 renewal.PriceId,
                 renewal.Plan,
                 succeeded ? "active" : "past_due",
-                renewal.CurrentPeriodStartUtc,
-                renewal.CurrentPeriodEndUtc,
+                succeeded ? renewal.CurrentPeriodStartUtc : subscription.CurrentPeriodStartUtc,
+                succeeded ? renewal.CurrentPeriodEndUtc : subscription.CurrentPeriodEndUtc,
                 cancelAtPeriodEnd: false,
                 canceledAtUtc: null,
                 trialStartUtc: null,
                 trialEndUtc: null,
                 renewal.EventId,
                 renewedAtUtc,
-                renewal.ProviderMetadataJson);
+                renewal.ProviderMetadataJson,
+                renewal.OccurredAtUtc);
             if (!succeeded) {
                 DateTime completedAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
                 subscription.MarkRenewalFailed(completedAtUtc.Add(FailedRenewalRetryDelay), renewal.EventId, completedAtUtc, renewal.ProviderMetadataJson);
@@ -244,7 +262,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
                     snapshot.Request.CustomerId, renewal.PaymentId, renewal.PaymentMethodId,
                     renewal.PriceId, renewal.Plan, renewal.Status, BillingPaymentKinds.Renewal,
                     renewal.Amount, renewal.Currency, renewal.CurrentPeriodStartUtc, renewal.CurrentPeriodEndUtc,
-                    renewal.EventId, renewal.ProviderMetadataJson);
+                    renewal.EventId, renewal.ProviderMetadataJson, occurredAtUtc: renewal.OccurredAtUtc);
                 await billingPaymentRepository.UpdateAsync(existingPayment, cancellationToken).ConfigureAwait(false);
             }
             return;
@@ -267,7 +285,8 @@ public sealed class RenewDueSubscriptionsCommandHandler(
             renewal.CurrentPeriodStartUtc,
             renewal.CurrentPeriodEndUtc,
             renewal.EventId,
-            renewal.ProviderMetadataJson);
+            renewal.ProviderMetadataJson,
+            occurredAtUtc: renewal.OccurredAtUtc);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
 

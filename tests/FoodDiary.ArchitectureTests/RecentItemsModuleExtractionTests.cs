@@ -3,6 +3,14 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class RecentItemsModuleExtractionTests {
     [Fact]
+    public void Registration_UsesCoordinationContractsWithoutConcreteSharedContext() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "ModuleRegistration.cs"));
+        Assert.Contains("GetRequiredService<IModuleContextFactory>()", source, StringComparison.Ordinal);
+        Assert.Contains("GetRequiredService<IModuleTransactionCoordinator>()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void RecentItemsOwnerSource_LivesOnlyInModule() {
         string[] legacyPaths = [
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", "RecentItems"),

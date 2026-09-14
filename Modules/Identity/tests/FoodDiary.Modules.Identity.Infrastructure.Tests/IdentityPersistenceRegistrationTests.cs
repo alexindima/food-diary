@@ -9,6 +9,8 @@ using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Persistence.Abstractions;
+using NSubstitute;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests;
 
@@ -18,6 +20,7 @@ public sealed class IdentityPersistenceRegistrationTests {
     public void AddIdentityPersistence_ReadModelRepositorySharesScopedSessionRepository() {
         var services = new ServiceCollection();
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
+        services.AddScoped(_ => Substitute.For<IModuleTransactionCoordinator>());
         services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddIdentityPersistence();
@@ -33,6 +36,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddSingleton(TimeProvider.System);
         services.AddMemoryCache();
+        services.AddScoped(_ => Substitute.For<IModuleTransactionCoordinator>());
         services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         Assert.Same(services, services.AddIdentityPersistence());
@@ -58,6 +62,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
         services.AddSingleton(TimeProvider.System);
+        services.AddScoped(_ => Substitute.For<IModuleTransactionCoordinator>());
         services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         Assert.Same(services, services.AddIdentityPersistence());
@@ -79,6 +84,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         var services = new ServiceCollection();
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
+        services.AddScoped(_ => Substitute.For<IModuleTransactionCoordinator>());
         services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddIdentityPersistence();
@@ -100,6 +106,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         var services = new ServiceCollection();
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
+        services.AddScoped(_ => Substitute.For<IModuleTransactionCoordinator>());
         services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(databaseName));
         services.AddIdentityPersistence();

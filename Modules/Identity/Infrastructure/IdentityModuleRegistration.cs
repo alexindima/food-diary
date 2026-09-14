@@ -1,7 +1,6 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.AspNetCore.DataProtection;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Admin.Common;
@@ -10,7 +9,6 @@ using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Users;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -48,11 +46,11 @@ public static class IdentityModuleRegistration {
     }
 
     private static Func<CancellationToken, Task> CreateTransactionSynchronizer(IServiceProvider provider) {
-        FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+        IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
         IdentityDbContext owned = provider.GetRequiredService<IdentityDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(shared.Database.CurrentTransaction?.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
             }
         };
     }

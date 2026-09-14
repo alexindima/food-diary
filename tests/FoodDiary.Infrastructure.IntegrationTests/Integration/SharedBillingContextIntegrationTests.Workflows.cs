@@ -120,6 +120,122 @@ public sealed partial class SharedBillingContextIntegrationTests {
         await gateway.Received(1).CreateRecurringPaymentAsync(Arg.Any<BillingRecurringPaymentRequestModel>(), Arg.Any<CancellationToken>());
     }
 
+    [RequiresDockerTheory]
+    [InlineData(true, "active")]
+    [InlineData(false, "active")]
+    [InlineData(true, "canceled")]
+    [InlineData(false, "canceled")]
+    public async Task RenewalAndWebhook_InSeparateScopes_ConvergeAsync(bool webhookFirst, string status) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("renewal-consistency@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        // PostgreSQL stores microseconds; use whole seconds for exact cursor/period assertions.
+        DateTime now = DateTimeOffset.FromUnixTimeSeconds(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).UtcDateTime;
+        DateTime oldEnd = now.AddDays(-1);
+        IBillingTransactionRunner runner = provider.GetRequiredService<IBillingTransactionRunner>();
+        IBillingSubscriptionWriteRepository subscriptions = provider.GetRequiredService<IBillingSubscriptionWriteRepository>();
+        var initial = BillingSubscription.CreatePending(user.Id, BillingProviderNames.YooKassa, user.Id.Value.ToString(), "price", "monthly");
+        initial.ApplyProviderSnapshot(BillingProviderNames.YooKassa, "initial", "pm_saved", "price", "monthly", "active",
+            oldEnd.AddMonths(-1), oldEnd, cancelAtPeriodEnd: false, canceledAtUtc: null, trialStartUtc: null, trialEndUtc: null,
+            "initial", oldEnd.AddMonths(-1), webhookOccurredAtUtc: oldEnd.AddMonths(-1));
+        await runner.ExecuteAsync(async token => await subscriptions.AddAsync(initial, token));
+        await using FoodDiaryDbContext otherContext = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
+        await using ServiceProvider otherProvider = CreateProvider(otherContext);
+        IUserBillingService users = WorkflowUsers(user);
+        BillingWebhookEventProcessor processor = WorkflowProcessor(otherProvider, users, Substitute.For<IBillingMarketingConversionRecorder>());
+        BillingWebhookEventModel webhook = WorkflowWebhook(user, "webhook_final", "payment_final", now) with {
+            Status = status,
+            IsRenewal = true,
+            CurrentPeriodStartUtc = null,
+            CurrentPeriodEndUtc = null,
+        };
+        IBillingRecurringProviderGateway gateway = Substitute.For<IBillingRecurringProviderGateway>();
+        gateway.Provider.Returns(BillingProviderNames.YooKassa);
+        gateway.CreateRecurringPaymentAsync(Arg.Any<BillingRecurringPaymentRequestModel>(), Arg.Any<CancellationToken>())
+            .Returns(async _ => {
+                if (webhookFirst) {
+                    Assert.True((await processor.ProcessAsync(BillingProviderNames.YooKassa, "{}", webhook, inboxEvent: null, CancellationToken.None)).IsSuccess);
+                }
+                return Result.Success(new BillingRecurringPaymentModel("payment_final", "pm_saved", "price", "monthly", status,
+                    string.Equals(status, "active", StringComparison.Ordinal) ? oldEnd : null,
+                    string.Equals(status, "active", StringComparison.Ordinal) ? oldEnd.AddMonths(1) : oldEnd,
+                    "response_final", 299m, "RUB", ProviderMetadataJson: null, OccurredAtUtc: now));
+            });
+        var renewal = new RenewDueSubscriptionsCommandHandler(subscriptions, provider.GetRequiredService<IBillingPaymentWriteRepository>(),
+            users, runner, [gateway], new BillingAccessService(users, subscriptions, TimeProvider.System), TimeProvider.System);
+
+        await renewal.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
+        if (!webhookFirst) {
+            Assert.True((await processor.ProcessAsync(BillingProviderNames.YooKassa, "{}", webhook, inboxEvent: null, CancellationToken.None)).IsSuccess);
+        }
+
+        await using FoodDiaryDbContext verification = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
+        BillingSubscription stored = await verification.BillingSubscriptions.AsNoTracking().SingleAsync();
+        BillingPayment payment = await verification.BillingPayments.AsNoTracking().SingleAsync();
+        bool paid = string.Equals(status, "active", StringComparison.Ordinal);
+        Assert.Multiple(
+            () => Assert.Equal(paid ? "active" : "past_due", stored.Status),
+            () => Assert.Equal(paid ? oldEnd.AddMonths(1) : oldEnd, stored.CurrentPeriodEndUtc),
+            () => Assert.Equal(now, stored.LastWebhookOccurredAtUtc),
+            () => Assert.Equal(status, payment.Status),
+            () => Assert.Equal(BillingPaymentKinds.Renewal, payment.Kind),
+            () => Assert.Equal(now, payment.OccurredAtUtc));
+        if (!paid) {
+            Assert.True(stored.NextBillingAttemptUtc >= now.AddHours(1));
+            Assert.Null(payment.CurrentPeriodStartUtc);
+        }
+    }
+
+    [RequiresDockerFact]
+    public async Task RenewalBatch_ReloadsSecondSubscriptionAfterWebhookInAnotherScopeAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var first = User.Create("first-batch@example.com", "hash");
+        var second = User.Create("second-batch@example.com", "hash");
+        context.Users.AddRange(first, second);
+        await context.SaveChangesAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        DateTime now = DateTime.UtcNow;
+        IBillingTransactionRunner runner = provider.GetRequiredService<IBillingTransactionRunner>();
+        IBillingSubscriptionWriteRepository subscriptions = provider.GetRequiredService<IBillingSubscriptionWriteRepository>();
+        foreach (User user in new[] { first, second }) {
+            var subscription = BillingSubscription.CreatePending(user.Id, BillingProviderNames.YooKassa, user.Id.Value.ToString(), "price", "monthly");
+            subscription.ApplyProviderSnapshot(BillingProviderNames.YooKassa, user.Id.Value.ToString(), $"pm_{user.Id.Value:N}", "price", "monthly", "active",
+                now.AddMonths(-1), now.AddDays(user == first ? -2 : -1), cancelAtPeriodEnd: false, canceledAtUtc: null, trialStartUtc: null, trialEndUtc: null,
+                user.Id.Value.ToString(), now.AddMonths(-1), webhookOccurredAtUtc: now.AddMonths(-1));
+            await runner.ExecuteAsync(async token => await subscriptions.AddAsync(subscription, token));
+        }
+        await using FoodDiaryDbContext otherContext = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
+        await using ServiceProvider otherProvider = CreateProvider(otherContext);
+        IUserBillingService users = WorkflowUsers(first);
+        users.GetProfileIncludingDeletedAsync(second.Id, Arg.Any<CancellationToken>()).Returns(new UserBillingProfileModel(
+            second.Id, second.Email, IsActive: true, IsDeleted: false, HasPaidPremium: true,
+            PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null, IsEmailConfirmed: true));
+        IBillingRecurringProviderGateway gateway = Substitute.For<IBillingRecurringProviderGateway>();
+        gateway.Provider.Returns(BillingProviderNames.YooKassa);
+        gateway.CreateRecurringPaymentAsync(Arg.Any<BillingRecurringPaymentRequestModel>(), Arg.Any<CancellationToken>())
+            .Returns(async call => {
+                BillingRecurringPaymentRequestModel request = call.Arg<BillingRecurringPaymentRequestModel>();
+                Assert.Equal(first.Id.Value, request.UserId);
+                BillingWebhookEventModel webhook = WorkflowWebhook(second, "second_renewed", "second_payment", now) with {
+                    ExternalPaymentMethodId = $"pm_{second.Id.Value:N}",
+                };
+                Assert.True((await WorkflowProcessor(otherProvider, users, Substitute.For<IBillingMarketingConversionRecorder>())
+                    .ProcessAsync(BillingProviderNames.YooKassa, "{}", webhook, inboxEvent: null, CancellationToken.None)).IsSuccess);
+                return Result.Success(new BillingRecurringPaymentModel("first_payment", request.PaymentMethodId, "price", "monthly", "active",
+                    now, now.AddMonths(1), "first_renewed", 299m, "RUB", ProviderMetadataJson: null, OccurredAtUtc: now));
+            });
+        var renewal = new RenewDueSubscriptionsCommandHandler(subscriptions, provider.GetRequiredService<IBillingPaymentWriteRepository>(),
+            users, runner, [gateway], new BillingAccessService(users, subscriptions, TimeProvider.System), TimeProvider.System);
+
+        await renewal.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
+
+        await gateway.Received(1).CreateRecurringPaymentAsync(Arg.Any<BillingRecurringPaymentRequestModel>(), Arg.Any<CancellationToken>());
+        await using FoodDiaryDbContext verification = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
+        Assert.Equal("second_renewed", (await verification.BillingSubscriptions.AsNoTracking().SingleAsync(item => item.UserId == second.Id)).LastWebhookEventId);
+    }
+
     private static IUserBillingService WorkflowUsers(User user) {
         IUserBillingService users = Substitute.For<IUserBillingService>();
         users.GetProfileIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>()).Returns(new UserBillingProfileModel(

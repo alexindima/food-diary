@@ -6,6 +6,8 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using System.Text.Json;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
@@ -30,7 +32,15 @@ public sealed class BillingWebhookContextResolver(
             provider,
             webhookEvent,
             cancellationToken).ConfigureAwait(false);
-        bool shouldUpdateSubscription = webhookEvent.UpdatesSubscription;
+        BillingPayment? payment = await ResolveRelatedPaymentAsync(provider,
+            webhookEvent.ExternalPaymentId ?? webhookEvent.ExternalSubscriptionId, cancellationToken).ConfigureAwait(false);
+        webhookEvent = NormalizeRenewal(provider, webhookEvent, subscription, payment);
+        if (subscription is null && webhookEvent.UserId is { } ownerId && ownerId != Guid.Empty) {
+            // A late notification from the previous provider still belongs to this user's payment history.
+            subscription = await billingSubscriptionRepository.GetByUserIdAsync(new UserId(ownerId), cancellationToken).ConfigureAwait(false);
+        }
+        bool shouldUpdateSubscription = webhookEvent.UpdatesSubscription &&
+            (subscription is null || string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase));
         if (webhookEvent.UpdatesSubscription &&
             subscription is not null &&
             string.Equals(subscription.LastWebhookEventId, webhookEvent.EventId, StringComparison.Ordinal)) {
@@ -41,7 +51,9 @@ public sealed class BillingWebhookContextResolver(
             subscription?.LastWebhookOccurredAtUtc is { } lastOccurredAtUtc &&
             (webhookEvent.OccurredAtUtc is not { } occurredAtUtc ||
              occurredAtUtc < lastOccurredAtUtc ||
-             (occurredAtUtc == lastOccurredAtUtc && !webhookEvent.IsAuthoritativeSnapshot))) {
+             (occurredAtUtc == lastOccurredAtUtc && (!webhookEvent.IsAuthoritativeSnapshot ||
+                 (webhookEvent.IsRenewal && !string.Equals(subscription.ExternalSubscriptionId,
+                     webhookEvent.ExternalSubscriptionId, StringComparison.Ordinal)))))) {
             shouldUpdateSubscription = false;
         }
 
@@ -61,7 +73,59 @@ public sealed class BillingWebhookContextResolver(
         return user is null
             ? Result.Failure<BillingWebhookProcessingContext?>(
                 BillingErrors.WebhookValidationFailed("Webhook user could not be resolved."))
-            : Result.Success<BillingWebhookProcessingContext?>(new BillingWebhookProcessingContext(subscription, user, shouldUpdateSubscription));
+            : Result.Success<BillingWebhookProcessingContext?>(new BillingWebhookProcessingContext(subscription, user, shouldUpdateSubscription, webhookEvent));
+    }
+
+    private static BillingWebhookEventModel NormalizeRenewal(string provider, BillingWebhookEventModel webhookEvent,
+        BillingSubscription? subscription, BillingPayment? payment) {
+        if (!webhookEvent.IsRenewal && !string.Equals(payment?.Kind, BillingPaymentKinds.Renewal, StringComparison.Ordinal) &&
+            !IsLegacyQueuedRenewal(provider, webhookEvent.ProviderMetadataJson)) {
+            return webhookEvent;
+        }
+        if (!string.Equals(webhookEvent.Status, "active", StringComparison.Ordinal)) {
+            // A declined attempt has an occurrence timestamp, but does not purchase a new subscription period.
+            return webhookEvent with { IsRenewal = true, CurrentPeriodStartUtc = null, CurrentPeriodEndUtc = null };
+        }
+
+        // Older inbox payloads used the capture date as the period and had no typed renewal marker.
+        DateTime? start = webhookEvent.IsRenewal ? webhookEvent.CurrentPeriodStartUtc : null;
+        DateTime? end = webhookEvent.IsRenewal ? webhookEvent.CurrentPeriodEndUtc : null;
+        if (payment is { Status: "active", CurrentPeriodStartUtc: not null, CurrentPeriodEndUtc: not null }) {
+            start = payment.CurrentPeriodStartUtc;
+            end = payment.CurrentPeriodEndUtc;
+        } else if (subscription is { Status: "active" } &&
+            string.Equals(subscription.ExternalSubscriptionId, webhookEvent.ExternalSubscriptionId, StringComparison.Ordinal)) {
+            start = subscription.CurrentPeriodStartUtc;
+            end = subscription.CurrentPeriodEndUtc;
+        } else if (start is null) {
+            // Compatibility with payments created before renewal_period_start metadata was introduced.
+            bool currentPayment = subscription?.LastWebhookOccurredAtUtc is not { } lastOccurred ||
+                webhookEvent.OccurredAtUtc > lastOccurred ||
+                (webhookEvent.OccurredAtUtc == lastOccurred && string.Equals(subscription.ExternalSubscriptionId,
+                    webhookEvent.ExternalSubscriptionId, StringComparison.Ordinal));
+            start = payment?.CurrentPeriodEndUtc ?? (currentPayment ? subscription?.CurrentPeriodEndUtc : null) ?? webhookEvent.OccurredAtUtc;
+            end = webhookEvent.Plan switch {
+                "monthly" => start?.AddMonths(1),
+                "yearly" => start?.AddYears(1),
+                _ => null,
+            };
+        }
+        return webhookEvent with { IsRenewal = true, CurrentPeriodStartUtc = start, CurrentPeriodEndUtc = end };
+    }
+
+    private static bool IsLegacyQueuedRenewal(string provider, string? metadataJson) {
+        if (!string.Equals(provider, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase) || metadataJson is null) {
+            return false;
+        }
+        try {
+            using var document = JsonDocument.Parse(metadataJson);
+            return document.RootElement.ValueKind == JsonValueKind.Object &&
+                document.RootElement.TryGetProperty("metadata", out JsonElement metadata) && metadata.ValueKind == JsonValueKind.Object &&
+                metadata.TryGetProperty("renewal", out JsonElement renewal) && renewal.ValueKind == JsonValueKind.String &&
+                string.Equals(renewal.GetString(), "true", StringComparison.OrdinalIgnoreCase);
+        } catch (JsonException) {
+            return false;
+        }
     }
 
     private async Task<BillingSubscription?> ResolveSubscriptionAsync(

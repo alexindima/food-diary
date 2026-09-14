@@ -17,6 +17,7 @@ public sealed class ModuleContextFactoryBoundaryTests {
     [InlineData("Lessons")]
     [InlineData("WeeklyGoals")]
     [InlineData("Wearables")]
+    [InlineData("OpenFoodFacts")]
     public void CoordinatedAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
         string project = $"FoodDiary.Modules.{module}.Infrastructure";
@@ -35,6 +36,31 @@ public sealed class ModuleContextFactoryBoundaryTests {
                 pending.Enqueue(dependency);
             }
         }
+    }
+
+    [Theory]
+    [InlineData("Identity", "IdentityModuleRegistration.cs")]
+    [InlineData("Users", "UsersModuleRegistration.cs")]
+    [InlineData("OpenFoodFacts", "ModuleRegistration.cs")]
+    public void CoordinatedRegistration_DoesNotResolveConcreteSharedContext(string module, string fileName) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", module, "Infrastructure", fileName));
+        Assert.Contains("GetRequiredService<IModuleTransactionCoordinator>()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("Ai", "ModuleRegistration.cs")]
+    [InlineData("Gamification", "ModuleRegistration.cs")]
+    [InlineData("Identity", "IdentityModuleRegistration.cs")]
+    [InlineData("Users", "UsersModuleRegistration.cs")]
+    [InlineData("OpenFoodFacts", "ModuleRegistration.cs")]
+    public void Registration_DoesNotReadTransactionsThroughDatabaseFacade(string module, string fileName) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", module, "Infrastructure", fileName));
+        IEnumerable<MemberAccessExpressionSyntax> accesses = CSharpSyntaxTree.ParseText(source).GetRoot()
+            .DescendantNodes().OfType<MemberAccessExpressionSyntax>();
+        Assert.Contains(accesses, access => access.Name.Identifier.ValueText.Equals("CurrentTransaction", StringComparison.Ordinal));
+        Assert.DoesNotContain(accesses, access => access.Name.Identifier.ValueText.Equals("CurrentTransaction", StringComparison.Ordinal)
+            && access.Expression is MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Database" });
     }
 
     [Fact]

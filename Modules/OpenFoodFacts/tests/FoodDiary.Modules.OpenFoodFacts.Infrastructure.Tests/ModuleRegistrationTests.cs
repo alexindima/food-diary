@@ -1,7 +1,9 @@
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
+using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 
 namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests;
 
@@ -10,8 +12,12 @@ public sealed class ModuleRegistrationTests {
     [Fact]
     public void AddOpenFoodFactsModule_RegistersCacheRepositoryPorts() {
         var services = new ServiceCollection();
-        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
-        services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
+        IModuleContextFactory contexts = Substitute.For<IModuleContextFactory>();
+        contexts.CreateModuleContext(Arg.Any<Func<DbContextOptions<OpenFoodFactsDbContext>, OpenFoodFactsDbContext>>(), Arg.Any<int>())
+            .Returns(call => call.Arg<Func<DbContextOptions<OpenFoodFactsDbContext>, OpenFoodFactsDbContext>>()(
+                new DbContextOptionsBuilder<OpenFoodFactsDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString("N")).Options));
+        services.AddSingleton(contexts);
+        services.AddScoped(_ => Substitute.For<IModuleTransactionCoordinator>());
         services.AddSingleton(TimeProvider.System);
 
         services.AddOpenFoodFactsModule();

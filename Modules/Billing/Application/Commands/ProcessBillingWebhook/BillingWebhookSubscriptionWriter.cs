@@ -33,23 +33,32 @@ public sealed class BillingWebhookSubscriptionWriter(
             webhookEvent.ExternalPriceId,
             webhookEvent.Plan);
 
+        bool failedRenewal = webhookEvent.IsRenewal && !string.Equals(webhookEvent.Status, "active", StringComparison.Ordinal);
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
+        DateTime? retryAt = failedRenewal && string.Equals(currentSubscription.ExternalSubscriptionId,
+            webhookEvent.ExternalSubscriptionId, StringComparison.Ordinal)
+            ? currentSubscription.NextBillingAttemptUtc
+            : null;
         currentSubscription.ApplyProviderSnapshot(
             provider,
             webhookEvent.ExternalSubscriptionId,
             webhookEvent.ExternalPaymentMethodId,
             webhookEvent.ExternalPriceId,
             webhookEvent.Plan,
-            webhookEvent.Status,
-            webhookEvent.CurrentPeriodStartUtc,
-            webhookEvent.CurrentPeriodEndUtc,
+            failedRenewal ? "past_due" : webhookEvent.Status,
+            failedRenewal ? currentSubscription.CurrentPeriodStartUtc : webhookEvent.CurrentPeriodStartUtc,
+            failedRenewal ? currentSubscription.CurrentPeriodEndUtc : webhookEvent.CurrentPeriodEndUtc,
             webhookEvent.CancelAtPeriodEnd,
             webhookEvent.CanceledAtUtc,
             webhookEvent.TrialStartUtc,
             webhookEvent.TrialEndUtc,
             webhookEvent.EventId,
-            dateTimeProvider.GetUtcNow().UtcDateTime,
+            now,
             webhookEvent.ProviderMetadataJson,
             webhookEvent.OccurredAtUtc);
+        if (failedRenewal) {
+            currentSubscription.MarkRenewalFailed(retryAt ?? now.AddHours(1), webhookEvent.EventId, now, webhookEvent.ProviderMetadataJson);
+        }
 
         if (subscription is null) {
             await billingSubscriptionRepository.AddAsync(currentSubscription, cancellationToken).ConfigureAwait(false);

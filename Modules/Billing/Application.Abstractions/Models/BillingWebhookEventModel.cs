@@ -30,4 +30,5 @@ public sealed record BillingWebhookEventModel(
     decimal? Earnings = null,
     string? PayoutCurrency = null,
     decimal? PayoutEarnings = null,
-    bool IsAuthoritativeSnapshot = false);
+    bool IsAuthoritativeSnapshot = false,
+    bool IsRenewal = false);

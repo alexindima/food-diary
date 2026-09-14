@@ -44,3 +44,7 @@ validation before consume, GUID payload parsing and cancellation.
 Login-event composed reads implement IUserLoginEventQuery in host read composition. UserLoginEventRepository retains AddAsync and bounded retention and delegates compatible read methods to the query port. Preserve existing scoped repository aliases; hosts register AddReadModelComposition. No authentication validation or token behavior changes.
 
 IdentityDbContext owns six root types plus EmailTemplate owned revisions, using the unchanged Identity model. Registration shares the central connection and synchronizes the live transaction before repository and Telegram operations, including after intermediate UOW saves. Repositories accept narrow owner DbSets; Telegram stores use the typed owner context. Shared IUnitOfWork commits tracked changes atomically with Users. The singleton template provider opens an owner scope and retains its one-minute cache. The user-purge participant remains a reviewed shared-transaction bridge.
+
+Registration obtains the live transaction from IModuleTransactionCoordinator,
+without resolving FoodDiaryDbContext. Preserve the relational guard and pass the
+operation cancellation token to UseTransactionAsync. Purge remains a separate bridge.

@@ -36,3 +36,7 @@ Current weight and waist implementations live in host ReadModel.Composition, rea
 UsersDbContext owns User, Role, UserRole, UserRoleAuditEvent, WeightGoal and WaistGoal. Runtime adapters receive only owner sets (and DatabaseFacade for role SQL), synchronizing the live shared transaction before operations. Save through IUnitOfWork. Users saves at priority -100 before the central context and dependent modules, independently of DI resolution order. Its options explicitly include TelegramIdentityConflictInterceptor; provider uniqueness details must remain hidden. UserCleanupService remains the ordered central purge coordinator and profile-image unlink bridge.
 
 Billing profile reads for webhook/renewal processing use IUserBillingProfileReadRepository on UserProfileProjectionService. Read persisted scalar account/role state without tracking, including deleted accounts; do not use cached tracked Users for this capability.
+
+Registration uses IModuleTransactionCoordinator for live transaction synchronization,
+without resolving FoodDiaryDbContext. Retain the relational guard, operation
+cancellation, save priority -100 and conflict interceptor. Cleanup remains separate.

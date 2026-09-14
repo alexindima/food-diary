@@ -65,6 +65,8 @@ public sealed class UserRelatedDataReadIntegrationTests(PostgresDatabaseFixture 
     [Fact]
     public void Registration_SharesBothNarrowReadersWithinScope() {
         var services = new ServiceCollection();
+        services.AddInfrastructure(new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build());
+        services.AddSingleton(NSubstitute.Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Events.IDomainEventPublisher>());
         services.AddScoped(_ => new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql("Host=localhost;Database=unused;Username=test").Options));
         services.AddUsersPersistence();

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "3d632603180003e346487781198be9ef0f0982c928d004d483a52b4d41cca348",
+    "sourceFingerprint": "fca35de799961a3b758d3084eb2b5d87268378db3bd4ac32cfba5ab3cb1c034c",
     "sourceFileCount": 4050
   },
   "summary": {
@@ -924,7 +924,10 @@
       "name": "BillingWebhookSubscriptionWriter",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
       "securitySignals": [],
-      "behaviorSignals": "cancellation-propagation-candidate",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience"
+      ],
       "behaviorSignalScope": "class-window",
       "evidenceStatus": "inferred-from-code"
     },

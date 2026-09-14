@@ -64,17 +64,17 @@
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "1ec200a2fd514e27277ffe57855568efe14ea80c22bf44d58e69a2d2d721c5f4",
+      "pageSha256": "c754c8ac412a0292e3b08416eeb1ce65064017fbe43fe20578bf8d660cd6eb7f",
       "sources": [
         {
-          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
-          "sha256": "11cec3b8ae9f15e8c692ccb506f21492bd482e7c1bc74c2b3a821062a041dc61"
+          "path": "Modules/Billing/Infrastructure/AGENTS.md",
+          "sha256": "55051e69a4c3519f93bd064c34a73017fa5652a494ab2083f9d10e0da7283d82"
         }
       ],
-      "reason": "Verified MealsModuleRegistration and EfMealRecognitionTransactionRunner against ADR 0040: host coordinator owns the top-level transaction, Meals retains its advisory lock and intermediate xmin flush. Updated the module coordination explanation; the purge bridge remains.",
+      "reason": "Reviewed Billing Infrastructure guide against the current Primary Backend ownership table. Renewal metadata, provider occurrence and retry normalization remain within Billing Application and Infrastructure; shared transaction coordination, checkout lease and host ownership are unchanged. No edits to the ownership page are required.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T12:41:12.5141492Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:42:40.0574769Z"
     },
     {
       "pageId": "system.architecture",
@@ -83,13 +83,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "aed1eeb1e879371c81537f048e446604758bbea03e9d48d5005bbacf5561c82c"
+          "sha256": "8391c1a05c87df73816e5c64e2660d53e28e1a6ab5452f89b81439f566775722"
         }
       ],
-      "reason": "Reviewed Billing scheduler migration against current handlers, gateway ports and project manifests. Direct Billing.Contracts references expose scheduler requests/results without foreign aggregate access; integration tests reference owning Application/Contracts explicitly. The dependency matrix and removal guidance remain accurate. Solution build passed, all architecture cases passed including the focused formatter retry, and 10 PostgreSQL tests verified shared transaction rollback and webhook/renewal ordering. Provider HTTP calls remain outside replayable transactions; no schema or HTTP wire contract changes.",
+      "reason": "Verified existing coordinator adoption in five module registrations and removal of the OpenFoodFacts central infrastructure edge; exact matrix and 1525 architecture tests agree. Architecture guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T16:25:19.6852270Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:15.6608632Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -210,14 +210,18 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "d986617ffac82b089d79b7dba993b9df3263327aafe46b73070074f71881b330"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "aed1eeb1e879371c81537f048e446604758bbea03e9d48d5005bbacf5561c82c"
+          "sha256": "8391c1a05c87df73816e5c64e2660d53e28e1a6ab5452f89b81439f566775722"
         }
       ],
-      "reason": "Reviewed Billing scheduler migration against current handlers, gateway ports and project manifests. Direct Billing.Contracts references expose scheduler requests/results without foreign aggregate access; integration tests reference owning Application/Contracts explicitly. The dependency matrix and removal guidance remain accurate. Solution build passed, all architecture cases passed including the focused formatter retry, and 10 PostgreSQL tests verified shared transaction rollback and webhook/renewal ordering. Provider HTTP calls remain outside replayable transactions; no schema or HTTP wire contract changes.",
+      "reason": "Verified updated dependency graph against the exact matrix and successful architecture-health check (1595 production, 1318 test edges). Static graph guidance remains accurate; runtime transaction evidence is separate.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T16:25:19.9130676Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:16.3575537Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -226,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a45a948d72af392f1863d69ddbb14efffeb3824185d67f3d9581a5494cfdf755"
+          "sha256": "8e6ed7cc8e9f59b11ebe8f4a527563e0d26dd421ea20e9b8368b3baf66b32c05"
         }
       ],
-      "reason": "Refreshed contract metadata includes the session seam and parallel Billing handler/contract moves. Existing guidance for constructor, DI and in-process consumer compatibility still applies; no workflow tool behavior changed.",
+      "reason": "Registration-only transaction changes preserve HTTP and consumer contract shapes; all 15 focused HTTP contract/auth-product tests passed. Generated navigation changes do not change review guidance.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T16:01:25.184904Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:17.7662458Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -492,14 +496,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "e3863cae3a6eca45d35b70c5ef564778c3244d205a1eeffcde6e14c93cf0ed48"
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "149bf43b95a4229f4adca54fba46ca235b9a1c207c545127ce2dcc6b6fbe8876"
         }
       ],
-      "reason": "Reviewed the Infrastructure guidance against the extracted session algorithm: owner models and relational mappings are unchanged, while persistence retry and durable intermediate-save behavior is preserved by PostgreSQL tests. No workflow mapping guidance needs changes.",
+      "reason": "This batch changes no entities, mappings, migrations or domain invariants. Shared generated indexes also include concurrent Billing work, which is not claimed as reviewed by this batch. Source-first invariant and provider-test guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T15:31:01.5234152Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:18.4997745Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -767,13 +771,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "45787020eda31c27c4f94d60852dd9a63404f099d4ec91483016654fae3380ef"
+          "sha256": "61508a86d1269a72e22708733009e4480de857d7bf8734215b0dc590ca3e88c3"
         }
       ],
-      "reason": "The new scheduler requests contain provider and batch settings, a timestamp, or no fields. They do not carry email bodies, images or payment details and do not enter Result-constrained logging. Existing provider sharing, receipt storage, retention and ErrorType-only worker logging remain unchanged by moving the workflows.",
+      "reason": "Reviewed five registration diffs: no authorization, sensitive fields, logging, retention, export or provider-sharing changes. Identity guards and independent Ai scopes are preserved. Candidate-index guidance remains accurate; this is not a general security audit.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:46:25.396718Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:19.2962167Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -812,13 +816,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c9fb50708d550771f4ee4d95223dd8ec8e0f1f0178d5243b931bfcce59102939"
+          "sha256": "87a7988a737735f382e60b8600586404c2fe071247f51c86fb150febaf7bedf8"
         }
       ],
-      "reason": "The regenerated quality metadata reflects source moves and new session tests. The workflow still correctly treats static references as investigation leads, separate from executed test results; no matching or query policy changed.",
+      "reason": "Reviewed registration scope and relevant test evidence: 2317 tests passed. Static index candidates remain navigation rather than execution coverage; workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T16:01:26.0516703Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:20.1852841Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -887,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "70ab3d8315913c43d46e9ca33c88bc3f64cc5a33180a625faacca4527a43a542"
+          "sha256": "c35797e53f6386dd3639939b47f0acdf2a25b3aff0df085cddca0a5d2a8fa843"
         }
       ],
-      "reason": "The refreshed topology contains the extracted shared session coordinator and current Billing entrypoint names. Runtime guidance about callback replay, failure reset and independent provider evidence remains correct; the stale Billing service pointer was repaired separately.",
+      "reason": "Live transaction callbacks preserve relational guards, cancellation and Users save order; Gamification clean-entry and independent Ai options remain. Focused PostgreSQL transaction tests passed; runtime-impact navigation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T16:01:27.4618442Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:21.4372762Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -902,21 +906,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c9fb50708d550771f4ee4d95223dd8ec8e0f1f0178d5243b931bfcce59102939"
+          "sha256": "87a7988a737735f382e60b8600586404c2fe071247f51c86fb150febaf7bedf8"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "70ab3d8315913c43d46e9ca33c88bc3f64cc5a33180a625faacca4527a43a542"
+          "sha256": "c35797e53f6386dd3639939b47f0acdf2a25b3aff0df085cddca0a5d2a8fa843"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "41d803dd30a7a8968492361148e06591efd5866c5bf332a4823560246d82fbc5"
+          "sha256": "61508a86d1269a72e22708733009e4480de857d7bf8734215b0dc590ca3e88c3"
         }
       ],
-      "reason": "Regenerated static quality/topology metadata does not change this workflow contract. It remains correct to treat inferred boundaries as leads and require current-source/runtime verification; this receipt is not a security assessment of parallel Billing changes.",
+      "reason": "Five registration changes preserve transaction ownership and authentication behavior with no new external boundary or secret handling. Index changes remain review leads, not security findings; security workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T16:01:28.3029090Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:22.1200933Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1158,13 +1162,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "2c69b6f367851b50d359cd7b5c869ffd0a23fefce006a5005ba80528acbf6642"
+          "sha256": "5bf44a7394d4e21bfccd7e7be08e70abebce6ee1f7de41a397d2f390bf071fec"
         }
       ],
-      "reason": "Catalog metadata changed for the session seam and parallel Billing moves. The context workflow still accurately describes ranked navigation and freshness checks; graph-build refreshed the current projection without changing resolver behavior.",
+      "reason": "Refreshed catalog and graph reflect current registration dependencies. Resolver guidance remains accurate: ranked source paths are navigation and must be verified against actual source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "29a763f27d9b8c966ce977508f6d8d0afacb5e6d",
-      "reviewedAtUtc": "2026-09-14T16:01:26.7852338Z"
+      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
+      "reviewedAtUtc": "2026-09-14T17:56:20.869022Z"
     },
     {
       "pageId": "workflow.review-diff",

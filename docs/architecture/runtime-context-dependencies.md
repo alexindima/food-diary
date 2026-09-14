@@ -10,7 +10,7 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 |---|---:|
 | Audit bridge | 1 |
 | Connection/lock | 1 |
-| Transaction/provider registration | 8 |
+| Transaction/provider registration | 4 |
 | Transaction coordination | 0 |
 | User purge | 14 |
 
@@ -38,20 +38,16 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 | [Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs](../../Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs) | Audit bridge | Inspects shared and Dietologist trackers, stages shared AuditEntry rows; preserve atomic save and event deduplication. |
 | [Modules/Gamification/Infrastructure/ModuleRegistration.cs](../../Modules/Gamification/Infrastructure/ModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 | [Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs](../../Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
-| [Modules/Identity/Infrastructure/IdentityModuleRegistration.cs](../../Modules/Identity/Infrastructure/IdentityModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 | [Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs](../../Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Images/Infrastructure/DependencyInjection.cs](../../Modules/Images/Infrastructure/DependencyInjection.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 | [Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs](../../Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs](../../Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs](../../Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Notifications/Infrastructure/ModuleRegistration.cs](../../Modules/Notifications/Infrastructure/ModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
-| [Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs](../../Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 | [Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs](../../Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
-| [Modules/RecentItems/Infrastructure/ModuleRegistration.cs](../../Modules/RecentItems/Infrastructure/ModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 | [Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs](../../Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs](../../Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs](../../Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs) | User purge | User cleanup orchestration, user/role deletion, locks and profile-image unlinking. |
-| [Modules/Users/Infrastructure/UsersModuleRegistration.cs](../../Modules/Users/Infrastructure/UsersModuleRegistration.cs) | Transaction/provider registration | Existing transaction synchronizers, clean-entry callbacks or independent provider options; owner creation uses IModuleContextFactory. |
 
 WeeklyGoals no longer consumes FoodDiaryDbContext or central Infrastructure. Its live transaction accessor and advisory-lock runner use IModuleTransactionCoordinator; shared clean-entry/retry/reset/save/commit behavior remains in EfModuleTransactionCoordinator.
 
@@ -62,3 +58,7 @@ Products and Recipes delegate Serializable mutations and live transaction access
 Billing delegates transaction/save/retry/reset and live transaction access to IModuleTransactionCoordinator; duplicate translation remains owner-side before cleanup. Its separate checkout-session advisory lease still uses the central connection.
 
 Wearables no longer references FoodDiaryDbContext or central Infrastructure. IModuleSessionCoordinator owns its separate session advisory lease, single callback execution and clean/reset/final-save boundary. Intermediate saves remain durable and provider calls are never replayed.
+
+RecentItems registration uses IModuleTransactionCoordinator for live transaction access. Its user-purge participant retains central context access; post-commit recording and shared unit-of-work saves remain unchanged.
+
+Users and Identity registrations now synchronize through IModuleTransactionCoordinator. Their cleanup bridges remain. OpenFoodFacts also uses the live coordinator callback and has no direct or transitive central Infrastructure dependency. Ai prompt synchronization and Gamification stores/enqueue use the same contract; Ai independent provider options and Gamification worker clean-entry coordination remain explicit central seams.

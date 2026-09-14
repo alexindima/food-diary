@@ -5239,7 +5239,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "AiDbContext",
@@ -5736,7 +5736,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "BillingWebhookEventProcessor",
@@ -5771,7 +5771,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookProcessingContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "BillingWebhookSubscriptionWriter",
@@ -13156,7 +13156,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "AchievementDefinitionStore",
@@ -14906,7 +14906,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 18
+      "line": 16
     },
     {
       "name": "IdentityProviderRegistration",
@@ -19666,7 +19666,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 8
     },
     {
       "name": "OpenFoodFactsProviderRegistration",
@@ -20541,7 +20541,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "PostCommitRecentItemUsageRecorder",
@@ -24076,7 +24076,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "line": 14
+      "line": 12
     },
     {
       "name": "DashboardLayoutHttpModel",

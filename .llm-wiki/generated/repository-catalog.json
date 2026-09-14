@@ -6177,6 +6177,10 @@
             "version": null
           },
           {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
             "name": "xunit",
             "version": null
           },
@@ -8485,7 +8489,6 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
@@ -8673,6 +8676,10 @@
           },
           {
             "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
             "version": null
           },
           {
@@ -10943,6 +10950,10 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
             "version": null
           },
           {

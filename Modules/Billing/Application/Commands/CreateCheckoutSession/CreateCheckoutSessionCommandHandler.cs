@@ -67,7 +67,9 @@ public sealed class CreateCheckoutSessionCommandHandler(
                 userId.Value,
                 user.Email,
                 plan,
-                existingSubscription?.ExternalCustomerId,
+                string.Equals(existingSubscription?.Provider, billingProvider.Provider, StringComparison.OrdinalIgnoreCase)
+                    ? existingSubscription?.ExternalCustomerId
+                    : null,
                 ResolveIdempotencyKey(request.IdempotencyKey, userId, plan)),
             cancellationToken).ConfigureAwait(false);
         if (sessionResult.IsFailure) {

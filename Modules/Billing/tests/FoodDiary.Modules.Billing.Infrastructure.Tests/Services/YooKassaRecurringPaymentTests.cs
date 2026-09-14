@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
@@ -35,7 +36,7 @@ public sealed class YooKassaRecurringPaymentTests {
             Assert.Multiple(
                 () => Assert.Equal(expectedStatus, result.Value.Status),
                 () => Assert.Equal("pay_pending", result.Value.PaymentId),
-                () => Assert.Equal(string.Equals(expectedStatus, "active", StringComparison.Ordinal) ? PeriodEnd.AddMonths(1) : PeriodEnd,
+                () => Assert.Equal(string.Equals(expectedStatus, "active", StringComparison.Ordinal) ? PeriodEnd.AddMonths(1) : (DateTime?)null,
                     result.Value.CurrentPeriodEndUtc));
         }
     }
@@ -69,6 +70,58 @@ public sealed class YooKassaRecurringPaymentTests {
         new(Guid.NewGuid(), Guid.NewGuid(), "customer", "pm_saved", "monthly", PeriodEnd, "attempt-key");
 
     [Theory]
+    [InlineData("succeeded", true)]
+    [InlineData("canceled", false)]
+    public async Task RenewalWebhook_UsesStoredAnchorAndProviderOccurrence(string status, bool paid) {
+        string metadata = JsonSerializer.Serialize(new Dictionary<string, string>(StringComparer.Ordinal) {
+            ["renewal"] = "true",
+            ["plan"] = "monthly",
+            ["user_id"] = Guid.NewGuid().ToString(),
+            ["renewal_period_start"] = "2026-07-31T00:00:00.0000000Z",
+        });
+        using var http = new PaymentHttpHandler("pay_final", status, paid, metadata);
+        using var client = new HttpClient(http);
+        YooKassaBillingGateway gateway = CreateGateway(client);
+
+        Result<BillingRecurringPaymentModel> response = await gateway.CreateRecurringPaymentAsync(CreateRequest(), CancellationToken.None);
+        using var body = JsonDocument.Parse(Assert.IsType<string>(http.Body));
+        Assert.Equal("2026-08-01T00:00:00.0000000Z", body.RootElement.GetProperty("metadata").GetProperty("renewal_period_start").GetString());
+        Result<BillingWebhookEventModel?> webhookResult = await gateway.ParseWebhookEventAsync(
+            """{"event":"payment.succeeded","object":{"id":"pay_final"}}""", string.Empty, CancellationToken.None);
+        Assert.True(response.IsSuccess);
+        Assert.True(webhookResult.IsSuccess);
+        BillingWebhookEventModel webhook = Assert.IsType<BillingWebhookEventModel>(webhookResult.Value);
+        Assert.Multiple(
+            () => Assert.True(webhook.IsRenewal),
+            () => Assert.Equal(response.Value.Status, webhook.Status),
+            () => Assert.Equal(response.Value.OccurredAtUtc, webhook.OccurredAtUtc),
+            () => Assert.Equal(PeriodEnd.AddHours(10), webhook.OccurredAtUtc));
+        if (paid) {
+            Assert.Equal(PeriodEnd.AddDays(-1), webhook.CurrentPeriodStartUtc);
+            Assert.Equal(response.Value.CurrentPeriodStartUtc, webhook.CurrentPeriodStartUtc);
+            Assert.Equal(response.Value.CurrentPeriodEndUtc, webhook.CurrentPeriodEndUtc);
+        } else {
+            Assert.Null(webhook.CurrentPeriodStartUtc);
+            Assert.Null(webhook.CurrentPeriodEndUtc);
+        }
+    }
+
+    [Fact]
+    public async Task LegacyRenewalWebhook_LeavesPeriodForApplicationToResolve() {
+        using var http = new PaymentHttpHandler("pay_legacy", "succeeded", paid: true,
+            """{"renewal":"true","plan":"monthly"}""");
+        using var client = new HttpClient(http);
+        Result<BillingWebhookEventModel?> result = await CreateGateway(client).ParseWebhookEventAsync(
+            """{"event":"payment.succeeded","object":{"id":"pay_legacy"}}""", string.Empty, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        BillingWebhookEventModel webhook = Assert.IsType<BillingWebhookEventModel>(result.Value);
+        Assert.True(webhook.IsRenewal);
+        Assert.Null(webhook.CurrentPeriodStartUtc);
+        Assert.Null(webhook.CurrentPeriodEndUtc);
+    }
+
+    [Theory]
     [InlineData("pending")]
     [InlineData("waiting_for_capture")]
     public async Task UnresolvedPaymentWebhook_DoesNotCancelSubscription(string status) {
@@ -94,22 +147,25 @@ public sealed class YooKassaRecurringPaymentTests {
     }));
 
     [ExcludeFromCodeCoverage]
-    private sealed class PaymentHttpHandler(string paymentId, string status, bool paid) : HttpMessageHandler {
+    private sealed class PaymentHttpHandler(string paymentId, string status, bool paid, string metadataJson = "{}") : HttpMessageHandler {
         public HttpMethod? Method { get; private set; }
         public string? Path { get; private set; }
         public string? IdempotenceKey { get; private set; }
+        public string? Body { get; private set; }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             Method = request.Method;
             Path = request.RequestUri?.AbsolutePath;
             IdempotenceKey = request.Headers.TryGetValues("Idempotence-Key", out IEnumerable<string>? values) ? values.Single() : null;
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+            Body = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
+            return new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent($$"""
                     {"id":"{{paymentId}}","status":"{{status}}","paid":{{(paid ? "true" : "false")}},
                      "amount":{"value":"299.00","currency":"RUB"},"payment_method":{"id":"pm_saved"},
+                     "metadata":{{metadataJson}},
                      "created_at":"2026-08-01T10:00:00Z","captured_at":"2026-08-01T10:00:00Z"}
                     """, Encoding.UTF8, "application/json"),
-            });
+            };
         }
     }
 }

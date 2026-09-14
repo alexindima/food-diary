@@ -83,6 +83,9 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
     }
 
     private static string ResolvePaymentKind(BillingWebhookEventModel webhookEvent) {
+        if (webhookEvent.IsRenewal) {
+            return BillingPaymentKinds.Renewal;
+        }
         if (webhookEvent.FinancialAction is not null) {
             return webhookEvent.FinancialAction.Trim().ToLowerInvariant() switch {
                 BillingPaymentKinds.Refund => BillingPaymentKinds.Refund,

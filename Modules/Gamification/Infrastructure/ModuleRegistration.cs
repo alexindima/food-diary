@@ -1,5 +1,4 @@
 using FoodDiary.Persistence.Abstractions;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Infrastructure.Options;
@@ -21,18 +20,18 @@ public static class ModuleRegistration {
         services.AddGamificationApplication();
         services.AddScoped<IAchievementDefinitionStore>(static provider => {
             GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
-            return new AchievementDefinitionStore(owned, owned.AchievementDefinitions, owned.UserAchievements, () => shared.Database.CurrentTransaction?.GetDbTransaction());
+            IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
+            return new AchievementDefinitionStore(owned, owned.AchievementDefinitions, owned.UserAchievements, () => coordinator.CurrentTransaction);
         });
         services.AddScoped<IUserAchievementStore>(static provider => {
             GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
-            return new UserAchievementStore(owned, owned.UserAchievements, () => shared.Database.CurrentTransaction?.GetDbTransaction());
+            IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
+            return new UserAchievementStore(owned, owned.UserAchievements, () => coordinator.CurrentTransaction);
         });
         services.AddScoped<IAchievementEvaluationOutbox>(static provider => {
             GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
-            return new AchievementEvaluationOutbox(owned, owned.AchievementEvaluationOutbox, provider.GetRequiredService<TimeProvider>(), () => shared.Database.CurrentTransaction?.GetDbTransaction());
+            IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
+            return new AchievementEvaluationOutbox(owned, owned.AchievementEvaluationOutbox, provider.GetRequiredService<TimeProvider>(), () => coordinator.CurrentTransaction);
         });
         services.AddScoped<IMealAchievementEvaluationRequest>(static provider => (AchievementEvaluationOutbox)provider.GetRequiredService<IAchievementEvaluationOutbox>());
         services.AddScoped<IAchievementEvaluationOutboxProcessor>(static provider => {

@@ -51,3 +51,8 @@ transaction. User purge and image ownership reassignment retain their shared
 transaction scope; they are not ordinary runtime repository dependencies.
 
 Achievement replay uses GamificationDbContext registered through CreateModuleContext. The shared coordinator owns the transaction and saves the audit plus owner record through IUnitOfWork; keep stream adapters free of SaveChanges/commit and preserve revision on retry.
+
+Definition and user-achievement stores and evaluation enqueue read the live
+IModuleTransactionCoordinator.CurrentTransaction. The worker clean-entry callback
+still checks the shared scope through OutboxProcessingEngine before claiming;
+do not conflate that invariant with read-only transaction access.

@@ -14,7 +14,7 @@
       "module": "Gamification",
       "capabilities": [
         "context:CreateModuleContext",
-        "context:Database",
+        "context:CurrentTransaction",
         "entity:AchievementDefinition",
         "entity:AchievementEvaluationOutboxMessage",
         "entity:UserAchievement",
@@ -23,7 +23,7 @@
         "tracked:UserAchievement"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "71519ea58e3408f8d04a76f219d1ec3b840fe5692872c14ac6ab838c5816febd"
+      "technicalSourceSha256": "1012bc29feafaecfc8b2ac8a4137c0563c461559a62a69dda2f3ff32eb2a675c"
     },
     "Modules/Images/Infrastructure/DependencyInjection.cs": {
       "module": "Images",
@@ -61,10 +61,10 @@
       "module": "RecentItems",
       "capabilities": [
         "context:CreateModuleContext",
-        "context:Database"
+        "context:CurrentTransaction"
       ],
       "reason": "Owner runtime context shares the central connection; a live transaction accessor preserves immediate SQL and post-commit execution.",
-      "technicalSourceSha256": "4831c39d343323ec42872c0d3ff1772f44687b0e06b3e1246f31ecf851bf7c66"
+      "technicalSourceSha256": "ceb8c50998516a016513b8fb27c1377077e95e7013239dd24840f833e8480c3e"
     },
     "Modules/ContentReports/Infrastructure/ModuleRegistration.cs": {
       "module": "ContentReports",
@@ -105,10 +105,10 @@
       "module": "OpenFoodFacts",
       "capabilities": [
         "context:CreateModuleContext",
-        "context:Database"
+        "context:CurrentTransaction"
       ],
       "reason": "Registers owned cache context and read-only live accessor to the shared transaction so immediate SQL and reads preserve caller commit/rollback. No transaction ownership transfer.",
-      "technicalSourceSha256": "4b76466654a35bddc928df612efb5e88da6a601cf725830ea6f315a5fa5ea1c2"
+      "technicalSourceSha256": "98580687e8cb4ac5d7568df3333f50368680c7492d4899fbaa73d7615b2490e9"
     },
     "Modules/Marketing/Infrastructure/ModuleRegistration.cs": {
       "module": "Marketing",
@@ -769,6 +769,7 @@
       "module": "Identity",
       "capabilities": [
         "context:CreateModuleContext",
+        "context:CurrentTransaction",
         "context:Database",
         "entity:EmailTemplate",
         "entity:UserLoginEvent",
@@ -778,7 +779,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "ce05d3772d46ec1fb5f047a42956ffaa657e9d51e43fb8d8ad39d28eacf13f36"
+      "technicalSourceSha256": "fdd22de27d7bb8114133bb4dcea4a973f8b5d552bbaad171a3754f8b3523b2eb"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -1609,12 +1610,13 @@
       "module": "Ai",
       "capabilities": [
         "context:CreateModuleContext",
+        "context:CurrentTransaction",
         "context:Database",
         "entity:AiPromptTemplate",
         "tracked:AiPromptTemplate"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "2278bcc6a2ba056d760d5d8b8859c2437e48dcb38f1b3b1c3ad7a784756bb88c"
+      "technicalSourceSha256": "573514de969767ee8e62167fd8f5c6a6f93fcbb5ce382ce7e121db6b325bf575"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",
@@ -1634,6 +1636,7 @@
       "module": "Users",
       "capabilities": [
         "context:CreateModuleContext",
+        "context:CurrentTransaction",
         "context:Database",
         "entity:Role",
         "entity:User",
@@ -1645,7 +1648,7 @@
         "tracked:UserRoleAuditEvent"
       ],
       "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
-      "technicalSourceSha256": "bb206b8056f884558f0bad194fccd1f4995784a75df91195ea6a7f0a0084692f"
+      "technicalSourceSha256": "30c1008ae5666ec95a3f9972b0b2bccb61957e709df7d6a006bf90b078cf179e"
     }
   }
 }

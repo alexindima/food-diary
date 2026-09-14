@@ -118,6 +118,9 @@ public partial class BillingFeatureTests {
             CreateRenewalPayment("pay_replay", "pm_replay", "evt_replay"));
         RenewDueSubscriptionsCommandHandler service = CreateRenewalHandler(new InMemoryBillingSubscriptionRepository(subscription),
             payments, users, gateway, new ReplayingBillingTransactionRunner(() => {
+                if (payments.Payments.Count == 0) {
+                    return; // The eligibility preflight has no business writes to roll back.
+                }
                 // Model rollback before retry; independently changed user roles must be reloaded.
                 subscription.ApplyProviderSnapshot(BillingProviderNames.YooKassa, "pay_initial", "pm_replay", "price_monthly",
                     "monthly", "active", Now.AddMonths(-1), Now.AddMinutes(-1), cancelAtPeriodEnd: false, canceledAtUtc: null, trialStartUtc: null, trialEndUtc: null,

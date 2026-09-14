@@ -1,8 +1,6 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts;
-using FoodDiary.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,10 +12,10 @@ public static class ModuleRegistration {
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<OpenFoodFactsDbContext>(static options => new OpenFoodFactsDbContext(options)));
         services.AddScoped<IOpenFoodFactsProductCacheRepository>(static provider => {
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
             return new OpenFoodFactsProductCacheRepository(
                 provider.GetRequiredService<OpenFoodFactsDbContext>(),
-                () => shared.Database.CurrentTransaction?.GetDbTransaction(),
+                () => coordinator.CurrentTransaction,
                 provider.GetRequiredService<TimeProvider>());
         });
         services.AddScoped<IOpenFoodFactsProductCacheReadRepository>(static provider => provider.GetRequiredService<IOpenFoodFactsProductCacheRepository>());

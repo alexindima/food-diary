@@ -11,4 +11,5 @@ public sealed record BillingRecurringPaymentModel(
     string EventId,
     decimal? Amount,
     string? Currency,
-    string? ProviderMetadataJson);
+    string? ProviderMetadataJson,
+    DateTime? OccurredAtUtc = null);

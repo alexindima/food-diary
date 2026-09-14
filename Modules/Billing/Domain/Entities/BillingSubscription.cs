@@ -70,6 +70,21 @@ public sealed class BillingSubscription : Entity<Guid> {
         string? normalizedPriceId = NormalizeOptional(externalPriceId, ExternalIdMaxLength, nameof(externalPriceId));
         string? normalizedPlan = NormalizeOptional(plan, PlanMaxLength, nameof(plan));
 
+        if (!string.Equals(Provider, normalizedProvider, StringComparison.Ordinal)) {
+            ExternalSubscriptionId = null;
+            ExternalPaymentMethodId = null;
+            CurrentPeriodStartUtc = null;
+            CurrentPeriodEndUtc = null;
+            CancelAtPeriodEnd = false;
+            CanceledAtUtc = null;
+            TrialStartUtc = null;
+            TrialEndUtc = null;
+            LastWebhookEventId = null;
+            LastWebhookOccurredAtUtc = null;
+            LastSyncedAtUtc = null;
+            ProviderMetadataJson = null;
+        }
+        NextBillingAttemptUtc = null;
         Provider = normalizedProvider;
         ExternalCustomerId = normalizedCustomerId;
         ExternalPriceId = normalizedPriceId;
