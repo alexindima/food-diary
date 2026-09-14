@@ -38,17 +38,17 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 26
+- Public contract files: 25
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 26
-- Interfaces: 13
+- Public contract types: 25
+- Interfaces: 12
 - DTO/read-model/projection types: 9
 - Enums: 0
-- Exported repository-shaped contracts: 7
+- Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 0
 - `class BillingErrors`
 - `class BillingInputLimits`
@@ -62,7 +62,6 @@ No literal attribute-routed controller was associated with this module.
 - `interface IBillingPublicConfigProvider`
 - `interface IBillingRecurringProviderGateway`
 - `interface IBillingSubscriptionReadModelRepository`
-- `interface IBillingSubscriptionReadRepository`
 - `interface IBillingSubscriptionWriteRepository`
 - `interface IBillingTransactionRunner`
 - `interface IBillingWebhookEventReadRepository`
@@ -83,6 +82,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.BaselineRegressionTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OrderingRegressionTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs`

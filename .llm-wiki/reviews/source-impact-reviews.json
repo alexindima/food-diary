@@ -64,64 +64,32 @@
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "0fc804d45f07c02432c88c8953dd118f34751612c11b12a1b384288676a69825",
+      "pageSha256": "1ec200a2fd514e27277ffe57855568efe14ea80c22bf44d58e69a2d2d721c5f4",
       "sources": [
         {
           "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
-          "sha256": "efb16148571a95653656673cc89e6dc0f4e1e4640aac95c7a50d409ecf076e19"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "015350d0d2ed431d8685e07747f6dc8cf0a7153c495105aaf37f32a3ae6587fb"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "41193f6dd586ad04ec1a44a7f2c4e5e9981284674c3e32d1031c1cfa25e2b456"
-        },
-        {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "320593b09624a9b5ca2a7f9a12ed2977a55e3938af3733f5327c9ebbc20f1b13"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "78453dd0683d9ad470f659bb85407e7db2c84fc304f290669cb2303bcc383e82"
+          "sha256": "11cec3b8ae9f15e8c692ccb506f21492bd482e7c1bc74c2b3a821062a041dc61"
         }
       ],
-      "reason": "Verified WeeklyGoals owner registration and host coordinator against ADR 0040, module guides and passing PostgreSQL tests. Updated the EF ownership table and factory/transaction explanation to reflect all 29 owner contexts.",
+      "reason": "Verified MealsModuleRegistration and EfMealRecognitionTransactionRunner against ADR 0040: host coordinator owns the top-level transaction, Meals retains its advisory lock and intermediate xmin flush. Updated the module coordination explanation; the purge bridge remains.",
       "baseRef": "HEAD",
-      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
-      "reviewedAtUtc": "2026-09-14T04:59:24.8098358Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T12:41:12.5141492Z"
     },
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "e6560a945723fcad655ee765ba460c3a093bd727873c52788f1d9bfda1d5a219",
+      "pageSha256": "118da177c216a206ef5643e0b11ebf4354d3ebc59c71ccab76e77419a2f397ed",
       "sources": [
         {
           "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
-          "sha256": "efb16148571a95653656673cc89e6dc0f4e1e4640aac95c7a50d409ecf076e19"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "015350d0d2ed431d8685e07747f6dc8cf0a7153c495105aaf37f32a3ae6587fb"
-        },
-        {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "ca6ab2e92eba61d61f2be925443ad53e662711902564e889980e4e3fb156a393"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "41193f6dd586ad04ec1a44a7f2c4e5e9981284674c3e32d1031c1cfa25e2b456"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e3ece78098f7ff0f58849bbbbd5c375b20f1810f57c9bfb85c6293a78da01063"
+          "sha256": "11cec3b8ae9f15e8c692ccb506f21492bd482e7c1bc74c2b3a821062a041dc61"
         }
       ],
-      "reason": "Verified the narrow WeeklyGoals coordinator edge and removal of the central Infrastructure reference against the exact project matrix and passing architecture checks. Added ADR 0040 navigation; host-owned transactions and migrations remain.",
+      "reason": "Verified the Meals coordinator follow-up and unchanged project references. The page now distinguishes Meals transaction delegation from complete central Infrastructure isolation; no schema, transport or deployment boundary changed.",
       "baseRef": "HEAD",
-      "gitHead": "0c7004376dd6facd6c4f1634e054149807c6debb",
-      "reviewedAtUtc": "2026-09-14T04:59:26.5559342Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T12:41:13.6310623Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -266,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "190064c75515345e1e7f3da50aa8eb276518b02d97ddc392d8c60269857f2b03"
+          "sha256": "194a563f3bbfff90001da67de634929d3692a0b28ec8bb9a9789960ffd1f2870"
         }
       ],
-      "reason": "Final test-only correction registers IModuleContextFactory for worker instances in AchievementLeaseOwnershipIntegrationTests; rebuilt seven PostgreSQL scenarios pass. Factory adoption changes DI receivers and explicit references, without HTTP routes, payloads or snapshots.",
+      "reason": "Reviewed the three new owner Contracts IRequest messages, their Application handlers, worker consumers, DI registrations and plain response types. Project dependency checks and registration-order tests pass. This refactor preserves HTTP payloads and routes; no snapshot changes are needed.",
       "baseRef": "HEAD",
-      "gitHead": "cd2d144455f1a0a734e2207578303cbc7e90da19",
-      "reviewedAtUtc": "2026-09-14T03:22:13.6656948Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:46:14.2506652Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -311,25 +279,21 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0d3d1d66ab6eeadd67a5ac4f4cc102c1408cf55c0d2a715f9a46d44ebbf24eb4",
+      "pageSha256": "302053473c79245b3486eebd10e393115d8e635c0206910a2901e3ea03c9d655",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "413a1fd3c34221220575f70abfd65e19ed742262da5ecaf8eac9f43d89eaafeb"
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "6f546061df6a892f18611fa32a339b2becf32666f676224ad35d47147097087a"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1",
-          "sha256": "6d7a8b0d07f164cbcd2f8c58b438522eb76e32fdfcce6293da109b62656ab468"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-          "sha256": "1965e3c1a5c8a036bdb4080c774ffaf031a2000c769c7e56cbc7e1dbc78f1022"
+          "sha256": "b2c7a4aeaa492ae3740162f16a5b2eaec89c6156746d942e66106a3a060bd482"
         }
       ],
-      "reason": "Reviewed bounded bilingual symptom roles, explicit persistence-role exclusions, and unchanged confidence gates. Removed redundant expansions to preserve the 700-rule complexity budget.",
+      "reason": "Reviewed the Billing rename impact on retrieval. The existing renewal intent rule now identifies renew/subscriptions/handler instead of billing/renewal/service, and the held-out expected path points to the actual Application handler. The original broad ownership query again selects Billing Application. Query engines, graph schema and read-only guarantees are unchanged; historical benchmark snapshots remain explicitly stale.",
       "baseRef": "HEAD",
-      "gitHead": "486838d1744a7a2cbcddf7449f1b38747c2264ae",
-      "reviewedAtUtc": "2026-09-10T15:31:52.2812047Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:56:09.1826411Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -721,13 +685,13 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/cases.json",
-          "sha256": "1b0db260fec3eb6c9a5086034b4d7561a8eaafe69e45d277467890152ff60204"
+          "sha256": "acef17559a23db9ff1ac529cbe582e4b560a3b0e993b09a1110f4831f1e58e0e"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed the sole cases.json edit: it corrects the static billing-security source path after module extraction, while retaining all expected classifications. No promoted case, event chain, approval state, retrospective or evaluation lifecycle behavior changes.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:24.177687Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:58:06.7626850Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -815,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3bb1f144ce881711ce1af0ece9753c1e8a5bc0019c92247c3d10d14cab09d71a"
+          "sha256": "45787020eda31c27c4f94d60852dd9a63404f099d4ec91483016654fae3380ef"
         }
       ],
-      "reason": "Users profile adapter removal preserves same data and consent checks; provider bodies unchanged apart from namespace imports. Inventory was regenerated and privacy review guidance remains valid.",
+      "reason": "The new scheduler requests contain provider and batch settings, a timestamp, or no fields. They do not carry email bodies, images or payment details and do not enter Result-constrained logging. Existing provider sharing, receipt storage, retention and ErrorType-only worker logging remain unchanged by moving the workflows.",
       "baseRef": "HEAD",
-      "gitHead": "dcaf64828945d74dd394319d1de2d84e2a8bc85c",
-      "reviewedAtUtc": "2026-09-14T01:51:12.4826848Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:46:25.3967180Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -860,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2c0bb48938070a9db768e6a8d86c4262313c2642aebcb4d19d163f6723be49a1"
+          "sha256": "288ea11931f9770f544064a08d2267906f06bdd7922f7b2997f85e4e1e18ad1e"
         }
       ],
-      "reason": "Reviewed factory adoption across 29 module registrations: unchanged context options, interceptors, save priorities and transaction callbacks; direct contract references and standalone DI fixtures updated. Ai reader aliases are concurrent scoped registrations.",
+      "reason": "Reviewed all Admin and Ai application services for single-use orchestration. Moved the two background workflows and Billing renewal into handlers; retained shared readers, owner APIs and provider capabilities with real consumers. Executed 692 module/worker tests, 247 architecture tests after corrections and one PostgreSQL HTTP journey; static reference counts are not presented as coverage.",
       "baseRef": "HEAD",
-      "gitHead": "cd2d144455f1a0a734e2207578303cbc7e90da19",
-      "reviewedAtUtc": "2026-09-14T03:01:47.2311101Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:46:20.1138222Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -935,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "65dd8660f67e9cf035a3f6eda0c58963df7220e6fdaab11b6673ee212dba6da3"
+          "sha256": "a09b66c932c4b13d27aad4b59d2c3eb35db87554921ff15de8d8e51dfe6d9472"
         }
       ],
-      "reason": "Reviewed factory adoption across 29 module registrations: unchanged context options, interceptors, save priorities and transaction callbacks; direct contract references and standalone DI fixtures updated. Ai reader aliases are concurrent scoped registrations.",
+      "reason": "Compared the moved Billing renewal, AI recognition and Admin acknowledgement implementations with their prior services: explicit commit boundaries, provider calls, claim finality, per-message receipts, worker scopes, cancellation, timeouts, schedules and telemetry are preserved. New IRequest contracts avoid automatic unit-of-work saves; focused worker tests and the PostgreSQL recognition journey pass.",
       "baseRef": "HEAD",
-      "gitHead": "cd2d144455f1a0a734e2207578303cbc7e90da19",
-      "reviewedAtUtc": "2026-09-14T03:01:48.0028190Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:46:16.9821280Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -950,17 +914,25 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2c0bb48938070a9db768e6a8d86c4262313c2642aebcb4d19d163f6723be49a1"
+          "sha256": "288ea11931f9770f544064a08d2267906f06bdd7922f7b2997f85e4e1e18ad1e"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "65dd8660f67e9cf035a3f6eda0c58963df7220e6fdaab11b6673ee212dba6da3"
+          "sha256": "a09b66c932c4b13d27aad4b59d2c3eb35db87554921ff15de8d8e51dfe6d9472"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "45787020eda31c27c4f94d60852dd9a63404f099d4ec91483016654fae3380ef"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "b2c7a4aeaa492ae3740162f16a5b2eaec89c6156746d942e66106a3a060bd482"
         }
       ],
-      "reason": "Reviewed factory adoption across 29 module registrations: unchanged context options, interceptors, save priorities and transaction callbacks; direct contract references and standalone DI fixtures updated. Ai reader aliases are concurrent scoped registrations.",
+      "reason": "Reviewed current workflow and ranking sources. Moving Billing, Ai and Admin workflows preserves provider boundaries, cancellation, claim/receipt idempotency and existing logging. The only retrieval-policy edit retargets the Billing renewal identity to its renamed handler; it changes navigation ranking, not security controls or any production runtime behavior.",
       "baseRef": "HEAD",
-      "gitHead": "cd2d144455f1a0a734e2207578303cbc7e90da19",
-      "reviewedAtUtc": "2026-09-14T03:01:49.1380218Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:56:13.3180057Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1153,21 +1125,17 @@
     {
       "pageId": "workflow.evals",
       "pagePath": ".llm-wiki/workflows/evals.md",
-      "pageSha256": "5b899900b0cfb76014af8d825ed6cd4f6c74f1f63baf1632fa65e97fdc985f68",
+      "pageSha256": "a4d6f6e45856ad6956a6133f5a9156fdca0a4ab5131c41b49df6ae6204a3aae4",
       "sources": [
         {
-          "path": ".llm-wiki/evals/development-context-historical.json",
-          "sha256": "e65ec6dc8bce1faa64f3408bebe2548e4cea8b8c1352c6be35ffe2629f5f81de"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1",
-          "sha256": "040900950660f0fdbe83ea15ee611e65fc6a72d712c0f126e57184bad17092dd"
+          "path": ".llm-wiki/evals/cases.json",
+          "sha256": "acef17559a23db9ff1ac529cbe582e4b560a3b0e993b09a1110f4831f1e58e0e"
         }
       ],
-      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
+      "reason": "The billing-security synthetic change set used the removed pre-extraction Billing project path. Updated only that input to the existing Modules/Billing/Application/Commands/ProcessBillingWebhook handler. Expected Billing ownership, security rules and architecture checks remain unchanged; the regression is preserved rather than weakened.",
       "baseRef": "HEAD",
-      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
-      "reviewedAtUtc": "2026-09-10T14:43:04.0106171Z"
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:57:56.9213328Z"
     },
     {
       "pageId": "workflow.evidence-bundle",

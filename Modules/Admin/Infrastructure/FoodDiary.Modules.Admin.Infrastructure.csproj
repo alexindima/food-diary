@@ -2,6 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Admin.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Admin.Domain.csproj" />
     <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
@@ -10,6 +11,7 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
 

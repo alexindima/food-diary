@@ -3,12 +3,13 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Modules.Admin.Application.Services;
+using FoodDiary.Modules.Admin.Application.Commands.SendBugAcknowledgements;
+using FoodDiary.Modules.Admin.Contracts.Commands.SendBugAcknowledgements;
 
 namespace FoodDiary.Modules.Admin.Application.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class BugAcknowledgementServiceTests {
+public sealed class SendBugAcknowledgementsCommandHandlerTests {
     [Fact]
     public async Task QueuesEditableTemplateThenRecordsReceipt() {
         var candidate = new BugAcknowledgementCandidate(Guid.NewGuid(), "reporter@example.com", "original@example.com", "bug-ack:123", "ru");
@@ -18,8 +19,8 @@ public sealed class BugAcknowledgementServiceTests {
         templates.GetTemplatesAsync(Arg.Any<CancellationToken>()).Returns([new EmailTemplateReadModel(Guid.NewGuid(), "bug_report_received", "ru", "Custom {{brand}}", "<p>Custom</p>", "Custom text", IsActive: true, DateTime.UtcNow, ModifiedOnUtc: null)]);
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         IBugAcknowledgementReceipts receipts = Substitute.For<IBugAcknowledgementReceipts>();
-        var service = new BugAcknowledgementService(source, templates, transport, receipts);
-        await service.RunAsync(DateTimeOffset.UtcNow, CancellationToken.None);
+        var service = new SendBugAcknowledgementsCommandHandler(source, templates, transport, receipts);
+        await service.Handle(new SendBugAcknowledgementsCommand(DateTimeOffset.UtcNow), CancellationToken.None);
         await transport.Received(1).SendAsync(Arg.Is<EmailMessage>(x => x.FromAddress == "no-reply@fooddiary.club" && x.ReplyTo == "bugs@fooddiary.club" && x.AutoSubmitted && x.InReplyTo == candidate.MessageId && x.Subject == "Custom FoodDiary" && x.IdempotencyKey == candidate.IdempotencyKey), Arg.Any<CancellationToken>());
         await receipts.Received(1).RecordAsync(candidate.InboxId, Arg.Any<CancellationToken>());
     }
@@ -34,8 +35,8 @@ public sealed class BugAcknowledgementServiceTests {
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         transport.SendAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>()).Returns(Task.FromException(new HttpRequestException("Unavailable")));
         IBugAcknowledgementReceipts receipts = Substitute.For<IBugAcknowledgementReceipts>();
-        var service = new BugAcknowledgementService(source, templates, transport, receipts);
-        await Assert.ThrowsAsync<HttpRequestException>(() => service.RunAsync(DateTimeOffset.UtcNow, CancellationToken.None));
+        var service = new SendBugAcknowledgementsCommandHandler(source, templates, transport, receipts);
+        await Assert.ThrowsAsync<HttpRequestException>(() => service.Handle(new SendBugAcknowledgementsCommand(DateTimeOffset.UtcNow), CancellationToken.None));
         await receipts.DidNotReceive().RecordAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
@@ -53,7 +54,7 @@ public sealed class BugAcknowledgementServiceTests {
             : []);
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         IBugAcknowledgementReceipts receipts = Substitute.For<IBugAcknowledgementReceipts>();
-        await new BugAcknowledgementService(source, templates, transport, receipts).RunAsync(DateTimeOffset.UnixEpoch, CancellationToken.None);
+        await new SendBugAcknowledgementsCommandHandler(source, templates, transport, receipts).Handle(new SendBugAcknowledgementsCommand(DateTimeOffset.UnixEpoch), CancellationToken.None);
         if (templateExists && active) {
             await transport.Received(1).SendAsync(Arg.Is<EmailMessage>(x => x.Subject == "Subject"), CancellationToken.None);
             await receipts.Received(1).RecordAsync(candidate.InboxId, CancellationToken.None);

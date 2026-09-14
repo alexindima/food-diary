@@ -1,4 +1,8 @@
 using System.Data;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Infrastructure.Persistence.Shared;
+using FoodDiary.Persistence.Abstractions;
+using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
@@ -29,6 +33,8 @@ public sealed class RecipeUsageCompositionIntegrationTests(PostgresDatabaseFixtu
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleTransactionCoordinator>(new EfModuleTransactionCoordinator(context,
+            new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
         services.AddMemoryCache();
         services.AddProductsPersistence();
         services.AddRecipesPersistence();

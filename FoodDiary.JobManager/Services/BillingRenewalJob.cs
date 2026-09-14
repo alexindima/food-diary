@@ -1,13 +1,14 @@
 using System.Diagnostics;
-using FoodDiary.Modules.Billing.Application.Models;
-using FoodDiary.Modules.Billing.Application.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Billing.Contracts.Models;
+using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class BillingRenewalJob(
-    IBillingRenewalService billingRenewalService,
+    ISender sender,
     IOptions<BillingRenewalOptions> options,
     JobExecutionObserver observer,
     ILogger<BillingRenewalJob> logger) {
@@ -27,9 +28,8 @@ public sealed class BillingRenewalJob(
                 return;
             }
 
-            BillingRenewalRunResult result = await billingRenewalService.RenewDueSubscriptionsAsync(
-                settings.Provider,
-                settings.BatchSize,
+            BillingRenewalRunResult result = await sender.Send(
+                new RenewDueSubscriptionsCommand(settings.Provider, settings.BatchSize),
                 cancellationToken).ConfigureAwait(false);
 
             if (result.Processed > 0) {

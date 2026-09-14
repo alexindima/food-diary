@@ -17,7 +17,6 @@ public static class ModuleRegistration {
         services.AddScoped<BillingSubscriptionRepository>(static provider =>
             new BillingSubscriptionRepository(provider.GetRequiredService<BillingDbContext>().BillingSubscriptions,
                 CreateTransactionSynchronizer(provider)));
-        services.AddScoped<IBillingSubscriptionReadRepository>(static provider => provider.GetRequiredService<BillingSubscriptionRepository>());
         services.AddScoped<IBillingSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<BillingSubscriptionRepository>());
         services.AddScoped<IBillingSubscriptionWriteRepository>(static provider => provider.GetRequiredService<BillingSubscriptionRepository>());
         services.AddScoped<BillingPaymentRepository>(static provider =>

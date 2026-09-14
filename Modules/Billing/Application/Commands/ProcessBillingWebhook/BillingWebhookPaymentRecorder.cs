@@ -25,6 +25,11 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
             externalPaymentId,
             cancellationToken).ConfigureAwait(false);
         if (existingPayment is not null) {
+            if (existingPayment.OccurredAtUtc is { } lastOccurredAtUtc &&
+                webhookEvent.OccurredAtUtc is { } occurredAtUtc && occurredAtUtc < lastOccurredAtUtc) {
+                return;
+            }
+
             existingPayment.ApplyProviderResult(
                 subscription?.Id,
                 webhookEvent.ExternalCustomerId,

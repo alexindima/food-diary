@@ -3,45 +3,32 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence.Shared;
+using FoodDiary.Persistence.Abstractions;
+using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
 public sealed class EfMealRecognitionTransactionRunner(
-    FoodDiaryDbContext context,
+    IModuleTransactionCoordinator coordinator,
     MealsDbContext meals,
-    IUnitOfWork unitOfWork,
-    IPostCommitActionQueue? postCommitActionQueue = null) : IMealRecognitionTransactionRunner {
+    IUnitOfWork unitOfWork) : IMealRecognitionTransactionRunner {
     public async Task<T> ExecuteSerializedAsync<T>(UserId userId, Func<CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
         if (userId.Value == Guid.Empty) {
             throw new ArgumentException("A meal recognition transaction requires an owner.", nameof(userId));
         }
-        SharedTransactionBoundary.EnsureCleanEntry(context, postCommitActionQueue);
-        IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
-        return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue, async () => {
-            IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
-                await AcquireLockAsync(userId, transaction, cancellationToken).ConfigureAwait(false);
-                T result = await operation(cancellationToken).ConfigureAwait(false);
-                if (result is not FoodDiary.Results.Result { IsFailure: true }) {
-                    if (unitOfWork.HasPendingChanges) {
-                        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                    }
-                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                }
-                return result;
-            }
-        }, cancellationToken)).ConfigureAwait(false);
+        return await coordinator.ExecuteAsync(async (transaction, token) => {
+            await AcquireLockAsync(userId, transaction, token).ConfigureAwait(false);
+            return await operation(token).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<uint> FlushCreatedMealAsync(MealId mealId, UserId userId, CancellationToken cancellationToken = default) {
-        if (context.Database.CurrentTransaction is null) {
+        if (coordinator.CurrentTransaction is null) {
             throw new InvalidOperationException("A meal receipt must be captured inside its creation transaction.");
         }
         EntityEntry<Meal>? entry = meals.ChangeTracker.Entries<Meal>()
@@ -53,10 +40,10 @@ public sealed class EfMealRecognitionTransactionRunner(
         return entry.Property<uint>("xmin").CurrentValue;
     }
 
-    private async Task AcquireLockAsync(UserId userId, IDbContextTransaction transaction, CancellationToken cancellationToken) {
-        var connection = (NpgsqlConnection)context.Database.GetDbConnection();
+    private static async Task AcquireLockAsync(UserId userId, DbTransaction transaction, CancellationToken cancellationToken) {
+        var postgresTransaction = (NpgsqlTransaction)transaction;
         var command = new NpgsqlCommand("SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
-            connection, (NpgsqlTransaction)transaction.GetDbTransaction());
+            postgresTransaction.Connection, postgresTransaction);
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue("serialization_key", NpgsqlTypes.NpgsqlDbType.Text, $"meal-recognition:{userId.Value:N}");
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);

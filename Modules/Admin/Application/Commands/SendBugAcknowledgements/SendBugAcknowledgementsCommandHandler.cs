@@ -3,13 +3,15 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using System.Net;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Admin.Contracts.Commands.SendBugAcknowledgements;
 
-namespace FoodDiary.Modules.Admin.Application.Services;
+namespace FoodDiary.Modules.Admin.Application.Commands.SendBugAcknowledgements;
 
-public sealed class BugAcknowledgementService(IBugAcknowledgementSource source, IEmailTemplateAdministrationReadService templates, IEmailTransport transport, IBugAcknowledgementReceipts receipts) {
-    public async Task RunAsync(DateTimeOffset since, CancellationToken cancellationToken) {
+public sealed class SendBugAcknowledgementsCommandHandler(IBugAcknowledgementSource source, IEmailTemplateAdministrationReadService templates, IEmailTransport transport, IBugAcknowledgementReceipts receipts) : IRequestHandler<SendBugAcknowledgementsCommand, Unit> {
+    public async Task<Unit> Handle(SendBugAcknowledgementsCommand request, CancellationToken cancellationToken) {
         IReadOnlyList<EmailTemplateReadModel> available = await templates.GetTemplatesAsync(cancellationToken).ConfigureAwait(false);
-        await foreach (BugAcknowledgementCandidate candidate in source.ReadAsync(since, cancellationToken).ConfigureAwait(false)) {
+        await foreach (BugAcknowledgementCandidate candidate in source.ReadAsync(request.Since, cancellationToken).ConfigureAwait(false)) {
             EmailTemplateReadModel? template = available.FirstOrDefault(x => string.Equals(x.Key, "bug_report_received", StringComparison.Ordinal) && string.Equals(x.Locale, candidate.Locale, StringComparison.Ordinal))
                 ?? available.FirstOrDefault(x => string.Equals(x.Key, "bug_report_received", StringComparison.Ordinal) && string.Equals(x.Locale, "en", StringComparison.Ordinal));
             // Deactivating the template disables acknowledgements; never replace it with a hard-coded fallback.
@@ -25,5 +27,6 @@ public sealed class BugAcknowledgementService(IBugAcknowledgementSource source, 
                 InReplyTo: candidate.MessageId, AutoSubmitted: true, CorrelationId: candidate.InboxId.ToString()), cancellationToken).ConfigureAwait(false);
             await receipts.RecordAsync(candidate.InboxId, cancellationToken).ConfigureAwait(false);
         }
+        return Unit.Value;
     }
 }

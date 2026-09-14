@@ -7,14 +7,13 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Modules.Billing.Application.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
 
 public sealed class StartPremiumTrialCommandHandler(
     IUserBillingService billingUserContextService,
-    IBillingSubscriptionReadRepository billingSubscriptionRepository,
+    IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
     : IRequestHandler<StartPremiumTrialCommand, Result<BillingOverviewModel>> {
@@ -38,7 +37,7 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         UserBillingProfileModel user = userResult.Value;
-        BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository.GetOverviewReadModelByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user.HasPaidPremium || IsPaidPremiumActive(subscription)) {
             return Result.Failure<BillingOverviewModel>(BillingErrors.SubscriptionAlreadyActive);
         }
@@ -79,6 +78,6 @@ public sealed class StartPremiumTrialCommandHandler(
             publicConfig.AvailableProviders));
     }
 
-    private bool IsPaidPremiumActive(BillingSubscription? subscription) =>
+    private bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription) =>
         BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime);
 }

@@ -136,11 +136,11 @@
     },
     {
       "old": "FoodDiary.Modules.Billing.Application/Services/BillingRenewalService.cs",
-      "current": "Modules/Billing/Application/Services/BillingRenewalService.cs",
+      "current": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
       "gitRenameChain": [
         {
           "old": "FoodDiary.Modules.Billing.Application/Services/BillingRenewalService.cs",
-          "new": "Modules/Billing/Application/Services/BillingRenewalService.cs",
+          "new": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
           "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
           "score": "R100"
         }

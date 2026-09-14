@@ -62,7 +62,7 @@
     {
       "id": "billing-security",
       "changedPaths": [
-        "FoodDiary.Modules.Billing.Application/Webhooks/ProcessBillingWebhookCommandHandler.cs"
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs"
       ],
       "expectedModules": ["Billing"],
       "expectedScopes": ["Backend"],

@@ -90,11 +90,13 @@ public sealed class ProductsModuleExtractionTests {
         string infrastructure = ArchitectureTestPaths.FromRoot("Modules/Products/Infrastructure");
         string runner = Path.GetFullPath(Path.Combine(infrastructure, "Persistence", "Products", "EfProductMutationTransactionRunner.cs"));
         string runnerSource = File.ReadAllText(runner);
-        Assert.Contains("IsolationLevel.Serializable", runnerSource, StringComparison.Ordinal);
+        Assert.Contains("coordinator.ExecuteSerializableAsync(operation, cancellationToken)", runnerSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", runnerSource, StringComparison.Ordinal);
+        string coordinator = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs"));
+        Assert.Contains("IsolationLevel.Serializable", coordinator, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeCompositionTransactionLock", runnerSource, StringComparison.Ordinal);
-        Assert.Contains("BeginTransactionAsync", runnerSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("BeginTransactionAsync", runnerSource, StringComparison.Ordinal);
         Assert.DoesNotContain(SourceScanner.SourceFiles(infrastructure), path =>
-            !string.Equals(Path.GetFullPath(path), runner, StringComparison.OrdinalIgnoreCase) &&
             File.ReadAllText(path).Contains("SaveChangesAsync(", StringComparison.Ordinal));
         Assert.DoesNotContain("FoodDiary.Modules.Products.Infrastructure", ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"), StringComparer.Ordinal);

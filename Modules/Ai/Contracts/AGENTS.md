@@ -2,8 +2,8 @@
 
 Own administration reads, prompt administration and completed recognition reads,
 with their immutable DTOs. Use project-and-folder namespaces and preserve method signatures.
-Depend only on Results and scalar Users.Domain.Contracts. Never expose aggregates,
-job stores, provider clients, quota repositories or processing entrypoints here.
+Depend only on Mediator, Results and scalar Users.Domain.Contracts. Never expose aggregates,
+job stores, provider clients or quota repositories here. The scheduler uses ProcessNextFoodRecognitionCommand; its implementation remains in Application.
 
 Admin consumes administration capabilities; Meals consumes IFoodRecognitionResultReader.
 Moving these types does not change authorization, consent, quota, prompts, provider

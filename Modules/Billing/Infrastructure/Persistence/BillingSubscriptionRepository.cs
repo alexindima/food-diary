@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> subscriptions, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingSubscriptionReadRepository, IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
+public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> subscriptions, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
     public async Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) {
         await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         return await subscriptions

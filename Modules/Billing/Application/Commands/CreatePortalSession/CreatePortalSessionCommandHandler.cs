@@ -6,13 +6,12 @@ using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Modules.Billing.Domain.Entities;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.CreatePortalSession;
 
 public sealed class CreatePortalSessionCommandHandler(
     IUserBillingService billingUserContextService,
-    IBillingSubscriptionReadRepository billingSubscriptionRepository,
+    IBillingSubscriptionReadModelRepository billingSubscriptionRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor)
     : IRequestHandler<CreatePortalSessionCommand, Result<BillingPortalSessionModel>> {
     public async Task<Result<BillingPortalSessionModel>> Handle(
@@ -32,7 +31,7 @@ public sealed class CreatePortalSessionCommandHandler(
             return Result.Failure<BillingPortalSessionModel>(userResult.Error);
         }
 
-        BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository.GetOverviewReadModelByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.ExternalCustomerId)) {
             return Result.Failure<BillingPortalSessionModel>(BillingErrors.CustomerPortalUnavailable);
         }

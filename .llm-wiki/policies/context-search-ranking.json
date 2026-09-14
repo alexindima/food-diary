@@ -1385,7 +1385,7 @@
       "id": "billing-renewal-service-intent",
       "queryTerms": ["renew", "subscription", "payment"],
       "minimumMatches": 2,
-      "identityTerms": ["billing", "renewal", "service"],
+      "identityTerms": ["renew", "subscriptions", "handler"],
       "minimumIdentityMatches": 3,
       "score": 350,
       "directOnly": true,

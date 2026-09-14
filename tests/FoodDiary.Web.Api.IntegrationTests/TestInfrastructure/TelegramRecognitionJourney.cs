@@ -2,7 +2,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Commands.ProcessNextFoodRecognition;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -30,9 +31,9 @@ internal static class TelegramRecognitionJourney {
         using HttpResponseMessage repeat = await client.PostAsJsonAsync("/api/v1/ai/food/recognitions", request);
         Assert.Equal(HttpStatusCode.Accepted, repeat.StatusCode);
         await using (AsyncServiceScope scope = services.CreateAsyncScope()) {
-            IFoodRecognitionProcessor processor = scope.ServiceProvider.GetRequiredService<IFoodRecognitionProcessor>();
-            Assert.True(await processor.ProcessNextAsync(CancellationToken.None));
-            Assert.False(await processor.ProcessNextAsync(CancellationToken.None));
+            ISender sender = scope.ServiceProvider.GetRequiredService<ISender>();
+            Assert.True(await sender.Send(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
+            Assert.False(await sender.Send(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
         }
         using HttpResponseMessage completed = await client.GetAsync($"/api/v1/ai/food/recognitions/{jobId}");
         Assert.Equal(HttpStatusCode.OK, completed.StatusCode);

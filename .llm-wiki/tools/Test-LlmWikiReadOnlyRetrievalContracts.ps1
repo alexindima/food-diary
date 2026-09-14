@@ -16,9 +16,9 @@ Assert-Retrieval ([bool]$catalog.readOnly) 'Catalog query is not explicitly read
 Assert-Retrieval ($catalog.index -eq 'catalog') 'Catalog reader returned the wrong index identity.'
 Assert-Retrieval (($generatedBefore -join "`n") -ceq ($generatedAfter -join "`n")) 'Catalog read modified a compiled projection.'
 
-$context = & $facade context -Query 'billing renewal service' -Format Json -Limit 5 | ConvertFrom-Json
+$context = & $facade context -Query 'RenewDueSubscriptionsCommandHandler' -Format Json -Limit 5 | ConvertFrom-Json
 Assert-Retrieval ([bool]$context.conclusive -and -not [bool]$context.abstained) 'Grounded context query did not report a conclusive result.'
-Assert-Retrieval ($context.candidates[0].path -eq 'Modules/Billing/Application/Services/BillingRenewalService.cs') 'Grounded context query lost its expected top candidate.'
+Assert-Retrieval ($context.candidates[0].path -eq 'Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs') 'Grounded context query lost its expected top candidate.'
 Assert-Retrieval (-not [string]::IsNullOrWhiteSpace([string]$context.confidence)) 'Context query omitted calibrated confidence.'
 
 $ownership = & $facade ownership -Query 'subscription checkout payment webhook renewal and financial state' -Format Json -Limit 5 | ConvertFrom-Json

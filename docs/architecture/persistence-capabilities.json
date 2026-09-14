@@ -224,12 +224,13 @@
     "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs": {
       "module": "Meals",
       "capabilities": [
-        "context:Database",
         "context:ChangeTracker",
+        "context:CurrentTransaction",
+        "context:ExecuteAsync",
         "entity:Meal"
       ],
-      "reason": "Meals-owned user-serialized transaction with intermediate unit-of-work flush to capture the newly added owned Meal xmin. Commit includes the receipt; shared retry boundary resets tracking and post-commit actions. No external provider calls or foreign aggregate mutations.",
-      "technicalSourceSha256": "4548bb11e67350eed318383b7a9ef949a3a2342c62e964e17494e54aa02fa63d"
+      "reason": "Meals owns the unchanged user advisory lock and intermediate shared unit-of-work flush for the new Meal xmin. Host IModuleTransactionCoordinator owns clean entry, retry/reset, save and commit including the receipt; no external provider or foreign aggregate writes.",
+      "technicalSourceSha256": "ed0d5f19c11df57c7656a4575a9f505b2538bc6189f63ff00662355575501e08"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
       "module": "Identity",
@@ -328,7 +329,6 @@
       "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
       "technicalSourceSha256": "899297f7749b790a9a718e7c7316078652e577dc51bf66d8e3fb1b3cfe346834"
     },
-
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
       "capabilities": [
@@ -354,7 +354,7 @@
         "tracked:BillingWebhookEvent"
       ],
       "reason": "Creates Billing owner context and supplies only owner sets plus a live shared transaction synchronization callback to repositories.",
-      "technicalSourceSha256": "bb7d2f4b95a2451e0cfbdba9e25265f38cdd9fa297129458c5558044b65fa782"
+      "technicalSourceSha256": "7852d23eef9e3fd4c34e080ca143361efa6e0ae1fb723650e68b325e9b68c3d2"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
@@ -1022,10 +1022,10 @@
     "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs": {
       "module": "Products",
       "capabilities": [
-        "context:Database"
+        "context:ExecuteSerializableAsync"
       ],
-      "reason": "Owner top-level Serializable transaction with whole-attempt retry and clean tracking/outbox callback reset; no global composition lock.",
-      "technicalSourceSha256": "eb0eec2bece41241dcbe85f1c1990e5dff14a923b748e64a0605cd8a3273b75f"
+      "reason": "Delegate Serializable mutation execution, retries, reset and Result rollback to the scoped host coordinator; no direct context, independent save or transaction.",
+      "technicalSourceSha256": "add93dd6e620d48be2f1951d5f3f7a7ef116364b72e2c0cd99cfcb8df14ca986"
     },
     "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs": {
       "module": "Products",
@@ -1091,10 +1091,10 @@
     "Modules/Recipes/Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs": {
       "module": "Recipes",
       "capabilities": [
-        "context:Database"
+        "context:ExecuteSerializableAsync"
       ],
-      "reason": "Owner top-level Serializable transaction with whole-attempt retry and clean tracking/outbox callback reset; no global composition lock.",
-      "technicalSourceSha256": "71a2226ead1164faa4306f586229656f3f8570b463dfae5e2cf8c8c3647e7813"
+      "reason": "Delegate Serializable mutation execution, retries, reset and Result rollback to the scoped host coordinator; no direct context, independent save or transaction.",
+      "technicalSourceSha256": "d615bd33511632d4f23a439f5d7f93c820b726a9b33a4c82850f43fdb1d9ecbb"
     },
     "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs": {
       "module": "Recipes",
@@ -1532,12 +1532,13 @@
       "module": "Meals",
       "capabilities": [
         "context:CreateModuleContext",
+        "context:CurrentTransaction",
         "context:Database",
         "entity:Meal",
         "tracked:Meal"
       ],
-      "reason": "Compose scoped owner context and narrow meal repositories; rejoin the live shared transaction before queries, including after intermediate recognition flush.",
-      "technicalSourceSha256": "bb1c0610f26b57776e9357cf9e974078c29674c1305c695585377b21c3b4d891"
+      "reason": "Compose the owner context and narrow repositories; synchronize owner queries with the live IModuleTransactionCoordinator transaction, including after intermediate recognition flush.",
+      "technicalSourceSha256": "b82425ae79bf65c8169ef881ba866956875e556f51ecb369adaf64ec6bafeb56"
     },
     "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
       "module": "ReadModelComposition",
@@ -1561,12 +1562,13 @@
       "module": "Products",
       "capabilities": [
         "context:CreateModuleContext",
+        "context:CurrentTransaction",
         "context:Database",
         "entity:Product",
         "tracked:Product"
       ],
-      "reason": "Scoped owner context, repository and snapshot read registration. Rejoin the live shared transaction before owner queries, including after intermediate unit-of-work saves.",
-      "technicalSourceSha256": "64757017a7984e6a426814e2f04cd2ed8cf7c99d5504d7d0e92f14eb5b2cdc26"
+      "reason": "Compose scoped Products owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
+      "technicalSourceSha256": "4425dcb8822c93255069bee3f45e54e1b171a35365d989083464e42ee3b2e58e"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1580,10 +1582,11 @@
       "module": "Recipes",
       "capabilities": [
         "context:CreateModuleContext",
+        "context:CurrentTransaction",
         "context:Database"
       ],
-      "reason": "Owner runtime context registration and live shared transaction synchronization, including after intermediate UOW saves.",
-      "technicalSourceSha256": "c786e1b3cb42f9e85581c7978fa3bb91d1830125cccd7316eee306f8248717dc"
+      "reason": "Compose scoped Recipes owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
+      "technicalSourceSha256": "424e0ea5cd17c67c906e2a50fbf0e930c4fa4b49e8a0d19ccc94d220ddf5c4df"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",
@@ -1641,7 +1644,7 @@
         "tracked:UserRoleAuditEvent"
       ],
       "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
-      "technicalSourceSha256": "65e66705fba0abcd0e4b190c76629c877227ad1f7fd27357b2eeb69d1bf8bfd8"
+      "technicalSourceSha256": "bb206b8056f884558f0bad194fccd1f4995784a75df91195ea6a7f0a0084692f"
     }
   }
 }

@@ -2,14 +2,15 @@ using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
-using FoodDiary.Modules.Ai.Application.Services;
+using FoodDiary.Modules.Ai.Application.Commands.ProcessNextFoodRecognition;
+using FoodDiary.Modules.Ai.Contracts.Commands.ProcessNextFoodRecognition;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
-public sealed class FoodRecognitionProcessorTests {
+public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
     [Fact]
     public async Task ProcessNextAsync_EmptyVisionCompletesWithoutChargingForNutrition() {
         IFoodRecognitionJobStore store = Substitute.For<IFoodRecognitionJobStore>();
@@ -20,7 +21,7 @@ public sealed class FoodRecognitionProcessorTests {
         store.SaveVisionAsync(job.Id, vision, Arg.Any<CancellationToken>()).Returns(returnThis: true);
         sender.Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(vision));
 
-        Assert.True(await new FoodRecognitionProcessor(store, sender).ProcessNextAsync(CancellationToken.None));
+        Assert.True(await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
 
         await store.Received(1).CompleteAsync(job.Id, nutrition: null, errorCode: null, nutritionErrorCode: null, Arg.Any<CancellationToken>());
         await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
@@ -37,9 +38,9 @@ public sealed class FoodRecognitionProcessorTests {
         store.SaveVisionAsync(job.Id, vision, Arg.Any<CancellationToken>()).Returns(returnThis: true);
         sender.Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(vision));
         sender.Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(nutrition));
-        var processor = new FoodRecognitionProcessor(store, sender);
+        var processor = new ProcessNextFoodRecognitionCommandHandler(store, sender);
 
-        Assert.True(await processor.ProcessNextAsync(CancellationToken.None));
+        Assert.True(await processor.Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
 
         Received.InOrder(() => {
             _ = store.ClaimAsync(Arg.Any<CancellationToken>());
@@ -62,10 +63,10 @@ public sealed class FoodRecognitionProcessorTests {
         store.ClaimAsync(Arg.Any<CancellationToken>()).Returns(job, (FoodRecognitionJobModel?)null);
         sender.Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<FoodVisionModel>(AiErrors.OpenAiFailed("timeout")));
-        var processor = new FoodRecognitionProcessor(store, sender);
+        var processor = new ProcessNextFoodRecognitionCommandHandler(store, sender);
 
-        Assert.True(await processor.ProcessNextAsync(CancellationToken.None));
-        Assert.False(await processor.ProcessNextAsync(CancellationToken.None));
+        Assert.True(await processor.Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
+        Assert.False(await processor.Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
 
         await store.Received(1).CompleteAsync(job.Id, nutrition: null, "Ai.OpenAiFailed", nutritionErrorCode: null, Arg.Any<CancellationToken>());
         await sender.Received(1).Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>());
@@ -82,7 +83,7 @@ public sealed class FoodRecognitionProcessorTests {
             .Returns(Result.Success(new FoodVisionModel([])));
         store.SaveVisionAsync(job.Id, Arg.Any<FoodVisionModel>(), Arg.Any<CancellationToken>()).Returns(returnThis: false);
 
-        await new FoodRecognitionProcessor(store, sender).ProcessNextAsync(CancellationToken.None);
+        await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None);
 
         await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
         await store.DidNotReceive().CompleteAsync(Arg.Any<Guid>(), Arg.Any<FoodNutritionModel?>(), Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
@@ -100,7 +101,7 @@ public sealed class FoodRecognitionProcessorTests {
         sender.Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<FoodNutritionModel>(AiErrors.QuotaExceeded()));
 
-        await new FoodRecognitionProcessor(store, sender).ProcessNextAsync(CancellationToken.None);
+        await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None);
 
         await store.Received(1).CompleteAsync(job.Id, nutrition: null, errorCode: null, "Ai.QuotaExceeded", Arg.Any<CancellationToken>());
     }

@@ -28,10 +28,12 @@
     <ProjectReference Include="../../Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
-    <ProjectReference Include="../../Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj" />
+    <ProjectReference Include="../../Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />

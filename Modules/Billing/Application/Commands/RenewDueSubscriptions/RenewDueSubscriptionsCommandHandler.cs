@@ -1,3 +1,7 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
+using FoodDiary.Modules.Billing.Contracts.Models;
+using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using System.Globalization;
 using System.Text.Json;
@@ -5,20 +9,18 @@ using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
-using FoodDiary.Modules.Billing.Application.Common;
-using FoodDiary.Modules.Billing.Application.Models;
 using FoodDiary.Modules.Billing.Domain.Entities;
 
-namespace FoodDiary.Modules.Billing.Application.Services;
+namespace FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
 
-public sealed class BillingRenewalService(
+public sealed class RenewDueSubscriptionsCommandHandler(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingPaymentWriteRepository billingPaymentRepository,
     IUserBillingService billingUserContextService,
     IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,
     BillingAccessService billingAccessService,
-    TimeProvider dateTimeProvider) : IBillingRenewalService {
+    TimeProvider dateTimeProvider) : IRequestHandler<RenewDueSubscriptionsCommand, BillingRenewalRunResult> {
     private static readonly TimeSpan FailedRenewalRetryDelay = TimeSpan.FromHours(1);
 
     private readonly Dictionary<string, IBillingRecurringProviderGateway> _recurringGateways = recurringProviderGateways
@@ -29,11 +31,10 @@ public sealed class BillingRenewalService(
         Failed = 1,
     }
 
-    public async Task<BillingRenewalRunResult> RenewDueSubscriptionsAsync(
-        string provider,
-        int batchSize,
-        CancellationToken cancellationToken = default) {
-        if (!TryGetRecurringGateway(provider, out IBillingRecurringProviderGateway recurringGateway)) {
+    public async Task<BillingRenewalRunResult> Handle(
+        RenewDueSubscriptionsCommand request,
+        CancellationToken cancellationToken) {
+        if (!TryGetRecurringGateway(request.Provider, out IBillingRecurringProviderGateway recurringGateway)) {
             return new BillingRenewalRunResult(0, 0, 0);
         }
 
@@ -41,7 +42,7 @@ public sealed class BillingRenewalService(
         IReadOnlyList<BillingSubscription> subscriptions = await billingSubscriptionRepository.GetDueForRenewalAsync(
             recurringGateway.Provider,
             now,
-            batchSize,
+            request.BatchSize,
             cancellationToken).ConfigureAwait(false);
         int renewed = 0;
         int failed = 0;
@@ -106,7 +107,6 @@ public sealed class BillingRenewalService(
                 subscription,
                 renewalResult.Value,
                 recurringGateway.Provider,
-                user,
                 now,
                 cancellationToken).ConfigureAwait(false);
         } catch (BillingPaymentAlreadyExistsException) {
@@ -160,7 +160,6 @@ public sealed class BillingRenewalService(
         BillingSubscription subscription,
         BillingRecurringPaymentModel renewal,
         string provider,
-        UserBillingProfileModel user,
         DateTime renewedAtUtc,
         CancellationToken cancellationToken) {
         await billingTransactionRunner.ExecuteAsync(async ct => {
@@ -185,6 +184,17 @@ public sealed class BillingRenewalService(
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
 
             await AddRenewalPaymentIfMissingAsync(subscription, renewal, provider, ct).ConfigureAwait(false);
+
+            UserBillingProfileModel? user = await billingUserContextService.GetProfileIncludingDeletedAsync(subscription.UserId, ct).ConfigureAwait(false);
+            if (user is not { IsActive: true, IsDeleted: false }) {
+                subscription.MarkRenewalSkippedForInaccessibleUser(
+                    BuildRenewalSkippedEventId(subscription, renewedAtUtc),
+                    renewedAtUtc,
+                    SerializeReason("User became inaccessible while the renewal payment was being processed."));
+                subscription.MarkPremiumRoleManagedByBilling(value: false, renewedAtUtc);
+                await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
+                return;
+            }
 
             bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
                 renewal.Status,

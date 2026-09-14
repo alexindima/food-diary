@@ -28,7 +28,7 @@ references its own Domain explicitly; Presentation has no direct Domain referenc
 | Session reads | IAdminImpersonationSessionQuery is implemented by FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery. GetAdminImpersonationSessionsQueryHandler consumes it directly. |
 | Billing and role-audit SQL projections | FoodDiary.ReadModel.Composition/Admin, including their DI registrations. Billing and Users retain aggregate ownership. |
 | Session and receipt EF model | Admin/PersistenceModel. AdminDbContext tracks the two owned entities; the central model also applies their configuration. Foreign User relationships are composed in FoodDiary.Infrastructure/Persistence/Composition/AdminCrossModuleRelationships.cs. |
-| BugAcknowledgementReceipt | Admin/PersistenceModel. Stores the inbox ID for deduplication. Admin Infrastructure handles receipt persistence; BugAcknowledgementService owns the application workflow. |
+| BugAcknowledgementReceipt | Admin/PersistenceModel. Stores the inbox ID for deduplication. Admin Infrastructure handles receipt persistence; SendBugAcknowledgementsCommandHandler owns the application workflow; the worker dispatches its Contracts request through ISender. |
 | Shared persistence and migrations | FoodDiary.Infrastructure. Shared save/transaction coordination and user purge remain in the existing central lifecycle. |
 | Impersonation handoff | Admin Infrastructure owns the specialized adapter. Authentication token issuance and SSO storage remain behind their existing owner contracts. |
 | MailInbox bridge and acknowledgement worker | Admin Infrastructure. Supporting-service access uses the approved MailInbox client. The application depends on ports, not that client. |

@@ -42,13 +42,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 38
+- Public contract files: 39
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 38
+- Public contract types: 39
 - Interfaces: 13
 - DTO/read-model/projection types: 12
 - Enums: 0
@@ -84,7 +84,7 @@ No literal attribute-routed controller was associated with this module.
 - `record AdminMailInboxDmarcRecordModel`
 - `record AdminMailInboxDmarcReportModel`
 - `record AdminMailInboxMessageDetailsModel`
-- ... 8 more type(s)
+- ... 9 more type(s)
 
 ## Focused Tests
 
@@ -110,8 +110,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FeatureErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/SendBugAcknowledgementsCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/Domain/AdminInvariantTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminDashboardMetricsIntegrationTests.cs`

@@ -14,6 +14,7 @@ public sealed class BillingModuleExtractionTests {
     [InlineData("Application", "Services/BillingUserContextService.cs")]
     [InlineData("Application", "Common/IBillingUserContextService.cs")]
     [InlineData("Application", "Models/BillingUserProfileModel.cs")]
+    [InlineData("Application.Abstractions", "Common/IBillingSubscriptionReadRepository.cs")]
     [InlineData("Application.Abstractions", "Common/IBillingSubscriptionRepository.cs")]
     [InlineData("Application.Abstractions", "Common/IBillingPaymentRepository.cs")]
     [InlineData("Application.Abstractions", "Common/IBillingWebhookEventRepository.cs")]

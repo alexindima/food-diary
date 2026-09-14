@@ -199,7 +199,7 @@ Backend structure guardrails now enforce the high-level placement rules. In part
 - application feature code belongs in feature purpose folders, not new flat folders;
 - presentation controllers should depend only on presentation-safe collaborators;
 - executable hosts keep only `Program.cs` in the project root;
-- JobManager remains a scheduler/worker host and must not own persistence, mediator, or HTTP workflows directly.
+- JobManager remains a scheduler/worker host: it dispatches owner Contracts requests through ISender, while application handlers own use cases. Do not implement persistence, request handlers, mediator pipelines, or HTTP workflows in the host.
 
 ## MealPlanning physical ownership
 

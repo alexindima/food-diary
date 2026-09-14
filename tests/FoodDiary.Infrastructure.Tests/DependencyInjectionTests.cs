@@ -943,7 +943,6 @@ public sealed class DependencyInjectionTests {
         {
             "FoodDiary.Modules.Billing.Infrastructure.Persistence.BillingSubscriptionRepository",
             [
-                "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingSubscriptionReadRepository",
                 "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingSubscriptionReadModelRepository",
                 "FoodDiary.Modules.Billing.Application.Abstractions.Common.IBillingSubscriptionWriteRepository",
             ]

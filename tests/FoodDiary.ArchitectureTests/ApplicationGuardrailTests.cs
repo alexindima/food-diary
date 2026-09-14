@@ -1432,7 +1432,6 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Exercises", "Application", "Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingOccurrenceReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingCheckInReadRepository.cs"),
-            Path.Combine(root, "Modules", "Billing", "Application.Abstractions", "Common", "IBillingSubscriptionReadRepository.cs"),
             Path.Combine(root, "Modules", "Users", "Application", "Abstractions", "Users", "Common", "IUserAdminReadRepository.cs"),
             Path.Combine(root, "Modules", "Notifications", "Application", "Abstractions", "Common", "INotificationReadRepository.cs"),
             Path.Combine(root, "Modules", "Notifications", "Application", "Abstractions", "Common", "IWebPushSubscriptionReadRepository.cs"),

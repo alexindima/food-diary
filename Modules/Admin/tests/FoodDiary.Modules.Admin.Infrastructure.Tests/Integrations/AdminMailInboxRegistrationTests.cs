@@ -1,4 +1,6 @@
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
+using FoodDiary.Modules.Admin.Application;
+using FoodDiary.Modules.Admin.Application.Commands.SendBugAcknowledgements;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client.Export;
@@ -11,6 +13,25 @@ namespace FoodDiary.Modules.Admin.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class AdminMailInboxRegistrationTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void MailIntegrationAndApplication_RegisterAcknowledgementHandlerOnce(bool applicationFirst) {
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["MailInboxClient:BaseUrl"] = "https://inbox.example.com",
+        }).Build();
+        var services = new ServiceCollection();
+        if (applicationFirst) {
+            services.AddAdminApplication();
+        }
+        services.AddAdminMailInboxIntegration(configuration);
+        if (!applicationFirst) {
+            services.AddAdminApplication();
+        }
+
+        Assert.Single(services, descriptor => descriptor.ImplementationType == typeof(SendBugAcknowledgementsCommandHandler));
+    }
+
     [Theory]
     [InlineData("00:00:10", true)]
     [InlineData("1.00:00:00", true)]

@@ -5,4 +5,4 @@
 - Do not reference EF Core, provider SDKs, hosts, presentation, or the central Application Abstractions project.
 - Keep `IBillingMarketingConversionRecorder` in Billing Contracts as the Billing consumer-owned cross-module port.
 
-Expose narrow read/write repository ports; register them against one scoped concrete implementation without a combined repository interface.
+Subscription reads use IBillingSubscriptionReadModelRepository projections; tracked aggregate lookups belong only to IBillingSubscriptionWriteRepository. Expose narrow read/write repository ports; register them against one scoped concrete implementation without a combined repository interface.

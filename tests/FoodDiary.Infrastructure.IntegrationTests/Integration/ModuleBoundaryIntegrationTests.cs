@@ -1,3 +1,5 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition.Recipes;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -69,6 +71,8 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleTransactionCoordinator>(new EfModuleTransactionCoordinator(context,
+            new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
         services.AddMealsPersistence();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IMealDailyCalorieReadService reader = provider.GetRequiredService<IMealDailyCalorieReadService>();

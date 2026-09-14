@@ -204,7 +204,7 @@ Other application modules must not acquire Billing repositories. Billing persist
 ### Public capabilities and adapters
 
 - Presentation invokes Billing commands and queries for checkout, portal, trial, overview and webhooks.
-- JobManager invokes `IBillingRenewalService`; it must not depend on the concrete renewal implementation.
+- JobManager sends `RenewDueSubscriptionsCommand` from Billing.Contracts through `ISender`; the Billing Application handler owns renewal orchestration and explicit per-item transactions.
 - Owning module Infrastructure implements provider gateways and public provider configuration; shared transport code is limited to narrow reusable adapters/primitives.
 - Admin consumes its dedicated projection-oriented admin Billing read service, not Billing aggregates.
 

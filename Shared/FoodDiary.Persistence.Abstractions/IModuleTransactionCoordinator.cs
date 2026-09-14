@@ -15,4 +15,12 @@ public interface IModuleTransactionCoordinator {
     Task<T> ExecuteAsync<T>(
         Func<DbTransaction, CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Runs a mutation with Serializable isolation and whole-attempt retries on relational providers.
+    /// Retains the existing single-attempt, unit-of-work save behavior for nonrelational test providers.
+    /// The same clean-entry, failure reset and post-commit rules apply; external calls must stay outside retries.
+    /// </summary>
+    Task<T> ExecuteSerializableAsync<T>(
+        Func<CancellationToken, Task<T>> operation,
+        CancellationToken cancellationToken = default);
 }

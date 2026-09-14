@@ -30,6 +30,7 @@ public static class UsersModuleRegistration {
         services.AddScoped<IUserFastingReminderReadService>(static provider => provider.GetRequiredService<UserRelatedDataReadService>());
         services.AddScoped<IUserCommentAuthorReadService>(static provider => provider.GetRequiredService<UserRelatedDataReadService>());
         services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserBillingProfileReadRepository>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserAiProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserDashboardProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<IUserDietologistProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());

@@ -73,8 +73,9 @@ abstraction-contract dependencies, host consumers and boundary enforceability.
 
 Adapter capabilities are reviewed in `docs/architecture/persistence-capabilities.json`.
 All 29 owner contexts participate in the shared scoped unit of work through
-`IModuleContextFactory`. WeeklyGoals uses `IModuleTransactionCoordinator` for
-top-level transactions while retaining its owner lock; central migration composition
+`IModuleContextFactory`. WeeklyGoals and Meals use `IModuleTransactionCoordinator`
+for top-level transactions while retaining their owner locks. Products and Recipes use its
+Serializable operation with whole-attempt retries; their purge bridges remain. Central migration composition
 and foreign-write restrictions remain. See ADR 0040. BCL-only transport helpers live in
 `Shared/FoodDiary.Integrations.Http`; consult the canonical architecture document
 and ADR 0029 for the remaining isolation limits.

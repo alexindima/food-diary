@@ -1,4 +1,5 @@
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Commands.ProcessNextFoodRecognition;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -14,7 +15,7 @@ public sealed class FoodRecognitionWorkerTests {
     public async Task ExecuteAsync_ContinuesAfterWorkIdleOrFailureAndDisposesEveryScope(string firstOutcome) {
         var state = new ProcessorState(firstOutcome);
         await using ServiceProvider services = new ServiceCollection()
-            .AddSingleton(state).AddScoped<IFoodRecognitionProcessor, Processor>().BuildServiceProvider();
+            .AddFoodDiaryMediator(_ => { }).AddSingleton(state).AddScoped<IRequestHandler<ProcessNextFoodRecognitionCommand, bool>, Processor>().BuildServiceProvider();
         using var worker = new FoodRecognitionWorker(services.GetRequiredService<IServiceScopeFactory>(), NullLogger<FoodRecognitionWorker>.Instance);
 
         await worker.StartAsync(CancellationToken.None);
@@ -35,8 +36,8 @@ public sealed class FoodRecognitionWorkerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class Processor(ProcessorState state) : IFoodRecognitionProcessor, IDisposable {
-        public async Task<bool> ProcessNextAsync(CancellationToken cancellationToken) {
+    private sealed class Processor(ProcessorState state) : IRequestHandler<ProcessNextFoodRecognitionCommand, bool>, IDisposable {
+        public async Task<bool> Handle(ProcessNextFoodRecognitionCommand request, CancellationToken cancellationToken) {
             if (Interlocked.Increment(ref state.Calls) == 1) {
                 return state.Outcome switch {
                     "processed" => true,

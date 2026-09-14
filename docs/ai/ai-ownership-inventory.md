@@ -1,4 +1,4 @@
-﻿# AI ownership inventory
+# AI ownership inventory
 
 AI owns food analysis, prompt administration, usage reporting contracts, quotas and asynchronous recognition. All seven production projects are sibling directories under `Modules/Ai`: Application, Application.Abstractions, Contracts, Domain, Infrastructure, PersistenceModel and Presentation. Namespaces follow the project filename and relative folders. The Application assembly name remains `FoodDiary.Application.Ai` for existing assembly discovery.
 
@@ -15,7 +15,7 @@ AI owns food analysis, prompt administration, usage reporting contracts, quotas 
 ## Service decisions
 
 - OpenAiFoodService owns deadlines, consent, prompt/provider calls and quota reconciliation across three operations; retain this workflow.
-- FoodRecognitionProcessor owns the background claim/vision/nutrition/completion lifecycle; retain it.
+- ProcessNextFoodRecognitionCommandHandler owns the background claim/vision/nutrition/completion lifecycle. The worker sends its Contracts request through ISender; preserve independent commits and protection against redispatch after uncertain provider outcomes.
 - FoodRecognitionResultReader validates ownership, completion and usable results for Meals; retain the public boundary.
 - AiPromptAdministrationService owns prompt mutation for Admin; retain the public boundary.
 - AiAdministrationReadService adapts internal read capabilities to the public Admin-facing API; its small forwarding methods do not justify exposing repositories to Admin.

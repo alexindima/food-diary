@@ -47,11 +47,17 @@ public sealed class UserBillingServiceTests {
     public async Task GetProfileIncludingDeletedAsync_ReturnsDeletedProjection() {
         User user = CreateUser();
         user.DeleteAccount(Now);
-        UserBillingService service = CreateService(CreateReader(user));
+        IUserLookupRepository trackedReader = CreateReader(CreateUser());
+        IUserBillingProfileReadRepository reader = Substitute.For<IUserBillingProfileReadRepository>();
+        var expected = new UserBillingProfileModel(user.Id, user.Email, IsActive: false, IsDeleted: true,
+            HasPaidPremium: false, PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null);
+        reader.GetBillingProfileIncludingDeletedAsync(user.Id, CancellationToken.None).Returns(expected);
+        UserBillingService service = CreateService(trackedReader, billingProfileReader: reader);
 
         UserBillingProfileModel? result = await service.GetProfileIncludingDeletedAsync(user.Id, CancellationToken.None);
 
-        Assert.True(result?.IsDeleted);
+        Assert.Same(expected, result);
+        await trackedReader.DidNotReceiveWithAnyArgs().GetByIdIncludingDeletedAsync(default, default);
     }
 
     [Fact]
@@ -116,11 +122,13 @@ public sealed class UserBillingServiceTests {
     private static UserBillingService CreateService(
         IUserLookupRepository reader,
         IUserWriteRepository? writer = null,
-        IUserRoleMembershipService? roleMembershipService = null) =>
+        IUserRoleMembershipService? roleMembershipService = null,
+        IUserBillingProfileReadRepository? billingProfileReader = null) =>
         new(
             reader,
             writer ?? Substitute.For<IUserWriteRepository>(),
-            roleMembershipService ?? Substitute.For<IUserRoleMembershipService>());
+            roleMembershipService ?? Substitute.For<IUserRoleMembershipService>(),
+            billingProfileReader ?? Substitute.For<IUserBillingProfileReadRepository>());
 
     private static IUserLookupRepository CreateReader(User user) {
         IUserLookupRepository reader = Substitute.For<IUserLookupRepository>();

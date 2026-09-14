@@ -530,7 +530,7 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task ProcessBillingWebhook_WhenSubscriptionAlreadyHandledEvent_ReturnsSuccessWithoutMutation() {
+    public async Task ProcessBillingWebhook_WhenSubscriptionAlreadyHandledEvent_RecordsMissingPaymentWithoutChangingSubscription() {
         var user = User.Create("subscription-duplicate-event@example.com", "hash");
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
@@ -578,7 +578,7 @@ public partial class BillingFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Empty(paymentRepository.Payments);
+        Assert.Equal("pay_duplicate_subscription", Assert.Single(paymentRepository.Payments).ExternalPaymentId);
         Assert.Equal(BillingWebhookEvent.ProcessedStatus, Assert.Single(webhookEventRepository.Events).Status);
         Assert.Equal(0, subscriptionRepository.UpdateCount);
     }

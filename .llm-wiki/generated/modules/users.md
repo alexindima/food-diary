@@ -38,17 +38,17 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 78
+- Public contract files: 79
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 78
-- Interfaces: 36
+- Public contract types: 79
+- Interfaces: 37
 - DTO/read-model/projection types: 36
 - Enums: 2
-- Exported repository-shaped contracts: 6
+- Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 5
 - `class CurrentUserAccessResolver`
 - `class UserErrors`
@@ -66,6 +66,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserAiProfileReadService`
 - `interface IUserAuthenticationIdentityService`
 - `interface IUserAuthenticationRegistrationService`
+- `interface IUserBillingProfileReadRepository`
 - `interface IUserBillingService`
 - `interface IUserCleanupService`
 - `interface IUserCommentAuthorReadService`
@@ -79,8 +80,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserGamificationProfileReadService`
 - `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
-- `interface IUserLookupRepository`
-- ... 48 more type(s)
+- ... 49 more type(s)
 
 ## Extraction Readiness
 

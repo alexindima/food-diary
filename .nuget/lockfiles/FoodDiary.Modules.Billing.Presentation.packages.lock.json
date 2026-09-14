@@ -94,7 +94,10 @@
         }
       },
       "fooddiary.modules.billing.contracts": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.billing.domain": {
         "type": "Project",

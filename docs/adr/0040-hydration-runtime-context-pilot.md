@@ -362,3 +362,33 @@ concurrent creation, rollback after saving both contexts, cancellation, caller-s
 rejection and failed-attempt callback discard; central reliability coverage exercises
 automatic retries. No SQL, mapping, schema or HTTP contract change is required. Deploy
 or revert the participating backend assemblies together.
+
+### Meals recognition transaction coordination contract
+
+Meals delegates recognition transaction execution and live transaction access to
+IModuleTransactionCoordinator. Its user advisory lock SQL/key and owned Meal xmin
+capture remain unchanged. FlushCreatedMealAsync still requires an active transaction
+and a newly added meal owned by the requested user; it saves through the existing
+IUnitOfWork. Repository reads rejoin the live transaction after each intermediate
+flush, so meal creation and its receipt commit or roll back together.
+
+The migration model and HTTP surface are unchanged. Meals retains its central
+Infrastructure reference only for remaining bridges, including user-data purge;
+this step does not claim complete adapter isolation. PostgreSQL coverage protects
+concurrent creation, undo, exception/Result/cancellation rollback and automatic retry
+after a meal flush. Provider calls remain outside the transaction.
+
+### Products and Recipes Serializable coordination
+
+Products and Recipes delegate their mutation runners to ExecuteSerializableAsync
+on the same scoped IModuleTransactionCoordinator. The host implementation retains
+Serializable isolation, provider whole-attempt retries, clean-entry validation,
+tracker/event/post-commit reset and Result-failure rollback. Nonrelational tests keep
+the existing single-attempt unit-of-work save path; no provider calls enter retries.
+Default-isolation consumers keep their existing ExecuteAsync contract and behavior.
+
+Owner repositories obtain the live transaction through the coordinator, including
+after intermediate saves. Composition queries continue to share this transaction;
+lock ordering, SQL, snapshot hydration and purge participants are unchanged. The
+module runners no longer hold permission to save or begin/commit transactions.
+Central references remain for the purge bridges; no schema or API change is required.

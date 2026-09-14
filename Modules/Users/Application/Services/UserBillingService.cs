@@ -11,7 +11,8 @@ namespace FoodDiary.Application.Users.Services;
 internal sealed class UserBillingService(
     IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository,
-    IUserRoleMembershipService roleMembershipService) : IUserBillingService {
+    IUserRoleMembershipService roleMembershipService,
+    IUserBillingProfileReadRepository billingProfileReadRepository) : IUserBillingService {
     public async Task<Result<UserBillingProfileModel>> GetAccessibleProfileAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
@@ -22,14 +23,10 @@ internal sealed class UserBillingService(
             : Result.Failure<UserBillingProfileModel>(error);
     }
 
-    public async Task<UserBillingProfileModel?> GetProfileIncludingDeletedAsync(
+    public Task<UserBillingProfileModel?> GetProfileIncludingDeletedAsync(
         UserId userId,
-        CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository
-            .GetByIdIncludingDeletedAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
-        return user is null ? null : ToModel(user);
-    }
+        CancellationToken cancellationToken = default) =>
+        billingProfileReadRepository.GetBillingProfileIncludingDeletedAsync(userId, cancellationToken);
 
     public async Task<Result<UserBillingProfileModel>> StartPremiumTrialAsync(
         UserId userId,

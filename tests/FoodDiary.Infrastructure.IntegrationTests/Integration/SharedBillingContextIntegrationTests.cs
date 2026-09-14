@@ -24,7 +24,6 @@ public sealed class SharedBillingContextIntegrationTests(PostgresDatabaseFixture
         await using ServiceProvider provider = CreateProvider(context);
         BillingDbContext owned = provider.GetRequiredService<BillingDbContext>();
         Assert.Multiple(
-            () => Assert.Same(provider.GetRequiredService<IBillingSubscriptionReadRepository>(), provider.GetRequiredService<IBillingSubscriptionWriteRepository>()),
             () => Assert.Same(provider.GetRequiredService<IBillingSubscriptionReadModelRepository>(), provider.GetRequiredService<IBillingSubscriptionWriteRepository>()),
             () => Assert.Same(provider.GetRequiredService<IBillingPaymentReadRepository>(), provider.GetRequiredService<IBillingPaymentWriteRepository>()),
             () => Assert.Same(provider.GetRequiredService<IBillingWebhookEventReadRepository>(), provider.GetRequiredService<IBillingWebhookEventWriteRepository>()),

@@ -1,6 +1,7 @@
 using System.Data.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
@@ -14,6 +15,37 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task BillingProfile_RereadsPersistedRolesAndDeletionDespiteTrackedUser() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("billing-fresh-profile@example.com", "hash");
+        Role premium = await context.Roles.FirstOrDefaultAsync(role => role.Name == RoleNames.Premium)
+            ?? Role.Create(RoleNames.Premium);
+        user.ReplaceRoles([premium]);
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        var service = new UserProfileProjectionService(context.Users);
+        UserBillingProfileModel? initial = await service.GetBillingProfileIncludingDeletedAsync(user.Id, CancellationToken.None);
+        Assert.NotNull(initial);
+        Assert.True(initial.HasPaidPremium);
+        int trackedCount = context.ChangeTracker.Entries().Count();
+
+        await context.UserRoles.Where(role => role.UserId == user.Id).ExecuteDeleteAsync();
+        DateTime deletedAt = DateTime.UtcNow;
+        await context.Users.Where(candidate => candidate.Id == user.Id)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(candidate => candidate.DeletedAt, deletedAt));
+        UserBillingProfileModel? fresh = await service.GetBillingProfileIncludingDeletedAsync(user.Id, CancellationToken.None);
+
+        Assert.NotNull(fresh);
+        Assert.Multiple(
+            () => Assert.False(fresh.HasPaidPremium),
+            () => Assert.True(fresh.IsDeleted),
+            () => Assert.True(user.HasRole(RoleNames.Premium)),
+            () => Assert.Null(user.DeletedAt),
+            () => Assert.Equal(trackedCount, context.ChangeTracker.Entries().Count()));
+        Assert.Null(await service.GetBillingProfileIncludingDeletedAsync(UserId.New(), CancellationToken.None));
+    }
+
     [RequiresDockerFact]
     public async Task ConsumerProfiles_ProjectOnlyRequiredValues() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

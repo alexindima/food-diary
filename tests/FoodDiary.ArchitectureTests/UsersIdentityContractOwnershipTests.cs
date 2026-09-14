@@ -7,7 +7,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
     [InlineData("Modules/Users/Contracts", 71)]
-    [InlineData("Modules/Users/Application/Abstractions", 7)]
+    [InlineData("Modules/Users/Application/Abstractions", 8)]
     [InlineData("Modules/Identity/Application/Abstractions", 41)]
     [InlineData("Modules/Identity/Contracts", 17)]
     [InlineData("Modules/BodyMetrics/Contracts", 6)]

@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.Entities.Products;
@@ -38,9 +39,9 @@ public sealed class RecipeCompositionIsolationIntegrationTests(PostgresDatabaseF
             recipe.AddStep(1, "Mix").AddNestedRecipeIngredient(to, 1);
             return Result.Success();
         }
-        Task<Result> firstAttempt = new EfRecipeMutationTransactionRunner(left, new UnitOfWork(left))
+        Task<Result> firstAttempt = new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(left, new UnitOfWork(left)))
             .ExecuteAsync(token => AddEdgeAsync(left, first.Id, second.Id, token));
-        Task<Result> secondAttempt = new EfRecipeMutationTransactionRunner(right, new UnitOfWork(right))
+        Task<Result> secondAttempt = new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(right, new UnitOfWork(right)))
             .ExecuteAsync(token => AddEdgeAsync(right, second.Id, first.Id, token));
         Result[] results = await Task.WhenAll(firstAttempt, secondAttempt).WaitAsync(TimeSpan.FromSeconds(45));
         Assert.Single(results, result => result.IsSuccess);
@@ -66,7 +67,7 @@ public sealed class RecipeCompositionIsolationIntegrationTests(PostgresDatabaseF
             if (Interlocked.Increment(ref reads) == 2) { bothRead.TrySetResult(); }
             await bothRead.Task.WaitAsync(TimeSpan.FromSeconds(15), token);
         }
-        Task<Result> edit = new EfProductMutationTransactionRunner(editing, new UnitOfWork(editing)).ExecuteAsync(async token => {
+        Task<Result> edit = new EfProductMutationTransactionRunner(new EfModuleTransactionCoordinator(editing, new UnitOfWork(editing))).ExecuteAsync(async token => {
             Product current = await editing.Products.SingleAsync(item => item.Id == product.Id, token);
             bool used = await editing.RecipeIngredients.AsNoTracking().AnyAsync(item => item.ProductId == product.Id, token);
             await SynchronizeAsync(token);
@@ -74,7 +75,7 @@ public sealed class RecipeCompositionIsolationIntegrationTests(PostgresDatabaseF
             current.UpdateCoreIdentity(name: "After");
             return Result.Success();
         });
-        Task<Result> link = new EfRecipeMutationTransactionRunner(linking, new UnitOfWork(linking)).ExecuteAsync(async token => {
+        Task<Result> link = new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(linking, new UnitOfWork(linking))).ExecuteAsync(async token => {
             linkedName = await linking.Products.AsNoTracking().Where(item => item.Id == product.Id).Select(item => item.Name).SingleAsync(token);
             Recipe current = await linking.Recipes.SingleAsync(item => item.Id == recipe.Id, token);
             await SynchronizeAsync(token);

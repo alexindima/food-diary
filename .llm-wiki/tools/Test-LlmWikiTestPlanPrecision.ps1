@@ -58,7 +58,7 @@ Write-Host "LLM Wiki test-plan precision passed: $($ids.Count) unique command ID
 
 $idempotencyPlan = & $tool `
     -Intent 'Harden billing renewal idempotency and retry behavior' `
-    -ProposedPath 'Modules/Billing/Application/Services/BillingRenewalService.cs' `
+    -ProposedPath 'Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs' `
     -NoBaseline `
     -Format Json | ConvertFrom-Json
 if (@($idempotencyPlan.focusedTestFiles) -notcontains 'Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs') {

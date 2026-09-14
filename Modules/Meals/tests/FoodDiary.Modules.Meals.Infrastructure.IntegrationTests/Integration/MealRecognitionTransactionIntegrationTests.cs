@@ -251,6 +251,70 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         Assert.Empty(context.ChangeTracker.Entries<Meal>());
     }
 
+    [RequiresDockerFact]
+    public async Task CancellationAfterMealFlush_RollsBackAndAllowsNextTransaction() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("recognition-cancellation@example.com", "hash");
+        context.Add(user);
+        await context.SaveChangesAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        MealsDbContext owned = provider.GetRequiredService<MealsDbContext>();
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+        using var cancellation = new CancellationTokenSource();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => runner.ExecuteSerializedAsync(user.Id, async token => {
+            var meal = Meal.Create(user.Id, DateTime.UtcNow);
+            owned.Add(meal);
+            await runner.FlushCreatedMealAsync(meal.Id, user.Id, token);
+            await cancellation.CancelAsync();
+            token.ThrowIfCancellationRequested();
+            return meal.Id;
+        }, cancellation.Token));
+        Assert.Multiple(() => Assert.Empty(owned.ChangeTracker.Entries()),
+            () => Assert.Empty(context.ChangeTracker.Entries()),
+            () => Assert.Null(context.Database.CurrentTransaction));
+        Assert.False(await context.Meals.AnyAsync(meal => meal.UserId == user.Id));
+        await runner.ExecuteSerializedAsync(user.Id, _ => {
+            owned.Add(Meal.Create(user.Id, DateTime.UtcNow));
+            return Task.FromResult(true);
+        });
+        Assert.Equal(1, await context.Meals.CountAsync(meal => meal.UserId == user.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task TransientFailureAfterFlush_RetriesWholeMealAndReceiptTransaction() {
+        await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("recognition-retry-flush@example.com", "hash");
+        seed.Add(user);
+        await seed.SaveChangesAsync();
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(seed.Database.GetConnectionString(), postgres => postgres.EnableRetryOnFailure(2, TimeSpan.Zero, errorCodesToAdd: null)).Options;
+        await using var context = new FoodDiaryDbContext(options);
+        await using ServiceProvider provider = CreateProvider(context);
+        MealsDbContext owned = provider.GetRequiredService<MealsDbContext>();
+        IMealRecognitionTransactionRunner runner = provider.GetRequiredService<IMealRecognitionTransactionRunner>();
+        IMealRecognitionReceiptRepository receipts = provider.GetRequiredService<IMealRecognitionReceiptRepository>();
+        var operationId = Guid.NewGuid();
+        DateTime now = DateTime.UtcNow;
+        int attempts = 0;
+        MealId result = await runner.ExecuteSerializedAsync(user.Id, async token => {
+            attempts++;
+            Assert.Empty(owned.ChangeTracker.Entries());
+            Assert.Null(await receipts.FindAsync(user.Id, operationId, token));
+            var meal = Meal.Create(user.Id, now);
+            owned.Add(meal);
+            uint version = await runner.FlushCreatedMealAsync(meal.Id, user.Id, token);
+            if (attempts == 1) {
+                throw new Npgsql.NpgsqlException("Injected transient failure after meal flush.", new TimeoutException());
+            }
+            await receipts.AddAsync(MealRecognitionReceipt.Create(operationId, user.Id, operationId, meal.Id,
+                version, now, now, TimeSpan.FromHours(24)), token);
+            return meal.Id;
+        });
+        Assert.Equal(2, attempts);
+        Assert.Equal(result, (await seed.Meals.SingleAsync(meal => meal.UserId == user.Id)).Id);
+        Assert.Equal(result, (await seed.Set<MealRecognitionReceipt>().SingleAsync(receipt => receipt.UserId == user.Id)).MealId);
+    }
+
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {

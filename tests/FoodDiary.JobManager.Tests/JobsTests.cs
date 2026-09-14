@@ -1,3 +1,8 @@
+using FoodDiary.Mediator;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
+using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
+using FoodDiary.Modules.Billing.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
@@ -934,8 +939,9 @@ public sealed class JobsTests {
 
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateRenewalProvider(CreateRenewDueSubscriptionsCommandHandlerWithoutGateways(now));
         var job = new BillingRenewalJob(
-            CreateBillingRenewalServiceWithoutGateways(now),
+            provider.GetRequiredService<ISender>(),
             Options.Create(new BillingRenewalOptions {
                 Enabled = true,
                 Provider = "MissingProvider",
@@ -986,7 +992,7 @@ public sealed class JobsTests {
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         var paymentRepository = new RecordingBillingPaymentRepository();
         var tracker = new JobExecutionStateTracker();
-        var service = new BillingRenewalService(
+        var service = new RenewDueSubscriptionsCommandHandler(
             subscriptionRepository,
             paymentRepository,
             userRepository,
@@ -1009,8 +1015,9 @@ public sealed class JobsTests {
             ],
             new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(now)),
             new FixedDateTimeProvider(now));
+        await using ServiceProvider provider = CreateRenewalProvider(service);
         var job = new BillingRenewalJob(
-            service,
+            provider.GetRequiredService<ISender>(),
             Options.Create(new BillingRenewalOptions {
                 Enabled = true,
                 Provider = BillingProviderNames.YooKassa,
@@ -1265,7 +1272,41 @@ public sealed class JobsTests {
         Assert.True(parameter.HasDefaultValue);
     }
 
-    private static BillingRenewalService CreateBillingRenewalServiceWithoutGateways(DateTime utcNow) =>
+    [Fact]
+    public async Task BillingRenewalJob_DispatchesProviderBatchAndCancellationThroughMediator() {
+        var capture = new RenewalRequestCapture();
+        await using ServiceProvider provider = CreateRenewalProvider(capture);
+        using var cancellation = new CancellationTokenSource();
+        var job = new BillingRenewalJob(provider.GetRequiredService<ISender>(),
+            Options.Create(new BillingRenewalOptions { Enabled = true, Provider = BillingProviderNames.YooKassa, BatchSize = 37 }),
+            new JobExecutionObserver(TimeProvider.System, new JobExecutionStateTracker()),
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute(cancellation.Token);
+
+        Assert.Equal(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 37), capture.Request);
+        Assert.Equal(cancellation.Token, capture.CancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RenewalRequestCapture : IRequestHandler<RenewDueSubscriptionsCommand, BillingRenewalRunResult> {
+        public RenewDueSubscriptionsCommand? Request { get; private set; }
+        public CancellationToken CancellationToken { get; private set; }
+
+        public Task<BillingRenewalRunResult> Handle(RenewDueSubscriptionsCommand request, CancellationToken cancellationToken) {
+            Request = request;
+            CancellationToken = cancellationToken;
+            return Task.FromResult(new BillingRenewalRunResult(0, 0, 0));
+        }
+    }
+
+    private static ServiceProvider CreateRenewalProvider(IRequestHandler<RenewDueSubscriptionsCommand, BillingRenewalRunResult> handler) =>
+        new ServiceCollection()
+            .AddFoodDiaryMediator(_ => { })
+            .AddSingleton<IRequestHandler<RenewDueSubscriptionsCommand, BillingRenewalRunResult>>(handler)
+            .BuildServiceProvider();
+
+    private static RenewDueSubscriptionsCommandHandler CreateRenewDueSubscriptionsCommandHandlerWithoutGateways(DateTime utcNow) =>
         new(
             null!,
             null!,
@@ -1622,7 +1663,7 @@ public sealed class JobsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
-        : IBillingSubscriptionReadRepository, IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
+        : IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
         public List<BillingSubscription> Subscriptions { get; } = [.. subscriptions];
 
         public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) =>

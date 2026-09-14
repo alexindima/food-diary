@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4042,
-    "symbols": 3983,
-    "interfaceImplementationLinks": 262,
-    "dependencyInjectionRegistrations": 149,
+    "sourceFiles": 4043,
+    "symbols": 3984,
+    "interfaceImplementationLinks": 260,
+    "dependencyInjectionRegistrations": 147,
     "kinds": {
       "class": 2096,
       "enum": 64,
-      "interface": 466,
-      "record": 1236,
+      "interface": 464,
+      "record": 1239,
       "record struct": 121
     },
     "roles": {
-      "Command": 178,
-      "CommandHandler": 174,
+      "Command": 181,
+      "CommandHandler": 177,
       "Configuration": 95,
       "Controller": 104,
       "Entity": 97,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1644,
+      "Other": 1642,
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -40,7 +40,7 @@
       "Repository": 101,
       "Request": 150,
       "Response": 213,
-      "Service": 296,
+      "Service": 293,
       "Validator": 223,
       "ValueObject": 115,
       "WriteRepository": 45
@@ -955,7 +955,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ModuleContextSaveCoordinator",
@@ -1074,7 +1074,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/BillingRenewalJob.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "BillingRenewalOptions",
@@ -1151,7 +1151,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/FoodRecognitionWorker.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "HangfireRecurringJobRegistrationVerifier",
@@ -2918,6 +2918,13 @@
       "line": 4
     },
     {
+      "name": "SendBugAcknowledgementsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/SendBugAcknowledgements/SendBugAcknowledgementsCommandHandler.cs",
+      "line": 10
+    },
+    {
       "name": "SetAdminUserPasswordCommand",
       "kind": "record",
       "role": "Command",
@@ -3765,18 +3772,18 @@
       "line": 11
     },
     {
-      "name": "BugAcknowledgementService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Admin/Application/Services/BugAcknowledgementService.cs",
-      "line": 8
-    },
-    {
       "name": "ExchangeAdminImpersonationCommand",
       "kind": "record",
       "role": "Command",
       "path": "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
       "line": 5
+    },
+    {
+      "name": "SendBugAcknowledgementsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Contracts/Commands/SendBugAcknowledgements/SendBugAcknowledgementsCommand.cs",
+      "line": 6
     },
     {
       "name": "AdminImpersonationSession",
@@ -3811,7 +3818,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
-      "line": 9
+      "line": 13
     },
     {
       "name": "AdminBugReportReader",
@@ -3853,7 +3860,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementWorker.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MailInboxClientAdminMailInboxReader",
@@ -4864,13 +4871,6 @@
       "line": 5
     },
     {
-      "name": "IFoodRecognitionProcessor",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionProcessor.cs",
-      "line": 2
-    },
-    {
       "name": "IOpenAiFoodClient",
       "kind": "interface",
       "role": "Other",
@@ -4960,6 +4960,13 @@
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "ProcessNextFoodRecognitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommandHandler.cs",
+      "line": 12
     },
     {
       "name": "StartFoodRecognitionCommand",
@@ -5060,13 +5067,6 @@
       "line": 5
     },
     {
-      "name": "FoodRecognitionProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
-      "line": 11
-    },
-    {
       "name": "FoodRecognitionResultReader",
       "kind": "class",
       "role": "Other",
@@ -5079,6 +5079,13 @@
       "role": "Service",
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "line": 10
+    },
+    {
+      "name": "ProcessNextFoodRecognitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Ai/Contracts/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommand.cs",
+      "line": 6
     },
     {
       "name": "IAiAdministrationReadService",
@@ -5585,13 +5592,6 @@
       "line": 5
     },
     {
-      "name": "IBillingSubscriptionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadRepository.cs",
-      "line": 5
-    },
-    {
       "name": "IBillingSubscriptionWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -5715,7 +5715,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "BillingWebhookContextResolver",
@@ -5802,6 +5802,13 @@
       "line": 6
     },
     {
+      "name": "RenewDueSubscriptionsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
+      "line": 15
+    },
+    {
       "name": "StartPremiumTrialCommand",
       "kind": "record",
       "role": "Command",
@@ -5813,7 +5820,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "BillingCurrentUserAccessResolver",
@@ -5821,13 +5828,6 @@
       "role": "Other",
       "path": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
       "line": 7
-    },
-    {
-      "name": "IBillingRenewalService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Billing/Application/Common/IBillingRenewalService.cs",
-      "line": 4
     },
     {
       "name": "IBillingWebhookInboxService",
@@ -5848,13 +5848,6 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Application/Models/BillingOverviewModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingRenewalRunResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Billing/Application/Models/BillingRenewalRunResult.cs",
       "line": 2
     },
     {
@@ -5886,13 +5879,6 @@
       "line": 8
     },
     {
-      "name": "BillingRenewalService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Billing/Application/Services/BillingRenewalService.cs",
-      "line": 13
-    },
-    {
       "name": "BillingWebhookInboxService",
       "kind": "class",
       "role": "Service",
@@ -5900,10 +5886,24 @@
       "line": 11
     },
     {
+      "name": "RenewDueSubscriptionsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Contracts/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommand.cs",
+      "line": 7
+    },
+    {
       "name": "IBillingMarketingConversionRecorder",
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingRenewalRunResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Contracts/Models/BillingRenewalRunResult.cs",
       "line": 2
     },
     {
@@ -18210,7 +18210,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "MealAiItemConfiguration",
@@ -20268,7 +20268,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
-      "line": 8
+      "line": 5
     },
     {
       "name": "ProductRepository",
@@ -20303,7 +20303,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "ProductLookupService",
@@ -21514,7 +21514,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
-      "line": 8
+      "line": 5
     },
     {
       "name": "RecipeRepository",
@@ -21542,7 +21542,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "RecipeAccessService",
@@ -22523,6 +22523,13 @@
       "role": "ReadRepository",
       "path": "Modules/Users/Application/Abstractions/Users/Common/IUserAdminReadRepository.cs",
       "line": 4
+    },
+    {
+      "name": "IUserBillingProfileReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs",
+      "line": 5
     },
     {
       "name": "IUserGoogleIdentityRepository",
@@ -28113,13 +28120,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IBillingRenewalService",
-      "interfacePath": "Modules/Billing/Application/Common/IBillingRenewalService.cs",
-      "implementation": "BillingRenewalService",
-      "implementationPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IBillingWebhookInboxService",
       "interfacePath": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
       "implementation": "BillingWebhookInboxService",
@@ -28642,13 +28642,6 @@
       "interfacePath": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobStore.cs",
       "implementation": "FoodRecognitionJobStore",
       "implementationPath": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IFoodRecognitionProcessor",
-      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionProcessor.cs",
-      "implementation": "FoodRecognitionProcessor",
-      "implementationPath": "Modules/Ai/Application/Services/FoodRecognitionProcessor.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29949,46 +29942,32 @@
       "line": 15
     },
     {
-      "service": "IFoodRecognitionProcessor",
-      "implementation": "FoodRecognitionProcessor",
-      "lifetime": "Scoped",
-      "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
       "service": "IFoodRecognitionResultReader",
       "implementation": "FoodRecognitionResultReader",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 16
     },
     {
       "service": "IAiAdministrationReadService",
       "implementation": "AiAdministrationReadService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 17
     },
     {
       "service": "IAiPromptAdministrationService",
       "implementation": "AiPromptAdministrationService",
       "lifetime": "Scoped",
       "path": "Modules/Ai/Application/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IBillingRenewalService",
-      "implementation": "BillingRenewalService",
-      "lifetime": "Scoped",
-      "path": "Modules/Billing/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IBillingWebhookInboxService",
       "implementation": "BillingWebhookInboxService",
       "lifetime": "Scoped",
       "path": "Modules/Billing/Application/DependencyInjection.cs",
-      "line": 24
+      "line": 23
     },
     {
       "service": "IBillingPublicConfigProvider",

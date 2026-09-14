@@ -14,7 +14,6 @@ public static class DependencyInjection {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(assembly));
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
-        services.AddScoped<IBillingRenewalService, BillingRenewalService>();
         services.AddScoped<BillingAccessService>();
         services.AddScoped<BillingWebhookContextResolver>();
         services.AddScoped<BillingWebhookPaymentRecorder>();
@@ -22,7 +21,6 @@ public static class DependencyInjection {
         services.AddScoped<BillingWebhookSubscriptionWriter>();
         services.AddScoped<BillingWebhookEventProcessor>();
         services.AddScoped<IBillingWebhookInboxService, BillingWebhookInboxService>();
-        services.AddScoped<BillingRenewalService>();
         return services;
     }
 }

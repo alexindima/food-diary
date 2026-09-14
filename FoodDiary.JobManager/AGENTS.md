@@ -1,4 +1,4 @@
-﻿# Job Manager Guidelines
+# Job Manager Guidelines
 
 ## Scope
 Rules for `FoodDiary.JobManager/`.
@@ -28,3 +28,5 @@ Rules for `FoodDiary.JobManager/`.
 - Build: `dotnet build FoodDiary.JobManager/FoodDiary.JobManager.csproj`
 - Run: `dotnet run --project FoodDiary.JobManager`
 - Tests: `dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj`
+
+Billing renewal and AI recognition workers dispatch Contracts requests through ISender. Keep loops, scopes, schedules, cancellation and job telemetry in the host; handlers own use-case orchestration. These workflow requests do not opt into automatic unit-of-work saves.

@@ -66,7 +66,10 @@ consumers separate and explicitly label analysis limitations.
 
 Owner runtime contexts join the scoped host unit of work through
 `IModuleContextFactory`. WeeklyGoals consumes `IModuleTransactionCoordinator`
-without referencing central Infrastructure. This preserves shared transactions and
+without referencing central Infrastructure. Meals also delegates recognition
+transactions to this contract while retaining its intermediate receipt flush and
+remaining purge bridge. Products and Recipes delegate Serializable mutations and live
+transaction access to the same coordinator, retaining their purge bridges. This preserves shared transactions and
 migrations; it does not introduce independent databases. See ADR 0040.
 
 ## Placement Rule

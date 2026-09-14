@@ -135,7 +135,7 @@
       "id": "billing-renewal-service",
       "query": "renew a subscription after a successful recurring payment",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Billing/Application/Services/BillingRenewalService.cs"]
+      "expectedPaths": ["Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs"]
     },
     {
       "id": "open-food-facts-cache-first-search",

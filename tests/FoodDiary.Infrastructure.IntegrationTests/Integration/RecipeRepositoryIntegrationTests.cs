@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Storage;
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.ReadModel.Composition.Favorites;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
@@ -228,19 +230,21 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         await using var firstContext = new FoodDiaryDbContext(options);
         await using var secondContext = new FoodDiaryDbContext(options);
         await firstContext.Database.MigrateAsync();
-        var recipeRunner = new EfRecipeMutationTransactionRunner(firstContext, Substitute.For<IUnitOfWork>());
-        var productRunner = new EfProductMutationTransactionRunner(secondContext, Substitute.For<IUnitOfWork>());
+        var recipeRunner = new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(firstContext, Substitute.For<IUnitOfWork>()));
+        var productRunner = new EfProductMutationTransactionRunner(new EfModuleTransactionCoordinator(secondContext, Substitute.For<IUnitOfWork>()));
         var firstEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var secondEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
         Task<Result> first = recipeRunner.ExecuteAsync(async _ => {
+            Assert.Equal(System.Data.IsolationLevel.Serializable, firstContext.Database.CurrentTransaction!.GetDbTransaction().IsolationLevel);
             firstEntered.SetResult();
             await releaseFirst.Task;
             return Result.Success();
         });
         await firstEntered.Task;
         Task<Result> second = productRunner.ExecuteAsync(_ => {
+            Assert.Equal(System.Data.IsolationLevel.Serializable, secondContext.Database.CurrentTransaction!.GetDbTransaction().IsolationLevel);
             secondEntered.SetResult();
             return Task.FromResult(Result.Success());
         });

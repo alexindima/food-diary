@@ -1,16 +1,18 @@
+using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
+using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
+using FoodDiary.Modules.Billing.Contracts.Models;
 using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Modules.Billing.Application.Models;
 
 namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
 
     [Fact]
-    public async Task BillingRenewalService_ForDueSubscription_UpdatesSubscriptionAddsPaymentAndKeepsPremiumRole() {
+    public async Task RenewDueSubscriptionsCommandHandler_ForDueSubscription_UpdatesSubscriptionAddsPaymentAndKeepsPremiumRole() {
         User user = CreatePremiumUser("premium@example.com");
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
@@ -34,13 +36,13 @@ public partial class BillingFeatureTests {
                 "pm_renewal",
                 "evt_renewed",
                 "{\"renewed\":true}"));
-        BillingRenewalService service = CreateRenewalService(
+        RenewDueSubscriptionsCommandHandler service = CreateRenewalHandler(
             subscriptionRepository,
             paymentRepository,
             userRepository,
             renewalGateway);
 
-        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(1, result.Renewed);
@@ -59,7 +61,7 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task BillingRenewalService_WhenRenewalPaymentAlreadyExists_ReturnsRenewed() {
+    public async Task RenewDueSubscriptionsCommandHandler_WhenRenewalPaymentAlreadyExists_ReturnsRenewed() {
         User user = CreatePremiumUser("renewal-duplicate-payment@example.com");
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
@@ -75,7 +77,7 @@ public partial class BillingFeatureTests {
         var paymentRepository = new RecordingBillingPaymentRepository {
             ThrowAlreadyExistsOnAdd = true,
         };
-        BillingRenewalService service = CreateRenewalService(
+        RenewDueSubscriptionsCommandHandler service = CreateRenewalHandler(
             new InMemoryBillingSubscriptionRepository(subscription),
             paymentRepository,
             new FakeUserRepository(user),
@@ -86,7 +88,7 @@ public partial class BillingFeatureTests {
                     "pm_renewal_duplicate",
                     "evt_renewed_duplicate")));
 
-        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(1, result.Renewed);
@@ -95,7 +97,7 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task BillingRenewalService_WhenRenewalPaymentExists_SkipsAddingPayment() {
+    public async Task RenewDueSubscriptionsCommandHandler_WhenRenewalPaymentExists_SkipsAddingPayment() {
         User user = CreatePremiumUser("renewal-existing-payment@example.com");
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
@@ -127,7 +129,7 @@ public partial class BillingFeatureTests {
             Now,
             "evt_existing_payment",
             providerMetadataJson: null));
-        BillingRenewalService service = CreateRenewalService(
+        RenewDueSubscriptionsCommandHandler service = CreateRenewalHandler(
             new InMemoryBillingSubscriptionRepository(subscription),
             paymentRepository,
             new FakeUserRepository(user),
@@ -138,7 +140,7 @@ public partial class BillingFeatureTests {
                     "pm_renewal_existing",
                     "evt_renewed_existing")));
 
-        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(1, result.Renewed);
@@ -146,8 +148,8 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task BillingRenewalService_WhenProviderMissing_DoesNotProcessSubscriptions() {
-        var service = new BillingRenewalService(
+    public async Task RenewDueSubscriptionsCommandHandler_WhenProviderMissing_DoesNotProcessSubscriptions() {
+        var service = new RenewDueSubscriptionsCommandHandler(
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),
             new FakeUserRepository(),
@@ -159,7 +161,7 @@ public partial class BillingFeatureTests {
                 new FixedDateTimeProvider(Now)),
             new FixedDateTimeProvider(Now));
 
-        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
 
         Assert.Equal(0, result.Processed);
         Assert.Equal(0, result.Renewed);
@@ -167,7 +169,7 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task BillingRenewalService_WhenRenewalFails_MarksPastDueAndRemovesBillingManagedPremiumRole() {
+    public async Task RenewDueSubscriptionsCommandHandler_WhenRenewalFails_MarksPastDueAndRemovesBillingManagedPremiumRole() {
         var premiumRole = Role.Create(RoleNames.Premium);
         var user = User.Create("failed-renewal@example.com", "hash");
         user.ReplaceRoles([premiumRole]);
@@ -195,7 +197,7 @@ public partial class BillingFeatureTests {
         subscription.MarkPremiumRoleManagedByBilling(value: true, Now.AddMonths(-1));
         var userRepository = new FakeUserRepository(user);
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
-        var service = new BillingRenewalService(
+        var service = new RenewDueSubscriptionsCommandHandler(
             subscriptionRepository,
             new RecordingBillingPaymentRepository(),
             userRepository,
@@ -204,7 +206,7 @@ public partial class BillingFeatureTests {
             new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
             new FixedDateTimeProvider(Now));
 
-        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(0, result.Renewed);
@@ -216,7 +218,7 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task BillingRenewalService_WhenBillingDetailsMissing_MarksPastDueWithoutCallingProvider() {
+    public async Task RenewDueSubscriptionsCommandHandler_WhenBillingDetailsMissing_MarksPastDueWithoutCallingProvider() {
         User user = CreatePremiumUser("missing-renewal-details@example.com");
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
@@ -238,13 +240,13 @@ public partial class BillingFeatureTests {
                 "pay_should_not_be_used",
                 "pm_should_not_be_used",
                 "evt_should_not_be_used"));
-        BillingRenewalService service = CreateRenewalService(
+        RenewDueSubscriptionsCommandHandler service = CreateRenewalHandler(
             subscriptionRepository,
             new RecordingBillingPaymentRepository(),
             userRepository,
             renewalGateway);
 
-        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(0, result.Renewed);
@@ -260,7 +262,7 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task BillingRenewalService_ForDeletedUserSubscription_SkipsProviderAndDisablesRenewal() {
+    public async Task RenewDueSubscriptionsCommandHandler_ForDeletedUserSubscription_SkipsProviderAndDisablesRenewal() {
         var user = User.Create("deleted-renewal@example.com", "hash");
         user.DeleteAccount(Now.AddDays(-1));
         BillingSubscription subscription = CreateSubscriptionSnapshot(
@@ -284,13 +286,13 @@ public partial class BillingFeatureTests {
                 "pay_should_not_be_used",
                 "pm_deleted_renewal",
                 "evt_should_not_be_used"));
-        BillingRenewalService service = CreateRenewalService(
+        RenewDueSubscriptionsCommandHandler service = CreateRenewalHandler(
             subscriptionRepository,
             paymentRepository,
             userRepository,
             renewalGateway);
 
-        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.Handle(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 10), CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(0, result.Renewed);

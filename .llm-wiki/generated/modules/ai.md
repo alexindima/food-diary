@@ -41,14 +41,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
-- Public contract files: 20
+- Public contract files: 19
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 20
-- Interfaces: 10
+- Public contract types: 19
+- Interfaces: 9
 - DTO/read-model/projection types: 3
 - Enums: 1
 - Exported repository-shaped contracts: 4
@@ -62,7 +62,6 @@ No literal attribute-routed controller was associated with this module.
 - `interface IAiUsageQuery`
 - `interface IFoodRecognitionJobReader`
 - `interface IFoodRecognitionJobStore`
-- `interface IFoodRecognitionProcessor`
 - `interface IOpenAiFoodClient`
 - `interface IOpenAiFoodService`
 - `record AiProviderTokenBudget`
@@ -80,10 +79,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptAdministrationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs`
-- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionProcessorTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionResultReaderTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ProcessNextFoodRecognitionCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Support/ResultAssert.cs`

@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.ReadModel.Composition;
@@ -69,10 +70,10 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
 
         switch (owner) {
             case "Products":
-                await new EfProductMutationTransactionRunner(context, unitOfWork, queue).ExecuteAsync(MutateAsync);
+                await new EfProductMutationTransactionRunner(new EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteAsync(MutateAsync);
                 break;
             case "Recipes":
-                await new EfRecipeMutationTransactionRunner(context, unitOfWork, queue).ExecuteAsync(MutateAsync);
+                await new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteAsync(MutateAsync);
                 break;
             case "WeeklyGoals":
                 await new EfWeeklyGoalTransactionRunner(new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteSerializedAsync(user.Id, DateTime.UtcNow.Date, MutateAsync);

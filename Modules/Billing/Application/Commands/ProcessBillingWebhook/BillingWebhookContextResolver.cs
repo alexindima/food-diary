@@ -20,10 +20,11 @@ public sealed class BillingWebhookContextResolver(
             provider,
             webhookEvent,
             cancellationToken).ConfigureAwait(false);
+        bool shouldUpdateSubscription = webhookEvent.UpdatesSubscription;
         if (webhookEvent.UpdatesSubscription &&
             subscription is not null &&
             string.Equals(subscription.LastWebhookEventId, webhookEvent.EventId, StringComparison.Ordinal)) {
-            return Result.Success<BillingWebhookProcessingContext?>(value: null);
+            shouldUpdateSubscription = false;
         }
 
         if (webhookEvent.UpdatesSubscription &&
@@ -31,6 +32,10 @@ public sealed class BillingWebhookContextResolver(
             (webhookEvent.OccurredAtUtc is not { } occurredAtUtc ||
              occurredAtUtc < lastOccurredAtUtc ||
              (occurredAtUtc == lastOccurredAtUtc && !webhookEvent.IsAuthoritativeSnapshot))) {
+            shouldUpdateSubscription = false;
+        }
+
+        if (webhookEvent.UpdatesSubscription && !shouldUpdateSubscription && !webhookEvent.Amount.HasValue) {
             return Result.Success<BillingWebhookProcessingContext?>(value: null);
         }
 
@@ -46,7 +51,7 @@ public sealed class BillingWebhookContextResolver(
         return user is null
             ? Result.Failure<BillingWebhookProcessingContext?>(
                 BillingErrors.WebhookValidationFailed("Webhook user could not be resolved."))
-            : Result.Success<BillingWebhookProcessingContext?>(new BillingWebhookProcessingContext(subscription, user));
+            : Result.Success<BillingWebhookProcessingContext?>(new BillingWebhookProcessingContext(subscription, user, shouldUpdateSubscription));
     }
 
     private async Task<BillingSubscription?> ResolveSubscriptionAsync(

@@ -14,9 +14,22 @@ namespace FoodDiary.Infrastructure.Persistence.Users;
 public sealed class UserProfileProjectionService(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) :
     ICurrentUserAccessService, IUserAiProfileReadService, IUserDashboardProfileReadService,
     IUserDietologistProfileReadService, IUserGamificationProfileReadService,
-    IUserHydrationProfileReadService, IUserTdeeProfileReadService, IUserWeeklyCheckInProfileReadService {
+    IUserHydrationProfileReadService, IUserTdeeProfileReadService, IUserWeeklyCheckInProfileReadService,
+    IUserBillingProfileReadRepository {
     private IQueryable<User> AccessibleUsers => users.AsNoTracking()
         .Where(user => user.IsActive && user.DeletedAt == null);
+
+    public async Task<UserBillingProfileModel?> GetBillingProfileIncludingDeletedAsync(
+        UserId userId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await users.AsNoTracking().Where(user => user.Id == userId)
+            .Select(user => new UserBillingProfileModel(user.Id, user.Email, user.IsActive,
+                user.DeletedAt != null, user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium),
+                user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, user.IsEmailConfirmed))
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {

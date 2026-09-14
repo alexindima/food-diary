@@ -1,4 +1,5 @@
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Contracts.Commands.ProcessNextFoodRecognition;
 
 namespace FoodDiary.JobManager.Services;
 
@@ -7,8 +8,8 @@ public sealed class FoodRecognitionWorker(IServiceScopeFactory scopes, ILogger<F
         while (!stoppingToken.IsCancellationRequested) {
             try {
                 using IServiceScope scope = scopes.CreateScope();
-                bool processed = await scope.ServiceProvider.GetRequiredService<IFoodRecognitionProcessor>()
-                    .ProcessNextAsync(stoppingToken).ConfigureAwait(false);
+                bool processed = await scope.ServiceProvider.GetRequiredService<ISender>()
+                    .Send(new ProcessNextFoodRecognitionCommand(), stoppingToken).ConfigureAwait(false);
                 if (processed) {
                     continue;
                 }

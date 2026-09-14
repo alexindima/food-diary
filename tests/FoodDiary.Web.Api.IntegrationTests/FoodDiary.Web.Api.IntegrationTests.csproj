@@ -39,6 +39,7 @@
     <ProjectReference Include="../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj" />
     <ProjectReference Include="../../Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />

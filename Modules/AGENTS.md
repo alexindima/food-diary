@@ -50,3 +50,5 @@ Reusable response mappers belong to owner `Presentation.Mappings` projects. They
 Module runtime DbContext types must use `FoodDiary.Modules.<Module>.Infrastructure.Persistence`, regardless of legacy RootNamespace values retained for other types. RuntimeContextNamespaceTests enforces this across module Infrastructure sources. Keep provider CLR names and migration models separate from this naming rule.
 
 Owner context registrations consume IModuleContextFactory from FoodDiary.Persistence.Abstractions. Preserve provider options, scoped identity, custom interceptors and save order. Concrete shared context access in transaction/provider callbacks remains separately reviewed; do not restore concrete context resolution solely to call CreateModuleContext.
+
+Background use-case entrypoints should be module Contracts requests dispatched through ISender, with orchestration in the owning Application handler. Preserve independent transactions and external side-effect ordering; do not apply ICommand<T> automatically to workflows that already commit per item. Owner capabilities, provider adapters and shared application operations remain valid services.

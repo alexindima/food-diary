@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Contracts.Common;
@@ -230,16 +231,17 @@ public partial class BillingFeatureTests {
             ProviderMetadataJson: null,
             user.Id.Value);
 
-    private static BillingRenewalService CreateRenewalService(
+    private static RenewDueSubscriptionsCommandHandler CreateRenewalHandler(
         InMemoryBillingSubscriptionRepository subscriptionRepository,
         RecordingBillingPaymentRepository paymentRepository,
         FakeUserRepository userRepository,
-        IBillingRecurringProviderGateway renewalGateway) =>
+        IBillingRecurringProviderGateway renewalGateway,
+        IBillingTransactionRunner? transactionRunner = null) =>
         new(
             subscriptionRepository,
             paymentRepository,
             userRepository,
-            new NoOpBillingTransactionRunner(),
+            transactionRunner ?? new NoOpBillingTransactionRunner(),
             [renewalGateway],
             new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
             new FixedDateTimeProvider(Now));
@@ -417,7 +419,7 @@ public partial class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
-        : IBillingSubscriptionReadRepository, IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
+        : IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
         public List<BillingSubscription> Subscriptions { get; } = [.. subscriptions];
         public int UpdateCount { get; private set; }
 
@@ -638,7 +640,8 @@ public partial class BillingFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class FakeRecurringBillingGateway(
         string provider,
-        BillingRecurringPaymentModel renewal)
+        BillingRecurringPaymentModel renewal,
+        Action? onPayment = null)
         : IBillingRecurringProviderGateway {
         public string Provider { get; } = provider;
         public int CreatePaymentCallCount { get; private set; }
@@ -647,6 +650,7 @@ public partial class BillingFeatureTests {
             BillingRecurringPaymentRequestModel request,
             CancellationToken cancellationToken = default) {
             CreatePaymentCallCount++;
+            onPayment?.Invoke();
             return Task.FromResult(Result.Success(renewal));
         }
     }

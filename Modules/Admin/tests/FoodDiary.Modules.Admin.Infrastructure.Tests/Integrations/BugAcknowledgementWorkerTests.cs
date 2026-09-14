@@ -3,7 +3,8 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Modules.Admin.Application.Services;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Admin.Application.Commands.SendBugAcknowledgements;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -32,7 +33,7 @@ public sealed class BugAcknowledgementWorkerTests {
         services.AddSingleton(Substitute.For<IEmailTemplateAdministrationReadService>());
         services.AddSingleton(Substitute.For<IEmailTransport>());
         services.AddSingleton(Substitute.For<IBugAcknowledgementReceipts>());
-        services.AddScoped<BugAcknowledgementService>();
+        services.AddFoodDiaryMediator(configuration => configuration.RegisterServicesFromAssembly(typeof(SendBugAcknowledgementsCommandHandler).Assembly));
         await using ServiceProvider provider = services.BuildServiceProvider();
         var settings = new BugAcknowledgementOptions { Enabled = true, StartAtUtc = explicitStart ? DateTimeOffset.UnixEpoch.AddDays(1) : null };
         using var worker = new BugAcknowledgementWorker(provider.GetRequiredService<IServiceScopeFactory>(), Options.Create(settings), NullLogger<BugAcknowledgementWorker>.Instance);
@@ -53,7 +54,7 @@ public sealed class BugAcknowledgementWorkerTests {
         services.AddSingleton(templates);
         services.AddSingleton(Substitute.For<IEmailTransport>());
         services.AddSingleton(Substitute.For<IBugAcknowledgementReceipts>());
-        services.AddScoped<BugAcknowledgementService>();
+        services.AddFoodDiaryMediator(configuration => configuration.RegisterServicesFromAssembly(typeof(SendBugAcknowledgementsCommandHandler).Assembly));
         await using ServiceProvider provider = services.BuildServiceProvider();
         var settings = new BugAcknowledgementOptions { Enabled = true, PollInterval = TimeSpan.FromMilliseconds(10) };
         using var worker = new BugAcknowledgementWorker(provider.GetRequiredService<IServiceScopeFactory>(), Options.Create(settings), NullLogger<BugAcknowledgementWorker>.Instance);
@@ -78,7 +79,7 @@ public sealed class BugAcknowledgementWorkerTests {
         services.AddSingleton(templates);
         services.AddSingleton(Substitute.For<IEmailTransport>());
         services.AddSingleton(Substitute.For<IBugAcknowledgementReceipts>());
-        services.AddScoped<BugAcknowledgementService>();
+        services.AddFoodDiaryMediator(configuration => configuration.RegisterServicesFromAssembly(typeof(SendBugAcknowledgementsCommandHandler).Assembly));
         await using ServiceProvider provider = services.BuildServiceProvider();
         using var worker = new BugAcknowledgementWorker(provider.GetRequiredService<IServiceScopeFactory>(), Options.Create(new BugAcknowledgementOptions { Enabled = true }), NullLogger<BugAcknowledgementWorker>.Instance);
         await worker.StartAsync(CancellationToken.None);

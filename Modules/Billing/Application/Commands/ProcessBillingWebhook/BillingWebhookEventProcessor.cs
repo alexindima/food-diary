@@ -87,7 +87,7 @@ public sealed class BillingWebhookEventProcessor(
         BillingWebhookProcessingContext context,
         CancellationToken cancellationToken) {
         BillingSubscription? updatedSubscription = context.Subscription;
-        if (webhookEvent.UpdatesSubscription) {
+        if (context.ShouldUpdateSubscription) {
             updatedSubscription = await billingWebhookSubscriptionWriter.UpsertAsync(
                 provider,
                 webhookEvent,

@@ -1,7 +1,6 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -37,11 +36,11 @@ public static class RecipesModuleRegistration {
     }
 
     private static Func<CancellationToken, Task> CreateTransactionSynchronizer(IServiceProvider provider) {
-        FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+        IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
         RecipesDbContext owned = provider.GetRequiredService<RecipesDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(shared.Database.CurrentTransaction?.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
             }
         };
     }

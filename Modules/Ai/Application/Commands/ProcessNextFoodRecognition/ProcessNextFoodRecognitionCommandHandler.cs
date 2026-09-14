@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Contracts.Commands.ProcessNextFoodRecognition;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
@@ -7,10 +8,11 @@ using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
-namespace FoodDiary.Modules.Ai.Application.Services;
+namespace FoodDiary.Modules.Ai.Application.Commands.ProcessNextFoodRecognition;
 
-public sealed class FoodRecognitionProcessor(IFoodRecognitionJobStore store, ISender sender) : IFoodRecognitionProcessor {
-    public async Task<bool> ProcessNextAsync(CancellationToken cancellationToken) {
+public sealed class ProcessNextFoodRecognitionCommandHandler(IFoodRecognitionJobStore store, ISender sender)
+    : IRequestHandler<ProcessNextFoodRecognitionCommand, bool> {
+    public async Task<bool> Handle(ProcessNextFoodRecognitionCommand request, CancellationToken cancellationToken) {
         await store.MaintainAsync(cancellationToken).ConfigureAwait(false);
         FoodRecognitionJobModel? job = await store.ClaimAsync(cancellationToken).ConfigureAwait(false);
         if (job is null) {
