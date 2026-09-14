@@ -12,7 +12,7 @@ public sealed class AdminDashboardOverviewTests {
     [Fact]
     public async Task Overview_PropagatesCurrentSummaryFailure() {
         IAdminDashboardMetricsReader reader = Substitute.For<IAdminDashboardMetricsReader>();
-        IAdminBillingReadRepository billing = Substitute.For<IAdminBillingReadRepository>();
+        IAdminBillingQuery billing = Substitute.For<IAdminBillingQuery>();
         IAdminDashboardReadService dashboard = Substitute.For<IAdminDashboardReadService>();
         reader.GetAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(new AdminDashboardMetrics(0, 0, 0, []));
         billing.GetRevenueSummaryAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(new AdminBillingRevenueSummaryReadModel(DateTime.UnixEpoch, DateTime.UnixEpoch, []));
@@ -29,7 +29,7 @@ public sealed class AdminDashboardOverviewTests {
     [Fact]
     public async Task Overview_UsesInclusiveUiDatesAndEqualPreviousRange() {
         IAdminDashboardMetricsReader reader = Substitute.For<IAdminDashboardMetricsReader>();
-        IAdminBillingReadRepository billing = Substitute.For<IAdminBillingReadRepository>();
+        IAdminBillingQuery billing = Substitute.For<IAdminBillingQuery>();
         IAdminDashboardReadService dashboard = Substitute.For<IAdminDashboardReadService>();
         reader.GetAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(new AdminDashboardMetrics(3, 2, 900, []));
@@ -54,7 +54,7 @@ public sealed class AdminDashboardOverviewTests {
     [Fact]
     public async Task Overview_RejectsReversedOrFutureDatesBeforeReadingData() {
         IAdminDashboardMetricsReader reader = Substitute.For<IAdminDashboardMetricsReader>();
-        var handler = new GetAdminDashboardOverviewQueryHandler(reader, Substitute.For<IAdminBillingReadRepository>(), Substitute.For<IAdminDashboardReadService>(), new Clock());
+        var handler = new GetAdminDashboardOverviewQueryHandler(reader, Substitute.For<IAdminBillingQuery>(), Substitute.For<IAdminDashboardReadService>(), new Clock());
         Assert.True((await handler.Handle(new GetAdminDashboardOverviewQuery(new DateOnly(2026, 9, 7), new DateOnly(2026, 9, 1)), CancellationToken.None)).IsFailure);
         Assert.True((await handler.Handle(new GetAdminDashboardOverviewQuery(To: new DateOnly(2026, 9, 9)), CancellationToken.None)).IsFailure);
         Assert.True((await handler.Handle(new GetAdminDashboardOverviewQuery(From: new DateOnly(2026, 9, 1), AllTime: true), CancellationToken.None)).IsFailure);

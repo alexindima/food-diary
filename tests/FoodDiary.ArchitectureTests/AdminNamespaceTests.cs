@@ -32,15 +32,40 @@ public sealed class AdminNamespaceTests {
             string relative = Path.GetRelativePath(directory, file).Replace('\\', '/');
             string folder = Path.GetDirectoryName(relative)?.Replace('\\', '.').Replace('/', '.') ?? string.Empty;
             string expected = expectedRoot + (folder.Length == 0 ? string.Empty : "." + folder);
-            foreach (BaseNamespaceDeclarationSyntax declaration in CSharpSyntaxTree.ParseText(File.ReadAllText(file))
-                         .GetRoot().DescendantNodes().OfType<BaseNamespaceDeclarationSyntax>()) {
-                string actual = string.Join('.', declaration.Ancestors().OfType<BaseNamespaceDeclarationSyntax>()
-                    .Reverse().Select(parent => parent.Name.ToString()).Append(declaration.Name.ToString()));
+            foreach (string actual in ReadDeclaredNamespaces(File.ReadAllText(file))) {
                 if (!string.Equals(actual, expected, StringComparison.Ordinal)) {
                     violations.Add($"{project}/{relative}: '{actual}', expected '{expected}'.");
                 }
             }
         }
         Assert.True(violations.Count == 0, string.Join(Environment.NewLine, violations));
+    }
+
+    [Theory]
+    [InlineData("public class Example { }", false)]
+    [InlineData("public record Example;", false)]
+    [InlineData("public delegate void Example();", false)]
+    [InlineData("namespace Expected; public class Example { }", true)]
+    [InlineData("namespace Expected { public class Example { } }", true)]
+    [InlineData("namespace Wrong; public class Example { }", false)]
+    [InlineData("namespace Expected { public class Example { } } public class Global { }", false)]
+    public void NamespaceDetection_RequiresTypesToHaveTheExpectedNamespace(string source, bool expectedValid) {
+        string[] actual = [.. ReadDeclaredNamespaces(source)];
+        Assert.NotEmpty(actual);
+        Assert.Equal(expectedValid, actual.All(value => string.Equals(value, "Expected", StringComparison.Ordinal)));
+    }
+
+    private static IEnumerable<string> ReadDeclaredNamespaces(string source) {
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(source).GetCompilationUnitRoot();
+        foreach (BaseNamespaceDeclarationSyntax declaration in root.DescendantNodes().OfType<BaseNamespaceDeclarationSyntax>()) {
+            yield return string.Join('.', declaration.Ancestors().OfType<BaseNamespaceDeclarationSyntax>()
+                .Reverse().Select(parent => parent.Name.ToString()).Append(declaration.Name.ToString()));
+        }
+        foreach (MemberDeclarationSyntax declaration in root.DescendantNodes().OfType<MemberDeclarationSyntax>()
+                     .Where(declaration => declaration is BaseTypeDeclarationSyntax or DelegateDeclarationSyntax)) {
+            if (!declaration.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().Any()) {
+                yield return "<global namespace>";
+            }
+        }
     }
 }

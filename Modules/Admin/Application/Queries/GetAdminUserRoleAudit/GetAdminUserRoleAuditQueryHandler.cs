@@ -9,7 +9,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
 
-public sealed class GetAdminUserRoleAuditQueryHandler(IUserAdministrationReadService userReadService, IAdminUserRoleAuditReadRepository roleAuditRepository)
+public sealed class GetAdminUserRoleAuditQueryHandler(IUserAdministrationReadService userReadService, IAdminUserRoleAuditQuery roleAuditRepository)
     : IQueryHandler<GetAdminUserRoleAuditQuery, Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>>> {
     public async Task<Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>>> Handle(GetAdminUserRoleAuditQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(

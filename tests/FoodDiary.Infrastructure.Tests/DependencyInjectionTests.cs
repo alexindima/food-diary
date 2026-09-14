@@ -503,8 +503,10 @@ public sealed class DependencyInjectionTests {
             () => Assert.IsType<AttentionSignalMetricsReadService>(scoped.GetRequiredService<IAttentionSignalMetricsReadService>()));
     }
 
-    [Fact]
-    public void AddInfrastructureAndDashboard_ReadServicesResolveThroughScopedConcreteInstances() {
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void AddInfrastructureAndDashboard_ReadServicesResolveThroughScopedConcreteInstances(bool compositionFirst) {
         var services = new ServiceCollection();
         services.AddSingleton(Substitute.For<IPublisher>());
         services.AddScoped<IDashboardStatisticsReadService>(_ => Substitute.For<IDashboardStatisticsReadService>());
@@ -521,7 +523,12 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence();
+        if (compositionFirst) {
+            services.AddReadModelComposition().AddDashboardReadServices();
+        } else {
+            services.AddDashboardReadServices().AddReadModelComposition();
+        }
         Assert.Multiple(
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardBodyReadService))),
@@ -1016,7 +1023,7 @@ public sealed class DependencyInjectionTests {
         {
             "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminBillingRepository",
             [
-                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminBillingReadRepository",
+                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminBillingQuery",
             ]
         },
         {
@@ -1029,7 +1036,7 @@ public sealed class DependencyInjectionTests {
         {
             "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminUserRoleAuditRepository",
             [
-                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminUserRoleAuditReadRepository",
+                "FoodDiary.Modules.Admin.Application.Abstractions.Common.IAdminUserRoleAuditQuery",
             ]
         },
         {

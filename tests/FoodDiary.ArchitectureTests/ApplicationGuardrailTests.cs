@@ -3154,9 +3154,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string abstractionsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts");
         string[] allowedRelativePaths = [
-            Path.Combine("Admin", "Common", "IAdminBillingReadRepository.cs"),
+            Path.Combine("Admin", "Common", "IAdminBillingQuery.cs"),
             Path.Combine("Admin", "Common", "IAdminImpersonationSessionReadRepository.cs"),
-            Path.Combine("Admin", "Common", "IAdminUserRoleAuditReadRepository.cs"),
+            Path.Combine("Admin", "Common", "IAdminUserRoleAuditQuery.cs"),
             Path.Combine("Authentication", "Common", "IUserLoginEventReadRepository.cs"),
             Path.Combine("Meals", "Common", "IMealProjectionReadRepository.cs"),
             Path.Combine("Meals", "Common", "IMealProductNutritionReadRepository.cs"),

@@ -1,0 +1,18 @@
+namespace FoodDiary.Modules.Admin.Presentation.Responses;
+
+public sealed record FastingTelemetrySummaryHttpResponse(
+    int WindowHours,
+    DateTime GeneratedAtUtc,
+    int StartedSessions,
+    int CompletedSessions,
+    int SavedCheckIns,
+    int ReminderPresetSelections,
+    int ReminderTimingSaves,
+    int PresetReminderTimingSaves,
+    int ManualReminderTimingSaves,
+    double CompletionRatePercent,
+    double CheckInRatePercent,
+    double? AverageCompletedDurationHours,
+    DateTime? LastCheckInAtUtc,
+    DateTime? LastEventAtUtc,
+    IReadOnlyList<FastingTelemetryPresetHttpResponse> TopPresets);

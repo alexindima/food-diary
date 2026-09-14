@@ -3,7 +3,8 @@
 Own Persistence/Dashboard projection readers and loaders. Use module Infrastructure namespaces; preserve
 internal visibility, scoped aliases, query shape/count, ordering, paging, tenant
 filters and cancellation. No write repository, aggregate or EF mapping ownership.
-Shared FoodDiaryDbContext remains central; reference central Infrastructure one-way.
+Do not reference central Infrastructure or EF Core. Body and meal SQL readers live in
+FoodDiary.ReadModel.Composition; hosts install them with AddReadModelComposition.
 AddDashboardReadServices installs optimized readers after central infrastructure.
 
 DashboardMealItemsLoader maps IMealItemDisplayReadService results only. Do not reintroduce direct Product/MealItem queries or snapshot/quality rules into that loader.

@@ -1,0 +1,195 @@
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
+using FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
+using FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
+using FoodDiary.Modules.Admin.Application.Commands.ReviewContentReport;
+using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
+using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
+using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
+using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
+using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
+using FoodDiary.Modules.Admin.Application.Queries.GetCollaborationAudit;
+using FoodDiary.Modules.Admin.Presentation.Requests;
+
+namespace FoodDiary.Modules.Admin.Presentation.Mappings;
+
+public static class AdminHttpMappings {
+    extension(GetCollaborationAuditHttpQuery query) {
+        public GetCollaborationAuditQuery ToQuery() =>
+                new(query.ClientUserId, query.Limit);
+    }
+
+    extension(AdminUserCreateHttpRequest request) {
+        public CreateAdminUserCommand ToCommand(
+                Guid actorUserId,
+                string? clientOrigin) {
+            return new CreateAdminUserCommand(
+                Email: request.Email,
+                FirstName: request.FirstName,
+                LastName: request.LastName,
+                Language: request.Language,
+                Roles: request.Roles,
+                TemporaryPassword: request.TemporaryPassword,
+                GeneratePassword: request.GeneratePassword,
+                IsEmailConfirmed: request.IsEmailConfirmed,
+                SendCredentialsEmail: request.SendCredentialsEmail,
+                RequirePasswordChange: request.RequirePasswordChange,
+                ClientOrigin: clientOrigin,
+                ActorUserId: actorUserId);
+        }
+    }
+
+    extension(AdminEmailTemplateUpsertHttpRequest request) {
+        public UpsertAdminEmailTemplateCommand ToCommand(
+                string key,
+                string locale) {
+            return new UpsertAdminEmailTemplateCommand(
+                Key: key,
+                Locale: locale,
+                Subject: request.Subject,
+                HtmlBody: request.HtmlBody,
+                TextBody: request.TextBody,
+                IsActive: request.IsActive);
+        }
+    }
+
+    extension(AdminEmailTemplateTestHttpRequest request) {
+        public SendAdminEmailTemplateTestCommand ToCommand() {
+            return new SendAdminEmailTemplateTestCommand(
+                ToEmail: request.ToEmail,
+                Key: request.Key,
+                Subject: request.Subject,
+                HtmlBody: request.HtmlBody,
+                TextBody: request.TextBody);
+        }
+    }
+
+    extension(AdminAiPromptUpsertHttpRequest request) {
+        public UpsertAdminAiPromptCommand ToCommand(
+                string key,
+                string locale) {
+            return new UpsertAdminAiPromptCommand(
+                Key: key,
+                Locale: locale,
+                PromptText: request.PromptText,
+                IsActive: request.IsActive);
+        }
+    }
+
+    extension(AdminUserUpdateHttpRequest request) {
+        public UpdateAdminUserCommand ToCommand(Guid userId, Guid actorUserId) {
+            return new UpdateAdminUserCommand(
+                UserId: userId,
+                IsActive: request.IsActive,
+                IsEmailConfirmed: request.IsEmailConfirmed,
+                Roles: request.Roles,
+                Language: request.Language,
+                AiInputTokenLimit: request.AiInputTokenLimit,
+                AiOutputTokenLimit: request.AiOutputTokenLimit,
+                ActorUserId: actorUserId);
+        }
+    }
+
+    extension(AdminUserSetPasswordHttpRequest request) {
+        public SetAdminUserPasswordCommand ToCommand(Guid userId, Guid actorUserId) {
+            return new SetAdminUserPasswordCommand(
+                UserId: userId,
+                ActorUserId: actorUserId,
+                NewPassword: request.NewPassword);
+        }
+    }
+
+    extension(AdminImpersonationStartHttpRequest request) {
+        public StartAdminImpersonationCommand ToCommand(
+                Guid actorUserId,
+                Guid targetUserId,
+                string? actorIpAddress,
+                string? actorUserAgent) {
+            return new StartAdminImpersonationCommand(
+                ActorUserId: actorUserId,
+                TargetUserId: targetUserId,
+                Reason: request.Reason,
+                ActorIpAddress: actorIpAddress,
+                ActorUserAgent: actorUserAgent);
+        }
+    }
+
+    extension(GetAdminImpersonationSessionsHttpQuery query) {
+        public GetAdminImpersonationSessionsQuery ToQuery() {
+            return new GetAdminImpersonationSessionsQuery(
+                Page: query.Page,
+                Limit: query.Limit,
+                Search: query.Search, query.FromUtc, query.ToUtc, query.ActorId, query.TargetId);
+        }
+    }
+
+    extension(AdminReportActionHttpRequest request) {
+        public ReviewContentReportCommand ToReviewCommand(Guid reportId, Guid reviewerUserId) {
+            return new ReviewContentReportCommand(reportId, reviewerUserId, request.AdminNote);
+        }
+
+        public DismissContentReportCommand ToDismissCommand(Guid reportId, Guid reviewerUserId) {
+            return new DismissContentReportCommand(reportId, reviewerUserId, request.AdminNote);
+        }
+    }
+
+    extension(AdminLessonCreateHttpRequest request) {
+        public CreateAdminLessonCommand ToCreateCommand() {
+            return new CreateAdminLessonCommand(
+                Title: request.Title,
+                Content: request.Content,
+                Summary: request.Summary,
+                Locale: request.Locale,
+                Category: request.Category,
+                Difficulty: request.Difficulty,
+                EstimatedReadMinutes: request.EstimatedReadMinutes,
+                SortOrder: request.SortOrder, IsPublished: request.IsPublished);
+        }
+    }
+
+    extension(AdminLessonUpdateHttpRequest request) {
+        public UpdateAdminLessonCommand ToUpdateCommand(Guid id) {
+            return new UpdateAdminLessonCommand(
+                Id: id,
+                Title: request.Title,
+                Content: request.Content,
+                Summary: request.Summary,
+                Locale: request.Locale,
+                Category: request.Category,
+                Difficulty: request.Difficulty,
+                EstimatedReadMinutes: request.EstimatedReadMinutes,
+                SortOrder: request.SortOrder, IsPublished: request.IsPublished);
+        }
+    }
+
+    extension(AdminLessonsImportHttpRequest request) {
+        public ImportAdminLessonsCommand ToImportCommand() {
+            return new ImportAdminLessonsCommand(
+                Version: request.Version,
+                Lessons: request.Lessons.Select(static lesson => new ImportAdminLessonItem(
+                    Title: lesson.Title,
+                    Content: lesson.Content,
+                    Summary: lesson.Summary,
+                    Locale: lesson.Locale,
+                    Category: lesson.Category,
+                    Difficulty: lesson.Difficulty,
+                    EstimatedReadMinutes: lesson.EstimatedReadMinutes,
+                    SortOrder: lesson.SortOrder, IsPublished: lesson.IsPublished)).ToList());
+        }
+    }
+
+    extension(Guid id) {
+        public DeleteAdminLessonCommand ToDeleteCommand() {
+            return new DeleteAdminLessonCommand(id);
+        }
+
+        public MarkAdminMailInboxMessageReadCommand ToMarkMailInboxMessageReadCommand() {
+            return new MarkAdminMailInboxMessageReadCommand(id);
+        }
+    }
+}

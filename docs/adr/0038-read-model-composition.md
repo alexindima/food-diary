@@ -39,3 +39,9 @@ HTTP/Swagger and the full architecture suite. Enforce zero direct foreign Domain
 project references in module Infrastructure. No schema migration is intended.
 Rebuild API, JobManager and Initializer with the new assembly and registration;
 update Docker restore inputs. Revert moves, ports and registrations together.
+
+## Dashboard body reads and Admin query ports
+
+DashboardBodyReadService now lives in composition with its query body unchanged. Host registration replaces the fallback with one scoped concrete/interface instance; Dashboard Infrastructure neither installs nor removes that port. This removes Dashboard Infrastructure references to central Infrastructure and EF Core. Composition explicitly references Hydration Domain for SQL translation alongside BodyMetrics. Tests cover both registration orders, PostgreSQL tenant filtering, hydration boundaries, trends and no tracking.
+
+Admin billing and role-audit report ports use Query names and immutable DTOs. Impersonation list handlers consume the existing composed query directly, while the owner repository retains writes and compatibility delegation. No HTTP or schema contract changes.

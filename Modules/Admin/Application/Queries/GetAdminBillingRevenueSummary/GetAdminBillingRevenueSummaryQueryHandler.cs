@@ -6,7 +6,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingRevenueSummary;
 
-public sealed class GetAdminBillingRevenueSummaryQueryHandler(IAdminBillingReadRepository billingRepository, TimeProvider? timeProvider = null)
+public sealed class GetAdminBillingRevenueSummaryQueryHandler(IAdminBillingQuery billingRepository, TimeProvider? timeProvider = null)
     : IQueryHandler<GetAdminBillingRevenueSummaryQuery, Result<AdminBillingRevenueSummaryReadModel>> {
     public async Task<Result<AdminBillingRevenueSummaryReadModel>> Handle(GetAdminBillingRevenueSummaryQuery query, CancellationToken cancellationToken) {
         DateTime nowUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;

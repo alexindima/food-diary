@@ -512,7 +512,7 @@
       ],
       "reason": "DailyAdvices-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
-    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs": {
+    "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs": {
       "module": "Dashboard",
       "capabilities": [
         "entity:HydrationEntry",
@@ -1290,7 +1290,7 @@
         "write:BugAcknowledgementReceipt"
       ],
       "reason": "Admin-owned acknowledgement receipts contain only an opaque MailInbox ID. The dedicated background scope saves its receipt after durable MailRelay enqueue; duplicate inserts are detached and verified by existence lookup, other failures propagate. No foreign aggregate writes, raw SQL or message content persistence.",
-      "technicalSourceSha256": "5ee64fd131215b3c21a88799948a0687bc01c1eeecbd43d1ada67e8073a1a8a3"
+      "technicalSourceSha256": "287ad7f6ee74eb32ffc3a3d54025831043f79d0b20656329ed37e7650b691589"
     },
     "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs": {
       "module": "Marketing",

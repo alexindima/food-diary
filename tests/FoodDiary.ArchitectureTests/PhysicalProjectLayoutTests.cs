@@ -76,14 +76,22 @@ public sealed class PhysicalProjectLayoutTests {
     [InlineData("Domain")]
     [InlineData("Infrastructure")]
     [InlineData("PersistenceModel")]
+    [InlineData("Presentation")]
     public void AdminProjects_DoNotRepeatModuleFolders(string project) {
-        // Presentation/Features/Admin is migrated separately.
         string root = ArchitectureTestPaths.FromRoot("Modules", "Admin", project);
         Assert.True(Directory.Exists(root));
         Assert.DoesNotContain(Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories),
             directory => string.Equals(Path.GetFileName(directory), "Admin", StringComparison.OrdinalIgnoreCase)
                 && !Path.GetRelativePath(root, directory).Split(Path.DirectorySeparatorChar)
                     .Any(segment => segment is "bin" or "obj" or ".artifacts"));
+    }
+
+    [Fact]
+    public void AdminPresentation_DoesNotWrapTheWholeProjectInFeatures() {
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Admin", "Presentation");
+        Assert.False(Directory.Exists(Path.Combine(root, "Features")));
+        Assert.Empty(Directory.EnumerateFiles(root, "*Controller.cs"));
+        Assert.NotEmpty(Directory.EnumerateFiles(Path.Combine(root, "Controllers"), "*Controller.cs"));
     }
 
     [Fact]

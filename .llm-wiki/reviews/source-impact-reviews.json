@@ -67,18 +67,26 @@
       "pageSha256": "7709e93c97cb79bdd642c55362ba6db5a92981a896f5f1db5a4a0b336e2900c9",
       "sources": [
         {
+          "path": "docs/adr/0038-read-model-composition.md",
+          "sha256": "b36679fd5049b4396610d7999f800a20a4896f725d09937456331e8ea9c84022"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
+          "sha256": "a23d240da0c9f2944ec4c2ae4a1c6458a0c10e3d7969337cc3ed47da32511f39"
+        },
+        {
+          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
+          "sha256": "79c24042a35eff26874fcdd351f4c8f776facb5a8510f6ac6c25126dff0cf50e"
         },
         {
           "path": "Modules/Admin/Infrastructure/AGENTS.md",
-          "sha256": "feb0ed8039e87d2e9cb885ef4db9735f30e9e42d908f464ccf46d4ff88c41c70"
+          "sha256": "a29b04c4987c2b0e9df8f885278f6d1ddd5cccb9b26fb71f147f29554c2b5eb2"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:25.7578638Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:11:55.3967098Z"
     },
     {
       "pageId": "system.architecture",
@@ -86,14 +94,22 @@
       "pageSha256": "0f20e6eab3d793b7be0c2e9a74c7b582f9e9f9769c6020dc2c76690e52188ed6",
       "sources": [
         {
+          "path": "docs/adr/0038-read-model-composition.md",
+          "sha256": "b36679fd5049b4396610d7999f800a20a4896f725d09937456331e8ea9c84022"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
+          "sha256": "a23d240da0c9f2944ec4c2ae4a1c6458a0c10e3d7969337cc3ed47da32511f39"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "824e86bfef7e7cbe8a35f64ddd825f829d515aa1228ced7e8a87d86c78d106b3"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:26.7235614Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:11:56.4036515Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -146,18 +162,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "Directory.Build.props",
-          "sha256": "65c364af3b5247b5dd7a119be65651a062d6d0c1e390a248281c8f3f37ea1d79"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
+          "sha256": "a23d240da0c9f2944ec4c2ae4a1c6458a0c10e3d7969337cc3ed47da32511f39"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:30.1008981Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:11:57.6733709Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -200,13 +212,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "7f3b7a78da827aa76ac17306c6ee80ca98d04f5d8a4719da7ae02e2179e2f76e"
+          "sha256": "96c2ca9eea85e62d1ba285c2af7b87e52823af5e82b18c18a1bed4a9913e8eef"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:30.9144206Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:11:58.3121199Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -215,13 +227,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b0a0a30ca6b4a3ca7578ec52ea02c7f6931f129207cc042fc45dd9b8f00c2e24"
+          "sha256": "a23d240da0c9f2944ec4c2ae4a1c6458a0c10e3d7969337cc3ed47da32511f39"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "824e86bfef7e7cbe8a35f64ddd825f829d515aa1228ced7e8a87d86c78d106b3"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:31.3538333Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:11:58.9902995Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +246,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "127537d4ee8b501acd6e96ba48986eb1e27f361a1b3ce7cafacd6bd06f7390d8"
+          "sha256": "0e709180fd400479a1904edfa5e163e8a154b1fb674f0e8fd52e68a69b248958"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:32.5074338Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:12:00.5635316Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -775,13 +791,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "11082ab9d49018b8b881daaa01a45f08d711a25a3bee34731cd4cac253dc13d0"
+          "sha256": "bc1812ed55b8054f2802080502586f1631fff09131bb4d437d5944b8d1f7b5fd"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:34.1520030Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:12:01.7772436Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -820,13 +836,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "832d8984f4da13d48e986b2f5a2997dae0b0f3c31c5c42558c3cc1e1859d7c53"
+          "sha256": "c6e839da5e189ced105ada1033be6581104c172aeb71ef55a20657ccc0c0bf4b"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Refreshed quality navigation includes the added Dashboard registration-order and provider assertions; checked the moved reader against HEAD with identical query source, PostgreSQL tenant isolation and no tracking verified. Query port renames introduce no new persistence capability, data projection, logging or provider boundary.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:35.0475222Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:22:35.8307567Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,13 +911,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a4ff4c8d31fc3a880f3c74559138a0809e7d2c848d45af669db5c974e2aa06bd"
+          "sha256": "6ea51bbca4e00be04f971a02660187e3e0811e139cfe7d8af3f84b60e4990af2"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:36.9496101Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:12:04.6105168Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -910,21 +926,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "832d8984f4da13d48e986b2f5a2997dae0b0f3c31c5c42558c3cc1e1859d7c53"
+          "sha256": "c6e839da5e189ced105ada1033be6581104c172aeb71ef55a20657ccc0c0bf4b"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a4ff4c8d31fc3a880f3c74559138a0809e7d2c848d45af669db5c974e2aa06bd"
+          "sha256": "6ea51bbca4e00be04f971a02660187e3e0811e139cfe7d8af3f84b60e4990af2"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "11082ab9d49018b8b881daaa01a45f08d711a25a3bee34731cd4cac253dc13d0"
+          "sha256": "bc1812ed55b8054f2802080502586f1631fff09131bb4d437d5944b8d1f7b5fd"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Refreshed quality navigation includes the added Dashboard registration-order and provider assertions; checked the moved reader against HEAD with identical query source, PostgreSQL tenant isolation and no tracking verified. Query port renames introduce no new persistence capability, data projection, logging or provider boundary.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:37.8168922Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:22:36.5682038Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1170,17 +1186,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0480becdc3ca93d1d0c30486ab4ed4f2ca13087b0351e214ecb62a283f1ecda1"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "acea3297b84b134e6693599c3afbd9db6ba90474241e7f0f6fd8a9f80602eb6b"
+          "sha256": "f5b4339449dcc693643c9e9defc3ad9a40a7d313eaec8d6b026aed6cba10c4f2"
         }
       ],
-      "reason": "Reviewed module DbContext namespace ownership, unchanged mapping and transaction behavior, direct shared-context inventory, and project discovery handling for moved files against current source; generated navigation refreshed for the combined working tree.",
+      "reason": "Reviewed Dashboard body reader relocation against unchanged SQL/LINQ and DTO contracts, explicit host scoped registration and removal of EF/shared Infrastructure references; Admin report ports now expose query contracts and receipt fingerprint matches reviewed owner context behavior. Generated navigation reflects current physical source paths.",
       "baseRef": "HEAD",
-      "gitHead": "f5951c4c9d1a0c1c9afcf9eb64f76880aa08999a",
-      "reviewedAtUtc": "2026-09-13T23:52:35.6882785Z"
+      "gitHead": "c26e4995ef49ebe27d2c00b1aa70511a636feb79",
+      "reviewedAtUtc": "2026-09-14T00:12:03.8138777Z"
     },
     {
       "pageId": "workflow.review-diff",

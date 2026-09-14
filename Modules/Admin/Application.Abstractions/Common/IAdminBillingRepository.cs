@@ -1,3 +1,3 @@
 namespace FoodDiary.Modules.Admin.Application.Abstractions.Common;
 
-public interface IAdminBillingRepository : IAdminBillingReadRepository;
+public interface IAdminBillingRepository : IAdminBillingQuery;

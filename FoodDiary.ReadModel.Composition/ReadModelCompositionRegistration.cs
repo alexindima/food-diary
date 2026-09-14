@@ -51,9 +51,9 @@ public static class ReadModelCompositionRegistration {
         services.AddScoped<IAdminDashboardMetricsReader, AdminDashboardMetricsReader>();
         services.AddScoped<IAdminRetentionReader, AdminRetentionReader>();
         services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();
-        services.AddScoped<IAdminUserRoleAuditReadRepository>(static provider => provider.GetRequiredService<IAdminUserRoleAuditRepository>());
+        services.AddScoped<IAdminUserRoleAuditQuery>(static provider => provider.GetRequiredService<IAdminUserRoleAuditRepository>());
         services.AddScoped<IAdminBillingRepository, AdminBillingRepository>();
-        services.AddScoped<IAdminBillingReadRepository>(static provider => provider.GetRequiredService<IAdminBillingRepository>());
+        services.AddScoped<IAdminBillingQuery>(static provider => provider.GetRequiredService<IAdminBillingRepository>());
         services.AddScoped<IAdminImpersonationSessionQuery, AdminImpersonationSessionQuery>();
         services.AddScoped<IFavoriteMealQuery, FavoriteMealQuery>();
         services.AddScoped<IMealProductNutritionQuery, MealProductNutritionQuery>();
@@ -62,6 +62,9 @@ public static class ReadModelCompositionRegistration {
         services.AddScoped<IProductOverviewReadService, ProductOverviewReadService>();
         services.AddScoped<IRecipeUsageQuery, RecipeUsageQuery>();
         services.AddScoped<IRecipeOverviewReadService, RecipeOverviewReadService>();
+        services.RemoveAll<IDashboardBodyReadService>();
+        services.AddScoped<DashboardBodyReadService>();
+        services.AddScoped<IDashboardBodyReadService>(static provider => provider.GetRequiredService<DashboardBodyReadService>());
         services.RemoveAll<IDashboardMealsReadService>();
         services.AddScoped<DashboardMealsReadService>();
         services.AddScoped<IDashboardMealsReadService>(static provider => provider.GetRequiredService<DashboardMealsReadService>());

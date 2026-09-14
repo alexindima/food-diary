@@ -7,7 +7,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
 
-public sealed class GetAdminImpersonationSessionsQueryHandler(IAdminImpersonationSessionReadRepository impersonationSessionRepository)
+public sealed class GetAdminImpersonationSessionsQueryHandler(IAdminImpersonationSessionQuery impersonationSessionRepository)
     : IQueryHandler<GetAdminImpersonationSessionsQuery, Result<PagedResponse<AdminImpersonationSessionReadModel>>> {
     public async Task<Result<PagedResponse<AdminImpersonationSessionReadModel>>> Handle(GetAdminImpersonationSessionsQuery query, CancellationToken cancellationToken) {
         int normalizedPage = PaginationPolicy.NormalizePage(query.Page);

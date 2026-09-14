@@ -316,7 +316,7 @@ public sealed class ControllerConventionsTests {
     [InlineData("*HttpResponseMappings.cs", "Mappings")]
     public void FeatureTransportFiles_LiveInExpectedFolders(string filePattern, string expectedFolderName) {
         string[] violations = [.. PresentationTestDiscovery.GetPresentationRoots()
-            .SelectMany(presentationRoot => Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories))
+            .SelectMany(presentationRoot => Directory.GetFiles(PresentationTestDiscovery.GetFeatureSourceRoot(presentationRoot), filePattern, SearchOption.AllDirectories))
             .Where(path => !string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), expectedFolderName, StringComparison.Ordinal))
             .Select(static path => Path.GetRelativePath(Directory.GetCurrentDirectory(), path))
             .Order(StringComparer.Ordinal)];
@@ -325,7 +325,7 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
-    public void FeatureTransportFiles_DoNotLiveOutsideFeaturesFolder() {
+    public void FeatureTransportFiles_LiveWithinReviewedSourceRoots() {
         string[] patterns = [
             "*HttpRequest.cs",
             "*HttpQuery.cs",
@@ -340,7 +340,8 @@ public sealed class ControllerConventionsTests {
                 .SelectMany(presentationRoot => Directory.GetFiles(presentationRoot, pattern, SearchOption.AllDirectories)))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
+                && !path.StartsWith(PresentationTestDiscovery.AdminPresentationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
             .Where(path => Path.GetFileName(path) is not nameof(ApiErrorHttpResponse) + ".cs"
                 and not "PagedHttpResponse.cs"
                 and not "PagedHttpResponseMappings.cs"
@@ -353,7 +354,7 @@ public sealed class ControllerConventionsTests {
 
     private static IEnumerable<SyntaxTree> GetControllerSyntaxTrees() {
         return PresentationTestDiscovery.GetPresentationRoots()
-            .SelectMany(static presentationRoot => Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories))
+            .SelectMany(static presentationRoot => Directory.GetFiles(PresentationTestDiscovery.GetFeatureSourceRoot(presentationRoot), "*Controller.cs", SearchOption.AllDirectories))
             .Select(static path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path));
     }
 
@@ -383,10 +384,17 @@ public sealed class ControllerConventionsTests {
                 .Any(invocation => invocation.Expression is IdentifierNameSyntax { Identifier.ValueText: "HandleCreated" }))
             .Select(static method => method.Identifier.ValueText);
 
+    [Fact]
+    public void AdminControllers_RemainInConventionCoverage() {
+        Assert.Contains(GetFeatureControllerTypes(), type => string.Equals(type.Name, "AdminUsersController", StringComparison.Ordinal));
+        Assert.Contains(GetControllerSyntaxTrees(), tree => string.Equals(Path.GetFileName(tree.FilePath), "AdminUsersController.cs", StringComparison.Ordinal));
+    }
+
     private static Type[] GetFeatureControllerTypes() =>
         [.. PresentationTestDiscovery.GetTypes()
             .Where(type => type is { IsAbstract: false, IsClass: true })
-            .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
+            .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true
+                || string.Equals(type.Namespace, "FoodDiary.Modules.Admin.Presentation.Controllers", StringComparison.Ordinal))
             .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))];
 
     private static MethodInfo[] GetActionMethods(Type controllerType) =>

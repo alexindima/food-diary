@@ -217,7 +217,7 @@ public class PresentationConventionsTests {
         string root = GetRepositoryRoot();
         string[] featurePaths = GetFeatureRoots(root);
         string[] allowedFiles = [
-            Path.Combine(root, "Modules", "Admin", "Presentation", "Features", "Admin", "AdminTelemetryController.cs"),
+            Path.Combine(root, "Modules", "Admin", "Presentation", "Controllers", "AdminTelemetryController.cs"),
             Path.Combine(root, "Modules", "Fasting", "Presentation", "Features", "Logs", "LogsController.cs"),
         ];
 

@@ -1,5 +1,5 @@
 using System.Reflection;
-using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;
 using FoodDiary.Presentation.Api.Features.Cycles.Responses;

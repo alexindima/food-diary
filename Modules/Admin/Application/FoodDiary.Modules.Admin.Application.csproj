@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Admin.Domain.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Admin.Contracts.csproj" />
     <ProjectReference Include="../../Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
     <ProjectReference Include="../../Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />

@@ -20,7 +20,7 @@ public sealed class AdminPersistenceRegistrationTests {
 
         Assert.Multiple(
             () => Assert.IsType<AdminUserRoleAuditRepository>(repository),
-            () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IAdminUserRoleAuditReadRepository>()),
+            () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IAdminUserRoleAuditQuery>()),
             () => Assert.NotSame(repository, second.ServiceProvider.GetRequiredService<IAdminUserRoleAuditRepository>()),
             () => Assert.Same(typeof(ReadModelCompositionRegistration).Assembly, repository.GetType().Assembly));
     }

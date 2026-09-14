@@ -4,9 +4,9 @@ using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinit
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Presentation.Api.Authorization;
-using FoodDiary.Modules.Admin.Presentation.Features.Admin;
-using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
-using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Controllers;
+using FoodDiary.Modules.Admin.Presentation.Requests;
+using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

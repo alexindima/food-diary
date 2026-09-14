@@ -1,0 +1,46 @@
+using FoodDiary.Modules.Admin.Application.Models;
+using FoodDiary.Modules.Admin.Presentation.Responses;
+
+namespace FoodDiary.Modules.Admin.Presentation.Mappings;
+
+public static class AdminContentManagementHttpResponseMappings {
+    extension(AdminLessonModel model) {
+        public AdminLessonHttpResponse ToLessonHttpResponse() {
+            return new AdminLessonHttpResponse(
+                model.Id,
+                model.Title,
+                model.Content,
+                model.Summary,
+                model.Locale,
+                model.Category,
+                model.Difficulty,
+                model.EstimatedReadMinutes,
+                model.SortOrder,
+                model.CreatedOnUtc,
+                model.ModifiedOnUtc, model.IsPublished, model.CompletedCount);
+        }
+    }
+
+    extension(AdminLessonsImportModel model) {
+        public AdminLessonsImportHttpResponse ToLessonsImportHttpResponse() {
+            return new AdminLessonsImportHttpResponse(
+                model.ImportedCount,
+                model.Lessons.Select(static item => item.ToLessonHttpResponse()).ToList());
+        }
+    }
+
+    extension(AdminEmailTemplateModel model) {
+        public AdminEmailTemplateHttpResponse ToHttpResponse() {
+            return new AdminEmailTemplateHttpResponse(
+                model.Id,
+                model.Key,
+                model.Locale,
+                model.Subject,
+                model.HtmlBody,
+                model.TextBody,
+                model.IsActive,
+                model.CreatedOnUtc,
+                model.UpdatedOnUtc);
+        }
+    }
+}

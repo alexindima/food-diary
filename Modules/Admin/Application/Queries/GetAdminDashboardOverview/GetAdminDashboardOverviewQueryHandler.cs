@@ -8,7 +8,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardOverview;
 
-public sealed class GetAdminDashboardOverviewQueryHandler(IAdminDashboardMetricsReader metrics, IAdminBillingReadRepository billing, IAdminDashboardReadService dashboard, TimeProvider clock)
+public sealed class GetAdminDashboardOverviewQueryHandler(IAdminDashboardMetricsReader metrics, IAdminBillingQuery billing, IAdminDashboardReadService dashboard, TimeProvider clock)
     : IQueryHandler<GetAdminDashboardOverviewQuery, Result<AdminDashboardOverviewModel>> {
     public async Task<Result<AdminDashboardOverviewModel>> Handle(GetAdminDashboardOverviewQuery query, CancellationToken cancellationToken) {
         DateTime today = clock.GetUtcNow().UtcDateTime.Date;

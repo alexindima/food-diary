@@ -7,7 +7,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingWebhookEvents;
 
-public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReadRepository billingRepository)
+public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingQuery billingRepository)
     : IQueryHandler<GetAdminBillingWebhookEventsQuery, Result<PagedResponse<AdminBillingWebhookEventReadModel>>> {
     public async Task<Result<PagedResponse<AdminBillingWebhookEventReadModel>>> Handle(GetAdminBillingWebhookEventsQuery query, CancellationToken cancellationToken) {
         AdminBillingListFilter filter = AdminBillingQueryFilters.Create(

@@ -42,3 +42,5 @@ Identity UserLoginEventQuery implements the owner query port. Preserve the Users
 AiUsageQuery implements the owner IAiUsageQuery port. Preserve SQL-side usage totals, day/operation/model breakdowns, Users inner join for display, requested-user filtering and [fromUtc, toUtc) bounds. Only immutable no-tracking reads live here; usage writes remain in Ai.
 
 Users current weight/waist providers implement the existing consumer ports with scalar BodyMetrics reads. Preserve user filtering, descending Date then CreatedOnUtc ordering, null for no measurements, cancellation and no tracking. Users goal mutation remains in its application layer.
+
+Dashboard body composition implements IDashboardBodyReadService. Preserve two latest measurements, Date/CreatedOnUtc ordering, UTC date normalization for weight/waist, inclusive original instant bounds for hydration, trend buckets and section flags. Register the scoped concrete/interface alias here; AddDashboardReadServices must not remove it. Dashboard Infrastructure has no EF Core or central Infrastructure dependency.

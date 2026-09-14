@@ -48,7 +48,7 @@
           "Modules/Admin/Infrastructure"
         ],
         "adapterAreas": [
-          "Modules/Admin/Presentation/Features/Admin",
+          "Modules/Admin/Presentation",
           "Modules/Admin/Infrastructure/Integrations/MailInbox"
         ],
         "contractProjects": [

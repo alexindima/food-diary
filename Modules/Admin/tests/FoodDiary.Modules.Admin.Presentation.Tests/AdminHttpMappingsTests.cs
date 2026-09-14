@@ -3,8 +3,8 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Modules.Admin.Presentation.Features.Admin.Mappings;
-using FoodDiary.Modules.Admin.Presentation.Features.Admin.Requests;
+using FoodDiary.Modules.Admin.Presentation.Mappings;
+using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
@@ -27,7 +27,7 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminDashboardSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminImpersonationSessions;
 using FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;
-using FoodDiary.Modules.Admin.Presentation.Features.Admin.Responses;
+using FoodDiary.Modules.Admin.Presentation.Responses;
 
 namespace FoodDiary.Modules.Admin.Presentation.Tests;
 

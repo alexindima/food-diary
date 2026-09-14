@@ -4441,6 +4441,14 @@
       "structuralRiskScore": 19.54
     },
     {
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs",
+      "nonBlankLines": 162,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18.24
+    },
+    {
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardFavoriteMealProjection.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -4634,11 +4642,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "nonBlankLines": 75,
+      "nonBlankLines": 78,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.5
+      "structuralRiskScore": 1.56
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
@@ -13913,7 +13921,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingQuery.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -14001,7 +14009,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditQuery.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15569,6 +15577,158 @@
       "structuralRiskScore": 0.54
     },
     {
+      "path": "Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.72
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminAcquisitionController.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.52
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.7
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminAiUsageController.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminAuditController.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminBillingController.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.72
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminCollaborationAuditController.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.42
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.5
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
+      "nonBlankLines": 46,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.92
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminLessonsController.cs",
+      "nonBlankLines": 50,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminMailInboxController.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.74
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminModerationController.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.74
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminRetentionController.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.42
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminTelemetryController.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.38
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserCreationController.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.52
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserPasswordController.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.48
+    },
+    {
+      "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "nonBlankLines": 72,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.44
+    },
+    {
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -15577,159 +15737,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAchievementDefinitionsController.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAcquisitionController.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAiPromptsController.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.7
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAiUsageController.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAuditController.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminBillingController.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminBugReportsController.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminCollaborationAuditController.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.42
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminDashboardController.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.5
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminEmailTemplatesController.cs",
-      "nonBlankLines": 46,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.92
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminLessonsController.cs",
-      "nonBlankLines": 50,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.74
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminModerationController.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.74
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminOutgoingEmailsController.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.42
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminTelemetryController.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.38
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUserCreationController.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUserPasswordController.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.48
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUsersController.cs",
-      "nonBlankLines": 72,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.44
-    },
-    {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
       "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15737,7 +15745,7 @@
       "structuralRiskScore": 0.56
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAiHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminAiHttpResponseMappings.cs",
       "nonBlankLines": 59,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15745,7 +15753,7 @@
       "structuralRiskScore": 1.18
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAuditJournalHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminAuditJournalHttpMappings.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15753,7 +15761,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBillingHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminBillingHttpResponseMappings.cs",
       "nonBlankLines": 116,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15761,7 +15769,7 @@
       "structuralRiskScore": 2.32
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBugReportHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15769,7 +15777,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminContentHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminContentHttpResponseMappings.cs",
       "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15777,7 +15785,7 @@
       "structuralRiskScore": 0.54
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminContentManagementHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminContentManagementHttpResponseMappings.cs",
       "nonBlankLines": 42,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15785,7 +15793,7 @@
       "structuralRiskScore": 0.84
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminDashboardOverviewHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminDashboardOverviewHttpMappings.cs",
       "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15793,7 +15801,7 @@
       "structuralRiskScore": 0.36
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminHttpMappings.cs",
       "nonBlankLines": 178,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15801,7 +15809,7 @@
       "structuralRiskScore": 3.56
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
       "nonBlankLines": 136,
       "decisionPoints": 6,
       "criticalSymbols": 0,
@@ -15809,7 +15817,7 @@
       "structuralRiskScore": 11.72
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminHttpResponseMappings.cs",
       "nonBlankLines": 171,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15817,7 +15825,7 @@
       "structuralRiskScore": 3.42
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMailInboxHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminMailInboxHttpResponseMappings.cs",
       "nonBlankLines": 66,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15825,7 +15833,7 @@
       "structuralRiskScore": 1.32
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMarketingHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminMarketingHttpResponseMappings.cs",
       "nonBlankLines": 62,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15833,7 +15841,7 @@
       "structuralRiskScore": 1.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMarketingRangeHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminMarketingRangeHttpMappings.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15841,7 +15849,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminOutgoingEmailHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminOutgoingEmailHttpMappings.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15849,7 +15857,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminRetentionHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminRetentionHttpMappings.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15857,7 +15865,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTelemetryHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminTelemetryHttpResponseMappings.cs",
       "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15865,7 +15873,7 @@
       "structuralRiskScore": 0.7
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTemplateRevisionHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminTemplateRevisionHttpMappings.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15873,7 +15881,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminAiPromptUpsertHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15881,7 +15889,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminEmailTemplateTestHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminEmailTemplateTestHttpRequest.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15889,7 +15897,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminEmailTemplateUpsertHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminEmailTemplateUpsertHttpRequest.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15897,7 +15905,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminImpersonationStartHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminImpersonationStartHttpRequest.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15905,7 +15913,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonCreateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonCreateHttpRequest.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15913,7 +15921,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonImportItemHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonImportItemHttpRequest.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15921,7 +15929,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonUpdateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonUpdateHttpRequest.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15929,7 +15937,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonsImportHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonsImportHttpRequest.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15937,7 +15945,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminReportActionHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminReportActionHttpRequest.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15945,7 +15953,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserCreateHttpRequest.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15953,7 +15961,7 @@
       "structuralRiskScore": 0.28
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserSetPasswordHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserSetPasswordHttpRequest.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15961,7 +15969,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserUpdateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserUpdateHttpRequest.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15969,7 +15977,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/CreateAdminAchievementDefinitionHttpRequest.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15977,7 +15985,7 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminAiUsageSummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminAiUsageSummaryHttpQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15985,7 +15993,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminAuditHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminAuditHttpQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15993,7 +16001,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminBillingHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminBillingHttpQuery.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16001,7 +16009,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminBugReportsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminBugReportsHttpQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16009,7 +16017,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminContentReportsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminContentReportsHttpQuery.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16017,7 +16025,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminDashboardHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminDashboardHttpQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16025,7 +16033,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminDashboardOverviewHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminDashboardOverviewHttpQuery.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16033,7 +16041,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminImpersonationSessionsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminImpersonationSessionsHttpQuery.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16041,7 +16049,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminMailInboxMessagePageHttpQuery.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16049,7 +16057,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16057,7 +16065,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminOutgoingEmailsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminOutgoingEmailsHttpQuery.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16065,7 +16073,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminRetentionHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminRetentionHttpQuery.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16073,7 +16081,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUserLoginEventsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUserLoginEventsHttpQuery.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16081,7 +16089,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUserLoginSummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUserLoginSummaryHttpQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16089,7 +16097,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUserRoleAuditHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUserRoleAuditHttpQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16097,7 +16105,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUsersHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUsersHttpQuery.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16105,7 +16113,7 @@
       "structuralRiskScore": 0.4
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetCollaborationAuditHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetCollaborationAuditHttpQuery.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16113,7 +16121,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetFastingTelemetrySummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetFastingTelemetrySummaryHttpQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16121,7 +16129,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetMarketingAttributionRangeHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetMarketingAttributionRangeHttpQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16129,7 +16137,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetMarketingAttributionSummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetMarketingAttributionSummaryHttpQuery.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16137,7 +16145,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16145,7 +16153,7 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAchievementDefinitionHttpResponse.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16153,7 +16161,7 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiPromptHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptHttpResponse.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16161,7 +16169,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageBreakdownHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageBreakdownHttpResponse.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16169,7 +16177,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageDailyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageDailyHttpResponse.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16177,7 +16185,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageSummaryHttpResponse.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16185,7 +16193,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageUserHttpResponse.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16193,7 +16201,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAuditEntryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAuditEntryHttpResponse.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16201,7 +16209,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAuditPageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAuditPageHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16209,7 +16217,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16217,7 +16225,7 @@
       "structuralRiskScore": 0.56
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16225,7 +16233,7 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueSummaryHttpResponse.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16233,7 +16241,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16241,7 +16249,7 @@
       "structuralRiskScore": 0.4
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingWebhookEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingWebhookEventHttpResponse.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16249,7 +16257,7 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBugReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBugReportHttpResponse.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16257,7 +16265,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBugReportPageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBugReportPageHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16265,7 +16273,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminContentReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminContentReportHttpResponse.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16273,7 +16281,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardMetricsHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardMetricsHttpResponse.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16281,7 +16289,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardOverviewHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardOverviewHttpResponse.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16289,7 +16297,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardPeriodHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardPeriodHttpResponse.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16297,7 +16305,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardRevenuePointHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardRevenuePointHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16305,7 +16313,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardSummaryHttpResponse.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16313,7 +16321,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardTrendHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardTrendHttpResponse.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16321,7 +16329,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminEmailTemplateHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminEmailTemplateHttpResponse.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16329,7 +16337,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationSessionHttpResponse.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16337,7 +16345,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationStartHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationStartHttpResponse.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16345,7 +16353,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminLessonHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminLessonHttpResponse.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16353,7 +16361,7 @@
       "structuralRiskScore": 0.3
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminLessonsImportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminLessonsImportHttpResponse.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16361,7 +16369,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxDmarcRecordHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxDmarcRecordHttpResponse.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16369,7 +16377,7 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxDmarcReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxDmarcReportHttpResponse.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16377,7 +16385,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageDetailsHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxMessageDetailsHttpResponse.cs",
       "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16385,7 +16393,7 @@
       "structuralRiskScore": 0.36
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxMessagePageHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16393,7 +16401,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxMessageSummaryHttpResponse.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16401,7 +16409,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminOutgoingEmailHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminOutgoingEmailHttpResponse.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16409,7 +16417,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminOutgoingEmailPageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminOutgoingEmailPageHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16417,7 +16425,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionCohortHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminRetentionCohortHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16425,7 +16433,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionDayHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminRetentionDayHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16433,7 +16441,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminRetentionReportHttpResponse.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16441,7 +16449,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminTemplateRevisionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminTemplateRevisionHttpResponse.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16449,7 +16457,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserCreationHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserCreationHttpResponse.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16457,7 +16465,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "nonBlankLines": 53,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16465,7 +16473,7 @@
       "structuralRiskScore": 1.06
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginDeviceSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginDeviceSummaryHttpResponse.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16473,7 +16481,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16481,7 +16489,7 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserRoleAuditEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserRoleAuditEventHttpResponse.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16489,7 +16497,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/FastingTelemetryPresetHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/FastingTelemetryPresetHttpResponse.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16497,7 +16505,7 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/FastingTelemetrySummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/FastingTelemetrySummaryHttpResponse.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16505,7 +16513,7 @@
       "structuralRiskScore": 0.34
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionBreakdownHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionBreakdownHttpResponse.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16513,7 +16521,7 @@
       "structuralRiskScore": 0.28
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionDayHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionDayHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16521,7 +16529,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionRangeHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionRangeHttpResponse.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16529,7 +16537,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionRecentEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionRecentEventHttpResponse.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -16537,7 +16545,7 @@
       "structuralRiskScore": 0.28
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionSummaryHttpResponse.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -21210,19 +21218,11 @@
     },
     {
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
-      "nonBlankLines": 162,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.24
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
@@ -45767,7 +45767,7 @@
     {
       "name": "AdminAchievementDefinitionsController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAchievementDefinitionsController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs",
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45779,7 +45779,7 @@
     {
       "name": "AdminAcquisitionController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAcquisitionController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAcquisitionController.cs",
       "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
@@ -45792,7 +45792,7 @@
     {
       "name": "AdminAiPromptsController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAiPromptsController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
       "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
@@ -45805,7 +45805,7 @@
     {
       "name": "AdminAiUsageController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAiUsageController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAiUsageController.cs",
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45817,7 +45817,7 @@
     {
       "name": "AdminAuditController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAuditController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAuditController.cs",
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45829,7 +45829,7 @@
     {
       "name": "AdminBillingController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminBillingController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminBillingController.cs",
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45841,7 +45841,7 @@
     {
       "name": "AdminBugReportsController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminBugReportsController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45853,7 +45853,7 @@
     {
       "name": "AdminCollaborationAuditController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminCollaborationAuditController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminCollaborationAuditController.cs",
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45865,7 +45865,7 @@
     {
       "name": "AdminDashboardController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminDashboardController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
       "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
@@ -45879,7 +45879,7 @@
     {
       "name": "AdminEmailTemplatesController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminEmailTemplatesController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
       "line": 20,
       "testReferenceCount": 3,
       "testReferences": [
@@ -45893,7 +45893,7 @@
     {
       "name": "AdminLessonsController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminLessonsController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminLessonsController.cs",
       "line": 19,
       "testReferenceCount": 2,
       "testReferences": [
@@ -45906,7 +45906,7 @@
     {
       "name": "AdminMailInboxController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminMailInboxController.cs",
       "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
@@ -45919,7 +45919,7 @@
     {
       "name": "AdminModerationController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminModerationController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminModerationController.cs",
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45931,7 +45931,7 @@
     {
       "name": "AdminOutgoingEmailsController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminOutgoingEmailsController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs",
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45943,7 +45943,7 @@
     {
       "name": "AdminRetentionController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminRetentionController.cs",
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45969,7 +45969,7 @@
     {
       "name": "AdminTelemetryController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminTelemetryController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminTelemetryController.cs",
       "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
@@ -45982,7 +45982,7 @@
     {
       "name": "AdminUserCreationController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUserCreationController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserCreationController.cs",
       "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
@@ -45995,7 +45995,7 @@
     {
       "name": "AdminUserPasswordController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUserPasswordController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserPasswordController.cs",
       "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
@@ -46007,11 +46007,12 @@
     {
       "name": "AdminUsersController",
       "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUsersController.cs",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46990,11 +46991,12 @@
       "role": "Controller",
       "path": "Modules/Users/Presentation/Features/Users/UsersController.cs",
       "line": 15,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersControllerTests.cs",
-        "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs"
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

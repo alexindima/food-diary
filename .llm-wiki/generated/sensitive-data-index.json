@@ -175,42 +175,42 @@
       "category": "credential",
       "name": "TemporaryPassword",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserCreateHttpRequest.cs",
       "line": 12
     },
     {
       "category": "credential",
       "name": "NewPassword",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserSetPasswordHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserSetPasswordHttpRequest.cs",
       "line": 7
     },
     {
       "category": "credential",
       "name": "TemporaryPassword",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserCreationHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserCreationHttpResponse.cs",
       "line": 5
     },
     {
       "category": "credential",
       "name": "CredentialsEmailQueued",
       "type": "bool",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserCreationHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserCreationHttpResponse.cs",
       "line": 6
     },
     {
       "category": "credential",
       "name": "HasPassword",
       "type": "bool",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 6
     },
     {
       "category": "credential",
       "name": "MustChangePassword",
       "type": "bool",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 54
     },
     {
@@ -1260,140 +1260,140 @@
       "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 7
     },
     {
       "category": "financial",
       "name": "ExternalPaymentId",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 9
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 10
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 11
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 12
     },
     {
       "category": "financial",
       "name": "ExternalPriceId",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 13
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "decimal?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 17
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 18
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "line": 4
     },
     {
       "category": "financial",
       "name": "Refunds",
       "type": "decimal",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "line": 6
     },
     {
       "category": "financial",
       "name": "SuccessfulPayments",
       "type": "int",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "line": 10
     },
     {
       "category": "financial",
       "name": "Tax",
       "type": "decimal",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "line": 11
     },
     {
       "category": "financial",
       "name": "EarningsTrackedPayments",
       "type": "int",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "line": 14
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 8
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 9
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 10
     },
     {
       "category": "financial",
       "name": "ExternalPriceId",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 11
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 17
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardRevenuePointHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardRevenuePointHttpResponse.cs",
       "line": 3
     },
     {
       "category": "financial",
       "name": "Revenue",
       "type": "IReadOnlyList<AdminDashboardRevenuePointHttpResponse>",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardTrendHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardTrendHttpResponse.cs",
       "line": 4
     },
     {
@@ -2247,126 +2247,126 @@
       "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 11
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 13
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 14
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 15
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 16
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 24
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 26
     },
     {
       "category": "health",
       "name": "TuesdayCalories",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 27
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 28
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 29
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 30
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 31
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "double?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 32
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 40
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "int",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 42
     },
     {
       "category": "health",
       "name": "FastingCheckInFollowUpReminderHours",
       "type": "int",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 43
     },
     {
@@ -6944,126 +6944,126 @@
       "category": "identity",
       "name": "ToEmail",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminEmailTemplateTestHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminEmailTemplateTestHttpRequest.cs",
       "line": 4
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserCreateHttpRequest.cs",
       "line": 7
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "bool?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserUpdateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserUpdateHttpRequest.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageUserHttpResponse.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "UserEmail",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "UserEmail",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "ActorEmail",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationSessionHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "TargetEmail",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationSessionHttpResponse.cs",
       "line": 8
     },
     {
       "category": "identity",
       "name": "ActorIpAddress",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationSessionHttpResponse.cs",
       "line": 10
     },
     {
       "category": "identity",
       "name": "ActorUserAgent",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationSessionHttpResponse.cs",
       "line": 11
     },
     {
       "category": "identity",
       "name": "TargetEmail",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationStartHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationStartHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "TelegramUserId",
       "type": "long?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 44
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "bool",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 46
     },
     {
       "category": "identity",
       "name": "UserEmail",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "MaskedIpAddress",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",
       "line": 8
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",
       "line": 9
     },
     {
       "category": "identity",
       "name": "ActorEmail",
       "type": "string?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserRoleAuditEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserRoleAuditEventHttpResponse.cs",
       "line": 9
     },
     {
@@ -8127,21 +8127,21 @@
       "category": "privateContent",
       "name": "PromptText",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminAiPromptUpsertHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
       "line": 4
     },
     {
       "category": "privateContent",
       "name": "PromptText",
       "type": "string",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiPromptHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptHttpResponse.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 34
     },
     {
@@ -10297,21 +10297,21 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminAiPromptUpsertHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminEmailTemplateTestHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminEmailTemplateTestHttpRequest.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserCreateHttpRequest.cs",
       "categories": [
         "credential",
         "identity"
@@ -10319,35 +10319,35 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserSetPasswordHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserSetPasswordHttpRequest.cs",
       "categories": [
         "credential"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserUpdateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserUpdateHttpRequest.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiPromptHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptHttpResponse.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageUserHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "categories": [
         "financial",
         "identity"
@@ -10355,14 +10355,14 @@
       "fieldCount": 9
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "categories": [
         "financial"
       ],
       "fieldCount": 5
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "categories": [
         "financial",
         "identity"
@@ -10370,42 +10370,42 @@
       "fieldCount": 6
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardRevenuePointHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardRevenuePointHttpResponse.cs",
       "categories": [
         "financial"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardTrendHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardTrendHttpResponse.cs",
       "categories": [
         "financial"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationSessionHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 4
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationStartHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationStartHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserCreationHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserCreationHttpResponse.cs",
       "categories": [
         "credential"
       ],
       "fieldCount": 2
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "categories": [
         "credential",
         "health",
@@ -10415,14 +10415,14 @@
       "fieldCount": 24
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserRoleAuditEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserRoleAuditEventHttpResponse.cs",
       "categories": [
         "identity"
       ],

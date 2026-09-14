@@ -7,7 +7,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingSubscriptions;
 
-public sealed class GetAdminBillingSubscriptionsQueryHandler(IAdminBillingReadRepository billingRepository)
+public sealed class GetAdminBillingSubscriptionsQueryHandler(IAdminBillingQuery billingRepository)
     : IQueryHandler<GetAdminBillingSubscriptionsQuery, Result<PagedResponse<AdminBillingSubscriptionReadModel>>> {
     public async Task<Result<PagedResponse<AdminBillingSubscriptionReadModel>>> Handle(GetAdminBillingSubscriptionsQuery query, CancellationToken cancellationToken) {
         AdminBillingListFilter filter = AdminBillingQueryFilters.Create(

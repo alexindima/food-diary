@@ -33,10 +33,10 @@
       "Mapping": 4,
       "Options": 70,
       "Other": 1641,
-      "Query": 209,
+      "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
-      "ReadRepository": 48,
+      "ReadRepository": 46,
       "Repository": 108,
       "Request": 150,
       "Response": 213,
@@ -1742,6 +1742,13 @@
       "line": 12
     },
     {
+      "name": "DashboardBodyReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs",
+      "line": 9
+    },
+    {
       "name": "DashboardFavoriteMealProjection",
       "kind": "record",
       "role": "Other",
@@ -2470,10 +2477,10 @@
       "line": 2
     },
     {
-      "name": "IAdminBillingReadRepository",
+      "name": "IAdminBillingQuery",
       "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingReadRepository.cs",
+      "role": "Query",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingQuery.cs",
       "line": 4
     },
     {
@@ -2547,10 +2554,10 @@
       "line": 4
     },
     {
-      "name": "IAdminUserRoleAuditReadRepository",
+      "name": "IAdminUserRoleAuditQuery",
       "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditReadRepository.cs",
+      "role": "Query",
+      "path": "Modules/Admin/Application.Abstractions/Common/IAdminUserRoleAuditQuery.cs",
       "line": 4
     },
     {
@@ -3905,6 +3912,139 @@
       "line": 7
     },
     {
+      "name": "AdminAchievementDefinitionsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs",
+      "line": 18
+    },
+    {
+      "name": "AdminAcquisitionController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAcquisitionController.cs",
+      "line": 17
+    },
+    {
+      "name": "AdminAiPromptsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
+      "line": 17
+    },
+    {
+      "name": "AdminAiUsageController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAiUsageController.cs",
+      "line": 18
+    },
+    {
+      "name": "AdminAuditController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminAuditController.cs",
+      "line": 18
+    },
+    {
+      "name": "AdminBillingController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminBillingController.cs",
+      "line": 17
+    },
+    {
+      "name": "AdminBugReportsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
+      "line": 18
+    },
+    {
+      "name": "AdminCollaborationAuditController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminCollaborationAuditController.cs",
+      "line": 17
+    },
+    {
+      "name": "AdminDashboardController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
+      "line": 16
+    },
+    {
+      "name": "AdminEmailTemplatesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
+      "line": 20
+    },
+    {
+      "name": "AdminLessonsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminLessonsController.cs",
+      "line": 19
+    },
+    {
+      "name": "AdminMailInboxController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminMailInboxController.cs",
+      "line": 17
+    },
+    {
+      "name": "AdminModerationController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminModerationController.cs",
+      "line": 17
+    },
+    {
+      "name": "AdminOutgoingEmailsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs",
+      "line": 18
+    },
+    {
+      "name": "AdminRetentionController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminRetentionController.cs",
+      "line": 18
+    },
+    {
+      "name": "AdminTelemetryController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminTelemetryController.cs",
+      "line": 16
+    },
+    {
+      "name": "AdminUserCreationController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserCreationController.cs",
+      "line": 17
+    },
+    {
+      "name": "AdminUserPasswordController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserPasswordController.cs",
+      "line": 16
+    },
+    {
+      "name": "AdminUsersController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "line": 17
+    },
+    {
       "name": "AdminPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -3912,850 +4052,717 @@
       "line": 5
     },
     {
-      "name": "AdminAchievementDefinitionsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAchievementDefinitionsController.cs",
-      "line": 18
-    },
-    {
-      "name": "AdminAcquisitionController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAcquisitionController.cs",
-      "line": 17
-    },
-    {
-      "name": "AdminAiPromptsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAiPromptsController.cs",
-      "line": 17
-    },
-    {
-      "name": "AdminAiUsageController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAiUsageController.cs",
-      "line": 18
-    },
-    {
-      "name": "AdminAuditController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAuditController.cs",
-      "line": 18
-    },
-    {
-      "name": "AdminBillingController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminBillingController.cs",
-      "line": 17
-    },
-    {
-      "name": "AdminBugReportsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminBugReportsController.cs",
-      "line": 18
-    },
-    {
-      "name": "AdminCollaborationAuditController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminCollaborationAuditController.cs",
-      "line": 17
-    },
-    {
-      "name": "AdminDashboardController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminDashboardController.cs",
-      "line": 16
-    },
-    {
-      "name": "AdminEmailTemplatesController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminEmailTemplatesController.cs",
-      "line": 20
-    },
-    {
-      "name": "AdminLessonsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminLessonsController.cs",
-      "line": 19
-    },
-    {
-      "name": "AdminMailInboxController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
-      "line": 17
-    },
-    {
-      "name": "AdminModerationController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminModerationController.cs",
-      "line": 17
-    },
-    {
-      "name": "AdminOutgoingEmailsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminOutgoingEmailsController.cs",
-      "line": 18
-    },
-    {
-      "name": "AdminRetentionController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
-      "line": 18
-    },
-    {
-      "name": "AdminTelemetryController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminTelemetryController.cs",
-      "line": 16
-    },
-    {
-      "name": "AdminUserCreationController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUserCreationController.cs",
-      "line": 17
-    },
-    {
-      "name": "AdminUserPasswordController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUserPasswordController.cs",
-      "line": 16
-    },
-    {
-      "name": "AdminUsersController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminUsersController.cs",
-      "line": 17
-    },
-    {
       "name": "AdminAchievementDefinitionsHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminAchievementDefinitionsHttpMappings.cs",
       "line": 9
     },
     {
       "name": "AdminAiHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAiHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminAiHttpResponseMappings.cs",
       "line": 6
     },
     {
       "name": "AdminAuditJournalHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAuditJournalHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminAuditJournalHttpMappings.cs",
       "line": 6
     },
     {
       "name": "AdminBillingHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBillingHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminBillingHttpResponseMappings.cs",
       "line": 7
     },
     {
       "name": "AdminBugReportHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBugReportHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
       "line": 7
     },
     {
       "name": "AdminContentHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminContentHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminContentHttpResponseMappings.cs",
       "line": 7
     },
     {
       "name": "AdminContentManagementHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminContentManagementHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminContentManagementHttpResponseMappings.cs",
       "line": 5
     },
     {
       "name": "AdminDashboardOverviewHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminDashboardOverviewHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminDashboardOverviewHttpMappings.cs",
       "line": 7
     },
     {
       "name": "AdminHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminHttpMappings.cs",
       "line": 20
     },
     {
       "name": "AdminHttpQueryMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
       "line": 25
     },
     {
       "name": "AdminHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminHttpResponseMappings.cs",
       "line": 8
     },
     {
       "name": "AdminMailInboxHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMailInboxHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminMailInboxHttpResponseMappings.cs",
       "line": 5
     },
     {
       "name": "AdminMarketingHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMarketingHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminMarketingHttpResponseMappings.cs",
       "line": 5
     },
     {
       "name": "AdminMarketingRangeHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMarketingRangeHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminMarketingRangeHttpMappings.cs",
       "line": 7
     },
     {
       "name": "AdminOutgoingEmailHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminOutgoingEmailHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminOutgoingEmailHttpMappings.cs",
       "line": 7
     },
     {
       "name": "AdminRetentionHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminRetentionHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminRetentionHttpMappings.cs",
       "line": 7
     },
     {
       "name": "AdminTelemetryHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTelemetryHttpResponseMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminTelemetryHttpResponseMappings.cs",
       "line": 5
     },
     {
       "name": "AdminTemplateRevisionHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTemplateRevisionHttpMappings.cs",
+      "path": "Modules/Admin/Presentation/Mappings/AdminTemplateRevisionHttpMappings.cs",
       "line": 6
     },
     {
       "name": "AdminAiPromptUpsertHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminAiPromptUpsertHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminAiPromptUpsertHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminEmailTemplateTestHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminEmailTemplateTestHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminEmailTemplateTestHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminEmailTemplateUpsertHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminEmailTemplateUpsertHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminEmailTemplateUpsertHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminImpersonationStartHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminImpersonationStartHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminImpersonationStartHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminLessonCreateHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonCreateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonCreateHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminLessonImportItemHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonImportItemHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonImportItemHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminLessonsImportHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonsImportHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonsImportHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminLessonUpdateHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminLessonUpdateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminLessonUpdateHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminReportActionHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminReportActionHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminReportActionHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminUserCreateHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserCreateHttpRequest.cs",
       "line": 5
     },
     {
       "name": "AdminUserSetPasswordHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserSetPasswordHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserSetPasswordHttpRequest.cs",
       "line": 5
     },
     {
       "name": "AdminUserUpdateHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminUserUpdateHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserUpdateHttpRequest.cs",
       "line": 2
     },
     {
       "name": "CreateAdminAchievementDefinitionHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/CreateAdminAchievementDefinitionHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/CreateAdminAchievementDefinitionHttpRequest.cs",
       "line": 2
     },
     {
       "name": "GetAdminAiUsageSummaryHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminAiUsageSummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminAiUsageSummaryHttpQuery.cs",
       "line": 2
     },
     {
       "name": "GetAdminAuditHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminAuditHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminAuditHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminBillingHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminBillingHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminBillingHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminBugReportsHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminBugReportsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminBugReportsHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminContentReportsHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminContentReportsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminContentReportsHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminDashboardHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminDashboardHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminDashboardHttpQuery.cs",
       "line": 4
     },
     {
       "name": "GetAdminDashboardOverviewHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminDashboardOverviewHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminDashboardOverviewHttpQuery.cs",
       "line": 2
     },
     {
       "name": "GetAdminImpersonationSessionsHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminImpersonationSessionsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminImpersonationSessionsHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminMailInboxMessagePageHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminMailInboxMessagePageHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminMailInboxMessagesHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminOutgoingEmailsHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminOutgoingEmailsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminOutgoingEmailsHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminRetentionHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminRetentionHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminRetentionHttpQuery.cs",
       "line": 2
     },
     {
       "name": "GetAdminUserLoginEventsHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUserLoginEventsHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUserLoginEventsHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetAdminUserLoginSummaryHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUserLoginSummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUserLoginSummaryHttpQuery.cs",
       "line": 2
     },
     {
       "name": "GetAdminUserRoleAuditHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUserRoleAuditHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUserRoleAuditHttpQuery.cs",
       "line": 4
     },
     {
       "name": "GetAdminUsersHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUsersHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminUsersHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetCollaborationAuditHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetCollaborationAuditHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetCollaborationAuditHttpQuery.cs",
       "line": 4
     },
     {
       "name": "GetFastingTelemetrySummaryHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetFastingTelemetrySummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetFastingTelemetrySummaryHttpQuery.cs",
       "line": 4
     },
     {
       "name": "GetMarketingAttributionRangeHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetMarketingAttributionRangeHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetMarketingAttributionRangeHttpQuery.cs",
       "line": 5
     },
     {
       "name": "GetMarketingAttributionSummaryHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetMarketingAttributionSummaryHttpQuery.cs",
+      "path": "Modules/Admin/Presentation/Requests/GetMarketingAttributionSummaryHttpQuery.cs",
       "line": 4
     },
     {
       "name": "UpdateAdminAchievementDefinitionHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Admin/Presentation/Features/Admin/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs",
+      "path": "Modules/Admin/Presentation/Requests/UpdateAdminAchievementDefinitionHttpRequest.cs",
       "line": 2
     },
     {
       "name": "AdminAchievementDefinitionHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAchievementDefinitionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAchievementDefinitionHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminAiPromptHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiPromptHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiPromptHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminAiUsageBreakdownHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageBreakdownHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageBreakdownHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminAiUsageDailyHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageDailyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageDailyHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminAiUsageSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageSummaryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminAiUsageUserHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAiUsageUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAiUsageUserHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminAuditEntryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAuditEntryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAuditEntryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminAuditPageHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAuditPageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminAuditPageHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminBillingPaymentHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminBillingRevenueCurrencyHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminBillingRevenueSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingRevenueSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingRevenueSummaryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminBillingSubscriptionHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminBillingWebhookEventHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingWebhookEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingWebhookEventHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminBugReportHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBugReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBugReportHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminBugReportPageHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBugReportPageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminBugReportPageHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminContentReportHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminContentReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminContentReportHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardMetricsHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardMetricsHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardMetricsHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardOverviewHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardOverviewHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardOverviewHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardPeriodHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardPeriodHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardPeriodHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardRevenuePointHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardRevenuePointHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardRevenuePointHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardSummaryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminDashboardTrendHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardTrendHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminDashboardTrendHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminEmailTemplateHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminEmailTemplateHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminEmailTemplateHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminImpersonationSessionHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationSessionHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminImpersonationStartHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationStartHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminImpersonationStartHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminLessonHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminLessonHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminLessonHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminLessonsImportHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminLessonsImportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminLessonsImportHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxDmarcRecordHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxDmarcRecordHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxDmarcRecordHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxDmarcReportHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxDmarcReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxDmarcReportHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxMessageDetailsHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageDetailsHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxMessageDetailsHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxMessagePageHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxMessagePageHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminMailInboxMessageSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminMailInboxMessageSummaryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminOutgoingEmailHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminOutgoingEmailHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminOutgoingEmailHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminOutgoingEmailPageHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminOutgoingEmailPageHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminOutgoingEmailPageHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminRetentionCohortHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionCohortHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminRetentionCohortHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminRetentionDayHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionDayHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminRetentionDayHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminRetentionReportHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionReportHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminRetentionReportHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminTemplateRevisionHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminTemplateRevisionHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminTemplateRevisionHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminUserCreationHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserCreationHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserCreationHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminUserHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminUserLoginDeviceSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginDeviceSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginDeviceSummaryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminUserLoginEventHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserLoginEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",
       "line": 2
     },
     {
       "name": "AdminUserRoleAuditEventHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminUserRoleAuditEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserRoleAuditEventHttpResponse.cs",
       "line": 2
     },
     {
       "name": "FastingTelemetryPresetHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/FastingTelemetryPresetHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/FastingTelemetryPresetHttpResponse.cs",
       "line": 2
     },
     {
       "name": "FastingTelemetrySummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/FastingTelemetrySummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/FastingTelemetrySummaryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "MarketingAttributionBreakdownHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionBreakdownHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionBreakdownHttpResponse.cs",
       "line": 2
     },
     {
       "name": "MarketingAttributionDayHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionDayHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionDayHttpResponse.cs",
       "line": 2
     },
     {
       "name": "MarketingAttributionRangeHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionRangeHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionRangeHttpResponse.cs",
       "line": 2
     },
     {
       "name": "MarketingAttributionRecentEventHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionRecentEventHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionRecentEventHttpResponse.cs",
       "line": 2
     },
     {
       "name": "MarketingAttributionSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionSummaryHttpResponse.cs",
+      "path": "Modules/Admin/Presentation/Responses/MarketingAttributionSummaryHttpResponse.cs",
       "line": 2
     },
     {
@@ -8782,13 +8789,6 @@
       "role": "Other",
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
       "line": 7
-    },
-    {
-      "name": "DashboardBodyReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
-      "line": 9
     },
     {
       "name": "DashboardReadService",
@@ -28368,7 +28368,7 @@
       "interface": "IDashboardBodyReadService",
       "interfacePath": "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs",
       "implementation": "DashboardBodyReadService",
-      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -30296,7 +30296,7 @@
       "implementation": "DashboardReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "line": 18
+      "line": 15
     },
     {
       "service": "IDietologistClientReadService",

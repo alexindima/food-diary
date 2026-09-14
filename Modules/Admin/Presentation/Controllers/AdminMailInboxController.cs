@@ -1,0 +1,42 @@
+using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Modules.Admin.Presentation.Mappings;
+using FoodDiary.Modules.Admin.Presentation.Requests;
+using FoodDiary.Modules.Admin.Presentation.Responses;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Admin.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/admin/mail-inbox/messages")]
+[Authorize(Roles = PresentationRoleNames.Admin)]
+public sealed class AdminMailInboxController(ISender mediator) : BaseApiController(mediator) {
+    [HttpGet("page")]
+    [ProducesResponseType<AdminMailInboxMessagePageHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetPage([FromQuery] GetAdminMailInboxMessagePageHttpQuery query) =>
+        HandleOk(query.ToQuery(),
+            static value => new AdminMailInboxMessagePageHttpResponse(value.Items.Select(item => item.ToHttpResponse()).ToList(), value.TotalItems, value.UnreadCount, value.ReadCount));
+
+    [HttpGet]
+    [ProducesResponseType<IReadOnlyList<AdminMailInboxMessageSummaryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetMessages([FromQuery] GetAdminMailInboxMessagesHttpQuery query) =>
+        HandleOk(query.ToQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType<AdminMailInboxMessageDetailsHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetMessage(Guid id) =>
+        HandleOk(id.ToMailInboxMessageDetailsQuery(), static value => value.ToHttpResponse());
+
+    [HttpPost("{id:guid}/read")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> MarkRead(Guid id) =>
+        HandleNoContent(id.ToMarkMailInboxMessageReadCommand());
+}

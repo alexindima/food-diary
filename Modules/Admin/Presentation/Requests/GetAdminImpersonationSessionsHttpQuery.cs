@@ -1,0 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Presentation.Api.Policies;
+
+namespace FoodDiary.Modules.Admin.Presentation.Requests;
+
+public sealed record GetAdminImpersonationSessionsHttpQuery(
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int Limit = 20,
+    [MaxLength(PresentationQueryLimits.MaximumSearchLength)] string? Search = null, DateTimeOffset? FromUtc = null, DateTimeOffset? ToUtc = null, Guid? ActorId = null, Guid? TargetId = null);

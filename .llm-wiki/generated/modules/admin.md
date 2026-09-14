@@ -32,7 +32,6 @@ sources:
 - `Modules/Admin/Infrastructure/Integrations/MailInbox`
 - `Modules/Admin/PersistenceModel`
 - `Modules/Admin/Presentation`
-- `Modules/Admin/Presentation/Features/Admin`
 
 ## HTTP Surface
 
@@ -53,10 +52,10 @@ No literal attribute-routed controller was associated with this module.
 - Interfaces: 15
 - DTO/read-model/projection types: 12
 - Enums: 0
-- Exported repository-shaped contracts: 7
+- Exported repository-shaped contracts: 5
 - Contracts referencing domain entities: 0
 - `class AdminMailInboxErrors`
-- `interface IAdminBillingReadRepository`
+- `interface IAdminBillingQuery`
 - `interface IAdminBillingRepository`
 - `interface IAdminBugReportReader`
 - `interface IAdminDashboardMetricsReader`
@@ -67,7 +66,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IAdminImpersonationSessionWriteRepository`
 - `interface IAdminMailInboxReader`
 - `interface IAdminRetentionReader`
-- `interface IAdminUserRoleAuditReadRepository`
+- `interface IAdminUserRoleAuditQuery`
 - `interface IAdminUserRoleAuditRepository`
 - `interface IBugAcknowledgementReceipts`
 - `interface IBugAcknowledgementSource`

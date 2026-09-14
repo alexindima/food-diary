@@ -9,7 +9,6 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 | Category | Files |
 |---|---:|
 | Audit bridge | 1 |
-| Composed read | 1 |
 | Connection/lock | 1 |
 | Context registration | 29 |
 | Image reassignment | 1 |
@@ -17,15 +16,14 @@ All 29 runtime contexts use `FoodDiary.Modules.<Module>.Infrastructure.Persisten
 | Transaction coordination | 6 |
 | User purge | 14 |
 
-The presence of 29 owner contexts does not mean all runtime access has left the shared context. In particular, DashboardBodyReadService is still a cross-module read implementation inside a module, and image reassignment, outbox replay and audit retain reviewed shared-context behavior.
+The presence of 29 owner contexts does not mean all runtime access has left the shared context. Dashboard body reads now live in host ReadModel.Composition. Image reassignment, outbox replay and audit retain reviewed shared-context behavior.
 
 ## Next changes, in order
 
-1. Move DashboardBodyReadService behind its existing Dashboard port into ReadModel.Composition (or replace its data reads with suitable owner contracts). Preserve query bounds, ordering, trend aggregation and missing-data behavior.
-2. Move ImageAssetOwnershipService to an Images-owned set/context while preserving the cleanup transaction. Verify reassignment and rollback with real PostgreSQL tests.
-3. Review the three outbox replay streams together with the shared replay coordinator. Preserve row locks, tracked entry mutation, scope reset and all-or-nothing replay saves; switching the constructor alone is insufficient.
-4. Extract a narrow shared persistence coordination seam for context creation, transactions, reset and connection access. Central Infrastructure must not become a dependency of that seam.
-5. Revisit purge and collaboration-audit bridges after transaction coordination is explicit. Preserve deletion order, FK behavior and audit atomicity.
+1. Move ImageAssetOwnershipService to an Images-owned set/context while preserving the cleanup transaction. Verify reassignment and rollback with real PostgreSQL tests.
+2. Review the three outbox replay streams together with the shared replay coordinator. Preserve row locks, tracked entry mutation, scope reset and all-or-nothing replay saves; switching the constructor alone is insufficient.
+3. Extract a narrow shared persistence coordination seam for context creation, transactions, reset and connection access. Central Infrastructure must not become a dependency of that seam.
+4. Revisit purge and collaboration-audit bridges after transaction coordination is explicit. Preserve deletion order, FK behavior and audit atomicity.
 
 The shared FoodDiaryDbContext partials and mapping composition remain necessary for the unified migration model and central read/purge integrations. Their removal is a separate architectural change, not part of a namespace rename.
 
@@ -46,7 +44,6 @@ The shared FoodDiaryDbContext partials and mapping composition remain necessary 
 | [Modules/Cycles/Infrastructure/ModuleRegistration.cs](../../Modules/Cycles/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs](../../Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs](../../Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
-| [Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs](../../Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs) | Composed read | Reads BodyMetrics weight/waist and Hydration rows with AsNoTracking projections; candidate for ReadModel.Composition. |
 | [Modules/Dietologist/Infrastructure/ModuleRegistration.cs](../../Modules/Dietologist/Infrastructure/ModuleRegistration.cs) | Context registration | Shared connection/options, owner context creation and live transaction synchronization. |
 | [Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs](../../Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs) | User purge | Ordered bulk cleanup in the caller transaction; some participants also reassign retained content. |
 | [Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs](../../Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs) | Audit bridge | Inspects shared and Dietologist trackers, stages shared AuditEntry rows; preserve atomic save and event deduplication. |

@@ -17,7 +17,7 @@ Rules for `Modules/Admin/Application/`.
 ## Commands
 
 - Build: `dotnet build Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj`
-- Tests: `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --filter FullyQualifiedName~Admin`
+- Tests: `dotnet test Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 - Register application handlers via AddAdminApplication; hosts use Infrastructure AddAdminModule.

@@ -18,9 +18,7 @@ docs/ai/admin-ownership-inventory.md for current source evidence and test owners
 
 Do not acquire foreign write repositories or move authentication transport/provider logic. Keep SQL, authorization, impersonation expiry/audit, cancellation and HTTP contracts unchanged. No empty Contracts layer is needed.
 
-The role-audit read projection and its DI/focused tests belong to Admin
-Infrastructure. UserRoleAuditEvent, role membership and their mappings still
-belong to Users. See `docs/ai/admin-role-audit-persistence.md`.
+The role-audit read projection and its DI registration belong to FoodDiary.ReadModel.Composition. Its focused Admin tests stay under Modules/Admin/tests. UserRoleAuditEvent, role membership and their mappings belong to Users. See `docs/adr/0038-read-model-composition.md`.
 
 ## Error ownership
 
@@ -31,4 +29,6 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 Identity Presentation consumes only ExchangeAdminImpersonationCommand from Admin Contracts; the handler and protocol remain Admin-owned.
 
-Do not repeat an `Admin` grouping directory inside Application, Application.Abstractions, Contracts, Domain, Infrastructure or PersistenceModel. Presentation/Features/Admin is a deferred migration. Do not override RootNamespace: namespaces follow the .csproj filename and physical folders. AdminNamespaceTests checks all production and test projects, and IDE0130 enforces this during compilation.
+Do not repeat an `Admin` grouping directory inside Application, Application.Abstractions, Contracts, Domain, Infrastructure, PersistenceModel or Presentation. Do not override RootNamespace: namespaces follow the .csproj filename and physical folders. AdminNamespaceTests checks all production and test projects, and IDE0130 enforces this during compilation.
+
+Presentation uses sibling Controllers, Requests, Responses, Mappings and Extensions folders. Do not reintroduce a Features wrapper for the whole module.

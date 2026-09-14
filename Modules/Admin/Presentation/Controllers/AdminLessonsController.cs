@@ -1,0 +1,56 @@
+using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Modules.Admin.Presentation.Mappings;
+using FoodDiary.Modules.Admin.Presentation.Requests;
+using FoodDiary.Modules.Admin.Presentation.Responses;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Admin.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/admin/lessons")]
+[Authorize(Roles = PresentationRoleNames.Admin)]
+public sealed class AdminLessonsController(ISender mediator) : BaseApiController(mediator) {
+    [HttpGet]
+    [ProducesResponseType<List<AdminLessonHttpResponse>>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetAll() =>
+        HandleOk(AdminHttpQueryMappings.ToLessonsQuery(), static value =>
+            value.Select(static item => item.ToLessonHttpResponse()).ToList());
+
+    [HttpPost]
+    [EnableIdempotency]
+    [ProducesResponseType<AdminLessonHttpResponse>(StatusCodes.Status201Created)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> Create([FromBody] AdminLessonCreateHttpRequest request) =>
+        HandleCreated(request.ToCreateCommand(), static value => value.ToLessonHttpResponse());
+
+    [HttpPost("import")]
+    [EnableIdempotency(requireKey: true)]
+    [RequestSizeLimit(PresentationRequestLimits.AdminImportPayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.AdminImportPayloadBytes)]
+    [ProducesResponseType<AdminLessonsImportHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+    public Task<IActionResult> Import([FromBody] AdminLessonsImportHttpRequest request) =>
+        HandleOk(request.ToImportCommand(), static value => value.ToLessonsImportHttpResponse());
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType<AdminLessonHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> Update(Guid id, [FromBody] AdminLessonUpdateHttpRequest request) =>
+        HandleOk(request.ToUpdateCommand(id), static value => value.ToLessonHttpResponse());
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> Delete(Guid id) =>
+        HandleNoContent(id.ToDeleteCommand());
+}

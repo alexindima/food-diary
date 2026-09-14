@@ -1,0 +1,9 @@
+namespace FoodDiary.Modules.Admin.Presentation.Responses;
+
+public sealed record AdminDashboardSummaryHttpResponse(
+    int TotalUsers,
+    int ActiveUsers,
+    int PremiumUsers,
+    int DeletedUsers,
+    int PendingReportsCount,
+    IReadOnlyList<AdminUserHttpResponse> RecentUsers);

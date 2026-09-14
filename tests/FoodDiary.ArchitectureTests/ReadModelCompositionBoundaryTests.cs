@@ -31,6 +31,15 @@ public sealed class ReadModelCompositionBoundaryTests {
     }
 
     [Fact]
+    public void DashboardInfrastructure_HasNoPersistenceDependency() {
+        const string project = "Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj";
+        Assert.DoesNotContain("FoodDiary.Infrastructure", ProjectReferenceReader.ReadProjectReferences(project), StringComparer.Ordinal);
+        Assert.DoesNotContain("Microsoft.EntityFrameworkCore", ProjectReferenceReader.ReadPackageReferences(project), StringComparer.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Dashboard", "Infrastructure", "Persistence", "Dashboard", "DashboardBodyReadService.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition", "Dashboard", "DashboardBodyReadService.cs")));
+    }
+
+    [Fact]
     public void Composition_HasOnlyReadCapabilities() {
         string root = ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition");
         IReadOnlyDictionary<string, string[]> capabilities = PersistenceCapabilityScanner.Scan(

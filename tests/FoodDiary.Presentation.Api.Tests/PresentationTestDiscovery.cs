@@ -21,6 +21,12 @@ internal static class PresentationTestDiscovery {
         ];
     }
 
+    internal static string GetFeatureSourceRoot(string presentationRoot) =>
+        File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Admin.Presentation.csproj"))
+            ? presentationRoot : Path.Combine(presentationRoot, "Features");
+
+    internal static string AdminPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Admin", "Presentation");
+
     private static Assembly[] DiscoverAssemblies() => [
         typeof(BaseApiController).Assembly,
         .. Directory.GetFiles(AppContext.BaseDirectory, "FoodDiary.Modules.*.Presentation.dll")
