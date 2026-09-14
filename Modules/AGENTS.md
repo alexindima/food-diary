@@ -48,3 +48,5 @@ Application and Presentation projects never reference a foreign whole Applicatio
 Reusable response mappers belong to owner `Presentation.Mappings` projects. They reference only narrow application/scalar contracts, DTO contracts and pure mappers. Keep request-to-command mapping in Presentation; do not expose controllers or handlers through reusable layers. See docs/adr/0039-presentation-contracts-and-mappings.md.
 
 Module runtime DbContext types must use `FoodDiary.Modules.<Module>.Infrastructure.Persistence`, regardless of legacy RootNamespace values retained for other types. RuntimeContextNamespaceTests enforces this across module Infrastructure sources. Keep provider CLR names and migration models separate from this naming rule.
+
+Owner context registrations consume IModuleContextFactory from FoodDiary.Persistence.Abstractions. Preserve provider options, scoped identity, custom interceptors and save order. Concrete shared context access in transaction/provider callbacks remains separately reviewed; do not restore concrete context resolution solely to call CreateModuleContext.

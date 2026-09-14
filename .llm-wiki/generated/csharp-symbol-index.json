@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4048,
-    "symbols": 3989,
+    "sourceFiles": 4049,
+    "symbols": 3990,
     "interfaceImplementationLinks": 267,
     "dependencyInjectionRegistrations": 150,
     "kinds": {
       "class": 2097,
       "enum": 64,
-      "interface": 470,
+      "interface": 471,
       "record": 1237,
       "record struct": 121
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1640,
+      "Other": 1641,
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -4850,6 +4850,13 @@
       "line": 4
     },
     {
+      "name": "IFoodRecognitionJobReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobReader.cs",
+      "line": 4
+    },
+    {
       "name": "IFoodRecognitionJobStore",
       "kind": "interface",
       "role": "Other",
@@ -5218,7 +5225,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AiDbContext",
@@ -5232,7 +5239,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AiPromptTemplateRepository",
@@ -6037,7 +6044,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "BillingDbContext",
@@ -13170,7 +13177,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "AchievementDefinitionStore",
@@ -14920,7 +14927,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "IdentityProviderRegistration",
@@ -15704,7 +15711,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ImageAssetContentService",
@@ -18259,7 +18266,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "MealAiItemConfiguration",
@@ -19309,7 +19316,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "WebPushOptions",
@@ -19680,7 +19687,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "OpenFoodFactsProviderRegistration",
@@ -20352,7 +20359,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "ProductLookupService",
@@ -20555,7 +20562,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "PostCommitRecentItemUsageRecorder",
@@ -21591,7 +21598,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "RecipeAccessService",
@@ -24083,7 +24090,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "DashboardLayoutHttpModel",
@@ -25042,7 +25049,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "EfWeeklyGoalTransactionRunner",
@@ -30436,28 +30443,28 @@
       "implementation": "ImageAssetOwnershipService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IImageAssetContentService",
       "implementation": "ImageAssetContentService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IUserProfileImageService",
       "implementation": "UserProfileImageService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IImageAssetCleanupBatch",
       "implementation": "ImageAssetCleanupBatch",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 24
+      "line": 25
     },
     {
       "service": "ILessonReadService",

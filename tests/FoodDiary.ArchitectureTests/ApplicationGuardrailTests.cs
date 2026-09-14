@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -2356,12 +2356,17 @@ public sealed class ApplicationGuardrailTests {
     public void AiQueries_UseReadPortsWithoutUsageWriters() {
         string root = GetRepositoryRoot();
         string aiQueriesRoot = Path.Combine(root, "Modules", "Ai", "Application", "Queries");
-        string[] aiQueryFiles = [.. SourceScanner.SourceFiles(aiQueriesRoot)];
+        string[] aiQueryFiles = [
+            .. SourceScanner.SourceFiles(aiQueriesRoot),
+            Path.Combine(root, "Modules", "Ai", "Application", "Services", "FoodRecognitionResultReader.cs"),
+            Path.Combine(root, "Modules", "Ai", "Presentation", "Services", "FoodRecognitionNotifier.cs"),
+        ];
         Assert.NotEmpty(aiQueryFiles);
 
         string[] violations = [
             .. FindReferencesInFiles(root, aiQueryFiles, "IAiUsageRepository"),
             .. FindReferencesInFiles(root, aiQueryFiles, "IAiUsageWriteRepository"),
+            .. FindReferencesInFiles(root, aiQueryFiles, "IFoodRecognitionJobStore"),
         ];
 
         Assert.Empty(violations);

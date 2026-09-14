@@ -1,9 +1,9 @@
+using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.BodyMetrics;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +13,7 @@ public static class ModuleRegistration {
     public static IServiceCollection AddBodyMetricsModule(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, BodyMetricsUserDataPurgeParticipant>());
         services.AddBodyMetricsApplication();
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<BodyMetricsDbContext>(static options => new BodyMetricsDbContext(options)));
         services.AddScoped<IWeightEntryRepository>(static provider => new WeightEntryRepository(
             provider.GetRequiredService<BodyMetricsDbContext>().WeightEntries));

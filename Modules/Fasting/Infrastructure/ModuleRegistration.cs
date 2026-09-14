@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Modules.Fasting.Application;
@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.Fasting.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddFastingModule(this IServiceCollection services) {
         services.AddFastingApplication();
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<FastingDbContext>(static options => new FastingDbContext(options)));
         services.AddScoped<IFastingPlanRepository>(static provider => new FastingPlanRepository(
             provider.GetRequiredService<FastingDbContext>().FastingPlans));

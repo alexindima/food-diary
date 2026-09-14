@@ -30,6 +30,7 @@ public sealed class ProductUsageCompositionIntegrationTests(PostgresDatabaseFixt
         context.ChangeTracker.Clear();
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddMemoryCache();
         services.AddProductsPersistence();
         services.AddReadModelComposition();

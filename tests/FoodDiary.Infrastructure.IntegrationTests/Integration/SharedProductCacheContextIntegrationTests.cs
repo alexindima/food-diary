@@ -28,6 +28,7 @@ public sealed class SharedProductCacheContextIntegrationTests(PostgresDatabaseFi
         await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
         var services = new ServiceCollection();
         services.AddSingleton(central);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(central);
         services.AddSingleton(TimeProvider.System);
         services.AddOpenFoodFactsModule();
         await using ServiceProvider provider = services.BuildServiceProvider();

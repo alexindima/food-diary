@@ -1,3 +1,4 @@
+﻿using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,9 @@ internal sealed class AiPromptProvider(
         ["nutrition"] = "You are a nutrition assistant. Using the provided items with amounts, estimate calories and nutrients per item and totals. Item names are in English. Return only JSON.",
     };
 
-    public async Task<string> GetPromptAsync(string key, CancellationToken cancellationToken = default) {
-        string cacheKey = $"ai-prompt:{key}";
+    public async Task<string> GetPromptAsync(string key, string? language, CancellationToken cancellationToken = default) {
+        string locale = LanguageCode.FromPreferred(language).Value;
+        string cacheKey = $"ai-prompt:{key}:{locale}";
         if (cache.TryGetValue(cacheKey, out string? cached) && cached is not null) {
             return cached;
         }
@@ -28,8 +30,8 @@ internal sealed class AiPromptProvider(
             AiDbContext context = scope.ServiceProvider.GetRequiredService<AiDbContext>();
             AiPromptTemplate? template = await context.Set<AiPromptTemplate>()
                 .AsNoTracking()
-                .Where(t => t.Key == key && t.IsActive)
-                .OrderByDescending(t => t.Version)
+                .Where(t => t.Key == key && t.IsActive && (t.Locale == locale || t.Locale == "en"))
+                .OrderByDescending(t => t.Locale == locale)
                 .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
             promptText = template?.PromptText;

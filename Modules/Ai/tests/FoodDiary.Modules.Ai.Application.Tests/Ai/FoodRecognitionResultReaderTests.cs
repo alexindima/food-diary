@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Results;
@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 public sealed class FoodRecognitionResultReaderTests {
     [Fact]
     public async Task GetCompletedAsync_DoesNotExposeAnotherUsersResult() {
-        IFoodRecognitionJobStore jobs = Substitute.For<IFoodRecognitionJobStore>();
+        IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob();
         var caller = Guid.NewGuid();
         jobs.GetAsync(caller, job.Id, Arg.Any<CancellationToken>()).Returns(job);
@@ -23,7 +23,7 @@ public sealed class FoodRecognitionResultReaderTests {
     [InlineData("Failed", null, "Ai.RecognitionNotUsable")]
     [InlineData("Succeeded", "partial-nutrition", "Ai.RecognitionNotUsable")]
     public async Task GetCompletedAsync_RejectsIncompleteResults(string status, string? nutritionError, string expectedError) {
-        IFoodRecognitionJobStore jobs = Substitute.For<IFoodRecognitionJobStore>();
+        IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob() with { Status = status, NutritionErrorCode = nutritionError };
         jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
         Result<FoodRecognitionJobModel> result = await new FoodRecognitionResultReader(jobs).GetCompletedAsync(job.UserId, job.Id, CancellationToken.None);
@@ -32,7 +32,7 @@ public sealed class FoodRecognitionResultReaderTests {
 
     [Fact]
     public async Task GetCompletedAsync_RejectsEmptyFoodResult() {
-        IFoodRecognitionJobStore jobs = Substitute.For<IFoodRecognitionJobStore>();
+        IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob() with { Vision = new FoodVisionModel([]) };
         jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
         Assert.True((await new FoodRecognitionResultReader(jobs).GetCompletedAsync(job.UserId, job.Id, CancellationToken.None)).IsFailure);
@@ -40,7 +40,7 @@ public sealed class FoodRecognitionResultReaderTests {
 
     [Fact]
     public async Task GetCompletedAsync_ReturnsOwnedCompleteResult() {
-        IFoodRecognitionJobStore jobs = Substitute.For<IFoodRecognitionJobStore>();
+        IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob();
         jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
         Result<FoodRecognitionJobModel> result = await new FoodRecognitionResultReader(jobs).GetCompletedAsync(job.UserId, job.Id, CancellationToken.None);
@@ -50,7 +50,7 @@ public sealed class FoodRecognitionResultReaderTests {
 
     [Fact]
     public async Task GetCompletedAsync_RejectsMissingNutritionForRecognizedItem() {
-        IFoodRecognitionJobStore jobs = Substitute.For<IFoodRecognitionJobStore>();
+        IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob() with {
             Vision = new FoodVisionModel([new FoodVisionItemModel("Apple", NameLocal: null, 100, "g", 0.9m),
                 new FoodVisionItemModel("Pear", NameLocal: null, 100, "g", 0.9m)]),

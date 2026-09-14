@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -17,7 +18,7 @@ namespace FoodDiary.Infrastructure;
 
 public static class IdentityModuleRegistration {
     public static IServiceCollection AddIdentityPersistence(this IServiceCollection services) {
-        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<IdentityDbContext>(options => new IdentityDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, IdentityUserDataPurgeParticipant>());
         services.AddDataProtection();

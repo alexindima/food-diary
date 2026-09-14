@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -17,8 +18,8 @@ public static class UsersModuleRegistration {
 
     public static IServiceCollection AddUsersPersistence(this IServiceCollection services) {
         services.AddScoped(provider => {
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
-            return shared.CreateModuleContext<UsersDbContext>(options => new UsersDbContext(
+            IModuleContextFactory factory = provider.GetRequiredService<IModuleContextFactory>();
+            return factory.CreateModuleContext<UsersDbContext>(options => new UsersDbContext(
                 new DbContextOptionsBuilder<UsersDbContext>(options).AddInterceptors(new TelegramIdentityConflictInterceptor()).Options), saveOrder: -100);
         });
         services.TryAddEnumerable(ServiceDescriptor.Scoped<ISaveChangesInterceptor, TelegramIdentityConflictInterceptor>());

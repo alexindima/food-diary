@@ -18,6 +18,7 @@ public sealed class OutboxReplayStreamTests(PostgresDatabaseFixture databaseFixt
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddImagesInfrastructure();
         services.AddImagesInfrastructure();
         await using ServiceProvider provider = services.BuildServiceProvider();

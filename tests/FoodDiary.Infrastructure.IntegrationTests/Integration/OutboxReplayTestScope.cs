@@ -25,6 +25,7 @@ internal sealed class OutboxReplayTestScope : IDisposable {
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddSingleton(timeProvider);
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.AddScoped<IOutboxReplayStream, EmailOutboxReplayStream>();

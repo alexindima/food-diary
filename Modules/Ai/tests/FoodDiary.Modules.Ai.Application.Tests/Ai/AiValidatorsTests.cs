@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Application.Services;
+﻿using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Images.Services;
@@ -427,7 +427,8 @@ public class AiValidatorsTests {
             .Returns(Result.Success(new UserAiProfileModel(user.Id, "ru", 1000, 2000, consent)));
         IOpenAiFoodClient client = CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls);
         IAiQuotaRepository quota = Substitute.For<IAiQuotaRepository>();
-        OpenAiFoodService service = CreateOrchestration(client, profiles, quota);
+        IAiPromptProvider prompts = Substitute.For<IAiPromptProvider>();
+        OpenAiFoodService service = CreateOrchestration(client, profiles, quota, prompts);
         IImageAssetContentService images = Substitute.For<IImageAssetContentService>();
         images.GetDataUrlAsync(Arg.Any<ImageAssetId>(), user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(TestImageDataUrl));
         using var cancellation = new CancellationTokenSource();
@@ -440,6 +441,7 @@ public class AiValidatorsTests {
                 new CalculateFoodNutritionCommand(user.Id.Value, [new FoodVisionItemModel("apple", "apple", 100, "g", 1m)], RequestId), cancellation.Token),
         };
         await profiles.Received(1).GetAiProfileAsync(user.Id, Arg.Is<CancellationToken>(token => token.CanBeCanceled));
+        await prompts.Received(consent ? 1 : 0).GetPromptAsync(operation, "ru", Arg.Is<CancellationToken>(token => token.CanBeCanceled));
         await quota.Received(consent ? 1 : 0).ReserveAsync(
             Arg.Is<AiQuotaReservationRequest>(request => request.UserId == user.Id && request.InputTokenLimit == 1000 && request.OutputTokenLimit == 2000),
             Arg.Any<CancellationToken>());
@@ -520,11 +522,11 @@ public class AiValidatorsTests {
 
     private static IOpenAiFoodClient CreateOpenAiFoodService() => CreateOpenAiFoodService(out _);
 
-    private static OpenAiFoodService CreateOrchestration(IOpenAiFoodClient client, IUserAiProfileReadService users, IAiQuotaRepository? quota = null) {
+    private static OpenAiFoodService CreateOrchestration(IOpenAiFoodClient client, IUserAiProfileReadService users, IAiQuotaRepository? quota = null, IAiPromptProvider? prompts = null) {
         quota ??= Substitute.For<IAiQuotaRepository>();
         quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(AiQuotaReservationStatus.Acquired);
-        IAiPromptProvider prompts = Substitute.For<IAiPromptProvider>();
-        prompts.GetPromptAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns("prompt");
+        prompts ??= Substitute.For<IAiPromptProvider>();
+        prompts.GetPromptAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns("prompt");
         return new OpenAiFoodService(client, quota, users, TimeProvider.System, prompts);
     }
 

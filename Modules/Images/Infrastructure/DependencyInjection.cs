@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Infrastructure.Options;
@@ -14,7 +15,7 @@ namespace FoodDiary.Modules.Images.Infrastructure;
 
 public static class DependencyInjection {
     public static IServiceCollection AddImagesInfrastructure(this IServiceCollection services) {
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<ImagesDbContext>(static options => new ImagesDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ImagesUserDataPurgeParticipant>());
         services.AddScoped<IImageAssetOwnershipService, ImageAssetOwnershipService>();

@@ -14,6 +14,7 @@
     <ProjectReference Include="../Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

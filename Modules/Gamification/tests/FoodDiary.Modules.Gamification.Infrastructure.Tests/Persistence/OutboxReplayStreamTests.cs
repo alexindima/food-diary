@@ -18,6 +18,7 @@ public sealed class OutboxReplayStreamTests {
         await using FoodDiaryDbContext context = new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString(), new Microsoft.EntityFrameworkCore.Storage.InMemoryDatabaseRoot()).Options);
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddGamificationModule();
         services.AddGamificationModule();
         await using ServiceProvider provider = services.BuildServiceProvider();

@@ -33,6 +33,7 @@ public sealed class SharedAdviceContextCompositionIntegrationTests(PostgresDatab
         central.ChangeTracker.Clear();
         var services = new ServiceCollection();
         services.AddSingleton(central);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(central);
         services.AddDailyAdvicesModule();
         await using ServiceProvider provider = services.BuildServiceProvider();
         DailyAdvicesDbContext owned = provider.GetRequiredService<DailyAdvicesDbContext>();

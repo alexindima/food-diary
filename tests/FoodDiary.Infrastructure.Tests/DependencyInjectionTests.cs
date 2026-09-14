@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Infrastructure;
+﻿using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition;
@@ -804,6 +804,7 @@ public sealed class DependencyInjectionTests {
     }
 
     public static TheoryData<string, string[]> SplitRepositoryRegistrationCases() => new() {
+        { "FoodDiary.Modules.Ai.Application.Abstractions.Common.IFoodRecognitionJobStore", ["FoodDiary.Modules.Ai.Application.Abstractions.Common.IFoodRecognitionJobReader"] },
         {
             "FoodDiary.Modules.ContentReports.Infrastructure.Persistence.ContentReportRepository",
             ["FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportWriteRepository"]

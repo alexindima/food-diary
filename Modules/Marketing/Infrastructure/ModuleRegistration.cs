@@ -1,6 +1,6 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Application.Marketing;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Marketing.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddMarketingModule(this IServiceCollection services) {
         services.AddMarketingApplication();
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<MarketingDbContext>(static options => new MarketingDbContext(options)));
         services.AddScoped(static provider => new MarketingAttributionEventRepository(
             provider.GetRequiredService<MarketingDbContext>().MarketingAttributionEvents));

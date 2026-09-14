@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts;
 using FoodDiary.Infrastructure.Persistence;
@@ -10,7 +11,7 @@ namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddOpenFoodFactsModule(this IServiceCollection services) {
         services.AddOpenFoodFactsApplication();
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<OpenFoodFactsDbContext>(static options => new OpenFoodFactsDbContext(options)));
         services.AddScoped<IOpenFoodFactsProductCacheRepository>(static provider => {
             FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();

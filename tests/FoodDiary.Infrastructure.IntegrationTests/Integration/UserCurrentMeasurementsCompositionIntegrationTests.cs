@@ -55,6 +55,7 @@ public sealed class UserCurrentMeasurementsCompositionIntegrationTests(PostgresD
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddUsersPersistence();
         services.AddReadModelComposition();
         return services.BuildServiceProvider();

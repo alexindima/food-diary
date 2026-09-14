@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Application.Abstractions.Billing.Common;
@@ -11,7 +12,7 @@ namespace FoodDiary.Modules.Billing.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddBillingModule(this IServiceCollection services) {
         services.AddBillingApplication();
-        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<BillingDbContext>(options => new BillingDbContext(options)));
         services.AddScoped<IBillingSubscriptionRepository>(static provider =>
             new BillingSubscriptionRepository(provider.GetRequiredService<BillingDbContext>().BillingSubscriptions,

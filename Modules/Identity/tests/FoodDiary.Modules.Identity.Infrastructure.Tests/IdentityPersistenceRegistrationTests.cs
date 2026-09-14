@@ -18,6 +18,7 @@ public sealed class IdentityPersistenceRegistrationTests {
     public void AddIdentityPersistence_ReadModelRepositorySharesScopedSessionRepository() {
         var services = new ServiceCollection();
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddIdentityPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
@@ -32,6 +33,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddSingleton(TimeProvider.System);
         services.AddMemoryCache();
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         Assert.Same(services, services.AddIdentityPersistence());
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions {
@@ -56,6 +58,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
         services.AddSingleton(TimeProvider.System);
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         Assert.Same(services, services.AddIdentityPersistence());
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
@@ -76,6 +79,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         var services = new ServiceCollection();
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddIdentityPersistence();
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
@@ -96,6 +100,7 @@ public sealed class IdentityPersistenceRegistrationTests {
         var services = new ServiceCollection();
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddMemoryCache();
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(databaseName));
         services.AddIdentityPersistence();
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });

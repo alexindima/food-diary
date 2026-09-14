@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Infrastructure.Options;
@@ -25,7 +26,7 @@ public static class ModuleRegistration {
     }
 
     public static IServiceCollection AddNotificationsPersistence(this IServiceCollection services) {
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<NotificationsDbContext>(static options => new NotificationsDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, WebPushOutboxReplayStream>());
         services.AddScoped<INotificationRepository>(static provider =>

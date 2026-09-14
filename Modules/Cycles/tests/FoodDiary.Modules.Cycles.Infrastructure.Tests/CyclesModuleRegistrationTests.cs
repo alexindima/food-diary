@@ -11,6 +11,7 @@ public sealed class CyclesModuleRegistrationTests {
     [Fact]
     public void AddCyclesModule_RegistersRepositoryAndAllNarrowAliases() {
         var services = new ServiceCollection();
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddCyclesModule();
 

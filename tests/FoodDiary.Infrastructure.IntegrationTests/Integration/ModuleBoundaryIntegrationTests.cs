@@ -68,6 +68,7 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         context.ChangeTracker.Clear();
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddMealsPersistence();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IMealDailyCalorieReadService reader = provider.GetRequiredService<IMealDailyCalorieReadService>();

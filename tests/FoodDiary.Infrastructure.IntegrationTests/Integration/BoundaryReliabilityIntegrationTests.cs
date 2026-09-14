@@ -142,6 +142,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton(TimeProvider.System);
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseNpgsql(seed.Database.GetConnectionString())
             .AddInterceptors(new RejectImageDeleteInterceptor(first.Id)));
         services.AddImagesInfrastructure();

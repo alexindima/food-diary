@@ -267,6 +267,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         context.ChangeTracker.Clear();
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddUsdaModule();
         await using ServiceProvider provider = services.BuildServiceProvider();
         UsdaDbContext owned = provider.GetRequiredService<UsdaDbContext>();

@@ -1,5 +1,5 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Wearables;
 using FoodDiary.Infrastructure.Authentication;
@@ -12,7 +12,7 @@ namespace FoodDiary.Modules.Wearables.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddWearablesModule(this IServiceCollection services) {
         services.AddWearablesApplication();
-        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<WearablesDbContext>(options => new WearablesDbContext(options)));
         services.AddScoped<IWearableConnectionRepository>(provider =>
             new WearableConnectionRepository(provider.GetRequiredService<WearablesDbContext>().WearableConnections));

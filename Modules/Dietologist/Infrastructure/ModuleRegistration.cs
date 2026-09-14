@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -16,7 +16,7 @@ public static class ModuleRegistration {
     public static IServiceCollection AddDietologistModule(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, DietologistUserDataPurgeParticipant>());
         services.AddDietologistApplication();
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<DietologistDbContext>(static options => new DietologistDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<ISaveChangesInterceptor, CollaborationAuditInterceptor>());
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();

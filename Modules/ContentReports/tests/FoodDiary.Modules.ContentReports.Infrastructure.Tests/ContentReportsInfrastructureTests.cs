@@ -12,6 +12,7 @@ public sealed class ContentReportsInfrastructureTests {
     [Fact]
     public void AddContentReportsModule_RegistersOwnedAdapters() {
         var services = new ServiceCollection();
+        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
 
         IServiceCollection returned = services.AddContentReportsModule();

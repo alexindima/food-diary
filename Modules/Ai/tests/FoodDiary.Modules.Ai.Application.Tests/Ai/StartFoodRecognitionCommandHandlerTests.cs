@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Users.Models;
+﻿using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
@@ -37,7 +37,7 @@ public sealed class StartFoodRecognitionCommandHandlerTests {
 
     [Fact]
     public async Task List_UsesTheRequestedOwnerAndCancellationToken() {
-        IFoodRecognitionJobStore store = Substitute.For<IFoodRecognitionJobStore>();
+        IFoodRecognitionJobReader store = Substitute.For<IFoodRecognitionJobReader>();
         var owner = Guid.NewGuid();
         using var cancellation = new CancellationTokenSource();
         IReadOnlyList<FoodRecognitionJobModel> jobs = [new(Guid.NewGuid(), owner, Guid.NewGuid(), "https://example.com/image", Description: null, "Queued", DateTime.UtcNow, DateTime.UtcNow)];

@@ -19,5 +19,6 @@
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
 </Project>

@@ -18,5 +18,6 @@
     <ProjectReference Include="../../Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
 </Project>

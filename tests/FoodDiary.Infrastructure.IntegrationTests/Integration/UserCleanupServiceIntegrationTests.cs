@@ -276,6 +276,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     private static ServiceProvider CreateServiceProvider(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, out UserCleanupService service, IUserDataPurgeParticipant? extra = null) {
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
         services.AddAdminPersistence();
         services.AddAiPersistence();
         services.AddBodyMetricsModule();

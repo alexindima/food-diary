@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Users.Models;
+﻿using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
@@ -517,7 +517,7 @@ public sealed class OpenAiFoodServiceTests {
     private static IAiPromptProvider CreateAiPromptProvider() {
         IAiPromptProvider provider = Substitute.For<IAiPromptProvider>();
         provider
-            .GetPromptAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .GetPromptAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>())
             .Returns(call => Task.FromResult(call.ArgAt<string>(0)));
 
         return provider;

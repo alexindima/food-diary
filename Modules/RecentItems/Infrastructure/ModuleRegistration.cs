@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Infrastructure.Persistence;
@@ -12,7 +13,7 @@ namespace FoodDiary.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddRecentItemsModule(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, RecentItemsUserDataPurgeParticipant>());
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<RecentItemsDbContext>(static options => new RecentItemsDbContext(options)));
         services.AddScoped<IRecentItemRepository>(static provider => {
             FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();

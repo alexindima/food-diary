@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -14,7 +15,7 @@ namespace FoodDiary.Modules.Gamification.Infrastructure;
 
 public static class ModuleRegistration {
     public static IServiceCollection AddGamificationModule(this IServiceCollection services) {
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<GamificationDbContext>(static options => new GamificationDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, AchievementEvaluationOutboxReplayStream>());
         services.AddGamificationApplication();

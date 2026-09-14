@@ -15,7 +15,7 @@
         "tracked:UserAchievement"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "df792b5d877bb2207c8851873fab6010b26712543b4ab3d97a1d4d5b305f02c6"
+      "technicalSourceSha256": "71519ea58e3408f8d04a76f219d1ec3b840fe5692872c14ac6ab838c5816febd"
     },
     "Modules/Images/Infrastructure/DependencyInjection.cs": {
       "module": "Images",
@@ -27,7 +27,7 @@
         "tracked:ImageObjectDeletionOutboxMessage"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "2ea3235544aff7973b1d2cd981fe383014cd312d83b60d30867c11ec73cab161"
+      "technicalSourceSha256": "727bb790c6e7d17c3adfaa433bb4511b8e44a28cfa07df841bbeeb025f4d74ec"
     },
     "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs": {
       "module": "ReadModelComposition",
@@ -56,7 +56,7 @@
         "context:Database"
       ],
       "reason": "Owner runtime context shares the central connection; a live transaction accessor preserves immediate SQL and post-commit execution.",
-      "technicalSourceSha256": "f365dbcdb21bc505615c6514556068b7955947ed4eaf189c7054c2a83e6b8dc0"
+      "technicalSourceSha256": "4831c39d343323ec42872c0d3ff1772f44687b0e06b3e1246f31ecf851bf7c66"
     },
     "Modules/ContentReports/Infrastructure/ModuleRegistration.cs": {
       "module": "ContentReports",
@@ -66,7 +66,7 @@
         "tracked:ContentReport"
       ],
       "reason": "Registers only owned reports with the shared connection and unit of work; host registers composed readers.",
-      "technicalSourceSha256": "827102c51134a4475010045ab2d257caaaa79d35a367a6b8536cad1f2b47e6d5"
+      "technicalSourceSha256": "c17ab2d3411275b6354cdf0adb654454fea92f5532b237c9b3796e539e24e1be"
     },
     "FoodDiary.ReadModel.Composition/ContentReports/ContentReportReadService.cs": {
       "module": "ReadModelComposition",
@@ -91,7 +91,7 @@
         "tracked:UsdaFoodPortion"
       ],
       "reason": "Registers only USDA-owned sets on the shared connection; repository remains no-tracking and read-only. Central import and migrations unchanged.",
-      "technicalSourceSha256": "339897196efd32923e51cba9cbcc09bca4c43284212ebe04d2a0dcec68bd88c9"
+      "technicalSourceSha256": "dbb0f3b580a216db087eedfad4f2d68e3c4578e7fc726b205ad592f0845a0491"
     },
     "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs": {
       "module": "OpenFoodFacts",
@@ -100,7 +100,7 @@
         "context:Database"
       ],
       "reason": "Registers owned cache context and read-only live accessor to the shared transaction so immediate SQL and reads preserve caller commit/rollback. No transaction ownership transfer.",
-      "technicalSourceSha256": "395e31079ab75450015f896d60bbaca2f9a674bb5556fe216ee4d594b9f4a173"
+      "technicalSourceSha256": "4b76466654a35bddc928df612efb5e88da6a601cf725830ea6f315a5fa5ea1c2"
     },
     "Modules/Marketing/Infrastructure/ModuleRegistration.cs": {
       "module": "Marketing",
@@ -110,7 +110,7 @@
         "tracked:MarketingAttributionEvent"
       ],
       "reason": "Registers only the owned attribution set with the shared connection and save coordinator; standalone batched retention semantics remain unchanged.",
-      "technicalSourceSha256": "e26ba6c02ccfe6b288b1133399276ddd9c2f0133be42621e61417deca8854e9c"
+      "technicalSourceSha256": "5a246ec8cb160f151299693401f011a7ac6c0826f0914ffe3c6cf5153e41f195"
     },
     "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs": {
       "module": "DailyAdvices",
@@ -120,7 +120,7 @@
         "tracked:DailyAdvice"
       ],
       "reason": "Registers the owned advice set on the existing shared connection; repository remains read-only and no-tracking.",
-      "technicalSourceSha256": "0ece19efce234166da025def8b3769c9272537629cc494b5e7f3a7ea74fb1a25"
+      "technicalSourceSha256": "7654a13830e6725ca18a866da6094678aa85e5a01ca047a5a7728169d971d6b6"
     },
     "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs": {
       "module": "ReadModelComposition",
@@ -142,7 +142,7 @@
         "tracked:ShoppingList"
       ],
       "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "6cdd6006cfb536ca21fe989a19570bd8785dbfb038e0163c633e2eca413c9702"
+      "technicalSourceSha256": "717277dd7ef02d3182ca9ad4f73a43c099f936e5bfacbf41c9b865e62c23e041"
     },
     "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs": {
       "module": "RecipeCommunity",
@@ -154,7 +154,7 @@
         "tracked:RecipeLike"
       ],
       "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "f1a4e2da603b22883aab60e217c2cec692c02c8b4884443afa3ca9270bc62cb3"
+      "technicalSourceSha256": "477e842732f3154d6d0fd515842d6134d256b7edc78ea9bf68a46a2427954b0c"
     },
     "Modules/Fasting/Infrastructure/ModuleRegistration.cs": {
       "module": "Fasting",
@@ -172,7 +172,7 @@
         "tracked:FastingTelemetryEvent"
       ],
       "reason": "Owner-only runtime sets created through the shared transaction coordinator; central migrations remain. ADR 0040.",
-      "technicalSourceSha256": "e9c2805c7cd79fae0bf2b1e7d68d531b092cd6aa2101917a0b87d901bcbb3bb1"
+      "technicalSourceSha256": "1b06813499544dc1aac9d5465ba8aead078d6ae886bf8ca35514098ee6a40670"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/IdentityUserDataPurgeParticipant.cs": {
       "module": "Identity",
@@ -253,7 +253,7 @@
         "tracked:AdminImpersonationSession"
       ],
       "reason": "Admin composition supplies only the owned session set to its writer; composed reads stay behind the existing query port.",
-      "technicalSourceSha256": "79db5cc06a36c8f3255afc0b4a6fdee287572f7074a187e009fbea105f5dd710"
+      "technicalSourceSha256": "d198dc08abe1bc740c6cde27b0f7975a1de8591f881e5a9e8ac10dd9fcf9158a"
     },
     "Modules/Admin/Infrastructure/Persistence/AdminImpersonationSessionRepository.cs": {
       "module": "Admin",
@@ -354,7 +354,7 @@
         "tracked:BillingWebhookEvent"
       ],
       "reason": "Creates Billing owner context and supplies only owner sets plus a live shared transaction synchronization callback to repositories.",
-      "technicalSourceSha256": "1aefeea95589ffefb19841371bb3bc191f7eec1313b8a7b79a35856ddbe42ab1"
+      "technicalSourceSha256": "eabc6f923490ffe33e3d9a3d47eba03749d2208249a809276e6f0c89bd6fe633"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
@@ -424,7 +424,7 @@
         "tracked:WeightEntry"
       ],
       "reason": "BodyMetrics registration supplies only owned sets from its runtime context. The shared factory preserves connection and coordinated UoW saves; central migration/read/purge bridges remain. See ADR 0040.",
-      "technicalSourceSha256": "a1b8851a857408f9520a0ed17817603a1499fc6290a15700c732069031610d68"
+      "technicalSourceSha256": "5543a0aa57c2edeb3c01be05048810de4fdce660da1a7accdfde1b3549287a28"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs": {
       "module": "BodyMetrics",
@@ -473,7 +473,7 @@
         "tracked:CycleProfile"
       ],
       "reason": "Cycles DI supplies its aggregate root set from its eight-entity owned runtime model, using shared connection and UoW coordination. Central migrations/read/purge remain. ADR 0040.",
-      "technicalSourceSha256": "5c180f90f3f9b63ed2fb0adb6b6eae7310c7c2eba457f83f978942700613bf2b"
+      "technicalSourceSha256": "022d48bd4102143c6b4fce303564210dd12b344ee0fe658cbac9ce07c42f5a31"
     },
     "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs": {
       "module": "Cycles",
@@ -608,7 +608,7 @@
         "tracked:ExerciseEntry"
       ],
       "reason": "Exercises registration supplies the owned runtime DbSet through the shared connection factory. IUnitOfWork owns atomic saves; tracked updates and central migration/read/purge bridges remain. ADR 0040.",
-      "technicalSourceSha256": "f638534262844e29d29d0c82fbeb33ae1ce39b8ad4cf5b6770333022ca42a6d7"
+      "technicalSourceSha256": "546d7c15b77272fdd1f048c7f1f252e5b30d34b26c0c9bcaf990dabfe55677b8"
     },
     "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs": {
       "module": "Exercises",
@@ -792,7 +792,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "a97bf941ac2ab93ba832e4ff290a7dd4010b31fdc613f97978685e96390e5521"
+      "technicalSourceSha256": "ce05d3772d46ec1fb5f047a42956ffaa657e9d51e43fb8d8ad39d28eacf13f36"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -977,7 +977,7 @@
         "tracked:WebPushSubscription"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "076ae4e7f50056e36885f381c391e71853777f49dcd2fb022086b6ac0cd7d742"
+      "technicalSourceSha256": "ce0e463beb287cffb10ba26dc6b2d0dcc3ae44636da1535cf8e8ab1d354f0665"
     },
     "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
       "module": "Notifications",
@@ -1311,7 +1311,7 @@
         "write:FoodRecognitionJob"
       ],
       "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. No foreign aggregate writes.",
-      "technicalSourceSha256": "614195b3fd393eed7cfca449a22c17f12b8bd107e98488e64766710ce12b3fb9"
+      "technicalSourceSha256": "50505e780491356197c5e2e83ddf7b9a3f78941423c375713876bd10fee141f0"
     },
     "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
       "module": "ReadModelComposition",
@@ -1431,7 +1431,7 @@
         "tracked:UserLessonProgress"
       ],
       "reason": "Registers two owned Lessons sets on the shared connection and unit-of-work coordinator; no foreign entity access.",
-      "technicalSourceSha256": "5ed54a77b3cbe0cd142d51225248efe1460407f85677233909c50eb37927a42d"
+      "technicalSourceSha256": "6fe7ca5e2791bf3d841ab914c8b09bee0e9f76d26541db132f4a683fea2a9b0c"
     },
     "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs": {
       "module": "WeeklyGoals",
@@ -1440,7 +1440,7 @@
         "context:Database"
       ],
       "reason": "Creates owner context and supplies a live shared transaction accessor; advisory lock and commit remain in the shared transaction runner.",
-      "technicalSourceSha256": "8e1907af9d430acdbc1023c3b0d292ccb64241989f02ecac7993707e07d5e3a6"
+      "technicalSourceSha256": "fc18ccb375686ab1595e5868d8bc0b6a79bccc247822bc7aff4f3faa9ca8c770"
     },
     "Modules/Wearables/Infrastructure/ModuleRegistration.cs": {
       "module": "Wearables",
@@ -1452,7 +1452,7 @@
         "tracked:WearableSyncEntry"
       ],
       "reason": "Creates owner runtime context and passes only its two entity sets to repositories.",
-      "technicalSourceSha256": "11effbc925789d486f698c9891668173494c2d26cc59d859425460d30e77f87e"
+      "technicalSourceSha256": "6e920619fec951677666bb756f0861b31b5ad4805881848c87ac53512425ef93"
     },
     "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs": {
       "module": "ReadModelComposition",
@@ -1482,7 +1482,7 @@
         "tracked:FavoriteRecipe"
       ],
       "reason": "Creates owner runtime context and passes only owner sets plus composition read ports.",
-      "technicalSourceSha256": "54abf19ce53a44a9fc1e59af6b8ca7c95946d0bcdeb0e7653e4189e5dffd69e3"
+      "technicalSourceSha256": "b36ffe72cf86b5b1d7588fc42998f183f9d87ab5e1dbfd12f8c0ce937cab480e"
     },
     "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs": {
       "module": "ReadModelComposition",
@@ -1533,7 +1533,7 @@
         "tracked:RecommendationTemplate"
       ],
       "reason": "Creates the owner runtime context and supplies only Dietologist sets to repositories.",
-      "technicalSourceSha256": "4fbb9eda6f4c2b3ac518fda05d65e6fadec925c1bb2952366815162ccf306942"
+      "technicalSourceSha256": "566aef1d90730738b886b86eff2aba21c336e36a5a25c8b547f57a4257cda97b"
     },
     "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs": {
       "module": "ReadModelComposition",
@@ -1552,7 +1552,7 @@
         "tracked:Meal"
       ],
       "reason": "Compose scoped owner context and narrow meal repositories; rejoin the live shared transaction before queries, including after intermediate recognition flush.",
-      "technicalSourceSha256": "fa4e1a39874b2a6005dc39ae0bf9be391322e8ea791a0d582d1173524eb52470"
+      "technicalSourceSha256": "bb1c0610f26b57776e9357cf9e974078c29674c1305c695585377b21c3b4d891"
     },
     "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
       "module": "ReadModelComposition",
@@ -1581,7 +1581,7 @@
         "tracked:Product"
       ],
       "reason": "Scoped owner context, repository and snapshot read registration. Rejoin the live shared transaction before owner queries, including after intermediate unit-of-work saves.",
-      "technicalSourceSha256": "9365d39ff41ad42e845ce297b48226253d6b30d216990d52820d0c85871921b6"
+      "technicalSourceSha256": "64757017a7984e6a426814e2f04cd2ed8cf7c99d5504d7d0e92f14eb5b2cdc26"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1598,7 +1598,7 @@
         "context:Database"
       ],
       "reason": "Owner runtime context registration and live shared transaction synchronization, including after intermediate UOW saves.",
-      "technicalSourceSha256": "ae56c6d8665f1be25dbc9e6954d13461611825be41563e505afad08d6a0b3f16"
+      "technicalSourceSha256": "c786e1b3cb42f9e85581c7978fa3bb91d1830125cccd7316eee306f8248717dc"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",
@@ -1627,7 +1627,7 @@
         "tracked:AiUsage"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "a6962ca9298165e039a3e8401c8a8ad50b3287158b0b7f82e56425da9822a767"
+      "technicalSourceSha256": "c7ff37492063d12865a0f86f5a25b9ad4f64b9493c07102fd7badbc2149ed663"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",
@@ -1658,7 +1658,7 @@
         "tracked:UserRoleAuditEvent"
       ],
       "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
-      "technicalSourceSha256": "7889ae072e77660f0564cbdfdba2344aa150af842362e526d1cef02b68204fba"
+      "technicalSourceSha256": "65e66705fba0abcd0e4b190c76629c877227ad1f7fd27357b2eeb69d1bf8bfd8"
     }
   }
 }

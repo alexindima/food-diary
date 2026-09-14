@@ -1,6 +1,6 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.RecipeCommunity;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
@@ -13,7 +13,7 @@ namespace FoodDiary.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddRecipeCommunityModule(this IServiceCollection services) {
         services.AddRecipeCommunityApplication();
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<RecipeCommunityDbContext>(static options => new RecipeCommunityDbContext(options)));
         services.AddScoped<IRecipeCommentRepository>(static provider => new RecipeCommentRepository(
             provider.GetRequiredService<RecipeCommunityDbContext>().RecipeComments, provider.GetRequiredService<IUserCommentAuthorReadService>()));

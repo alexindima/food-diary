@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -19,7 +20,7 @@ public static class RecipesModuleRegistration {
         services.AddRecipesApplication().AddRecipesPersistence();
 
     public static IServiceCollection AddRecipesPersistence(this IServiceCollection services) {
-        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<RecipesDbContext>(options => new RecipesDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, RecipesUserDataPurgeParticipant>());
         services.AddScoped<IRecipeRepository>(provider => new RecipeRepository(

@@ -1,6 +1,6 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Admin.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Admin.Application;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
@@ -15,7 +15,7 @@ public static class AdminModuleRegistration {
 
     public static IServiceCollection AddAdminPersistence(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AdminUserDataPurgeParticipant>());
-        services.AddScoped(static provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<AdminDbContext>(static options => new AdminDbContext(options)));
         services.AddScoped<IAdminImpersonationSessionWriteRepository>(static provider => new AdminImpersonationSessionRepository(
             provider.GetRequiredService<AdminDbContext>().AdminImpersonationSessions));

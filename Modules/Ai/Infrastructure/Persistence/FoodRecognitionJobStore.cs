@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+﻿using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.PersistenceModel;
 using System.Text.Json;
 using System.Runtime.CompilerServices;
@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 namespace FoodDiary.Modules.Ai.Infrastructure.Persistence;
 
 public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> options, TimeProvider timeProvider)
-    : IFoodRecognitionJobStore {
+    : IFoodRecognitionJobStore, IFoodRecognitionJobReader {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public Task<Result<FoodRecognitionJobModel>> CreateAsync(FoodRecognitionJobModel job, CancellationToken cancellationToken) =>

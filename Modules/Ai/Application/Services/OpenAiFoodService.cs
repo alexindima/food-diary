@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+﻿using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
@@ -37,7 +37,7 @@ public sealed class OpenAiFoodService(
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
 
-            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetAnalyzeFoodImageTokenBudgetAsync(
                 imageUrl,
                 contextResult.Value.Language,
@@ -84,7 +84,7 @@ public sealed class OpenAiFoodService(
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
 
-            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetParseFoodTextTokenBudgetAsync(
                 text,
                 contextResult.Value.Language,
@@ -129,7 +129,7 @@ public sealed class OpenAiFoodService(
                 return Result.Failure<FoodNutritionModel>(contextResult.Error);
             }
 
-            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetCalculateNutritionTokenBudgetAsync(
                 items,
                 promptTemplate,

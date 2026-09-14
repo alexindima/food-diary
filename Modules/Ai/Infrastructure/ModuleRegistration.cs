@@ -1,3 +1,4 @@
+﻿using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -12,7 +13,7 @@ namespace FoodDiary.Modules.Ai.Infrastructure;
 public static class ModuleRegistration {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static IServiceCollection AddAiPersistence(this IServiceCollection services) {
-        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<AiDbContext>(options => new AiDbContext(options)));
         services.AddScoped(provider => new DbContextOptions<AiDbContext>(provider.GetRequiredService<DbContextOptions<FoodDiaryDbContext>>()
             .Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
@@ -21,7 +22,9 @@ public static class ModuleRegistration {
         services.AddScoped<IAiUsageWriteRepository>(provider => new AiUsageRepository(
             provider.GetRequiredService<AiDbContext>().AiUsages, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();
-        services.AddScoped<IFoodRecognitionJobStore, FoodRecognitionJobStore>();
+        services.AddScoped<FoodRecognitionJobStore>();
+        services.AddScoped<IFoodRecognitionJobStore>(provider => provider.GetRequiredService<FoodRecognitionJobStore>());
+        services.AddScoped<IFoodRecognitionJobReader>(provider => provider.GetRequiredService<FoodRecognitionJobStore>());
         services.AddScoped<AiPromptTemplateRepository>(provider => new AiPromptTemplateRepository(
             provider.GetRequiredService<AiDbContext>().AiPromptTemplates, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IAiPromptTemplateReadModelRepository>(static provider => provider.GetRequiredService<AiPromptTemplateRepository>());

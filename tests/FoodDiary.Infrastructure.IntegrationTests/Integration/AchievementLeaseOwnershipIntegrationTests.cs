@@ -28,6 +28,7 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton(worker);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(worker);
         services.AddSingleton(TimeProvider.System);
         services.AddGamificationModule();
         services.AddSingleton<IAchievementReconciliationHandler>(new ReplaceClaimHandler(seed, updateRevision, failDispatch));
@@ -61,6 +62,7 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton(worker);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(worker);
         services.AddSingleton(TimeProvider.System);
         services.AddGamificationModule();
         services.AddSingleton<IAchievementReconciliationHandler>(new RequestNewRevisionHandler(seed, failDispatch));
@@ -89,6 +91,7 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddSingleton(context);
+            services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
             services.AddSingleton(TimeProvider.System);
             services.AddGamificationModule();
             await using ServiceProvider provider = services.BuildServiceProvider();

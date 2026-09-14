@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
@@ -14,7 +14,7 @@ namespace FoodDiary.Modules.Favorites.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddFavoritesModule(this IServiceCollection services) {
         services.AddFavoritesApplication();
-        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<FavoritesDbContext>(options => new FavoritesDbContext(options)));
         services.AddScoped<IFavoriteMealRepository>(provider => new FavoriteMealRepository(
             provider.GetRequiredService<FavoritesDbContext>().FavoriteMeals, provider.GetRequiredService<IFavoriteMealQuery>()));

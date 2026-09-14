@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Products.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -18,7 +19,7 @@ public static class ProductsModuleRegistration {
         services.AddProductsApplication().AddProductsPersistence();
 
     public static IServiceCollection AddProductsPersistence(this IServiceCollection services) {
-        services.AddScoped(provider => provider.GetRequiredService<FoodDiaryDbContext>()
+        services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<ProductsDbContext>(options => new ProductsDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ProductsUserDataPurgeParticipant>());
         services.AddScoped(provider => new ProductRepository(provider.GetRequiredService<ProductsDbContext>(),

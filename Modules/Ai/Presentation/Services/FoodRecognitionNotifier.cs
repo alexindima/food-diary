@@ -1,4 +1,4 @@
-using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+﻿using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Presentation.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +19,7 @@ public sealed class FoodRecognitionNotifier(
             try {
                 DateTime next = timeProvider.GetUtcNow().UtcDateTime;
                 using IServiceScope scope = scopes.CreateScope();
-                IReadOnlyList<FoodRecognitionJobUpdate> updates = await scope.ServiceProvider.GetRequiredService<IFoodRecognitionJobStore>()
+                IReadOnlyList<FoodRecognitionJobUpdate> updates = await scope.ServiceProvider.GetRequiredService<IFoodRecognitionJobReader>()
                     .GetUpdatesAsync(since, stoppingToken).ConfigureAwait(false);
                 foreach (FoodRecognitionJobUpdate update in updates) {
                     // Send only an invalidation hint. The owner-scoped HTTP endpoint is authoritative.
