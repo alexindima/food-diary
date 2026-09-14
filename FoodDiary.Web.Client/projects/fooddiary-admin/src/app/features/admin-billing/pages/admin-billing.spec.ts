@@ -12,6 +12,8 @@ import { AdminBillingComponent } from './admin-billing';
 const PAGE_SIZE = 20;
 const TOTAL_PAGES = 2;
 const TOTAL_ITEMS = 21;
+const THREE_DECIMAL_AMOUNT = 7.991;
+const TWO_DECIMAL_AMOUNT = 7.99;
 
 type BillingApiMock = {
     getRevenueSummary: ReturnType<typeof vi.fn>;
@@ -124,6 +126,31 @@ const subscriptionsPage = {
 };
 
 describe('AdminBillingComponent loading', () => {
+    it.each([
+        [THREE_DECIMAL_AMOUNT, '7.991 BHD'],
+        [TWO_DECIMAL_AMOUNT, '7.99 BHD'],
+        [0, '0.00 BHD'],
+    ])('should preserve payment precision for %s', async (amount, expected) => {
+        const { billing, fixture } = await setupBillingAsync();
+        await fixture.whenStable();
+        billing.payments.set([
+            {
+                id: 'payment-precision',
+                userId: 'user-1',
+                userEmail: null,
+                provider: 'Stripe',
+                externalPaymentId: 'in_paid',
+                status: 'completed',
+                kind: 'transaction',
+                createdOnUtc: '2026-04-28T00:00:00Z',
+                amount,
+                currency: 'BHD',
+            },
+        ]);
+
+        expect(billing.paymentItems()[0]?.amountText).toBe(expected);
+    });
+
     it('should load subscriptions on init', async () => {
         const { billingApi, billing, fixture } = await setupBillingAsync();
         await fixture.whenStable();

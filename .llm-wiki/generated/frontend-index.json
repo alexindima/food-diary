@@ -2000,7 +2000,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/lib/admin-billing.facade.ts",
-      "line": 31
+      "line": 32
     },
     {
       "name": "AdminBillingFiltersComponent",

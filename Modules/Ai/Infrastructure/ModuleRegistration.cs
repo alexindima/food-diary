@@ -2,7 +2,6 @@ using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +13,8 @@ public static class ModuleRegistration {
     public static IServiceCollection AddAiPersistence(this IServiceCollection services) {
         services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<AiDbContext>(options => new AiDbContext(options)));
-        services.AddScoped(provider => new DbContextOptions<AiDbContext>(provider.GetRequiredService<DbContextOptions<FoodDiaryDbContext>>()
-            .Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
+        services.AddScoped(provider => provider.GetRequiredService<IIndependentModuleContextOptionsFactory>()
+            .CreateOptions<AiDbContext>());
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AiUserDataPurgeParticipant>());
         services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();

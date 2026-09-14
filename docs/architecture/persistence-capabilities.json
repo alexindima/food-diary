@@ -23,7 +23,7 @@
         "tracked:UserAchievement"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "1012bc29feafaecfc8b2ac8a4137c0563c461559a62a69dda2f3ff32eb2a675c"
+      "technicalSourceSha256": "f9b003a123f955d450ab00961dffb5775eee183254efa20e3bb748867c64c8ed"
     },
     "Modules/Images/Infrastructure/DependencyInjection.cs": {
       "module": "Images",
@@ -35,7 +35,7 @@
         "tracked:ImageObjectDeletionOutboxMessage"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "727bb790c6e7d17c3adfaa433bb4511b8e44a28cfa07df841bbeeb025f4d74ec"
+      "technicalSourceSha256": "bda4e81975c18bbd0b3b39b3601382e3a504c37c055309e92920a333622ca2e9"
     },
     "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs": {
       "module": "ReadModelComposition",
@@ -391,14 +391,6 @@
       ],
       "reason": "Delegates save, retry, commit and reset to the scoped coordinator; owns advisory-lock SQL and duplicate payment/webhook translation before tracker cleanup.",
       "technicalSourceSha256": "7c8accd2e12d68a04be5d0ec49210680947f24a23e8e572247670de262f39ab0"
-    },
-    "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs": {
-      "module": "Billing",
-      "capabilities": [
-        "context:Database"
-      ],
-      "reason": "Billing serializes checkout creation with the existing PostgreSQL lock; context connection access is explicitly reviewed.",
-      "technicalSourceSha256": "6068551314544312a9ccd3f3096f90691a434d5623004a1029e1fd44c0612d74"
     },
     "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs": {
       "module": "BodyMetrics",
@@ -964,7 +956,7 @@
         "tracked:WebPushSubscription"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "ce0e463beb287cffb10ba26dc6b2d0dcc3ae44636da1535cf8e8ab1d354f0665"
+      "technicalSourceSha256": "5b6d4aa65430565df99c3920e7b22413cfdf01e1c5a1c8f5668ca763768f2766"
     },
     "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
       "module": "Notifications",
@@ -1616,7 +1608,7 @@
         "tracked:AiPromptTemplate"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions.",
-      "technicalSourceSha256": "573514de969767ee8e62167fd8f5c6a6f93fcbb5ce382ce7e121db6b325bf575"
+      "technicalSourceSha256": "9d2177aeadad13f9c552483f1fa32820f9ee1bcc3520f444d6186af206417674"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",

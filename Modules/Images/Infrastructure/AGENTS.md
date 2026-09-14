@@ -16,3 +16,5 @@ coordinator resets all registered trackers and saves audit plus owner changes th
 ImagesDbContext on the same connection and executes only the requested-ID bulk update.
 It must not create, save or commit a transaction. Preserve caller rollback and reuse
 after rollback, including resolving the service before the caller starts a transaction.
+
+Resolve IModuleScopeGuard for the processor's clean-entry callback instead of the concrete shared context. Invoke the live check before each claim; the shared engine and owner claimer retain their existing lifecycle and local transaction checks.

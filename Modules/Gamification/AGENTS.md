@@ -54,5 +54,5 @@ Achievement replay uses GamificationDbContext registered through CreateModuleCon
 
 Definition and user-achievement stores and evaluation enqueue read the live
 IModuleTransactionCoordinator.CurrentTransaction. The worker clean-entry callback
-still checks the shared scope through OutboxProcessingEngine before claiming;
+checks the shared scope through IModuleScopeGuard before each claim;
 do not conflate that invariant with read-only transaction access.

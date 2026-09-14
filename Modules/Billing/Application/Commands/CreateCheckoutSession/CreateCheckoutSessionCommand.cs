@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
@@ -10,4 +9,4 @@ public sealed record CreateCheckoutSessionCommand(
     string Plan,
     string? Provider,
     string? IdempotencyKey = null)
-    : IRequest<Result<BillingCheckoutSessionModel>>, ITransactionalCommand;
+    : IRequest<Result<BillingCheckoutSessionModel>>;

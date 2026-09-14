@@ -14,3 +14,5 @@ CreateModuleContext. Processors retain a shared-scope clean-entry callback befor
 claiming. Replay streams use their owner context on the shared connection. The central
 coordinator resets all registered trackers and saves audit plus owner changes through IUnitOfWork. User purge and image ownership reassignment retain their shared
 transaction scope; they are not ordinary runtime repository dependencies.
+
+Resolve IModuleScopeGuard for the processor's clean-entry callback instead of the concrete shared context. Invoke the live check before each claim; the shared engine and owner claimer retain their existing lifecycle and local transaction checks.

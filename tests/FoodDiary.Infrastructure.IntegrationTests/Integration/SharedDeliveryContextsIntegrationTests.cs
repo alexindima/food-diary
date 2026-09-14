@@ -29,7 +29,7 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
-public sealed class SharedDeliveryContextsIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task SharedSaveAndProcessorsUseOwnedModelsAsync() {
         await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();

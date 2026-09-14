@@ -4,6 +4,8 @@ using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Ai.Domain.Entities;
+using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
@@ -78,6 +80,44 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         }
         Assert.Single(await database.Users.ToListAsync());
         Assert.Single(await database.AiQuotaReservations.ToListAsync());
+    }
+
+    [RequiresDockerTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task JobCommitRemainsIndependentOfSharedRollbackAsync(bool resolveBeforeTransaction) {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("ai-job-independent@example.com", "hash");
+        var image = ImageAsset.Create(user.Id, "independent-job/image.jpg", "https://example.com/image.jpg");
+        image.Confirm();
+        database.Users.Add(user);
+        database.ImageAssets.Add(image);
+        await database.SaveChangesAsync();
+        string connectionString = database.Database.GetConnectionString()!;
+        await using ServiceProvider provider = CreateProvider(connectionString);
+        FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+        IFoodRecognitionJobStore? store = resolveBeforeTransaction ? provider.GetRequiredService<IFoodRecognitionJobStore>() : null;
+        DateTime now = DateTime.UtcNow;
+        var job = new FoodRecognitionJobModel(Guid.NewGuid(), user.Id.Value, image.Id.Value, image.Url,
+            "Independent admission", "Queued", now, now);
+        await using (IDbContextTransaction transaction = await shared.Database.BeginTransactionAsync()) {
+            shared.Users.Add(User.Create("ai-job-discarded@example.com", "hash"));
+            await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+            store ??= provider.GetRequiredService<IFoodRecognitionJobStore>();
+            Assert.Same(store, provider.GetRequiredService<IFoodRecognitionJobReader>());
+            Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
+            Assert.Same(transaction, shared.Database.CurrentTransaction);
+            await transaction.RollbackAsync();
+        }
+
+        Assert.Single(await database.Users.AsNoTracking().ToListAsync());
+        await using ServiceProvider readerProvider = CreateProvider(connectionString);
+        FoodRecognitionJobModel? persisted = await readerProvider.GetRequiredService<IFoodRecognitionJobReader>()
+            .GetAsync(user.Id.Value, job.Id, CancellationToken.None);
+        Assert.NotNull(persisted);
+        Assert.Multiple(
+            () => Assert.Equal(job.Id, persisted.Id),
+            () => Assert.Equal("Queued", persisted.Status));
     }
 
     private static ServiceProvider CreateProvider(string connectionString) {

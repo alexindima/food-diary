@@ -1681,14 +1681,14 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value exceeds numeric(18,2) storage limits.\")",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value exceeds numeric(19,3) storage limits.\")",
       "path": "Modules/Billing/Domain/Entities/BillingDomainGuard.cs",
       "line": 14
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must have at most two fractional digits.\")",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must have at most three fractional digits.\")",
       "path": "Modules/Billing/Domain/Entities/BillingDomainGuard.cs",
       "line": 18
     },

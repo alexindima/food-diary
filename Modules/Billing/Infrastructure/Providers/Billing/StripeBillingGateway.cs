@@ -174,6 +174,8 @@ public sealed class StripeBillingGateway(
                         cancellationToken).ConfigureAwait(false)),
                 "checkout.session.completed" => Result.Success<BillingWebhookEventModel?>(
                     await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken).ConfigureAwait(false)),
+                "invoice.paid" or "invoice.payment_succeeded" => Result.Success<BillingWebhookEventModel?>(
+                    MapPaidInvoiceEvent((Invoice)stripeEvent.Data.Object!, stripeEvent)),
                 _ => Result.Success<BillingWebhookEventModel?>(value: null),
             };
         } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
@@ -195,6 +197,39 @@ public sealed class StripeBillingGateway(
             cancellationToken: cancellationToken).ConfigureAwait(false);
         return MapSubscriptionEvent(currentSubscription, stripeEvent) with { IsAuthoritativeSnapshot = true };
     }
+
+    private BillingWebhookEventModel? MapPaidInvoiceEvent(Invoice invoice, Event stripeEvent) {
+        string? subscriptionId = invoice.Parent?.SubscriptionDetails?.SubscriptionId;
+        if (string.IsNullOrWhiteSpace(subscriptionId) || !string.Equals(invoice.Status, "paid", StringComparison.Ordinal)) {
+            return null;
+        }
+        InvoiceLineItem? line = invoice.Lines?.Data?.FirstOrDefault(item => ResolvePlan(item.Pricing?.PriceDetails?.PriceId) is not null);
+        string? priceId = line?.Pricing?.PriceDetails?.PriceId;
+        string plan = ResolvePlan(priceId)
+            ?? throw new InvalidOperationException("Stripe invoice has no approved Premium price.");
+        if (string.IsNullOrWhiteSpace(invoice.Id) || string.IsNullOrWhiteSpace(invoice.CustomerId) ||
+            string.IsNullOrWhiteSpace(invoice.Currency) || invoice.AmountPaid < 0) {
+            throw new InvalidOperationException("Stripe invoice payment details are invalid.");
+        }
+
+        // Invoice lines describe the purchased period; the current subscription may already be in a later period.
+        return new BillingWebhookEventModel(
+            stripeEvent.Id, stripeEvent.Type, invoice.CustomerId, subscriptionId,
+            ExternalPaymentMethodId: null, priceId, plan, Status: "completed",
+            line?.Period?.Start, line?.Period?.End,
+            CancelAtPeriodEnd: false, CanceledAtUtc: null, TrialStartUtc: null, TrialEndUtc: null,
+            Amount: FromStripeMinorUnits(invoice.AmountPaid, invoice.Currency),
+            Currency: invoice.Currency.ToUpperInvariant(), ProviderMetadataJson: null,
+            UserId: ParseUserId(ReadMetadata(invoice.Parent?.SubscriptionDetails?.Metadata, "user_id")),
+            OccurredAtUtc: invoice.StatusTransitions?.PaidAt ?? stripeEvent.Created,
+            ExternalPaymentId: invoice.Id, UpdatesSubscription: false);
+    }
+
+    private static decimal FromStripeMinorUnits(long amount, string currency) => currency.ToUpperInvariant() switch {
+        "BIF" or "CLP" or "DJF" or "GNF" or "JPY" or "KMF" or "KRW" or "MGA" or "PYG" or "RWF" or "VND" or "VUV" or "XAF" or "XOF" or "XPF" => amount,
+        "BHD" or "JOD" or "KWD" or "OMR" or "TND" => amount / 1000m,
+        _ => amount / 100m,
+    };
 
     private async Task<BillingWebhookEventModel?> MapCheckoutCompletedEventAsync(
         CheckoutSession session,

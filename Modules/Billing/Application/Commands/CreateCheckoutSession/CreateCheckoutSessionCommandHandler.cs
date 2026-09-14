@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Billing.Domain.Contracts;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -22,7 +21,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
     TimeProvider dateTimeProvider,
     IBillingCheckoutLock billingCheckoutLock,
-    IUnitOfWork? unitOfWork = null)
+    IBillingTransactionRunner transactionRunner)
     : IRequestHandler<CreateCheckoutSessionCommand, Result<BillingCheckoutSessionModel>> {
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
         CreateCheckoutSessionCommand request,
@@ -62,6 +61,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         string plan = request.Plan.Trim().ToLowerInvariant();
+        CheckoutVersion? originalVersion = CaptureVersion(existingSubscription);
         Result<BillingCheckoutSessionModel> sessionResult = await billingProvider.CreateCheckoutSessionAsync(
             new BillingCheckoutSessionRequestModel(
                 userId.Value,
@@ -78,31 +78,68 @@ public sealed class CreateCheckoutSessionCommandHandler(
 
         BillingCheckoutSessionModel session = sessionResult.Value;
 
-        if (existingSubscription is null) {
-            var pendingSubscription = BillingSubscription.CreatePending(
-                userId,
-                billingProvider.Provider,
-                session.CustomerId,
-                session.PriceId,
-                session.Plan);
-            await billingSubscriptionRepository.AddAsync(pendingSubscription, cancellationToken).ConfigureAwait(false);
-            await AddCheckoutPaymentAsync(pendingSubscription, billingProvider.Provider, session, cancellationToken).ConfigureAwait(false);
-        } else {
-            existingSubscription.UpdateCheckoutContext(
-                billingProvider.Provider,
-                session.CustomerId,
-                session.PriceId,
-                session.Plan);
-            await billingSubscriptionRepository.UpdateAsync(existingSubscription, cancellationToken).ConfigureAwait(false);
-            await AddCheckoutPaymentAsync(existingSubscription, billingProvider.Provider, session, cancellationToken).ConfigureAwait(false);
-        }
-
-        if (unitOfWork?.HasPendingChanges == true) {
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        return Result.Success(session);
+        var result = Result.Success(session);
+        await transactionRunner.ExecuteSerializedAsync(BillingOperationLockKeys.ForUser(userId.Value), async token => {
+            // The transaction resets tracking; never save the entity read before provider HTTP.
+            Result<UserBillingProfileModel> currentUser = await billingUserContextService.GetAccessibleProfileAsync(userId, token).ConfigureAwait(false);
+            if (currentUser.IsFailure) {
+                result = Result.Failure<BillingCheckoutSessionModel>(currentUser.Error);
+                return;
+            }
+            BillingSubscription? current = await billingSubscriptionRepository.GetByUserIdAsync(userId, token).ConfigureAwait(false);
+            if (currentUser.Value.HasPaidPremium || IsPaidPremiumActive(current, dateTimeProvider.GetUtcNow().UtcDateTime)) {
+                result = Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
+                return;
+            }
+            if (CaptureVersion(current) != originalVersion) {
+                result = Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
+                return;
+            }
+            BillingPayment? savedCheckout = await billingPaymentRepository.GetByExternalPaymentIdAsync(
+                billingProvider.Provider, session.SessionId, token).ConfigureAwait(false);
+            if (savedCheckout is not null) {
+                bool matches = current is not null && savedCheckout.UserId == userId &&
+                    savedCheckout.BillingSubscriptionId == current.Id &&
+                    string.Equals(savedCheckout.Kind, BillingPaymentKinds.Checkout, StringComparison.Ordinal) &&
+                    string.Equals(savedCheckout.Status, BillingSubscription.PendingCheckoutStatus, StringComparison.Ordinal) &&
+                    string.Equals(current.Status, BillingSubscription.PendingCheckoutStatus, StringComparison.Ordinal) &&
+                    string.Equals(current.Provider, billingProvider.Provider, StringComparison.Ordinal) &&
+                    string.Equals(savedCheckout.ExternalCustomerId, session.CustomerId, StringComparison.Ordinal) && string.Equals(current.ExternalCustomerId, session.CustomerId, StringComparison.Ordinal) &&
+                    string.Equals(savedCheckout.ExternalPriceId, session.PriceId, StringComparison.Ordinal) && string.Equals(current.ExternalPriceId, session.PriceId, StringComparison.Ordinal) &&
+                    string.Equals(savedCheckout.Plan, session.Plan, StringComparison.Ordinal) && string.Equals(current.Plan, session.Plan, StringComparison.Ordinal);
+                result = matches ? Result.Success(session)
+                    : Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
+                return;
+            }
+            result = Result.Success(session);
+            if (current is null) {
+                var pendingSubscription = BillingSubscription.CreatePending(
+                    userId,
+                    billingProvider.Provider,
+                    session.CustomerId,
+                    session.PriceId,
+                    session.Plan);
+                await billingSubscriptionRepository.AddAsync(pendingSubscription, token).ConfigureAwait(false);
+                await AddCheckoutPaymentAsync(pendingSubscription, billingProvider.Provider, session, token).ConfigureAwait(false);
+            } else {
+                current.UpdateCheckoutContext(
+                    billingProvider.Provider,
+                    session.CustomerId,
+                    session.PriceId,
+                    session.Plan);
+                await billingSubscriptionRepository.UpdateAsync(current, token).ConfigureAwait(false);
+                await AddCheckoutPaymentAsync(current, billingProvider.Provider, session, token).ConfigureAwait(false);
+            }
+        }, cancellationToken).ConfigureAwait(false);
+        return result;
     }
+
+    private sealed record CheckoutVersion(Guid Id, string Provider, string Status, DateTime? Modified,
+        string? EventId, DateTime? Synced, DateTime? Occurred);
+
+    private static CheckoutVersion? CaptureVersion(BillingSubscription? subscription) =>
+        subscription is null ? null : new(subscription.Id, subscription.Provider, subscription.Status, subscription.ModifiedOnUtc,
+            subscription.LastWebhookEventId, subscription.LastSyncedAtUtc, subscription.LastWebhookOccurredAtUtc);
 
     private Task<Result<UserId>> ResolveUserIdAsync(
         CreateCheckoutSessionCommand command,

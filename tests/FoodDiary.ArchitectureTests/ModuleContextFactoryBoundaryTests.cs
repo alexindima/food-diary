@@ -17,6 +17,7 @@ public sealed class ModuleContextFactoryBoundaryTests {
     [InlineData("Lessons")]
     [InlineData("WeeklyGoals")]
     [InlineData("Wearables")]
+    [InlineData("Billing")]
     [InlineData("OpenFoodFacts")]
     public void CoordinatedAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
@@ -39,6 +40,7 @@ public sealed class ModuleContextFactoryBoundaryTests {
     }
 
     [Theory]
+    [InlineData("Ai", "ModuleRegistration.cs")]
     [InlineData("Identity", "IdentityModuleRegistration.cs")]
     [InlineData("Users", "UsersModuleRegistration.cs")]
     [InlineData("OpenFoodFacts", "ModuleRegistration.cs")]
@@ -64,7 +66,7 @@ public sealed class ModuleContextFactoryBoundaryTests {
     }
 
     [Fact]
-    public void EveryModuleContext_IsCreatedThroughFactoryContract() {
+    public void EveryModuleRegistration_UsesFactoryContractsWithoutConcreteSharedContext() {
         string modules = ArchitectureTestPaths.FromRoot("Modules");
         string[] files = [.. SourceScanner.SourceFiles(modules)
             .Where(path => path.Contains($"{Path.DirectorySeparatorChar}Infrastructure{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
@@ -74,13 +76,35 @@ public sealed class ModuleContextFactoryBoundaryTests {
         foreach (string path in files) {
             string source = File.ReadAllText(path);
             Assert.Contains("GetRequiredService<IModuleContextFactory>()", source, StringComparison.Ordinal);
-            Assert.DoesNotContain("GetRequiredService<FoodDiaryDbContext>()\n            .CreateModuleContext", source.Replace("\r\n", "\n", StringComparison.Ordinal), StringComparison.Ordinal);
-            InvocationExpressionSyntax creation = Assert.Single(CSharpSyntaxTree.ParseText(source).GetRoot()
+            CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(source).GetCompilationUnitRoot();
+            Assert.DoesNotContain(root.DescendantNodes().OfType<IdentifierNameSyntax>(),
+                identifier => identifier.Identifier.ValueText.Equals("FoodDiaryDbContext", StringComparison.Ordinal));
+            InvocationExpressionSyntax creation = Assert.Single(root
                 .DescendantNodes().OfType<InvocationExpressionSyntax>(), invocation =>
                     invocation.Expression is MemberAccessExpressionSyntax { Name.Identifier.ValueText: "CreateModuleContext" });
             MemberAccessExpressionSyntax access = Assert.IsType<MemberAccessExpressionSyntax>(creation.Expression);
             Assert.True(access.Expression.ToString().Contains("GetRequiredService<IModuleContextFactory>()", StringComparison.Ordinal)
                 || access.Expression is IdentifierNameSyntax { Identifier.ValueText: "factory" }, path);
         }
+    }
+
+    [Theory]
+    [InlineData("Gamification", "ModuleRegistration.cs")]
+    [InlineData("Images", "DependencyInjection.cs")]
+    [InlineData("Notifications", "ModuleRegistration.cs")]
+    public void OutboxRegistration_UsesScopeGuardWithoutConcreteSharedContext(string module, string fileName) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", module, "Infrastructure", fileName));
+        IEnumerable<IdentifierNameSyntax> identifiers = CSharpSyntaxTree.ParseText(source).GetRoot()
+            .DescendantNodes().OfType<IdentifierNameSyntax>();
+        Assert.Contains(identifiers, identifier => identifier.Identifier.ValueText.Equals("IModuleScopeGuard", StringComparison.Ordinal));
+        Assert.DoesNotContain(identifiers, identifier => identifier.Identifier.ValueText.Equals("FoodDiaryDbContext", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AiRegistration_KeepsIndependentOptionsSeparateFromCoordinatedContexts() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "ModuleRegistration.cs"));
+        Assert.Contains("GetRequiredService<IIndependentModuleContextOptionsFactory>()", source, StringComparison.Ordinal);
+        Assert.Contains(".CreateOptions<AiDbContext>()", source, StringComparison.Ordinal);
+        Assert.Contains(".CreateModuleContext<AiDbContext>", source, StringComparison.Ordinal);
     }
 }

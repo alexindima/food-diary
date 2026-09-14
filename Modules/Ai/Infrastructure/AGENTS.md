@@ -17,5 +17,7 @@ Prompt selection uses LanguageCode.FromPreferred: active requested locale, activ
 AiDbContext translates only unique violations for public.AiPromptTemplates / IX_AiPromptTemplates_Key_Locale into DbUpdateConcurrencyException. Keep other database errors unchanged. Failed inserts are rolled back by the caller; never retry the failed tracked scope.
 
 Prompt transaction synchronization reads IModuleTransactionCoordinator.CurrentTransaction
-inside the existing relational callback. Do not replace the separate copied provider
-options for quota/job contexts with the scoped context or its shared connection.
+inside the existing relational callback. Quota/job options come from
+IIndependentModuleContextOptionsFactory, preserving the configured provider and core
+extensions. Do not replace them with the scoped context or its live shared connection.
+The options factory does not register these per-operation contexts with the shared unit of work.

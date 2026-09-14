@@ -15,7 +15,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
-public sealed class BillingGatewayTests {
+public sealed partial class BillingGatewayTests {
     [Theory]
     [InlineData("https://checkout.example/path", true)]
     [InlineData("http://checkout.example/path", false)]

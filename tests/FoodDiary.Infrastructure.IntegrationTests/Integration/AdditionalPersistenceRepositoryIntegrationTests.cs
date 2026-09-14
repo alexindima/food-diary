@@ -558,7 +558,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     [RequiresDockerFact]
     public async Task PostgresBillingCheckoutLock_AcquiresAndReleasesAdvisoryLock() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var checkoutLock = new PostgresBillingCheckoutLock(context);
+        var checkoutLock = new PostgresBillingCheckoutLock(new EfModuleSessionLock(context));
 
         IAsyncDisposable releaser = await checkoutLock.AcquireAsync(Guid.NewGuid());
         Assert.Equal(System.Data.ConnectionState.Closed, context.Database.GetDbConnection().State);
@@ -605,7 +605,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await using (var command = new Npgsql.NpgsqlCommand("BEGIN; SELECT missing_billing_lock_test_function()", connection)) {
             await Assert.ThrowsAsync<Npgsql.PostgresException>(() => command.ExecuteNonQueryAsync());
         }
-        var checkoutLock = new PostgresBillingCheckoutLock(context);
+        var checkoutLock = new PostgresBillingCheckoutLock(new EfModuleSessionLock(context));
 
         IAsyncDisposable releaser = await checkoutLock.AcquireAsync(Guid.NewGuid());
         await releaser.DisposeAsync();
@@ -620,7 +620,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             .UseNpgsql("Host=127.0.0.1;Port=1;Database=unavailable;Username=unavailable;Password=unavailable;Timeout=1")
             .Options;
         await using var context = new FoodDiaryDbContext(options);
-        var checkoutLock = new PostgresBillingCheckoutLock(context);
+        var checkoutLock = new PostgresBillingCheckoutLock(new EfModuleSessionLock(context));
 
         Npgsql.NpgsqlException exception = await Assert.ThrowsAsync<Npgsql.NpgsqlException>(() =>
             checkoutLock.AcquireAsync(Guid.NewGuid()));

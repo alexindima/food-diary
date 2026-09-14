@@ -60,16 +60,16 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
             .HasMaxLength(32);
 
         builder.Property(e => e.Amount)
-            .HasPrecision(18, 2);
+            .HasPrecision(19, 3);
 
         builder.Property(e => e.Currency)
             .HasMaxLength(3);
 
-        builder.Property(e => e.Tax).HasPrecision(18, 2);
-        builder.Property(e => e.Fee).HasPrecision(18, 2);
-        builder.Property(e => e.Earnings).HasPrecision(18, 2);
+        builder.Property(e => e.Tax).HasPrecision(19, 3);
+        builder.Property(e => e.Fee).HasPrecision(19, 3);
+        builder.Property(e => e.Earnings).HasPrecision(19, 3);
         builder.Property(e => e.PayoutCurrency).HasMaxLength(3);
-        builder.Property(e => e.PayoutEarnings).HasPrecision(18, 2);
+        builder.Property(e => e.PayoutEarnings).HasPrecision(19, 3);
         builder.Property(e => e.OccurredAtUtc).HasColumnType("timestamp with time zone");
 
         builder.Property(e => e.CurrentPeriodStartUtc)

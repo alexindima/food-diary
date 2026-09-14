@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +7,6 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
 public static class OutboxProcessingEngine {
-    public static void EnsureCleanEntry(DbContext context) => SharedTransactionBoundary.EnsureCleanEntry(context);
-
     public static async Task<int> ProcessDueAsync<TMessage>(
         DbContext context,
         DbSet<TMessage> messages,

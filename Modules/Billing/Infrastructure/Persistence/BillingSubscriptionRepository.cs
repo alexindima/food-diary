@@ -96,7 +96,10 @@ public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> sub
     }
 
     public Task UpdateAsync(BillingSubscription subscription, CancellationToken cancellationToken = default) {
-        subscriptions.Update(subscription);
+        // Access synchronization can update a subscription created by this same webhook before its first save.
+        if (subscriptions.Entry(subscription).State != EntityState.Added) {
+            subscriptions.Update(subscription);
+        }
         return Task.CompletedTask;
     }
 

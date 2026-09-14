@@ -6,7 +6,6 @@ using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Outbox;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using FoodDiary.Modules.Notifications.Infrastructure.Resources;
@@ -41,11 +40,11 @@ public static class ModuleRegistration {
             provider.GetRequiredService<NotificationsDbContext>().NotificationWebPushOutbox, provider.GetRequiredService<TimeProvider>()));
         services.AddScoped<INotificationWebPushOutboxProcessor>(static provider => {
             NotificationsDbContext owned = provider.GetRequiredService<NotificationsDbContext>();
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            IModuleScopeGuard scopeGuard = provider.GetRequiredService<IModuleScopeGuard>();
             return new NotificationWebPushOutboxProcessor(owned, owned.NotificationWebPushOutbox,
                 provider.GetRequiredService<IWebPushNotificationSender>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
                 provider.GetRequiredService<TimeProvider>(), provider.GetRequiredService<ILogger<NotificationWebPushOutboxProcessor>>(),
-                () => OutboxProcessingEngine.EnsureCleanEntry(shared));
+                scopeGuard.EnsureCleanEntry);
         });
         services.AddScoped<IWebPushSubscriptionRepository>(static provider =>
             new WebPushSubscriptionRepository(provider.GetRequiredService<NotificationsDbContext>().WebPushSubscriptions));

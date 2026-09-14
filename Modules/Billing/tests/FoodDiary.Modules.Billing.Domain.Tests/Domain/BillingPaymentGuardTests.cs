@@ -12,22 +12,53 @@ public sealed class BillingPaymentGuardTests {
     [InlineData("-9999999999999999.99")]
     [InlineData("0")]
     [InlineData("1.2300")]
+    [InlineData("7.991")]
+    [InlineData("-0.001")]
+    [InlineData("9999999999999999.999")]
+    [InlineData("-9999999999999999.999")]
     public void Create_AcceptsStorageBoundaryAndTrailingZeros(string amount) {
         decimal value = decimal.Parse(amount, CultureInfo.InvariantCulture);
         Assert.Equal(value, Create(value).Amount);
     }
 
     [Theory]
-    [InlineData("10000000000000000", "Value exceeds numeric(18,2) storage limits.")]
-    [InlineData("-10000000000000000", "Value exceeds numeric(18,2) storage limits.")]
-    [InlineData("1.005", "Value must have at most two fractional digits.")]
-    [InlineData("1.015", "Value must have at most two fractional digits.")]
-    [InlineData("-0.001", "Value must have at most two fractional digits.")]
+    [InlineData("10000000000000000", "Value exceeds numeric(19,3) storage limits.")]
+    [InlineData("-10000000000000000", "Value exceeds numeric(19,3) storage limits.")]
+    [InlineData("1.0005", "Value must have at most three fractional digits.")]
+    [InlineData("1.0015", "Value must have at most three fractional digits.")]
+    [InlineData("-0.0001", "Value must have at most three fractional digits.")]
     public void Create_RejectsAmountWithoutRounding(string amount, string message) {
         decimal value = decimal.Parse(amount, CultureInfo.InvariantCulture);
         ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => Create(value));
         Assert.Equal("amount", exception.ParamName);
         Assert.Equal(RangeMessage("amount", message), exception.Message);
+    }
+
+    [Theory]
+    [InlineData("amount")]
+    [InlineData("tax")]
+    [InlineData("fee")]
+    [InlineData("earnings")]
+    [InlineData("payoutEarnings")]
+    public void ApplyProviderResult_RejectsExcessPrecisionBeforeChangingAnyFields(string field) {
+        BillingPayment payment = Create(7.991m, "BHD");
+        decimal Value(string name) => string.Equals(field, name, StringComparison.Ordinal) ? 0.0001m : 0.001m;
+
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => payment.ApplyProviderResult(
+            billingSubscriptionId: null, externalCustomerId: "new_customer", externalSubscriptionId: null,
+            externalPaymentMethodId: null, externalPriceId: null, plan: null, status: "refunded", kind: BillingPaymentKinds.Transaction,
+            amount: Value("amount"), currency: "USD", currentPeriodStartUtc: null, currentPeriodEndUtc: null,
+            webhookEventId: "new_event", providerMetadataJson: null,
+            tax: Value("tax"), fee: Value("fee"), earnings: Value("earnings"), payoutEarnings: Value("payoutEarnings")));
+
+        Assert.Equal(field, exception.ParamName);
+        Assert.Multiple(
+            () => Assert.Equal(7.991m, payment.Amount),
+            () => Assert.Equal("BHD", payment.Currency),
+            () => Assert.Equal("paid", payment.Status),
+            () => Assert.Null(payment.ExternalCustomerId),
+            () => Assert.Null(payment.WebhookEventId),
+            () => Assert.Null(payment.ModifiedOnUtc));
     }
 
     [Theory]

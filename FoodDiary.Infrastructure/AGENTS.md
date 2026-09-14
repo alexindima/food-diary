@@ -199,3 +199,9 @@ IModuleContextFactory is scoped to the same FoodDiaryDbContext instance by AddIn
 Billing uses the coordinator command overload to preserve unconditional unit-of-work save and owner exception translation before shared tracker reset. Never move Billing constraint names or entities into the shared coordinator.
 
 EfModuleSessionCoordinator owns the separate session lease and single-attempt clean/reset/save boundary used by Wearables. It runs provider callbacks without a database transaction or execution-strategy replay; intermediate saves remain durable and only final persistence retries. Keep it distinct from EfModuleTransactionCoordinator.
+
+EfModuleScopeGuard exposes the existing shared clean-entry inspection through IModuleScopeGuard for owner outbox callbacks. Register it scoped with the same FoodDiaryDbContext. Inspect live module trackers, including contexts resolved after the guard, and the current shared transaction. Preserve the outbox behavior of not inspecting or discarding post-commit actions; do not add reset/save behavior to this guard.
+
+EfIndependentModuleContextOptionsFactory copies configured DbContextOptions extensions behind IIndependentModuleContextOptionsFactory. It must not resolve FoodDiaryDbContext or copy its live scoped connection. Preserve provider/core extensions, configured interceptors and execution strategy exactly; no filtering or runtime rebinding. Ai retains per-operation context disposal and commits for quota/job work. This seam does not alter the coordinated module factory or authorize new independent writes.
+
+EfModuleSessionLock reads the live scoped relational connection string and delegates to the existing independent PostgreSQL advisory lease. Preserve polling cancellation, idempotent unlock/disposal and isolation from shared transaction lifetime; it never executes caller work or saves entities.

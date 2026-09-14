@@ -221,7 +221,7 @@ public partial class BillingFeatureTests {
         var gateway = new FakeBillingProviderGateway(newProvider,
             checkoutSession: new BillingCheckoutSessionModel("checkout_new", "https://checkout.example/new", "new_customer", "price", "monthly"));
         var handler = new CreateCheckoutSessionCommandHandler(users, subscriptions, payments,
-            new FakeBillingProviderGatewayAccessor(gateway), new FixedDateTimeProvider(Now), new NoopBillingCheckoutLock());
+            new FakeBillingProviderGatewayAccessor(gateway), new FixedDateTimeProvider(Now), new NoopBillingCheckoutLock(), new NoOpBillingTransactionRunner());
 
         ResultAssert.Success(await handler.Handle(new CreateCheckoutSessionCommand(user.Id.Value, "monthly", newProvider), CancellationToken.None));
 

@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4049,
-    "symbols": 3990,
+    "sourceFiles": 4055,
+    "symbols": 3996,
     "interfaceImplementationLinks": 259,
-    "dependencyInjectionRegistrations": 147,
+    "dependencyInjectionRegistrations": 150,
     "kinds": {
-      "class": 2099,
+      "class": 2102,
       "enum": 64,
-      "interface": 465,
+      "interface": 468,
       "record": 1241,
       "record struct": 121
     },
@@ -26,13 +26,13 @@
       "Controller": 104,
       "Entity": 97,
       "Event": 19,
-      "Factory": 12,
+      "Factory": 14,
       "Handler": 9,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1646,
+      "Other": 1650,
       "Query": 211,
       "QueryHandler": 139,
       "ReadModelRepository": 30,
@@ -934,7 +934,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "OutboxProcessingPolicy",
@@ -951,11 +951,32 @@
       "line": 4
     },
     {
+      "name": "EfIndependentModuleContextOptionsFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfIndependentModuleContextOptionsFactory.cs",
+      "line": 5
+    },
+    {
+      "name": "EfModuleScopeGuard",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleScopeGuard.cs",
+      "line": 4
+    },
+    {
       "name": "EfModuleSessionCoordinator",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleSessionCoordinator.cs",
       "line": 7
+    },
+    {
+      "name": "EfModuleSessionLock",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleSessionLock.cs",
+      "line": 6
     },
     {
       "name": "EfModuleTransactionCoordinator",
@@ -5239,7 +5260,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "AiDbContext",
@@ -5701,14 +5722,14 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "CreateCheckoutSessionCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -6044,7 +6065,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "BillingPublicConfigProvider",
@@ -15690,7 +15711,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "ImageAssetContentService",
@@ -19295,7 +19316,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "WebPushOptions",
@@ -27929,6 +27950,13 @@
       "line": 2
     },
     {
+      "name": "IIndependentModuleContextOptionsFactory",
+      "kind": "interface",
+      "role": "Factory",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IIndependentModuleContextOptionsFactory.cs",
+      "line": 6
+    },
+    {
       "name": "IModuleContextFactory",
       "kind": "interface",
       "role": "Factory",
@@ -27936,10 +27964,24 @@
       "line": 6
     },
     {
+      "name": "IModuleScopeGuard",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleScopeGuard.cs",
+      "line": 4
+    },
+    {
       "name": "IModuleSessionCoordinator",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleSessionCoordinator.cs",
+      "line": 4
+    },
+    {
+      "name": "IModuleSessionLock",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleSessionLock.cs",
       "line": 4
     },
     {
@@ -29879,18 +29921,39 @@
       "line": 27
     },
     {
+      "service": "IModuleSessionLock",
+      "implementation": "EfModuleSessionLock",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
+      "line": 28
+    },
+    {
+      "service": "IModuleScopeGuard",
+      "implementation": "EfModuleScopeGuard",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
+      "line": 29
+    },
+    {
+      "service": "IIndependentModuleContextOptionsFactory",
+      "implementation": "EfIndependentModuleContextOptionsFactory",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
+      "line": 30
+    },
+    {
       "service": "IOutboxDeadLetterReplayService",
       "implementation": "OutboxDeadLetterReplayService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 29
+      "line": 32
     },
     {
       "service": "IDomainEventPublisher",
       "implementation": "MediatorDomainEventPublisher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 31
+      "line": 34
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -30366,28 +30429,28 @@
       "implementation": "ImageAssetOwnershipService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 21
+      "line": 20
     },
     {
       "service": "IImageAssetContentService",
       "implementation": "ImageAssetContentService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 22
+      "line": 21
     },
     {
       "service": "IUserProfileImageService",
       "implementation": "UserProfileImageService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 23
+      "line": 22
     },
     {
       "service": "IImageAssetCleanupBatch",
       "implementation": "ImageAssetCleanupBatch",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 25
+      "line": 24
     },
     {
       "service": "ILessonReadService",

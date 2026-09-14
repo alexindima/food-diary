@@ -67,14 +67,18 @@
       "pageSha256": "c754c8ac412a0292e3b08416eeb1ce65064017fbe43fe20578bf8d660cd6eb7f",
       "sources": [
         {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "ed3d088a858200660c3a8ac94a9464762b8244b57700755e45f08cf48e60905d"
+        },
+        {
           "path": "Modules/Billing/Infrastructure/AGENTS.md",
-          "sha256": "55051e69a4c3519f93bd064c34a73017fa5652a494ab2083f9d10e0da7283d82"
+          "sha256": "d1b5ab02052c5789733a867ff36b4b4026738b4222674caa3a27cebd042b7140"
         }
       ],
-      "reason": "Reviewed Billing Infrastructure guide against the current Primary Backend ownership table. Renewal metadata, provider occurrence and retry normalization remain within Billing Application and Infrastructure; shared transaction coordination, checkout lease and host ownership are unchanged. No edits to the ownership page are required.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:42:40.0574769Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:06.7189481Z"
     },
     {
       "pageId": "system.architecture",
@@ -83,13 +87,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8391c1a05c87df73816e5c64e2660d53e28e1a6ab5452f89b81439f566775722"
+          "sha256": "631617cdc97ad8a63f6ddde7967bccc1e500929ed7466b1f3657eaf38ce7f886"
         }
       ],
-      "reason": "Verified existing coordinator adoption in five module registrations and removal of the OpenFoodFacts central infrastructure edge; exact matrix and 1525 architecture tests agree. Architecture guidance remains accurate.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:15.6608632Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:07.0574215Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -211,17 +215,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d986617ffac82b089d79b7dba993b9df3263327aafe46b73070074f71881b330"
+          "sha256": "b53f9729ababbb8e6275faf3ce56efd37bf67c69c739de8acc4165f159273cfa"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8391c1a05c87df73816e5c64e2660d53e28e1a6ab5452f89b81439f566775722"
+          "sha256": "631617cdc97ad8a63f6ddde7967bccc1e500929ed7466b1f3657eaf38ce7f886"
         }
       ],
-      "reason": "Verified updated dependency graph against the exact matrix and successful architecture-health check (1595 production, 1318 test edges). Static graph guidance remains accurate; runtime transaction evidence is separate.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:16.3575537Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:07.3963897Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8e6ed7cc8e9f59b11ebe8f4a527563e0d26dd421ea20e9b8368b3baf66b32c05"
+          "sha256": "93619586e99553365554f8c8149a203789f8d9a21fdabd9957cbae6f914a2493"
         }
       ],
-      "reason": "Registration-only transaction changes preserve HTTP and consumer contract shapes; all 15 focused HTTP contract/auth-product tests passed. Generated navigation changes do not change review guidance.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:17.7662458Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:08.2151031Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -497,13 +501,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "149bf43b95a4229f4adca54fba46ca235b9a1c207c545127ce2dcc6b6fbe8876"
+          "sha256": "d63cd17b798d880c038d72a09ab992e18ca57d20ef8b2eafeda2e3fd5a34f14a"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "ed3d088a858200660c3a8ac94a9464762b8244b57700755e45f08cf48e60905d"
         }
       ],
-      "reason": "This batch changes no entities, mappings, migrations or domain invariants. Shared generated indexes also include concurrent Billing work, which is not claimed as reviewed by this batch. Source-first invariant and provider-test guidance remains accurate.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:18.4997745Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:08.6246356Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -771,13 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "61508a86d1269a72e22708733009e4480de857d7bf8734215b0dc590ca3e88c3"
+          "sha256": "f68606df378ffdbfafef3413199caddf57761fc48908145f5f98716124adce21"
         }
       ],
-      "reason": "Reviewed five registration diffs: no authorization, sensitive fields, logging, retention, export or provider-sharing changes. Identity guards and independent Ai scopes are preserved. Candidate-index guidance remains accurate; this is not a general security audit.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:19.2962167Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:09.1198629Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -816,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "87a7988a737735f382e60b8600586404c2fe071247f51c86fb150febaf7bedf8"
+          "sha256": "23bc1d63fa666696e21bc08e84142a968edcc4724b70d7e59b5c5eef7f18acc4"
         }
       ],
-      "reason": "Reviewed registration scope and relevant test evidence: 2317 tests passed. Static index candidates remain navigation rather than execution coverage; workflow guidance remains accurate.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:20.1852841Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:09.8269093Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -891,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c35797e53f6386dd3639939b47f0acdf2a25b3aff0df085cddca0a5d2a8fa843"
+          "sha256": "ef322c8c2702f12f494ea2d3ec16b274df4ed1cccb25cb20c090d18ec2bada4b"
         }
       ],
-      "reason": "Live transaction callbacks preserve relational guards, cancellation and Users save order; Gamification clean-entry and independent Ai options remain. Focused PostgreSQL transaction tests passed; runtime-impact navigation guidance remains accurate.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:21.4372762Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:10.8400703Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -906,21 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "87a7988a737735f382e60b8600586404c2fe071247f51c86fb150febaf7bedf8"
+          "sha256": "23bc1d63fa666696e21bc08e84142a968edcc4724b70d7e59b5c5eef7f18acc4"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c35797e53f6386dd3639939b47f0acdf2a25b3aff0df085cddca0a5d2a8fa843"
+          "sha256": "ef322c8c2702f12f494ea2d3ec16b274df4ed1cccb25cb20c090d18ec2bada4b"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "61508a86d1269a72e22708733009e4480de857d7bf8734215b0dc590ca3e88c3"
+          "sha256": "f68606df378ffdbfafef3413199caddf57761fc48908145f5f98716124adce21"
         }
       ],
-      "reason": "Five registration changes preserve transaction ownership and authentication behavior with no new external boundary or secret handling. Index changes remain review leads, not security findings; security workflow guidance remains accurate.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:22.1200933Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:11.5847253Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1052,18 +1060,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "fec60092fdbda4386337f4fc802241eb375ebb60348af4d9a4561b2417b8d453"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "161222bc8e607376850e9b16778027dd16dc01eea3a095a1addc566bbdff6c67"
+          "sha256": "9c68936f4d7c56705461e3c334bb43086e6adde19c4bc193bbad8789d6e52961"
         }
       ],
-      "reason": "ADR 0039 and module guides describe the 20 new contracts/mappings projects. Mail service client boundaries and discovery, trace, decision and runtime review procedures remain unchanged; new assemblies are in-process libraries.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "ca6ae5b5e52024207891fc91edd1f97b33e98a73",
-      "reviewedAtUtc": "2026-09-13T00:56:26.2337454Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:12.0687776Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1162,13 +1166,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "5bf44a7394d4e21bfccd7e7be08e70abebce6ee1f7de41a397d2f390bf071fec"
+          "sha256": "936d197a5907b6438128a09ebae8ac5a1ede1eb7059a329e86c4bb8a2499fa19"
         }
       ],
-      "reason": "Refreshed catalog and graph reflect current registration dependencies. Resolver guidance remains accurate: ranked source paths are navigation and must be verified against actual source and tests.",
+      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "df0bbf49a84a18f36feede4371b0c5edcd792a77",
-      "reviewedAtUtc": "2026-09-14T17:56:20.869022Z"
+      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
+      "reviewedAtUtc": "2026-09-14T19:29:10.408817Z"
     },
     {
       "pageId": "workflow.review-diff",

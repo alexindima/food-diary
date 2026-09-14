@@ -37,4 +37,8 @@ Reload and recheck provider, renewal status, cancellation and due time under the
 
 Checkout may reuse a customer identifier only for the same provider. Provider switches clear old subscription/method identifiers and ordering state; late notifications from the previous provider may update payment history but must not replace the current subscription.
 
+Checkout owns its final transaction and uses bare IRequest: retain the checkout lease across provider HTTP and commit, but save under the same per-user transaction key as webhooks. Reload the user and subscription inside the callback and compare an immutable pre-provider version. A concurrent webhook must not be overwritten or followed by a duplicate subscription insert. Never replay provider HTTP in a database retry.
+
+After the checkout cooldown, an idempotent provider may return an already saved session if HTTP response caching failed after commit. Under the user transaction lock, reuse only a pending checkout belonging to the same user and current subscription with matching provider, customer, price and plan. Do not insert it again or refresh the checkout timestamp; reject mismatched or finalized records.
+
 Inbox batches dispatch individual queued-event requests. Exceptions roll back business writes before a separate transaction records a generic failure and backoff. Continue the batch after recorded failures; propagate cancellation and failure-bookkeeping errors.

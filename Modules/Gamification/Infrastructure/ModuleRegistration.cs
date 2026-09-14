@@ -36,11 +36,11 @@ public static class ModuleRegistration {
         services.AddScoped<IMealAchievementEvaluationRequest>(static provider => (AchievementEvaluationOutbox)provider.GetRequiredService<IAchievementEvaluationOutbox>());
         services.AddScoped<IAchievementEvaluationOutboxProcessor>(static provider => {
             GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            IModuleScopeGuard scopeGuard = provider.GetRequiredService<IModuleScopeGuard>();
             return new AchievementEvaluationOutboxProcessor(owned, owned.AchievementEvaluationOutbox,
                 provider.GetRequiredService<IAchievementReconciliationHandler>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
                 provider.GetRequiredService<TimeProvider>(), provider.GetRequiredService<ILogger<AchievementEvaluationOutboxProcessor>>(),
-                () => OutboxProcessingEngine.EnsureCleanEntry(shared));
+                scopeGuard.EnsureCleanEntry);
         });
         return services;
     }

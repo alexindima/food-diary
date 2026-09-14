@@ -6,11 +6,11 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1460,
+    "candidateFields": 1459,
     "credential": 155,
     "identity": 174,
     "health": 685,
-    "financial": 127,
+    "financial": 126,
     "privateContent": 319,
     "boundaryFiles": 192,
     "potentialLoggingLeads": 1,
@@ -1542,13 +1542,6 @@
       "type": "string?",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
       "line": 19
-    },
-    {
-      "category": "financial",
-      "name": "ITransactionalCommand",
-      "type": "IRequest<Result<BillingCheckoutSessionModel>>,",
-      "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs",
-      "line": 13
     },
     {
       "category": "financial",

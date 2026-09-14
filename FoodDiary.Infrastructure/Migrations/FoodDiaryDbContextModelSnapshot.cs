@@ -301,8 +301,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("uuid");
 
                 b.Property<decimal?>("Amount")
-                    .HasPrecision(18, 2)
-                    .HasColumnType("numeric(18,2)");
+                    .HasPrecision(19, 3)
+                    .HasColumnType("numeric(19,3)");
 
                 b.Property<Guid?>("BillingSubscriptionId")
                     .HasColumnType("uuid");
@@ -321,8 +321,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("timestamp with time zone");
 
                 b.Property<decimal?>("Earnings")
-                    .HasPrecision(18, 2)
-                    .HasColumnType("numeric(18,2)");
+                    .HasPrecision(19, 3)
+                    .HasColumnType("numeric(19,3)");
 
                 b.Property<string>("ExternalCustomerId")
                     .HasMaxLength(255)
@@ -346,8 +346,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(255)");
 
                 b.Property<decimal?>("Fee")
-                    .HasPrecision(18, 2)
-                    .HasColumnType("numeric(18,2)");
+                    .HasPrecision(19, 3)
+                    .HasColumnType("numeric(19,3)");
 
                 b.Property<string>("Kind")
                     .IsRequired()
@@ -365,8 +365,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(3)");
 
                 b.Property<decimal?>("PayoutEarnings")
-                    .HasPrecision(18, 2)
-                    .HasColumnType("numeric(18,2)");
+                    .HasPrecision(19, 3)
+                    .HasColumnType("numeric(19,3)");
 
                 b.Property<string>("Plan")
                     .HasMaxLength(32)
@@ -386,8 +386,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(64)");
 
                 b.Property<decimal?>("Tax")
-                    .HasPrecision(18, 2)
-                    .HasColumnType("numeric(18,2)");
+                    .HasPrecision(19, 3)
+                    .HasColumnType("numeric(19,3)");
 
                 b.Property<Guid>("UserId")
                     .HasColumnType("uuid");

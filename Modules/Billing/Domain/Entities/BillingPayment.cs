@@ -89,13 +89,13 @@ public sealed class BillingPayment : Entity<Guid> {
             Plan = NormalizeOptional(plan, PlanMaxLength, nameof(plan)),
             Status = NormalizeRequired(status, StatusMaxLength, nameof(status)),
             Kind = NormalizeRequired(kind, KindMaxLength, nameof(kind)),
-            Amount = BillingDomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)),
+            Amount = BillingDomainGuard.OptionalNumeric19Scale3(amount, nameof(amount)),
             Currency = BillingDomainGuard.OptionalCurrencyCode(currency, nameof(currency)),
-            Tax = BillingDomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)),
-            Fee = BillingDomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)),
-            Earnings = BillingDomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)),
+            Tax = BillingDomainGuard.OptionalNumeric19Scale3(tax, nameof(tax)),
+            Fee = BillingDomainGuard.OptionalNumeric19Scale3(fee, nameof(fee)),
+            Earnings = BillingDomainGuard.OptionalNumeric19Scale3(earnings, nameof(earnings)),
             PayoutCurrency = BillingDomainGuard.OptionalCurrencyCode(payoutCurrency, nameof(payoutCurrency)),
-            PayoutEarnings = BillingDomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)),
+            PayoutEarnings = BillingDomainGuard.OptionalNumeric19Scale3(payoutEarnings, nameof(payoutEarnings)),
             OccurredAtUtc = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)),
             CurrentPeriodStartUtc = normalizedPeriodStart,
             CurrentPeriodEndUtc = normalizedPeriodEnd,
@@ -178,11 +178,11 @@ public sealed class BillingPayment : Entity<Guid> {
         decimal? fee,
         decimal? earnings,
         decimal? payoutEarnings) => new(
-            BillingDomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)) ?? Amount,
-            BillingDomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)) ?? Tax,
-            BillingDomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)) ?? Fee,
-            BillingDomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)) ?? Earnings,
-            BillingDomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)) ?? PayoutEarnings);
+            BillingDomainGuard.OptionalNumeric19Scale3(amount, nameof(amount)) ?? Amount,
+            BillingDomainGuard.OptionalNumeric19Scale3(tax, nameof(tax)) ?? Tax,
+            BillingDomainGuard.OptionalNumeric19Scale3(fee, nameof(fee)) ?? Fee,
+            BillingDomainGuard.OptionalNumeric19Scale3(earnings, nameof(earnings)) ?? Earnings,
+            BillingDomainGuard.OptionalNumeric19Scale3(payoutEarnings, nameof(payoutEarnings)) ?? PayoutEarnings);
 
     private readonly record struct BillingPaymentAmounts(
         decimal? Amount,

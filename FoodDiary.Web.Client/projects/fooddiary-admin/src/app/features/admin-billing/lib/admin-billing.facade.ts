@@ -26,6 +26,7 @@ const DEFAULT_PAGE_SIZE = 20;
 const SHORT_ID_MIN_LENGTH = 18;
 const SHORT_ID_PREFIX_LENGTH = 8;
 const SHORT_ID_SUFFIX_START = -6;
+const PAYMENT_DECIMAL_PLACES = 3;
 
 @Injectable()
 export class AdminBillingFacade {
@@ -302,7 +303,8 @@ export class AdminBillingFacade {
             return '-';
         }
 
-        return currency !== null && currency !== undefined && currency.length > 0 ? `${amount.toFixed(2)} ${currency}` : amount.toFixed(2);
+        const formattedAmount = amount.toFixed(PAYMENT_DECIMAL_PLACES).replace(/(\.\d{2})0$/u, '$1');
+        return currency !== null && currency !== undefined && currency.length > 0 ? `${formattedAmount} ${currency}` : formattedAmount;
     }
 
     private formatDateLabel(value?: string | Date | null, format = 'short'): string {

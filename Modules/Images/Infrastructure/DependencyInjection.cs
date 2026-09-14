@@ -2,7 +2,6 @@ using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Infrastructure.Options;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -31,11 +30,11 @@ public static class DependencyInjection {
             provider.GetRequiredService<ImagesDbContext>().ImageObjectDeletionOutbox, provider.GetRequiredService<TimeProvider>()));
         services.AddScoped<IImageObjectDeletionOutboxProcessor>(static provider => {
             ImagesDbContext owned = provider.GetRequiredService<ImagesDbContext>();
-            FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
+            IModuleScopeGuard scopeGuard = provider.GetRequiredService<IModuleScopeGuard>();
             return new ImageObjectDeletionOutboxProcessor(owned, owned.ImageObjectDeletionOutbox,
                 provider.GetRequiredService<IImageStorageService>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
                 provider.GetRequiredService<TimeProvider>(), provider.GetRequiredService<ILogger<ImageObjectDeletionOutboxProcessor>>(),
-                () => OutboxProcessingEngine.EnsureCleanEntry(shared));
+                scopeGuard.EnsureCleanEntry);
         });
         return services;
     }

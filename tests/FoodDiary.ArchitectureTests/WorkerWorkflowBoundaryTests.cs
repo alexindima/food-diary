@@ -20,15 +20,17 @@ public sealed class WorkerWorkflowBoundaryTests {
         Assert.Equal($"IRequest<{response}>", Assert.Single(declaration.BaseList.Types).Type.ToString());
     }
 
-    [Fact]
-    public void QueuedWebhook_WithSeparateFailureCommit_DoesNotEnableAutomaticUnitOfWorkSave() {
+    [Theory]
+    [InlineData("ProcessQueuedBillingWebhook", "Result")]
+    [InlineData("CreateCheckoutSession", "Result<BillingCheckoutSessionModel>")]
+    public void BillingWorkflow_WithExplicitCommit_DoesNotEnableAutomaticUnitOfWorkSave(string command, string response) {
         string path = ArchitectureTestPaths.FromRoot("Modules", "Billing", "Application", "Commands",
-            "ProcessQueuedBillingWebhook", "ProcessQueuedBillingWebhookCommand.cs");
+            command, command + "Command.cs");
         RecordDeclarationSyntax declaration = Assert.Single(CSharpSyntaxTree.ParseText(File.ReadAllText(path))
             .GetRoot().DescendantNodes().OfType<RecordDeclarationSyntax>());
 
         Assert.NotNull(declaration.BaseList);
-        Assert.Equal("IRequest<Result>", Assert.Single(declaration.BaseList.Types).Type.ToString());
+        Assert.Equal($"IRequest<{response}>", Assert.Single(declaration.BaseList.Types).Type.ToString());
     }
 
     [Theory]
