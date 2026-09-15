@@ -1,10 +1,11 @@
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

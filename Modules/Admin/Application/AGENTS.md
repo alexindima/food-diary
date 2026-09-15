@@ -18,7 +18,7 @@ Rules for `Modules/Admin/Application/`.
 
 - Build: `dotnet build Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj`
 - Tests: `dotnet test Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj`
-- Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 - Register application handlers via AddAdminApplication; hosts use Infrastructure AddAdminModule.
 - Keep legacy FoodDiary.Application.Admin AssemblyName; use FoodDiary.Modules.Admin.Application namespaces.

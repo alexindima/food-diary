@@ -1,6 +1,6 @@
 using FoodDiary.Modules.RecentItems.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

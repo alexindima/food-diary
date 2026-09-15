@@ -1,10 +1,10 @@
 using System.Data.Common;
-using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
 using Npgsql;
 
-namespace FoodDiary.Infrastructure.Persistence.WeeklyGoals;
+namespace FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 
 public sealed class EfWeeklyGoalTransactionRunner(IModuleTransactionCoordinator coordinator) : IWeeklyGoalTransactionRunner {
     public async Task<T> ExecuteSerializedAsync<T>(

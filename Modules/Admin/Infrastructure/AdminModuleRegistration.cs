@@ -1,7 +1,7 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Admin.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Admin.Application;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Infrastructure.Authentication;

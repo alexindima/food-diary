@@ -1,8 +1,8 @@
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationFromOperation;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Hydration.Application.Tests;
 
@@ -76,6 +76,6 @@ public sealed class CreateHydrationFromOperationTests {
     }
     [ExcludeFromCodeCoverage]
     private sealed class InlineHydrationTransactionRunner : IHydrationOperationTransactionRunner {
-        public Task<T> ExecuteSerializedAsync<T>(FoodDiary.Domain.ValueObjects.Ids.UserId userId, Guid operationId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) => operation(cancellationToken);
+        public Task<T> ExecuteSerializedAsync<T>(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId, Guid operationId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) => operation(cancellationToken);
     }
 }

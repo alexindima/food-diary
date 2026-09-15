@@ -880,11 +880,11 @@
     },
     {
       "old": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "current": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
+      "current": "Modules/Wearables/Domain/Entities/WearableSyncEntry.cs",
       "gitRenameChain": [
         {
           "old": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
-          "new": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
+          "new": "Modules/Wearables/Domain/Entities/WearableSyncEntry.cs",
           "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
           "score": "R100"
         }
@@ -1288,11 +1288,11 @@
     },
     {
       "old": "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs",
-      "current": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+      "current": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/WearableDateValidatorTests.cs",
       "gitRenameChain": [
         {
           "old": "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs",
-          "new": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+          "new": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/WearableDateValidatorTests.cs",
           "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
           "score": "R100"
         }
@@ -1300,11 +1300,11 @@
     },
     {
       "old": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
-      "current": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
+      "current": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInCalculatorTests.cs",
       "gitRenameChain": [
         {
           "old": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
-          "new": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
+          "new": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInCalculatorTests.cs",
           "commit": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
           "score": "R100"
         }
@@ -1335,11 +1335,11 @@
       ]
     },
     {
-      "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
+      "old": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
       "current": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
       "gitRenameChain": [
         {
-          "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
+          "old": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
           "new": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
           "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
           "score": "R100"
@@ -1347,11 +1347,11 @@
       ]
     },
     {
-      "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
+      "old": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
       "current": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
       "gitRenameChain": [
         {
-          "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
+          "old": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
           "new": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
           "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
           "score": "R100"

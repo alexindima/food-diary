@@ -1,8 +1,7 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Application.WeeklyGoals;
-using FoodDiary.Infrastructure.Persistence.WeeklyGoals;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.WeeklyGoals.Application;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.WeeklyGoals.Infrastructure;

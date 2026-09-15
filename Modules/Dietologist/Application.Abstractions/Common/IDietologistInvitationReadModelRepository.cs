@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 

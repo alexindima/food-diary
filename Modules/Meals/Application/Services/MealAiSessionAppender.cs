@@ -7,7 +7,7 @@ using FoodDiary.Modules.Meals.Application.Common.Validation;
 using FoodDiary.Modules.Meals.Application.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Meals.Application.Services;
 

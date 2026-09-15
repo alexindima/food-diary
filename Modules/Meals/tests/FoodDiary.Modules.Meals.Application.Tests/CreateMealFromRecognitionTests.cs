@@ -4,14 +4,14 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMealFromRecognition;
 
 using FoodDiary.Modules.Meals.Application.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Meals.Application.Tests;

@@ -1,0 +1,26 @@
+namespace FoodDiary.Modules.Usda.Domain.Entities;
+
+/// <summary>
+/// Amount of a specific nutrient in a USDA food (per 100g). Read-only reference data.
+/// </summary>
+public sealed class UsdaFoodNutrient {
+    public required int Id {
+        get;
+        init => field = UsdaDomainGuard.Positive(value, nameof(Id));
+    }
+    public required int FdcId {
+        get;
+        init => field = UsdaDomainGuard.Positive(value, nameof(FdcId));
+    }
+    public required int NutrientId {
+        get;
+        init => field = UsdaDomainGuard.Positive(value, nameof(NutrientId));
+    }
+    public required double Amount {
+        get;
+        init => field = UsdaDomainGuard.NonNegativeFinite(value, nameof(Amount));
+    }
+
+    public UsdaFood Food { get; init; } = null!;
+    public UsdaNutrient Nutrient { get; init; } = null!;
+}

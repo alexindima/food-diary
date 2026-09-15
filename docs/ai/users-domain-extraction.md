@@ -10,7 +10,7 @@ Source baseline: `d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf`.
 | User-prefixed states/updates, lifecycle events, RoleId/WeightGoalId/WaistGoalId, goal statuses and role audit enum/role names | Modules/Users/Domain |
 | GenderCode, ProfileWeightKg, ProfileHeightCm, ThemeCode, UiStyleCode | Modules/Users/Domain; these encode User profile rules |
 | UserId and ActivityLevel | Modules/Users/Domain.Contracts; only shared IEntityId primitives dependency |
-| User/role/audit and both goal EF mappings | Modules/Users/Infrastructure/Model, selected by the existing ApplyUsersPersistenceModel registration |
+| User/role/audit and both goal EF mappings | Modules/Users/PersistenceModel, selected by the existing ApplyUsersPersistenceModel registration |
 | Constants, EmailAddress, LanguageCode, DesiredWeightKg/DesiredWaistCm, shared enums and food-health value objects | Residual FoodDiary.Domain |
 | Combined Users/Identity UserRepository, DbContext/DbSets, historical migrations and snapshot | Central Infrastructure, unchanged |
 | Authentication use cases, sessions/login events, tokens and providers | Existing Identity and integration owners, unchanged |

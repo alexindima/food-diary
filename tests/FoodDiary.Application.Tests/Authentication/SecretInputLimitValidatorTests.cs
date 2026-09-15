@@ -18,9 +18,9 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreAcco
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
-using FoodDiary.Application.Users.Commands.ChangePassword;
-using FoodDiary.Application.Users.Commands.SetPassword;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Application.Commands.ChangePassword;
+using FoodDiary.Modules.Users.Application.Commands.SetPassword;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

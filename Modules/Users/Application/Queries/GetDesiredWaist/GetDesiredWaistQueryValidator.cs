@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Users.Queries.GetDesiredWaist;
+namespace FoodDiary.Modules.Users.Application.Queries.GetDesiredWaist;
 
 public sealed class GetDesiredWaistQueryValidator : AbstractValidator<GetDesiredWaistQuery> {
     public GetDesiredWaistQueryValidator() {

@@ -58,12 +58,12 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Support/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeCalculatorTests.cs`
-- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeValidatorTests.cs`
 - [presentation] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Presentation.Tests/TdeeControllerTests.cs`
 - [presentation] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Presentation.Tests/TdeeHttpMappingsTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/TdeeModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/TdeeModuleExtractionTests.cs`
 
 ## Working Rule
 

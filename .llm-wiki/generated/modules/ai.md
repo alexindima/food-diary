@@ -99,12 +99,12 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs`
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiHttpMappingsTests.cs`
 - [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiNamespaceTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiProjectLayoutTests.cs`
-- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
-- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/AiConsentTests.cs`
+- [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
+- [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/AiNamespaceTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/AiProjectLayoutTests.cs`
 
 ## Working Rule
 

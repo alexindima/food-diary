@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Users.Queries.GetWaistGoalHistory;
+namespace FoodDiary.Modules.Users.Application.Queries.GetWaistGoalHistory;
 
 public sealed record GetWaistGoalHistoryQuery(Guid? UserId)
     : IQuery<Result<IReadOnlyList<WaistGoalHistoryModel>>>, IUserRequest;

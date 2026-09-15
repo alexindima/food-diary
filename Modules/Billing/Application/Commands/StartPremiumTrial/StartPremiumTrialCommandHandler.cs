@@ -1,14 +1,14 @@
-using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
-using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
+using FoodDiary.Modules.Users.Contracts.Commands.StartUserPremiumTrial;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Modules.Billing.Application.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
 

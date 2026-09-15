@@ -5,8 +5,8 @@ using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
 namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 

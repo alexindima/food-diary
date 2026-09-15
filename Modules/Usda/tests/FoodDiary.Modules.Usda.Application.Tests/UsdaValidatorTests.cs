@@ -1,0 +1,70 @@
+using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
+using FluentValidation.TestHelper;
+using FoodDiary.Modules.Usda.Application.Queries.SearchUsdaFoods;
+using FoodDiary.Modules.Usda.Application.Queries.GetMicronutrients;
+
+namespace FoodDiary.Modules.Usda.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public class UsdaValidatorTests {
+    private readonly SearchUsdaFoodsQueryValidator _validator = new();
+
+    [Fact]
+    public async Task Validate_WithEmptySearch_HasError() {
+        var query = new SearchUsdaFoodsQuery("");
+        TestValidationResult<SearchUsdaFoodsQuery> result = await _validator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Search);
+    }
+
+    [Fact]
+    public async Task Validate_WithOversizedSearch_HasError() {
+        var query = new SearchUsdaFoodsQuery(new string('x', SearchUsdaFoodsQueryValidator.MaximumSearchLength + 1));
+
+        TestValidationResult<SearchUsdaFoodsQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.Search);
+    }
+
+    [Fact]
+    public async Task Validate_WithLimitTooLow_HasError() {
+        var query = new SearchUsdaFoodsQuery("chicken", Limit: 0);
+        TestValidationResult<SearchUsdaFoodsQuery> result = await _validator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Limit);
+    }
+
+    [Fact]
+    public async Task Validate_WithLimitTooHigh_HasError() {
+        var query = new SearchUsdaFoodsQuery("chicken", Limit: 101);
+        TestValidationResult<SearchUsdaFoodsQuery> result = await _validator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Limit);
+    }
+
+    [Fact]
+    public async Task Validate_WithValidQuery_NoErrors() {
+        var query = new SearchUsdaFoodsQuery("chicken", Limit: 20);
+        TestValidationResult<SearchUsdaFoodsQuery> result = await _validator.TestValidateAsync(query);
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GetMicronutrients_WithNonPositiveFdcId_HasError(int fdcId) {
+        var validator = new GetMicronutrientsQueryValidator();
+
+        TestValidationResult<GetMicronutrientsQuery> result = await validator.TestValidateAsync(
+            new GetMicronutrientsQuery(fdcId));
+
+        result.ShouldHaveValidationErrorFor(static query => query.FdcId);
+    }
+
+    [Fact]
+    public async Task GetMicronutrients_WithPositiveFdcId_NoErrors() {
+        var validator = new GetMicronutrientsQueryValidator();
+
+        TestValidationResult<GetMicronutrientsQuery> result = await validator.TestValidateAsync(
+            new GetMicronutrientsQuery(1));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+}

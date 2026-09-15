@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$BaseRef = 'HEAD',
-    [string]$SnapshotPath = 'tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json',
-    [string]$PayloadSnapshotPath = 'tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/payload-contract-snapshots.json',
+    [string]$SnapshotPath = 'Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json',
+    [string]$PayloadSnapshotPath = 'Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/payload-contract-snapshots.json',
     [string]$BaseSnapshotContent,
     [string]$CurrentSnapshotContent,
     [string]$BasePayloadSnapshotContent,

@@ -5,8 +5,8 @@ using FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitationForCur
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dietologist.Application.Tests;
 

@@ -4,7 +4,7 @@ using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Images.Infrastructure.Persistence.Images;

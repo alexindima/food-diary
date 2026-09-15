@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 

@@ -1,20 +1,22 @@
+using FoodDiary.Infrastructure;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using System.Data.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

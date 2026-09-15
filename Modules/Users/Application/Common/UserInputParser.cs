@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Modules.Users.Application.Common;
 
 internal static class UserInputParser {
     public static Result<TEnum?> ParseOptionalEnum<TEnum>(string? value, string fieldName, string message)

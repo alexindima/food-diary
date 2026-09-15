@@ -2,7 +2,7 @@ using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using System.Globalization;
 
 namespace FoodDiary.Modules.Fasting.Application.Tests;

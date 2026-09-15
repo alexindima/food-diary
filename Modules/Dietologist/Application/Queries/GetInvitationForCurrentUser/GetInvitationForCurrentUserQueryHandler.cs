@@ -5,10 +5,10 @@ using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Modules.Dietologist.Application.Mappings;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationForCurrentUser;
 

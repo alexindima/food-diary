@@ -1,12 +1,13 @@
 using System.Diagnostics;
-using FoodDiary.Application.WeeklyGoals.Services;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.WeeklyGoals.Contracts.Commands.SendWeeklyGoalReminders;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class WeeklyGoalReminderJob(
-    WeeklyGoalReminderProcessor processor,
+    ISender sender,
     IOptions<WeeklyGoalReminderOptions> options,
     JobExecutionObserver observer,
     ILogger<WeeklyGoalReminderJob> logger) {
@@ -22,7 +23,7 @@ public sealed class WeeklyGoalReminderJob(
                 return;
             }
 
-            int processed = await processor.ProcessAsync(cancellationToken).ConfigureAwait(false);
+            int processed = await sender.Send(new SendWeeklyGoalRemindersCommand(), cancellationToken).ConfigureAwait(false);
             observer.RecordSuccess(JobName, processed: processed);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation("Weekly goal reminder job was canceled.");

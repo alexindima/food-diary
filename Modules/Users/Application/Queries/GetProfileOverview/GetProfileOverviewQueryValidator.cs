@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Users.Queries.GetProfileOverview;
+namespace FoodDiary.Modules.Users.Application.Queries.GetProfileOverview;
 
 public sealed class GetProfileOverviewQueryValidator : AbstractValidator<GetProfileOverviewQuery> {
     public GetProfileOverviewQueryValidator() {

@@ -1,8 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Application.WeeklyCheckIn</AssemblyName>
-    <RootNamespace>FoodDiary.Application.WeeklyCheckIn</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" />

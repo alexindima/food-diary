@@ -1,1 +1,1 @@
-<Project><Import Project="..\..\..\tests\Directory.Build.props" /></Project>
+<Project><Import Project="..\..\..\Tooling\Testing\TestProjects.props" /></Project>

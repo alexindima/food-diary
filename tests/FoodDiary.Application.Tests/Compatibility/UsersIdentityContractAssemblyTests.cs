@@ -4,7 +4,8 @@ using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Application.Tests.Compatibility;
 

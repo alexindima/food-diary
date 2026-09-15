@@ -1,0 +1,126 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FoodDiary.Modules.Users.PersistenceModel.Persistence.Configurations.Users;
+
+internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
+    public void Configure(EntityTypeBuilder<User> builder) {
+        builder.Property<uint>("xmin").IsRowVersion();
+
+        ConfigureIdentity(builder);
+        ConfigurePreferences(builder);
+        ConfigureUsageLimits(builder);
+        ConfigureRelationships(builder);
+        ConfigureNavigationAccess(builder);
+    }
+
+    private static void ConfigureIdentity(EntityTypeBuilder<User> builder) {
+        builder.Property(e => e.Id).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        builder.Property(e => e.ProfileImageAssetId).HasConversion(
+            id => id.HasValue ? id.Value.Value : (Guid?)null,
+            value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
+        builder.Property(e => e.Email).IsRequired(false);
+        builder.Property(e => e.TimeZoneId).HasMaxLength(100);
+        builder.HasIndex(e => e.Email).IsUnique();
+        builder.HasIndex(e => new { e.GoogleIssuer, e.GoogleSubject })
+            .IsUnique()
+            .HasFilter("\"GoogleIssuer\" IS NOT NULL AND \"GoogleSubject\" IS NOT NULL");
+        builder.Property(e => e.GoogleIssuer).HasMaxLength(200);
+        builder.Property(e => e.GoogleSubject).HasMaxLength(255);
+        builder.Property(e => e.IsActive).HasDefaultValue(value: true);
+        builder.Property(e => e.IsEmailConfirmed).HasDefaultValue(value: false);
+        builder.Property(e => e.HasPassword).HasDefaultValue(value: true);
+        builder.Property(e => e.MustChangePassword).HasDefaultValue(value: false);
+        builder.Property(e => e.SecurityVersion).HasDefaultValue(0L);
+        builder.Property(e => e.EmailConfirmationTokenExpiresAtUtc)
+            .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.EmailConfirmationSentAtUtc)
+            .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.PasswordResetTokenExpiresAtUtc)
+            .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.PasswordResetSentAtUtc)
+            .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.LastLoginAtUtc)
+            .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.DeletedAt)
+            .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.ActivityLevel)
+            .HasConversion<string>();
+        builder.Property(e => e.TelegramUserId)
+            .HasColumnType("bigint");
+        builder.HasIndex(e => e.TelegramUserId)
+            .IsUnique();
+        builder.Property(e => e.TelegramOidcIssuer).HasMaxLength(200);
+        builder.Property(e => e.TelegramOidcSubject).HasMaxLength(255);
+        builder.HasIndex(e => new { e.TelegramOidcIssuer, e.TelegramOidcSubject })
+            .IsUnique()
+            .HasFilter("\"TelegramOidcIssuer\" IS NOT NULL AND \"TelegramOidcSubject\" IS NOT NULL");
+    }
+
+    private static void ConfigurePreferences(EntityTypeBuilder<User> builder) {
+        builder.Property(e => e.Language)
+            .HasDefaultValue("en");
+        builder.Property(e => e.Theme)
+            .HasDefaultValue("ocean");
+        builder.Property(e => e.SurfaceStyle)
+            .HasMaxLength(16)
+            .HasDefaultValue("normal")
+            .IsRequired();
+
+        builder.Property(e => e.UiStyle)
+            .HasDefaultValue("classic");
+        builder.Property(e => e.PushNotificationsEnabled)
+            .HasDefaultValue(value: false);
+        builder.Property(e => e.FastingPushNotificationsEnabled)
+            .HasDefaultValue(value: true);
+        builder.Property(e => e.SocialPushNotificationsEnabled)
+            .HasDefaultValue(value: true);
+        builder.Property(e => e.FastingCheckInReminderHours)
+            .HasDefaultValue(12);
+        builder.Property(e => e.FastingCheckInFollowUpReminderHours)
+            .HasDefaultValue(20);
+        builder.Property(e => e.DashboardLayoutJson)
+            .HasColumnType("jsonb")
+            .HasColumnName("DashboardLayout");
+    }
+
+    private static void ConfigureUsageLimits(EntityTypeBuilder<User> builder) {
+        builder.Property(e => e.AiInputTokenLimit)
+            .HasDefaultValue(5_000_000L);
+        builder.Property(e => e.AiOutputTokenLimit)
+            .HasDefaultValue(1_000_000L);
+        builder.Property(e => e.AiConsentAcceptedAt);
+        builder.Property(e => e.PremiumTrialStartedAtUtc)
+            .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.PremiumTrialEndsAtUtc)
+            .HasColumnType("timestamp with time zone");
+    }
+
+    private static void ConfigureRelationships(EntityTypeBuilder<User> builder) {
+        builder.HasMany(e => e.WeightGoals)
+            .WithOne()
+            .HasForeignKey(goal => goal.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(e => e.WaistGoals)
+            .WithOne()
+            .HasForeignKey(goal => goal.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private static void ConfigureNavigationAccess(EntityTypeBuilder<User> builder) {
+        builder.Metadata.FindNavigation(nameof(User.WeightGoals))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata.FindNavigation(nameof(User.WaistGoals))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata.FindNavigation(nameof(User.UserRoles))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+    }
+}

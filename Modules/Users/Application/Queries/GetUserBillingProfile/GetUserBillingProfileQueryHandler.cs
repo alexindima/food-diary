@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfile;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Users.Queries.GetUserBillingProfile;
+namespace FoodDiary.Modules.Users.Application.Queries.GetUserBillingProfile;
 
 public sealed class GetUserBillingProfileQueryHandler(IUserBillingProfileReadModelRepository repository) : IRequestHandler<GetUserBillingProfileQuery, Result<UserBillingProfileModel>> {
     public async Task<Result<UserBillingProfileModel>> Handle(GetUserBillingProfileQuery request, CancellationToken cancellationToken) {

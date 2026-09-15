@@ -18,6 +18,6 @@ Rules for `Modules/Dietologist/Application/`.
 
 - Build: `dotnet build Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj`
 - Tests: `dotnet test Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/FoodDiary.Modules.Dietologist.Application.Tests.csproj`
-- Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 Consume RoleNames through Users Domain.Contracts; do not reference Users Domain for role constants. User mutation remains behind Users capabilities.

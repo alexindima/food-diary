@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Modules.Usda.Contracts.Models;
+using FoodDiary.Modules.Usda.Contracts.Common;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Meals.Application.Services;
 

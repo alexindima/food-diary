@@ -1,3 +1,12 @@
+using FoodDiary.Modules.WeeklyGoals.Presentation.Extensions;
+using FoodDiary.Modules.WeeklyGoals.Infrastructure;
+using FoodDiary.Modules.WeeklyCheckIn.Presentation.Extensions;
+using FoodDiary.Modules.Wearables.Presentation.Extensions;
+using FoodDiary.Modules.Wearables.Infrastructure;
+using FoodDiary.Modules.Users.Presentation.Extensions;
+using FoodDiary.Modules.Users.Infrastructure;
+using FoodDiary.Modules.Usda.Presentation.Extensions;
+using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Tdee.Presentation.Extensions;
 using FoodDiary.Modules.Statistics.Presentation.Extensions;
 using FoodDiary.Modules.Recipes.Presentation.Extensions;
@@ -72,10 +81,7 @@ using FoodDiary.Modules.Statistics.Application;
 using FoodDiary.Modules.Tdee.Application;
 using FoodDiary.Modules.Notifications.Application;
 
-using FoodDiary.Modules.Wearables.Infrastructure;
-using FoodDiary.Modules.WeeklyGoals.Infrastructure;
-using FoodDiary.Modules.Usda.Infrastructure;
-using FoodDiary.Application.WeeklyCheckIn;
+using FoodDiary.Modules.WeeklyCheckIn.Application;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 

@@ -9,12 +9,12 @@ $tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
 $scriptPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath '.llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1' -Format Json | ConvertFrom-Json
 if ('.llm-wiki/tools/Test-LlmWikiContextEvaluationSnapshot.ps1' -notin $scriptPlan.required) { throw 'Fast plan lost the PowerShell companion test.' }
 $ciPlan = & $tool -ChangedPath '.github/workflows/ci-tests.yml' -Format Json | ConvertFrom-Json
-if ('tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' -notin $ciPlan.focusedTestFiles -or
+if ('Tooling/tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' -notin $ciPlan.focusedTestFiles -or
     @($ciPlan.commands | Where-Object { $_.command -match 'FullyQualifiedName~BuildWorkflowGuardrailTests' -and $_.priority -eq 'required' }).Count -ne 1) {
     throw 'CI workflow changes must select their architecture guardrail and runnable command.'
 }
 $ciFastPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ChangedPath '.github/workflows/ci-tests.yml' -Format Json | ConvertFrom-Json
-if ('tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' -notin $ciFastPlan.required) {
+if ('Tooling/tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' -notin $ciFastPlan.required) {
     throw 'Fast CI test plan dropped the required workflow guardrail.'
 }
 $changedPaths = @(
@@ -77,7 +77,7 @@ $repositoryPlan = & $tool `
     -Limit 15 `
     -Format Json | ConvertFrom-Json
 $declaredTypeTest = @($repositoryPlan.focusedTestDetails | Where-Object {
-    $_.path -eq 'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+    $_.path -eq 'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
 })
 if ($declaredTypeTest.Count -ne 1 -or $declaredTypeTest[0].reason -ne 'references-changed-declared-type') {
     throw 'A test referencing the changed repository type was displaced by common member-name matches.'
@@ -135,7 +135,7 @@ $databasePlan = & $tool `
     -NoBaseline `
     -Format Json | ConvertFrom-Json
 if (@($databasePlan.focusedTestFiles).Count -eq 0 -or
-    @($databasePlan.focusedTestFiles) -notcontains 'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs') {
+    @($databasePlan.focusedTestFiles) -notcontains 'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs') {
     throw 'Database/index intent produced an empty or non-provider-backed focused test plan.'
 }
 if (@($databasePlan.scenarios.id) -notcontains 'database-production-consumer' -or
@@ -158,7 +158,7 @@ $databasePlanWithUnrelatedUiDiff = & $tool `
     }) `
     -PolicyInput ([pscustomobject]@{ matchedRules = @(); requiredChecks = @(); reviewObligations = @() }) `
     -Format Json | ConvertFrom-Json
-if (@($databasePlanWithUnrelatedUiDiff.focusedTestFiles) -notcontains 'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs' -or
+if (@($databasePlanWithUnrelatedUiDiff.focusedTestFiles) -notcontains 'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs' -or
     @($databasePlanWithUnrelatedUiDiff.focusedTestFiles | Where-Object { $_ -like 'FoodDiary.Web.Client/*' }).Count -gt 0) {
     throw 'An unrelated UI diff displaced the intent-only PostgreSQL regression set.'
 }

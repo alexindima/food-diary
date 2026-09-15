@@ -8,7 +8,7 @@
 
 ## Context
 
-ADR 0018 deliberately kept `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in central Domain until their CLR and EF dependencies could be proved safe. The follow-up analysis found no `User` aggregate navigation or cross-module domain ownership: `WeeklyGoal` stores `UserId`, and its EF relationship uses `HasOne<User>().WithMany()` without a CLR navigation. The shared context, historical migrations, and model snapshot identify the entity by its unchanged `FoodDiary.Domain.Entities.WeeklyGoals.WeeklyGoal` full name.
+ADR 0018 deliberately kept `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in central Domain until their CLR and EF dependencies could be proved safe. The follow-up analysis found no `User` aggregate navigation or cross-module domain ownership: `WeeklyGoal` stores `UserId`, and its EF relationship uses `HasOne<User>().WithMany()` without a CLR navigation. The shared context, historical migrations, and model snapshot identify the entity by its unchanged `FoodDiary.Modules.WeeklyGoals.Domain.Entities.WeeklyGoal` full name.
 
 All source consumers are rebuilt together, the projects are non-packable, and the repository contains no assembly-qualified reflection or serialization dependency on these WeeklyGoals types. The established Fasting pattern already permits a module Domain project to reference central Domain one-way while shared `User` and `UserId` ownership remains centralized.
 

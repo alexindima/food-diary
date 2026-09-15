@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
-namespace FoodDiary.Application.Users.Queries.GetProfileOverview;
+namespace FoodDiary.Modules.Users.Application.Queries.GetProfileOverview;
 
 public sealed record GetProfileOverviewQuery(Guid? UserId) : IQuery<Result<ProfileOverviewModel>>, IUserRequest;

@@ -4,7 +4,7 @@ using FluentValidation.TestHelper;
 using FoodDiary.Modules.Cycles.Application.Commands.ConfirmPeriodStart;
 using FoodDiary.Modules.Cycles.Application.Commands.UpdateCycleConsent;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;

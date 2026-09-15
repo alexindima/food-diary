@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;

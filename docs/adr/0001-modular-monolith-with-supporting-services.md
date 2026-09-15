@@ -52,8 +52,8 @@ Enforce boundaries with architecture tests and local `AGENTS.md` project guides.
 
 ## Enforcement
 
-- `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`
-- `tests/FoodDiary.ArchitectureTests/LayeringTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/LayeringTests.cs`
 - `docs/ARCHITECTURE.md`
 
 ## Follow-up

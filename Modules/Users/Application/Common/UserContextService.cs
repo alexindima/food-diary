@@ -1,11 +1,13 @@
+using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 
-namespace FoodDiary.Application.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Users.Application.Common;
 
 internal sealed class UserContextService(
     IUserLookupRepository userLookupRepository,
@@ -49,8 +51,8 @@ internal sealed class UserContextService(
     }
 
     private static UserDesiredWeightModel ToDesiredWeightModel(User user) {
-        FoodDiary.Domain.Entities.Tracking.WeightGoal? goal = user.WeightGoals.SingleOrDefault(
-            item => item.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
+        FoodDiary.Modules.Users.Domain.Entities.Tracking.WeightGoal? goal = user.WeightGoals.SingleOrDefault(
+            item => item.Status == FoodDiary.Modules.Users.Domain.Enums.WeightGoalStatus.Active);
         return new UserDesiredWeightModel(user.DesiredWeightKg, goal?.StartWeightKg, goal?.StartedAtUtc);
     }
 
@@ -73,8 +75,8 @@ internal sealed class UserContextService(
     }
 
     private static UserDesiredWaistModel ToDesiredWaistModel(User user) {
-        FoodDiary.Domain.Entities.Tracking.WaistGoal? goal = user.WaistGoals.SingleOrDefault(
-            item => item.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active);
+        FoodDiary.Modules.Users.Domain.Entities.Tracking.WaistGoal? goal = user.WaistGoals.SingleOrDefault(
+            item => item.Status == FoodDiary.Modules.Users.Domain.Enums.WaistGoalStatus.Active);
         return new UserDesiredWaistModel(user.DesiredWaistCm, goal?.StartWaistCm, goal?.StartedAtUtc);
     }
 

@@ -1,7 +1,7 @@
-using FoodDiary.Application.WeeklyGoals.Models;
-using FoodDiary.Domain.Entities.WeeklyGoals;
+using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 
-namespace FoodDiary.Application.WeeklyGoals.Common;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Common;
 
 internal static class WeeklyGoalMapping {
     public static WeeklyGoalModel ToModel(this WeeklyGoal goal, int progressDays) {

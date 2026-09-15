@@ -47,8 +47,8 @@ Product and recipe command paths still need aggregate repositories for write-ori
 
 ## Enforcement
 
-- `tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs`
-- `tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs`
 
 ## Follow-up
 

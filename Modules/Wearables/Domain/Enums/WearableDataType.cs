@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Wearables.Domain.Enums;
 
 public enum WearableDataType {
     Steps = 0,

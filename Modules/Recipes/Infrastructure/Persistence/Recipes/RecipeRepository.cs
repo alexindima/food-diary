@@ -5,7 +5,7 @@ using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 

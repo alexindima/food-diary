@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.ValueObjects;
 
 public readonly record struct SurfaceStyleCode {
     public string Value { get; }

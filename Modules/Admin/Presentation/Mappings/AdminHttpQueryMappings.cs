@@ -16,7 +16,7 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Fasting.Contracts.Telemetry.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionSummary;
 using FoodDiary.Modules.Admin.Presentation.Requests;

@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Notifications.Domain.Entities;
 

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 

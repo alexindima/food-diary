@@ -9,14 +9,14 @@ using FoodDiary.Modules.Gamification.Application.Queries.GetGamification;
 using FoodDiary.Modules.Gamification.Application.Common;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Gamification.Application.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Gamification.Application.Tests;
 

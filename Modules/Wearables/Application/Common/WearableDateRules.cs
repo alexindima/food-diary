@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Wearables.Common;
+namespace FoodDiary.Modules.Wearables.Application.Common;
 
 internal static class WearableDateRules {
     public static bool IsSupported(DateTime date, TimeProvider timeProvider) {

@@ -8,17 +8,14 @@ Rules for `Modules/Usda/Application/`.
 
 - Own USDA queries, product-link commands, mappings, and USDA read services.
 - Consume Meals nutrition through USDA-owned `IUsdaMealNutritionReadService`; never load Meal aggregates.
-- Keep provider access and persistence behind contracts from `FoodDiary.Application.Abstractions`.
-- Expose product suggestions through `IUsdaProductSuggestionReadService` rather than USDA implementation types.
+- Keep provider access behind Contracts and persistence behind Application.Abstractions.
+- Expose combined food search through SearchUsdaFoodsQuery in Contracts.
 - Register application behavior through `AddUsdaApplication`; Infrastructure's `AddUsdaModule` facade composes persistence. Executable hosts remain composition roots.
 
 ## Verification
 
-- Build: `dotnet build Modules/Usda/Application/FoodDiary.Application.Usda.csproj`
+- Build: `dotnet build Modules/Usda/Application/FoodDiary.Modules.Usda.Application.csproj`
 - Focused tests: `dotnet test Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FoodDiary.Modules.Usda.Application.Tests.csproj`
-- Architecture: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Architecture: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
-USDA owns IUsdaProductLinkService in Application/Abstractions. Products implements
-that port and returns its original Result errors; USDA propagates them without
-referencing Products application contracts. Suggestion readers also live in USDA
-Application/Abstractions, so Products never references the USDA implementation.
+SearchUsdaFoodsQuery belongs to Contracts and is handled here. Products delegates combined local/provider search through ISender. Detail and daily-summary orchestration live in their handlers. IUsdaProductLinkService and IUsdaMealNutritionReadService remain consumer-owned technical ports in Contracts.

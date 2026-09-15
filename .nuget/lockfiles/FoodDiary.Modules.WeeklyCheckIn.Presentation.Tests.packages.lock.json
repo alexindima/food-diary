@@ -140,7 +140,7 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.WeeklyCheckIn": {
+      "FoodDiary.Modules.WeeklyCheckIn.Application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -321,7 +321,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
-          "FoodDiary.Application.WeeklyCheckIn": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyCheckIn.Application": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },

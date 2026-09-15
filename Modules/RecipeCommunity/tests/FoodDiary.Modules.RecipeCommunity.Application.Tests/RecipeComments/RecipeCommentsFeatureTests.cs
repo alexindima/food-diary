@@ -8,12 +8,12 @@ using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.Upda
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Modules.Recipes.Contracts.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Queries.GetRecipeComments;
 using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Common.Models;

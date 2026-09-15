@@ -1,17 +1,17 @@
 using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Entities.Wearables;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

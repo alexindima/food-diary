@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Usda.Contracts.Models;
+using FoodDiary.Modules.Usda.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Usda.Mappings;
+namespace FoodDiary.Modules.Usda.Application.Mappings;
 
 public static class HealthAreaScoreMappings {
     public static HealthAreaScoresModel ToModel(this HealthAreaScores scores) =>

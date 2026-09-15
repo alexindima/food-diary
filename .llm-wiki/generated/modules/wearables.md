@@ -15,17 +15,17 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj`
+- Extracted project: `Modules/Wearables/Application/FoodDiary.Modules.Wearables.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `Modules/Wearables/Application`
-- `Modules/Wearables/Application/Abstractions`
+- `Modules/Wearables/Application.Abstractions`
 - `Modules/Wearables/Infrastructure/Providers`
 - `Modules/Wearables/Presentation`
 
@@ -39,7 +39,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: WearableConnection, WearableSyncEntry
 - Public contract files: 18
-- Observed external consumer groups: 2
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -49,7 +49,7 @@ No literal attribute-routed controller was associated with this module.
 - DTO/read-model/projection types: 3
 - Enums: 0
 - Exported repository-shaped contracts: 7
-- Contracts referencing domain entities: 4
+- Contracts referencing domain entities: 0
 - `class WearableErrors`
 - `class WearableInputLimits`
 - `interface IWearableClient`
@@ -75,10 +75,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Support/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs`
-- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/Domain/WearableIdConversionTests.cs`
-- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/Domain/WearableInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/WearableDateValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/WearablesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/WearableIdConversionTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/WearableInvariantTests.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseCollection.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableRetryIntegrationTests.cs`
@@ -93,8 +93,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Services/WearableTokenProtectorTests.cs`
 - [presentation] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearableHttpMappingsTests.cs`
 - [presentation] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearablesControllerTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/WearablesModuleExtractionTests.cs`
 
 ## Working Rule
 

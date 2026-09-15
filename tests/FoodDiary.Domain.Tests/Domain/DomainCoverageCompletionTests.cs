@@ -18,10 +18,11 @@ using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Usda;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Events;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Usda.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Events;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Tests.Domain;
 

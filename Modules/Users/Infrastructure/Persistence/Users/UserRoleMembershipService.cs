@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 internal sealed class UserRoleMembershipService(Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database, DbSet<User> users, DbSet<Role> roles, DbSet<UserRole> userRoles, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserRoleMembershipService {
     public async Task EnsureRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) {

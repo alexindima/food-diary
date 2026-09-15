@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.WeeklyGoals.Queries.GetWeeklyGoal;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Queries.GetWeeklyGoal;
 
 public sealed class GetWeeklyGoalQueryValidator : AbstractValidator<GetWeeklyGoalQuery> {
     public GetWeeklyGoalQueryValidator() {

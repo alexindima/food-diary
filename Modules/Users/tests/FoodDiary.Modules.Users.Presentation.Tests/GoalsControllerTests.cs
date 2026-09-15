@@ -1,15 +1,16 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Users.Commands.UpdateGoals;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Queries.GetUserGoals;
+using FoodDiary.Modules.Users.Application.Commands.UpdateGoals;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Application.Queries.GetUserGoals;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Goals;
-using FoodDiary.Presentation.Api.Features.Goals.Requests;
-using FoodDiary.Presentation.Api.Features.Goals.Responses;
+using FoodDiary.Modules.Users.Presentation.Goals.Controllers;
+using FoodDiary.Modules.Users.Presentation.Goals.Requests;
+using FoodDiary.Modules.Users.Presentation.Goals.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Users.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class GoalsControllerTests {

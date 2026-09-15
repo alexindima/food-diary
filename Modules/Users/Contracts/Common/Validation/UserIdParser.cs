@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Common.Validation;
+namespace FoodDiary.Modules.Users.Contracts.Common.Validation;
 
 public static class UserIdParser {
     public static Result<UserId> Parse(Guid? value) {

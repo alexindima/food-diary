@@ -55,10 +55,11 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/Support/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs`
-- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.PeriodBounds.cs`
+- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs`
 - [presentation] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Presentation.Tests/WeeklyCheckInHttpMappingsTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WeeklyCheckInModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/WeeklyCheckInModuleExtractionTests.cs`
 
 ## Working Rule
 

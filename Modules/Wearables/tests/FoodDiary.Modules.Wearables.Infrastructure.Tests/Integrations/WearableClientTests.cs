@@ -1,14 +1,14 @@
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
 using System.Net;
 using System.Text;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Wearables;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Wearables;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class WearableClientTests {

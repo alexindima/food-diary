@@ -1,6 +1,6 @@
 using FoodDiary.Persistence.Abstractions;
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Usda;
+using FoodDiary.Modules.Usda.Application.Abstractions.Common;
+using FoodDiary.Modules.Usda.Application;
 using FoodDiary.Modules.Usda.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 

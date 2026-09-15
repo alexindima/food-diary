@@ -58,7 +58,7 @@ directly to substitute only the external AI client and object storage. The real
 recognition processor, quota store, image ownership checks and Meals flow remain
 in the test host. These test dependencies do not change production module ownership.
 
-TG-01 through TG-20 in the plan are the acceptance requirements, not claims of completed tests. Initial domain tests live in `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/TelegramAccountTests.cs`; further API, PostgreSQL and frontend evidence is recorded in the task workspace as implementation proceeds.
+TG-01 through TG-20 in the plan are the acceptance requirements, not claims of completed tests. Initial domain tests live in `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/TelegramAccountTests.cs`; further API, PostgreSQL and frontend evidence is recorded in the task workspace as implementation proceeds.
 
 ## Follow-up
 

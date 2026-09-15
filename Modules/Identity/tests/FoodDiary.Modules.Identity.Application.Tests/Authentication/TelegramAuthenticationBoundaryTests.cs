@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.BeginTelegramMiniApp;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.ExchangeTelegramOidc;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramOidc;

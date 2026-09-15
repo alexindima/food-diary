@@ -8,7 +8,7 @@ This document is an evidence-based map of the backend architecture. It is intend
 
 The primary FoodDiary backend is deployed as one application but split into projects and feature modules with explicit dependency rules. This preserves simple deployment and in-process transactions while preventing an unstructured “big ball of mud”. The important senior-level point is that a modular monolith is a deliberate trade-off: microservices are deferred until independent scaling, ownership, availability or release cadence justify their distributed-systems cost.
 
-Evidence: `docs/ARCHITECTURE.md`, `docs/adr/0001-modular-monolith-with-supporting-services.md`, `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`.
+Evidence: `docs/ARCHITECTURE.md`, `docs/adr/0001-modular-monolith-with-supporting-services.md`, `Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`.
 
 ### 2. Selective service extraction
 
@@ -20,7 +20,7 @@ Evidence: `docs/adr/0002-mailrelay-mailinbox-as-separate-services.md`, `Services
 
 MailRelay and MailInbox repeat their own Domain/Application/Infrastructure/Presentation layering and can be accessed from the core only through typed client packages. This limits model leakage and forms an anti-corruption boundary between contexts.
 
-Evidence: `FoodDiary.MailRelay.Client`, `FoodDiary.MailInbox.Client`, `tests/FoodDiary.ArchitectureTests/ClientPackageBoundaryTests.cs`.
+Evidence: `FoodDiary.MailRelay.Client`, `FoodDiary.MailInbox.Client`, `Tooling/tests/FoodDiary.ArchitectureTests/ClientPackageBoundaryTests.cs`.
 
 ### 4. Database per supporting service
 
@@ -34,7 +34,7 @@ Evidence: `docs/ARCHITECTURE.md`, Docker Compose configuration, service infrastr
 
 Dependencies point inward: Domain contains business rules; Application contains use cases; Application.Abstractions defines ports; Infrastructure and Integrations implement ports; Presentation adapts HTTP; Web.Api composes the process. Business logic does not depend on ASP.NET Core, EF Core or external SDKs.
 
-Evidence: project references, `docs/BACKEND_MODULE_MAP.md`, `tests/FoodDiary.ArchitectureTests/LayeringTests.cs`.
+Evidence: project references, `docs/BACKEND_MODULE_MAP.md`, `Tooling/tests/FoodDiary.ArchitectureTests/LayeringTests.cs`.
 
 ### 6. Hexagonal Architecture / Ports and Adapters
 
@@ -52,7 +52,7 @@ Evidence: `FoodDiary.Application.Abstractions/Common/Abstractions/`, project ref
 
 Executable hosts own DI, configuration, authentication, middleware, telemetry and provider wiring, but not feature controllers or business rules. Centralizing object-graph assembly keeps construction concerns out of domain and application code.
 
-Evidence: `FoodDiary.Web.Api/Program.cs`, `FoodDiary.Web.Api/Extensions/`, `tests/FoodDiary.ArchitectureTests/HostCompositionBoundaryTests.cs`.
+Evidence: `FoodDiary.Web.Api/Program.cs`, `FoodDiary.Web.Api/Extensions/`, `Tooling/tests/FoodDiary.ArchitectureTests/HostCompositionBoundaryTests.cs`.
 
 ### 9. Dependency injection and modular registration
 
@@ -64,7 +64,7 @@ Evidence: `FoodDiary.Infrastructure/DependencyInjection.*.cs`, `FoodDiary.Integr
 
 Architecture is enforced by executable tests: dependency matrix, layer rules, host-only boundaries, async conventions, feature structure, package allowlists and side-effect restrictions. This turns architectural intent into a CI constraint and prevents gradual erosion.
 
-Evidence: `tests/FoodDiary.ArchitectureTests/`.
+Evidence: `Tooling/tests/FoodDiary.ArchitectureTests/`.
 
 ### 11. Architecture Decision Records
 
@@ -78,7 +78,7 @@ Evidence: `docs/adr/`.
 
 Commands, queries, handlers, validators, models and services are grouped by business feature rather than only by technical type. A change is therefore localized around a use case, while common folders are restricted to genuinely cross-feature concepts.
 
-Evidence: `FoodDiary.Application.<Feature>/`, `Shared/FoodDiary.Application.Runtime/`, `FoodDiary.Application.Abstractions/`, `tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`.
+Evidence: `FoodDiary.Application.<Feature>/`, `Shared/FoodDiary.Application.Runtime/`, `FoodDiary.Application.Abstractions/`, `Tooling/tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`.
 
 ### 13. CQRS
 
@@ -158,7 +158,7 @@ Evidence: `FoodDiary.Domain/ValueObjects/`, `FoodDiary.Domain/ValueObjects/Ids/`
 
 `UserId`, `MealId`, `RecipeId` and many other IDs wrap `Guid`. EF converters bridge them to database columns. The trade-off is extra mapping/serialization code in exchange for compile-time type safety.
 
-Evidence: `Modules/Users/Domain.Contracts/ValueObjects/Ids/UserId.cs`, module PersistenceModel `HasConversion` mappings, and `tests/FoodDiary.Infrastructure.Tests/Persistence/StronglyTypedIdModelTests.cs`. The unused central converter container was retired; these tests inspect the actual composed Npgsql model.
+Evidence: `Modules/Users/Domain.Contracts/ValueObjects/Ids/UserId.cs`, module PersistenceModel `HasConversion` mappings, and `Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/StronglyTypedIdModelTests.cs`. The unused central converter container was retired; these tests inspect the actual composed Npgsql model.
 
 ### 26. Domain Events
 
@@ -266,7 +266,7 @@ Evidence: `FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs`, presentation `R
 
 Routes, payloads, status codes and OpenAPI output are stored as reviewed snapshots. This makes accidental contract drift visible in a pull request and treats HTTP shape as a compatibility surface.
 
-Evidence: `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`, ADR 0005.
+Evidence: `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`, ADR 0005.
 
 ### 43. Rate limiting and defense in depth
 
@@ -324,7 +324,7 @@ Evidence: `docs/TESTING_STRATEGY.md`, `tests/`, service-specific test projects.
 
 PostgreSQL integration tests verify mappings, migrations, transactions, repository semantics and query plans against the actual database engine. This catches behavior that EF in-memory substitutes cannot reproduce.
 
-Evidence: `tests/FoodDiary.Infrastructure.IntegrationTests/` and service integration tests.
+Evidence: `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/` and service integration tests.
 
 ### 52. Migration safety as a governed practice
 

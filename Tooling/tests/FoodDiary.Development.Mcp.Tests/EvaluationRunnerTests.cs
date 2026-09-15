@@ -172,7 +172,7 @@ public sealed class EvaluationRunnerTests {
                 "id": "users",
                 "intent": "Change users",
                 "query": "user handler",
-                "plannedPath": "FoodDiary.Application.Users",
+                "plannedPath": "FoodDiary.Modules.Users.Application",
                 "expectedPaths": ["FoodDiary.Application.Users/Handler.cs"],
                 "expectedLayers": ["Application"]
               }]
@@ -231,7 +231,7 @@ public sealed class EvaluationRunnerTests {
                 "id": "empty",
                 "intent": "Inspect users",
                 "query": "missing context",
-                "plannedPath": "FoodDiary.Application.Users",
+                "plannedPath": "FoodDiary.Modules.Users.Application",
                 "expectedPaths": ["FoodDiary.Application.Users/Missing.cs"],
                 "expectedLayers": []
               }]

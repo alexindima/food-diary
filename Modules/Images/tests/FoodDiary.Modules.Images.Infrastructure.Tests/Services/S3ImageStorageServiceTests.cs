@@ -2,7 +2,7 @@ using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Diagnostics.Metrics;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using SkiaSharp;
 
 namespace FoodDiary.Modules.Images.Infrastructure.Tests.Services;

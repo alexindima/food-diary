@@ -4,8 +4,8 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
 using FoodDiary.Modules.Fasting.Application.Mappings;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Modules.Fasting.Application.Commands.UpdateCurrentFastingCheckIn;

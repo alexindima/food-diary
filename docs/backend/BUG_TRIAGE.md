@@ -100,7 +100,7 @@ The queue limits require a service restart with the updated build, but no schema
 dotnet test Services/BugTriage/tests/FoodDiary.BugTriage.Tests
 dotnet test Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests
 python -m unittest discover -s Services/BugTriage/worker -p test_bugtriage.py
-dotnet test tests/FoodDiary.ArchitectureTests
+dotnet test Tooling/tests/FoodDiary.ArchitectureTests
 ```
 
 PostgreSQL tests require Docker. They exercise duplicate imports, competing claims, lease expiry/fencing, retry limits, completion retries and content purging. MailInbox tests cover recipient isolation, tied timestamps, key capabilities, binary fidelity and retention.

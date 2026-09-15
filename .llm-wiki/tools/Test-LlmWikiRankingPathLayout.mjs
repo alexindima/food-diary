@@ -17,6 +17,9 @@ const moved = [
   ['Modules/Inventory/Presentation/Features/Stock/Mappings/StockResponseMappings.cs', 'FoodDiary.Presentation.Api/Features/Stock/Mappings/StockResponseMappings.cs'],
   ['Modules/Inventory/Contracts/Stock/IStockReader.cs', 'FoodDiary.Application.Abstractions/Stock/IStockReader.cs'],
   ['FoodDiary.ReadModel.Composition/Inventory/StockReader.cs', 'FoodDiary.Infrastructure/Persistence/Inventory/StockReader.cs'],
+  ['Hosts/tests/FoodDiary.Example.IntegrationTests/ContractTests.cs', 'tests/FoodDiary.Example.IntegrationTests/ContractTests.cs'],
+  ['Platform/tests/FoodDiary.Example.Tests/QueryTests.cs', 'tests/FoodDiary.Example.Tests/QueryTests.cs'],
+  ['Tooling/tests/FoodDiary.ArchitectureTests/BoundaryTests.cs', 'tests/FoodDiary.ArchitectureTests/BoundaryTests.cs'],
 ];
 for (const [current, legacy] of moved) {
   assert.deepEqual(rankingPathIdentities(current), [current.toLowerCase(), legacy.toLowerCase()]);

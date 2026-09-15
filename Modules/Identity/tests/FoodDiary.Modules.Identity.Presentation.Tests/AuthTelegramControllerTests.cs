@@ -5,12 +5,12 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramBot
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;

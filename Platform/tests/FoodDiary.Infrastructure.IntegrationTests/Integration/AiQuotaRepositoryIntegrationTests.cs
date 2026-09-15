@@ -1,0 +1,330 @@
+using FoodDiary.Modules.Ai.Infrastructure.Persistence;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+
+[Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
+public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    private static readonly DateTime PeriodStartUtc = new(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+
+    [RequiresDockerFact]
+    public async Task ReserveAsync_WithTwentyConcurrentRequests_NeverExceedsQuota() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+
+        Task<AiQuotaReservationStatus>[] attempts = [.. Enumerable.Range(0, 20)
+            .Select(index => new AiQuotaRepository(options, timeProvider).ReserveAsync(CreateRequest(
+                RequestIdFor(index),
+                userId,
+                inputTokens: 100,
+                outputTokens: 50,
+                inputLimit: 300,
+                outputLimit: 150)))];
+
+        AiQuotaReservationStatus[] statuses = await Task.WhenAll(attempts);
+
+        Assert.Equal(3, statuses.Count(status => status == AiQuotaReservationStatus.Acquired));
+        Assert.Equal(17, statuses.Count(status => status == AiQuotaReservationStatus.QuotaExceeded));
+    }
+
+    [RequiresDockerFact]
+    public async Task ReserveAsync_WithSameConcurrentRequestId_AcquiresExactlyOnce() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        AiQuotaReservationRequest request = CreateRequest(
+            RequestIdFor(0),
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 10_000,
+            outputLimit: 10_000);
+
+        Task<AiQuotaReservationStatus>[] attempts = [.. Enumerable.Range(0, 20)
+            .Select(_ => new AiQuotaRepository(options, timeProvider).ReserveAsync(request))];
+
+        AiQuotaReservationStatus[] statuses = await Task.WhenAll(attempts);
+
+        Assert.Equal(1, statuses.Count(status => status == AiQuotaReservationStatus.Acquired));
+        Assert.Equal(19, statuses.Count(status => status == AiQuotaReservationStatus.InProgress));
+    }
+
+    [RequiresDockerFact]
+    public async Task ReserveAsync_WithExistingRequestIdForDifferentOperation_ReturnsDuplicate() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        AiQuotaReservationRequest request = CreateRequest(
+            RequestIdFor(20),
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 1_000,
+            outputLimit: 1_000);
+        await repository.ReserveAsync(request);
+
+        AiQuotaReservationStatus status = await repository.ReserveAsync(request with { Operation = "meal_plan" });
+
+        Assert.Equal(AiQuotaReservationStatus.Duplicate, status);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReserveAsync_WithUnsupportedPersistedState_Throws() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        AiQuotaReservationRequest request = CreateRequest(
+            RequestIdFor(21),
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 1_000,
+            outputLimit: 1_000);
+        await repository.ReserveAsync(request);
+        await using (var context = new AiDbContext(options)) {
+            await context.Database.ExecuteSqlInterpolatedAsync(
+                $"UPDATE \"AiQuotaReservations\" SET \"State\" = {int.MaxValue} WHERE \"RequestId\" = {request.RequestId}");
+        }
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            repository.ReserveAsync(request));
+
+        Assert.Equal("Unsupported AI quota reservation state.", exception.Message);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReconcileAsync_IsIdempotentAndReturnsUnusedBudget() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        string firstRequestId = RequestIdFor(0);
+        AiQuotaReservationStatus reservation = await repository.ReserveAsync(CreateRequest(
+            firstRequestId,
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 100,
+            outputLimit: 50));
+
+        var usage = new AiQuotaUsage("nutrition", "gpt-test", 40, 10, 50);
+        await repository.ReconcileAsync(firstRequestId, usage);
+        await repository.ReconcileAsync(firstRequestId, usage);
+        AiQuotaReservationStatus secondReservation = await repository.ReserveAsync(CreateRequest(
+            RequestIdFor(1),
+            userId,
+            inputTokens: 60,
+            outputTokens: 40,
+            inputLimit: 100,
+            outputLimit: 50));
+
+        await using var assertionContext = new AiDbContext(options);
+        int usageRows = await assertionContext.AiUsages.CountAsync(item => item.UserId == userId);
+        Assert.Equal(AiQuotaReservationStatus.Acquired, reservation);
+        Assert.Equal(AiQuotaReservationStatus.Acquired, secondReservation);
+        Assert.Equal(1, usageRows);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReserveAsync_WhenPendingReservationExpires_ChargesItConservatively() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        string firstRequestId = RequestIdFor(0);
+        AiQuotaReservationRequest firstRequest = CreateRequest(
+            firstRequestId,
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 100,
+            outputLimit: 50,
+            expiresOnUtc: timeProvider.GetUtcNow().UtcDateTime.AddMinutes(1));
+
+        AiQuotaReservationStatus firstStatus = await repository.ReserveAsync(firstRequest);
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+        AiQuotaReservationStatus secondStatus = await repository.ReserveAsync(CreateRequest(
+            RequestIdFor(1),
+            userId,
+            inputTokens: 1,
+            outputTokens: 1,
+            inputLimit: 100,
+            outputLimit: 50));
+        AiQuotaReservationStatus repeatedStatus = await repository.ReserveAsync(CreateRequest(
+            firstRequestId,
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 100,
+            outputLimit: 50));
+
+        Assert.Equal(AiQuotaReservationStatus.Acquired, firstStatus);
+        Assert.Equal(AiQuotaReservationStatus.QuotaExceeded, secondStatus);
+        Assert.Equal(AiQuotaReservationStatus.Duplicate, repeatedStatus);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReleaseAsync_AllowsSameRequestToAcquireAgain() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        AiQuotaReservationRequest request = CreateRequest(
+            RequestIdFor(0),
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 100,
+            outputLimit: 50);
+
+        AiQuotaReservationStatus firstStatus = await repository.ReserveAsync(request);
+        await repository.ReleaseAsync(request.RequestId);
+        AiQuotaReservationStatus secondStatus = await repository.ReserveAsync(request);
+
+        Assert.Equal(AiQuotaReservationStatus.Acquired, firstStatus);
+        Assert.Equal(AiQuotaReservationStatus.Acquired, secondStatus);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReconcileAsync_AfterReservationExpires_ReconcilesOrphanedUsage() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        string requestId = RequestIdFor(10);
+        AiQuotaReservationRequest request = CreateRequest(
+            requestId,
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 1_000,
+            outputLimit: 1_000,
+            expiresOnUtc: timeProvider.GetUtcNow().UtcDateTime.AddMinutes(1));
+
+        await repository.ReserveAsync(request);
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+        await repository.ReserveAsync(CreateRequest(
+            RequestIdFor(11),
+            userId,
+            inputTokens: 1,
+            outputTokens: 1,
+            inputLimit: 1_000,
+            outputLimit: 1_000));
+        await repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 40, 10, 50));
+
+        await using var context = new AiDbContext(options);
+        Assert.Single(await context.AiUsages.Where(item => item.UserId == userId).ToListAsync());
+    }
+
+    [RequiresDockerFact]
+    public async Task ReconcileAsync_WhenUsageExceedsReservation_Throws() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        string requestId = RequestIdFor(12);
+        await repository.ReserveAsync(CreateRequest(
+            requestId,
+            userId,
+            inputTokens: 10,
+            outputTokens: 10,
+            inputLimit: 100,
+            outputLimit: 100));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.ReconcileAsync(
+            requestId,
+            new AiQuotaUsage("nutrition", "gpt-test", 11, 10, 21)));
+    }
+
+    [RequiresDockerFact]
+    public async Task ReconcileAsync_WhenReservationWasReleased_Throws() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        string requestId = RequestIdFor(22);
+        await repository.ReserveAsync(CreateRequest(
+            requestId,
+            userId,
+            inputTokens: 10,
+            outputTokens: 10,
+            inputLimit: 100,
+            outputLimit: 100));
+        await repository.ReleaseAsync(requestId);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 5, 5, 10)));
+
+        Assert.Equal("Only pending or orphaned AI quota reservations can be reconciled.", exception.Message);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReleaseAsync_WhenReservationIsCompleted_IsIdempotent() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        string requestId = RequestIdFor(13);
+        await repository.ReserveAsync(CreateRequest(
+            requestId,
+            userId,
+            inputTokens: 10,
+            outputTokens: 10,
+            inputLimit: 100,
+            outputLimit: 100));
+        await repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 5, 5, 10));
+
+        await repository.ReleaseAsync(requestId);
+
+        await using var context = new AiDbContext(options);
+        Assert.Single(await context.AiUsages.Where(item => item.UserId == userId).ToListAsync());
+    }
+
+    private async Task<(DbContextOptions<AiDbContext> Options, UserId UserId)> CreateDatabaseAsync() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
+            .UseNpgsql(connectionString, npgsqlOptions => npgsqlOptions.EnableRetryOnFailure())
+            .Options;
+        await using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(connectionString).Options);
+        await context.Database.MigrateAsync();
+        var user = User.Create($"ai-quota-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        return (options, user.Id);
+    }
+
+    private static AiQuotaReservationRequest CreateRequest(
+        string requestId,
+        UserId userId,
+        long inputTokens,
+        long outputTokens,
+        long inputLimit,
+        long outputLimit,
+        DateTime? expiresOnUtc = null) =>
+        new(
+            requestId,
+            userId,
+            PeriodStartUtc,
+            "nutrition",
+            inputTokens,
+            outputTokens,
+            inputLimit,
+            outputLimit,
+            expiresOnUtc ?? new DateTime(2026, 8, 17, 12, 15, 0, DateTimeKind.Utc));
+
+    private static string RequestIdFor(int index) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(
+            $"ai-quota-request-{index.ToString(CultureInfo.InvariantCulture)}")));
+
+    [ExcludeFromCodeCoverage]
+    private sealed class MutableTimeProvider(DateTime utcNow) : TimeProvider {
+        private DateTime _utcNow = utcNow;
+
+        public override DateTimeOffset GetUtcNow() => new(_utcNow);
+
+        public void Advance(TimeSpan duration) {
+            _utcNow = _utcNow.Add(duration);
+        }
+    }
+}

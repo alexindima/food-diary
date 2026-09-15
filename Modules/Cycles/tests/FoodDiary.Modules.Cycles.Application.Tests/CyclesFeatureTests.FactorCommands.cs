@@ -3,7 +3,7 @@ using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleFactor;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;
 

@@ -1,14 +1,14 @@
+using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Users.Queries.GetUserForAdministration;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserForAdministration;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
 

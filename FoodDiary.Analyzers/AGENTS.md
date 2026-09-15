@@ -8,7 +8,7 @@ Rules for `FoodDiary.Analyzers/`.
 
 - Keep this project limited to FoodDiary-specific Roslyn diagnostics evaluated during compilation.
 - Use analyzers for local syntax or semantic rules that can be decided from one compilation and benefit from immediate IDE feedback.
-- Keep repository topology, project-reference, cross-file contract, deployment, and filesystem-layout rules in `tests/FoodDiary.ArchitectureTests`.
+- Keep repository topology, project-reference, cross-file contract, deployment, and filesystem-layout rules in `Tooling/tests/FoodDiary.ArchitectureTests`.
 - Do not add runtime application code, business rules, application extension methods, or production dependencies here.
 
 ## Diagnostic Rules

@@ -1,10 +1,11 @@
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -18,12 +19,12 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.ChangeTracker.Clear();
         User loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
         Assert.Equal("normal", loaded.SurfaceStyle);
-        loaded.UpdatePreferences(new FoodDiary.Domain.ValueObjects.UserPreferenceUpdate(SurfaceStyle: "matte"));
+        loaded.UpdatePreferences(new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserPreferenceUpdate(SurfaceStyle: "matte"));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
         Assert.Equal("matte", loaded.SurfaceStyle);
-        loaded.UpdatePreferences(new FoodDiary.Domain.ValueObjects.UserPreferenceUpdate(Theme: "dark"));
+        loaded.UpdatePreferences(new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserPreferenceUpdate(Theme: "dark"));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
@@ -44,8 +45,8 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
         User firstCopy = await firstContext.Users.SingleAsync(user => user.Email == "concurrency@example.com");
         User staleCopy = await secondContext.Users.SingleAsync(user => user.Email == "concurrency@example.com");
-        firstCopy.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "first-writer"));
-        staleCopy.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "stale-writer"));
+        firstCopy.UpdatePersonalInfo(new FoodDiary.Modules.Users.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "first-writer"));
+        staleCopy.UpdatePersonalInfo(new FoodDiary.Modules.Users.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "stale-writer"));
 
         await firstContext.SaveChangesAsync();
 
@@ -142,7 +143,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.Users.Add(user);
         await context.SaveChangesAsync();
         context.Entry(user).State = EntityState.Detached;
-        user.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "detached-user"));
+        user.UpdatePersonalInfo(new FoodDiary.Modules.Users.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "detached-user"));
         var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
 
         await repository.UpdateAsync(user);

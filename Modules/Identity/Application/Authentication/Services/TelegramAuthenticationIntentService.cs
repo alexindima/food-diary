@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Results;
 

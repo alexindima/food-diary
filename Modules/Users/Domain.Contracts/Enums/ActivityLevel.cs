@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
 public enum ActivityLevel {
     Minimal = 0,

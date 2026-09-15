@@ -1,11 +1,10 @@
 using System.Data.Common;
-using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Domain.Entities.WeeklyGoals;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.WeeklyGoals;
+namespace FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 
 public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTransaction?> currentTransaction) : IWeeklyGoalRepository {
     public async Task<WeeklyGoal?> GetAsync(

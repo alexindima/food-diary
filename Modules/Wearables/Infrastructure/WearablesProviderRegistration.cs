@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Wearables;
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Wearables;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Wearables.Infrastructure;
 
 public static class WearablesProviderRegistration {
     public static IServiceCollection AddWearablesProvider(this IServiceCollection services, IConfiguration configuration) {

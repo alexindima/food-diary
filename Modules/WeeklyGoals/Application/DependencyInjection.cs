@@ -1,10 +1,9 @@
 using FluentValidation;
-using FoodDiary.Application.WeeklyGoals.Common;
-using FoodDiary.Application.WeeklyGoals.Services;
+using FoodDiary.Modules.WeeklyGoals.Application.Common;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.WeeklyGoals;
+namespace FoodDiary.Modules.WeeklyGoals.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddWeeklyGoalsApplication(this IServiceCollection services) {
@@ -12,8 +11,6 @@ public static class DependencyInjection {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         services.AddScoped<WeeklyGoalProgressReader>();
-        services.AddScoped<IWeeklyGoalReadService, WeeklyGoalReadService>();
-        services.AddScoped<WeeklyGoalReminderProcessor>();
         return services;
     }
 }

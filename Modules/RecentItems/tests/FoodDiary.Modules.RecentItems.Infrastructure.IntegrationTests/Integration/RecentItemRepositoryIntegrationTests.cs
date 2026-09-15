@@ -3,7 +3,7 @@ using FoodDiary.Modules.RecentItems.Domain.Enums;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence.RecentItems;
 using Microsoft.EntityFrameworkCore;

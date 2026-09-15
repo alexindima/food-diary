@@ -104,7 +104,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
 - [presentation] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanHttpMappingsTests.cs`
 - [presentation] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/ShoppingListHttpMappingsTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MealPlanningModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/MealPlanningModuleExtractionTests.cs`
 
 ## Working Rule
 

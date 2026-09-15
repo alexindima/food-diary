@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Users.Queries.GetUserGoals;
+namespace FoodDiary.Modules.Users.Application.Queries.GetUserGoals;
 
 public sealed class GetUserGoalsQueryValidator : AbstractValidator<GetUserGoalsQuery> {
     public GetUserGoalsQueryValidator() {

@@ -9,8 +9,8 @@ tags:
   - api
   - compatibility
 sources:
-  - tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json
-  - tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs
+  - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json
+  - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs
   - .llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1
 ---
 

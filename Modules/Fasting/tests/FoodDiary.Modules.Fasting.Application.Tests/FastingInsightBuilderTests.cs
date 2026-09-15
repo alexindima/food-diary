@@ -2,7 +2,7 @@ using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
 namespace FoodDiary.Modules.Fasting.Application.Tests;
 

@@ -7,7 +7,7 @@ using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Services;
 

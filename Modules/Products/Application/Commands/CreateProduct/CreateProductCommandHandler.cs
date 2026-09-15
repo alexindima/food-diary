@@ -5,7 +5,7 @@ using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 
 using FoodDiary.Modules.Products.Application.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Products.Domain.Entities;
 
 namespace FoodDiary.Modules.Products.Application.Commands.CreateProduct;

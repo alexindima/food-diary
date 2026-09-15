@@ -1,19 +1,19 @@
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Wearables.Domain.Enums;
 using FoodDiary.Integrations.Http;
-using FoodDiary.Integrations.Options;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Wearables;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Providers.Wearables;
 
 internal sealed class FitbitClient(
     HttpClient httpClient,

@@ -3,10 +3,10 @@ using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Models;
 using FoodDiary.Modules.Lessons.Application.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Modules.Lessons.Application.Queries.GetLessons;

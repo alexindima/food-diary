@@ -2,7 +2,7 @@ using FoodDiary.Modules.Notifications.Application.Commands.MarkAllNotificationsR
 using FoodDiary.Modules.Notifications.Application.Commands.MarkNotificationRead;
 using FoodDiary.Modules.Notifications.Application.Services;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Notifications.Application.Tests;

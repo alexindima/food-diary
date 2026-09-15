@@ -3,11 +3,11 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Statistics.Application.Common;
 using FoodDiary.Modules.Statistics.Application.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Statistics.Application.Queries.GetDiaryStatistics;

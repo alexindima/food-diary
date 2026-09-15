@@ -1,14 +1,14 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Notifications.Contracts.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Notifications.Application.Common;
 using FoodDiary.Modules.Notifications.Application.Queries.GetNotifications;
 using FoodDiary.Modules.Notifications.Application.Services;
 using FoodDiary.Modules.Notifications.Application.Queries.GetUnreadCount;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Notifications.Application.Models;
 

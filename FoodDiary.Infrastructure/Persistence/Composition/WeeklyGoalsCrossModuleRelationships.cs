@@ -1,5 +1,5 @@
-using FoodDiary.Domain.Entities.WeeklyGoals;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Composition;

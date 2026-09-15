@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;

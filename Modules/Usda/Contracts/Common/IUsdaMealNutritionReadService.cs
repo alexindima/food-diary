@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Usda.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Usda.Common;
+namespace FoodDiary.Modules.Usda.Contracts.Common;
 
 public interface IUsdaMealNutritionReadService {
     Task<IReadOnlyList<UsdaMealProductNutritionReadModel>> GetForDateAsync(

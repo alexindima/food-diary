@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -6,8 +7,8 @@ using FoodDiary.Modules.Dashboard.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Mappings;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
+
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;

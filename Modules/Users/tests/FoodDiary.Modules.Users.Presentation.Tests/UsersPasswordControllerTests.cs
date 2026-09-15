@@ -1,13 +1,14 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Users.Commands.ChangePassword;
-using FoodDiary.Application.Users.Commands.SetPassword;
+using FoodDiary.Modules.Users.Application.Commands.ChangePassword;
+using FoodDiary.Modules.Users.Application.Commands.SetPassword;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Users;
-using FoodDiary.Presentation.Api.Features.Users.Requests;
+using FoodDiary.Modules.Users.Presentation.Controllers;
+using FoodDiary.Modules.Users.Presentation.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Users.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsersPasswordControllerTests {

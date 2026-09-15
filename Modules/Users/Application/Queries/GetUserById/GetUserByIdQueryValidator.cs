@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Users.Queries.GetUserById;
+namespace FoodDiary.Modules.Users.Application.Queries.GetUserById;
 
 public sealed class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery> {
     public GetUserByIdQueryValidator() {

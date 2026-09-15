@@ -78,7 +78,7 @@ if ($identitySessionIntent) {
         'Modules/Identity/Presentation/Features/Auth/AuthSessionLifecycleController.cs'
         'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
-        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
         'Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs'
     ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
     $effectivePaths = @($effectivePaths + $identitySessionGroundingPaths | Sort-Object -Unique)
@@ -121,8 +121,8 @@ $changedTestFiles = @(
         Sort-Object -Unique
 )
 if ($databaseIntent) {
-    $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs')
-    $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs')
+    $null = $behavioralIntentTests.Add('Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs')
+    $null = $behavioralIntentTests.Add('Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs')
     if ($dashboardIntent) {
         $null = $behavioralIntentTests.Add('Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs')
         $null = $behavioralIntentTests.Add('Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs')
@@ -134,10 +134,10 @@ if ($identitySessionIntent) {
         'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs'
         'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs'
         'Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs'
-        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
         'Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs'
-        'tests/FoodDiary.Presentation.Api.Tests/CurrentRefreshSessionIdModelBinderTests.cs'
-        'tests/FoodDiary.Web.Api.Tests/Extensions/SwaggerOperationFilterTests.cs'
+        'Platform/tests/FoodDiary.Presentation.Api.Tests/CurrentRefreshSessionIdModelBinderTests.cs'
+        'Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/SwaggerOperationFilterTests.cs'
         'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.spec.ts'
         'FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.spec.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts'
@@ -242,6 +242,10 @@ if ($changedTypeNames.Count -gt 0) {
     $testFiles = @()
     $testRoots = [Collections.Generic.List[string]]::new()
     $testRoots.Add('tests')
+    $testRoots.Add('Hosts/tests')
+    $testRoots.Add('Platform/tests')
+    $testRoots.Add('Shared/tests')
+    $testRoots.Add('Tooling/tests')
     $testRoots.Add('FoodDiary.Web.Client/src')
     foreach ($moduleTestRoot in $moduleTestRoots) { $testRoots.Add($moduleTestRoot) }
     if (@($effectivePaths | Where-Object { $_ -match '^Services/MailRelay/' }).Count -gt 0) { $testRoots.Add('Services/MailRelay/tests') }
@@ -318,17 +322,17 @@ if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempote
 }
 if ($repositoryAssessment) {
     foreach ($assessmentTest in @(
-        'tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'
-        'tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs'
-        'tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs'
-        'tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs'
+        'Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'
+        'Tooling/tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs'
+        'Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs'
+        'Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs'
         'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs'
         'Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs'
-        'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
-        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
         'Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs'
-        'tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs'
-        'tests/FoodDiary.ArchitectureTests/ContainerSupplyChainGuardrailTests.cs'
+        'Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs'
+        'Tooling/tests/FoodDiary.ArchitectureTests/ContainerSupplyChainGuardrailTests.cs'
         'Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayMessageProcessorTests.cs'
         'Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs'
         'Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs'
@@ -375,7 +379,7 @@ Add-RankedTests @($declaredTypeTests | Sort-Object) 98 'references-changed-decla
 Add-RankedTests @($plannedDirectoryTests | Sort-Object) 95 'planned-directory-test'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
 if ($ciWorkflowChange) {
-    Add-RankedTests @('tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs') 100 'ci-workflow-guardrail'
+    Add-RankedTests @('Tooling/tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs') 100 'ci-workflow-guardrail'
 }
 Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'
 $changedFrontendFeatureRoots = @($effectivePaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/(?:src/app|projects/[^/]+/src/app)/features/[^/]+' } | ForEach-Object {
@@ -391,8 +395,8 @@ Add-RankedTests $affineDirectTests 90 'references-changed-symbol-in-feature-boun
 Add-RankedTests @($behavioralIntentTests | Sort-Object) 85 'behavioral-intent-and-scope-affinity'
 if ($repositoryAssessment) {
     Add-RankedTests @(
-        'tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs'
-        'tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs'
+        'Tooling/tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs'
+        'Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs'
         'FoodDiary.Web.Client/src/app/services/auth.service.spec.ts'
     ) 90 'repository-assessment-core-representative'
 }
@@ -566,7 +570,7 @@ if ($databaseIntent) {
         source = 'database-intent'; priority = 'required'; reason = 'ef-model-migration-snapshot-sync'; commandEvidence = 'FoodDiaryDbContextModelSnapshot.cs'
     }
     $commands += [pscustomobject]@{
-        id = 'database-provider-tests'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~MigrationSafetyIntegrationTests|FullyQualifiedName~QueryPlanIntegrationTests"'
+        id = 'database-provider-tests'; command = 'dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~MigrationSafetyIntegrationTests|FullyQualifiedName~QueryPlanIntegrationTests"'
         source = 'database-intent'; priority = 'required'; reason = 'postgresql-migration-and-query-plan'; commandEvidence = 'MigrationSafetyIntegrationTests.cs; QueryPlanIntegrationTests.cs'
     }
 }
@@ -576,7 +580,7 @@ if ($identitySessionIntent) {
         source = 'identity-session-intent'; priority = 'required'; reason = 'session-lifecycle-use-cases'; commandEvidence = 'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication'
     }
     $commands += [pscustomobject]@{
-        id = 'session-provider-tests'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~PersistenceRepositoryCoverageIntegrationTests"'
+        id = 'session-provider-tests'; command = 'dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~PersistenceRepositoryCoverageIntegrationTests"'
         source = 'identity-session-intent'; priority = 'required'; reason = 'postgresql-session-races-and-scoping'; commandEvidence = 'PersistenceRepositoryCoverageIntegrationTests.cs'
     }
     $commands += [pscustomobject]@{
@@ -586,8 +590,8 @@ if ($identitySessionIntent) {
 }
 if ($repositoryAssessment) {
     $commands += [pscustomobject]@{
-        id = 'assessment-architecture'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
-        source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-architecture-lane'; commandEvidence = 'tests/FoodDiary.ArchitectureTests'
+        id = 'assessment-architecture'; command = 'dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
+        source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-architecture-lane'; commandEvidence = 'Tooling/tests/FoodDiary.ArchitectureTests'
     }
     $commands += [pscustomobject]@{
         id = 'assessment-backend'; command = 'dotnet test FoodDiary.slnx'
@@ -598,7 +602,7 @@ if ($repositoryAssessment) {
         source = 'repository-assessment'; priority = 'recommended'; reason = 'repository-wide-frontend-regression'; commandEvidence = 'FoodDiary.Web.Client/package.json'
     }
     $commands += [pscustomobject]@{
-        id = 'assessment-migrations'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj'
+        id = 'assessment-migrations'; command = 'dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj'
         source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-migration-safety-lane'; commandEvidence = 'MigrationSafetyIntegrationTests.cs'
     }
     $commands += [pscustomobject]@{
@@ -724,7 +728,7 @@ if ($contractBoundaryChange) {
         source = 'contract-boundary'; priority = 'required'; reason = 'application-contract-moved-or-reshaped'; commandEvidence = 'Application/Application.Abstractions contract path'
     }
     $commands += [pscustomobject]@{
-        id = 'architecture-contract-tests'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore'
+        id = 'architecture-contract-tests'; command = 'dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore'
         source = 'contract-boundary'; priority = 'required'; reason = 'assembly-and-namespace-boundary-change'; commandEvidence = 'Application/Application.Abstractions contract path'
     }
     Add-Scenario 'old-implementation-namespace-absent' 'Verify consumers no longer import the implementation namespace for contracts moved to an abstraction assembly.' 'Architecture test plus repository search for the former namespace'
@@ -732,17 +736,17 @@ if ($contractBoundaryChange) {
 }
 if ($presentationBoundaryChange -or ($contractBoundaryChange -and @($effectivePaths | Where-Object { $_ -match 'Presentation|Http|Controller|Mappings' }).Count)) {
     $commands += [pscustomobject]@{
-        id = 'presentation-contract-tests'; command = 'dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore'
+        id = 'presentation-contract-tests'; command = 'dotnet test Platform/tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore'
         source = 'contract-boundary'; priority = 'required'; reason = 'presentation-namespace-or-contract-consumer-change'; commandEvidence = 'Presentation API path or consumer'
     }
 }
 if ($ciWorkflowChange) {
-    $otherArchitectureTests = @($selectedFocusedTests | Where-Object { $_.path -like 'tests/FoodDiary.ArchitectureTests/*' -and $_.path -ne 'tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' })
+    $otherArchitectureTests = @($selectedFocusedTests | Where-Object { $_.path -like 'Tooling/tests/FoodDiary.ArchitectureTests/*' -and $_.path -ne 'Tooling/tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' })
     if ($otherArchitectureTests.Count -eq 0) {
         $commands = @($commands | Where-Object { $_.id -ne 'focused-backend-fooddiary.architecturetests' })
     }
     $commands += [pscustomobject]@{
-        id = 'ci-workflow-guardrails'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --filter FullyQualifiedName~BuildWorkflowGuardrailTests'
+        id = 'ci-workflow-guardrails'; command = 'dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --filter FullyQualifiedName~BuildWorkflowGuardrailTests'
         source = 'ci-workflow'; priority = 'required'; reason = 'workflow-file-contract'; commandEvidence = '.github/workflows/ci-tests.yml'
     }
 }

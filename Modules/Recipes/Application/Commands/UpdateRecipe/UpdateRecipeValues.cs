@@ -4,7 +4,7 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 

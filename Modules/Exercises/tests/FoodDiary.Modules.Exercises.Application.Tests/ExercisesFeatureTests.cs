@@ -12,9 +12,9 @@ using FoodDiary.Modules.Exercises.Application.Commands.DeleteExerciseEntry;
 using FoodDiary.Modules.Exercises.Application.Commands.UpdateExerciseEntry;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Exercises.Application.Queries.GetExerciseEntries;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Exercises.Contracts.Models;
 

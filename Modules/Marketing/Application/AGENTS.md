@@ -21,4 +21,4 @@ Rules for `Modules/Marketing/Application/`.
 
 - Build: `dotnet build Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj`
 - Application tests: `dotnet test Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/FoodDiary.Modules.Marketing.Application.Tests.csproj`
-- Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Architecture tests: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`

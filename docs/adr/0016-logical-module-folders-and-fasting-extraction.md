@@ -66,9 +66,9 @@ Adopt option 3.
 ## Enforcement
 
 - `docs/architecture/backend-modules.json` declares the canonical logical root and mapped projects.
-- `tests/FoodDiary.ArchitectureTests/FastingModuleExtractionTests.cs` verifies physical projects and approved references.
-- `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs` governs all new project edges.
-- `tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs` retains semantic ownership rules.
+- `Tooling/tests/FoodDiary.ArchitectureTests/FastingModuleExtractionTests.cs` verifies physical projects and approved references.
+- `Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs` governs all new project edges.
+- `Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs` retains semantic ownership rules.
 - `.llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1` and `.llm-wiki/tools/Test-LlmWikiIntentOwnership.ps1` protect logical-module discovery.
 
 ## Follow-up

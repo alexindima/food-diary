@@ -1,8 +1,8 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Modules.Users.Application.Common;
 
 public static class UserAppearancePreferencesParser {
     public static Result<UserAppearancePreferences> ParseOptional(string? theme, string? uiStyle, string? surfaceStyle = null) {

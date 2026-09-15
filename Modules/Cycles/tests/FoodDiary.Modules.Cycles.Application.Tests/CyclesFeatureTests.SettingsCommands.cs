@@ -2,7 +2,7 @@ using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Modules.Cycles.Application.Commands.UpdateCycleSettings;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;

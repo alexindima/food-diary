@@ -3,8 +3,8 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Modules.Recipes.Application.Models;
 

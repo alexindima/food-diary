@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.WeeklyGoals.Models;
+using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Commands.UpsertWeeklyGoal;
 
 public sealed record UpsertWeeklyGoalCommand(
     Guid? UserId,

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Users.Commands.UpdateUserAppearance;
+namespace FoodDiary.Modules.Users.Application.Commands.UpdateUserAppearance;
 
 public sealed class UpdateUserAppearanceCommandValidator : AbstractValidator<UpdateUserAppearanceCommand> {
     public UpdateUserAppearanceCommandValidator() {

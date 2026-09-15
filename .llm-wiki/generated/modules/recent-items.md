@@ -14,17 +14,20 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `Modules/RecentItems/Application/FoodDiary.Modules.RecentItems.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: none observed
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `Modules/RecentItems/Application`
-- `Modules/RecentItems/Application/Abstractions`
+- `Modules/RecentItems/Application.Abstractions`
+- `Modules/RecentItems/Contracts`
+- `Modules/RecentItems/PersistenceModel`
 
 ## HTTP Surface
 
@@ -35,32 +38,37 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: RecentItem
-- Public contract files: 3
-- Observed external consumer groups: 0
+- Public contract files: 8
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 3
-- Interfaces: 3
+- Public contract types: 8
+- Interfaces: 4
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
 - `interface IRecentItemReadRepository`
 - `interface IRecentItemRepository`
+- `interface IRecentItemUsageRecorder`
 - `interface IRecentItemWriteRepository`
+- `record ReadRecentProductsQuery`
+- `record ReadRecentRecipesQuery`
+- `record RecentProductUsage`
+- `record RecentRecipeUsage`
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/Domain/RecentItemInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/RecentItemInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/RecentItemsIdConversionTests.cs`
 - [integration] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.IntegrationTests/Integration/RecentItemRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs`
 - [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/Persistence/RecentItemRepositoryTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/RecentItemsModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/RecentItemsModuleExtractionTests.cs`
 
 ## Working Rule
 

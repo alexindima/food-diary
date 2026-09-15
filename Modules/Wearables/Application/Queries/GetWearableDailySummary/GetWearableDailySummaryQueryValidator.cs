@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Common;
 
-namespace FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
+namespace FoodDiary.Modules.Wearables.Application.Queries.GetWearableDailySummary;
 
 public sealed class GetWearableDailySummaryQueryValidator : AbstractValidator<GetWearableDailySummaryQuery> {
     public GetWearableDailySummaryQueryValidator(TimeProvider timeProvider) {

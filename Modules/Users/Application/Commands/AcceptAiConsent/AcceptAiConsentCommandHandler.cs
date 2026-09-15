@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
 
-namespace FoodDiary.Application.Users.Commands.AcceptAiConsent;
+namespace FoodDiary.Modules.Users.Application.Commands.AcceptAiConsent;
 
 public sealed class AcceptAiConsentCommandHandler(IUserContextService userContextService)
     : ICommandHandler<AcceptAiConsentCommand, Result> {

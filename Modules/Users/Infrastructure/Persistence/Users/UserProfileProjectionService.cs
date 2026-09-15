@@ -1,15 +1,16 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using System.Linq.Expressions;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 public sealed class UserProfileProjectionService(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) :
     ICurrentUserAccessService, IUserAiProfileReadService, IUserDashboardProfileReadService,

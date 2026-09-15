@@ -2,8 +2,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
-using FoodDiary.Modules.Products.Application.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.RecentItems.Contracts.Queries.ReadRecentProducts;
 
@@ -15,12 +14,17 @@ public sealed class RecentProductLoader(ISender sender, IProductOverviewReadServ
         int limit,
         bool includePublic,
         CancellationToken cancellationToken) {
-        return await RecentProductOverviewLoader.LoadAsync<RecentProductUsage, ProductId, ProductOverviewReadItem>(
-            userId,
-            limit,
-            (owner, count, token) => sender.Send(new ReadRecentProductsQuery(owner, count), token),
-            recent => recent.ProductId,
-            (ids, ownerUserId, ct) => productOverviewReadService.GetByIdsWithUsageAsync(ids, ownerUserId, includePublic, ct),
-            cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<RecentProductUsage> recents = await sender.Send(new ReadRecentProductsQuery(userId, limit), cancellationToken)
+            .ConfigureAwait(false);
+        if (recents.Count == 0) {
+            return [];
+        }
+
+        ProductId[] idsInOrder = [.. recents.Select(recent => recent.ProductId)];
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> itemsById = await productOverviewReadService
+            .GetByIdsWithUsageAsync(idsInOrder, userId, includePublic, cancellationToken)
+            .ConfigureAwait(false);
+
+        return [.. idsInOrder.Where(itemsById.ContainsKey).Select(id => itemsById[id])];
     }
 }

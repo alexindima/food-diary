@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
 
-namespace FoodDiary.Application.Wearables.Commands.SyncWearableData;
+namespace FoodDiary.Modules.Wearables.Application.Commands.SyncWearableData;
 
 public record SyncWearableDataCommand(
     Guid? UserId,

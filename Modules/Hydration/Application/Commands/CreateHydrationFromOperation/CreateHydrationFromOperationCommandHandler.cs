@@ -1,10 +1,10 @@
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Hydration.Application.Models;
 using FoodDiary.Modules.Hydration.Application.Validators;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationFromOperation;

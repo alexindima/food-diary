@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Application.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
 
-namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
+namespace FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWaist;
 
 public sealed class UpdateDesiredWaistCommandHandler(
     IUserContextService userContextService,
@@ -35,8 +35,8 @@ public sealed class UpdateDesiredWaistCommandHandler(
         }
 
         User currentUser = userResult.Value;
-        FoodDiary.Domain.Entities.Tracking.WaistGoal? activeGoal = currentUser.WaistGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active);
+        FoodDiary.Modules.Users.Domain.Entities.Tracking.WaistGoal? activeGoal = currentUser.WaistGoals.SingleOrDefault(
+            goal => goal.Status == FoodDiary.Modules.Users.Domain.Enums.WaistGoalStatus.Active);
         if (command.DesiredWaistCm == currentUser.DesiredWaistCm) {
             return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaistCm, activeGoal?.StartWaistCm, activeGoal?.StartedAtUtc));
         }
@@ -55,7 +55,7 @@ public sealed class UpdateDesiredWaistCommandHandler(
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         activeGoal = currentUser.WaistGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active);
+            goal => goal.Status == FoodDiary.Modules.Users.Domain.Enums.WaistGoalStatus.Active);
         return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaistCm, activeGoal?.StartWaistCm, activeGoal?.StartedAtUtc));
     }
 

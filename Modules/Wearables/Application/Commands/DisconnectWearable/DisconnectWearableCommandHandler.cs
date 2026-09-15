@@ -1,14 +1,14 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Wearables;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Application.Common;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Domain.Entities;
 
-namespace FoodDiary.Application.Wearables.Commands.DisconnectWearable;
+namespace FoodDiary.Modules.Wearables.Application.Commands.DisconnectWearable;
 
 public sealed class DisconnectWearableCommandHandler(
     IWearableConnectionWriteRepository connectionRepository,

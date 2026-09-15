@@ -2,7 +2,7 @@ using FoodDiary.Modules.Exercises.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Exercises.Infrastructure.Persistence;

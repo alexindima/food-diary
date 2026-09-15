@@ -1,14 +1,14 @@
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Queries.GetWearableConnections;
+namespace FoodDiary.Modules.Wearables.Application.Queries.GetWearableConnections;
 
 internal sealed class GetWearableConnectionsQueryHandler(
-    IWearableReadService wearableReadService,
+    IWearableConnectionReadRepository connectionRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWearableConnectionsQuery, Result<IReadOnlyList<WearableConnectionModel>>> {
     public async Task<Result<IReadOnlyList<WearableConnectionModel>>> Handle(
@@ -22,8 +22,8 @@ internal sealed class GetWearableConnectionsQueryHandler(
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WearableConnectionModel>>(userIdResult);
         }
 
-        IReadOnlyList<WearableConnectionModel> models = await wearableReadService
-            .GetConnectionsAsync(userIdResult.Value, cancellationToken)
+        IReadOnlyList<WearableConnectionModel> models = await connectionRepository
+            .GetConnectionModelsAsync(userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);
         return Result.Success<IReadOnlyList<WearableConnectionModel>>(models);
     }

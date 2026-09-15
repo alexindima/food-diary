@@ -16,7 +16,7 @@ $cases = @(
         'Modules/Fasting/Presentation/Features/Fasting/FastingController.cs'
         'FoodDiary.Web.Api/appsettings.Production.json'
     ); MinimumSymbols = 2 }
-    [pscustomobject]@{ ChangedPath = @('tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'); MinimumSymbols = 0 }
+    [pscustomobject]@{ ChangedPath = @('Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'); MinimumSymbols = 0 }
     [pscustomobject]@{ ChangedPath = @(
         'Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj'
         'docs/ARCHITECTURE.md'

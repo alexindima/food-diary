@@ -9,7 +9,7 @@ using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Modules.Notifications.Application.Common;
 using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
 

@@ -11,7 +11,7 @@ Protect the backend HTTP contract from accidental breaking changes.
 
 ### 1. Presentation-Level Conventions
 
-Repository tests already protect transport conventions in `tests/FoodDiary.Presentation.Api.Tests`.
+Repository tests already protect transport conventions in `Platform/tests/FoodDiary.Presentation.Api.Tests`.
 
 Examples:
 
@@ -22,29 +22,29 @@ Examples:
 
 ### 2. Error Contract Snapshots
 
-`tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs` verifies important error payloads against stored snapshots.
+`Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs` verifies important error payloads against stored snapshots.
 
 Snapshot file:
 
-- `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/error-contract-snapshots.json`
+- `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/error-contract-snapshots.json`
 
 ### 3. Payload Contract Snapshots
 
-`tests/FoodDiary.Web.Api.IntegrationTests/PresentationPayloadContractIntegrationTests.cs` verifies normalized payload shapes for representative API responses.
+`Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationPayloadContractIntegrationTests.cs` verifies normalized payload shapes for representative API responses.
 
 Snapshot file:
 
-- `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/payload-contract-snapshots.json`
+- `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/payload-contract-snapshots.json`
 
 ### 4. OpenAPI Contract Snapshots
 
-`tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs` verifies generated Swagger/OpenAPI output against stored snapshots.
+`Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs` verifies generated Swagger/OpenAPI output against stored snapshots.
 
 Snapshot files:
 
-- `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-focused-contract.json`
-- `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-auth-admin-contract.json`
-- `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json`
+- `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-focused-contract.json`
+- `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-auth-admin-contract.json`
+- `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json`
 
 ## Rules
 
@@ -112,7 +112,7 @@ Use the existing integration tests with the environment variable:
 
 ```powershell
 $env:UPDATE_CONTRACT_SNAPSHOTS='1'
-dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore /p:UseSharedCompilation=false
+dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore /p:UseSharedCompilation=false
 Remove-Item Env:UPDATE_CONTRACT_SNAPSHOTS
 ```
 
@@ -122,14 +122,14 @@ Example for Swagger/OpenAPI only:
 
 ```powershell
 $env:UPDATE_CONTRACT_SNAPSHOTS='1'
-dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --filter "SwaggerJson_" -c Release
+dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --filter "SwaggerJson_" -c Release
 Remove-Item Env:UPDATE_CONTRACT_SNAPSHOTS
 ```
 
 Notes:
 
 - Snapshot files live in the repository and must be committed when intentionally changed.
-- CI reads those checked-in files from `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`; if a Swagger snapshot fails in CI, the usual cause is stale committed contract snapshots, not a missing file in the build environment.
+- CI reads those checked-in files from `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`; if a Swagger snapshot fails in CI, the usual cause is stale committed contract snapshots, not a missing file in the build environment.
 
 ## Review Expectations
 

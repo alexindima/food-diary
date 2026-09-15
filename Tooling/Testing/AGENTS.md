@@ -1,0 +1,100 @@
+# Test Guidelines
+
+## Scope
+Shared rules for every backend test project. Import `Tooling/Testing/TestProjects.props` for build and runner configuration.
+
+## Role
+- Keep tests aligned with the production project they protect.
+- Use tests as living architecture documentation when updating project guides.
+
+## Test Types
+- `FoodDiary.Analyzers.Tests`: positive, negative, exception, and compatibility coverage for custom build-time Roslyn diagnostics.
+- `FoodDiary.ArchitectureTests`: dependency, structure, naming, async, and boundary guardrails.
+- `FoodDiary.Web.Api.IntegrationTests`: HTTP contract, OpenAPI, and end-to-end API host behavior.
+- `FoodDiary.Web.Api.Tests`: Web.Api host options, middleware, health check, and service unit behavior.
+- `FoodDiary.Presentation.Api.Tests`: shared presentation-kernel, conventions, filters, binders, composite endpoints, and cross-module HTTP behavior. Module-owned controller and mapping tests live in each module's nested Presentation test project.
+- `FoodDiary.Application.Tests`: use case and application service behavior.
+- `FoodDiary.Domain.Tests`: core domain entity, value object, domain event, and invariant behavior.
+- `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
+- `FoodDiary.Infrastructure.Tests`: infrastructure unit behavior that does not require external services.
+- `FoodDiary.Infrastructure.IntegrationTests`: PostgreSQL/Testcontainers infrastructure behavior.
+- Extracted-module tests: module-owned Application, Domain, Presentation, and Infrastructure adapter behavior lives under `Modules/<Module>/tests/`; central projects retain shared HTTP-kernel, host, shared DbContext/migration, architecture, orchestration, and cross-module coverage.
+- WeeklyGoals aggregate/id/enum invariants live in `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests`; the central donor project must not retain duplicate WeeklyGoals-only tests.
+- WeeklyCheckIn query, calculation, and application-service tests live in `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests`; central test projects retain HTTP, host, architecture, and cross-module coverage.
+- `FoodDiary.Testing`: shared test-only helpers reused by multiple test projects, such as Docker availability attributes.
+- `FoodDiary.Results.Tests`: shared result and error primitive behavior.
+- Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.
+
+## Rules
+- Shared-library tests live in `Shared/tests`; module and service tests live with their owners. Host tests live in `Hosts/tests`, platform composition tests in `Platform/tests`, and architecture/analyzer/development MCP tests in `Tooling/tests`. `FoodDiary.Testing` lives in `Tooling/FoodDiary.Testing`. Only mixed Application/Domain donor suites remain in root `tests` pending ownership extraction.
+- Prefer focused tests near the layer being changed.
+- Use NSubstitute for simple interface substitutes in unit tests when it avoids noisy hand-written `Fake`/`Stub`/`Recording` types.
+- Keep hand-written `InMemory`/`Recording` helpers when they make stateful behavior, call history, or side effects clearer than a mock setup.
+- Prefer shared assertion helpers for common result shapes. In `FoodDiary.Application.Tests`, use `ResultAssert.Success(...)` and `ResultAssert.Failure(...)` instead of bare `Assert.True(result.IsSuccess)` / `Assert.True(result.IsFailure)` so failures include useful error context.
+- Use `Assert.Multiple(...)` for groups of independent assertions over an already-created result, especially DTO, HTTP response, read-model, mapping, and domain-event field coverage. Keep assert-and-extract steps outside `Assert.Multiple(...)`: use plain `Assert.Single`, `Assert.IsType`, `Assert.NotNull`, `ResultAssert.Success(...)`, and similar guards first, then wrap the independent field checks.
+- Avoid raw sleeps in async tests. Prefer a task-completion signal with a bounded wait helper and a failure message; use polling only when checking an external resource such as a TCP port or broker message, and keep the timeout explicit.
+- When feature-test files grow large, split new coverage by command/query/service instead of adding unrelated scenarios to an already-large file.
+- Do not replace persistence, HTTP contract, or other integration coverage with mocks; keep Testcontainers/Postgres and WebApplicationFactory tests for behavior that depends on real infrastructure.
+- For HTTP contract changes, update snapshots under `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
+- Do not weaken architecture tests to make a feature pass; update the architecture intentionally and document why.
+- Keep test helpers local to the test project unless reuse is clear; shared helpers belong in `FoodDiary.Testing`.
+- Outbox stream adapter tests belong with Images/Notifications/Gamification; shared four-stream replay, rollback/locking/cancellation, DI and email tests remain central. Do not duplicate or relocate the shared processing engine tests into one module.
+- Keep test project references aligned with the architecture-test dependency matrix.
+- Mark every test type and test-only helper type with `[ExcludeFromCodeCoverage]` so test implementation details stay out of dotCover reports.
+
+## Commands
+- Analyzer tests: `dotnet test Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
+- Architecture tests: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Shared domain primitive tests: `dotnet test Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
+- Core domain tests: `dotnet test tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj`
+- Shared result tests: `dotnet test Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj`
+- Web API unit tests: `dotnet test Hosts/tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj`
+- API integration tests: `dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`
+- Infrastructure unit tests: `dotnet test Platform/tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj`
+- Infrastructure integration tests: `dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj`
+- Full backend test/build baseline: `dotnet build FoodDiary.slnx`
+
+- MealPlanning application and aggregate-focused tests live in Modules/MealPlanning/tests;
+  central mixed tests retain other owners. PostgreSQL module regression protects
+  the User inverse navigation, scalar source IDs and deletion relationships.
+
+- Exercises application/domain suites live in Modules/Exercises/tests. Only Exercises methods moved out of TrackingEntryInvariantTests; Hydration and MealPlanning mixed coverage remains central.
+
+## Products physical ownership
+
+Products use cases, ports, consumed contracts, persistence adapters and EF model
+live under `Modules/Products`; focused application, Product invariant and repository PostgreSQL tests live under its nested
+tests folder. Central Product/User/RecipeIngredient/MealItem/USDA CLR navigations,
+shared context/migrations and composition lock remain unchanged. Hosts explicitly
+compose AddProductsModule; JobManager adds AddProductsPersistence without new
+handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
+coordinated-rebuild compatibility promise.
+
+## Meals physical ownership
+
+Meals-only application tests, Meal/MealAI invariant tests and MealRepository
+PostgreSQL tests live in the three projects under `Modules/Meals/tests`. Keep mixed
+Domain/DI and cross-module/provider/HTTP suites with their established owners; do
+not duplicate them. See `docs/ai/meals-ownership-inventory.md`.
+
+## RecentItems physical ownership
+
+RecentItems-only domain, unit and PostgreSQL repository suites live under `Modules/RecentItems/tests`. Mixed Users cleanup, shared-context/provider and HTTP suites remain central. See `docs/ai/recent-items-ownership-inventory.md`.
+
+## Users Domain ownership
+
+Users owns the complete User aggregate, all credential/security partials, roles,
+role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
+`Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
+reference the exact owner; shared guards and generic values belong to
+`FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Users
+Infrastructure owns UserRepository and its focused provider tests; authentication
+flows/providers, shared DbContext, migrations and snapshot retain their owners. CLR namespaces,
+security behavior and EF/HTTP contracts are unchanged. See
+`docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+Food-quality calculation, grade and measurement-unit contract tests belong to Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests. Mixed Product/Meal/Recipe consumer compatibility remains in the central application suite. See docs/adr/0027-retire-shared-domain-assemblies.md.
+
+HTTP scenarios that persist multiple module contexts must use PostgresApiWebApplicationFactory. The Products overview/favorites/recent flow also creates a meal and records recent usage, so it belongs to ProductPostgresApiFlowTests; InMemory cannot verify the required atomic multi-context save.
+
+ApiWebApplicationFactory now derives from the PostgreSQL fixture and retains test exception-controller registration. Its tests require Docker: authentication registration writes Users and Identity contexts in one atomic save. Do not restore InMemory for these multi-context flows or weaken shared-save atomicity guards. TestAuthApiWebApplicationFactory uses the same PostgreSQL base with its test authentication handler; admin flows also register users and require shared atomic saves.

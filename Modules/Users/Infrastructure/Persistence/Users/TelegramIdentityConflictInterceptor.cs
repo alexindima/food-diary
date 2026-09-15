@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Npgsql;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 internal sealed class TelegramIdentityConflictInterceptor : SaveChangesInterceptor {
     public override void SaveChangesFailed(DbContextErrorEventData eventData) => Translate(eventData.Exception);

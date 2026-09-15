@@ -2,7 +2,7 @@ using FoodDiary.Modules.RecentItems.Application;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.RecentItems.Infrastructure.Persistence.RecentItems;

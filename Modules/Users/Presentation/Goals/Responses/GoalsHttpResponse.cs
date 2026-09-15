@@ -1,0 +1,19 @@
+namespace FoodDiary.Modules.Users.Presentation.Goals.Responses;
+
+public sealed record GoalsHttpResponse(
+    double? DailyCalorieTarget,
+    double? ProteinTarget,
+    double? FatTarget,
+    double? CarbTarget,
+    double? FiberTarget,
+    double? WaterGoal,
+    double? DesiredWeightKg,
+    double? DesiredWaistCm,
+    bool CalorieCyclingEnabled,
+    double? MondayCalories,
+    double? TuesdayCalories,
+    double? WednesdayCalories,
+    double? ThursdayCalories,
+    double? FridayCalories,
+    double? SaturdayCalories,
+    double? SundayCalories);

@@ -1,12 +1,12 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace FoodDiary.Infrastructure.Authentication;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Authentication;
 
 public sealed class WearableOAuthStateService(
     IDataProtectionProvider dataProtectionProvider,

@@ -1,10 +1,9 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Wearables;
-using FoodDiary.Infrastructure.Authentication;
-using FoodDiary.Infrastructure.Persistence.Wearables;
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Application;
+using FoodDiary.Modules.Wearables.Infrastructure.Authentication;
+using FoodDiary.Modules.Wearables.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.Wearables.Infrastructure;

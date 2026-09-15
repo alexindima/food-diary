@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Modules.Users.Application.Common;
 
 public interface IUserIdentityMutationService {
     Task<User> AddAsync(User user, CancellationToken cancellationToken = default);

@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Results;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Wearables.Domain.Enums;
 
-namespace FoodDiary.Application.Wearables.Common;
+namespace FoodDiary.Modules.Wearables.Application.Common;
 
 internal static class WearableProviderParser {
     public static Result<WearableProvider> Parse(string value) {

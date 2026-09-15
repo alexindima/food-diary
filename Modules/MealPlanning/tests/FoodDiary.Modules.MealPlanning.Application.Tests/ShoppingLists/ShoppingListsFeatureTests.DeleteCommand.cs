@@ -1,6 +1,6 @@
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;

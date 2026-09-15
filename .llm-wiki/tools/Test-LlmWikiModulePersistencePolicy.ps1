@@ -37,7 +37,7 @@ foreach ($case in $cases) {
     }
     if ($required) {
         $command = [string]($result.requiredChecks | Where-Object id -eq 'data-access-integration-tests').command
-        if ($command -cne 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj') {
+        if ($command -cne 'dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj') {
             throw "Persistence policy changed its provider-backed check: $command"
         }
     }

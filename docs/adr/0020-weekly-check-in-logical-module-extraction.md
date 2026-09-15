@@ -56,8 +56,8 @@ Adopt option 3.
 
 ## Enforcement
 
-- `tests/FoodDiary.ArchitectureTests/WeeklyCheckInModuleExtractionTests.cs` verifies exclusive application ownership, approved references, absent unowned layers, and composition registration.
-- `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs` governs production and test project edges.
+- `Tooling/tests/FoodDiary.ArchitectureTests/WeeklyCheckInModuleExtractionTests.cs` verifies exclusive application ownership, approved references, absent unowned layers, and composition registration.
+- `Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs` governs production and test project edges.
 - `docs/architecture/backend-modules.json` and `docs/architecture/module-dependencies.json` declare logical ownership and executable dependencies.
 - Focused WeeklyCheckIn tests and central presentation tests protect calculation and HTTP mapping behavior.
 

@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Wearables.Commands.DisconnectWearable;
+namespace FoodDiary.Modules.Wearables.Application.Commands.DisconnectWearable;
 
 public sealed class DisconnectWearableCommandValidator : AbstractValidator<DisconnectWearableCommand> {
     public DisconnectWearableCommandValidator() {

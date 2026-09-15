@@ -1,5 +1,5 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
 

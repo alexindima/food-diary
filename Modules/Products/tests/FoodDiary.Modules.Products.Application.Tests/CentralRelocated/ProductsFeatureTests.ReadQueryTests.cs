@@ -6,7 +6,7 @@ using FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Products.Application.Models;
 
 namespace FoodDiary.Modules.Products.Application.Tests.CentralRelocated;

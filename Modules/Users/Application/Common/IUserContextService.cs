@@ -1,9 +1,9 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Modules.Users.Application.Common;
 
 public interface IUserContextService : ICurrentUserAccessService {
     Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken);

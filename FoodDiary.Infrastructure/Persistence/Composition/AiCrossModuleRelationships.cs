@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Ai.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 

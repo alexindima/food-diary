@@ -11,13 +11,13 @@ using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests;
 

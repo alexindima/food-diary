@@ -15,7 +15,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramLog
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;

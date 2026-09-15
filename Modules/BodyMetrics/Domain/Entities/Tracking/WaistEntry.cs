@@ -1,7 +1,7 @@
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;

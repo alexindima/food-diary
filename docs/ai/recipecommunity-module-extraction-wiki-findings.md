@@ -63,9 +63,9 @@ Canonical-to-actual check correspondence:
 
 | Check | Canonical Definition | Actual Command and scope evidence |
 | --- | --- | --- |
-| architecture-tests | `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj` | Same full project with `--no-build --no-restore --artifacts-path .artifacts/recipecommunity-extraction`; 759 passed against the verified current solution build. |
+| architecture-tests | `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj` | Same full project with `--no-build --no-restore --artifacts-path .artifacts/recipecommunity-extraction`; 759 passed against the verified current solution build. |
 | nuget-vulnerability-audit | `dotnet list FoodDiary.slnx package --vulnerable --include-transitive` | Same solution/package scope with `--no-restore` and ArtifactsPath set to the restored own scope; exit 0, no vulnerable packages. |
-| data-access-integration-tests | `dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj` | Same full project with `--artifacts-path .artifacts/recipecommunity-extraction --no-build --no-restore --logger "trx;LogFileName=Infrastructure.Full.trx" --results-directory .artifacts/recipecommunity-extraction/results`; no filter, 116 passed after current restore/build. |
+| data-access-integration-tests | `dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj` | Same full project with `--artifacts-path .artifacts/recipecommunity-extraction --no-build --no-restore --logger "trx;LogFileName=Infrastructure.Full.trx" --results-directory .artifacts/recipecommunity-extraction/results`; no filter, 116 passed after current restore/build. |
 | infrastructure-integration-tests | Same full integration project command | Same single unfiltered 116-test run as the preceding requirement. |
 
 The own scope was cleaned again with dotnet clean after the full integration run and preservation of TRX/logs; no foreign outputs, caches, processes or worktrees were modified.

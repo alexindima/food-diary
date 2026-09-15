@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace FoodDiary.Infrastructure.Services;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Services;
 
 public sealed class WearableTokenProtector(IDataProtectionProvider dataProtectionProvider) : IWearableTokenProtector {
     private const string Purpose = "FoodDiary.WearableTokens.v1";

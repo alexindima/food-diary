@@ -1,0 +1,37 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Users.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Users.Domain.Entities;
+
+public sealed class Role : AggregateRoot<RoleId> {
+    private const int NameMaxLength = 64;
+
+    public string Name { get; private set; } = string.Empty;
+    private readonly List<UserRole> _userRoles = [];
+    public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
+
+    private Role() {
+    }
+
+    public static Role Create(string name) {
+        string normalizedName = NormalizeRequiredName(name);
+
+        var role = new Role {
+            Id = RoleId.New(),
+            Name = normalizedName,
+        };
+        role.SetCreated();
+        return role;
+    }
+
+    private static string NormalizeRequiredName(string value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            throw new ArgumentException("Role name is required.", nameof(value));
+        }
+
+        string normalized = value.Trim();
+        return normalized.Length > NameMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Role name must be at most {NameMaxLength} characters.")
+            : normalized;
+    }
+}

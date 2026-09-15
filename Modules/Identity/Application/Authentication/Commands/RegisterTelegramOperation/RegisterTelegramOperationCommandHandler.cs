@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
 

@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 

@@ -2,7 +2,7 @@ using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using UserIdType = FoodDiary.Domain.ValueObjects.Ids.UserId;
+using UserIdType = FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 

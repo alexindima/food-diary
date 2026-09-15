@@ -224,8 +224,8 @@ if ($databaseIntent) {
     $databaseGroundingPaths = @(
         'FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs'
         'FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs'
-        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
-        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs'
     ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
     if ($callerPathCount -eq 0) {
         $effectivePaths = @($effectivePaths + $databaseGroundingPaths | Sort-Object -Unique)
@@ -246,7 +246,7 @@ if ($identitySessionIntent) {
         'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html'
-        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
         'Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs'
     ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
     if ($callerPathCount -eq 0) {

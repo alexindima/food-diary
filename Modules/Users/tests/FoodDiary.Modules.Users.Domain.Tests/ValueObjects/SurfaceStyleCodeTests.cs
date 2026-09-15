@@ -1,7 +1,8 @@
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Tests.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.Tests.ValueObjects;
 
 [ExcludeFromCodeCoverage]
 public sealed class SurfaceStyleCodeTests {

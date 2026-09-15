@@ -1,34 +1,22 @@
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Results;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
+using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Products.Application.Common;
 using FoodDiary.Modules.Products.Application.Models;
 
 namespace FoodDiary.Modules.Products.Application.SearchSuggestions;
 
 public sealed class UsdaProductSearchSuggestionProvider(
-    IUsdaProductSuggestionReadService usdaProductSuggestionReadService,
-    IUsdaFoodSearchService usdaFoodSearchService) : IProductSearchSuggestionProvider {
+    ISender sender) : IProductSearchSuggestionProvider {
     public string Source => "usda";
 
     public async Task<IReadOnlyList<ProductSearchSuggestionModel>> SearchAsync(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        IReadOnlyList<UsdaFoodReadModel> localFoods = await usdaProductSuggestionReadService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
-        var foods = localFoods
-            .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.FoodCategory))
-            .ToList();
-
-        if (foods.Count >= limit) {
-            return foods.ConvertAll(ToSuggestion);
-        }
-
-        int remaining = limit - foods.Count;
-        IReadOnlyList<UsdaFoodModel> brandedFoods = await usdaFoodSearchService.SearchBrandedAsync(search, remaining, cancellationToken).ConfigureAwait(false);
-        var existingIds = foods.Select(m => m.FdcId).ToHashSet();
-        foods.AddRange(brandedFoods.Where(f => !existingIds.Contains(f.FdcId)));
-
-        return foods.ConvertAll(ToSuggestion);
+        Result<IReadOnlyList<UsdaFoodModel>> result = await sender.Send(new SearchUsdaFoodsQuery(search, limit), cancellationToken).ConfigureAwait(false);
+        return result.IsSuccess ? result.Value.Select(ToSuggestion).ToArray() : [];
     }
 
     private ProductSearchSuggestionModel ToSuggestion(UsdaFoodModel food) =>

@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Wearables;
+using FoodDiary.Modules.Wearables.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;

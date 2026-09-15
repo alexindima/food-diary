@@ -680,6 +680,10 @@ $testRoots = if ($ChangeType -eq 'Frontend') {
 } else {
     @(
         Join-Path $repositoryRoot 'tests'
+        Join-Path $repositoryRoot 'Hosts/tests'
+        Join-Path $repositoryRoot 'Platform/tests'
+        Join-Path $repositoryRoot 'Shared/tests'
+        Join-Path $repositoryRoot 'Tooling/tests'
         Join-Path $repositoryRoot 'Services/MailRelay/tests'
         Join-Path $repositoryRoot 'Services/MailInbox/tests'
     )
@@ -817,14 +821,14 @@ if ($SqlShadow) {
 $recommendedChecks = switch ($ChangeType) {
     'Api' {
         @(
-            'dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj'
-            'dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj'
+            'dotnet test Platform/tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj'
+            'dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj'
             'Update relevant API contract snapshots when the Swagger-visible surface changes.'
         )
     }
     'Backend' {
         @(
-            'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
+            'dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
             'Run the focused application/domain/infrastructure test project for the changed area.'
         )
     }
@@ -836,7 +840,7 @@ $recommendedChecks = switch ($ChangeType) {
     }
     'Database' {
         @(
-            'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj'
+            'dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj'
             'Run migration whitespace formatting and commit both migration files.'
         )
     }

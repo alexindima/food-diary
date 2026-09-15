@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Users.Domain.Enums;
 
 public enum WaistGoalStatus {
     Active = 0,

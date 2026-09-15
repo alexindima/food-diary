@@ -1,16 +1,20 @@
+using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Commands.CreateUserByAdministrator;
+using FoodDiary.Modules.Users.Contracts.Commands.CreateUserByAdministrator;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
+namespace FoodDiary.Modules.Users.Application.Commands.CreateUserByAdministrator;
 
 public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository,

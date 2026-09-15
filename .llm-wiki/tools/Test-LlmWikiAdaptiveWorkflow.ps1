@@ -76,7 +76,7 @@ $groundedInfrastructureBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWork
     -Objective 'Fix the cycle database read query because split-query loading is slow and duplicates related rows.' `
     -ProposedPath @(
         'FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs',
-        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+        'Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
     ) `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($groundedInfrastructureBug.profile -eq 'bug') 'Grounded data-query fix did not use the bounded bug route.'
@@ -199,9 +199,9 @@ Assert-Adaptive ($migrationFeature.profile -eq 'critical' -and $migrationFeature
 $criticalCoverageOnly = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Add coverage for OpenTelemetry, email outbox, and provider failure behavior without changing production code.' `
     -ProposedPath @(
-        'tests/FoodDiary.Web.Api.Tests/Extensions/OpenTelemetryConfigurationTests.cs',
-        'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs',
-        'tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs'
+        'Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/OpenTelemetryConfigurationTests.cs',
+        'Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs',
+        'Platform/tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs'
     ) `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($criticalCoverageOnly.profile -eq 'test-only') 'Test-only coverage inherited critical risk from unchanged production code.'
@@ -214,7 +214,7 @@ $testOnlyWithWikiBookkeeping = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWo
     -Objective 'Add billing and statistics coverage without changing production code.' `
     -ProposedPath @(
         'tests/FoodDiary.Application.Tests/Statistics/StatisticsTests.cs',
-        'tests/FoodDiary.Infrastructure.Tests/Billing/BillingTests.cs',
+        'Platform/tests/FoodDiary.Infrastructure.Tests/Billing/BillingTests.cs',
         '.llm-wiki/generated/quality-index.json',
         '.llm-wiki/reviews/source-impact-reviews.json'
     ) `
@@ -224,7 +224,7 @@ Assert-Adaptive (-not $testOnlyWithWikiBookkeeping.requiresWorkspace) 'Test-only
 
 $testInfrastructureChange = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Update the infrastructure test project dependencies.' `
-    -ProposedPath 'tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj' `
+    -ProposedPath 'Platform/tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj' `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($testInfrastructureChange.profile -ne 'test-only') 'A test project dependency change was incorrectly treated as test-source-only work.'
 

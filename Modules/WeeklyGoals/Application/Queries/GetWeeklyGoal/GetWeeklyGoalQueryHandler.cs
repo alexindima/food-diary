@@ -1,14 +1,17 @@
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Common;
+using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.WeeklyGoals.Common;
-using FoodDiary.Application.WeeklyGoals.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.WeeklyGoals.Queries.GetWeeklyGoal;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Queries.GetWeeklyGoal;
 
 public sealed class GetWeeklyGoalQueryHandler(
-    IWeeklyGoalReadService weeklyGoalReadService,
+    IWeeklyGoalRepository goalRepository,
+    WeeklyGoalProgressReader progressReader,
     ICurrentUserAccessService userContextService)
     : IQueryHandler<GetWeeklyGoalQuery, Result<WeeklyGoalModel?>> {
     public async Task<Result<WeeklyGoalModel?>> Handle(GetWeeklyGoalQuery query, CancellationToken cancellationToken) {
@@ -21,9 +24,22 @@ public sealed class GetWeeklyGoalQueryHandler(
         }
 
         var weekStartUtc = DateTime.SpecifyKind(query.WeekStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
-        WeeklyGoalModel? goal = await weeklyGoalReadService
-            .GetAsync(userIdResult.Value, weekStartUtc, cancellationToken)
+        WeeklyGoalModel? goal = await GetGoalAsync(userIdResult.Value, weekStartUtc, cancellationToken)
             .ConfigureAwait(false);
         return Result.Success(goal);
+    }
+    private async Task<WeeklyGoalModel?> GetGoalAsync(
+        UserId userId,
+        DateTime weekStartUtc,
+        CancellationToken cancellationToken) {
+        WeeklyGoal? goal = await goalRepository
+            .GetAsync(userId, weekStartUtc, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        if (goal is null) {
+            return null;
+        }
+
+        int progressDays = await progressReader.GetProgressDaysAsync(goal, cancellationToken).ConfigureAwait(false);
+        return goal.ToModel(progressDays);
     }
 }

@@ -5,7 +5,7 @@ using FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle;
 using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;
 

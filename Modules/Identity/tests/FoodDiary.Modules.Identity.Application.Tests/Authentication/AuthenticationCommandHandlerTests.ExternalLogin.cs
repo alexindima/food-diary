@@ -5,9 +5,9 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Notifications.Application.Common;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FluentValidation.TestHelper;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;

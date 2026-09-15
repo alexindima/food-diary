@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Modules.Usda.Contracts.Common;
 using FluentValidation;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;
 using FoodDiary.Modules.Meals.Application.Services;

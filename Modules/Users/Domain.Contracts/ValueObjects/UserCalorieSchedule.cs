@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 public readonly record struct UserCalorieSchedule(
     double? DailyCalorieTarget,

@@ -3,7 +3,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.CreateShoppingList;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 

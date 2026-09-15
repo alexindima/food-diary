@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Notifications.Presentation.Contracts.Responses;
 
 namespace FoodDiary.Modules.Notifications.Presentation.Mappings.Mappings;

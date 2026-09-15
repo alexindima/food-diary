@@ -1,16 +1,16 @@
+using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 
 using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Products.Application.Commands.DuplicateProduct;
 

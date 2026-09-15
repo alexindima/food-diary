@@ -76,3 +76,4 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0045: Explicit shared adapter composition](0045-optional-shared-adapters.md)
 
 - [0046: Authentication contract ownership and explicit outbox settings](0046-shared-authentication-contract-ownership.md)
+- [0047: Test project ownership and shared configuration](0047-test-project-ownership.md)

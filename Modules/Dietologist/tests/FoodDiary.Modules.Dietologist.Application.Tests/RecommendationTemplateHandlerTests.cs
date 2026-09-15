@@ -7,11 +7,11 @@ using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendationTem
 using FoodDiary.Modules.Dietologist.Application.Commands.UpdateRecommendationTemplate;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Dietologist.Application.Queries.SearchRecommendationTemplates;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 #pragma warning disable MA0003

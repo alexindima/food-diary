@@ -1,6 +1,6 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.RecipeCommunity.Application;
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;

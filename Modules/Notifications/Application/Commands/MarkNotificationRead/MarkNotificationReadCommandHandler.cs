@@ -1,13 +1,13 @@
+using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Modules.Notifications.Application.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Notifications.Contracts.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Notifications.Domain.Entities;
 
 namespace FoodDiary.Modules.Notifications.Application.Commands.MarkNotificationRead;

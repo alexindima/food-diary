@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 

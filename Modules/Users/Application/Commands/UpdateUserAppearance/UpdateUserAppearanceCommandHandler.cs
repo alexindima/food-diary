@@ -1,14 +1,15 @@
+using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Application.Common;
 
-namespace FoodDiary.Application.Users.Commands.UpdateUserAppearance;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+
+namespace FoodDiary.Modules.Users.Application.Commands.UpdateUserAppearance;
 
 public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userContextService)
     : ICommandHandler<UpdateUserAppearanceCommand, Result<UserModel>> {

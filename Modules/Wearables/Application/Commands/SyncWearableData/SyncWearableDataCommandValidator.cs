@@ -1,8 +1,8 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Application.Common;
 
-namespace FoodDiary.Application.Wearables.Commands.SyncWearableData;
+namespace FoodDiary.Modules.Wearables.Application.Commands.SyncWearableData;
 
 public sealed class SyncWearableDataCommandValidator : AbstractValidator<SyncWearableDataCommand> {
     public SyncWearableDataCommandValidator(TimeProvider timeProvider) {

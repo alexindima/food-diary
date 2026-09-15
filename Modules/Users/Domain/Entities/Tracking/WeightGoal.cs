@@ -1,9 +1,10 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking;
+namespace FoodDiary.Modules.Users.Domain.Entities.Tracking;
 
 public sealed class WeightGoal : Entity<WeightGoalId> {
     public UserId UserId { get; private set; }

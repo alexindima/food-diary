@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/WeeklyGoals/Application`
-- `Modules/WeeklyGoals/Application/Abstractions`
+- `Modules/WeeklyGoals/Application.Abstractions`
 - `Modules/WeeklyGoals/Presentation`
 
 ## HTTP Surface
@@ -48,7 +48,7 @@ No literal attribute-routed controller was associated with this module.
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 1
-- Contracts referencing domain entities: 1
+- Contracts referencing domain entities: 0
 - `interface IWeeklyGoalRepository`
 - `interface IWeeklyGoalTransactionRunner`
 
@@ -57,17 +57,17 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/Support/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs`
-- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/Domain/WeeklyGoalIdInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/Domain/WeeklyGoalInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalReminderProcessorTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalIdInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoals/WeeklyGoalTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseCollection.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseFixture.cs`
 - [integration] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs`
 - [integration] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs`
 - [presentation] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests/WeeklyGoalsControllerTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WeeklyGoalsModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/WeeklyGoalsModuleExtractionTests.cs`
 
 ## Working Rule
 

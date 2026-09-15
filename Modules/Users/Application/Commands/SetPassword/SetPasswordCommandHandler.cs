@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Users.Commands.SetPassword;
+namespace FoodDiary.Modules.Users.Application.Commands.SetPassword;
 
 public sealed class SetPasswordCommandHandler(
     IUserContextService userContextService,
@@ -23,12 +23,12 @@ public sealed class SetPasswordCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<Domain.Entities.Users.User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<FoodDiary.Modules.Users.Domain.Entities.User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
 
-        Domain.Entities.Users.User currentUser = userResult.Value;
+        FoodDiary.Modules.Users.Domain.Entities.User currentUser = userResult.Value;
         if (currentUser.HasPassword) {
             return Result.Failure(UserErrors.PasswordAlreadySet);
         }

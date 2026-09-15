@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.WeeklyGoals.Common;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Common;
 
 internal static class WeeklyGoalWeekPolicy {
     public static bool CanWrite(DateOnly weekStart, DateTime utcNow) {

@@ -1,4 +1,4 @@
-﻿# Telegram Bot Guidelines
+# Telegram Bot Guidelines
 
 ## Scope
 Rules for `FoodDiary.Telegram.Bot/`.
@@ -21,4 +21,4 @@ Rules for `FoodDiary.Telegram.Bot/`.
 ## Commands
 - Build: `dotnet build FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj`
 - Run: `dotnet run --project FoodDiary.Telegram.Bot`
-- Tests: `dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj`
+- Tests: `dotnet test Hosts/tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj`

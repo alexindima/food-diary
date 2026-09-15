@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
 namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 

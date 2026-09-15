@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dietologist.Domain.Tests;
 

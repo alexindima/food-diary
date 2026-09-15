@@ -17,10 +17,10 @@ using FoodDiary.Modules.Export.Application.Queries.ExportCycle;
 using FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 using FoodDiary.Modules.Export.Application.Services;
 using FoodDiary.Modules.Meals.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Export.Application.Tests;

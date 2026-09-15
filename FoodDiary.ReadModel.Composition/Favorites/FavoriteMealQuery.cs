@@ -2,7 +2,7 @@ using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;

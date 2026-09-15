@@ -66,10 +66,10 @@ Target shape:
 ## Testing Expectations
 - If you change controller transport behavior, update presentation or integration tests.
 - Contract-sensitive changes should be covered in:
-  - `tests/FoodDiary.Presentation.Api.Tests`
-  - `tests/FoodDiary.Web.Api.IntegrationTests`
+  - `Platform/tests/FoodDiary.Presentation.Api.Tests`
+  - `Hosts/tests/FoodDiary.Web.Api.IntegrationTests`
 - Preserve OpenAPI and error-contract expectations unless the contract change is intentional.
-- If the public HTTP contract changes intentionally, update the matching snapshots in `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
+- If the public HTTP contract changes intentionally, update the matching snapshots in `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
 - For Swagger/OpenAPI changes, refresh at least `openapi-full-contract.json`, and update the narrower OpenAPI snapshots too when their selected endpoints changed.
 - Architecture tests enforce that only base controllers remain in `Controllers/`; new endpoint controllers belong in feature folders.
 

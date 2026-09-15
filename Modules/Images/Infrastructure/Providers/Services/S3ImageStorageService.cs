@@ -3,7 +3,7 @@ using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Net.Mime;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.Extensions.Options;
 using SkiaSharp;
 

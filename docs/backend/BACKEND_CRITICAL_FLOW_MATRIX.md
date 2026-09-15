@@ -18,23 +18,23 @@ This document defines the minimum critical backend flows that must remain covere
 
 | Flow ID | Flow | Level | Current Status | Source |
 |---|---|---|---|---|
-| CF01 | Register and access protected endpoint | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF02 | Refresh token exchange | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF03 | Request password reset persists reset state | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF04 | Confirm password reset returns fresh authentication | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF05 | Delete user then restore account | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF06 | Weight entry duplicate date conflict | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF07 | Waist entry duplicate date conflict | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
-| CF08 | Product delete preserves shopping-list item text and clears FK | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF09 | Recipe image asset cannot be deleted while referenced | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF10 | Recipe duplicate remains independent after original deletion | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
-| CF11 | Product -> meal -> dashboard nutrition path | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
-| CF12 | Hydration daily aggregation | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
-| CF13 | User repository loads active user with roles | Infrastructure + Postgres | covered | `tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |
-| CF14 | User repository paging and search normalization | Infrastructure + Postgres | covered | `tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |
-| CF15 | Admin dashboard summary counts deleted and premium users correctly | Infrastructure + Postgres | covered | `tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |
-| CF16 | Cleanup deleted users removes owned data without reassignment | Infrastructure + Postgres | covered | `tests/FoodDiary.Infrastructure.Tests/Integration/UserCleanupServiceIntegrationTests.cs` |
-| CF17 | Cleanup deleted users reassigns transferable content correctly | Infrastructure + Postgres | covered | `tests/FoodDiary.Infrastructure.Tests/Integration/UserCleanupServiceIntegrationTests.cs` |
+| CF01 | Register and access protected endpoint | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF02 | Refresh token exchange | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF03 | Request password reset persists reset state | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF04 | Confirm password reset returns fresh authentication | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF05 | Delete user then restore account | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF06 | Weight entry duplicate date conflict | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF07 | Waist entry duplicate date conflict | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
+| CF08 | Product delete preserves shopping-list item text and clears FK | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF09 | Recipe image asset cannot be deleted while referenced | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
+| CF10 | Recipe duplicate remains independent after original deletion | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
+| CF11 | Product -> meal -> dashboard nutrition path | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
+| CF12 | Hydration daily aggregation | API + Postgres | covered | `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
+| CF13 | User repository loads active user with roles | Infrastructure + Postgres | covered | `Platform/tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |
+| CF14 | User repository paging and search normalization | Infrastructure + Postgres | covered | `Platform/tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |
+| CF15 | Admin dashboard summary counts deleted and premium users correctly | Infrastructure + Postgres | covered | `Platform/tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |
+| CF16 | Cleanup deleted users removes owned data without reassignment | Infrastructure + Postgres | covered | `Platform/tests/FoodDiary.Infrastructure.Tests/Integration/UserCleanupServiceIntegrationTests.cs` |
+| CF17 | Cleanup deleted users reassigns transferable content correctly | Infrastructure + Postgres | covered | `Platform/tests/FoodDiary.Infrastructure.Tests/Integration/UserCleanupServiceIntegrationTests.cs` |
 
 ## Current Gaps
 

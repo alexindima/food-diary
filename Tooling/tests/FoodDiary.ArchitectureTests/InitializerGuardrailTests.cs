@@ -1,0 +1,143 @@
+using System.Globalization;
+
+namespace FoodDiary.ArchitectureTests;
+
+[ExcludeFromCodeCoverage]
+public sealed class InitializerGuardrailTests {
+    [Fact]
+    public void InitializerProject_ReferencesOnlyApplicationInfrastructureAndOperationalPackages() {
+        const string relativeProjectPath = "FoodDiary.Initializer/FoodDiary.Initializer.csproj";
+        string[] expectedProjectReferences = [
+            "FoodDiary.Application.Contracts",
+            "FoodDiary.Modules.Images.Application",
+            "FoodDiary.Modules.MealPlanning.Application",
+            "FoodDiary.Modules.Notifications.Application",
+            "FoodDiary.Modules.RecipeCommunity.Application",
+            "FoodDiary.Application.Runtime",
+            "FoodDiary.Modules.Usda.Application",
+            "FoodDiary.Authentication.Infrastructure",
+            "FoodDiary.Infrastructure",
+            "FoodDiary.Modules.Admin.Application",
+            "FoodDiary.Modules.Admin.Infrastructure",
+            "FoodDiary.Modules.Ai.Application",
+            "FoodDiary.Modules.Ai.Infrastructure",
+            "FoodDiary.Modules.Billing.Infrastructure",
+            "FoodDiary.Modules.BodyMetrics.Application",
+            "FoodDiary.Modules.BodyMetrics.Infrastructure",
+            "FoodDiary.Modules.ContentReports.Infrastructure",
+            "FoodDiary.Modules.Cycles.Infrastructure",
+            "FoodDiary.Modules.DailyAdvices.Infrastructure",
+            "FoodDiary.Modules.Dashboard.Application",
+            "FoodDiary.Modules.Dashboard.Infrastructure",
+            "FoodDiary.Modules.Dietologist.Infrastructure",
+            "FoodDiary.Modules.Exercises.Application",
+            "FoodDiary.Modules.Exercises.Infrastructure",
+            "FoodDiary.Modules.Export.Application",
+            "FoodDiary.Modules.Export.Infrastructure",
+            "FoodDiary.Modules.Fasting.Infrastructure",
+            "FoodDiary.Modules.Favorites.Infrastructure",
+            "FoodDiary.Modules.Gamification.Infrastructure",
+            "FoodDiary.Modules.Hydration.Infrastructure",
+            "FoodDiary.Modules.Identity.Application",
+            "FoodDiary.Modules.Identity.Application.Abstractions",
+            "FoodDiary.Modules.Identity.Infrastructure",
+            "FoodDiary.Modules.Images.Infrastructure",
+            "FoodDiary.Modules.Lessons.Infrastructure",
+            "FoodDiary.Modules.Marketing.Infrastructure",
+            "FoodDiary.Modules.MealPlanning.Infrastructure",
+            "FoodDiary.Modules.Meals.Infrastructure",
+            "FoodDiary.Modules.Notifications.Application.Abstractions",
+            "FoodDiary.Modules.Notifications.Infrastructure",
+            "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
+            "FoodDiary.Modules.Products.Application",
+            "FoodDiary.Modules.Products.Infrastructure",
+            "FoodDiary.Modules.RecentItems.Infrastructure",
+            "FoodDiary.Modules.RecipeCommunity.Infrastructure",
+            "FoodDiary.Modules.Recipes.Application",
+            "FoodDiary.Modules.Recipes.Infrastructure",
+            "FoodDiary.Modules.Statistics.Application",
+            "FoodDiary.Modules.Tdee.Application",
+            "FoodDiary.Modules.Usda.Infrastructure",
+            "FoodDiary.Modules.Users.Infrastructure",
+            "FoodDiary.Modules.Wearables.Infrastructure",
+            "FoodDiary.Modules.WeeklyCheckIn.Application",
+            "FoodDiary.Modules.WeeklyGoals.Infrastructure",
+            "FoodDiary.Outbox.Abstractions",
+            "FoodDiary.Outbox.Management.Contracts",
+            "FoodDiary.ReadModel.Composition",
+        ];
+        string[] expectedPackageReferences = [
+            "Microsoft.EntityFrameworkCore",
+            "Microsoft.EntityFrameworkCore.Relational",
+            "Microsoft.Extensions.Hosting",
+        ];
+
+        string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
+        string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
+
+        Assert.Equal(expectedProjectReferences, projectReferences);
+        Assert.Equal(expectedPackageReferences, packageReferences);
+    }
+
+    [Fact]
+    public void InitializerRootFolders_StayLimitedToConsoleHostStructure() {
+        string initializerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Initializer");
+        string[] allowedDirectories = [
+            "Properties",
+        ];
+
+        string[] unexpectedDirectories = [.. Directory.GetDirectories(initializerRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedDirectories);
+    }
+
+    [Fact]
+    public void InitializerSource_DoesNotReferenceHttpPresentationHostOrSchedulerSurface() {
+        string initializerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Initializer");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(initializerRoot, [
+            "using FoodDiary.Presentation.Api",
+            "using FoodDiary.Web.Api",
+            "Microsoft.AspNetCore.Mvc",
+            "ControllerBase",
+            "IActionResult",
+            "HttpContext",
+            "MapGet(",
+            "MapPost(",
+            "MapPut(",
+            "MapPatch(",
+            "MapDelete(",
+            "Hangfire",
+            "IHostedService",
+            "BackgroundService",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void InitializerProductionCode_UsesCancellationTokenNoneOnlyAtConsoleEntrypointBoundary() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string initializerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Initializer");
+        string programPath = Path.Combine(initializerRoot, "Program.cs");
+
+        string[] violations = [.. SourceScanner.SourceFiles(initializerRoot)
+            .Where(path => !string.Equals(path, programPath, StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(static entry => entry.line.Contains("CancellationToken.None", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+}

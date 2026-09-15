@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.ValueObjects;
 
 public readonly record struct UserProfileState(
     string? Username,

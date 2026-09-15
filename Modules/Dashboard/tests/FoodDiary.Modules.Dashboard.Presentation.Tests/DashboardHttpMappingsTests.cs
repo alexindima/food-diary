@@ -5,7 +5,7 @@ using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Hydration.Contracts.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Tdee.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Modules.Dashboard.Presentation.Mappings;

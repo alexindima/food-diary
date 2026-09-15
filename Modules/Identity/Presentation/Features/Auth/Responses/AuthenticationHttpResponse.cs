@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 

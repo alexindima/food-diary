@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Billing.Domain.Entities;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;

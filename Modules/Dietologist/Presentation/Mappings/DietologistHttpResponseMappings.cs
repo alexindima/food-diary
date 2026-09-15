@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Dietologist.Application.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
 

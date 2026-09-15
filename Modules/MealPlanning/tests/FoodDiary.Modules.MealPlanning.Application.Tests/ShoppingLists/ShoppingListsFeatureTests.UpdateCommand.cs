@@ -4,7 +4,7 @@ using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 

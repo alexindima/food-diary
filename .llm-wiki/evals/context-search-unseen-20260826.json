@@ -118,7 +118,7 @@
       "query": "automated checks for architecture abstractions boundary",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.ArchitectureTests/SharedApplicationContractsBoundaryTests.cs"
+        "Tooling/tests/FoodDiary.ArchitectureTests/SharedApplicationContractsBoundaryTests.cs"
       ]
     },
     {
@@ -172,7 +172,7 @@
       "query": "automated checks for architecture paths",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.ArchitectureTests/ArchitectureTestPaths.cs"
+        "Tooling/tests/FoodDiary.ArchitectureTests/ArchitectureTestPaths.cs"
       ]
     },
     {
@@ -335,7 +335,7 @@
       "query": "automated checks for web api dietologist invitation notification integration",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs"
+        "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs"
       ]
     },
     {
@@ -389,7 +389,7 @@
       "query": "automated checks for idempotency cache idempotency store",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Web.Api.Tests/Services/RedisIdempotencyStoreTests.cs"
+        "Hosts/tests/FoodDiary.Web.Api.Tests/Services/RedisIdempotencyStoreTests.cs"
       ]
     },
     {
@@ -497,7 +497,7 @@
       "query": "automated checks for api base http endpoint controller no namespace",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerNoNamespaceTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerNoNamespaceTests.cs"
       ]
     },
     {
@@ -659,7 +659,7 @@
       "query": "automated checks for api current user identifier model binder",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Presentation.Api.Tests/CurrentUserIdModelBinderTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/CurrentUserIdModelBinderTests.cs"
       ]
     },
     {
@@ -821,7 +821,7 @@
       "query": "automated checks for extensions http endpoint host options configuration",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Web.Api.Tests/Extensions/ApiHostOptionsConfigurationTests.cs"
+        "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/ApiHostOptionsConfigurationTests.cs"
       ]
     },
     {
@@ -875,7 +875,7 @@
       "query": "automated checks for api base http endpoint controller root namespace",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeaturesRootNamespaceTests.cs"
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeaturesRootNamespaceTests.cs"
       ]
     },
     {

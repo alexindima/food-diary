@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -6,10 +7,9 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Mappings;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 

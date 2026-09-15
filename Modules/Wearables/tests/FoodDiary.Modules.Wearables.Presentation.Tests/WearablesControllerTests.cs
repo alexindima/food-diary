@@ -1,21 +1,22 @@
+using FoodDiary.Presentation.Api.Tests;
 using System.Reflection;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Commands.ConnectWearable;
-using FoodDiary.Application.Wearables.Commands.DisconnectWearable;
-using FoodDiary.Application.Wearables.Commands.SyncWearableData;
-using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
-using FoodDiary.Application.Wearables.Queries.GetWearableConnections;
-using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Wearables.Application.Commands.ConnectWearable;
+using FoodDiary.Modules.Wearables.Application.Commands.DisconnectWearable;
+using FoodDiary.Modules.Wearables.Application.Commands.SyncWearableData;
+using FoodDiary.Modules.Wearables.Application.Queries.GetWearableAuthUrl;
+using FoodDiary.Modules.Wearables.Application.Queries.GetWearableConnections;
+using FoodDiary.Modules.Wearables.Application.Queries.GetWearableDailySummary;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Wearables;
-using FoodDiary.Presentation.Api.Features.Wearables.Requests;
-using FoodDiary.Presentation.Api.Features.Wearables.Responses;
+using FoodDiary.Modules.Wearables.Presentation.Controllers;
+using FoodDiary.Modules.Wearables.Presentation.Requests;
+using FoodDiary.Modules.Wearables.Presentation.Responses;
 using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Wearables.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WearablesControllerTests {

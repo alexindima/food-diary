@@ -1,0 +1,435 @@
+using FoodDiary.Modules.Users.Infrastructure;
+using FoodDiary.Modules.Recipes.Infrastructure;
+using FoodDiary.Modules.Products.Infrastructure;
+using FoodDiary.Modules.RecentItems.Infrastructure;
+using FoodDiary.Modules.RecentItems.Domain.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Modules.Meals.Infrastructure;
+using FoodDiary.Modules.MealPlanning.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Persistence.Runtime.Persistence;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
+using FoodDiary.Modules.Users.Infrastructure.Persistence;
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
+using FoodDiary.Modules.Ai.Infrastructure;
+using FoodDiary.Modules.Admin.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+
+using FoodDiary.Modules.Images.Infrastructure;
+
+using FoodDiary.Modules.Dietologist.Infrastructure;
+using FoodDiary.Modules.Cycles.Infrastructure;
+using FoodDiary.Modules.Users.Contracts.Common;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Modules.Ai.Domain.Entities;
+using FoodDiary.Modules.Admin.Domain.Entities;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
+using FoodDiary.Modules.Dietologist.Domain.Entities;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
+using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
+using Npgsql;
+using Microsoft.AspNetCore.DataProtection;
+
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+
+[Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
+public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task CleanupDeletedUsersAsync_WithoutReassign_RemovesUserAndOwnedData() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var deletedUser = User.Create("deleted@example.com", "hash");
+        var survivingUser = User.Create("survivor@example.com", "hash");
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+
+        var imageAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/image-1.webp", "https://cdn.example.com/image-1.webp");
+        var product = Product.Create(
+            deletedUser.Id,
+            "Apple",
+            MeasurementUnit.G,
+            100,
+            100,
+            52,
+            0.3,
+            0.2,
+            14,
+            2.4,
+            0,
+            imageAssetId: imageAsset.Id);
+        var recipe = Recipe.Create(
+            deletedUser.Id,
+            "Pie",
+            servings: 2,
+            imageAssetId: imageAsset.Id,
+            visibility: Visibility.Private);
+        recipe.AddStep(1, "Mix ingredients", imageAssetId: imageAsset.Id);
+        var shoppingList = ShoppingList.Create(deletedUser.Id, "Cleanup");
+        shoppingList.AddItem("Apple", product.Id, 1, MeasurementUnit.Pcs, "Fruit", isChecked: false, 0);
+        var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Product, product.Id.Value);
+        var aiUsage = AiUsage.Create(deletedUser.Id, "vision", "gpt-4.1-mini", 10, 20, 30);
+        var recordedAt = new DateTime(2026, 7, 26, 8, 0, 0, DateTimeKind.Utc);
+        var meal = FoodDiary.Modules.Meals.Domain.Entities.Meal.Create(deletedUser.Id, recordedAt);
+        var hydration = HydrationEntry.Create(deletedUser.Id, recordedAt, 250);
+        var weight = WeightEntry.Create(deletedUser.Id, recordedAt, 72.5);
+        var waist = WaistEntry.Create(deletedUser.Id, recordedAt, 84);
+        var targetedSession = AdminImpersonationSession.Start(
+            survivingUser.Id,
+            deletedUser.Id,
+            "Investigate account support request",
+            actorIpAddress: null,
+            actorUserAgent: null,
+            recordedAt);
+        var actorSession = AdminImpersonationSession.Start(
+            deletedUser.Id,
+            survivingUser.Id,
+            "Investigate account support request",
+            actorIpAddress: null,
+            actorUserAgent: null,
+            recordedAt);
+        var assignedTask = ClientTask.Create(survivingUser.Id, deletedUser.Id, "Review plan", details: null, dueAtUtc: null);
+        var authoredTask = ClientTask.Create(deletedUser.Id, survivingUser.Id, "Review plan", details: null, dueAtUtc: null);
+
+        context.Users.AddRange(deletedUser, survivingUser);
+        context.AdminImpersonationSessions.AddRange(targetedSession, actorSession);
+        context.ClientTasks.AddRange(assignedTask, authoredTask);
+        context.ImageAssets.Add(imageAsset);
+        context.Products.Add(product);
+        context.Recipes.Add(recipe);
+        context.ShoppingLists.Add(shoppingList);
+        context.RecentItems.Add(recentItem);
+        context.AiUsages.Add(aiUsage);
+        context.Meals.Add(meal);
+        context.HydrationEntries.Add(hydration);
+        context.WeightEntries.Add(weight);
+        context.WaistEntries.Add(waist);
+        await context.SaveChangesAsync();
+
+        await using var identity = new IdentityDbContext(new DbContextOptionsBuilder<IdentityDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection()).Options);
+        var telegram = new TelegramOperationStore(identity, new EphemeralDataProtectionProvider(), TimeProvider.System);
+        await telegram.RegisterAsync(123, 1, deletedUser.Id.Value, 0, "deleted-user-photo", CancellationToken.None);
+        Guid? survivorOperation = await telegram.RegisterAsync(123, 2, survivingUser.Id.Value, 0, "survivor-photo", CancellationToken.None);
+        Assert.NotNull(survivorOperation);
+
+        var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
+        await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
+
+        int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
+
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
+
+        Assert.Equal(1, removed);
+        Assert.Equal(0, await verificationContext.Database.SqlQuery<int>($"""
+            SELECT count(*)::int AS "Value" FROM "TelegramOperations" WHERE "UserId" = {deletedUser.Id.Value}
+            """).SingleAsync());
+        Assert.Equal(survivorOperation.Value, Assert.Single(await telegram.ListReadyAsync(123, CancellationToken.None)));
+        Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
+        Assert.False(await verificationContext.Products.AnyAsync());
+        Assert.False(await verificationContext.Recipes.AnyAsync());
+        Assert.False(await verificationContext.RecipeSteps.AnyAsync());
+        Assert.False(await verificationContext.ImageAssets.AnyAsync());
+        Assert.False(await verificationContext.ShoppingLists.AnyAsync());
+        Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
+        Assert.False(await verificationContext.RecentItems.AnyAsync());
+        Assert.False(await verificationContext.AiUsages.AnyAsync());
+        Assert.False(await verificationContext.Meals.AnyAsync());
+        Assert.False(await verificationContext.HydrationEntries.AnyAsync());
+        Assert.False(await verificationContext.WeightEntries.AnyAsync());
+        Assert.False(await verificationContext.WaistEntries.AnyAsync());
+        Assert.False(await verificationContext.AdminImpersonationSessions.AnyAsync());
+        Assert.False(await verificationContext.ClientTasks.AnyAsync());
+        Assert.True(await verificationContext.Users.AnyAsync(user => user.Id == survivingUser.Id));
+        Assert.Equal(["users/deleted/image-1.webp"], imageObjectDeletionOutbox.ObjectKeys);
+    }
+
+    [RequiresDockerFact]
+    public async Task CleanupDeletedUsersAsync_WithReassign_ReassignsContentAssetsAndDeletesUser() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        (User? deletedUser, User? survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
+
+        var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
+        await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
+
+        int removed = await service.CleanupDeletedUsersAsync(
+            DateTime.UtcNow.AddDays(-1),
+            batchSize: 10,
+            reassignUserId: survivorUser.Id.Value).ConfigureAwait(false);
+
+        FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
+        await using (verificationContext.ConfigureAwait(false)) {
+            Assert.Equal(1, removed);
+            await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
+            Assert.Equal(
+                ["users/deleted/meal.webp", "users/deleted/profile.webp"],
+                [.. imageObjectDeletionOutbox.ObjectKeys.Order(StringComparer.Ordinal)]);
+        }
+    }
+
+    [RequiresDockerFact]
+    public async Task CleanupDeletedUsersAsync_WithDeletedReassignTarget_FallsBackToDeletePath() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var deletedUser = User.Create("deleted@example.com", "hash");
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+
+        var deletedTarget = User.Create("deleted-target@example.com", "hash");
+        deletedTarget.MarkDeleted(DateTime.UtcNow.AddDays(-2));
+
+        var imageAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/fallback.webp", "https://cdn.example.com/fallback.webp");
+        var product = Product.Create(
+            deletedUser.Id,
+            "Apple",
+            MeasurementUnit.G,
+            100,
+            100,
+            52,
+            0.3,
+            0.2,
+            14,
+            2.4,
+            0,
+            imageAssetId: imageAsset.Id);
+
+        context.Users.AddRange(deletedUser, deletedTarget);
+        context.ImageAssets.Add(imageAsset);
+        context.Products.Add(product);
+        await context.SaveChangesAsync();
+
+        var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
+        await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
+
+        int removed = await service.CleanupDeletedUsersAsync(
+            DateTime.UtcNow.AddDays(-1),
+            batchSize: 10,
+            reassignUserId: deletedTarget.Id.Value);
+
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
+
+        Assert.Equal(2, removed);
+        Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
+        Assert.False(await verificationContext.Products.AnyAsync());
+        Assert.False(await verificationContext.ImageAssets.AnyAsync());
+        Assert.Equal(["users/deleted/fallback.webp"], imageObjectDeletionOutbox.ObjectKeys);
+    }
+
+    [RequiresDockerFact]
+    public async Task CleanupUserAsync_WhenCandidateWasRestored_DoesNotDeleteUser() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("restored-before-cleanup@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        user.Restore();
+        await context.SaveChangesAsync();
+
+        await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service);
+
+        bool removed = await service.CleanupUserAsync(
+            user.Id,
+            reassignTarget: null,
+            DateTime.UtcNow.AddDays(-1),
+            CancellationToken.None);
+
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
+        Assert.False(removed);
+        Assert.True(await verificationContext.Users.AnyAsync(candidate => candidate.Id == user.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task OwnerFailure_RollsBackContentReassignmentAndUserDeletion() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        (User deleted, User survivor) = await SeedReassignScenarioAsync(context);
+        await using var identity = new IdentityDbContext(new DbContextOptionsBuilder<IdentityDbContext>()
+            .UseNpgsql(context.Database.GetDbConnection()).Options);
+        var telegram = new TelegramOperationStore(identity, new EphemeralDataProtectionProvider(), TimeProvider.System);
+        Guid? operation = await telegram.RegisterAsync(123, 1, deleted.Id.Value, 0, "recoverable-photo", CancellationToken.None);
+        Assert.NotNull(operation);
+        await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service, new FailingParticipant(context));
+
+        int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, survivor.Id.Value);
+
+        Assert.Equal(0, removed);
+        Assert.False(context.ChangeTracker.HasChanges());
+        await context.SaveChangesAsync();
+        await using FoodDiaryDbContext verification = CreateVerificationContext(context);
+        Assert.True(await verification.Users.AnyAsync(user => user.Id == deleted.Id));
+        Assert.Equal(operation.Value, Assert.Single(await telegram.ListReadyAsync(123, CancellationToken.None)));
+        TelegramOperationLease? lease = await telegram.AcquireAsync(123, operation.Value, CancellationToken.None);
+        Assert.NotNull(lease);
+        Assert.Equal("recoverable-photo", lease.Payload);
+        Assert.All(await verification.Products.ToListAsync(), product => Assert.Equal(deleted.Id, product.UserId));
+        Assert.All(await verification.Recipes.ToListAsync(), recipe => Assert.Equal(deleted.Id, recipe.UserId));
+        Assert.All(await verification.ImageAssets.ToListAsync(), asset => Assert.Equal(deleted.Id, asset.UserId));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailingParticipant(FoodDiaryDbContext context) : IUserDataPurgeParticipant {
+        public int Order => 140;
+        public Task PurgeAsync(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId, FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId? reassignTarget, CancellationToken cancellationToken) {
+            context.Users.Add(User.Create("uncommitted-purge-work@example.com", "hash"));
+            throw new InvalidOperationException("Injected owner cleanup failure.");
+        }
+    }
+
+    private static ServiceProvider CreateServiceProvider(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, out UserCleanupService service, IUserDataPurgeParticipant? extra = null) {
+        var services = new ServiceCollection();
+        services.AddSingleton(context);
+        services.AddSingleton<SharedPersistenceDbContext>(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(
+            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleTransactionCoordinator(context,
+                new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance)));
+        services.AddUsersPersistence();
+        services.AddAdminPersistence();
+        services.AddAiPersistence();
+        services.AddBodyMetricsModule();
+        services.AddCyclesModule();
+        services.AddDietologistModule();
+        services.AddHydrationModule();
+        services.AddIdentityPersistence();
+        services.AddImagesInfrastructure();
+        services.AddMealPlanningModule();
+        services.AddMealsPersistence();
+        services.AddProductsPersistence();
+        services.AddRecentItemsModule();
+        services.AddRecipesPersistence();
+        services.AddSingleton(outbox);
+        if (extra is not null) { services.AddSingleton(extra); }
+        ServiceProvider provider = services.BuildServiceProvider();
+        IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
+        Assert.Equal(extra is null ? 13 : 14, participants.Length);
+        service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
+            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
+            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleScopeGuard(context));
+        return provider;
+    }
+
+    private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
+        string connectionString = sourceContext.Database.GetConnectionString()
+            ?? throw new InvalidOperationException("Source context does not have a connection string.");
+
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(new NpgsqlConnectionStringBuilder(connectionString).ConnectionString)
+            .Options;
+
+        return new FoodDiaryDbContext(options);
+    }
+
+    private static async Task<(User DeletedUser, User SurvivorUser)> SeedReassignScenarioAsync(
+        FoodDiaryDbContext context,
+        CancellationToken cancellationToken = default) {
+        var deletedUser = User.Create("deleted@example.com", "hash");
+        var survivorUser = User.Create("survivor@example.com", "hash");
+        survivorUser.UpdateProfileMedia(profileImageAssetId: null);
+
+        context.Users.AddRange(deletedUser, survivorUser);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        var productAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/product.webp", "https://cdn.example.com/product.webp");
+        var recipeAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/recipe.webp", "https://cdn.example.com/recipe.webp");
+        var stepAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/step.webp", "https://cdn.example.com/step.webp");
+        var profileAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/profile.webp", "https://cdn.example.com/profile.webp");
+        var mealAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/meal.webp", "https://cdn.example.com/meal.webp");
+
+        var product = Product.Create(
+            deletedUser.Id,
+            "Bread",
+            MeasurementUnit.G,
+            100,
+            100,
+            265,
+            9,
+            3.2,
+            49,
+            2.7,
+            0,
+            imageAssetId: productAsset.Id);
+        var recipe = Recipe.Create(deletedUser.Id, "Toast", servings: 1, imageAssetId: recipeAsset.Id);
+        recipe.AddStep(1, "Toast bread", imageAssetId: stepAsset.Id);
+        var meal = FoodDiary.Modules.Meals.Domain.Entities.Meal.Create(
+            deletedUser.Id,
+            new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc),
+            imageAssetId: mealAsset.Id);
+        var shoppingList = ShoppingList.Create(deletedUser.Id, "Temporary");
+        shoppingList.AddItem("Bread", product.Id, 2, MeasurementUnit.Pcs, "Bakery", isChecked: false, 0);
+
+        context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset, profileAsset, mealAsset);
+        context.Products.Add(product);
+        context.Recipes.Add(recipe);
+        context.Meals.Add(meal);
+        context.ShoppingLists.Add(shoppingList);
+        context.RecentItems.Add(RecentItem.Create(deletedUser.Id, RecentItemType.Recipe, recipe.Id.Value));
+        context.AiUsages.Add(AiUsage.Create(deletedUser.Id, "nutrition", "gpt-4.1-mini", 15, 25, 40));
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        deletedUser.UpdateProfileMedia(profileImageAssetId: profileAsset.Id);
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return (deletedUser, survivorUser);
+    }
+
+    private static async Task AssertReassignedContentAsync(
+        FoodDiaryDbContext verificationContext,
+        User deletedUser,
+        User survivorUser,
+        CancellationToken cancellationToken = default) {
+        Assert.False(await verificationContext.Users
+            .AnyAsync(user => user.Id == deletedUser.Id, cancellationToken)
+            .ConfigureAwait(false));
+        Assert.True(await verificationContext.Users
+            .AnyAsync(user => user.Id == survivorUser.Id, cancellationToken)
+            .ConfigureAwait(false));
+
+        Product reassignedProduct = await verificationContext.Products.SingleAsync(cancellationToken).ConfigureAwait(false);
+        Recipe reassignedRecipe = await verificationContext.Recipes.SingleAsync(cancellationToken).ConfigureAwait(false);
+        List<ImageAsset> reassignedAssets = await verificationContext.ImageAssets
+            .OrderBy(asset => asset.ObjectKey)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        Assert.Equal(survivorUser.Id, reassignedProduct.UserId);
+        Assert.Equal(survivorUser.Id, reassignedRecipe.UserId);
+        Assert.All(reassignedAssets, asset => Assert.Equal(survivorUser.Id, asset.UserId));
+        Assert.Single(await verificationContext.RecipeSteps.ToListAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.Meals.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.ShoppingLists.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.ShoppingListItems.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.RecentItems.AnyAsync(cancellationToken).ConfigureAwait(false));
+        Assert.False(await verificationContext.AiUsages.AnyAsync(cancellationToken).ConfigureAwait(false));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingImageObjectDeletionOutbox : IImageObjectDeletionOutbox {
+        private readonly List<(string ObjectKey, bool IsConfirmed)> _requests = [];
+
+        public IReadOnlyList<string> ObjectKeys => [.. _requests
+            .Select(static request => request.ObjectKey)
+            .Distinct(StringComparer.Ordinal)];
+
+        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
+            _requests.Add((objectKey, isConfirmed));
+            return Task.CompletedTask;
+        }
+    }
+    [ExcludeFromCodeCoverage]
+    private sealed class NoEvents : IDomainEventPublisher {
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+}

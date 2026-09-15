@@ -1,15 +1,15 @@
 using FoodDiary.Testing;
-using FoodDiary.Application.Abstractions.Users.Commands.CreateUserByAdministrator;
-using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
-using FoodDiary.Application.Users.Commands.UpdateUserByAdministrator;
-using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
+using FoodDiary.Modules.Users.Contracts.Commands.CreateUserByAdministrator;
+using FoodDiary.Modules.Users.Application.Commands.SetUserPasswordByAdministrator;
+using FoodDiary.Modules.Users.Application.Commands.UpdateUserByAdministrator;
+using FoodDiary.Modules.Users.Application.Commands.CreateUserByAdministrator;
 using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Tests.Admin;

@@ -1,8 +1,8 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Users.Queries.GetUsersForAdministration;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUsersForAdministration;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
 using FoodDiary.Results;

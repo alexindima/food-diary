@@ -4,7 +4,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Images.Application.Services;
 

@@ -55,7 +55,7 @@ remain atomic with owner writes through the shared unit of work.
 - Format migration whitespace after generation; remove unnecessary System imports
   and UTF-8 BOM. Keep LF line endings.
 - Build: dotnet build FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj
-- Unit tests: dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj
+- Unit tests: dotnet test Platform/tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj
 - Run focused PostgreSQL integration tests for transaction or mapping behavior;
   skipped Docker tests do not constitute verification.
 

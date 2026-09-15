@@ -2,7 +2,7 @@ using FluentValidation.TestHelper;
 using FoodDiary.Modules.Cycles.Application.Commands.DeleteMenstrualEpisode;
 using FoodDiary.Modules.Cycles.Application.Commands.UpdateMenstrualEpisode;
 using FoodDiary.Modules.Cycles.Contracts.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;

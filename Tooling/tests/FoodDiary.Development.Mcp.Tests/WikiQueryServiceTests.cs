@@ -127,7 +127,7 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Change a backend flow",
             "SomeCommand",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.Equal("snapshot-hash", result.SnapshotFingerprint);
@@ -151,7 +151,7 @@ public sealed class WikiQueryServiceTests {
                 "Change a backend flow",
                 "-NoBaseline",
                 "-ProposedPath",
-                "FoodDiary.Application.Users",
+                "FoodDiary.Modules.Users.Application",
             })),
             CancellationToken.None);
         await _executor.Received(1).ExecuteAsync(
@@ -302,7 +302,7 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Change user flow",
             "update user",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.Equal("sqlite", result.ContextRetrievalSource);
@@ -342,7 +342,7 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Change user flow",
             "update user",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.Equal("unavailable", result.ContextRetrievalSource);
@@ -386,12 +386,12 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Change user flow",
             "update user",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.Equal("unavailable", result.ContextRetrievalSource);
         Assert.Equal("snapshot-mismatch", result.ContextFallbackReason);
-        Assert.Equal(["FoodDiary.Application.Users"], result.ExpandedScopePaths);
+        Assert.Equal(["FoodDiary.Modules.Users.Application"], result.ExpandedScopePaths);
         Assert.Contains(result.ComponentErrors, error =>
             string.Equals(error.ErrorCode, DevelopmentMcpErrorCodes.ContextSearchUnavailable, StringComparison.Ordinal) &&
             error.Message.Contains("worktree", StringComparison.OrdinalIgnoreCase));
@@ -455,7 +455,7 @@ public sealed class WikiQueryServiceTests {
             service.GetDevelopmentContextAsync(
                 "Change backend flow",
                 "SomeCommand",
-                "FoodDiary.Application.Users",
+                "FoodDiary.Modules.Users.Application",
                 CancellationToken.None));
 
         Assert.Equal(DevelopmentMcpErrorCodes.SnapshotChanged, exception.ErrorCode);
@@ -530,7 +530,7 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Change backend flow",
             "SomeCommand",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.True(result.PartialSuccess);
@@ -659,11 +659,11 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Update user",
             "UpdateUser",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.False(result.ScopeMismatch);
-        Assert.Equal(["FoodDiary.Application.Users"], result.ExpandedScopePaths);
+        Assert.Equal(["FoodDiary.Modules.Users.Application"], result.ExpandedScopePaths);
         Assert.True(result.PartialSuccess);
         await _executor.DidNotReceive().ExecuteAsync(
             "trace",
@@ -972,7 +972,7 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Change user flow",
             "update user",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.Equal("unavailable", result.ContextRetrievalSource);
@@ -1013,7 +1013,7 @@ public sealed class WikiQueryServiceTests {
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.GetDevelopmentContextAsync(
             "Change user flow",
             "update user",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             cancellation.Token));
 
         await _executor.DidNotReceive().ExecuteAsync(
@@ -1051,7 +1051,7 @@ public sealed class WikiQueryServiceTests {
         DevelopmentContext result = await service.GetDevelopmentContextAsync(
             "Change user flow",
             "update user",
-            "FoodDiary.Application.Users",
+            "FoodDiary.Modules.Users.Application",
             CancellationToken.None);
 
         Assert.Equal("unavailable", result.ContextRetrievalSource);

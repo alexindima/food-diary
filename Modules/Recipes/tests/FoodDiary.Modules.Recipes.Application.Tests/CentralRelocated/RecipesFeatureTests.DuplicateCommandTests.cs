@@ -5,7 +5,7 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Commands.DuplicateRecipe;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Recipes.Application.Models;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;

@@ -1,3 +1,7 @@
+using FoodDiary.Modules.Users.PersistenceModel;
+using FoodDiary.Modules.Wearables.PersistenceModel;
+using FoodDiary.Modules.WeeklyGoals.PersistenceModel;
+using FoodDiary.Modules.Usda.PersistenceModel;
 using FoodDiary.Modules.RecentItems.PersistenceModel;
 using FoodDiary.Modules.RecipeCommunity.PersistenceModel;
 using FoodDiary.Modules.Recipes.PersistenceModel;
@@ -33,10 +37,8 @@ using FoodDiary.Modules.Fasting.PersistenceModel;
 using FoodDiary.Modules.DailyAdvices.PersistenceModel;
 
 using FoodDiary.Modules.Favorites.PersistenceModel;
-using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
-using FoodDiary.Modules.Cycles.PersistenceModel;
 
-using FoodDiary.Modules.Usda.Infrastructure.Model;
+using FoodDiary.Modules.Cycles.PersistenceModel;
 
 namespace FoodDiary.Infrastructure.Persistence;
 

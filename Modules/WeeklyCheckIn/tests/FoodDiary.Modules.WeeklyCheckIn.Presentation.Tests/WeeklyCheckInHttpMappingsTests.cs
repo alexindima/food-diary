@@ -1,10 +1,11 @@
-using FoodDiary.Application.WeeklyCheckIn.Models;
-using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
-using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
-using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
-using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Requests;
+using FoodDiary.Modules.WeeklyCheckIn.Presentation.Mappings;
+using FoodDiary.Modules.WeeklyCheckIn.Application.Models;
+using FoodDiary.Modules.WeeklyCheckIn.Application.Queries.GetWeeklyCheckIn;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.WeeklyCheckIn.Presentation.Responses;
+using FoodDiary.Modules.WeeklyCheckIn.Presentation.Requests;
+
+namespace FoodDiary.Modules.WeeklyCheckIn.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WeeklyCheckInHttpMappingsTests {

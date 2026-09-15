@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 

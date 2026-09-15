@@ -1,0 +1,124 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
+
+namespace FoodDiary.Modules.Users.Domain.Entities;
+
+public sealed partial class User {
+    public void LinkGoogleIdentity(string issuer, string subject) {
+        EnsureNotDeleted();
+        string normalizedIssuer = DomainGuard.RequiredText(issuer, 200, nameof(issuer));
+        string normalizedSubject = DomainGuard.RequiredText(subject, 255, nameof(subject));
+
+        GoogleIssuer = normalizedIssuer;
+        GoogleSubject = normalizedSubject;
+        SetModified();
+    }
+
+    public void CompletePasswordReset(string hashedPassword) {
+        EnsureNotDeleted();
+        UserSecurityState nextState = GetSecurityState()
+            .WithPassword(NormalizeRequiredPasswordHash(hashedPassword))
+            .WithoutPasswordResetToken();
+        ApplySecurityState(nextState);
+        AdvanceSecurityVersion();
+        SetModified();
+    }
+
+    public void RecordAuthenticationActivity(DateTime occurredAtUtc) {
+        EnsureNotDeleted();
+        DateTime normalizedOccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc));
+        UserSecurityState currentState = GetSecurityState();
+        UserSecurityState nextState = currentState.WithAuthenticationActivity(normalizedOccurredAtUtc);
+        if (nextState == currentState) {
+            return;
+        }
+
+        ApplySecurityState(nextState);
+        SetModified(LatestAuditTimestamp(normalizedOccurredAtUtc));
+    }
+
+    public void UpdatePassword(string hashedPassword) {
+        EnsureNotDeleted();
+        ApplySecurityState(GetSecurityState().WithPassword(NormalizeRequiredPasswordHash(hashedPassword)));
+        AdvanceSecurityVersion();
+        SetModified();
+    }
+
+    public void RequirePasswordChange() {
+        EnsureNotDeleted();
+        ApplySecurityState(GetSecurityState().RequiringPasswordChange());
+        SetModified();
+    }
+
+    public void SetEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc, DateTime? issuedAtUtc = null) {
+        SetEmailConfirmationToken(new UserTokenIssue(tokenHash, expiresAtUtc, issuedAtUtc));
+    }
+
+    public void SetEmailConfirmationToken(UserTokenIssue issue) {
+        EnsureNotDeleted();
+        string normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
+        DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceIsNotFuture(normalizedIssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceDoesNotRegress(normalizedIssuedAtUtc, EmailConfirmationSentAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        EnsureExpiresAfterIssuance(normalizedExpiresAtUtc, normalizedIssuedAtUtc, nameof(issue.ExpiresAtUtc));
+        UserSecurityState nextState = GetSecurityState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
+        ApplySecurityState(nextState);
+        SetModified(normalizedIssuedAtUtc);
+    }
+
+    public void CompleteEmailVerification() {
+        SetEmailConfirmed(isConfirmed: true);
+    }
+
+    public void SetEmailConfirmed(bool isConfirmed) {
+        EnsureNotDeleted();
+        if (isConfirmed && Email is null) {
+            throw new InvalidOperationException("An email address is required before confirming it.");
+        }
+        ApplySecurityState(GetSecurityState().AsEmailConfirmed(isConfirmed));
+        SetModified();
+    }
+
+    public void AddVerifiedEmail(string email) {
+        EnsureNotDeleted();
+        if (Email is not null) {
+            throw new InvalidOperationException("An email address is already assigned.");
+        }
+        Email = NormalizeRequiredEmail(email);
+        ApplySecurityState(GetSecurityState().AsEmailConfirmed(isConfirmed: true));
+        AdvanceSecurityVersion();
+        SetModified();
+    }
+
+    public void SetPasswordResetToken(string tokenHash, DateTime expiresAtUtc, DateTime? issuedAtUtc = null) {
+        SetPasswordResetToken(new UserTokenIssue(tokenHash, expiresAtUtc, issuedAtUtc));
+    }
+
+    public void SetPasswordResetToken(UserTokenIssue issue) {
+        EnsureNotDeleted();
+        string normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
+        DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceIsNotFuture(normalizedIssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceDoesNotRegress(normalizedIssuedAtUtc, PasswordResetSentAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        EnsureExpiresAfterIssuance(normalizedExpiresAtUtc, normalizedIssuedAtUtc, nameof(issue.ExpiresAtUtc));
+        UserSecurityState nextState = GetSecurityState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
+        ApplySecurityState(nextState);
+        SetModified(normalizedIssuedAtUtc);
+    }
+
+    private static void EnsureIssuanceIsNotFuture(DateTime issuedAtUtc, string paramName) {
+        if (issuedAtUtc > DomainTime.UtcNow) {
+            throw new ArgumentOutOfRangeException(paramName, "Issuance date cannot be in the future.");
+        }
+    }
+
+    private static void EnsureIssuanceDoesNotRegress(DateTime issuedAtUtc, DateTime? previousIssuedAtUtc, string paramName) {
+        if (previousIssuedAtUtc.HasValue && issuedAtUtc < previousIssuedAtUtc.Value) {
+            throw new ArgumentOutOfRangeException(paramName, "Issuance date cannot be earlier than the previous issuance date.");
+        }
+    }
+}

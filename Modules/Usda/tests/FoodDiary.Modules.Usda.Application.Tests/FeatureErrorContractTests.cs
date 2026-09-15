@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Modules.Usda.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Usda.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FeatureErrorContractTests {

@@ -1,6 +1,6 @@
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.ReadModel.Composition.Users;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.ReadModel.Composition.Ai;

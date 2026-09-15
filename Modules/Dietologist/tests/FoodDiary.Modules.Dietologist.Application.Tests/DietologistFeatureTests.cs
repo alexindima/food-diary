@@ -1,9 +1,11 @@
+using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Application.Abstractions.Audit.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitation;
@@ -33,15 +35,15 @@ using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using FoodDiary.Modules.Notifications.Application.Services;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Abstractions.Users.Models;
+
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Dietologist.Application.Tests;
 

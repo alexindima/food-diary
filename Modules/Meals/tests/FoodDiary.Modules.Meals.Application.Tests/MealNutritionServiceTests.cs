@@ -8,7 +8,7 @@ using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Results;

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Modules.Hydration.Application;
 using FoodDiary.Persistence.Abstractions;

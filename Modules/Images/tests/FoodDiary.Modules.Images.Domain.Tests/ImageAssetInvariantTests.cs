@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Images.Domain.Tests;
 

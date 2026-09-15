@@ -5,8 +5,9 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -16,8 +17,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Runtime.Common.Behaviors;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -69,9 +70,9 @@ public class CommonAbstractionsTests {
                 typeof(FoodDiary.Modules.Recipes.Contracts.Common.RecipeErrors),
                 typeof(FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
                 typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.ShoppingListErrors),
-                typeof(FoodDiary.Application.Abstractions.Usda.Common.UsdaErrors),
-                typeof(FoodDiary.Application.Abstractions.Users.Common.UserErrors),
-                typeof(FoodDiary.Application.Abstractions.Wearables.Common.WearableErrors),
+                typeof(FoodDiary.Modules.Usda.Application.Abstractions.Common.UsdaErrors),
+                typeof(FoodDiary.Modules.Users.Contracts.Common.UserErrors),
+                typeof(FoodDiary.Modules.Wearables.Application.Abstractions.Common.WearableErrors),
             ])
             .SelectMany(GetErrorsFromType)
             .Where(static error => error.Kind is null)
@@ -692,9 +693,9 @@ public class CommonAbstractionsTests {
                 typeof(FoodDiary.Modules.Recipes.Contracts.Common.RecipeErrors),
                 typeof(FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
                 typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.ShoppingListErrors),
-                typeof(FoodDiary.Application.Abstractions.Usda.Common.UsdaErrors),
-                typeof(FoodDiary.Application.Abstractions.Users.Common.UserErrors),
-                typeof(FoodDiary.Application.Abstractions.Wearables.Common.WearableErrors),
+                typeof(FoodDiary.Modules.Usda.Application.Abstractions.Common.UsdaErrors),
+                typeof(FoodDiary.Modules.Users.Contracts.Common.UserErrors),
+                typeof(FoodDiary.Modules.Wearables.Application.Abstractions.Common.WearableErrors),
             ])
             .SelectMany(GetErrorsFromType)
             .Select(static error => error.Code);

@@ -5,13 +5,13 @@ using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Commands.DeleteMeal;
 using FoodDiary.Modules.Meals.Application.Commands.RepeatMeal;
 using FoodDiary.Modules.Meals.Application.Services;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 
 namespace FoodDiary.Modules.Meals.Application.Tests;

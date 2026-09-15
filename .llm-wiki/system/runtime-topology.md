@@ -11,7 +11,7 @@ sources:
   - Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs
   - Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs
   - FoodDiary.JobManager/Services/RecurringJobsHostedService.cs
-  - tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs
+  - Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs
 ---
 
 # Runtime Topology

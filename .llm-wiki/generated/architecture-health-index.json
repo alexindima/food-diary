@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1636,
-    "dependencyViolations": 0,
+    "productionProjectEdges": 1644,
+    "dependencyViolations": 1,
     "unusedAllowances": 0,
-    "untrackedProductionProjects": 0,
+    "untrackedProductionProjects": 1,
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 1,
@@ -16,9 +16,22 @@
     "criticalSymbolsWithoutTestReferences": 27,
     "explicitDebtMarkers": 10
   },
-  "projectDependencyViolations": [],
+  "projectDependencyViolations": [
+    {
+      "source": "FoodDiary.Testing",
+      "target": "FoodDiary.Mediator",
+      "sourcePath": "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj",
+      "targetPath": "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+      "isTest": false
+    }
+  ],
   "unusedProjectAllowances": [],
-  "untrackedProductionProjects": [],
+  "untrackedProductionProjects": [
+    {
+      "name": "FoodDiary.Testing",
+      "path": "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
+    }
+  ],
   "moduleCycleNodes": [],
   "moduleHotspots": [
     {
@@ -5329,7 +5342,7 @@
       "name": "MealAiItemInputValidator",
       "role": "Validator",
       "path": "Modules/Meals/Application/Common/Validators/MealAiItemInputValidator.cs",
-      "line": 8,
+      "line": 6,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

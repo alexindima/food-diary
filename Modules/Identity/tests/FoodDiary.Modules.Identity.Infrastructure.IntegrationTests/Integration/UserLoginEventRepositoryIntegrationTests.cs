@@ -3,7 +3,7 @@ using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 using FoodDiary.ReadModel.Composition.Identity;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

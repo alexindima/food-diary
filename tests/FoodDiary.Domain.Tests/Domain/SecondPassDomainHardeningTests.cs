@@ -13,11 +13,13 @@ using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Entities.Wearables;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Usda.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Tests.Domain;
 

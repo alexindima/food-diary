@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> auditEvents, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserRepository, IUserGoogleIdentityRepository {
     private IQueryable<User> UsersWithRoles() =>

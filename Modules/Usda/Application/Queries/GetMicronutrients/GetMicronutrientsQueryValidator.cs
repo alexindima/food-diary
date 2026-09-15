@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Usda.Queries.GetMicronutrients;
+namespace FoodDiary.Modules.Usda.Application.Queries.GetMicronutrients;
 
 public sealed class GetMicronutrientsQueryValidator : AbstractValidator<GetMicronutrientsQuery> {
     public GetMicronutrientsQueryValidator() {

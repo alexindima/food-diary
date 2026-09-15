@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Events;
+namespace FoodDiary.Modules.Users.Domain.Events;
 
 public sealed record UserRestoredDomainEvent : IDomainEvent {
     public UserRestoredDomainEvent(UserId userId, DateTime? occurredOnUtcOverride = null) {

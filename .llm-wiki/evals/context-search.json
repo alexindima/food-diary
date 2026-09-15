@@ -165,7 +165,7 @@
       "id": "project-dependency-matrix",
       "query": "enforce project dependency matrix architecture boundaries",
       "changeType": "Tests",
-      "expectedPaths": ["tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"]
+      "expectedPaths": ["Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"]
     },
     {
       "id": "swagger-standard-errors",

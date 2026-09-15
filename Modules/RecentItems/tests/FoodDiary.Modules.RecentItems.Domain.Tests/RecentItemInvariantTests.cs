@@ -1,6 +1,6 @@
 using FoodDiary.Modules.RecentItems.Domain.Enums;
 using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using System.Reflection;
 
 namespace FoodDiary.Modules.RecentItems.Domain.Tests;

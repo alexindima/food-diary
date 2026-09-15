@@ -1,9 +1,9 @@
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 public sealed class UserAccessTokenSecurityReader(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserAccessTokenSecurityReader {
     public async Task<bool> IsCurrentAsync(

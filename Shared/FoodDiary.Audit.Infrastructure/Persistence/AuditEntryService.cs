@@ -2,7 +2,7 @@ using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Infrastructure.Persistence.Audit;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Audit.Infrastructure.Persistence;

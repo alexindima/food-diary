@@ -2,7 +2,7 @@ using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Products.Application.Commands.CreateProduct;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Products.Application.Models;
 
 namespace FoodDiary.Modules.Products.Application.Tests;

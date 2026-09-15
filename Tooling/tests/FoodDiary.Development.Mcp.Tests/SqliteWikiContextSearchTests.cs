@@ -336,7 +336,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [Theory]
     [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTests/StockStoreTests.cs", true)]
     [InlineData("Modules\\Shipping\\tests\\FoodDiary.Modules.Shipping.Infrastructure.IntegrationTests\\StockStoreTests.cs", true)]
-    [InlineData("tests/FoodDiary.Infrastructure.IntegrationTests/StockStoreTests.cs", true)]
+    [InlineData("Platform/tests/FoodDiary.Infrastructure.IntegrationTests/StockStoreTests.cs", true)]
     [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Shipping.Infrastructure.IntegrationTests/StockStoreTests.cs", false)]
     [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTestsExtra/StockStoreTests.cs", false)]
     [InlineData("Tooling/tests/FoodDiary.Analyzers.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Analyzers.Tests/")]
@@ -345,7 +345,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Shared/FoodDiary.Email.PersistenceModel/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Email/")]
     [InlineData("Shared/FoodDiary.Email.PersistenceModel/Configurations/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Configurations/Email/")]
     public async Task SearchAsync_PreservesIntegrationTestSelectorAfterModuleRelocation(string path, bool expectedMatch,
-        string selectorPrefix = "tests/FoodDiary.Infrastructure.IntegrationTests/") {
+        string selectorPrefix = "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/") {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
         System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
         // A synthetic role tests selector equivalence without any benchmark vocabulary.
@@ -353,7 +353,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
             [{"id":"synthetic-stock-integration-tests","queryTerms":["stock"],"minimumMatches":1,
               "candidateTerms":["stock"],"minimumCandidateMatches":1,"minimumQueryIdentityMatches":1,
               "score":300,"identityScope":"file","changeTypes":["Tests"],"recordTypes":["code"],
-              "pathPrefixes":["tests/FoodDiary.Infrastructure.IntegrationTests/"],"pathSuffixes":["Tests.cs"]}]
+              "pathPrefixes":["Platform/tests/FoodDiary.Infrastructure.IntegrationTests/"],"pathSuffixes":["Tests.cs"]}]
             """);
         policy["structuralRoleBoosts"]![0]!["pathPrefixes"] = System.Text.Json.JsonSerializer.SerializeToNode<string[]>([selectorPrefix]);
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());

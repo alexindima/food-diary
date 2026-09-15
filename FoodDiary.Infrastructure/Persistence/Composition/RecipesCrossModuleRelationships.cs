@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Composition;

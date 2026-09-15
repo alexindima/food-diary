@@ -2,7 +2,7 @@ using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
 

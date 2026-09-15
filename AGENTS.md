@@ -151,10 +151,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - TDEE logical module: `Modules/Tdee/AGENTS.md`
 - Wearables logical module: `Modules/Wearables/AGENTS.md`
 - Wearables application: `Modules/Wearables/Application/AGENTS.md`
-- Wearables application abstractions: `Modules/Wearables/Application/Abstractions/AGENTS.md`
+- Wearables application abstractions: `Modules/Wearables/Application.Abstractions/AGENTS.md`
 - Wearables domain: `Modules/Wearables/Domain/AGENTS.md`
 - Wearables infrastructure: `Modules/Wearables/Infrastructure/AGENTS.md`
-- Wearables persistence model: `Modules/Wearables/Infrastructure/Model/AGENTS.md`
+- Wearables persistence model: `Modules/Wearables/PersistenceModel/AGENTS.md`
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
 - Frontend application shell: `FoodDiary.Web.Client/src/app/AGENTS.md`
 - Frontend feature folders: `FoodDiary.Web.Client/src/app/features/AGENTS.md`
@@ -182,12 +182,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared outbox record contract: `Shared/FoodDiary.Outbox.Abstractions/AGENTS.md`
 - Users logical module: `Modules/Users/AGENTS.md`
 - Users consumer contracts: `Modules/Users/Contracts/AGENTS.md`
-- Users application ports: `Modules/Users/Application/Abstractions/AGENTS.md`
+- Users application ports: `Modules/Users/Application.Abstractions/AGENTS.md`
 - Users domain: `Modules/Users/Domain/AGENTS.md`
 - Users domain contracts: `Modules/Users/Domain.Contracts/AGENTS.md`
 - Users application: `Modules/Users/Application/AGENTS.md`
 - Users infrastructure: `Modules/Users/Infrastructure/AGENTS.md`
-- Users persistence model: `Modules/Users/Infrastructure/Model/AGENTS.md`
+- Users persistence model: `Modules/Users/PersistenceModel/AGENTS.md`
 - Users tests: `Modules/Users/tests/AGENTS.md`
 - Content reports logical module: `Modules/ContentReports/AGENTS.md`
 - Gamification logical module: `Modules/Gamification/AGENTS.md`
@@ -197,18 +197,18 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Export infrastructure: `Modules/Export/Infrastructure/AGENTS.md`
 - Export tests: `Modules/Export/tests/AGENTS.md`
 - Weekly goals logical module: `Modules/WeeklyGoals/AGENTS.md`
-- Weekly goals application abstractions: `Modules/WeeklyGoals/Application/Abstractions/AGENTS.md`
+- Weekly goals application abstractions: `Modules/WeeklyGoals/Application.Abstractions/AGENTS.md`
 - Weekly goals contracts: `Modules/WeeklyGoals/Contracts/AGENTS.md`
 - Weekly goals domain: `Modules/WeeklyGoals/Domain/AGENTS.md`
 - Weekly goals infrastructure: `Modules/WeeklyGoals/Infrastructure/AGENTS.md`
-- Weekly goals persistence model: `Modules/WeeklyGoals/Infrastructure/Model/AGENTS.md`
+- Weekly goals persistence model: `Modules/WeeklyGoals/PersistenceModel/AGENTS.md`
 - USDA logical module: `Modules/Usda/AGENTS.md`
 - USDA application: `Modules/Usda/Application/AGENTS.md`
-- USDA application abstractions: `Modules/Usda/Application/Abstractions/AGENTS.md`
+- USDA application abstractions: `Modules/Usda/Application.Abstractions/AGENTS.md`
 - USDA contracts: `Modules/Usda/Contracts/AGENTS.md`
 - USDA domain: `Modules/Usda/Domain/AGENTS.md`
 - USDA infrastructure: `Modules/Usda/Infrastructure/AGENTS.md`
-- USDA persistence model: `Modules/Usda/Infrastructure/Model/AGENTS.md`
+- USDA persistence model: `Modules/Usda/PersistenceModel/AGENTS.md`
 - USDA tests: `Modules/Usda/tests/AGENTS.md`
 - Weekly check-in logical module: `Modules/WeeklyCheckIn/AGENTS.md`
 - Weekly check-in application tests: `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/AGENTS.md`
@@ -236,9 +236,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared mediator: `Shared/FoodDiary.Mediator/AGENTS.md`
 - Shared domain primitives: `Shared/FoodDiary.Domain.Primitives/AGENTS.md`
 - Tests: `tests/AGENTS.md`
+- Shared test configuration and rules: `Tooling/Testing/AGENTS.md`
+- Host tests: `Hosts/tests/AGENTS.md`
+- Platform tests: `Platform/tests/AGENTS.md`
 - Shared-library tests: `Shared/tests/AGENTS.md`
 - Development-tool tests: `Tooling/tests/AGENTS.md`
-- Architecture tests: `tests/FoodDiary.ArchitectureTests/AGENTS.md`
+- Architecture tests: `Tooling/tests/FoodDiary.ArchitectureTests/AGENTS.md`
 - Mail inbox application layer: `Services/MailInbox/FoodDiary.MailInbox.Application/AGENTS.md`
 - Mail inbox client package: `Services/MailInbox/FoodDiary.MailInbox.Client/AGENTS.md`
 - Mail inbox domain layer: `Services/MailInbox/FoodDiary.MailInbox.Domain/AGENTS.md`
@@ -280,12 +283,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Keep nullable enabled in C# projects and align namespaces with folders.
 - Use K&R brace style for C# code (opening brace on the same line).
 - Prefer C# primary constructors where applicable.
-- Respect the dependency matrix enforced in `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`.
+- Respect the dependency matrix enforced in `Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`.
 - Reference the owning module or narrow shared contract project directly when consuming its types; do not add unused references to `FoodDiary.Application.Contracts` or another shared package merely to make types transitively available. Explicit references document existing use, not permission to acquire foreign aggregate writes.
 - Primary FoodDiary projects may interact with MailRelay/MailInbox only through approved client packages. MailRelay email transport belongs to `Shared/FoodDiary.Email.MailRelay`; Admin MailInbox access belongs to `Modules/Admin/Infrastructure`.
 - Keep executable hosts as composition roots. Put HTTP transport in presentation projects, use cases in application projects, persistence/provider implementations in infrastructure projects, and domain rules in domain projects.
 - Async backend methods should use the `Async` suffix and accept `CancellationToken` unless they are framework entrypoints covered by architecture-test exceptions.
-- If backend HTTP routes, payloads, status codes, or Swagger-visible API surface change, update the relevant contract snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them with the feature.
+- If backend HTTP routes, payloads, status codes, or Swagger-visible API surface change, update the relevant contract snapshots under `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them with the feature.
 - For UI text changes, update both locales:
     - `FoodDiary.Web.Client/assets/i18n/en/*.json`
     - `FoodDiary.Web.Client/assets/i18n/ru/*.json`
@@ -295,7 +298,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 - `dotnet build FoodDiary.slnx`
 - `cd FoodDiary.Web.Client && npm run build`
-- Focused architecture guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Focused architecture guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 - Backend coverage: `dotnet test FoodDiary.slnx --settings coverage.runsettings --collect:"XPlat Code Coverage" --results-directory .\TestResults\coverage-backend`
 - Frontend full verification: `cd FoodDiary.Web.Client && npm run verify`
 - The pre-commit hook only runs `git diff --cached --check`; formatting, linters, builds, and tests run before push or in CI.

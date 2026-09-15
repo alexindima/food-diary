@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 internal sealed class UserRoleCatalogService(DbSet<Role> roleSet, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserRoleCatalogService {
     public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {

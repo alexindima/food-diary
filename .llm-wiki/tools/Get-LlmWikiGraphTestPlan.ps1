@@ -52,7 +52,7 @@ foreach ($consumer in @($impact.consumers)) {
     if (& $isTestPath $consumer.path) { [void]$graphConsumers.Add([string]$consumer.path) }
 }
 $required = @(
-    $(if (@($scope | Where-Object { $_.Replace('\', '/') -eq '.github/workflows/ci-tests.yml' }).Count -gt 0) { 'tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' })
+    $(if (@($scope | Where-Object { $_.Replace('\', '/') -eq '.github/workflows/ci-tests.yml' }).Count -gt 0) { 'Tooling/tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' })
     @($scoped | Sort-Object)
 ) | Select-Object -First $Limit
 $recommended = @(

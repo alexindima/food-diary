@@ -1,11 +1,11 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using System.Text.Json;

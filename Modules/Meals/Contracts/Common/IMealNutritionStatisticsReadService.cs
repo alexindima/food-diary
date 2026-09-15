@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Contracts.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Meals.Contracts.Common;
 

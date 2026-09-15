@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
 public static class RoleNames {
     public const string Owner = "Owner";

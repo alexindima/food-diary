@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Wearables.Domain.ValueObjects.Ids;
 
 public readonly record struct WearableConnectionId(Guid Value) : IEntityId<Guid> {
     public static WearableConnectionId New() => new(Guid.NewGuid());

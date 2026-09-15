@@ -7,7 +7,7 @@ using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
@@ -17,8 +17,8 @@ using FoodDiary.Modules.Fasting.Application.Queries.GetFastingOverview;
 using FoodDiary.Modules.Fasting.Application.Queries.GetFastingStats;
 using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Fasting.Application.Tests;
 

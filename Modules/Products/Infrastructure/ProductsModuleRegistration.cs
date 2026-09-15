@@ -4,7 +4,7 @@ using FoodDiary.Modules.Products.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Products.Application;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Contracts.Common;

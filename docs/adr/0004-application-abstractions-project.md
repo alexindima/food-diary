@@ -43,8 +43,8 @@ Feature-specific abstractions should live near their feature. Only truly cross-f
 
 ## Enforcement
 
-- `tests/FoodDiary.ArchitectureTests/ApplicationAbstractionsBoundaryTests.cs`
-- `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/ApplicationAbstractionsBoundaryTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`
 
 ## Follow-up
 

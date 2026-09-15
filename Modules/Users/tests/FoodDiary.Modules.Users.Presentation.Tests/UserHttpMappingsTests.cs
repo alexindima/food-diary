@@ -1,16 +1,19 @@
-using FoodDiary.Application.Users.Commands.ChangePassword;
-using FoodDiary.Application.Users.Commands.SetPassword;
-using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
-using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
-using FoodDiary.Application.Users.Commands.UpdateUser;
-using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Presentation.Api.Features.Users.Mappings;
-using FoodDiary.Presentation.Api.Features.Users.Models;
-using FoodDiary.Presentation.Api.Features.Users.Requests;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Users.Presentation.Mappings;
+using FoodDiary.Modules.Users.Application.Commands.ChangePassword;
+using FoodDiary.Modules.Users.Application.Commands.SetPassword;
+using FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWaist;
+using FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWeight;
+using FoodDiary.Modules.Users.Application.Commands.UpdateUser;
+using FoodDiary.Modules.Users.Application.Commands.UpdateUserAppearance;
+using FoodDiary.Modules.Users.Contracts.Models;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Users.Presentation.Contracts.Models;
+using FoodDiary.Modules.Users.Presentation.Requests;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Users.Presentation.Responses;
+
+namespace FoodDiary.Modules.Users.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserHttpMappingsTests {

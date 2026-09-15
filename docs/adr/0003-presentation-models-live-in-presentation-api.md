@@ -46,8 +46,8 @@ Do not introduce or revive a separate HTTP contracts project for request DTOs.
 
 ## Enforcement
 
-- `tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs`
-- `tests/FoodDiary.ArchitectureTests/HostCompositionBoundaryTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/HostCompositionBoundaryTests.cs`
 
 ## Follow-up
 

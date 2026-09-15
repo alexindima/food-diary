@@ -28,7 +28,7 @@ Keep migration changes compatible with `dotnet ef migrations bundle`, because de
 - `MigrationSafetyIntegrationTests.CleanDatabase_MigrateToLatest_AppliesFullMigrationChain`
 - `MigrationSafetyIntegrationTests.DatabaseAtInitialCreate_CanUpgradeToLatest`
 
-Both live in `tests/FoodDiary.Infrastructure.Tests/Integration` and run against PostgreSQL via Testcontainers when Docker is available.
+Both live in `Platform/tests/FoodDiary.Infrastructure.Tests/Integration` and run against PostgreSQL via Testcontainers when Docker is available.
 
 ## Release Checklist For Schema Changes
 

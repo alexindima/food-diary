@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Users.Commands.ChangePassword;
+namespace FoodDiary.Modules.Users.Application.Commands.ChangePassword;
 
 public record ChangePasswordCommand(
     Guid? UserId,

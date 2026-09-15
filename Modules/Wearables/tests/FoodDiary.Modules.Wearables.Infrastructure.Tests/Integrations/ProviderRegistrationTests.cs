@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Integrations.Wearables;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Wearables;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderRegistrationTests {
@@ -29,9 +29,9 @@ public sealed class ProviderRegistrationTests {
         Assert.Multiple(
             () => Assert.IsType<FitbitClient>(client),
             () => Assert.Equal("FoodDiary.Modules.Wearables.Infrastructure", client.GetType().Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Wearables.FitbitClient", client.GetType().FullName),
+            () => Assert.Equal("FoodDiary.Modules.Wearables.Infrastructure.Providers.Wearables.FitbitClient", client.GetType().FullName),
             () => Assert.Equal("FoodDiary.Modules.Wearables.Infrastructure", typeof(FitbitOptions).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Options.FitbitOptions", typeof(FitbitOptions).FullName),
+            () => Assert.Equal("FoodDiary.Modules.Wearables.Infrastructure.Providers.Options.FitbitOptions", typeof(FitbitOptions).FullName),
             () => Assert.Same(clock, provider.GetRequiredService<TimeProvider>()));
         using HttpClient httpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(FitbitClient));
         Assert.Equal(TimeSpan.FromSeconds(30), httpClient.Timeout);

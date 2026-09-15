@@ -2,7 +2,7 @@ using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Mappings;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Mediator;
 

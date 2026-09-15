@@ -27,7 +27,7 @@ public sealed class AdminTemplateHistoryTests {
         IAiUsageQuery repository = Substitute.For<IAiUsageQuery>();
         var userId = Guid.NewGuid();
         var summary = new AiUsageSummary(30, 10, 20, [], [], [], []);
-        repository.GetSummaryForUserAsync(DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1), new FoodDiary.Domain.ValueObjects.Ids.UserId(userId), cancellation.Token).Returns(summary);
+        repository.GetSummaryForUserAsync(DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1), new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId(userId), cancellation.Token).Returns(summary);
         ISender service = RequestTestSender.Create(new GetAiPromptRevisionsQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>()), new GetAiUsageForUserQueryHandler(repository), new GetAiUsageSummaryQueryHandler(repository), new GetAiPromptTemplatesQueryHandler(Substitute.For<IAiPromptTemplateReadModelRepository>()));
         Assert.Same(summary, await service.Send(new GetAiUsageForUserQuery(FromUtc: DateTime.UnixEpoch, ToUtc: DateTime.UnixEpoch.AddDays(1), UserId: userId), cancellation.Token));
     }

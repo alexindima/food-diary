@@ -12,8 +12,8 @@ sources:
   - docs/adr/0042-shared-runtime-persistence-session.md
   - docs/architecture/module-dependencies.json
   - docs/architecture/backend-modules.json
-  - tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs
-  - tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
+  - Tooling/tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs
+  - Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
 ---
 
 # System Architecture
@@ -57,7 +57,7 @@ SQL joins and pagination remain in the database; shared persistence remains a
 runtime coupling. Architecture tests forbid tracked reads and writes in composition.
 
 The executable project-reference allowlist is enforced by
-[`ProjectDependencyMatrixTests`](../../tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs).
+[`ProjectDependencyMatrixTests`](../../Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs).
 The folder-module API graph is stored in
 [`module-dependencies.json`](../../docs/architecture/module-dependencies.json).
 The unified inventory, ownership, cross-layer mappings, physical isolation and

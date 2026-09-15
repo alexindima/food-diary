@@ -8,7 +8,7 @@ using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -84,7 +84,7 @@ public sealed class DashboardMealsReadServiceTests {
         var readService = new DashboardMealsReadService(context, new FoodDiary.Infrastructure.Persistence.Meals.MealItemDisplayReadService(context));
 
         Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
-            Domain.ValueObjects.Ids.UserId.New(),
+            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
             page: 1,
             limit: 10,
             new DateTime(2026, 6, 2, 0, 0, 0, DateTimeKind.Utc),
@@ -159,7 +159,7 @@ public sealed class DashboardMealsReadServiceTests {
         return (DateTime)method.Invoke(null, [value])!;
     }
 
-    private static Meal CreateMeal(Domain.ValueObjects.Ids.UserId userId) {
+    private static Meal CreateMeal(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId) {
         var meal = Meal.Create(
             userId,
             new DateTime(2026, 6, 1, 12, 0, 0, DateTimeKind.Utc),

@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
-    <None Include="../../../../tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/bugtriage-mail-export-contract.json" Link="bugtriage-mail-export-contract.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../../Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/bugtriage-mail-export-contract.json" Link="bugtriage-mail-export-contract.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

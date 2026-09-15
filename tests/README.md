@@ -46,12 +46,12 @@
 - Full build and tests:
   - `dotnet restore FoodDiary.slnx`
   - `dotnet build FoodDiary.slnx --configuration Release --no-restore`
-  - `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --configuration Release --no-restore`
+  - `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --configuration Release --no-restore`
   - `dotnet test tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj --configuration Release --no-restore`
   - `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --configuration Release --no-restore`
-  - `dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --configuration Release --no-restore`
-  - `dotnet test tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj --configuration Release --no-restore`
-  - `dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --configuration Release --no-restore`
+  - `dotnet test Platform/tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --configuration Release --no-restore`
+  - `dotnet test Hosts/tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj --configuration Release --no-restore`
+  - `dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --configuration Release --no-restore`
 
 ## CI
 - Workflow: `.github/workflows/ci-tests.yml`

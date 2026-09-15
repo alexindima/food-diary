@@ -1,10 +1,10 @@
-using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIdentityConflictTests {

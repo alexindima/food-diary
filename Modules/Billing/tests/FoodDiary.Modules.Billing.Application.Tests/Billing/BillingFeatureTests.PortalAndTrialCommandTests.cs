@@ -1,18 +1,18 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
-using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
-using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
+using FoodDiary.Modules.Users.Contracts.Commands.StartUserPremiumTrial;
+using FoodDiary.Modules.Users.Contracts.Queries.CheckUserAccess;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Application.Commands.CreatePortalSession;
 using FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Application.Models;
 
 namespace FoodDiary.Modules.Billing.Application.Tests.Billing;

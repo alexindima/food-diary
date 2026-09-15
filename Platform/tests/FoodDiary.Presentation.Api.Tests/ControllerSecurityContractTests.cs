@@ -1,0 +1,739 @@
+using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Fasting.Presentation.Features.Logs;
+using System.Reflection;
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Modules.Admin.Presentation.Controllers;
+using FoodDiary.Modules.Admin.Presentation.Requests;
+using FoodDiary.Modules.Ai.Presentation.Controllers;
+using FoodDiary.Modules.Dietologist.Presentation.Controllers;
+using FoodDiary.Modules.Dietologist.Presentation.Requests;
+using FoodDiary.Modules.Meals.Presentation.Controllers;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Billing.Presentation.Controllers;
+using FoodDiary.Modules.Dashboard.Presentation.Controllers;
+using FoodDiary.Modules.Images.Presentation.Controllers;
+using FoodDiary.Modules.Hydration.Presentation.Controllers;
+using FoodDiary.Modules.Export.Presentation.Controllers;
+using FoodDiary.Modules.Export.Presentation.Requests;
+using FoodDiary.Modules.Marketing.Presentation.Controllers;
+using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Controllers;
+using FoodDiary.Modules.Notifications.Presentation.Controllers;
+using FoodDiary.Modules.OpenFoodFacts.Presentation.Controllers;
+using FoodDiary.Modules.Products.Presentation.Controllers;
+using FoodDiary.Modules.Recipes.Presentation.Controllers;
+using FoodDiary.Modules.RecipeCommunity.Presentation.RecipeLikes.Controllers;
+using FoodDiary.Presentation.Api.Features.Version;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries;
+using FoodDiary.Modules.Wearables.Presentation.Controllers;
+using FoodDiary.Modules.Wearables.Presentation.Requests;
+using FoodDiary.Modules.Usda.Presentation.Controllers;
+using FoodDiary.Modules.WeeklyCheckIn.Presentation.Controllers;
+using FoodDiary.Modules.Users.Presentation.Controllers;
+using FoodDiary.Modules.Users.Presentation.Requests;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.OutputCaching;
+
+namespace FoodDiary.Presentation.Api.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class ControllerSecurityContractTests {
+    [Fact]
+    public void FromCurrentUserAttribute_UsesCustomBindingSource() {
+        var attribute = new FromCurrentUserAttribute();
+
+        Assert.Same(BindingSource.Custom, attribute.BindingSource);
+    }
+
+    [Fact]
+    public void AiFoodController_RequiresPremiumRole_AndAiRateLimitPolicy() {
+        AuthorizeAttribute[] authorizeAttributes = [.. typeof(AiFoodController).GetCustomAttributes<AuthorizeAttribute>(inherit: true)];
+        EnableRateLimitingAttribute rateLimit = AssertSingleAttribute<EnableRateLimitingAttribute>(typeof(AiFoodController));
+
+        Assert.NotEmpty(authorizeAttributes);
+        Assert.Contains(authorizeAttributes, static attribute => string.Equals(attribute.Roles, PresentationRoleNames.Premium, StringComparison.Ordinal));
+        Assert.Equal(PresentationPolicyNames.AiRateLimitPolicyName, rateLimit.PolicyName);
+    }
+
+    [Fact]
+    public void AiFoodController_Actions_RequireCurrentUserBinding() {
+        AssertHasFromCurrentUserParameter(typeof(AiFoodController), nameof(AiFoodController.AnalyzeFood));
+        AssertHasFromCurrentUserParameter(typeof(AiFoodController), nameof(AiFoodController.ParseFoodText));
+        AssertHasFromCurrentUserParameter(typeof(AiFoodController), nameof(AiFoodController.CalculateNutrition));
+    }
+
+    [Fact]
+    public void AiFoodController_WriteActions_RequireIdempotencyKey() {
+        AssertRequiresIdempotencyKey(nameof(AiFoodController.AnalyzeFood));
+        AssertRequiresIdempotencyKey(nameof(AiFoodController.ParseFoodText));
+        AssertRequiresIdempotencyKey(nameof(AiFoodController.CalculateNutrition));
+    }
+
+    [Fact]
+    public void AbuseProneJsonEndpoints_UseDedicatedRequestLimits() {
+        AssertControllerRequestLimits(typeof(AiFoodController), PresentationRequestLimits.AiPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(BulkRecommendationsController),
+            nameof(BulkRecommendationsController.Create),
+            PresentationRequestLimits.BulkRecommendationsPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(AdminLessonsController),
+            nameof(AdminLessonsController.Import),
+            PresentationRequestLimits.AdminImportPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(MealsController),
+            nameof(MealsController.Create),
+            PresentationRequestLimits.RichWritePayloadBytes);
+        AssertActionRequestLimits(
+            typeof(MealsController),
+            nameof(MealsController.Update),
+            PresentationRequestLimits.RichWritePayloadBytes);
+        AssertActionRequestLimits(
+            typeof(RecipesController),
+            nameof(RecipesController.Create),
+            PresentationRequestLimits.RichWritePayloadBytes);
+        AssertActionRequestLimits(
+            typeof(RecipesController),
+            nameof(RecipesController.Update),
+            PresentationRequestLimits.RichWritePayloadBytes);
+    }
+
+    [Fact]
+    public void AuthController_SensitiveActions_UseAuthRateLimitPolicy() {
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Register), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Login), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Refresh), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.RestoreAccount), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.VerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.ResendVerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.LinkTelegram), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth), PresentationPolicyNames.AuthRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void AuthController_TelegramBotAuth_RequiresTelegramBotSecret() {
+        MethodInfo method = GetAction(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth));
+
+        Assert.NotNull(method.GetCustomAttribute<RequireTelegramBotSecretAttribute>());
+    }
+
+    [Fact]
+    public void AuthController_AdminSsoStart_RequiresAdminRole() {
+        MethodInfo method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoStart));
+        AuthorizeAttribute authorize = AssertSingleAttribute<AuthorizeAttribute>(method);
+
+        Assert.Equal(PresentationRoleNames.Admin, authorize.Roles);
+    }
+
+    [Fact]
+    public void AuthController_AdminSsoExchange_AllowsAnonymous() {
+        MethodInfo method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange));
+
+        Assert.NotNull(method.GetCustomAttribute<AllowAnonymousAttribute>());
+    }
+
+    [Fact]
+    public void PresentationActions_HaveExplicitAuthorizationClassification() {
+        string[] unclassifiedActions = [.. PresentationTestDiscovery.GetTypes()
+            .Where(static type => !type.IsAbstract && typeof(ControllerBase).IsAssignableFrom(type))
+            .SelectMany(static type => type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .Where(static method => method.GetCustomAttributes<HttpMethodAttribute>(inherit: true).Any())
+                .Select(method => (Controller: type, Action: method)))
+            .Where(static item =>
+                !item.Controller.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>().Any() &&
+                !item.Controller.GetCustomAttributes<AllowAnonymousAttribute>(inherit: true).Any() &&
+                !item.Action.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>().Any() &&
+                !item.Action.GetCustomAttributes<AllowAnonymousAttribute>(inherit: true).Any())
+            .Select(static item => $"{item.Controller.FullName}.{item.Action.Name}")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unclassifiedActions);
+    }
+
+    [Fact]
+    public void AuthenticationPayloadEndpoints_UseDedicatedRequestLimits() {
+        AssertControllerRequestLimits(typeof(AuthSessionController), AuthRequestLimits.MaxPayloadBytes);
+        AssertControllerRequestLimits(typeof(AuthPasswordController), AuthRequestLimits.MaxPayloadBytes);
+        AssertControllerRequestLimits(typeof(AuthTelegramController), AuthRequestLimits.MaxPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(AdminSsoController),
+            nameof(AdminSsoController.AdminSsoExchange),
+            AuthRequestLimits.MaxPayloadBytes);
+    }
+
+    [Fact]
+    public void AuthenticationRequestStrings_HaveExplicitTransportLengthConstraints() {
+        Type[] requestTypes = [
+            typeof(AdminSsoExchangeHttpRequest),
+            typeof(ConfirmPasswordResetHttpRequest),
+            typeof(GoogleLoginHttpRequest),
+            typeof(LoginHttpRequest),
+            typeof(RefreshTokenHttpRequest),
+            typeof(RegisterHttpRequest),
+            typeof(RequestPasswordResetHttpRequest),
+            typeof(ResendEmailVerificationHttpRequest),
+            typeof(RestoreAccountHttpRequest),
+            typeof(TelegramAuthHttpRequest),
+            typeof(TelegramLoginWidgetHttpRequest),
+            typeof(VerifyEmailHttpRequest),
+        ];
+        var nullability = new NullabilityInfoContext();
+
+        foreach (ParameterInfo parameter in requestTypes
+            .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())
+            .Where(static parameter => parameter.ParameterType == typeof(string))) {
+            Assert.True(parameter.GetCustomAttribute<MaxLengthAttribute>() is not null, $"{parameter.Member.DeclaringType?.Name}.{parameter.Name} needs MaxLength.");
+            if (nullability.Create(parameter).ReadState == NullabilityState.NotNull) {
+                Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
+            }
+        }
+
+        Assert.NotNull(Assert.Single(typeof(TelegramBotAuthHttpRequest).GetConstructors())
+            .GetParameters()
+            .Single(static parameter => string.Equals(parameter.Name, "TelegramUserId", StringComparison.Ordinal))
+            .GetCustomAttribute<RangeAttribute>());
+    }
+
+    [Fact]
+    public void PresentationQueryStrings_HaveExplicitTransportLengthConstraints() {
+        var nullability = new NullabilityInfoContext();
+        Type[] queryTypes = [.. PresentationTestDiscovery.GetTypes()
+            .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
+            .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
+
+        ParameterInfo[] stringParameters = [.. queryTypes
+            .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())
+            .Where(static parameter => parameter.ParameterType == typeof(string))];
+
+        Assert.NotEmpty(stringParameters);
+        foreach (ParameterInfo parameter in stringParameters) {
+            Assert.True(parameter.GetCustomAttribute<MaxLengthAttribute>() is not null, $"{parameter.Member.DeclaringType?.Name}.{parameter.Name} needs MaxLength.");
+            if (nullability.Create(parameter).ReadState == NullabilityState.NotNull) {
+                Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
+            }
+        }
+    }
+
+    [Fact]
+    public void PresentationQueryNumbers_HaveExplicitOpenApiRanges() {
+        Type[] numericTypes = [typeof(byte), typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal)];
+        Type[] queryTypes = [.. PresentationTestDiscovery.GetTypes()
+            .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
+            .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
+        ParameterInfo[] numericParameters = [.. queryTypes
+            .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())
+            .Where(parameter => numericTypes.Contains(Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType))];
+
+        Assert.NotEmpty(numericParameters);
+        foreach (ParameterInfo parameter in numericParameters) {
+            OpenApiNumericRangeAttribute range = Assert.IsType<OpenApiNumericRangeAttribute>(
+                parameter.GetCustomAttribute<OpenApiNumericRangeAttribute>());
+            Assert.Multiple(
+                () => Assert.False(double.IsNaN(range.Minimum)),
+                () => Assert.True(range.Maximum is null || range.Maximum >= range.Minimum));
+        }
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_DefensivelyCopiesContentTypes() {
+        string[] source = ["text/csv"];
+        var attribute = new ProducesFileResponseAttribute(source);
+
+        source[0] = "application/octet-stream";
+
+        Assert.Equal(["text/csv"], attribute.ContentTypes);
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_RequiresAtLeastOneContentType() {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            static () => new ProducesFileResponseAttribute());
+
+        Assert.Equal("contentTypes", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("not-a-media-type")]
+    [InlineData(" text/csv")]
+    [InlineData("text/csv; charset=utf-8")]
+    [InlineData("text/*")]
+    [InlineData("*/*")]
+    public void ProducesFileResponseAttribute_RejectsInvalidContentType(string contentType) {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            () => new ProducesFileResponseAttribute(contentType));
+
+        Assert.Equal("contentTypes", exception.ParamName);
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_RejectsCaseInsensitiveDuplicates() {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            static () => new ProducesFileResponseAttribute("text/csv", "TEXT/CSV"));
+
+        Assert.Multiple(
+            () => Assert.Equal("contentTypes", exception.ParamName),
+            () => Assert.Contains("Duplicate", exception.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_RejectsNullContentTypes() {
+        Assert.Throws<ArgumentNullException>(
+            static () => new ProducesFileResponseAttribute(contentTypes: null!));
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_RejectsNullContentTypeEntry() {
+        Assert.Throws<ArgumentException>(
+            static () => new ProducesFileResponseAttribute([null!]));
+    }
+
+    [Fact]
+    public void ClosedSetQueryStrings_RejectUnknownValues() {
+        (Type QueryType, string ParameterName, string AcceptedValue)[] expectations = [
+            (typeof(global::FoodDiary.Modules.Admin.Presentation.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),
+            (typeof(global::FoodDiary.Modules.Admin.Presentation.Requests.GetAdminUsersHttpQuery), "Status", PresentationQueryValues.Active),
+            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
+            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
+            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
+            (typeof(global::FoodDiary.Modules.Recipes.Presentation.Requests.ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
+            (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests.GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
+            (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests.GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
+        ];
+
+        foreach ((Type queryType, string parameterName, string acceptedValue) in expectations) {
+            ParameterInfo parameter = Assert.Single(queryType.GetConstructors())
+                .GetParameters()
+                .Single(item => string.Equals(item.Name, parameterName, StringComparison.OrdinalIgnoreCase));
+            AllowedQueryValuesAttribute attribute = Assert.IsType<AllowedQueryValuesAttribute>(
+                parameter.GetCustomAttribute<AllowedQueryValuesAttribute>());
+
+            Assert.Multiple(
+                () => Assert.True(attribute.IsValid(acceptedValue.ToUpperInvariant())),
+                () => Assert.False(attribute.IsValid("unsupported-value")));
+        }
+    }
+
+    [Fact]
+    public void AllowedQueryValuesAttribute_HandlesOptionalAndNonStringValues() {
+        var attribute = new AllowedQueryValuesAttribute("one", "two");
+
+        Assert.Multiple(
+            () => Assert.True(attribute.IsValid(value: null)),
+            () => Assert.False(attribute.IsValid(42)),
+            () => Assert.Equal("The Query field must be one of: one, two.", attribute.FormatErrorMessage("Query")),
+            () => Assert.Equal(["one", "two"], attribute.Values));
+    }
+
+    [Fact]
+    public void SecretVerificationRequests_HaveExplicitTransportLengthConstraints() {
+        (Type RequestType, string ParameterName, int MaximumLength)[] expectations = [
+            (typeof(ChangePasswordHttpRequest), "CurrentPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(ChangePasswordHttpRequest), "NewPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(SetPasswordHttpRequest), "NewPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(AdminUserSetPasswordHttpRequest), "NewPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(AdminUserCreateHttpRequest), "TemporaryPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(SensitiveCycleExportHttpRequest), "CurrentPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(AcceptInvitationHttpRequest), "Token", AuthenticationInputLimits.MaximumOpaqueTokenLength),
+            (typeof(DeclineInvitationHttpRequest), "Token", AuthenticationInputLimits.MaximumOpaqueTokenLength),
+        ];
+
+        foreach ((Type requestType, string parameterName, int maximumLength) in expectations) {
+            ParameterInfo parameter = Assert.Single(requestType.GetConstructors())
+                .GetParameters()
+                .Single(item => string.Equals(item.Name, parameterName, StringComparison.OrdinalIgnoreCase));
+            MaxLengthAttribute attribute = Assert.IsType<MaxLengthAttribute>(
+                parameter.GetCustomAttribute<MaxLengthAttribute>());
+            Assert.Equal(maximumLength, attribute.Length);
+        }
+    }
+
+    [Fact]
+    public void ImagesController_Actions_RequireCurrentUserBinding() {
+        AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
+        AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.Delete));
+    }
+
+    [Fact]
+    public void ImagesController_GetUploadUrl_UsesAuthRateLimitPolicy() {
+        AssertActionRateLimit(typeof(ImagesController), nameof(ImagesController.GetUploadUrl), PresentationPolicyNames.AuthRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void TestDeliveryActions_UseDedicatedRateLimitPolicy() {
+        AssertActionRateLimit(
+            typeof(DashboardController),
+            nameof(DashboardController.SendTestEmail),
+            PresentationPolicyNames.TestDeliveryRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(NotificationsController),
+            nameof(NotificationsController.ScheduleTestNotification),
+            PresentationPolicyNames.TestDeliveryRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(AdminEmailTemplatesController),
+            nameof(AdminEmailTemplatesController.SendTest),
+            PresentationPolicyNames.TestDeliveryRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void SecretVerificationActions_UseDedicatedRateLimitPolicy() {
+        AssertActionRateLimit(
+            typeof(UsersPasswordController),
+            nameof(UsersPasswordController.ChangePassword),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(ExportController),
+            nameof(ExportController.ExportSensitiveCycle),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(DietologistInvitationsController),
+            nameof(DietologistInvitationsController.Accept),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(DietologistInvitationsController),
+            nameof(DietologistInvitationsController.Decline),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void ExpensiveExportAndBillingActions_UseDedicatedRateLimitPolicies() {
+        AssertActionRateLimit(
+            typeof(ExportController),
+            nameof(ExportController.ExportDiary),
+            PresentationPolicyNames.ExportRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(ExportController),
+            nameof(ExportController.ExportCycle),
+            PresentationPolicyNames.ExportRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(BillingController),
+            nameof(BillingController.CreateCheckoutSession),
+            PresentationPolicyNames.BillingRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(BillingController),
+            nameof(BillingController.CreatePortalSession),
+            PresentationPolicyNames.BillingRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void AnonymousIngestionControllers_UseDedicatedRateLimitsAndRequestSizeLimits() {
+        AssertControllerRateLimit(typeof(LogsController), PresentationPolicyNames.ClientTelemetryRateLimitPolicyName);
+        AssertControllerRateLimit(typeof(MarketingAttributionController), PresentationPolicyNames.MarketingAttributionRateLimitPolicyName);
+        AssertActionRequestSizeLimit(typeof(LogsController), nameof(LogsController.Create), LogsController.MaxPayloadBytes);
+        AssertActionContentLengthLimit(typeof(LogsController), nameof(LogsController.Create), LogsController.MaxPayloadBytes);
+        AssertActionRequestSizeLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.Create),
+            MarketingAttributionController.MaxPayloadBytes);
+        AssertActionContentLengthLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.Create),
+            MarketingAttributionController.MaxPayloadBytes);
+        AssertActionRequestSizeLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.CreateSignup),
+            MarketingAttributionController.MaxPayloadBytes);
+        AssertActionContentLengthLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.CreateSignup),
+            MarketingAttributionController.MaxPayloadBytes);
+    }
+
+    [Fact]
+    public void MarketingSignupAttribution_RequiresAuthorizationAndCurrentUserBinding() {
+        MethodInfo method = GetAction(typeof(MarketingAttributionController), nameof(MarketingAttributionController.CreateSignup));
+
+        Assert.NotNull(method.GetCustomAttribute<AuthorizeAttribute>());
+        AssertHasFromCurrentUserParameter(typeof(MarketingAttributionController), nameof(MarketingAttributionController.CreateSignup));
+    }
+
+    [Fact]
+    public void AdminLessonsController_RequiresAdminRole() {
+        AuthorizeAttribute[] authorizeAttributes = [.. typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true)];
+
+        Assert.NotEmpty(authorizeAttributes);
+        Assert.Contains(authorizeAttributes, static attribute => string.Equals(attribute.Roles, PresentationRoleNames.Admin, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void CriticalWriteActions_OptIntoExplicitIdempotencyPolicy() {
+        Assert.DoesNotContain(
+            GetAction(typeof(AuthSessionController), nameof(AuthSessionController.Refresh)).GetCustomAttributes(inherit: true),
+            static attribute => attribute is EnableIdempotencyAttribute);
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ProductsController), nameof(ProductsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ProductsController), nameof(ProductsController.Duplicate));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Duplicate));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealsController), nameof(MealsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealsController), nameof(MealsController.Repeat));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.StartPremiumTrial));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.CreateCheckoutSession));
+        AssertRequiresIdempotencyKey(typeof(BillingController), nameof(BillingController.CreateCheckoutSession));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.CreatePortalSession));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BulkRecommendationsController), nameof(BulkRecommendationsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(AdminEmailTemplatesController), nameof(AdminEmailTemplatesController.SendTest));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(NotificationsController), nameof(NotificationsController.ScheduleTestNotification));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealPlansController), nameof(MealPlansController.Adopt));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealPlansController), nameof(MealPlansController.GenerateShoppingList));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistClientsController), nameof(DietologistClientsController.CreateRecommendation));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DashboardController), nameof(DashboardController.SendTestEmail));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistController), nameof(DietologistController.Invite));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(WearablesController), nameof(WearablesController.Sync));
+        AssertRequiresIdempotencyKey(typeof(WearablesController), nameof(WearablesController.Connect));
+        AssertRequiresIdempotencyKey(typeof(RecipeLikesController), nameof(RecipeLikesController.Toggle));
+        AssertRequiresIdempotencyKey(typeof(HydrationEntriesController), nameof(HydrationEntriesController.Create));
+        AssertRequiresIdempotencyKey(typeof(WaistEntriesController), nameof(WaistEntriesController.Create));
+        AssertRequiresIdempotencyKey(typeof(AdminLessonsController), nameof(AdminLessonsController.Import));
+        Assert.DoesNotContain(
+            GetAction(typeof(AdminUserCreationController), nameof(AdminUserCreationController.CreateUser)).GetCustomAttributes(inherit: true),
+            static attribute => attribute is EnableIdempotencyAttribute);
+    }
+
+    [Fact]
+    public void WearableProviderMutations_EnforceSensitiveAccessAndResourcePolicies() {
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.GetAuthUrl));
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Connect));
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Disconnect));
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Sync));
+        AssertActionRateLimit(
+            typeof(WearablesController),
+            nameof(WearablesController.GetAuthUrl),
+            PresentationPolicyNames.WearableRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(WearablesController),
+            nameof(WearablesController.Connect),
+            PresentationPolicyNames.WearableRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(WearablesController),
+            nameof(WearablesController.Sync),
+            PresentationPolicyNames.WearableRateLimitPolicyName);
+
+        EnableIdempotencyAttribute idempotency = AssertSingleAttribute<EnableIdempotencyAttribute>(
+            GetAction(typeof(WearablesController), nameof(WearablesController.Sync)));
+        Assert.True(idempotency.RequireKey);
+    }
+
+    [Fact]
+    public void WearableEndpoints_ConstrainProviderAndOAuthPayloadLengths() {
+        MethodInfo authUrlMethod = GetAction(typeof(WearablesController), nameof(WearablesController.GetAuthUrl));
+        ParameterInfo state = authUrlMethod.GetParameters()
+            .Single(static parameter => string.Equals(parameter.Name, "state", StringComparison.Ordinal));
+        PropertyInfo code = typeof(ConnectWearableHttpRequest).GetProperty(nameof(ConnectWearableHttpRequest.Code))!;
+        PropertyInfo protectedState = typeof(ConnectWearableHttpRequest).GetProperty(nameof(ConnectWearableHttpRequest.State))!;
+
+        Assert.Multiple(
+            () => Assert.All(
+                new[] { nameof(WearablesController.GetAuthUrl), nameof(WearablesController.Connect), nameof(WearablesController.Disconnect), nameof(WearablesController.Sync) },
+                actionName => AssertParameterMaximumLength(
+                    typeof(WearablesController),
+                    actionName,
+                    "provider",
+                    WearableInputLimits.MaximumProviderLength)),
+            () => Assert.NotNull(state.GetCustomAttribute<RequiredAttribute>()),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumOAuthStateLength,
+                Assert.IsType<MaxLengthAttribute>(state.GetCustomAttribute<MaxLengthAttribute>()).Length),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumAuthorizationCodeLength,
+                Assert.IsType<MaxLengthAttribute>(code.GetCustomAttribute<MaxLengthAttribute>()).Length),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumProtectedOAuthStateLength,
+                Assert.IsType<MaxLengthAttribute>(protectedState.GetCustomAttribute<MaxLengthAttribute>()).Length));
+    }
+
+    [Fact]
+    public void ProviderBackedFoodDataEndpoints_UseDedicatedRateLimit() {
+        AssertControllerRateLimit(typeof(OpenFoodFactsController), PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertControllerRateLimit(typeof(ProductSuggestionsController), PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(UsdaController),
+            nameof(UsdaController.Search),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(UsdaController),
+            nameof(UsdaController.GetDetail),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(UsdaController),
+            nameof(UsdaController.GetDailyMicronutrients),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(WeeklyCheckInController),
+            nameof(WeeklyCheckInController.Get),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void WeeklyCheckIn_UsesUserScopedOutputCache() {
+        MethodInfo action = GetAction(typeof(WeeklyCheckInController), nameof(WeeklyCheckInController.Get));
+
+        OutputCacheAttribute attribute = Assert.Single(action.GetCustomAttributes<OutputCacheAttribute>());
+
+        Assert.Equal(PresentationPolicyNames.UserScopedCachePolicyName, attribute.PolicyName);
+    }
+
+    [Fact]
+    public void NonSensitiveCreatedWriteActions_OptIntoExplicitIdempotencyPolicy() {
+        MethodInfo sensitiveAdminUserCreation = GetAction(
+            typeof(AdminUserCreationController),
+            nameof(AdminUserCreationController.CreateUser));
+        string[] missingActions = [.. PresentationTestDiscovery.GetTypes()
+            .Where(static type => !type.IsAbstract && typeof(ControllerBase).IsAssignableFrom(type))
+            .SelectMany(static type => type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
+            .Where(static method => method.GetCustomAttributes<HttpPostAttribute>(inherit: true).Any())
+            .Where(static method => method.GetCustomAttributes<ProducesResponseTypeAttribute>(inherit: true)
+                .Any(static attribute => attribute.StatusCode == StatusCodes.Status201Created))
+            .Where(method => method != sensitiveAdminUserCreation)
+            .Where(static method => method.GetCustomAttribute<EnableIdempotencyAttribute>(inherit: true) is null)
+            .Select(static method => $"{method.DeclaringType?.FullName}.{method.Name}")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(missingActions);
+    }
+
+    [Fact]
+    public void SensitiveAndDeploymentMetadataControllers_DisableClientAndProxyCaching() {
+        Type[] controllerTypes = [
+            typeof(AuthSessionController),
+            typeof(AuthPasswordController),
+            typeof(AuthTelegramController),
+            typeof(AdminSsoController),
+            typeof(ExportController),
+            typeof(VersionController),
+        ];
+
+        Assert.All(controllerTypes, static controllerType => {
+            ResponseCacheAttribute attribute = AssertSingleAttribute<ResponseCacheAttribute>(controllerType);
+
+            Assert.True(attribute.NoStore);
+            Assert.Equal(ResponseCacheLocation.None, attribute.Location);
+        });
+    }
+
+    private static void AssertActionRateLimit(Type controllerType, string actionName, string expectedPolicyName) {
+        MethodInfo method = GetAction(controllerType, actionName);
+        EnableRateLimitingAttribute attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(method);
+
+        Assert.Equal(expectedPolicyName, attribute.PolicyName);
+    }
+
+    private static void AssertParameterMaximumLength(
+        Type controllerType,
+        string actionName,
+        string parameterName,
+        int expectedMaximumLength) {
+        ParameterInfo parameter = GetAction(controllerType, actionName).GetParameters()
+            .Single(value => string.Equals(value.Name, parameterName, StringComparison.Ordinal));
+
+        Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
+        Assert.Equal(
+            expectedMaximumLength,
+            Assert.IsType<MaxLengthAttribute>(parameter.GetCustomAttribute<MaxLengthAttribute>()).Length);
+    }
+
+    private static void AssertRequiresIdempotencyKey(string actionName) {
+        AssertRequiresIdempotencyKey(typeof(AiFoodController), actionName);
+    }
+
+    private static void AssertRequiresIdempotencyKey(Type controllerType, string actionName) {
+        MethodInfo method = GetAction(controllerType, actionName);
+        EnableIdempotencyAttribute attribute = AssertSingleAttribute<EnableIdempotencyAttribute>(method);
+
+        Assert.True(attribute.RequireKey);
+    }
+
+    private static void AssertControllerRateLimit(Type controllerType, string expectedPolicyName) {
+        EnableRateLimitingAttribute attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(controllerType);
+
+        Assert.Equal(expectedPolicyName, attribute.PolicyName);
+    }
+
+    private static void AssertActionRequestSizeLimit(Type controllerType, string actionName, long expectedBytes) {
+        MethodInfo method = GetAction(controllerType, actionName);
+        CustomAttributeData attribute = Assert.Single(
+            method.CustomAttributes,
+            static attribute => attribute.AttributeType == typeof(RequestSizeLimitAttribute));
+        CustomAttributeTypedArgument bytes = Assert.Single(attribute.ConstructorArguments);
+
+        Assert.Equal(expectedBytes, bytes.Value);
+    }
+
+    private static void AssertActionContentLengthLimit(Type controllerType, string actionName, long expectedBytes) {
+        MethodInfo method = GetAction(controllerType, actionName);
+        RejectOversizedRequestAttribute attribute = AssertSingleAttribute<RejectOversizedRequestAttribute>(method);
+
+        Assert.Equal(expectedBytes, attribute.MaxBytes);
+    }
+
+    private static void AssertControllerRequestLimits(Type controllerType, long expectedBytes) {
+        AssertRequestLimits(controllerType, expectedBytes);
+    }
+
+    private static void AssertActionRequestLimits(Type controllerType, string actionName, long expectedBytes) {
+        AssertRequestLimits(GetAction(controllerType, actionName), expectedBytes);
+    }
+
+    private static void AssertRequestLimits(MemberInfo member, long expectedBytes) {
+        CustomAttributeData requestSizeLimit = Assert.Single(
+            member.CustomAttributes,
+            static attribute => attribute.AttributeType == typeof(RequestSizeLimitAttribute));
+        RejectOversizedRequestAttribute contentLengthLimit = AssertSingleAttribute<RejectOversizedRequestAttribute>(member);
+        ProducesApiErrorResponseAttribute payloadTooLarge = Assert.Single(
+            member.GetCustomAttributes<ProducesApiErrorResponseAttribute>(inherit: true),
+            static attribute => attribute.StatusCode == StatusCodes.Status413PayloadTooLarge);
+
+        Assert.Multiple(
+            () => Assert.Equal(expectedBytes, Assert.Single(requestSizeLimit.ConstructorArguments).Value),
+            () => Assert.Equal(expectedBytes, contentLengthLimit.MaxBytes),
+            () => Assert.Equal(StatusCodes.Status413PayloadTooLarge, payloadTooLarge.StatusCode));
+    }
+
+    private static void AssertHasFromCurrentUserParameter(Type controllerType, string actionName) {
+        MethodInfo method = GetAction(controllerType, actionName);
+        ParameterInfo[] parameters = method.GetParameters();
+
+        Assert.Contains(parameters, static parameter => parameter.GetCustomAttribute<FromCurrentUserAttribute>() is not null);
+    }
+
+    private static void AssertHasAttribute<TAttribute>(Type controllerType, string actionName)
+        where TAttribute : Attribute {
+        MethodInfo method = GetAction(controllerType, actionName);
+        Assert.NotNull(method.GetCustomAttribute<TAttribute>());
+    }
+
+    private static MethodInfo GetAction(Type controllerType, string actionName) =>
+        controllerType.GetMethod(actionName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+        ?? throw new InvalidOperationException($"Action {controllerType.FullName}.{actionName} was not found.");
+
+    private static TAttribute AssertSingleAttribute<TAttribute>(Type type)
+        where TAttribute : Attribute {
+        TAttribute[] attributes = [.. type.GetCustomAttributes<TAttribute>(inherit: true)];
+        Assert.Single(attributes);
+        return attributes[0];
+    }
+
+    private static TAttribute AssertSingleAttribute<TAttribute>(MemberInfo member)
+        where TAttribute : Attribute {
+        TAttribute[] attributes = [.. member.GetCustomAttributes<TAttribute>(inherit: true)];
+        Assert.Single(attributes);
+        return attributes[0];
+    }
+}

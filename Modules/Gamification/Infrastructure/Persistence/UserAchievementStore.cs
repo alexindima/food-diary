@@ -2,7 +2,7 @@ using System.Data.Common;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Models;
 using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;

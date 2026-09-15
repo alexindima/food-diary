@@ -10,7 +10,7 @@ using FoodDiary.Modules.Products.Application.Queries.GetProducts;
 using FoodDiary.Modules.Products.Application.Queries.GetProductsOverview;
 using FoodDiary.Modules.Products.Application.Queries.GetRecentProducts;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Products.Application.Tests;
 

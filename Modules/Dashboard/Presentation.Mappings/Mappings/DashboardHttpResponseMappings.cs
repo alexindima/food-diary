@@ -10,7 +10,7 @@ using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Cycles.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
 
-using FoodDiary.Presentation.Api.Features.Users.Models;
+using FoodDiary.Modules.Users.Presentation.Contracts.Models;
 
 namespace FoodDiary.Modules.Dashboard.Presentation.Mappings.Mappings;
 

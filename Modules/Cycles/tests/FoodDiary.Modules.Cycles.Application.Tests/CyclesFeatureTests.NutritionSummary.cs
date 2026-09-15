@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;
 

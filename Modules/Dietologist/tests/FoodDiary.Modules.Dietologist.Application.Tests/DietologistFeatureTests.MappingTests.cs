@@ -2,9 +2,9 @@ using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Application.Mappings;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dietologist.Application.Tests;
 

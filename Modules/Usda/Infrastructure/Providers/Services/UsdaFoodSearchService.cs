@@ -1,15 +1,15 @@
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Modules.Usda.Contracts.Common;
+using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Integrations.Http;
-using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Usda.Infrastructure.Providers.Services;
 
 internal sealed class UsdaFoodSearchService(
     HttpClient httpClient,

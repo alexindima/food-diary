@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Modules.Users.Application.Common;
 
 internal static class UserTimeZoneInput {
     internal static bool IsValid(string? value) => IsValid(value, TimeZoneInfo.FindSystemTimeZoneById);

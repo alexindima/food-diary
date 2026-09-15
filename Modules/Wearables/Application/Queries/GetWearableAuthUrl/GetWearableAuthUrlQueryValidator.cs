@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
+namespace FoodDiary.Modules.Wearables.Application.Queries.GetWearableAuthUrl;
 
 public sealed class GetWearableAuthUrlQueryValidator : AbstractValidator<GetWearableAuthUrlQuery> {
     public GetWearableAuthUrlQueryValidator() {

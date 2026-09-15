@@ -1,15 +1,15 @@
 using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Entities.Wearables;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -96,7 +96,7 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
         IWearableTransactionRunner runner,
         WearablesDbContext context,
         string serializationKey,
-        FoodDiary.Domain.ValueObjects.Ids.UserId userId,
+        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
         string externalUserId) =>
         runner.ExecuteSerializedAsync(
             serializationKey,
@@ -124,7 +124,7 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
         IWearableTransactionRunner runner,
         WearablesDbContext context,
         string serializationKey,
-        FoodDiary.Domain.ValueObjects.Ids.UserId userId,
+        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
         DateTime date,
         double value) =>
         runner.ExecuteSerializedAsync(

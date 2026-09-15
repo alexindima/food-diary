@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
-namespace FoodDiary.Application.Users.Queries.GetDesiredWaist;
+namespace FoodDiary.Modules.Users.Application.Queries.GetDesiredWaist;
 
 public record GetDesiredWaistQuery(Guid? UserId)
     : IQuery<Result<UserDesiredWaistModel>>, IUserRequest;

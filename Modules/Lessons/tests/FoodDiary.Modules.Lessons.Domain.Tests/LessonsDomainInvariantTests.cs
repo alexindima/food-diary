@@ -2,7 +2,7 @@ using FoodDiary.Modules.Lessons.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Modules.Lessons.Domain.Entities.Content;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Lessons.Domain.Tests;
 

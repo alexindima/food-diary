@@ -4,7 +4,7 @@ using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Application.Models;
 
 namespace FoodDiary.Modules.Products.Application.Tests;

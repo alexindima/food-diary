@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
-namespace FoodDiary.Domain.Tests.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.Tests.ValueObjects;
 
 [ExcludeFromCodeCoverage]
 public sealed class ValueObjectsInvariantTestsDesiredTests {

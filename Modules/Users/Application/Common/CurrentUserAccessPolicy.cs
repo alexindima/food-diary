@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
-namespace FoodDiary.Application.Users.Common;
+namespace FoodDiary.Modules.Users.Application.Common;
 
 public static class CurrentUserAccessPolicy {
     public static Error? EnsureCanAccess(User? user) {

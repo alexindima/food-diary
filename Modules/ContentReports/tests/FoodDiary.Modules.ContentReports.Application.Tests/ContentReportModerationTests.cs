@@ -6,7 +6,7 @@ using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.ContentReports.Application.Tests;

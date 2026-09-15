@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 

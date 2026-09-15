@@ -7,13 +7,13 @@ using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
 using FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
 using FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle;
 using System.Reflection;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;
 

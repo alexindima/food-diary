@@ -82,7 +82,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/OutboxReplayStreamTests.cs`
 - [presentation] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Presentation.Tests/GamificationHttpMappingsTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/GamificationModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/GamificationModuleExtractionTests.cs`
 
 ## Working Rule
 

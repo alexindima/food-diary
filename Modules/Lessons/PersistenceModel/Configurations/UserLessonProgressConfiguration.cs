@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Lessons.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Lessons.Domain.Entities.Content;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

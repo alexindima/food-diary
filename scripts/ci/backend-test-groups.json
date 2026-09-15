@@ -4,7 +4,7 @@
     {
       "name": "fast",
       "projects": [
-        "tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj",
+        "Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/FoodDiary.Modules.Admin.Domain.Tests.csproj",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/FoodDiary.Modules.Ai.Domain.Tests.csproj",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/FoodDiary.Modules.Billing.Domain.Tests.csproj",
@@ -117,10 +117,10 @@
         "Shared/tests/FoodDiary.Integrations.Http.Tests/FoodDiary.Integrations.Http.Tests.csproj",
         "Shared/tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj",
         "Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj",
-        "tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj",
-        "tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
-        "tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj",
-        "tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
+        "Hosts/tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj",
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
+        "Hosts/tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj",
+        "Hosts/tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
         "Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj"
       ]
     },
@@ -131,7 +131,7 @@
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/FoodDiary.Modules.Ai.Infrastructure.Tests.csproj",
         "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests.csproj",
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/FoodDiary.Modules.Gamification.Infrastructure.Tests.csproj",
-        "tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
       ]
     },
     {
@@ -153,7 +153,7 @@
         "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/FoodDiary.Modules.Wearables.Infrastructure.Tests.csproj",
         "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj",
         "Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj",
-        "tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj"
+        "Platform/tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj"
       ]
     },
     {
@@ -176,7 +176,7 @@
         "Services/MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj",
         "Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj",
         "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj",
-        "tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj"
+        "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj"
       ]
     },
     {

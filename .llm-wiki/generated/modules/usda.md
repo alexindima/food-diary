@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Usda/Application/FoodDiary.Application.Usda.csproj`
+- Extracted project: `Modules/Usda/Application/FoodDiary.Modules.Usda.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
@@ -25,6 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/Usda/Application`
+- `Modules/Usda/Application.Abstractions`
 - `Modules/Usda/Application/Abstractions`
 - `Modules/Usda/Contracts`
 - `Modules/Usda/Domain`
@@ -40,32 +41,27 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: DailyReferenceValue, UsdaFood, UsdaFoodNutrient, UsdaFoodPortion, UsdaNutrient
-- Public contract files: 21
+- Public contract files: 16
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 21
-- Interfaces: 8
+- Public contract types: 16
+- Interfaces: 3
 - DTO/read-model/projection types: 12
 - Enums: 0
-- Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 1
-- `class UsdaErrors`
-- `interface IUsdaDailyMicronutrientReadService`
-- `interface IUsdaFoodReadModelRepository`
-- `interface IUsdaFoodReadRepository`
-- `interface IUsdaFoodRepository`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
 - `interface IUsdaFoodSearchService`
 - `interface IUsdaMealNutritionReadService`
 - `interface IUsdaProductLinkService`
-- `interface IUsdaProductSuggestionReadService`
 - `record DailyMicronutrientModel`
 - `record DailyMicronutrientSummaryModel`
 - `record HealthAreaScoreModel`
 - `record HealthAreaScoresModel`
 - `record MicronutrientModel`
+- `record SearchUsdaFoodsQuery`
 - `record UsdaDailyReferenceValueReadModel`
 - `record UsdaFoodDetailModel`
 - `record UsdaFoodModel`
@@ -80,10 +76,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Support/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
-- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaValidatorTests.cs`
-- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/Domain/ReferenceDataInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaQueryHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/ReferenceDataInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/ValueObjects/AdditionalValueObjectsInvariantTestsHealthAreaTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/ValueObjects/SecondPassDomainHardeningTestsHealthAreaTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
@@ -92,7 +88,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Services/UsdaFoodDetailCacheTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `Modules/Usda/tests/FoodDiary.Modules.Usda.Presentation.Tests/UsdaHttpMappingsTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
 
 ## Working Rule
 

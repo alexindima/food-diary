@@ -1,10 +1,10 @@
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Modules.Usda.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Products.Application.Services;
 

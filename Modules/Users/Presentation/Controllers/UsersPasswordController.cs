@@ -1,0 +1,36 @@
+using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Users.Presentation.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+
+using FoodDiary.Modules.Users.Presentation.Requests;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Security;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Users.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/users/password")]
+public sealed class UsersPasswordController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpPatch]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.SecretVerificationRateLimitPolicyName)]
+    [BlockImpersonatedAccess]
+    public Task<IActionResult> ChangePassword([FromCurrentUser] Guid userId, [FromBody] ChangePasswordHttpRequest request) =>
+        HandleNoContent(request.ToCommand(userId));
+
+    [HttpPatch("set")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [BlockImpersonatedAccess]
+    public Task<IActionResult> SetPassword([FromCurrentUser] Guid userId, [FromBody] SetPasswordHttpRequest request) =>
+        HandleNoContent(request.ToCommand(userId));
+}

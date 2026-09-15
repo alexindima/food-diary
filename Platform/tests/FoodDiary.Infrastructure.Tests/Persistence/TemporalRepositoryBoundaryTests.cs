@@ -1,0 +1,80 @@
+using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.ReadModel.Composition.Meals;
+using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
+using FoodDiary.Modules.Meals.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Meals;
+using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+namespace FoodDiary.Infrastructure.Tests.Persistence;
+
+[ExcludeFromCodeCoverage]
+public sealed class TemporalRepositoryBoundaryTests {
+    [Fact]
+    public async Task MealRepository_AtMaximumDate_UsesInclusiveEndWithoutOverflow() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create($"meal-boundary-{Guid.NewGuid():N}@example.com", "hash");
+        var meal = Meal.Create(user.Id, DateTime.MaxValue);
+        context.AddRange(user, meal);
+        await context.SaveChangesAsync();
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context.Products), new MealSourceSnapshotQuery(context));
+
+        IReadOnlyList<Meal> period = await repository.GetByPeriodAsync(
+            user.Id,
+            DateTime.MaxValue,
+            DateTime.MaxValue,
+            CancellationToken.None);
+        IReadOnlyList<DateTime> dates = await repository.GetDistinctMealDatesAsync(
+            user.Id,
+            DateTime.MaxValue,
+            DateTime.MaxValue,
+            CancellationToken.None);
+        IReadOnlyList<Meal> day = await repository.GetWithItemsAndProductsAsync(
+            user.Id,
+            DateTime.MaxValue,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Single(period),
+            () => Assert.Equal(DateTime.MaxValue.Date, Assert.Single(dates)),
+            () => Assert.Single(day));
+    }
+
+    [Fact]
+    public async Task HydrationRepository_AtMaximumDate_UsesInclusiveEndWithoutOverflow() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create($"hydration-boundary-{Guid.NewGuid():N}@example.com", "hash");
+        var maximumUtc = DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc);
+        var entry = HydrationEntry.Create(user.Id, maximumUtc, 250);
+        context.AddRange(user, entry);
+        await context.SaveChangesAsync();
+        var repository = new HydrationEntryRepository(context.HydrationEntries);
+
+        IReadOnlyList<HydrationEntry> entries = await repository.GetByDateAsync(
+            user.Id,
+            maximumUtc,
+            CancellationToken.None);
+        int total = await repository.GetDailyTotalAsync(user.Id, maximumUtc, CancellationToken.None);
+        IReadOnlyList<(DateTime Date, int TotalMl)> totals = await repository.GetDailyTotalsAsync(
+            user.Id,
+            maximumUtc,
+            maximumUtc,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Single(entries),
+            () => Assert.Equal(250, total),
+            () => Assert.Equal((maximumUtc.Date, 250), Assert.Single(totals)));
+    }
+
+    private static FoodDiaryDbContext CreateContext() {
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
+            .Options;
+
+        return new FoodDiaryDbContext(options);
+    }
+}

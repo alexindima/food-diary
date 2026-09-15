@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Fasting.Domain.Tests;
 

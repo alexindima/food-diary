@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging;
 

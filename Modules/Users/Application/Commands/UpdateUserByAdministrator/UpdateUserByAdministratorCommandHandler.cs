@@ -1,16 +1,19 @@
+using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Application.Common;
+
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Commands.UpdateUserByAdministrator;
+using FoodDiary.Modules.Users.Contracts.Commands.UpdateUserByAdministrator;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Users.Commands.UpdateUserByAdministrator;
+namespace FoodDiary.Modules.Users.Application.Commands.UpdateUserByAdministrator;
 
 public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository,
@@ -135,7 +138,7 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
     private static IReadOnlyList<UserRoleAuditEvent> CreateRoleAuditEvents(
         User user,
         IReadOnlyCollection<Role> requestedRoles,
-        FoodDiary.Domain.ValueObjects.Ids.UserId? actorUserId,
+        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId? actorUserId,
         DateTime occurredAtUtc) {
         var current = user.UserRoles.Select(userRole => userRole.Role).ToDictionary(role => role.Name, StringComparer.Ordinal);
         var requested = requestedRoles.ToDictionary(role => role.Name, StringComparer.Ordinal);

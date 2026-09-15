@@ -257,7 +257,7 @@
       "id": "adaptive-cycle-query-splitting-bug",
       "changedPaths": [
         "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
-        "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs"
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs"
       ],
       "expectedModules": [],
       "expectedScopes": ["Backend", "Tests"],

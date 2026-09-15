@@ -6,10 +6,10 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Exercises.Application.Internal;
 using FoodDiary.Modules.Exercises.Application.Common;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Exercises.Application.Mappings;
 using FoodDiary.Modules.Exercises.Contracts.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Exercises.Application.Commands.UpdateExerciseEntry;
 

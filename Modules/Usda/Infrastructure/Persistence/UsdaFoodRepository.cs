@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Domain.Entities.Usda;
+using FoodDiary.Modules.Usda.Application.Abstractions.Common;
+using FoodDiary.Modules.Usda.Contracts.Models;
+using FoodDiary.Modules.Usda.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Usda.Infrastructure.Persistence;

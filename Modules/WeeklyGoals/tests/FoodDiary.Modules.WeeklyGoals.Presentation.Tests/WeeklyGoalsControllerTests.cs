@@ -1,16 +1,18 @@
-using FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
-using FoodDiary.Application.WeeklyGoals.Models;
-using FoodDiary.Application.WeeklyGoals.Queries.GetWeeklyGoal;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.WeeklyGoals.Presentation.Mappings;
+using FoodDiary.Modules.WeeklyGoals.Application.Commands.UpsertWeeklyGoal;
+using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
+using FoodDiary.Modules.WeeklyGoals.Application.Queries.GetWeeklyGoal;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.WeeklyGoals;
-using FoodDiary.Presentation.Api.Features.WeeklyGoals.Mappings;
-using FoodDiary.Presentation.Api.Features.WeeklyGoals.Requests;
-using FoodDiary.Presentation.Api.Features.WeeklyGoals.Responses;
+using FoodDiary.Modules.WeeklyGoals.Presentation.Controllers;
+
+using FoodDiary.Modules.WeeklyGoals.Presentation.Requests;
+using FoodDiary.Modules.WeeklyGoals.Presentation.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.WeeklyGoals.Presentation.Tests;
 
 #pragma warning disable MA0003
 

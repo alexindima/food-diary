@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Modules.Usda.Contracts.Models;
 
-namespace FoodDiary.Application.Usda.Queries.GetMicronutrients;
+namespace FoodDiary.Modules.Usda.Application.Queries.GetMicronutrients;
 
 public record GetMicronutrientsQuery(int FdcId) : IQuery<Result<UsdaFoodDetailModel>>;

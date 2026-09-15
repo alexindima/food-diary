@@ -6,11 +6,11 @@ Notifications-focused application, aggregate and provider/persistence tests live
 Run architecture tests when changing project references, folders, boundary rules, controllers, async method conventions, or service client packages.
 
 ```bash
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
+dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
 ```
 
 These tests are also the best executable documentation for backend boundaries.
-They also guard the allowed reference graph between test projects, so shared test helpers should be added through `tests/FoodDiary.Testing` instead of ad hoc cross-test-project references.
+They also guard the allowed reference graph between test projects, so shared test helpers should be added through `Tooling/FoodDiary.Testing` instead of ad hoc cross-test-project references.
 
 ## Local Git Hooks and CI
 
@@ -91,22 +91,22 @@ and dependencies. Do not run the same group concurrently in one checkout.
 
 | Project | Purpose |
 | --- | --- |
-| `tests/FoodDiary.ArchitectureTests` | Project references, source conventions, layer boundaries, async/cancellation guardrails. |
+| `Tooling/tests/FoodDiary.ArchitectureTests` | Project references, source conventions, layer boundaries, async/cancellation guardrails. |
 | `tests/FoodDiary.Application.Tests` | Application use cases, handlers, validation, application services. |
 | `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests` | Weight/waist entry commands, queries, validators, mappings, read services, and date/user-scoping semantics. |
 | `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests` | Product invariants and all 43 food scoring, grade and unit contract cases from the retired Nutrition suite. |
 | `tests/FoodDiary.Domain.Tests` | Core domain invariants, value objects, entities, and domain events. |
-| `tests/FoodDiary.Infrastructure.Tests` | Infrastructure unit behavior without external services. |
-| `tests/FoodDiary.Infrastructure.IntegrationTests` | PostgreSQL/Testcontainers persistence and migration behavior. |
-| `tests/FoodDiary.Testing` | Shared test-only helpers reused by multiple test projects, including Docker-gated test attributes. |
-| `tests/FoodDiary.Presentation.Api.Tests` | Controller flow, HTTP mapping, presentation error behavior. |
-| `tests/FoodDiary.Web.Api.Tests` | API host options, middleware, health checks, and host service unit behavior. |
-| `tests/FoodDiary.Web.Api.IntegrationTests` | API host behavior, OpenAPI/Swagger snapshots, HTTP contract snapshots. |
-| `tests/FoodDiary.JobManager.Tests` | Job registration, recurring job behavior, job execution policy. |
+| `Platform/tests/FoodDiary.Infrastructure.Tests` | Infrastructure unit behavior without external services. |
+| `Platform/tests/FoodDiary.Infrastructure.IntegrationTests` | PostgreSQL/Testcontainers persistence and migration behavior. |
+| `Tooling/FoodDiary.Testing` | Shared test-only helpers reused by multiple test projects, including Docker-gated test attributes. |
+| `Platform/tests/FoodDiary.Presentation.Api.Tests` | Controller flow, HTTP mapping, presentation error behavior. |
+| `Hosts/tests/FoodDiary.Web.Api.Tests` | API host options, middleware, health checks, and host service unit behavior. |
+| `Hosts/tests/FoodDiary.Web.Api.IntegrationTests` | API host behavior, OpenAPI/Swagger snapshots, HTTP contract snapshots. |
+| `Hosts/tests/FoodDiary.JobManager.Tests` | Job registration, recurring job behavior, job execution policy. |
 | `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests` | Billing checkout, portal, webhook, renewal and entitlement application behavior. |
 | `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests` | Billing subscription, payment and webhook-event invariants. |
 | `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests` | Billing provider boundary, authenticity and resilience behavior. |
-| `tests/FoodDiary.Telegram.Bot.Tests` | Bot parsing, command/callback behavior, worker edge cases. |
+| `Hosts/tests/FoodDiary.Telegram.Bot.Tests` | Bot parsing, command/callback behavior, worker edge cases. |
 | `Services/MailRelay/tests/FoodDiary.MailRelay.*.Tests` | MailRelay unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
 | `Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests` | MailRelay host, PostgreSQL, RabbitMQ, and queue behavior. |
 | `Services/MailInbox/tests/FoodDiary.MailInbox.*.Tests` | MailInbox unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
@@ -117,7 +117,7 @@ and dependencies. Do not run the same group concurrently in one checkout.
 | `Tooling/tests/FoodDiary.Analyzers.Tests` | Build-time analyzer diagnostics and exceptions. |
 | `Tooling/tests/FoodDiary.Development.Mcp.Tests` | Development MCP protocol, context retrieval and process behavior. |
 
-Shared and Tooling test projects reuse `tests/Directory.Build.props` and its
+Shared and Tooling test projects reuse `Tooling/Testing/TestProjects.props` and its
 runsettings/runner files. Their solution folders match their physical owner:
 `/Shared/tests/` and `/Tooling/tests/`. This is test organization, not a new runtime
 boundary; production projects and assembly identities are unchanged. General
@@ -144,7 +144,7 @@ Run from `FoodDiary.Web.Client`.
 ## Contract Snapshots
 
 If backend HTTP routes, payloads, status codes, OpenAPI output, or Swagger-visible behavior changes intentionally:
-- update snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`,
+- update snapshots under `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`,
 - include snapshot changes in the same commit,
 - mention the contract change in the PR/commit summary.
 
@@ -164,7 +164,7 @@ For a narrow docs-only change:
 - `git diff --check`
 
 For architecture guide/test changes:
-- `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 For primary backend application changes:
 - relevant project tests,

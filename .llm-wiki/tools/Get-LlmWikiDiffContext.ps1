@@ -490,14 +490,14 @@ if ($matchedModules.Count -gt 1) {
 
 $recommendedChecks = [System.Collections.Generic.List[string]]::new()
 if ($scopes.Backend) {
-    $recommendedChecks.Add('dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj')
+    $recommendedChecks.Add('dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj')
 }
 foreach ($project in $matchedProjects | Where-Object { $_.isTestProject }) {
     $recommendedChecks.Add("dotnet test $($project.path)")
 }
 if ($scopes.Api) {
-    $recommendedChecks.Add('dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj')
-    $recommendedChecks.Add('dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj')
+    $recommendedChecks.Add('dotnet test Platform/tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj')
+    $recommendedChecks.Add('dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj')
 }
 if ($scopes.Frontend) {
     $recommendedChecks.Add('cd FoodDiary.Web.Client && npm run verify')
@@ -507,7 +507,7 @@ if ($scopes.Localization) {
     $recommendedChecks.Add('cd FoodDiary.Web.Client && npm run check:i18n')
 }
 if ($scopes.Database) {
-    $recommendedChecks.Add('dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj')
+    $recommendedChecks.Add('dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj')
     $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1')
 }
 if ($scopes.Backend -and @($changedPaths | Where-Object { $_ -match '(^|/)(FoodDiary\.Domain|FoodDiary\.MailInbox\.Domain|FoodDiary\.MailRelay\.Domain)/|^Modules/[^/]+/Domain/|^Shared/FoodDiary\.Domain\.Primitives/' }).Count -gt 0) {

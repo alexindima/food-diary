@@ -1,6 +1,6 @@
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Application;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;

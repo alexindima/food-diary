@@ -24,3 +24,5 @@ role-audit commit/rollback and cancellation. Register all aggregate aliases thro
 Users in both composition orders; central AddInfrastructure must not own them.
 
 Users provider tests reference central Infrastructure explicitly for their shared PostgreSQL fixture and composition checks; production Users Infrastructure no longer supplies it transitively.
+
+All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.

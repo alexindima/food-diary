@@ -32,7 +32,7 @@ The backend follows a layered architecture with explicit dependency direction:
 5. `Presentation.Api` maps transport contracts to feature commands and queries.
 6. `Web.Api` is the host that explicitly composes presentation, runtime, feature modules, infrastructure, and integrations.
 
-These constraints are enforced by architecture tests in `tests/FoodDiary.ArchitectureTests`.
+These constraints are enforced by architecture tests in `Tooling/tests/FoodDiary.ArchitectureTests`.
 
 More detail:
 
@@ -78,7 +78,7 @@ dotnet test FoodDiary.slnx --maxcpucount:1
 Architecture guardrails:
 
 ```bash
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
+dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
 ```
 
 Backend verification:

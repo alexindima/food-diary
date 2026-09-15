@@ -56,7 +56,7 @@
       "expectedLayers": [],
       "maximumExpectedRank": 3,
       "expectedTestPaths": [
-        "tests/FoodDiary.Infrastructure.Tests/Persistence/ImageObjectDeletionOutboxTests.cs"
+        "Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/ImageObjectDeletionOutboxTests.cs"
       ]
     },
     {
@@ -70,7 +70,7 @@
       "expectedLayers": [],
       "maximumExpectedRank": 3,
       "expectedTestPaths": [
-        "tests/FoodDiary.Infrastructure.Tests/Persistence/ImageObjectDeletionOutboxTests.cs"
+        "Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/ImageObjectDeletionOutboxTests.cs"
       ]
     },
     {

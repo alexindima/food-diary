@@ -15,7 +15,7 @@ Rules for `Modules/Dashboard/Application/`.
 
 - Build: `dotnet build Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj`
 - Tests: `dotnet test Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/FoodDiary.Modules.Dashboard.Application.Tests.csproj`
-- Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 Reference Products FoodQuality directly for the existing shared food-quality calculation. Do not reference Products Domain for scoring.
 

@@ -4,7 +4,7 @@ using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Modules.Lessons.Domain.Entities.Content;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Lessons.Infrastructure.Persistence;

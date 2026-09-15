@@ -1,7 +1,7 @@
 using FoodDiary.Modules.BodyMetrics.Application;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;

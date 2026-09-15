@@ -8,8 +8,8 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Statistics.Application.Common;
 using FoodDiary.Modules.Statistics.Application.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
 

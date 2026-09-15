@@ -1,15 +1,16 @@
-using FoodDiary.Mediator;
 using FoodDiary.Testing;
+using FoodDiary.Modules.Usda.Application.Queries.SearchUsdaFoods;
+using FoodDiary.Mediator;
 using FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchProducts;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Modules.Usda.Application.Abstractions.Common;
+using FoodDiary.Modules.Usda.Contracts.Common;
+using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Modules.Products.Application.SearchSuggestions;
-using FoodDiary.Application.Usda.Services;
-using FoodDiary.Domain.Entities.Usda;
+using FoodDiary.Modules.Usda.Domain.Entities;
 
 namespace FoodDiary.Modules.Products.Application.Tests.CentralRelocated;
 
@@ -76,7 +77,7 @@ public sealed class ProductSearchSuggestionTests {
             new UsdaFoodModel(100, "Duplicate Fanta", "Soda"),
             new UsdaFoodModel(200, "FANTA ZERO, SODA, ORANGE", "Soda"),
         ], out Func<(string Search, int Limit)?> getLastBrandedSearchCall);
-        var provider = new UsdaProductSearchSuggestionProvider(new UsdaProductSuggestionReadService(repository), searchService);
+        var provider = new UsdaProductSearchSuggestionProvider(RequestTestSender.Create(new SearchUsdaFoodsQueryHandler(repository, searchService)));
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
 
@@ -99,7 +100,7 @@ public sealed class ProductSearchSuggestionTests {
         IUsdaFoodSearchService searchService = CreateUsdaFoodSearchService(
             [],
             out Func<(string Search, int Limit)?> getLastBrandedSearchCall);
-        var provider = new UsdaProductSearchSuggestionProvider(new UsdaProductSuggestionReadService(repository), searchService);
+        var provider = new UsdaProductSearchSuggestionProvider(RequestTestSender.Create(new SearchUsdaFoodsQueryHandler(repository, searchService)));
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 1, CancellationToken.None);
 

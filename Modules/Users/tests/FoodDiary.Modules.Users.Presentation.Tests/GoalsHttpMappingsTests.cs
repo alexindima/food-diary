@@ -1,11 +1,12 @@
-using FoodDiary.Application.Users.Commands.UpdateGoals;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Queries.GetUserGoals;
-using FoodDiary.Presentation.Api.Features.Goals.Mappings;
-using FoodDiary.Presentation.Api.Features.Goals.Requests;
-using FoodDiary.Presentation.Api.Features.Goals.Responses;
+using FoodDiary.Modules.Users.Presentation.Goals.Mappings;
+using FoodDiary.Modules.Users.Application.Commands.UpdateGoals;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Application.Queries.GetUserGoals;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Users.Presentation.Goals.Requests;
+using FoodDiary.Modules.Users.Presentation.Goals.Responses;
+
+namespace FoodDiary.Modules.Users.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class GoalsHttpMappingsTests {

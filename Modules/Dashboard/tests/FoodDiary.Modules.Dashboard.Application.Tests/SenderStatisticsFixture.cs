@@ -3,7 +3,7 @@ using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.Dashboard.Application.Tests;

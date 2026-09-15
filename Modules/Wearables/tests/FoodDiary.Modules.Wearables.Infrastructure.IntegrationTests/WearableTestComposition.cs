@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -5,11 +6,11 @@ using FoodDiary.Email.Infrastructure;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Wearables.Infrastructure;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 internal static class WearableTestComposition {

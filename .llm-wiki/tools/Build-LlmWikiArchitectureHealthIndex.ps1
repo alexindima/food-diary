@@ -15,7 +15,7 @@ $cacheInputs = @(
     '.llm-wiki/generated/quality-index.json',
     'docs/architecture/module-dependencies.json',
     'docs/architecture/backend-modules.json',
-    'tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs',
+    'Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs',
     '.llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1',
     '.llm-wiki/tools/LlmWikiJson.ps1',
     '.llm-wiki/tools/LlmWikiIndexCache.ps1'
@@ -49,7 +49,7 @@ foreach ($project in $projects) {
     }
 }
 
-$matrixPath = Join-Path $repositoryRoot 'tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'
+$matrixPath = Join-Path $repositoryRoot 'Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'
 $matrixContent = [System.IO.File]::ReadAllText($matrixPath)
 $productionSection = $matrixContent.Substring(
     $matrixContent.IndexOf('AllowedProductionProjectReferences', [System.StringComparison]::Ordinal),

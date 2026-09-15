@@ -10,7 +10,7 @@ The executable source analysis remains authoritative:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 extraction -Module <Module>
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
+dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
 ```
 
 ## Required exit criteria

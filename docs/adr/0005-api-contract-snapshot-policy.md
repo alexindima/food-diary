@@ -22,7 +22,7 @@ FoodDiary exposes HTTP APIs consumed by the Angular client, admin app, Telegram 
 3. Commit API and OpenAPI snapshots verified by integration tests.
 
 ## Decision
-Treat API/OpenAPI snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` as contract artifacts.
+Treat API/OpenAPI snapshots under `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` as contract artifacts.
 
 If a backend HTTP contract changes intentionally:
 - update the relevant integration snapshots,
@@ -44,8 +44,8 @@ If a backend HTTP contract changes intentionally:
 
 ## Enforcement
 
-- `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`
-- `tests/FoodDiary.Web.Api.IntegrationTests`
+- `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`
+- `Hosts/tests/FoodDiary.Web.Api.IntegrationTests`
 
 ## Follow-up
 

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Users.Commands.DeleteUser;
+namespace FoodDiary.Modules.Users.Application.Commands.DeleteUser;
 
 public sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand> {
     public DeleteUserCommandValidator() {

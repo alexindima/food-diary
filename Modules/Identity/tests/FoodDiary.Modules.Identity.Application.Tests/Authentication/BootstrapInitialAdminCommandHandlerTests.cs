@@ -1,10 +1,10 @@
 
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.BootstrapInitialAdmin;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;

@@ -1,6 +1,6 @@
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Identity.Domain.Entities.Content;
 

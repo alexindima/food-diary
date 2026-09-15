@@ -1,14 +1,15 @@
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -245,9 +246,9 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
     public async Task GetPagedAsync_NormalizesPagingAndEscapesLikePattern() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var matchingUser = User.Create("100%real@example.com", "hash");
-        matchingUser.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "special_user"));
+        matchingUser.UpdatePersonalInfo(new FoodDiary.Modules.Users.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "special_user"));
         var otherUser = User.Create("1000real@example.com", "hash");
-        otherUser.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "plain_user"));
+        otherUser.UpdatePersonalInfo(new FoodDiary.Modules.Users.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "plain_user"));
         context.Users.AddRange(matchingUser, otherUser);
         await context.SaveChangesAsync();
 

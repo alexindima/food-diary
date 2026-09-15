@@ -5,7 +5,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
@@ -125,6 +125,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
             .DistinctBy(item => item.Id)
             .OrderByDescending(item => item.LastUsedAtUtc)
             .ThenByDescending(item => item.CreatedOnUtc)
+            .ThenBy(item => item.ItemId)
             .Skip(MaxStoredPerType)];
 
         if (overflowItems.Length > 0) {
@@ -143,6 +144,8 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.ItemType == RecentItemType.Product)
             .OrderByDescending(x => x.LastUsedAtUtc)
+            .ThenByDescending(x => x.CreatedOnUtc)
+            .ThenBy(x => x.ItemId)
             .Take(sanitizedLimit)
             .Select(x => new RecentProductUsage(new ProductId(x.ItemId), x.UsageCount, x.LastUsedAtUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -159,6 +162,8 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.ItemType == RecentItemType.Recipe)
             .OrderByDescending(x => x.LastUsedAtUtc)
+            .ThenByDescending(x => x.CreatedOnUtc)
+            .ThenBy(x => x.ItemId)
             .Take(sanitizedLimit)
             .Select(x => new RecentRecipeUsage(new RecipeId(x.ItemId), x.UsageCount, x.LastUsedAtUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -199,7 +204,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
                 SELECT "Id"
                 FROM "RecentItems"
                 WHERE "UserId" = {{userId.Value}} AND "ItemType" = {{itemTypeValue}}
-                ORDER BY "LastUsedAtUtc" DESC, "CreatedOnUtc" DESC
+                ORDER BY "LastUsedAtUtc" DESC, "CreatedOnUtc" DESC, "ItemId" ASC
                 OFFSET {{MaxStoredPerType}})
             """, cancellationToken).ConfigureAwait(false);
     }

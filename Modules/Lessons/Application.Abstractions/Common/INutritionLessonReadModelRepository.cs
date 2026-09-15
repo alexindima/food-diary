@@ -2,7 +2,7 @@ using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 

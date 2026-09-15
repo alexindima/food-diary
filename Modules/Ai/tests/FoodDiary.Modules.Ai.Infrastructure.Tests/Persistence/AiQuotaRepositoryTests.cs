@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Persistence;

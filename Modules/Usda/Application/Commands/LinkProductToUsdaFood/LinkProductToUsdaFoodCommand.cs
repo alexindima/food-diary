@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
+namespace FoodDiary.Modules.Usda.Application.Commands.LinkProductToUsdaFood;
 
 public record LinkProductToUsdaFoodCommand(
     Guid? UserId,

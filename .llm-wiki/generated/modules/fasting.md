@@ -72,6 +72,9 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/FastingNotificationJobTests.cs`
+- [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs`
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FastingApiIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingContractsGlobalUsings.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Adjustments.cs`
@@ -99,9 +102,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/PostgresDatabaseCollection.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/PostgresDatabaseFixture.cs`
 - [presentation] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/ClientTelemetryLogHttpRequestValidationTests.cs`
-- [presentation] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingHttpMappingsTests.cs`
-- [presentation] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingReadControllerTests.cs`
-- [presentation] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingTelemetrySummaryServiceTests.cs`
 
 ## Working Rule
 

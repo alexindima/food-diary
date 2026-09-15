@@ -8,7 +8,7 @@ using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavori
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Favorites.Application.Tests.FavoriteMeals;
 

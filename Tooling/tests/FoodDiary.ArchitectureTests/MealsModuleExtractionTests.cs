@@ -1,0 +1,106 @@
+namespace FoodDiary.ArchitectureTests;
+
+[ExcludeFromCodeCoverage]
+public sealed class MealsModuleExtractionTests {
+    [Fact]
+    public void RecognitionConsumption_DoesNotAcquireMutableAiJobStorage() {
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Meals", "Application");
+        foreach (string path in SourceScanner.SourceFiles(root)) {
+            Assert.DoesNotContain("IFoodRecognitionJobStore", File.ReadAllText(path), StringComparison.Ordinal);
+        }
+    }
+
+    [Theory]
+    [InlineData(typeof(FoodDiary.Modules.Meals.Domain.Contracts.Enums.MealType))]
+    [InlineData(typeof(FoodDiary.Modules.Meals.Domain.Contracts.Enums.AiRecognitionSource))]
+    public void MealEnums_AreOwnedOnlyByMealsDomainContractsContracts(Type enumType) {
+        Assert.Equal("FoodDiary.Modules.Meals.Domain.Contracts", enumType.Assembly.GetName().Name);
+        Assert.Equal("FoodDiary.Modules.Meals.Domain.Contracts.Enums", enumType.Namespace);
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain.Contracts", "Enums", $"{enumType.Name}.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
+    }
+
+    [Fact]
+    public void MealsApplicationSource_LivesOnlyInExtractedAssembly() {
+        string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Meals");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Meals", "Application");
+        Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
+        Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
+    }
+
+    [Fact]
+    public void ExtractedMealsAssembly_HasOnlyApprovedProjectReferences() {
+        string[] references = ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj");
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Contracts", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.RecentItems.Contracts", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Nutrition.Contracts"], references);
+    }
+
+    [Fact]
+    public void ExtractedMealsAssembly_UsesCanonicalClrIdentity() {
+        string project = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules", "Meals", "Application", "FoodDiary.Modules.Meals.Application.csproj"));
+        Assert.DoesNotContain("<AssemblyName>", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("<RootNamespace>", project, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void SharedDomainAndContext_RetainTheCentralRelationshipAndMigrationSeams() {
+        string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain", "Entities", "User.cs"));
+        string userConfiguration = ArchitectureTestPaths.FromRoot(
+            "Modules", "Users", "PersistenceModel", "Persistence", "Configurations", "Users", "UserConfiguration.cs");
+        string dbContext = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Infrastructure", "Persistence", "FoodDiaryDbContext.cs"));
+
+        Assert.DoesNotContain("Meals", user, StringComparison.Ordinal);
+        Assert.True(File.Exists(userConfiguration), "UserConfiguration must remain with the Users owner.");
+        Assert.Contains("ApplyMealsPersistenceModel()", dbContext, StringComparison.Ordinal);
+        Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Migrations")));
+        Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain")));
+    }
+
+    [Fact]
+    public void MealsDomain_HasSinglePhysicalOwnershipAndOneWayDependencies() {
+        string[] ownedFiles = [
+            "Entities/Meal.cs", "Entities/MealItem.cs",
+            "Entities/MealAiSession.cs", "Entities/MealAiItem.cs",
+            "Entities/MealAiItemData.cs", "Events/MealNutritionAppliedDomainEvent.cs",
+            "ValueObjects/Ids/MealId.cs", "ValueObjects/Ids/MealItemId.cs",
+            "ValueObjects/Ids/MealAiSessionId.cs", "ValueObjects/Ids/MealAiItemId.cs",
+            "ValueObjects/MealDetailsState.cs", "ValueObjects/MealNutritionState.cs",
+            "ValueObjects/MealNutritionUpdate.cs", "ValueObjects/MealAiItemState.cs",
+            "Enums/MealItemOrigin.cs", "Enums/MealAiSessionStatus.cs", "Enums/MealAiItemResolution.cs",
+        ];
+        foreach (string path in ownedFiles) {
+            Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/" + path)), path);
+            string layer = path.StartsWith("ValueObjects/Ids/", StringComparison.Ordinal) || path.StartsWith("Enums/", StringComparison.Ordinal)
+                ? "Domain.Contracts" : "Domain";
+            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot($"Modules/Meals/{layer}/{path}")), path);
+        }
+
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Recipes.Domain.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
+        Assert.Equal(["FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/FoodDiary.Modules.Meals.Domain.Tests.csproj"));
+    }
+
+    [Fact]
+    public void MealsOwnedTests_LiveUnderTheModuleWithoutLegacyDuplicates() {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "Meals", "tests", "FoodDiary.Modules.Meals.Application.Tests", "FoodDiary.Modules.Meals.Application.Tests.csproj")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "Meals", "tests", "FoodDiary.Modules.Meals.Domain.Tests", "FoodDiary.Modules.Meals.Domain.Tests.csproj")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "Meals", "tests", "FoodDiary.Modules.Meals.Infrastructure.IntegrationTests", "FoodDiary.Modules.Meals.Infrastructure.IntegrationTests.csproj")));
+        string legacyTests = ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Application.Tests", "Meals");
+        Assert.Empty(Directory.Exists(legacyTests) ? SourceScanner.SourceFiles(legacyTests) : []);
+    }
+
+    [Theory]
+    [InlineData("FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs")]
+    [InlineData("FoodDiary.Initializer/Program.cs")]
+    public void ExecutableCompositionRoots_RegisterMealsModule(string relativePath) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath.Split('/')));
+        Assert.Contains("AddMealsModule()", source, StringComparison.Ordinal);
+    }
+}

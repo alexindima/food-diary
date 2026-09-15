@@ -12,7 +12,7 @@ using FoodDiary.Modules.Images.Application.Commands.ConfirmUpload;
 using FoodDiary.Modules.Images.Application.Commands.GetUploadUrl;
 using FoodDiary.Modules.Images.Application.Services;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Modules.Images.Application.Tests;

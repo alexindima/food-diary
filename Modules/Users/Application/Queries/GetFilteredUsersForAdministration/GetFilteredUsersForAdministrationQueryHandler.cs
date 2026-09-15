@@ -1,9 +1,10 @@
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Users.Queries.GetFilteredUsersForAdministration;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Contracts.Queries.GetFilteredUsersForAdministration;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Users.Queries.GetFilteredUsersForAdministration;
+namespace FoodDiary.Modules.Users.Application.Queries.GetFilteredUsersForAdministration;
 
 public sealed class GetFilteredUsersForAdministrationQueryHandler(IUserAdminReadModelRepository repository) : IRequestHandler<GetFilteredUsersForAdministrationQuery, (IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> {
     public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> Handle(GetFilteredUsersForAdministrationQuery request, CancellationToken cancellationToken) {

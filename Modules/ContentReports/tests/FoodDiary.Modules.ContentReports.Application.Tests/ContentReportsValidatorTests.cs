@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.ContentReports.Contracts.Commands.DismissContentReport;
 using FoodDiary.Modules.ContentReports.Contracts.Commands.ReviewContentReport;

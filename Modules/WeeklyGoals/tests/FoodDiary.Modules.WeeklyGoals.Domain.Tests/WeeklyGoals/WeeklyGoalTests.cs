@@ -1,8 +1,8 @@
-using FoodDiary.Domain.Entities.WeeklyGoals;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.WeeklyGoals.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests.WeeklyGoals;
+namespace FoodDiary.Modules.WeeklyGoals.Domain.Tests.WeeklyGoals;
 
 [ExcludeFromCodeCoverage]
 public sealed class WeeklyGoalTests {

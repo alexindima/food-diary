@@ -5,12 +5,12 @@ using FluentValidation.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Common;
 using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.DailyAdvices.Application.Queries.GetDailyAdvice;
 using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.DailyAdvices.Application.Tests;
 

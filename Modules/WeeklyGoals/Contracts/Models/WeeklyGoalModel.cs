@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.WeeklyGoals.Models;
+namespace FoodDiary.Modules.WeeklyGoals.Contracts.Models;
 
 public sealed record WeeklyGoalModel(
     Guid Id,

@@ -17,11 +17,11 @@ using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Commands.RemoveFavor
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Mappings;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.GetFavoriteMeals;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.IsMealFavorite;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Favorites.Application.Tests.FavoriteMeals;

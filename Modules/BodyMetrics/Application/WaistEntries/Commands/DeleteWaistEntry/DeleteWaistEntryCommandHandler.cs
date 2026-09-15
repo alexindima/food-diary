@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.BodyMetrics.Application.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 

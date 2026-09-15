@@ -1,0 +1,110 @@
+using FoodDiary.JobManager.Services;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using FoodDiary.Modules.Users.Contracts.Common;
+
+namespace FoodDiary.JobManager.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class UserCleanupJobTests : IDisposable {
+    private readonly JobExecutionStateTracker _stateTracker = new();
+
+    [Fact]
+    public async Task Execute_WhenNoDeletedUsers_RecordsSuccess() {
+        var cleanup = new StubUserCleanupService(usersPerBatch: 0);
+        UserCleanupJob job = CreateJob(cleanup);
+
+        await job.Execute();
+
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("users.cleanup");
+        Assert.NotNull(snapshot);
+        Assert.NotNull(snapshot.Value.LastSucceededAtUtc);
+    }
+
+    [Fact]
+    public async Task Execute_WithDeletedUsers_CleansUpInBatches() {
+        var cleanup = new StubUserCleanupService(usersPerBatch: 2, totalAvailable: 3);
+        var options = new UserCleanupOptions { BatchSize = 2, RetentionDays = 30 };
+        UserCleanupJob job = CreateJob(cleanup, options);
+
+        await job.Execute();
+
+        Assert.Equal(3, cleanup.TotalDeleted);
+        Assert.Equal(2, cleanup.CallCount);
+    }
+
+    [Fact]
+    public async Task Execute_WithReassignUserId_PassesItToService() {
+        var reassignId = Guid.NewGuid();
+        var cleanup = new StubUserCleanupService(usersPerBatch: 0);
+        var options = new UserCleanupOptions { ReassignUserId = reassignId.ToString() };
+        UserCleanupJob job = CreateJob(cleanup, options);
+
+        await job.Execute();
+
+        Assert.Equal(reassignId, cleanup.LastReassignUserId);
+    }
+
+    [Fact]
+    public async Task Execute_WithInvalidReassignUserId_PassesNull() {
+        var cleanup = new StubUserCleanupService(usersPerBatch: 0);
+        var options = new UserCleanupOptions { ReassignUserId = "not-a-guid" };
+        UserCleanupJob job = CreateJob(cleanup, options);
+
+        await job.Execute();
+
+        Assert.Null(cleanup.LastReassignUserId);
+    }
+
+    [Fact]
+    public async Task Execute_WhenServiceThrows_RecordsFailure() {
+        var cleanup = new ThrowingUserCleanupService();
+        UserCleanupJob job = CreateJob(cleanup);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
+
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("users.cleanup");
+        Assert.Equal(1, snapshot!.Value.ConsecutiveFailures);
+    }
+
+    private UserCleanupJob CreateJob(
+        IUserCleanupService cleanupService,
+        UserCleanupOptions? options = null) {
+        return new UserCleanupJob(
+            cleanupService,
+            Options.Create(options ?? new UserCleanupOptions()),
+            new JobExecutionObserver(new FixedDateTimeProvider(), _stateTracker),
+            NullLogger<UserCleanupJob>.Instance);
+    }
+
+    public void Dispose() => _stateTracker.Dispose();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubUserCleanupService(int usersPerBatch, int totalAvailable = 0) : IUserCleanupService {
+        public int TotalDeleted { get; private set; }
+        public int CallCount { get; private set; }
+        public Guid? LastReassignUserId { get; private set; }
+
+        public Task<int> CleanupDeletedUsersAsync(
+            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken cancellationToken = default) {
+            CallCount++;
+            LastReassignUserId = reassignUserId;
+            int remaining = totalAvailable - TotalDeleted;
+            int toDelete = Math.Min(Math.Min(usersPerBatch, batchSize), remaining);
+            TotalDeleted += toDelete;
+            return Task.FromResult(toDelete);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingUserCleanupService : IUserCleanupService {
+        public Task<int> CleanupDeletedUsersAsync(
+            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("DB error");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc));
+    }
+}

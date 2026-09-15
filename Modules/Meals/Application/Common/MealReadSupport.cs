@@ -5,7 +5,7 @@ using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Application.Mappings;
 
 namespace FoodDiary.Modules.Meals.Application.Common;

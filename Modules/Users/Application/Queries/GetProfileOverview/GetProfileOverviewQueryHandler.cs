@@ -1,14 +1,15 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
-namespace FoodDiary.Application.Users.Queries.GetProfileOverview;
+namespace FoodDiary.Modules.Users.Application.Queries.GetProfileOverview;
 
 public sealed class GetProfileOverviewQueryHandler(
-    IProfileOverviewReadService readService,
+    IUserProfileReadService userProfileReadService,
+    IProfileNotificationReadService notificationReadService,
+    IProfileDietologistReadService dietologistReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProfileOverviewQuery, Result<ProfileOverviewModel>> {
     public async Task<Result<ProfileOverviewModel>> Handle(GetProfileOverviewQuery query, CancellationToken cancellationToken) {
@@ -21,6 +22,33 @@ public sealed class GetProfileOverviewQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        return await readService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        return await GetOverviewAsync(userId, cancellationToken).ConfigureAwait(false);
+    }
+    private async Task<Result<ProfileOverviewModel>> GetOverviewAsync(UserId userId, CancellationToken cancellationToken) {
+        Result<UserModel> userResult = await userProfileReadService.GetUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<ProfileOverviewModel>(userResult.Error);
+        }
+
+        Result<UserNotificationPreferencesModel> preferencesResult = await userProfileReadService.GetNotificationPreferencesAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (preferencesResult.IsFailure) {
+            return Result.Failure<ProfileOverviewModel>(preferencesResult.Error);
+        }
+
+        IReadOnlyList<ProfileWebPushSubscriptionModel> webPushSubscriptions = await notificationReadService
+            .GetWebPushSubscriptionsAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        Result<ProfileDietologistRelationshipModel?> relationshipResult = await dietologistReadService
+            .GetRelationshipAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (relationshipResult.IsFailure) {
+            return Result.Failure<ProfileOverviewModel>(relationshipResult.Error);
+        }
+
+        return Result.Success(new ProfileOverviewModel(
+            userResult.Value,
+            preferencesResult.Value,
+            webPushSubscriptions,
+            relationshipResult.Value));
     }
 }

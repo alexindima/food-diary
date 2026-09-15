@@ -9,11 +9,11 @@ using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetLatestW
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests;
 using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WeightEntries.Responses;
 using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 
 namespace FoodDiary.Modules.BodyMetrics.Presentation.Tests;
 

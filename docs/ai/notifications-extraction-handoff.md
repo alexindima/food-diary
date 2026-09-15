@@ -38,8 +38,8 @@ All six cases belong to `FoodDiary.Infrastructure.Tests.DependencyInjectionTests
 | `FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionRepository` | `Type 'FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionRepository' was not found.` |
 | `FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventRepository` | `Type 'FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventRepository' was not found.` |
 | `FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common.IOpenFoodFactsProductCacheRepository` | `Type 'FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common.IOpenFoodFactsProductCacheRepository' was not found.` |
-| `FoodDiary.Application.Abstractions.Wearables.Common.IWearableConnectionRepository` | `No service for type 'FoodDiary.Application.Abstractions.Wearables.Common.IWearableConnectionRepository' has been registered.` |
-| `FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncRepository` | `No service for type 'FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncRepository' has been registered.` |
+| `FoodDiary.Modules.Wearables.Application.Abstractions.Common.IWearableConnectionRepository` | `No service for type 'FoodDiary.Modules.Wearables.Application.Abstractions.Common.IWearableConnectionRepository' has been registered.` |
+| `FoodDiary.Modules.Wearables.Application.Abstractions.Common.IWearableSyncRepository` | `No service for type 'FoodDiary.Modules.Wearables.Application.Abstractions.Common.IWearableSyncRepository' has been registered.` |
 
 Baseline selected theory: 31 passed / 6 failed at the exact base commit. Comparing the sorted baseline/final TRX ErrorInfo.Message values yields six identical messages with no difference. These failures were deliberately not fixed in this extraction.
 

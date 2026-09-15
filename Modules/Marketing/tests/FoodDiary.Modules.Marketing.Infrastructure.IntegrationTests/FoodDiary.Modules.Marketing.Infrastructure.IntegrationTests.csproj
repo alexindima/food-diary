@@ -5,7 +5,7 @@
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\tests\FoodDiary.Infrastructure.IntegrationTests\Integration\PostgresDatabaseCollection.cs" Link="Support\PostgresDatabaseCollection.cs" />
-    <Compile Include="..\..\..\..\tests\FoodDiary.Infrastructure.IntegrationTests\Integration\PostgresDatabaseFixture.cs" Link="Support\PostgresDatabaseFixture.cs" />
+    <Compile Include="..\..\..\..\Platform\tests\FoodDiary.Infrastructure.IntegrationTests\Integration\PostgresDatabaseCollection.cs" Link="Support\PostgresDatabaseCollection.cs" />
+    <Compile Include="..\..\..\..\Platform\tests\FoodDiary.Infrastructure.IntegrationTests\Integration\PostgresDatabaseFixture.cs" Link="Support\PostgresDatabaseFixture.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,8 +3,8 @@ using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Modules.ContentReports.Application.Models;
 using FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
 using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.ContentReports.Application.Tests;

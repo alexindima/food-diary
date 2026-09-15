@@ -3,7 +3,7 @@ using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.PersistenceModel;
 using Microsoft.EntityFrameworkCore;

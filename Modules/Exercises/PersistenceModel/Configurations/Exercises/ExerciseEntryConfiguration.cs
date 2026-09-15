@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Exercises.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

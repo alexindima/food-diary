@@ -6,12 +6,12 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
-using FoodDiary.Application.Users.Services;
+using FoodDiary.Modules.Users.Application.Services;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
@@ -507,7 +507,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         public bool RotationSucceeds { get; init; } = true;
 
         public Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
-            FoodDiary.Application.Abstractions.Users.Models.UserAuthenticationPrincipalModel principal,
+            FoodDiary.Modules.Users.Contracts.Models.UserAuthenticationPrincipalModel principal,
             CancellationToken cancellationToken,
             AuthenticationClientContext? clientContext = null,
             bool rememberMe = false) {
@@ -517,7 +517,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         }
 
         public Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
-            FoodDiary.Application.Abstractions.Users.Models.UserAuthenticationPrincipalModel principal,
+            FoodDiary.Modules.Users.Contracts.Models.UserAuthenticationPrincipalModel principal,
             Guid refreshSessionId,
             string expectedRefreshTokenHash,
             bool rememberMe,

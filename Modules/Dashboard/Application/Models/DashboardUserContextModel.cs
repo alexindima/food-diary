@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Dashboard.Application.Models;
 

@@ -5,7 +5,7 @@ using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Model
 using FoodDiary.Modules.Gamification.Application.Models;
 using FoodDiary.Modules.Gamification.Application.Services;
 using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Gamification.Application.Tests;
 

@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Globalization;
 using System.Security.Claims;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Web.Api.Extensions;
 

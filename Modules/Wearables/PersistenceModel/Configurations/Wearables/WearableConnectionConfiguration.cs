@@ -1,0 +1,41 @@
+using FoodDiary.Modules.Wearables.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FoodDiary.Modules.Wearables.PersistenceModel.Configurations.Wearables;
+
+internal sealed class WearableConnectionConfiguration : IEntityTypeConfiguration<WearableConnection> {
+    public void Configure(EntityTypeBuilder<WearableConnection> builder) {
+        builder.Property(e => e.Id).HasConversion(
+            id => id.Value,
+            value => new WearableConnectionId(value));
+
+        builder.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        builder.Property(e => e.Provider)
+            .HasConversion<string>()
+            .HasMaxLength(32);
+
+        builder.Property(e => e.ExternalUserId).HasMaxLength(256).IsRequired();
+        builder.Property(e => e.AccessToken)
+            .HasConversion(
+                token => token.Value,
+                value => ProtectedWearableToken.FromStoredValue(value))
+            .HasMaxLength(8192)
+            .IsRequired();
+        builder.Property(e => e.RefreshToken)
+            .HasConversion(
+                token => token.HasValue ? token.Value.Value : null,
+                value => value == null ? null : ProtectedWearableToken.FromStoredValue(value))
+            .HasMaxLength(8192);
+        builder.Property(e => e.LastConnectRequestId).HasMaxLength(64);
+        builder.Property(e => e.LastConnectRequestHash).HasMaxLength(64);
+
+        builder.HasIndex(e => new { e.UserId, e.Provider }).IsUnique();
+    }
+}

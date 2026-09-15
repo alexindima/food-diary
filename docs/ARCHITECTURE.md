@@ -141,7 +141,7 @@ Rules:
 - Supporting-service infrastructure options live in infrastructure options folders, with explicit exceptions for client/application/presentation options.
 
 ## Architecture Tests
-Architecture guardrails live in `tests/FoodDiary.ArchitectureTests`.
+Architecture guardrails live in `Tooling/tests/FoodDiary.ArchitectureTests`.
 
 Important tests:
 - `ProjectDependencyMatrixTests` is the source of truth for allowed production project references.
@@ -156,7 +156,7 @@ Important tests:
 Run:
 
 ```bash
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
+dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
 ```
 
 When architecture changes intentionally, update:

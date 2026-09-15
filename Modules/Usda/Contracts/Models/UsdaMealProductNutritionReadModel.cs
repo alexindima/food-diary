@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Usda.Models;
+namespace FoodDiary.Modules.Usda.Contracts.Models;
 
 public sealed record UsdaMealProductNutritionReadModel(
     double Amount,

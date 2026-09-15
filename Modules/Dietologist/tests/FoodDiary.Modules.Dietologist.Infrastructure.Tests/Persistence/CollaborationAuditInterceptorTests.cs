@@ -5,8 +5,8 @@ using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

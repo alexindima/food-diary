@@ -310,8 +310,8 @@
     "removed": []
   },
   {
-    "path": "Modules/Usda/Application/FoodDiary.Application.Usda.csproj",
-    "project": "FoodDiary.Application.Usda",
+    "path": "Modules/Usda/Application/FoodDiary.Modules.Usda.Application.csproj",
+    "project": "FoodDiary.Modules.Usda.Application",
     "added": [
       "FoodDiary.Modules.Products.Contracts",
       "FoodDiary.Modules.Products.Domain.Contracts"
@@ -409,7 +409,7 @@
     "removed": []
   },
   {
-    "path": "tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj",
+    "path": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj",
     "project": "FoodDiary.Infrastructure.IntegrationTests",
     "added": [
       "FoodDiary.Modules.Billing.Application.Abstractions",
@@ -421,7 +421,7 @@
     "removed": []
   },
   {
-    "path": "tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj",
+    "path": "Platform/tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj",
     "project": "FoodDiary.Infrastructure.Tests",
     "added": [
       "FoodDiary.Modules.Billing.Application.Abstractions",
@@ -432,7 +432,7 @@
     "removed": []
   },
   {
-    "path": "tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj",
+    "path": "Hosts/tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj",
     "project": "FoodDiary.JobManager.Tests",
     "added": [
       "FoodDiary.Modules.Billing.Application.Abstractions",
@@ -444,7 +444,7 @@
     "removed": []
   },
   {
-    "path": "tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
+    "path": "Platform/tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
     "project": "FoodDiary.Presentation.Api.Tests",
     "added": [
       "FoodDiary.Modules.Billing.Application.Abstractions",
@@ -462,7 +462,7 @@
     "removed": []
   },
   {
-    "path": "tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj",
+    "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj",
     "project": "FoodDiary.Web.Api.IntegrationTests",
     "added": [
       "FoodDiary.Modules.Identity.Application.Abstractions",
@@ -472,7 +472,7 @@
     "removed": []
   },
   {
-    "path": "tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
+    "path": "Hosts/tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
     "project": "FoodDiary.Web.Api.Tests",
     "added": [
       "FoodDiary.Modules.Notifications.Application.Abstractions"

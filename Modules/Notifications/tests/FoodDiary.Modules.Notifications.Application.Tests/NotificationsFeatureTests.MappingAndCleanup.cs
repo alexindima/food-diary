@@ -7,7 +7,7 @@ using FoodDiary.Modules.Notifications.Application.Services;
 
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Notifications.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Notifications.Application.Models;
 
 namespace FoodDiary.Modules.Notifications.Application.Tests;

@@ -1,14 +1,15 @@
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Wearables.Application.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
+namespace FoodDiary.Modules.Wearables.Application.Queries.GetWearableDailySummary;
 
 internal sealed class GetWearableDailySummaryQueryHandler(
-    IWearableReadService wearableReadService,
+    IWearableSyncReadModelRepository syncRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWearableDailySummaryQuery, Result<WearableDailySummaryModel>> {
     public async Task<Result<WearableDailySummaryModel>> Handle(
@@ -22,9 +23,9 @@ internal sealed class GetWearableDailySummaryQueryHandler(
             return CurrentUserAccessResolver.ToFailure<WearableDailySummaryModel>(userIdResult);
         }
 
-        WearableDailySummaryModel summary = await wearableReadService
-            .GetDailySummaryAsync(userIdResult.Value, query.Date, cancellationToken)
+        IReadOnlyList<WearableSyncEntryReadModel> entries = await syncRepository
+            .GetDailySummaryReadModelsAsync(userIdResult.Value, query.Date, cancellationToken)
             .ConfigureAwait(false);
-        return Result.Success(summary);
+        return Result.Success(WearableSummaryCalculator.Calculate(query.Date, entries.Select(entry => (entry.DataType, entry.Value))));
     }
 }

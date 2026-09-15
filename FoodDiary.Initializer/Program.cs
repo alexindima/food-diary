@@ -1,3 +1,7 @@
+using FoodDiary.Modules.WeeklyGoals.Infrastructure;
+using FoodDiary.Modules.Wearables.Infrastructure;
+using FoodDiary.Modules.Users.Infrastructure;
+using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.RecipeCommunity.Infrastructure;
 using FoodDiary.Modules.RecentItems.Infrastructure;
@@ -45,10 +49,7 @@ using FoodDiary.Modules.Statistics.Application;
 using FoodDiary.Modules.Tdee.Application;
 using FoodDiary.Modules.Notifications.Application;
 
-using FoodDiary.Modules.Wearables.Infrastructure;
-using FoodDiary.Modules.WeeklyGoals.Infrastructure;
-using FoodDiary.Modules.Usda.Infrastructure;
-using FoodDiary.Application.WeeklyCheckIn;
+using FoodDiary.Modules.WeeklyCheckIn.Application;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;

@@ -109,8 +109,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipeHttpMappingsTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FavoritesContractOwnershipTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FavoritesModuleExtractionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/FavoritesContractOwnershipTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/FavoritesModuleExtractionTests.cs`
 
 ## Working Rule
 

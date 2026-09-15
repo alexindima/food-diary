@@ -1,0 +1,69 @@
+using FoodDiary.Modules.Users.Domain.Entities.Tracking;
+using FoodDiary.Modules.Users.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Users.Domain.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class WaistGoalInvariantTests {
+    [Fact]
+    public void Start_CreatesActiveGoalWithItsOwnBaseline() {
+        DateTime startedAtUtc = new(2026, 8, 6, 12, 0, 0, DateTimeKind.Utc);
+        var goal = WaistGoal.Start(UserId.New(), 75, 88.5, startedAtUtc);
+
+        Assert.Multiple(
+            () => Assert.Equal(75, goal.TargetWaistCm),
+            () => Assert.Equal(88.5, goal.StartWaistCm),
+            () => Assert.Equal(startedAtUtc, goal.StartedAtUtc),
+            () => Assert.Equal(WaistGoalStatus.Active, goal.Status),
+            () => Assert.Null(goal.EndedAtUtc));
+    }
+
+    [Fact]
+    public void Replace_ClosesActiveGoalWithoutLosingItsBaseline() {
+        DateTime startedAtUtc = new(2026, 8, 6, 12, 0, 0, DateTimeKind.Utc);
+        DateTime endedAtUtc = startedAtUtc.AddDays(7);
+        var goal = WaistGoal.Start(UserId.New(), 75, 88.5, startedAtUtc);
+        goal.Replace(endedAtUtc, 84);
+
+        Assert.Multiple(
+            () => Assert.Equal(WaistGoalStatus.Replaced, goal.Status),
+            () => Assert.Equal(endedAtUtc, goal.EndedAtUtc),
+            () => Assert.Equal(84, goal.EndWaistCm),
+            () => Assert.Equal(88.5, goal.StartWaistCm));
+    }
+
+    [Fact]
+    public void Cancel_ClosesActiveGoal() {
+        DateTime startedAtUtc = new(2026, 8, 6, 12, 0, 0, DateTimeKind.Utc);
+        var goal = WaistGoal.Start(UserId.New(), 75, 88.5, startedAtUtc);
+        goal.Cancel(startedAtUtc.AddDays(1), 87);
+
+        Assert.Multiple(
+            () => Assert.Equal(WaistGoalStatus.Cancelled, goal.Status),
+            () => Assert.Equal(87, goal.EndWaistCm));
+    }
+
+    [Fact]
+    public void End_WhenGoalIsAlreadyClosed_Throws() {
+        DateTime startedAtUtc = new(2026, 8, 6, 12, 0, 0, DateTimeKind.Utc);
+        var goal = WaistGoal.Start(UserId.New(), 75, 88.5, startedAtUtc);
+        goal.Cancel(startedAtUtc.AddDays(1), 87);
+
+        Assert.Throws<InvalidOperationException>(() => goal.Replace(startedAtUtc.AddDays(2), 86));
+    }
+
+    [Fact]
+    public void Start_WithEmptyUserId_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            WaistGoal.Start(new UserId(Guid.Empty), 75, 88.5, DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void Cancel_WhenEndedBeforeStart_Throws() {
+        DateTime startedAtUtc = new(2026, 8, 6, 12, 0, 0, DateTimeKind.Utc);
+        var goal = WaistGoal.Start(UserId.New(), 75, 88.5, startedAtUtc);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => goal.Cancel(startedAtUtc.AddTicks(-1), 87));
+    }
+}

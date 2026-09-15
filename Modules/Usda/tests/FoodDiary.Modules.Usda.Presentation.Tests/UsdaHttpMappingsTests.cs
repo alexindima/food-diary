@@ -1,14 +1,14 @@
-using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
-using FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
-using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
-using FoodDiary.Application.Usda.Queries.GetMicronutrients;
-using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
-using FoodDiary.Presentation.Api.Features.Usda.Mappings;
-using FoodDiary.Presentation.Api.Features.Usda.Requests;
-using FoodDiary.Presentation.Api.Features.Usda.Responses;
+using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
+using FoodDiary.Modules.Usda.Contracts.Models;
+using FoodDiary.Modules.Usda.Application.Commands.LinkProductToUsdaFood;
+using FoodDiary.Modules.Usda.Application.Commands.UnlinkProductFromUsdaFood;
+using FoodDiary.Modules.Usda.Application.Queries.GetDailyMicronutrients;
+using FoodDiary.Modules.Usda.Application.Queries.GetMicronutrients;
+using FoodDiary.Modules.Usda.Presentation.Mappings;
+using FoodDiary.Modules.Usda.Presentation.Requests;
+using FoodDiary.Modules.Usda.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Usda.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsdaHttpMappingsTests {

@@ -54,9 +54,9 @@ Primary FoodDiary core may call these services only through typed client package
 
 ## Enforcement
 
-- `tests/FoodDiary.ArchitectureTests/MailRelayArchitectureTests.cs`
-- `tests/FoodDiary.ArchitectureTests/MailInboxArchitectureTests.cs`
-- `tests/FoodDiary.ArchitectureTests/ClientPackageBoundaryTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/MailRelayArchitectureTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/MailInboxArchitectureTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/ClientPackageBoundaryTests.cs`
 
 ## Follow-up
 

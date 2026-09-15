@@ -1,14 +1,15 @@
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users;
-using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Application;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Users.Infrastructure;
 
 public static class UsersModuleRegistration {
     public static IServiceCollection AddUsersModule(this IServiceCollection services) =>

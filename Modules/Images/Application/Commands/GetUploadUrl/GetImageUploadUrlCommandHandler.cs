@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Images.Application.Commands.GetUploadUrl;
 

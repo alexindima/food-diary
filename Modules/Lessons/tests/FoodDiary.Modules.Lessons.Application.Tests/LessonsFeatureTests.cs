@@ -9,10 +9,10 @@ using FoodDiary.Modules.Lessons.Application.Commands.MarkLessonRead;
 using FoodDiary.Modules.Lessons.Application.Models;
 using FoodDiary.Modules.Lessons.Application.Queries.GetLessonById;
 using FoodDiary.Modules.Lessons.Application.Queries.GetLessons;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
 using FoodDiary.Modules.Lessons.Domain.Entities.Content;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using NSubstitute.Core;
 
 namespace FoodDiary.Modules.Lessons.Application.Tests;

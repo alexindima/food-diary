@@ -12,7 +12,7 @@ using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 using QuestPDF.Fluent;
 using SkiaSharp;

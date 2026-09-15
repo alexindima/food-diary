@@ -1,9 +1,9 @@
 using FluentValidation;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 using System.Globalization;
 
-namespace FoodDiary.Application.Users.Commands.UpdateUser;
+namespace FoodDiary.Modules.Users.Application.Commands.UpdateUser;
 
 public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand> {
     public UpdateUserCommandValidator() {

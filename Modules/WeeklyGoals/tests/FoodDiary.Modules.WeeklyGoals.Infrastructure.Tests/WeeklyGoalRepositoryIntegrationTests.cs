@@ -1,23 +1,24 @@
+using FoodDiary.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Modules.WeeklyGoals.Infrastructure;
+
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Entities.WeeklyGoals;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.WeeklyGoals.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -120,7 +121,7 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
 
     private static async Task CreateGoalWithRunnerAsync(
         FoodDiaryDbContext context,
-        FoodDiary.Domain.ValueObjects.Ids.UserId userId,
+        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
         DateTime weekStartUtc) {
         await using ServiceProvider provider = CreateProvider(context);
         IWeeklyGoalRepository repository = provider.GetRequiredService<IWeeklyGoalRepository>();

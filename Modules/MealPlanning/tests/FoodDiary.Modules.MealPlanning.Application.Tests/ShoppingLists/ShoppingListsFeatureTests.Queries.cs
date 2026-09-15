@@ -3,7 +3,7 @@ using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetCurren
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 

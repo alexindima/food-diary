@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseCalories;
 using FoodDiary.Modules.Fasting.Contracts.Queries.ReadCurrentFasting;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -15,7 +16,7 @@ using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Modules.Tdee.Contracts.Models;
 using FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 using FoodDiary.Modules.Dashboard.Application.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.Dashboard.Application.Services;

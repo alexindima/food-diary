@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using System.Data.Common;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
 using Npgsql;
 

@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.WeeklyGoals.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Common;
 
-namespace FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Commands.UpsertWeeklyGoal;
 
 public sealed class UpsertWeeklyGoalCommandValidator : AbstractValidator<UpsertWeeklyGoalCommand> {
     private static readonly int[] SupportedTargets = [3, 5, 7];

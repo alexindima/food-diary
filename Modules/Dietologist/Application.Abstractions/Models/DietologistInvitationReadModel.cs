@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
 namespace FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 

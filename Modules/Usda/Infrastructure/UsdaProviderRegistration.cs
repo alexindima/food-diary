@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Usda.Contracts.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

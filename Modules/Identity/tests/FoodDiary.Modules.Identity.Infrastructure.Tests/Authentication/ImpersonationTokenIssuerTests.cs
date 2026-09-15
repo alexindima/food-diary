@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Services;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 

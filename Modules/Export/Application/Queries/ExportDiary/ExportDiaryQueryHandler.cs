@@ -9,8 +9,8 @@ using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Export.Application.Abstractions.Models;
 using FoodDiary.Modules.Export.Application.Models;
 using FoodDiary.Modules.Export.Application.Services;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 

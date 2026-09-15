@@ -8,7 +8,7 @@
     <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseCollection.cs" Link="Support/PostgresDatabaseCollection.cs" />
-    <Compile Include="../../../../tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs" Link="Support/PostgresDatabaseFixture.cs" />
+    <Compile Include="../../../../Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseCollection.cs" Link="Support/PostgresDatabaseCollection.cs" />
+    <Compile Include="../../../../Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs" Link="Support/PostgresDatabaseFixture.cs" />
   </ItemGroup>
 
   <ItemGroup>

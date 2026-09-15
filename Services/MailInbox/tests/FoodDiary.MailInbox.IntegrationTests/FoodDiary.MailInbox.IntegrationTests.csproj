@@ -28,7 +28,7 @@
     <ProjectReference Include="../../FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj" />
     <ProjectReference Include="../../FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj" />
     <ProjectReference Include="../../FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj" />
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 
 </Project>

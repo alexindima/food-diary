@@ -1,0 +1,22 @@
+namespace FoodDiary.Modules.Usda.Domain.Entities;
+
+/// <summary>
+/// USDA nutrient definition (vitamin, mineral, macro). Read-only reference data.
+/// </summary>
+public sealed class UsdaNutrient {
+    public const int NameMaxLength = 256;
+    public const int UnitNameMaxLength = 32;
+
+    public required int Id {
+        get;
+        init => field = UsdaDomainGuard.Positive(value, nameof(Id));
+    }
+    public required string Name {
+        get;
+        init => field = UsdaDomainGuard.RequiredText(value, NameMaxLength, nameof(Name));
+    }
+    public required string UnitName {
+        get;
+        init => field = UsdaDomainGuard.RequiredText(value, UnitNameMaxLength, nameof(UnitName));
+    }
+}

@@ -16,12 +16,12 @@ using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetLatestWa
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.Tests.WaistEntries;

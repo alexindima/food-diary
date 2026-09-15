@@ -4,17 +4,17 @@ using FluentValidation.TestHelper;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Commands.BulkCreateRecommendations;
 using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendationComment;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetAttentionSignals;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationComments;
 using FoodDiary.Modules.Dietologist.Application.Services;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 #pragma warning disable MA0003
@@ -190,7 +190,7 @@ public sealed class DietologistResidualCoverageTests {
         var service = new DietologistUserContextService(access, profiles, userProfiles);
 
         Result<string> email = await service.GetAccessibleUserEmailAsync(userId, CancellationToken.None);
-        Result<FoodDiary.Application.Abstractions.Users.Models.UserModel> model =
+        Result<FoodDiary.Modules.Users.Contracts.Models.UserModel> model =
             await service.GetUserModelByIdAsync(userId, CancellationToken.None);
         Result<UserDietologistProfileModel> accessible =
             await service.GetAccessibleProfileAsync(userId, CancellationToken.None);

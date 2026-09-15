@@ -74,6 +74,8 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/MarketingAttributionCleanupJobTests.cs`
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/MarketingAttributionIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionRangeTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConversionRecorderTests.cs`
@@ -82,10 +84,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingIdConversionTests.cs`
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/MarketingModuleRegistrationTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/MarketingAttributionCleanupJobTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs`
-- [integration] `tests/FoodDiary.Web.Api.IntegrationTests/MarketingAttributionIntegrationTests.cs`
+- [presentation] `Platform/tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`
 
 ## Working Rule
 

@@ -1,19 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.WeeklyGoals.Infrastructure</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.WeeklyGoals.Infrastructure</RootNamespace>
-  </PropertyGroup>
-
   <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />

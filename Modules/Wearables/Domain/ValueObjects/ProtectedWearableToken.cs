@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Wearables.Domain.ValueObjects;
 
 public readonly record struct ProtectedWearableToken {
     private const string ProtectedPrefix = "fdp1:";

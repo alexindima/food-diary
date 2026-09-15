@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 

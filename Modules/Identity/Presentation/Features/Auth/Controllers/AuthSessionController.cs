@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Presentation.Api.Controllers;
@@ -5,8 +6,8 @@ using FoodDiary.Presentation.Api.Filters;
 
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Mappings;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;

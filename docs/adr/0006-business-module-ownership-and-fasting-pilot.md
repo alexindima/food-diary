@@ -56,9 +56,9 @@ Creating an assembly, schema, or service for every feature would add migration a
 
 - `docs/backend/BACKEND_MODULE_OWNERSHIP.md` is the current ownership and interaction map.
 - `docs/architecture/module-dependencies.json` is the current Application dependency graph, governed by ADR-0009.
-- `tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs`
-- `tests/FoodDiary.ArchitectureTests/ModuleDependencyGraphTests.cs`
-- `tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/ModuleDependencyGraphTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`
 
 ## Follow-up
 

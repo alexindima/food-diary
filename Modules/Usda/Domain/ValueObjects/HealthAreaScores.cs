@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Usda.Domain.ValueObjects;
 
 [StructLayout(LayoutKind.Auto)]
 public readonly record struct HealthAreaScores(

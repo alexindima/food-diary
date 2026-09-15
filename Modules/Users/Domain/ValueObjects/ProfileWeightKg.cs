@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.ValueObjects;
 
 public readonly record struct ProfileWeightKg {
     public const double MaxValue = 500d;

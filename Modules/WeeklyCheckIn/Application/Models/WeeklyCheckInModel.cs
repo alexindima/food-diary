@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.WeeklyCheckIn.Models;
+namespace FoodDiary.Modules.WeeklyCheckIn.Application.Models;
 
 public sealed record WeeklyCheckInModel(
     WeekSummaryModel ThisWeek,

@@ -7,8 +7,8 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 using FoodDiary.Modules.Meals.Application.Common;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 
 namespace FoodDiary.Modules.Meals.Application.Tests;

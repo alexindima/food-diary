@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Domain.Entities.Wearables;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Wearables.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Wearables;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 
 internal sealed class WearableConnectionRepository(DbSet<WearableConnection> records) : IWearableConnectionRepository {
     public async Task<WearableConnection?> GetAsync(

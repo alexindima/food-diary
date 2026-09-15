@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Users.Commands.ChangePassword;
+namespace FoodDiary.Modules.Users.Application.Commands.ChangePassword;
 
 public sealed class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand> {
     public ChangePasswordCommandValidator() {

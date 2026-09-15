@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
 using FluentValidation;
 
-namespace FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
+namespace FoodDiary.Modules.Usda.Application.Queries.SearchUsdaFoods;
 
 public sealed class SearchUsdaFoodsQueryValidator : AbstractValidator<SearchUsdaFoodsQuery> {
     public const int MaximumSearchLength = 256;

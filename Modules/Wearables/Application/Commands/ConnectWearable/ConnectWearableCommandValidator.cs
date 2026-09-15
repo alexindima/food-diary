@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 
-namespace FoodDiary.Application.Wearables.Commands.ConnectWearable;
+namespace FoodDiary.Modules.Wearables.Application.Commands.ConnectWearable;
 
 public sealed class ConnectWearableCommandValidator : AbstractValidator<ConnectWearableCommand> {
     public ConnectWearableCommandValidator() {

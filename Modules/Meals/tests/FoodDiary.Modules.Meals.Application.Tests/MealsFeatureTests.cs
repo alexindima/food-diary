@@ -11,7 +11,7 @@ using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavo
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteStatus;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
-using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
@@ -22,7 +22,7 @@ using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Meals.Application.Commands.DeleteMeal;
 using FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
@@ -33,8 +33,8 @@ using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 
 namespace FoodDiary.Modules.Meals.Application.Tests;

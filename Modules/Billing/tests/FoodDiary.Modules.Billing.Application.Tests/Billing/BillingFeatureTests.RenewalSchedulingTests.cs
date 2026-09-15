@@ -6,7 +6,7 @@ using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Billing.Contracts.Models;
 
 namespace FoodDiary.Modules.Billing.Application.Tests.Billing;

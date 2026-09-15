@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 public readonly record struct DesiredWaistCm {
     public const double MaxValue = 300d;

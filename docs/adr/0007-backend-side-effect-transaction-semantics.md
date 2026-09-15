@@ -47,9 +47,9 @@ This makes side-effect placement important. Sending email, push notifications, s
 
 ## Enforcement
 
-- `tests/FoodDiary.ArchitectureTests/EventGovernanceTests.cs`
-- `tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs`
-- `tests/FoodDiary.ArchitectureTests/PersistenceTransactionGuardrailTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/EventGovernanceTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/PersistenceTransactionGuardrailTests.cs`
 
 ## Follow-up
 

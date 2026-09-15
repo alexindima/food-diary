@@ -1,9 +1,9 @@
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Authentication;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Infrastructure.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace FoodDiary.Infrastructure.Tests.Authentication;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class WearableOAuthStateServiceTests {

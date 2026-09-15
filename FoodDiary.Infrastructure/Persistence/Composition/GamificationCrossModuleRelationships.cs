@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Composition;

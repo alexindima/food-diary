@@ -12,7 +12,7 @@ $receiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVer
 # not a requirement that shared contracts belong to central Application.Tests.
 $planCommand = 'dotnet test Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FoodDiary.Modules.Ai.Application.Tests.csproj --no-restore'
 $planReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVerificationCommand $planCommand)).json"
-$importCommand = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
+$importCommand = 'dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
 $importReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVerificationCommand $importCommand)).json"
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'verification-receipts'

@@ -14,7 +14,7 @@ sources:
   - .llm-wiki/tools/Find-LlmWikiArchitectureHealth.ps1
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
-  - tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
+  - Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
   - docs/architecture/backend-modules.json
 ---
 

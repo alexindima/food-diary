@@ -2,7 +2,7 @@ using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using System.Reflection;
 using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Modules.Ai.Domain.Entities;

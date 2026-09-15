@@ -25,6 +25,6 @@ Rules for `Shared/FoodDiary.Application.Runtime/`.
 
 - Build: `dotnet build Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj`
 - Tests: `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj`
-- Architecture guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Architecture guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 IPostCommitActionQueue.Discard removes actions and resets capacity for failed transaction attempts. Never deliver callbacks belonging to a rolled-back attempt.

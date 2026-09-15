@@ -1,8 +1,8 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
-using FoodDiary.Domain.Entities.WeeklyGoals;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 
-namespace FoodDiary.Application.WeeklyGoals.Common;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Common;
 
 public sealed class WeeklyGoalProgressReader(ISender mealActivityReadService) {
     public async Task<int> GetProgressDaysAsync(WeeklyGoal goal, CancellationToken cancellationToken) {

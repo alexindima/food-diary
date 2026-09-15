@@ -9,7 +9,6 @@ Rules for `Modules/Wearables/`.
 - Own provider connections, OAuth state, protected provider tokens, synchronization history, and daily wearable summaries.
 - Own Fitbit HTTP adapters/options in Infrastructure/Providers. Hosts call AddWearablesProvider explicitly; shared HTTP/URI helpers remain in Integrations through a one-way reference.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot central.
-- Preserve the legacy `FoodDiary.Application.Wearables` assembly and CLR/EF identities unless a separately reviewed migration changes them.
 
 ## Privacy and operations
 
@@ -24,3 +23,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+All module projects and tests use `FoodDiary.Modules.Wearables.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.

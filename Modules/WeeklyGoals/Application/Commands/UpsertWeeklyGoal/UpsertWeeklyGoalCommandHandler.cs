@@ -1,15 +1,15 @@
-using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.WeeklyGoals.Common;
-using FoodDiary.Application.WeeklyGoals.Models;
-using FoodDiary.Domain.Entities.WeeklyGoals;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.WeeklyGoals.Application.Common;
+using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.WeeklyGoals.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
+namespace FoodDiary.Modules.WeeklyGoals.Application.Commands.UpsertWeeklyGoal;
 
 public sealed class UpsertWeeklyGoalCommandHandler(
     IWeeklyGoalRepository goalRepository,

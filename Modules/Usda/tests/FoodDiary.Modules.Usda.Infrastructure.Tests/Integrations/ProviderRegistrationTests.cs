@@ -1,12 +1,11 @@
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Modules.Usda.Infrastructure;
-using FoodDiary.Integrations.Services;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Usda.Contracts.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Usda.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderRegistrationTests {
@@ -28,9 +27,9 @@ public sealed class ProviderRegistrationTests {
         Assert.Multiple(
             () => Assert.IsType<UsdaFoodSearchService>(client),
             () => Assert.Equal("FoodDiary.Modules.Usda.Infrastructure", client.GetType().Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Services.UsdaFoodSearchService", client.GetType().FullName),
+            () => Assert.Equal("FoodDiary.Modules.Usda.Infrastructure.Providers.Services.UsdaFoodSearchService", client.GetType().FullName),
             () => Assert.Equal("FoodDiary.Modules.Usda.Infrastructure", typeof(UsdaApiOptions).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Options.UsdaApiOptions", typeof(UsdaApiOptions).FullName),
+            () => Assert.Equal("FoodDiary.Modules.Usda.Infrastructure.Providers.Options.UsdaApiOptions", typeof(UsdaApiOptions).FullName),
             () => Assert.Same(clock, provider.GetRequiredService<TimeProvider>()));
         using HttpClient httpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(IUsdaFoodSearchService));
         Assert.Equal(TimeSpan.FromSeconds(15), httpClient.Timeout);

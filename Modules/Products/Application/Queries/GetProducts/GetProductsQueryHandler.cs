@@ -8,9 +8,9 @@ using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
 using FoodDiary.Modules.Products.Application.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Products.Application.Queries.GetProducts;
 

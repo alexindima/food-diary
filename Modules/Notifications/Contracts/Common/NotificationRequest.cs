@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Notifications.Contracts.Common;
 

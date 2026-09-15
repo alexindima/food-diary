@@ -1,11 +1,13 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Users.Services;
+namespace FoodDiary.Modules.Users.Application.Services;
 
 internal sealed class UserAuthenticationRegistrationService(
     IUserLookupRepository userLookupRepository,

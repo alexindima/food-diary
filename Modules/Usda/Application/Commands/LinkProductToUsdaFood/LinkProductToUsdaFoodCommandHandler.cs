@@ -1,12 +1,13 @@
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Usda;
+using FoodDiary.Modules.Usda.Application.Abstractions.Common;
+using FoodDiary.Modules.Usda.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Usda.Domain.Entities;
 
-namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
+namespace FoodDiary.Modules.Usda.Application.Commands.LinkProductToUsdaFood;
 
 public sealed class LinkProductToUsdaFoodCommandHandler(
     IUsdaProductLinkService productLinkService,

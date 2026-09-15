@@ -1,8 +1,8 @@
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Modules.Wearables.Infrastructure.Services;
 using Microsoft.AspNetCore.DataProtection;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class WearableTokenProtectorTests {

@@ -1,9 +1,9 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole;
-using FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole;
+using FoodDiary.Modules.Users.Contracts.Commands.EnsureUserPremiumRole;
+using FoodDiary.Modules.Users.Contracts.Commands.RemoveUserPremiumRole;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Billing.Domain.Entities;
 
 namespace FoodDiary.Modules.Billing.Application.Services;

@@ -8,10 +8,10 @@ using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Commo
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Gamification.Application.Common;
 using FoodDiary.Modules.Gamification.Application.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Modules.Gamification.Application.Queries.GetGamification;
 

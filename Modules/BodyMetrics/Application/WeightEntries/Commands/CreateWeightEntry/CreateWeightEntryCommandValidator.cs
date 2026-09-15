@@ -1,6 +1,6 @@
 using System.Globalization;
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.CreateWeightEntry;
 

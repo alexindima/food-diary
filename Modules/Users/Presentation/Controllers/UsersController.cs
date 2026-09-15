@@ -1,0 +1,72 @@
+using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Users.Presentation.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+
+using FoodDiary.Modules.Users.Presentation.Requests;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Users.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/users")]
+public sealed class UsersController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet("info")]
+    [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetCurrentUserInfo([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToUserQuery(), static value => value.ToHttpResponse());
+
+    [HttpPatch("info")]
+    [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateCurrentUser([FromCurrentUser] Guid userId, [FromBody] UpdateUserHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpPatch("preferences/appearance")]
+    [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateAppearance(
+        [FromCurrentUser] Guid userId,
+        [FromBody] UpdateUserAppearanceHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpGet("desired-weight")]
+    [ProducesResponseType<UserDesiredWeightHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetDesiredWeight([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToDesiredWeightQuery(), static value => value.ToHttpResponse());
+
+    [HttpPut("desired-weight")]
+    [ProducesResponseType<UserDesiredWeightHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateDesiredWeight([FromCurrentUser] Guid userId, [FromBody] UpdateDesiredWeightHttpRequest request) =>
+        HandleOk(request.ToDesiredWeightCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpGet("desired-waist")]
+    [ProducesResponseType<UserDesiredWaistHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetDesiredWaist([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToDesiredWaistQuery(), static value => value.ToHttpResponse());
+
+    [HttpPut("desired-waist")]
+    [ProducesResponseType<UserDesiredWaistHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateDesiredWaist([FromCurrentUser] Guid userId, [FromBody] UpdateDesiredWaistHttpRequest request) =>
+        HandleOk(request.ToDesiredWaistCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [BlockImpersonatedAccess]
+    public Task<IActionResult> DeleteCurrentUser([FromCurrentUser] Guid userId) =>
+        HandleNoContent(userId.ToDeleteCommand());
+}

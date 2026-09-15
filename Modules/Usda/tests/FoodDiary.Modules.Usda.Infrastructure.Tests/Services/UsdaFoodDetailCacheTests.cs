@@ -1,6 +1,6 @@
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Services;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Usda.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsdaFoodDetailCacheTests {

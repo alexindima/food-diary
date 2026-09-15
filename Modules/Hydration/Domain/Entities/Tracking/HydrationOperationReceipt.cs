@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Hydration.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 

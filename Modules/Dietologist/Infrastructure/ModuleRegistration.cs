@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendations;

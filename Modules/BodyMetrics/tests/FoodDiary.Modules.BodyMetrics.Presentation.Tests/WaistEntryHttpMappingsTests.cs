@@ -9,11 +9,11 @@ using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetLatestWa
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
 using FoodDiary.Modules.BodyMetrics.Presentation.Contracts.Features.WaistEntries.Responses;
 using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 
 namespace FoodDiary.Modules.BodyMetrics.Presentation.Tests;
 

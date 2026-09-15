@@ -1,10 +1,10 @@
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Statistics.Application;
 using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using Microsoft.Extensions.DependencyInjection;

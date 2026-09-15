@@ -1,7 +1,7 @@
 # Users consumer contracts
 
 Own semantic Users capabilities, profile/admin/authentication projection models,
-account-status filtering and UserErrors. Preserve legacy namespaces, signatures,
+account-status filtering and UserErrors. Preserve wire contracts, signatures,
 nullability, error values and cancellation/default parameters.
 
 Users/Common/UserAuthenticationErrors owns account-state and identity-link failures.
@@ -29,4 +29,6 @@ and soft-deleted accounts. No IQueryable or aggregate escapes these contracts.
 
 Administration reads/mutations and billing access/profile/trial/Premium operations use public requests. Their handlers remain in Users Application. Mutations participate in the caller unit of work. Billing dispatches CheckUserAccessQuery; the existing narrow ICurrentUserAccessService capability remains valid for other callers.
 
-Public request slices live under Users/Commands and Users/Queries alongside the legacy Users/Common and Users/Models folders. Their namespaces explicitly include Users and follow this project's existing FoodDiary.Application.Abstractions root. Do not restore unowned Abstractions.Commands/Queries namespaces. All consumers rebuild together for this namespace change.
+Public request slices live under Commands and Queries; other contracts live under Common and Models. Use FoodDiary.Modules.Users.Contracts namespaces matching their folders. Do not repeat a Users folder inside this project.
+
+All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.

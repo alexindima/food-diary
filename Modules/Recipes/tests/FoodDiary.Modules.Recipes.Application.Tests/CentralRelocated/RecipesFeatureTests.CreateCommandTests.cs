@@ -6,8 +6,8 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Application.Models;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;

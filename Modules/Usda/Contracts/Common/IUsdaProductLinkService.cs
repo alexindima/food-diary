@@ -1,8 +1,8 @@
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Usda.Common;
+namespace FoodDiary.Modules.Usda.Contracts.Common;
 
 public interface IUsdaProductLinkService {
     Task<Result> IsAccessibleForUpdateAsync(

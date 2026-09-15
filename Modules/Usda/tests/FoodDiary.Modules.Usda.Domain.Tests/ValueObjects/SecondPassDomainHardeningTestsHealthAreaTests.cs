@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Usda.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Tests.ValueObjects;
+namespace FoodDiary.Modules.Usda.Domain.Tests.ValueObjects;
 
 [ExcludeFromCodeCoverage]
 public sealed class SecondPassDomainHardeningTestsHealthAreaTests {

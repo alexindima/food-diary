@@ -4,7 +4,7 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 using FoodDiary.Modules.Recipes.Application.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FluentValidation.Results;
 

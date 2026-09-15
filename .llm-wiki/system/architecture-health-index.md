@@ -5,7 +5,7 @@ status: current
 generated_by: .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
 sources:
   - .llm-wiki/generated/architecture-health-index.json
-  - tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
+  - Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
   - docs/architecture/module-dependencies.json
 ---
 

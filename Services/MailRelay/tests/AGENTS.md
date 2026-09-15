@@ -18,4 +18,4 @@ Rules for `Services/MailRelay/tests/`.
 - Application tests: `dotnet test Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj`
 - Infrastructure tests: `dotnet test Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj`
 - Integration tests: `dotnet test Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj`
-- Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Architecture tests: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`

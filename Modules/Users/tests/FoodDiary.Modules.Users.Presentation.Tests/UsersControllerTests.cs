@@ -1,21 +1,22 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Users.Commands.DeleteUser;
-using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
-using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
-using FoodDiary.Application.Users.Commands.UpdateUser;
-using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Queries.GetDesiredWaist;
-using FoodDiary.Application.Users.Queries.GetDesiredWeight;
-using FoodDiary.Application.Users.Queries.GetUserById;
+using FoodDiary.Modules.Users.Application.Commands.DeleteUser;
+using FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWaist;
+using FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWeight;
+using FoodDiary.Modules.Users.Application.Commands.UpdateUser;
+using FoodDiary.Modules.Users.Application.Commands.UpdateUserAppearance;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Application.Queries.GetDesiredWaist;
+using FoodDiary.Modules.Users.Application.Queries.GetDesiredWeight;
+using FoodDiary.Modules.Users.Application.Queries.GetUserById;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Users;
-using FoodDiary.Presentation.Api.Features.Users.Requests;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Modules.Users.Presentation.Controllers;
+using FoodDiary.Modules.Users.Presentation.Requests;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Users.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsersControllerTests {

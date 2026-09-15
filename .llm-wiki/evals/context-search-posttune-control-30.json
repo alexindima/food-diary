@@ -87,7 +87,7 @@
 
     { "id": "posttune-test-001", "cohort": "behavior-to-test", "query": "тест parser значений enum", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Application.Tests/Validation/EnumValueParserTests.cs"] },
     { "id": "posttune-test-002", "cohort": "behavior-to-test", "query": "тест sender Web Push notification", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs"] },
-    { "id": "posttune-test-003", "cohort": "behavior-to-test", "query": "тест job очистки fasting telemetry", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs"] },
+    { "id": "posttune-test-003", "cohort": "behavior-to-test", "query": "тест job очистки fasting telemetry", "changeType": "Tests", "expectedPaths": ["Hosts/tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs"] },
     { "id": "posttune-test-004", "cohort": "behavior-to-test", "query": "тест API controller push notifications", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs"] },
     { "id": "posttune-test-005", "cohort": "behavior-to-test", "query": "domain tests инвариантов favorites", "changeType": "Tests", "expectedPaths": ["Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteInvariantTests.cs"] },
 

@@ -1216,11 +1216,11 @@ try {
     try {
         $directoryScopeManifest = $directoryScopeManifestRaw | ConvertFrom-Json
         $directoryScopePacket = $directoryScopePacketRaw | ConvertFrom-Json
-        $directoryScopeManifest.scope.plannedPaths = @('tests/FoodDiary.ArchitectureTests')
+        $directoryScopeManifest.scope.plannedPaths = @('Tooling/tests/FoodDiary.ArchitectureTests')
         $directoryScopeManifest.scope.allowedPathPatterns = @('^tests/FoodDiary\.ArchitectureTests/')
         $governanceProvenancePath = '.llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1'
         $directoryScopePacket.diff.changedPaths = @(
-            'tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs'
+            'Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs'
             $governanceProvenancePath
         )
         [IO.File]::WriteAllText($directoryScopeManifestPath, (($directoryScopeManifest | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
@@ -1230,7 +1230,7 @@ try {
             -Format Json | ConvertFrom-Json
         Assert-Wiki (
             $directoryScopeConformance.valid -and
-            @($directoryScopeConformance.conformance.classification.plannedChangedPaths) -contains 'tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs' -and
+            @($directoryScopeConformance.conformance.classification.plannedChangedPaths) -contains 'Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs' -and
             @($directoryScopeConformance.conformance.classification.actualPaths) -notcontains $governanceProvenancePath -and
             @($directoryScopeConformance.conformance.classification.governanceGeneratedPaths) -contains $governanceProvenancePath -and
             @((Get-Content -LiteralPath $directoryScopePacketPath -Raw | ConvertFrom-Json).diff.changedPaths) -contains $governanceProvenancePath -and
@@ -2320,7 +2320,7 @@ try {
             -CheckId 'architecture-tests' `
             -Status $sample.status `
             -DurationSeconds $sample.duration `
-            -Command 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj' `
+            -Command 'dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj' `
             -AsOfUtc $sample.at | Out-Null
     }
     $verificationTelemetryMetrics = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics `

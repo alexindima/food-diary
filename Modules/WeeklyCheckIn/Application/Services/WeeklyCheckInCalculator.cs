@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
-using FoodDiary.Application.WeeklyCheckIn.Models;
+using FoodDiary.Modules.WeeklyCheckIn.Application.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
-namespace FoodDiary.Application.WeeklyCheckIn.Services;
+namespace FoodDiary.Modules.WeeklyCheckIn.Application.Services;
 
 public static class WeeklyCheckInCalculator {
     public static WeekSummaryModel BuildSummary(

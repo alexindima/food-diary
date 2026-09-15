@@ -3,7 +3,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.RecentItems.Infrastructure.Persistence.RecentItems;
 

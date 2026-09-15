@@ -23,9 +23,9 @@ $featureBrief = [pscustomobject]@{
         productionConsumers = @([pscustomobject]@{ consumerPath = 'FoodDiary.Web.Api/Dashboard.cs'; contract = 'DashboardResponse' })
     }
     frontendContractImpact = [pscustomobject]@{ downstreamConsumers = @(); changedConsumers = @(); apiCalls = @() }
-    focusedTests = @('tests/FoodDiary.Web.Api.IntegrationTests/DashboardTests.cs')
+    focusedTests = @('Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardTests.cs')
     testScenarios = @([pscustomobject]@{ id = 'api-compatible'; description = 'Existing clients remain compatible.' })
-    requiredChecks = @([pscustomobject]@{ id = 'api-tests'; command = 'dotnet test tests/FoodDiary.Web.Api.IntegrationTests' })
+    requiredChecks = @([pscustomobject]@{ id = 'api-tests'; command = 'dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests' })
 }
 $featureScan = & (Join-Path $PSScriptRoot 'Get-LlmWikiIntegrationScan.ps1') `
     -Objective 'Extend the dashboard API response.' `

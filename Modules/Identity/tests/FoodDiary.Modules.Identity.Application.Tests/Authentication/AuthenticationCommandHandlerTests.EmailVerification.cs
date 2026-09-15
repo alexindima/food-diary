@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 

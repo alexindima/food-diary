@@ -5,7 +5,7 @@ using FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleDay;
 using FoodDiary.Modules.Cycles.Application.Mappings;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Application.Services;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Cycles.Application.Tests;
 

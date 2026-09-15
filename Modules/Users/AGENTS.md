@@ -10,7 +10,7 @@ migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
-Preserve the FoodDiary.Application.Users assembly identity. Keep semantic capabilities/models in Users Contracts and the seven aggregate/repository ports in Application/Abstractions; retain central CurrentUserAccessResolver and its Users.Contracts reference. Consumers of repository ports reference the owner directly, not a central umbrella. Compose AddUsersModule from the existing hosts.
+Keep semantic capabilities/models in Users Contracts and aggregate/repository ports in Application.Abstractions; retain central CurrentUserAccessResolver and its Users.Contracts reference. Consumers of repository ports reference the owner directly, not a central umbrella. Compose AddUsersModule from the existing hosts.
 
 Users Infrastructure owns the independent access-token security-state reader.
 The port signature is unchanged and now belongs to Users Contracts; API bearer validation consumes it without receiving
@@ -35,3 +35,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.

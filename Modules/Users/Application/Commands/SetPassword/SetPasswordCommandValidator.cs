@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Users.Commands.SetPassword;
+namespace FoodDiary.Modules.Users.Application.Commands.SetPassword;
 
 public sealed class SetPasswordCommandValidator : AbstractValidator<SetPasswordCommand> {
     public SetPasswordCommandValidator() {

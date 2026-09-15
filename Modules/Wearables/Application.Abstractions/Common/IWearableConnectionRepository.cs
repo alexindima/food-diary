@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+
+public interface IWearableConnectionRepository : IWearableConnectionReadRepository, IWearableConnectionWriteRepository;

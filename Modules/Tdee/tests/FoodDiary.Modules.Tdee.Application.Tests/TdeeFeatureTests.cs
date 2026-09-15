@@ -15,12 +15,12 @@ using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Tdee.Application.Queries.GetTdeeInsight;
 using FoodDiary.Modules.Tdee.Contracts.Queries.GetTdeeInsight;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Tdee.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Tdee.Application.Tests;
 

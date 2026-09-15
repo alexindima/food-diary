@@ -1,0 +1,424 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using System.Text.Json;
+using FoodDiary.Results;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Users.Application.Commands.UpdateUser;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Users.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class UpdateUserCommandHandlerTests {
+    [Theory]
+    [InlineData("Asia/Tbilisi", true)]
+    [InlineData("America/New_York", true)]
+    [InlineData("UTC", true)]
+    [InlineData(null, true)]
+    [InlineData("", false)]
+    [InlineData("not/a-zone", false)]
+    [InlineData("Pacific Standard Time", false)]
+    public async Task Handle_TimeZoneIsValidatedBeforeOtherProfileChanges(string? timeZoneId, bool valid) {
+        var user = User.Create("timezone@example.com", "hash");
+        user.SetTimeZone("Europe/Paris");
+        var handler = new UpdateUserCommandHandler(CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+        UpdateUserCommand command = CreateCommand(user.Id.Value) with { TimeZoneId = timeZoneId, FirstName = "Updated" };
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.Equal(valid, result.IsSuccess);
+        if (valid) {
+            Assert.Equal(timeZoneId ?? "Europe/Paris", result.Value.TimeZoneId);
+            Assert.Equal("Updated", user.FirstName);
+        } else {
+            Assert.Equal("Validation.Invalid", result.Error.Code);
+            Assert.Equal("Europe/Paris", user.TimeZoneId);
+            Assert.Null(user.FirstName);
+        }
+    }
+
+    [Fact]
+    public async Task Handle_WithDashboardLayout_SerializesInApplicationLayer() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"]);
+        var command = new UpdateUserCommand(
+            UserId: user.Id.Value,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: null,
+            WeightKg: null,
+            HeightCm: null,
+            ActivityLevel: null,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: null,
+            Theme: null,
+            UiStyle: null,
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: null,
+            DashboardLayout: layout,
+            IsActive: null);
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(user.DashboardLayoutJson);
+        DashboardLayoutModel? deserialized = JsonSerializer.Deserialize<DashboardLayoutModel>(user.DashboardLayoutJson!);
+        Assert.NotNull(deserialized);
+        Assert.Equal(layout.Web, deserialized.Web);
+        Assert.Equal(layout.Mobile, deserialized.Mobile);
+    }
+
+    [Fact]
+    public async Task Handle_WhenProfileImageCleanupFails_StillReturnsSuccessAndUpdatesUser() {
+        var user = User.Create("user@example.com", "hash");
+        var oldAssetId = ImageAssetId.New();
+        user.UpdateProfileMedia(new FoodDiary.Modules.Users.Domain.ValueObjects.UserProfileMediaUpdate(ProfileImageAssetId: oldAssetId));
+
+        IImageAssetCleanupService cleanup = CreateImageAssetCleanupService("storage_error", out List<ImageAssetId> requestedAssetIds);
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(cleanup, FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        var newAssetId = ImageAssetId.New();
+        var command = new UpdateUserCommand(
+            UserId: user.Id.Value,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: null,
+            WeightKg: null,
+            HeightCm: null,
+            ActivityLevel: null,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: null,
+            Theme: null,
+            UiStyle: null,
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: newAssetId.Value,
+            DashboardLayout: null,
+            IsActive: null);
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(newAssetId, user.ProfileImageAssetId);
+        Assert.Equal([oldAssetId], requestedAssetIds);
+    }
+
+    [Fact]
+    public async Task Handle_WithEmptyProfileImageAssetId_ReturnsValidationFailure() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        Result<UserModel> result = await handler.Handle(
+            new UpdateUserCommand(
+                UserId: user.Id.Value,
+                Username: null,
+                FirstName: null,
+                LastName: null,
+                BirthDate: null,
+                Gender: null,
+                WeightKg: null,
+                HeightCm: null,
+                ActivityLevel: null,
+                StepGoal: null,
+                HydrationGoal: null,
+                Language: null,
+                Theme: null,
+                UiStyle: null,
+                PushNotificationsEnabled: null,
+                FastingPushNotificationsEnabled: null,
+                SocialPushNotificationsEnabled: null,
+                ProfileImage: null,
+                ProfileImageAssetId: Guid.Empty,
+                DashboardLayout: null,
+                IsActive: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProfileImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithMissingUserId_ReturnsInvalidToken() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        Result<UserModel> result = await handler.Handle(CreateCommand(userId: null), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Handle_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-user@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        Result<UserModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task Handle_WhenUserLoadFailsAfterAccessCheck_ReturnsFailure() {
+        var userId = UserId.New();
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(AuthenticationErrors.InvalidToken)));
+        var handler = new UpdateUserCommandHandler(
+            userContextService,
+            CreateProfileImageService(CreateImageAssetCleanupService(),
+                FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        Result<UserModel> result = await handler.Handle(CreateCommand(userId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("not-activity", null, null, null, null, "ActivityLevel")]
+    [InlineData(null, "not-language", null, null, null, "Language")]
+    [InlineData(null, null, "not-theme", null, null, "Theme")]
+    [InlineData(null, null, null, "not-ui-style", null, "UiStyle")]
+    [InlineData(null, null, null, null, "not-gender", "Gender")]
+    public async Task Handle_WithInvalidPreferences_ReturnsValidationFailure(
+        string? activityLevel,
+        string? language,
+        string? theme,
+        string? uiStyle,
+        string? gender,
+        string expectedField) {
+        var user = User.Create("preferences-user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        Result<UserModel> result = await handler.Handle(
+            CreateCommand(
+                user.Id.Value,
+                activityLevel: activityLevel,
+                language: language,
+                theme: theme,
+                uiStyle: uiStyle,
+                gender: gender),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains(expectedField, result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithTheme_UpdatesUserTheme() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        var command = new UpdateUserCommand(
+            UserId: user.Id.Value,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: null,
+            WeightKg: null,
+            HeightCm: null,
+            ActivityLevel: null,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: null,
+            Theme: "leaf",
+            UiStyle: "modern",
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: null,
+            DashboardLayout: null,
+            IsActive: null);
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("leaf", user.Theme);
+        Assert.Equal("leaf", result.Value.Theme);
+        Assert.Equal("modern", user.UiStyle);
+        Assert.Equal("modern", result.Value.UiStyle);
+    }
+
+    [Fact]
+    public async Task Handle_WhenProfileImageAccessFails_ReturnsFailure() {
+        var user = User.Create("user@example.com", "hash");
+        RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
+            .WithFailure(ImageErrors.NotFound(Guid.NewGuid()));
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), imageAccess));
+
+        var assetId = Guid.NewGuid();
+        Result<UserModel> result = await handler.Handle(
+            CreateCommand(user.Id.Value, profileImageAssetId: assetId),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+        Assert.Equal([new ImageAssetId(assetId)], imageAccess.RequestedAssetIds);
+    }
+
+    [Fact]
+    public async Task Handle_WithIsActiveFalse_DeactivatesUser() {
+        var user = User.Create("active@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        Result<UserModel> result = await handler.Handle(
+            CreateCommand(user.Id.Value, isActive: false),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.False(user.IsActive);
+        Assert.False(result.Value.IsActive);
+    }
+
+    [Fact]
+    public async Task Handle_WithIsActiveTrue_KeepsUserActive() {
+        var user = User.Create("active-again@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+
+        Result<UserModel> result = await handler.Handle(
+            CreateCommand(user.Id.Value, isActive: true),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.True(user.IsActive);
+        Assert.True(result.Value.IsActive);
+    }
+
+    private static UpdateUserCommand CreateCommand(
+        Guid? userId,
+        Guid? profileImageAssetId = null,
+        bool? isActive = null,
+        string? activityLevel = null,
+        string? language = null,
+        string? theme = null,
+        string? uiStyle = null,
+        string? gender = null) =>
+        new(
+            UserId: userId,
+            Username: null,
+            FirstName: null,
+            LastName: null,
+            BirthDate: null,
+            Gender: gender,
+            WeightKg: null,
+            HeightCm: null,
+            ActivityLevel: activityLevel,
+            StepGoal: null,
+            HydrationGoal: null,
+            Language: language,
+            Theme: theme,
+            UiStyle: uiStyle,
+            PushNotificationsEnabled: null,
+            FastingPushNotificationsEnabled: null,
+            SocialPushNotificationsEnabled: null,
+            ProfileImage: null,
+            ProfileImageAssetId: profileImageAssetId,
+            DashboardLayout: null,
+            IsActive: isActive);
+
+    private static IUserContextService CreateUserRepository(User user) {
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                User? foundUser = user.Id == id ? user : null;
+                Error? error = CurrentUserAccessPolicy.EnsureCanAccess(foundUser);
+                return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(foundUser!));
+            });
+        userContextService
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                User? foundUser = user.Id == id ? user : null;
+                return Task.FromResult(CurrentUserAccessPolicy.EnsureCanAccess(foundUser));
+            });
+        userContextService
+            .UpdateUserAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        return userContextService;
+    }
+
+    private static IUserProfileImageService CreateProfileImageService(
+        IImageAssetCleanupService cleanup,
+        IImageAssetAccessService access) {
+        IUserProfileImageService service = Substitute.For<IUserProfileImageService>();
+        service.ResolveOptionalUrlAsync(Arg.Any<ImageAssetId?>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(async call => {
+                Result<FoodDiary.Modules.Images.Service.Contracts.Models.ImageAssetReadModel?> result = await access.ResolveOptionalAsync(
+                    call.Arg<ImageAssetId?>(), call.Arg<UserId>(), call.Arg<CancellationToken>()).ConfigureAwait(false);
+                return result.IsFailure ? Result.Failure<string?>(result.Error) : Result.Success(result.Value?.Url);
+            });
+        service.DeleteIfUnusedAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
+            .Returns(call => cleanup.DeleteIfUnusedAsync(call.Arg<ImageAssetId>(), call.Arg<CancellationToken>()));
+        return service;
+    }
+
+    private static IImageAssetCleanupService CreateImageAssetCleanupService(string? errorCode = null) =>
+        CreateImageAssetCleanupService(errorCode, out _);
+
+    private static IImageAssetCleanupService CreateImageAssetCleanupService(
+        string? errorCode,
+        out List<ImageAssetId> requestedAssetIds) {
+        requestedAssetIds = [];
+        List<ImageAssetId> capturedRequestedAssetIds = requestedAssetIds;
+
+        IImageAssetCleanupService service = Substitute.For<IImageAssetCleanupService>();
+        service
+            .DeleteIfUnusedAsync(Arg.Do<ImageAssetId>(capturedRequestedAssetIds.Add), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(errorCode is null
+                ? new DeleteImageAssetResult(Deleted: true)
+                : new DeleteImageAssetResult(Deleted: false, errorCode)));
+        return service;
+    }
+}

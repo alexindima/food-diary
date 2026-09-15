@@ -140,7 +140,7 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.Users": {
+      "FoodDiary.Modules.Users.Application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -289,7 +289,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
-          "FoodDiary.Application.Users": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Application": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Presentation.Contracts": "[1.0.0, )",

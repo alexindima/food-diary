@@ -25,7 +25,7 @@ Rules for `FoodDiary.Web.Api/`.
 ## Commands
 - Build: `dotnet build FoodDiary.Web.Api/FoodDiary.Web.Api.csproj`
 - Run: `dotnet run --project FoodDiary.Web.Api`
-- Integration tests: `dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`
+- Integration tests: `dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`
 
 ## Host Practices
 - Keep business logic and HTTP transport behavior out of this project; wire existing modules together instead.
@@ -33,7 +33,7 @@ Rules for `FoodDiary.Web.Api/`.
 - Keep telemetry/exporter wiring in this host project, not in `FoodDiary.Presentation.Api`.
 - Compose `IServiceCollection` registration helpers through their fluent return values. Keep the fluent return type for conventional DI extensions, and chain calls at composition boundaries instead of discarding those values.
 - New host configuration sections should use typed options in `Options/` and validate on startup when practical.
-- Treat generated Swagger/OpenAPI output as contract. If host or presentation changes alter it intentionally, update the stored snapshots in `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them.
+- Treat generated Swagger/OpenAPI output as contract. If host or presentation changes alter it intentionally, update the stored snapshots in `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them.
 - Do not commit real secrets or local passwords to `appsettings*.json`; keep repository config as safe placeholders only.
 - Avoid logging sensitive query values. If auth tokens must travel in query for transport reasons, do not enable global query-string logging without explicit redaction.
 - Do not trust raw `X-Forwarded-*` headers directly in rate limiting, auth, or logging decisions; only honor forwarded client metadata after explicit trusted proxy/network configuration.

@@ -2,12 +2,12 @@ using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Statistics.Application.Models;
 using FoodDiary.Modules.Statistics.Application.Queries.GetDiaryStatistics;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Statistics.Application.Tests;

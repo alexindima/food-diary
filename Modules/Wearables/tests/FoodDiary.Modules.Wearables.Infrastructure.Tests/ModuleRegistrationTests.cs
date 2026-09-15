@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Wearables.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ModuleRegistrationTests {

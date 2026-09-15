@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

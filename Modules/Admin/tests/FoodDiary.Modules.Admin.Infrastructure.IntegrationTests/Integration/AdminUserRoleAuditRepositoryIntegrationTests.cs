@@ -1,7 +1,8 @@
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Admin;
 using Microsoft.EntityFrameworkCore;

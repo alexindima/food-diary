@@ -3,7 +3,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 

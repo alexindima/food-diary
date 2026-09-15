@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Exercises.Contracts.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries;

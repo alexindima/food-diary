@@ -1,6 +1,7 @@
+using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Users.Presentation.Extensions;
 
 public static class UsersPresentationServiceCollectionExtensions {
     public static IServiceCollection AddUsersPresentation(this IServiceCollection services) {

@@ -1,11 +1,11 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Services;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Users;
+namespace FoodDiary.Modules.Users.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddUsersApplication(this IServiceCollection services) {
@@ -21,7 +21,6 @@ public static class DependencyInjection {
         services.AddScoped<UserContextService>();
         services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IProfileOverviewReadService, ProfileOverviewReadService>();
 
         return services;
     }

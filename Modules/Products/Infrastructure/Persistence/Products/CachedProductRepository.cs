@@ -3,7 +3,7 @@ using FoodDiary.Domain.Primitives;
 using Microsoft.Extensions.Caching.Memory;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 

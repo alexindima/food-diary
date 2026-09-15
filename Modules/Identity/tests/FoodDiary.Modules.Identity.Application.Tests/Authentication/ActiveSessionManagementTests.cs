@@ -8,7 +8,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeSessi
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeOtherSessions;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSessions;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;

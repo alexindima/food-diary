@@ -3,7 +3,7 @@ using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +57,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
-            Domain.ValueObjects.Ids.UserId.New(),
+            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
             new DateTime(2026, 6, 3, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 6, 2, 0, 0, 0, DateTimeKind.Utc),
             quantizationDays: 1,
@@ -73,7 +73,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
-            Domain.ValueObjects.Ids.UserId.New(),
+            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
             DateTime.MaxValue,
             DateTime.MaxValue,
             quantizationDays: 1,
@@ -98,7 +98,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
-            Domain.ValueObjects.Ids.UserId.New(),
+            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
             from,
             from.AddDays(periodDays),
             quantizationDays,
@@ -136,7 +136,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     }
 
     private static Meal CreateMeal(
-        Domain.ValueObjects.Ids.UserId userId,
+        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
         DateTime date,
         double calories,
         double proteins) {

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
+using FoodDiary.Modules.Users.Contracts.Queries.CheckUserAccess;
 using FoodDiary.Mediator;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Billing.Application.Common;

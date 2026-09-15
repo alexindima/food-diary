@@ -33,8 +33,8 @@ public sealed class AdminImpersonationSessionQuery(ICompositionReadContext conte
 
         if (fromUtc.HasValue) { DateTime start = fromUtc.Value.UtcDateTime; query = query.Where(item => item.session.StartedAtUtc >= start); }
         if (toUtc.HasValue) { DateTime end = toUtc.Value.UtcDateTime; query = query.Where(item => item.session.StartedAtUtc < end); }
-        if (actorId.HasValue) { var actor = new FoodDiary.Domain.ValueObjects.Ids.UserId(actorId.Value); query = query.Where(item => item.session.ActorUserId == actor); }
-        if (targetId.HasValue) { var target = new FoodDiary.Domain.ValueObjects.Ids.UserId(targetId.Value); query = query.Where(item => item.session.TargetUserId == target); }
+        if (actorId.HasValue) { var actor = new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId(actorId.Value); query = query.Where(item => item.session.ActorUserId == actor); }
+        if (targetId.HasValue) { var target = new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId(targetId.Value); query = query.Where(item => item.session.TargetUserId == target); }
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminImpersonationSessionReadModel> items = await query
             .OrderByDescending(item => item.session.StartedAtUtc)

@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
 using System.Text.Json;
 
-namespace FoodDiary.Application.Users.Mappings;
+namespace FoodDiary.Modules.Users.Application.Mappings;
 
 public static class UserMappings {
     public static UserAdminReadModel ToAdminReadModel(this User user) =>

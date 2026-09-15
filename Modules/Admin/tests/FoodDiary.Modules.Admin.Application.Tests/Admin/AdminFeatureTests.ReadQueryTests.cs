@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Modules.ContentReports.Contracts.Models;
 using FoodDiary.Modules.ContentReports.Domain.Entities;
@@ -7,17 +8,17 @@ using FoodDiary.Modules.ContentReports.Application.Queries.CountContentReports;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Identity.Application.Email.Queries.GetEmailTemplateRevisions;
 using FoodDiary.Modules.Identity.Application.Email.Queries.GetEmailTemplates;
-using FoodDiary.Application.Users.Queries.GetFilteredUsersForAdministration;
-using FoodDiary.Application.Users.Queries.GetUserAdministrationSummary;
-using FoodDiary.Application.Users.Queries.GetUserForAdministration;
-using FoodDiary.Application.Users.Queries.GetUsersForAdministration;
+using FoodDiary.Modules.Users.Application.Queries.GetFilteredUsersForAdministration;
+using FoodDiary.Modules.Users.Application.Queries.GetUserAdministrationSummary;
+using FoodDiary.Modules.Users.Application.Queries.GetUserForAdministration;
+using FoodDiary.Modules.Users.Application.Queries.GetUsersForAdministration;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiPromptRevisions;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiPromptTemplates;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageForUser;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUsers;
 using FoodDiary.Modules.Admin.Application.Services;
-using FoodDiary.Application.Users.Mappings;
+
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
@@ -35,12 +36,14 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessageDetail
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminMailInboxMessages;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Identity.Domain.Entities.Content;
 using FoodDiary.Modules.Ai.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FluentValidation.Results;
@@ -459,7 +462,7 @@ public partial class AdminFeatureTests {
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
         var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(
-RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports.CountContentReportsQuery)]))));
+RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Modules.Users.Contracts.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports.CountContentReportsQuery)]))));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 

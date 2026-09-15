@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.Products.Application.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Application.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Modules.Products.Application.Queries.GetRecentProducts;
 

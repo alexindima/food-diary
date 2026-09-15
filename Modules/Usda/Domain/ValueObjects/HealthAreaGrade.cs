@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Usda.Domain.ValueObjects;
 
 public enum HealthAreaGrade {
     Unknown = 0,

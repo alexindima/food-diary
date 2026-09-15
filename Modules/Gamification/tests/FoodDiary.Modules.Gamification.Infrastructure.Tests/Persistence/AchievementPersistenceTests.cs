@@ -5,7 +5,7 @@ using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Modules.Gamification.Contracts.Models;
 using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;

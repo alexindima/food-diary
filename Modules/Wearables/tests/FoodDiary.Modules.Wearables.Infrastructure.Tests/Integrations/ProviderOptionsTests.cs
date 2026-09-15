@@ -1,6 +1,6 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderOptionsTests {

@@ -5,7 +5,7 @@ using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.ReadModel.Composition.Images;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Meals.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 

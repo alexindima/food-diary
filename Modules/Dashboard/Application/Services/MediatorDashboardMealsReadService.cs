@@ -4,7 +4,7 @@ using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.Dashboard.Application.Services;

@@ -1,8 +1,8 @@
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports;
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserAdministrationSummary;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Results;
 using FoodDiary.Modules.Admin.Application.Common;

@@ -1,13 +1,14 @@
 using FoodDiary.Testing;
-using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
-using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
-using FoodDiary.Application.Users.Commands.UpdateUserByAdministrator;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Application.Commands.CreateUserByAdministrator;
+using FoodDiary.Modules.Users.Application.Commands.SetUserPasswordByAdministrator;
+using FoodDiary.Modules.Users.Application.Commands.UpdateUserByAdministrator;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPassword;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FluentValidation.Results;
 using FoodDiary.Modules.Admin.Application.Models;
@@ -588,7 +589,7 @@ public partial class AdminFeatureTests {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         user.SetEmailConfirmed(isConfirmed: true);
         user.SetLanguage("en");
-        user.UpdateAiTokenLimits(new FoodDiary.Domain.ValueObjects.UserAiTokenLimitUpdate(
+        user.UpdateAiTokenLimits(new FoodDiary.Modules.Users.Domain.ValueObjects.UserAiTokenLimitUpdate(
             InputLimit: 123,
             OutputLimit: 456));
         DateTime? modifiedBefore = user.ModifiedOnUtc;

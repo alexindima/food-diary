@@ -1,5 +1,5 @@
 using FoodDiary.Mediator;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Meals.Contracts.Queries.ReadTotalMealCount;
 

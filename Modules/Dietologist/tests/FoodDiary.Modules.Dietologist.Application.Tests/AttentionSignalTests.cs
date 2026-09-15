@@ -13,11 +13,11 @@ using FoodDiary.Modules.Dietologist.Application.Commands.SetAttentionSignalState
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetAttentionSignals;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Modules.Users.Application.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 #pragma warning disable MA0003

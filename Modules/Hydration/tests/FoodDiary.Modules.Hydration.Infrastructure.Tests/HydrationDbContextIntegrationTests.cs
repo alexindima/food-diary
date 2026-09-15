@@ -7,7 +7,7 @@ using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
 

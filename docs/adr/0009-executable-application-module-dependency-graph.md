@@ -50,8 +50,8 @@ Source-level conventions without an explicit graph allow accidental dependencies
 ## Enforcement
 
 - `docs/architecture/module-dependencies.json`
-- `tests/FoodDiary.ArchitectureTests/ModuleDependencyGraphTests.cs`
-- `tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/ModuleDependencyGraphTests.cs`
+- `Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs`
 
 ## Follow-up
 

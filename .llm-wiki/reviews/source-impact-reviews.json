@@ -106,7 +106,7 @@
           "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
         },
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
           "sha256": "69f77e38d381ddd84c88da9e93a2003d2da2d9deafe3ed3c3ff2d84b3650e013"
         }
       ],
@@ -223,7 +223,7 @@
       "pageSha256": "45f240d45bcf663e9be82c91096f8f6328b896356cc41475ef898b25b39ca7e8",
       "sources": [
         {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
           "sha256": "3cdfe55576b1bf0d9259e2c855ffccc3a317bbc88a7f5763846a34652e1355dc"
         }
       ],
@@ -246,7 +246,7 @@
           "sha256": "dd026a00407902348f88bd25fb2b920939196b0c1c3897546b71a298d3901a69"
         },
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
           "sha256": "4c619f05b6cacd2a373ac7c96c6d18b2876d4adc5c99dd79104274de5624eca6"
         }
       ],

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;

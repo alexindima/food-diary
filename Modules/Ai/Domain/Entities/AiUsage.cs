@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;

@@ -3,11 +3,11 @@ using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Commands.ToggleR
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeLikes.Models;
 

@@ -3421,7 +3421,7 @@
       "affinityDirectOnly": false,
       "changeTypes": ["Tests"],
       "recordTypes": ["code"],
-      "pathPrefixes": ["tests/FoodDiary.Infrastructure.IntegrationTests/"],
+      "pathPrefixes": ["Platform/tests/FoodDiary.Infrastructure.IntegrationTests/"],
       "pathSuffixes": ["Tests.cs"]
     },
     {
@@ -3507,7 +3507,7 @@
       "affinityDirectOnly": false,
       "changeTypes": ["Tests"],
       "recordTypes": ["code"],
-      "pathPrefixes": ["tests/FoodDiary.Infrastructure.Tests/"],
+      "pathPrefixes": ["Platform/tests/FoodDiary.Infrastructure.Tests/"],
       "pathSuffixes": ["Tests.cs"]
     },
     {

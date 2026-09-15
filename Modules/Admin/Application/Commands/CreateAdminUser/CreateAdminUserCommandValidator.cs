@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FluentValidation;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;

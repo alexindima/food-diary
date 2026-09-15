@@ -6,7 +6,7 @@ export function rankingPathIdentities(value) {
   if (readComposition && !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)/.test(path)) {
     return [path, `fooddiary.infrastructure/persistence/${readComposition[1]}`];
   }
-  const sharedTest = /^(?:shared|tooling)\/(tests\/[^/]+\.tests\/.+)$/.exec(path);
+  const sharedTest = /^(?:shared|tooling|hosts|platform)\/(tests\/[^/]+tests\/.+)$/.exec(path);
   if (sharedTest) return [path, sharedTest[1]];
   const persistenceModel = /^shared\/fooddiary\.([^.\/]+)\.persistencemodel\/(.+)$/.exec(path);
   if (persistenceModel && !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {

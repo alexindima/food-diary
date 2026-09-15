@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Persistence.Abstractions;
 
-namespace FoodDiary.Infrastructure.Persistence.Wearables;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 
 internal sealed class EfWearableTransactionRunner(IModuleSessionCoordinator coordinator) : IWearableTransactionRunner {
     public Task<TResult> ExecuteSerializedAsync<TResult>(

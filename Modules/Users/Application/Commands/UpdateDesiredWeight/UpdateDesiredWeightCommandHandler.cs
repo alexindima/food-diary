@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
 
-namespace FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
+namespace FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWeight;
 
 public sealed class UpdateDesiredWeightCommandHandler(
     IUserContextService userContextService,
@@ -35,8 +35,8 @@ public sealed class UpdateDesiredWeightCommandHandler(
         }
 
         User currentUser = userResult.Value;
-        FoodDiary.Domain.Entities.Tracking.WeightGoal? activeGoal = currentUser.WeightGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
+        FoodDiary.Modules.Users.Domain.Entities.Tracking.WeightGoal? activeGoal = currentUser.WeightGoals.SingleOrDefault(
+            goal => goal.Status == FoodDiary.Modules.Users.Domain.Enums.WeightGoalStatus.Active);
         if (command.DesiredWeightKg == currentUser.DesiredWeightKg) {
             return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeightKg, activeGoal?.StartWeightKg, activeGoal?.StartedAtUtc));
         }
@@ -55,7 +55,7 @@ public sealed class UpdateDesiredWeightCommandHandler(
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         activeGoal = currentUser.WeightGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
+            goal => goal.Status == FoodDiary.Modules.Users.Domain.Enums.WeightGoalStatus.Active);
         return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeightKg, activeGoal?.StartWeightKg, activeGoal?.StartedAtUtc));
     }
 

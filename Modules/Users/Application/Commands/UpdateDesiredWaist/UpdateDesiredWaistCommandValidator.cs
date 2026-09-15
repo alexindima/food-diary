@@ -1,8 +1,8 @@
 using System.Globalization;
 using FluentValidation;
-using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaistCm;
+using DesiredWaistValueObject = FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.DesiredWaistCm;
 
-namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
+namespace FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWaist;
 
 public sealed class UpdateDesiredWaistCommandValidator : AbstractValidator<UpdateDesiredWaistCommand> {
     public UpdateDesiredWaistCommandValidator() {

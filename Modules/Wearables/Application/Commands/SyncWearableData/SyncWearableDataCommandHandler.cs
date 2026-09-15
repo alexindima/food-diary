@@ -1,16 +1,16 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Domain.Entities.Wearables;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Wearables.Application.Common;
+using FoodDiary.Modules.Wearables.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Wearables.Commands.SyncWearableData;
+namespace FoodDiary.Modules.Wearables.Application.Commands.SyncWearableData;
 
 public sealed class SyncWearableDataCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
@@ -147,22 +147,7 @@ public sealed class SyncWearableDataCommandHandler(
         DateTime date,
         CancellationToken cancellationToken) {
         IReadOnlyList<WearableSyncEntry> entries = await syncRepository.GetDailySummaryAsync(userId, date, cancellationToken).ConfigureAwait(false);
-        return MapToSummary(date, entries);
+        return WearableSummaryCalculator.Calculate(date, entries.Select(entry => (entry.DataType, entry.Value)));
     }
 
-    internal static WearableDailySummaryModel MapToSummary(DateTime date, IReadOnlyList<WearableSyncEntry> entries) {
-        double? steps = null, heartRate = null, calories = null, active = null, sleep = null;
-
-        foreach (WearableSyncEntry e in entries) {
-            switch (e.DataType) {
-                case WearableDataType.Steps: steps = (steps ?? 0) + e.Value; break;
-                case WearableDataType.HeartRate: heartRate = e.Value; break;
-                case WearableDataType.CaloriesBurned: calories = (calories ?? 0) + e.Value; break;
-                case WearableDataType.ActiveMinutes: active = (active ?? 0) + e.Value; break;
-                case WearableDataType.SleepMinutes: sleep = (sleep ?? 0) + e.Value; break;
-            }
-        }
-
-        return new WearableDailySummaryModel(date, steps, heartRate, calories, active, sleep);
-    }
 }

@@ -9,13 +9,13 @@ using FoodDiary.Modules.Dashboard.Contracts.Queries.GetDietologistClientDashboar
 using FoodDiary.Modules.Dietologist.Application.Queries.GetClientGoals;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetMyClients;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationsForClient;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Controllers;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

@@ -5,7 +5,7 @@ using FoodDiary.Modules.Meals.Application.Queries.ReadDistinctMealDates;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Meals.Application.Tests;
 

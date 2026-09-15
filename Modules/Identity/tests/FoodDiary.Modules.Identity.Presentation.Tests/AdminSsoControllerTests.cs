@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;

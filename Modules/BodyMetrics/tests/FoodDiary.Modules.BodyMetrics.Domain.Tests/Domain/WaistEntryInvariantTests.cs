@@ -1,5 +1,5 @@
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.BodyMetrics.Domain.Tests.Domain;
 

@@ -10,12 +10,11 @@ Rules for `Modules/WeeklyGoals/`.
 - Keep the real application assembly at `Application/FoodDiary.Modules.WeeklyGoals.Application.csproj`; do not recreate a root module project or an empty wrapper.
 - Do not reference the core `FoodDiary.Application` project.
 - Register application behavior through `AddWeeklyGoalsApplication`; composition roots use Infrastructure's `AddWeeklyGoalsModule` facade.
-- Read meal activity only through `IMealActivityReadService`; do not load Meal aggregates.
-- Reference Notifications Application/Abstractions directly for notification delivery; keep the shared unit of work behind central application contracts.
+- Read meal activity through Meals Contracts queries via ISender; do not load Meal aggregates.
+- Reference Notifications Contracts directly for notification delivery; keep the shared unit of work behind central application contracts.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
-- Keep `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in `Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj` while preserving their existing `FoodDiary.Domain.*` CLR namespaces.
+- Keep `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in `Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj` while using canonical module namespaces.
 - Keep the module Domain dependency on Users Domain.Contracts for `UserId`; do not add a WeeklyGoals navigation to the `User` aggregate.
-- Preserve legacy `FoodDiary.Application.WeeklyGoals.*`, `FoodDiary.Application.Abstractions.WeeklyGoals.*`, and WeeklyGoals persistence CLR namespaces during this extraction.
 - Preserve reminder job ID, cron/options binding, batching, retry, cancellation, and notification behavior.
 
 ## Verification
@@ -24,7 +23,7 @@ Rules for `Modules/WeeklyGoals/`.
 - Focused domain tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj`
 - Focused application tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj`
 - Focused infrastructure tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj`
-- Architecture: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Architecture: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 ## Tests
 
@@ -39,3 +38,7 @@ reference the exact owner; shared guards and generic values belong to
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+All module projects and tests use `FoodDiary.Modules.WeeklyGoals.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
+
+The reminder job dispatches SendWeeklyGoalRemindersCommand through ISender. Its handler retains batching, explicit saves and post-commit notifications. GetWeeklyGoal owns read orchestration and reuses WeeklyGoalProgressReader.

@@ -216,7 +216,7 @@ dotnet_diagnostic.MA0048.severity = error
 [Shared/FoodDiary.Mediator/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 
-[{tests,Shared/tests,Tooling/tests}/**/*.cs]
+[{tests,Shared/tests,Tooling/tests,Hosts/tests,Platform/tests,Tooling/FoodDiary.Testing}/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 # xUnit1030 requires test awaits to preserve its synchronization context.
 dotnet_diagnostic.MA0004.severity = none
@@ -312,22 +312,22 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.Presentation.Api/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.ArchitectureTests/**/*.cs]
+[Tooling/tests/FoodDiary.ArchitectureTests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [tests/FoodDiary.Application.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.Infrastructure.Tests/**/*.cs]
+[Platform/tests/FoodDiary.Infrastructure.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.Presentation.Api.Tests/**/*.cs]
+[Platform/tests/FoodDiary.Presentation.Api.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.Web.Api.IntegrationTests/**/*.cs]
+[Hosts/tests/FoodDiary.Web.Api.IntegrationTests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.JobManager.Tests/**/*.cs]
+[Hosts/tests/FoodDiary.JobManager.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [tests/FoodDiary.MailInbox.Tests/**/*.cs]
@@ -342,7 +342,7 @@ dotnet_diagnostic.MA0051.severity = warning
 [Modules/{Export,Notifications}/tests/**/Resources/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.Telegram.Bot.Tests/**/*.cs]
+[Hosts/tests/FoodDiary.Telegram.Bot.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 # Build-time project conventions. Rules are disabled by default in the analyzer
@@ -437,7 +437,7 @@ dotnet_diagnostic.FD0006.severity = error
 [Shared/FoodDiary.Mediator/**/*.cs]
 dotnet_diagnostic.FD0006.severity = error
 
-[{tests,Shared/tests,Tooling/tests}/**/*.cs]
+[{tests,Shared/tests,Tooling/tests,Hosts/tests,Platform/tests,Tooling/FoodDiary.Testing}/**/*.cs]
 dotnet_diagnostic.FD0007.severity = error
 dotnet_diagnostic.FD0009.severity = error
 dotnet_diagnostic.FD0012.severity = error

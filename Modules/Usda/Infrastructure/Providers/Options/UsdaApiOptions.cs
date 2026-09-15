@@ -1,4 +1,5 @@
-namespace FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
 
 public sealed class UsdaApiOptions {
     public const string SectionName = "UsdaApi";

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
 
-namespace FoodDiary.Application.Wearables.Queries.GetWearableConnections;
+namespace FoodDiary.Modules.Wearables.Application.Queries.GetWearableConnections;
 
 public record GetWearableConnectionsQuery(Guid? UserId)
     : IQuery<Result<IReadOnlyList<WearableConnectionModel>>>, IUserRequest;

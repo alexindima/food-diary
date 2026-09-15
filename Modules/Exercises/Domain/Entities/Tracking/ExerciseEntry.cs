@@ -2,7 +2,7 @@ using FoodDiary.Modules.Exercises.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Exercises.Domain.Enums;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 

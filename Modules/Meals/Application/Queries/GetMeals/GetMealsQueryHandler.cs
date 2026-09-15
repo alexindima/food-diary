@@ -8,14 +8,14 @@ using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Modules.Meals.Application.Common;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Meals.Application.Common.Time;
 using FoodDiary.Modules.Meals.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Modules.Meals.Application.Queries.GetMeals;
 

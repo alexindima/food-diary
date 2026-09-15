@@ -1,12 +1,13 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Users.Commands.AcceptAiConsent;
-using FoodDiary.Application.Users.Commands.RevokeAiConsent;
+using FoodDiary.Modules.Users.Application.Commands.AcceptAiConsent;
+using FoodDiary.Modules.Users.Application.Commands.RevokeAiConsent;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Users;
+using FoodDiary.Modules.Users.Presentation.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Users.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserAiConsentControllerTests {

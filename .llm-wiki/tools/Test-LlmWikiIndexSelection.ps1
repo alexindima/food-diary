@@ -34,7 +34,7 @@ $frontendLocalizationPlan = Get-IndexPlan 'FoodDiary.Web.Client/assets/i18n/en/l
 Assert-Plan ($frontendLocalizationPlan -match 'Build-LlmWikiFrontendIndex.ps1') 'Frontend localization changes should update the localization-reading frontend index.'
 Assert-Plan ($frontendLocalizationPlan -notmatch 'Build-LlmWikiFrontendContractIndex.ps1|Build-LlmWikiQualityIndex.ps1|Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend localization changes selected unrelated indexes.'
 
-$csharpTestPlan = Get-IndexPlan 'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
+$csharpTestPlan = Get-IndexPlan 'Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
 Assert-Plan ($csharpTestPlan -match 'Build-LlmWikiQualityIndex.ps1') 'C# tests should update the quality index.'
 foreach ($unexpectedTool in @(
     'Build-LlmWikiCatalog.ps1',
@@ -51,7 +51,7 @@ $changedPathFile = Join-Path (Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repos
 $null = New-Item -ItemType Directory -Path (Split-Path -Parent $changedPathFile) -Force
 try {
     [IO.File]::WriteAllLines($changedPathFile, @(
-        'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs',
+        'Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs',
         '.llm-wiki/generated/quality-index.json',
         '.llm-wiki/reviews/source-impact-reviews.json'
     ))

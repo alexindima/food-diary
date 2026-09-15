@@ -92,7 +92,7 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.Users": {
+      "FoodDiary.Modules.Users.Application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",

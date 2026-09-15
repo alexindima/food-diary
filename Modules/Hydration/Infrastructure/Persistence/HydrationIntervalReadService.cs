@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Hydration.Infrastructure.Persistence;

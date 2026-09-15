@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Users.Domain.ValueObjects;
 
 [StructLayout(LayoutKind.Auto)]
 public readonly record struct UserActivityUpdate(

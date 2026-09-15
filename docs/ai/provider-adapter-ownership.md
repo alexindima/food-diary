@@ -141,7 +141,7 @@ Wiki-quality certificate.
 Changing the path helper also activates the code-graph smoke group. Its first
 run stopped on an additional stale fixture in Test-LlmWikiCodeGraphPathTransport:
 the source tail still pointed at FoodDiary.Domain/Entities/Users/User.cs.
-Git commit 7a9a3fad8 records its move to Modules/Users/Domain/Entities/Users/User.cs.
+Git commit 7a9a3fad8 records its move to Modules/Users/Domain/Entities/User.cs.
 Only this literal is updated; oversized-scope, projection equality, Unicode and
 invalid-input assertions are retained. This early failure is recorded separately
 from the frozen100 quality failure, not mislabeled as the same gate outcome.

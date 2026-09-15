@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
-using FoodDiary.Presentation.Api.Features.Users.Mappings;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 

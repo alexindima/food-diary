@@ -4,12 +4,12 @@ using FoodDiary.Modules.Cycles.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Export.Application.Models;
 using FoodDiary.Modules.Export.Application.Services;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Export.Application.Queries.ExportCycle;
 

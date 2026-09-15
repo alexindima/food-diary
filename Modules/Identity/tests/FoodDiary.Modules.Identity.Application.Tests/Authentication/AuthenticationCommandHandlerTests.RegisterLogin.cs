@@ -2,7 +2,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.Register;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;

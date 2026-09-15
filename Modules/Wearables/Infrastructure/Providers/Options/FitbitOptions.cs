@@ -1,4 +1,5 @@
-namespace FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
 
 public sealed class FitbitOptions {
     public const string SectionName = "Fitbit";

@@ -37,7 +37,7 @@ public sealed class WikiOutputParserTests {
               ],
               "impact": {
                 "references": [
-                  { "path": "tests/FoodDiary.ArchitectureTests/UnrelatedTests.cs" }
+                  { "path": "Tooling/tests/FoodDiary.ArchitectureTests/UnrelatedTests.cs" }
                 ]
               }
             }

@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
 using System.Net;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Usda.Contracts.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Usda.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsdaFoodSearchServiceTests {

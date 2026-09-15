@@ -58,8 +58,8 @@ Telegram Login поддерживает OIDC и идентификатор по�
 | Telegram HTTP | `Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs` | verify, login-widget, link, bot/auth; проверить фактическое версионирование URL клиента |
 | Привязка | `Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs` | Проверка initData и защита от повторного использования |
 | Идентичности | `Modules/Users/Application/Services/UserAuthenticationIdentityService.cs` | Вход/привязка Telegram, Google; Telegram без связи сейчас не регистрируется |
-| Пользователь | `Modules/Users/Domain/Entities/Users/User.cs` | Email обязателен в Create; HasPassword, TelegramUserId, SecurityVersion |
-| EF | `Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs` | Уникальные email и Telegram ID |
+| Пользователь | `Modules/Users/Domain/Entities/User.cs` | Email обязателен в Create; HasPassword, TelegramUserId, SecurityVersion |
+| EF | `Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserConfiguration.cs` | Уникальные email и Telegram ID |
 | JWT | `Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs` | Email claim создаётся и извлекается как обязательный |
 | Frontend auth | `FoodDiary.Web.Client/src/app/services/auth.service.ts`, `src/app/guards/auth.guard.ts` | Автопривязка initData; guard блокирует неподтверждённую почту |
 | Профиль | `FoodDiary.Web.Client/src/app/features/profile/` | Существующие настройки/безопасность, типы предполагают email |
@@ -69,7 +69,7 @@ Telegram Login поддерживает OIDC и идентификатор по�
 | Срок HTTP-дедупликации | `FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs` | ResponseTtl 24 часа; недостаточно для вечной гарантии отсутствия повторной еды |
 | Сводки | `Modules/Statistics/Presentation/Controllers/StatisticsController.cs`, `Modules/Dashboard/Presentation/Features/Dashboard/DashboardController.cs` | statistics/summary и dashboard; у dashboard есть TimeZoneOffsetMinutes |
 | Email в оплате | `Modules/Users/Application/Services/UserBillingService.cs`, `Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs` | Email передаётся платёжным адаптерам |
-| Проверки бота | `tests/FoodDiary.Telegram.Bot.Tests/` | Имеется тестовый проект, расширить вместо дублирования |
+| Проверки бота | `Hosts/tests/FoodDiary.Telegram.Bot.Tests/` | Имеется тестовый проект, расширить вместо дублирования |
 
 Wiki research по Identity завершился с discovery=high, но не проверяет всю будущую область изменения. В checkout есть чужие изменения persistence/lockfiles/wiki; их не включать в реализацию или коммит. Текущая задача меняет только этот документ и индекс планов.
 
@@ -244,13 +244,13 @@ Wiki research по Identity завершился с discovery=high, но не п
 
 ```powershell
 dotnet build FoodDiary.slnx
-dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
-dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj
-dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj
+dotnet test Hosts/tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj
+dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
+dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj
+dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj
 ```
 
-Дополнительно обязательны затронутые Identity/Users/Ai/Meals/Statistics/Dashboard unit и PostgreSQL integration suites, presentation/idempotency tests. Для frontend из `FoodDiary.Web.Client`: `npm run build`, `npm run verify`; focused tests по локальным AGENTS. Проверить contract snapshots под `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`. Для изолированных .NET outputs использовать repository-level `--artifacts-path`.
+Дополнительно обязательны затронутые Identity/Users/Ai/Meals/Statistics/Dashboard unit и PostgreSQL integration suites, presentation/idempotency tests. Для frontend из `FoodDiary.Web.Client`: `npm run build`, `npm run verify`; focused tests по локальным AGENTS. Проверить contract snapshots под `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`. Для изолированных .NET outputs использовать repository-level `--artifacts-path`.
 
 Сценарии ручной проверки: новый Telegram-only аккаунт; существующий email аккаунт; вход на втором устройстве; фото и undo; ручное изменение до undo; суточная/недельная сводка; restart между recognition и save; недоступный API; unlink во время job. Прогон в настоящем Telegram отмечается отдельно от mocked доказательств.
 

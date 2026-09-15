@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
-namespace FoodDiary.Application.Users.Queries.GetUserGoals;
+namespace FoodDiary.Modules.Users.Application.Queries.GetUserGoals;
 
 public record GetUserGoalsQuery(
     Guid? UserId

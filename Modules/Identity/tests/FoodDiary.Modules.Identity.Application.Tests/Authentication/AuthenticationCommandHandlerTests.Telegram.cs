@@ -3,9 +3,9 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramBot
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 

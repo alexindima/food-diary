@@ -1,15 +1,15 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AcquireTelegramOperation;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.CheckpointTelegramOperation;
 
-using FoodDiary.Application.Users.Services;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Application.Services;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;

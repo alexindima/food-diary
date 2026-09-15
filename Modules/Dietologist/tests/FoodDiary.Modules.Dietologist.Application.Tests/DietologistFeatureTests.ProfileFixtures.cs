@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Domain.Entities;
 
 namespace FoodDiary.Modules.Dietologist.Application.Tests;
 

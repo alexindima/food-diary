@@ -15,7 +15,7 @@
       "requiredChecks": [
         {
           "id": "architecture-tests",
-          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+          "command": "dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
         }
       ],
       "reviewObligations": []
@@ -37,11 +37,11 @@
         },
         {
           "id": "presentation-api-tests",
-          "command": "dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj"
+          "command": "dotnet test Platform/tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj"
         },
         {
           "id": "api-integration-tests",
-          "command": "dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj"
+          "command": "dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj"
         }
       ],
       "reviewObligations": [
@@ -92,7 +92,7 @@
         },
         {
           "id": "infrastructure-integration-tests",
-          "command": "dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
+          "command": "dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
         }
       ],
       "reviewObligations": [
@@ -161,7 +161,7 @@
       "requiredChecks": [
         {
           "id": "data-access-integration-tests",
-          "command": "dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
+          "command": "dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
         }
       ],
       "reviewObligations": [
@@ -386,7 +386,7 @@
       "requiredChecks": [
         {
           "id": "infrastructure-integration-tests",
-          "command": "dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
+          "command": "dotnet test Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj"
         }
       ],
       "reviewObligations": [
@@ -412,7 +412,7 @@
         },
         {
           "id": "architecture-tests",
-          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+          "command": "dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
         }
       ],
       "reviewObligations": [
@@ -439,7 +439,7 @@
       "requiredChecks": [
         {
           "id": "architecture-tests",
-          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+          "command": "dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
         }
       ],
       "reviewObligations": [
@@ -509,7 +509,7 @@
       "requiredChecks": [
         {
           "id": "architecture-tests",
-          "command": "dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
+          "command": "dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj"
         }
       ],
       "reviewObligations": [

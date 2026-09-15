@@ -17,12 +17,12 @@ using FoodDiary.Modules.Hydration.Application.Abstractions.Models;
 using FoodDiary.Modules.Hydration.Application.Queries.GetHydrationDailyTotal;
 using FoodDiary.Modules.Hydration.Application.Queries.GetHydrationEntries;
 using FoodDiary.Modules.Hydration.Application.Validators;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 using FoodDiary.Modules.Hydration.Contracts.Models;
 

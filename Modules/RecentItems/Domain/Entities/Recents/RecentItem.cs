@@ -1,7 +1,7 @@
 using FoodDiary.Modules.RecentItems.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.RecentItems.Domain.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 

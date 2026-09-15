@@ -110,7 +110,7 @@
       "intent": "Review automated coverage for the Redis idempotency store",
       "query": "automated tests for Redis idempotency store behavior",
       "plannedPath": null,
-      "expectedPaths": ["tests/FoodDiary.Web.Api.Tests/Services/RedisIdempotencyStoreTests.cs"],
+      "expectedPaths": ["Hosts/tests/FoodDiary.Web.Api.Tests/Services/RedisIdempotencyStoreTests.cs"],
       "expectedLayers": []
     }
   ]

@@ -2,7 +2,7 @@
 
 Own the complete User aggregate, including every credential/security partial,
 roles, role audit, weight/waist goals, lifecycle events and User-specific state and
-value objects. Preserve legacy CLR namespaces and all invariants. Keep authentication
+value objects. Use canonical project/folder namespaces and all invariants. Keep authentication
 flows and providers in Identity and their established adapters.
 
 Reusable UserCalorieSchedule and UserPreferenceUpdate live in Users.Domain.Contracts;
@@ -18,3 +18,5 @@ Keep User goal collections and UserRole/Role relationships unchanged.
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access.
 
 RoleNames belongs to Users Domain.Contracts; role entities and membership invariants remain here.
+
+All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.

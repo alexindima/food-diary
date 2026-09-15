@@ -231,7 +231,7 @@
         ],
         "testAreas": [
           "Modules/Meals/tests",
-          "tests/FoodDiary.Web.Api.IntegrationTests"
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests"
         ]
       }
     },
@@ -762,7 +762,7 @@
         "testAreas": [
           "Modules/Products/tests",
           "tests/FoodDiary.Application.Tests/Products",
-          "tests/FoodDiary.Web.Api.IntegrationTests/ProductPostgresApiFlowTests.cs"
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/ProductPostgresApiFlowTests.cs"
         ],
         "persistenceModelProjects": [
           "Modules/Products/PersistenceModel"
@@ -860,8 +860,8 @@
         "testAreas": [
           "Modules/Recipes/tests",
           "tests/FoodDiary.Application.Tests/Recipes",
-          "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
-          "tests/FoodDiary.Web.Api.IntegrationTests/RecipePostgresApiFlowTests.cs"
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipePostgresApiFlowTests.cs"
         ],
         "persistenceModelProjects": [
           "Modules/Recipes/PersistenceModel"
@@ -915,7 +915,7 @@
           "Modules/Usda/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Usda/Application/Abstractions"
+          "Modules/Usda/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Usda/Contracts"
@@ -928,6 +928,9 @@
         ],
         "adapterAreas": [
           "Modules/Usda/Infrastructure/Providers"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Usda/PersistenceModel"
         ]
       }
     },
@@ -949,10 +952,10 @@
           "Modules/Users/Application"
         ],
         "abstractionAreas": [
-          "Modules/Users/Application/Abstractions"
+          "Modules/Users/Application.Abstractions"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Users/Application/Abstractions"
+          "Modules/Users/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Users/Contracts"
@@ -963,12 +966,15 @@
         ],
         "persistenceAreas": [
           "Modules/Users/Infrastructure",
-          "Modules/Users/Infrastructure/Model"
+          "Modules/Users/PersistenceModel"
         ],
         "centralPersistenceSeams": [],
         "identitySeams": [
           "Modules/Identity/Application",
           "Modules/Identity/Infrastructure/Persistence/Authentication"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Users/PersistenceModel"
         ]
       }
     },
@@ -986,7 +992,7 @@
           "Modules/Wearables/Application"
         ],
         "abstractionAreas": [
-          "Modules/Wearables/Application/Abstractions"
+          "Modules/Wearables/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/Wearables/Domain"
@@ -996,6 +1002,9 @@
         ],
         "adapterAreas": [
           "Modules/Wearables/Infrastructure/Providers"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Wearables/PersistenceModel"
         ]
       }
     },
@@ -1024,7 +1033,7 @@
           "Modules/WeeklyGoals/Application"
         ],
         "abstractionAreas": [
-          "Modules/WeeklyGoals/Application/Abstractions"
+          "Modules/WeeklyGoals/Application.Abstractions"
         ],
         "contractAreas": [
           "Modules/WeeklyGoals/Contracts"
@@ -1034,6 +1043,9 @@
         ],
         "persistenceAreas": [
           "Modules/WeeklyGoals/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/WeeklyGoals/PersistenceModel"
         ]
       }
     }

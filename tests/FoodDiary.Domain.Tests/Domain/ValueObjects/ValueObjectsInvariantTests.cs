@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Recipes.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Tests.Domain.ValueObjects;
 

@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -5,14 +6,14 @@ using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Entities.WeeklyGoals;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Modules.WeeklyGoals.Domain.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.WeeklyGoals.Infrastructure;
+
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Results;
@@ -20,7 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

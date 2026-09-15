@@ -9,10 +9,10 @@ Products consumes USDA suggestions and link workflows. Meals supplies activity p
 | Responsibility | Owner / retained seam |
 | --- | --- |
 | Search, food details, daily micronutrients, link/unlink | `Modules/Usda/Application` (3 query slices, 2 command slices, 3 read services, health-score mapping) |
-| Provider/repository/daily-read ports and error factory | `Modules/Usda/Application/Abstractions`; central `Errors.Usda` remains a compatibility facade |
+| Provider/repository/daily-read ports and error factory | `Modules/Usda/Application.Abstractions`; central `Errors.Usda` remains a compatibility facade |
 | Eleven read/result models | `Modules/Usda/Contracts`; CLR namespaces preserved |
 | USDA foods, nutrients, portions, food-nutrients, DRI | central `FoodDiary.Domain/Entities/Usda`; no owned IDs/events introduced |
-| Four USDA EF configurations | `Modules/Usda/Infrastructure/Model`; Product navigation and Nutrition DRI configuration remain central |
+| Four USDA EF configurations | `Modules/Usda/PersistenceModel`; Product navigation and Nutrition DRI configuration remain central |
 | Read repository | `Modules/Usda/Infrastructure/Persistence`; central DbContext/unit of work retained |
 | HTTP adapter, options, DTO mapping, detail cache | shared Integrations, unchanged |
 | API transport, import/seed operations, jobs | presentation/Initializer/JobManager remain composition or operational consumers |

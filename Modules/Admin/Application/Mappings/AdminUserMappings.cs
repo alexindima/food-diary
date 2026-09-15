@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Admin.Application.Models;
-using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Mappings;
 

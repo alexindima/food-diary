@@ -1,0 +1,1892 @@
+using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
+using FoodDiary.Modules.Users.Contracts.Commands.EnsureUserPremiumRole;
+using FoodDiary.Modules.Users.Contracts.Commands.RemoveUserPremiumRole;
+using FoodDiary.Modules.Users.Contracts.Commands.StartUserPremiumTrial;
+using FoodDiary.Modules.Users.Contracts.Queries.CheckUserAccess;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfile;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfileIncludingDeleted;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
+using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
+using FoodDiary.Modules.Billing.Contracts.Models;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
+using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Results;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Billing.Application.Services;
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.JobManager.Services;
+using Hangfire;
+using Hangfire.Common;
+using Hangfire.Storage;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
+using System.Reflection;
+
+namespace FoodDiary.JobManager.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class JobsTests {
+    private const string JobManagerMeterName = "FoodDiary.JobManager";
+
+    [Fact]
+    public async Task ImageCleanupJob_RecordsSuccessMetrics() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? deletedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: (value, _) => deletedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingImageCleanupService([2, 0]);
+        IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 2, OlderThanHours = 12 });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageCleanupJob(
+            RequestTestSender.Create(cleanupService),
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<ImageCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.Equal(2, deletedItems);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("images.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("images.cleanup")?.LastSucceededAtUtc);
+    }
+
+    [Fact]
+    public async Task ImageCleanupJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingImageCleanupService([1]);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageCleanupJob(
+            RequestTestSender.Create(cleanupService),
+            Options.Create(new ImageCleanupOptions { BatchSize = 1, OlderThanHours = 12 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<ImageCleanupJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        Assert.Empty(cleanupService.BatchSizes);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("images.cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task UserCleanupJob_RecordsFailureMetric_AndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "users.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new ThrowingUserCleanupService();
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions { BatchSize = 10, RetentionDays = 30 });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new UserCleanupJob(
+            cleanupService,
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<UserCleanupJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
+        Assert.Equal(1, executionCount);
+        Assert.Equal("failure", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(1, tracker.GetSnapshot("users.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("users.cleanup")?.LastFailedAtUtc);
+    }
+
+    [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenEnabled_ProcessesDueMessagesAndRecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? processedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.object_deletion_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: (value, _) => processedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingImageObjectDeletionOutboxProcessor(processed: 3);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(7, processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("success", outcome),
+            () => Assert.Equal(3, processedItems),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(0, tracker.GetSnapshot("images.object_deletion_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("images.object_deletion_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenDisabled_RecordsSuccessWithoutProcessing() {
+        var processor = new RecordingImageObjectDeletionOutboxProcessor(processed: 3);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = false, BatchSize = 7 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("images.object_deletion_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("images.object_deletion_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.object_deletion_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingImageObjectDeletionOutboxProcessor(processed: 3);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("images.object_deletion_outbox");
+        Assert.NotNull(snapshot);
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("canceled", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(now, snapshot.Value.LastStartedAtUtc),
+            () => Assert.Null(snapshot.Value.LastSucceededAtUtc),
+            () => Assert.Null(snapshot.Value.LastFailedAtUtc),
+            () => Assert.Equal(0, snapshot.Value.ConsecutiveFailures));
+    }
+
+    [Fact]
+    public async Task ImageObjectDeletionOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.object_deletion_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new ThrowingImageObjectDeletionOutboxProcessor();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageObjectDeletionOutboxJob(
+            processor,
+            Options.Create(new ImageObjectDeletionOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<ImageObjectDeletionOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("failure", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(1, tracker.GetSnapshot("images.object_deletion_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("images.object_deletion_outbox")?.LastFailedAtUtc));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenEnabled_ProcessesDueMessagesAndRecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? processedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "email.outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: (value, _) => processedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingEmailOutboxProcessor(processed: 5);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = true, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(11, processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("success", outcome),
+            () => Assert.Equal(5, processedItems),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(0, tracker.GetSnapshot("email.outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("email.outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenDisabled_RecordsSuccessWithoutProcessing() {
+        var processor = new RecordingEmailOutboxProcessor(processed: 5);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = false, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("email.outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("email.outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "email.outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingEmailOutboxProcessor(processed: 5);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = true, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("email.outbox");
+        Assert.NotNull(snapshot);
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("canceled", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(now, snapshot.Value.LastStartedAtUtc),
+            () => Assert.Null(snapshot.Value.LastSucceededAtUtc),
+            () => Assert.Null(snapshot.Value.LastFailedAtUtc),
+            () => Assert.Equal(0, snapshot.Value.ConsecutiveFailures));
+    }
+
+    [Fact]
+    public async Task EmailOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "email.outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new ThrowingEmailOutboxProcessor();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new EmailOutboxJob(
+            processor,
+            Options.Create(new EmailOutboxOptions { Enabled = true, BatchSize = 11 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<EmailOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("failure", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(1, tracker.GetSnapshot("email.outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("email.outbox")?.LastFailedAtUtc));
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenEnabled_ProcessesDueMessagesAndRecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? processedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.web_push_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: (value, _) => processedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingNotificationWebPushOutboxProcessor(processed: 4);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(9, processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("success", outcome),
+            () => Assert.Equal(4, processedItems),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(0, tracker.GetSnapshot("notifications.web_push_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("notifications.web_push_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenEnabled_ProcessesDueMessages() {
+        var processor = new RecordingAchievementEvaluationOutboxProcessor(processed: 3);
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = true, BatchSize = 7 }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(7, processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures));
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenDisabled_DoesNotProcess() {
+        var processor = new RecordingAchievementEvaluationOutboxProcessor(processed: 3);
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = false }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Null(processor.BatchSize);
+        Assert.Equal(0, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenCanceled_RecordsCancellationAndRethrows() {
+        var processor = new RecordingAchievementEvaluationOutboxProcessor(processed: 0);
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = true }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cancellation.Token));
+
+        Assert.Equal(0, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        IAchievementEvaluationOutboxProcessor processor = new ThrowingAchievementEvaluationOutboxProcessor();
+        var tracker = new JobExecutionStateTracker();
+        var job = new AchievementEvaluationOutboxJob(
+            processor,
+            Options.Create(new AchievementEvaluationOutboxOptions { Enabled = true }),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<AchievementEvaluationOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Equal(1, tracker.GetSnapshot("achievements.evaluation_outbox")?.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenDisabled_RecordsSuccessWithoutProcessing() {
+        var processor = new RecordingNotificationWebPushOutboxProcessor(processed: 4);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = false, BatchSize = 9 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+
+        await job.Execute(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(0, tracker.GetSnapshot("notifications.web_push_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("notifications.web_push_outbox")?.LastSucceededAtUtc));
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.web_push_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new RecordingNotificationWebPushOutboxProcessor(processed: 4);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("notifications.web_push_outbox");
+        Assert.NotNull(snapshot);
+        Assert.Multiple(
+            () => Assert.Null(processor.BatchSize),
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("canceled", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(now, snapshot.Value.LastStartedAtUtc),
+            () => Assert.Null(snapshot.Value.LastSucceededAtUtc),
+            () => Assert.Null(snapshot.Value.LastFailedAtUtc),
+            () => Assert.Equal(0, snapshot.Value.ConsecutiveFailures));
+    }
+
+    [Fact]
+    public async Task NotificationWebPushOutboxJob_WhenProcessorFails_RecordsFailureAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.web_push_outbox",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onProcessedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var processor = new ThrowingNotificationWebPushOutboxProcessor();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationWebPushOutboxJob(
+            processor,
+            Options.Create(new NotificationWebPushOutboxOptions { Enabled = true, BatchSize = 9 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<NotificationWebPushOutboxJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute(CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, executionCount),
+            () => Assert.Equal("failure", outcome),
+            () => Assert.NotNull(duration),
+            () => Assert.Equal(1, tracker.GetSnapshot("notifications.web_push_outbox")?.ConsecutiveFailures),
+            () => Assert.Equal(now, tracker.GetSnapshot("notifications.web_push_outbox")?.LastFailedAtUtc));
+    }
+
+    [Fact]
+    public async Task NoOpNotificationPusher_CompletesPushMethods() {
+        Type pusherType = typeof(JobManagerServiceCollectionExtensions).Assembly.GetType(
+            "FoodDiary.JobManager.Services.NoOpNotificationPusher",
+            throwOnError: true)!;
+        var pusher = (INotificationPusher)Activator.CreateInstance(pusherType)!;
+        var userId = Guid.NewGuid();
+
+        await pusher.PushUnreadCountAsync(userId, count: 5, CancellationToken.None);
+        await pusher.PushNotificationsChangedAsync(userId, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task ImageCleanupJob_WithNonPositiveBatchSize_UsesOne() {
+        var cleanupService = new RecordingImageCleanupService([1, 0]);
+        IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 0, OlderThanHours = 12 });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var job = new ImageCleanupJob(
+            RequestTestSender.Create(cleanupService),
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
+            NullLogger<ImageCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal([1], cleanupService.BatchSizes);
+        Assert.Equal(now.AddHours(-12), cleanupService.OlderThanValues[0]);
+    }
+
+    [Fact]
+    public async Task ImageCleanupJob_WithNonPositiveOlderThan_UsesDefault12Hours() {
+        var cleanupService = new RecordingImageCleanupService([0]);
+        IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 10, OlderThanHours = 0 });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var job = new ImageCleanupJob(
+            RequestTestSender.Create(cleanupService),
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
+            NullLogger<ImageCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Single(cleanupService.OlderThanValues);
+        Assert.Equal(now.AddHours(-12), cleanupService.OlderThanValues[0]);
+    }
+
+    [Fact]
+    public async Task UserCleanupJob_WithInvalidReassignUserId_PassesNull() {
+        var cleanupService = new RecordingUserCleanupService([0]);
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions {
+            BatchSize = 10,
+            RetentionDays = 30,
+            ReassignUserId = "not-a-guid",
+        });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var job = new UserCleanupJob(
+            cleanupService,
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
+            NullLogger<UserCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Single(cleanupService.ReassignUserIds);
+        Assert.Null(cleanupService.ReassignUserIds[0]);
+        Assert.Equal(now.AddDays(-30), cleanupService.OlderThanValues[0]);
+    }
+
+    [Fact]
+    public async Task UserCleanupJob_WithValidReassignUserId_PassesParsedGuid() {
+        var expectedId = Guid.NewGuid();
+        var cleanupService = new RecordingUserCleanupService([0]);
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions {
+            BatchSize = 10,
+            RetentionDays = 30,
+            ReassignUserId = expectedId.ToString(),
+        });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var job = new UserCleanupJob(
+            cleanupService,
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
+            NullLogger<UserCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Single(cleanupService.ReassignUserIds);
+        Assert.Equal(expectedId, cleanupService.ReassignUserIds[0]);
+    }
+
+    [Fact]
+    public async Task UserCleanupJob_WithNonPositiveBatchAndRetention_UsesDefaults() {
+        var cleanupService = new RecordingUserCleanupService([1, 0]);
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions {
+            BatchSize = 0,
+            RetentionDays = 0,
+        });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var job = new UserCleanupJob(
+            cleanupService,
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
+            NullLogger<UserCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal([1], cleanupService.BatchSizes);
+        Assert.Equal(now.AddDays(-30), cleanupService.OlderThanValues[0]);
+    }
+
+    [Fact]
+    public async Task UserCleanupJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "users.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingUserCleanupService([1]);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new UserCleanupJob(
+            cleanupService,
+            Options.Create(new UserCleanupOptions { BatchSize = 1, RetentionDays = 30 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<UserCleanupJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        Assert.Empty(cleanupService.BatchSizes);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("users.cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task NotificationCleanupJob_RecordsSuccessMetrics_AndBuildsExpectedPolicy() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? deletedItems = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: (value, _) => deletedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingNotificationCleanupService([2, 0]);
+        IOptions<NotificationCleanupOptions> options = Options.Create(new NotificationCleanupOptions {
+            TransientTypes = ["Test", "Reminder"],
+            BatchSize = 2,
+            TransientReadRetentionDays = 3,
+            TransientUnreadRetentionDays = 5,
+            StandardReadRetentionDays = 14,
+            StandardUnreadRetentionDays = 30,
+        });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationCleanupJob(
+            RequestTestSender.Create(cleanupService),
+            options,
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<NotificationCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.Equal(2, deletedItems);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("notifications.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("notifications.cleanup")?.LastSucceededAtUtc);
+        Assert.Equal(2, cleanupService.Policies.Count);
+        Assert.All(cleanupService.Policies, policy => {
+            Assert.Equal(["Test", "Reminder"], policy.TransientTypes);
+            Assert.Equal(3, policy.TransientReadRetentionDays);
+            Assert.Equal(5, policy.TransientUnreadRetentionDays);
+            Assert.Equal(14, policy.StandardReadRetentionDays);
+            Assert.Equal(30, policy.StandardUnreadRetentionDays);
+            Assert.Equal(2, policy.BatchSize);
+        });
+    }
+
+    [Fact]
+    public async Task NotificationCleanupJob_WhenCleanupFails_RecordsFailureMetric_AndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new ThrowingNotificationCleanupService();
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationCleanupJob(
+            RequestTestSender.Create(cleanupService),
+            Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 10 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<NotificationCleanupJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("failure", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(1, tracker.GetSnapshot("notifications.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("notifications.cleanup")?.LastFailedAtUtc);
+    }
+
+    [Fact]
+    public async Task NotificationCleanupJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingNotificationCleanupService([1]);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationCleanupJob(
+            RequestTestSender.Create(cleanupService),
+            Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 1 }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<NotificationCleanupJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        Assert.Empty(cleanupService.Policies);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("notifications.cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenDisabled_RecordsSuccessWithoutService() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new BillingRenewalJob(
+            null!,
+            Options.Create(new BillingRenewalOptions { Enabled = false }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastSucceededAtUtc);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenProviderHasNoGateway_RecordsSuccess() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        await using ServiceProvider provider = CreateRenewalProvider(CreateRenewDueSubscriptionsCommandHandlerWithoutGateways(now));
+        var job = new BillingRenewalJob(
+            provider.GetRequiredService<ISender>(),
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = "MissingProvider",
+                BatchSize = 10,
+            }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastSucceededAtUtc);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenRenewalsAreProcessed_RecordsSuccessMetric() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var user = User.Create("renewal-job@example.com", "hash");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.YooKassa,
+            "customer_renewal_job",
+            "pay_initial",
+            "pm_initial",
+            "active",
+            now.AddMonths(-1),
+            now.AddMinutes(-1),
+            "evt_initial",
+            now.AddMonths(-1));
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var paymentRepository = new RecordingBillingPaymentRepository();
+        var tracker = new JobExecutionStateTracker();
+        var service = new RenewDueSubscriptionsCommandHandler(
+            subscriptionRepository,
+            paymentRepository,
+            userRepository,
+            new NoOpBillingTransactionRunner(),
+            [
+                new FakeRecurringBillingGateway(
+                    BillingProviderNames.YooKassa,
+                    new BillingRecurringPaymentModel(
+                        "pay_renewal_job",
+                        "pm_renewal_job",
+                        "price_monthly",
+                        "monthly",
+                        "active",
+                        now,
+                        now.AddMonths(1),
+                        "evt_renewal_job",
+                        7.99m,
+                        "USD",
+                        "{\"renewal\":true}")),
+            ],
+            new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(now)),
+            new FixedDateTimeProvider(now));
+        await using ServiceProvider provider = CreateRenewalProvider(service);
+        var job = new BillingRenewalJob(
+            provider.GetRequiredService<ISender>(),
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = BillingProviderNames.YooKassa,
+                BatchSize = 10,
+            }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastSucceededAtUtc);
+        Assert.Equal("pay_renewal_job", subscription.ExternalSubscriptionId);
+        Assert.Single(paymentRepository.Payments);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenServiceThrows_RecordsFailureMetric_AndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new BillingRenewalJob(
+            null!,
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = "YooKassa",
+                BatchSize = 10,
+            }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await Assert.ThrowsAsync<NullReferenceException>(() => job.Execute());
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("failure", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+        Assert.Equal(1, tracker.GetSnapshot("billing.renewal")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("billing.renewal")?.LastFailedAtUtc);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new BillingRenewalJob(
+            null!,
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = "YooKassa",
+                BatchSize = 10,
+            }),
+            new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
+            NullLogger<BillingRenewalJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("billing.renewal");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
+    [Fact]
+    public async Task RecurringJobsHostedService_StartAsync_RegistersExpectedJobs_AndVerifiesThem() {
+        var recurringJobManager = new RecordingRecurringJobManager();
+        var verifier = new RecordingRecurringJobRegistrationVerifier();
+        RecurringJobsHostedService service = CreateRecurringJobsHostedService(recurringJobManager, verifier);
+
+        await service.StartAsync(CancellationToken.None);
+
+        Assert.Equal(
+            [
+                RecurringJobIds.ImageAssetsCleanup,
+                RecurringJobIds.BillingRenewal,
+                RecurringJobIds.BillingWebhookInbox,
+                RecurringJobIds.PaddleNotificationRecovery,
+                RecurringJobIds.FastingNotifications,
+                RecurringJobIds.ImageObjectDeletionOutbox,
+                RecurringJobIds.EmailOutbox,
+                RecurringJobIds.NotificationWebPushOutbox,
+                RecurringJobIds.AchievementEvaluationOutbox,
+                RecurringJobIds.NotificationsCleanup,
+                RecurringJobIds.UsersCleanup,
+                RecurringJobIds.UserLoginEventsCleanup,
+                RecurringJobIds.MarketingAttributionCleanup,
+                RecurringJobIds.FastingTelemetryCleanup,
+                RecurringJobIds.ClientTaskReminders,
+                RecurringJobIds.WeeklyGoalReminders,
+            ],
+            recurringJobManager.JobIds);
+        Assert.Equal(
+            [
+                RecurringJobIds.ImageAssetsCleanup,
+                RecurringJobIds.NotificationsCleanup,
+                RecurringJobIds.UsersCleanup,
+                RecurringJobIds.BillingRenewal,
+                RecurringJobIds.BillingWebhookInbox,
+                RecurringJobIds.PaddleNotificationRecovery,
+                RecurringJobIds.FastingNotifications,
+                RecurringJobIds.ImageObjectDeletionOutbox,
+                RecurringJobIds.EmailOutbox,
+                RecurringJobIds.NotificationWebPushOutbox,
+                RecurringJobIds.AchievementEvaluationOutbox,
+                RecurringJobIds.UserLoginEventsCleanup,
+                RecurringJobIds.MarketingAttributionCleanup,
+                RecurringJobIds.FastingTelemetryCleanup,
+                RecurringJobIds.ClientTaskReminders,
+                RecurringJobIds.WeeklyGoalReminders,
+            ],
+            verifier.ExpectedJobIds);
+    }
+
+    [Fact]
+    public async Task RecurringJobsHostedService_StartAsync_WhenRegistrationLockTimesOut_RetriesWithoutRestarting() {
+        var recurringJobManager = new RecordingRecurringJobManager(RecurringJobIds.ImageObjectDeletionOutbox);
+        var verifier = new RecordingRecurringJobRegistrationVerifier();
+        RecurringJobsHostedService service = CreateRecurringJobsHostedService(recurringJobManager, verifier);
+
+        await service.StartAsync(CancellationToken.None);
+
+        Assert.Equal(2, recurringJobManager.RegistrationAttempts[RecurringJobIds.ImageObjectDeletionOutbox]);
+        Assert.Empty(RecurringJobIds.All.Except(recurringJobManager.JobIds, StringComparer.Ordinal));
+        Assert.Equal(RecurringJobIds.All, verifier.ExpectedJobIds, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task RecurringJobsHostedService_StartAsync_WhenVerificationFails_Throws() {
+        var recurringJobManager = new RecordingRecurringJobManager();
+        var verifier = new ThrowingRecurringJobRegistrationVerifier();
+        RecurringJobsHostedService service = CreateRecurringJobsHostedService(recurringJobManager, verifier);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
+        var service = new RecurringJobsHostedService(
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!);
+
+        await service.StopAsync(CancellationToken.None);
+    }
+
+    [Fact]
+    public void CleanupJobs_DeclareExpectedRetryAndConcurrencyPolicy() {
+        MethodInfo? imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
+        MethodInfo? billingRenewalMethod = typeof(BillingRenewalJob).GetMethod(nameof(BillingRenewalJob.Execute));
+        MethodInfo? fastingNotificationMethod = typeof(FastingNotificationJob).GetMethod(nameof(FastingNotificationJob.Execute));
+        MethodInfo? imageObjectDeletionOutboxMethod = typeof(ImageObjectDeletionOutboxJob).GetMethod(nameof(ImageObjectDeletionOutboxJob.Execute));
+        MethodInfo? emailOutboxMethod = typeof(EmailOutboxJob).GetMethod(nameof(EmailOutboxJob.Execute));
+        MethodInfo? notificationWebPushOutboxMethod = typeof(NotificationWebPushOutboxJob).GetMethod(nameof(NotificationWebPushOutboxJob.Execute));
+        MethodInfo? notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
+        MethodInfo? userLoginEventCleanupMethod = typeof(UserLoginEventCleanupJob).GetMethod(nameof(UserLoginEventCleanupJob.Execute));
+        MethodInfo? marketingAttributionCleanupMethod = typeof(MarketingAttributionCleanupJob).GetMethod(nameof(MarketingAttributionCleanupJob.Execute));
+        MethodInfo? fastingTelemetryCleanupMethod = typeof(FastingTelemetryCleanupJob).GetMethod(nameof(FastingTelemetryCleanupJob.Execute));
+        MethodInfo? userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
+
+        Assert.NotNull(imageMethod);
+        Assert.NotNull(billingRenewalMethod);
+        Assert.NotNull(fastingNotificationMethod);
+        Assert.NotNull(imageObjectDeletionOutboxMethod);
+        Assert.NotNull(emailOutboxMethod);
+        Assert.NotNull(notificationWebPushOutboxMethod);
+        Assert.NotNull(notificationMethod);
+        Assert.NotNull(userLoginEventCleanupMethod);
+        Assert.NotNull(marketingAttributionCleanupMethod);
+        Assert.NotNull(fastingTelemetryCleanupMethod);
+        Assert.NotNull(userMethod);
+
+        AssertExecutionPolicy(imageMethod!);
+        AssertExecutionPolicy(billingRenewalMethod!);
+        AssertExecutionPolicy(fastingNotificationMethod!);
+        AssertExecutionPolicy(imageObjectDeletionOutboxMethod!);
+        AssertExecutionPolicy(emailOutboxMethod!);
+        AssertExecutionPolicy(notificationWebPushOutboxMethod!);
+        AssertExecutionPolicy(notificationMethod!);
+        AssertExecutionPolicy(userLoginEventCleanupMethod!);
+        AssertExecutionPolicy(marketingAttributionCleanupMethod!);
+        AssertExecutionPolicy(fastingTelemetryCleanupMethod!);
+        AssertExecutionPolicy(userMethod!);
+        AssertCancellationTokenParameter(imageMethod!);
+        AssertCancellationTokenParameter(billingRenewalMethod!);
+        AssertCancellationTokenParameter(fastingNotificationMethod!);
+        AssertCancellationTokenParameter(notificationMethod!);
+        AssertCancellationTokenParameter(userLoginEventCleanupMethod!);
+        AssertCancellationTokenParameter(marketingAttributionCleanupMethod!);
+        AssertCancellationTokenParameter(fastingTelemetryCleanupMethod!);
+        AssertCancellationTokenParameter(userMethod!);
+    }
+
+    private static BillingRenewalJob CreateBillingRenewalJob() =>
+        new(
+            null!,
+            Options.Create(new BillingRenewalOptions()),
+            new JobExecutionObserver(new FixedDateTimeProvider(DateTime.UtcNow), new JobExecutionStateTracker()),
+            NullLogger<BillingRenewalJob>.Instance);
+
+    private static void AssertCancellationTokenParameter(MethodInfo method) {
+        ParameterInfo parameter = Assert.Single(method.GetParameters());
+
+        Assert.Equal(typeof(CancellationToken), parameter.ParameterType);
+        Assert.True(parameter.HasDefaultValue);
+    }
+
+    [Fact]
+    public async Task BillingRenewalJob_DispatchesProviderBatchAndCancellationThroughMediator() {
+        var capture = new RenewalRequestCapture();
+        await using ServiceProvider provider = CreateRenewalProvider(capture);
+        using var cancellation = new CancellationTokenSource();
+        var job = new BillingRenewalJob(provider.GetRequiredService<ISender>(),
+            Options.Create(new BillingRenewalOptions { Enabled = true, Provider = BillingProviderNames.YooKassa, BatchSize = 37 }),
+            new JobExecutionObserver(TimeProvider.System, new JobExecutionStateTracker()),
+            NullLogger<BillingRenewalJob>.Instance);
+
+        await job.Execute(cancellation.Token);
+
+        Assert.Equal(new RenewDueSubscriptionsCommand(BillingProviderNames.YooKassa, 37), capture.Request);
+        Assert.Equal(cancellation.Token, capture.CancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RenewalRequestCapture : IRequestHandler<RenewDueSubscriptionsCommand, BillingRenewalRunResult> {
+        public RenewDueSubscriptionsCommand? Request { get; private set; }
+        public CancellationToken CancellationToken { get; private set; }
+
+        public Task<BillingRenewalRunResult> Handle(RenewDueSubscriptionsCommand request, CancellationToken cancellationToken) {
+            Request = request;
+            CancellationToken = cancellationToken;
+            return Task.FromResult(new BillingRenewalRunResult(0, 0, 0));
+        }
+    }
+
+    private static ServiceProvider CreateRenewalProvider(IRequestHandler<RenewDueSubscriptionsCommand, BillingRenewalRunResult> handler) =>
+        new ServiceCollection()
+            .AddFoodDiaryMediator(_ => { })
+            .AddSingleton<IRequestHandler<RenewDueSubscriptionsCommand, BillingRenewalRunResult>>(handler)
+            .BuildServiceProvider();
+
+    private static RenewDueSubscriptionsCommandHandler CreateRenewDueSubscriptionsCommandHandlerWithoutGateways(DateTime utcNow) =>
+        new(
+            null!,
+            null!,
+            null!,
+            null!,
+            Array.Empty<IBillingRecurringProviderGateway>(),
+            null!,
+            new FixedDateTimeProvider(utcNow));
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
+    }
+
+    private static MeterListener CreateJobManagerListener(
+        string expectedJobName,
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onExecution,
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onDeletedItems,
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onProcessedItems = null,
+        Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration = null) {
+        var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (!string.Equals(instrument.Meter.Name, JobManagerMeterName, StringComparison.Ordinal)) {
+                return;
+            }
+
+            if (instrument.Name is "fooddiary.job.execution.events" or "fooddiary.job.deleted_items" or "fooddiary.job.processed_items" or "fooddiary.job.execution.duration") {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
+            if (!string.Equals(GetTagValue(tags, "fooddiary.job.name"), expectedJobName, StringComparison.Ordinal)) {
+                return;
+            }
+
+            if (string.Equals(instrument.Name, "fooddiary.job.execution.events", StringComparison.Ordinal)) {
+                onExecution?.Invoke(value, tags);
+            } else if (string.Equals(instrument.Name, "fooddiary.job.deleted_items", StringComparison.Ordinal)) {
+                onDeletedItems?.Invoke(value, tags);
+            } else if (string.Equals(instrument.Name, "fooddiary.job.processed_items", StringComparison.Ordinal)) {
+                onProcessedItems?.Invoke(value, tags);
+            }
+        });
+        listener.SetMeasurementEventCallback<double>((instrument, value, tags, _) => {
+            if (!string.Equals(GetTagValue(tags, "fooddiary.job.name"), expectedJobName, StringComparison.Ordinal)) {
+                return;
+            }
+
+            if (string.Equals(instrument.Name, "fooddiary.job.execution.duration", StringComparison.Ordinal)) {
+                onDuration?.Invoke(value, tags);
+            }
+        });
+        listener.Start();
+        return listener;
+    }
+
+    private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
+            if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
+                return tag.Value?.ToString();
+            }
+        }
+
+        return null;
+    }
+
+    private static void AssertExecutionPolicy(System.Reflection.MethodInfo method) {
+        AutomaticRetryAttribute? retry = method.GetCustomAttributes(typeof(AutomaticRetryAttribute), inherit: false)
+            .Cast<AutomaticRetryAttribute>()
+            .SingleOrDefault();
+        DisableConcurrentExecutionAttribute? concurrency = method.GetCustomAttributes(typeof(DisableConcurrentExecutionAttribute), inherit: false)
+            .Cast<DisableConcurrentExecutionAttribute>()
+            .SingleOrDefault();
+
+        Assert.NotNull(retry);
+        Assert.NotNull(concurrency);
+        Assert.Equal(RecurringJobExecutionPolicy.CleanupRetryAttempts, retry!.Attempts);
+        Assert.Equal(AttemptsExceededAction.Fail, retry.OnAttemptsExceeded);
+        Assert.Equal(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds, concurrency!.TimeoutSec);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingImageCleanupService(IEnumerable<int> results) : IRequestHandler<CleanupOrphanImagesCommand, int> {
+        private readonly Queue<int> _results = new(results);
+
+        public List<int> BatchSizes { get; } = [];
+        public List<DateTime> OlderThanValues { get; } = [];
+
+        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(global::FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new DeleteImageAssetResult(Deleted: false));
+
+        public Task<int> Handle(CleanupOrphanImagesCommand request, CancellationToken cancellationToken) {
+            DateTime olderThanUtc = request.OlderThanUtc;
+            int batchSize = request.BatchSize;
+            OlderThanValues.Add(olderThanUtc);
+            BatchSizes.Add(batchSize);
+            int value = _results.Count > 0 ? _results.Dequeue() : 0;
+            return Task.FromResult(value);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingUserCleanupService(IEnumerable<int> results) : IUserCleanupService {
+        private readonly Queue<int> _results = new(results);
+
+        public List<int> BatchSizes { get; } = [];
+        public List<DateTime> OlderThanValues { get; } = [];
+        public List<Guid?> ReassignUserIds { get; } = [];
+
+        public Task<int> CleanupDeletedUsersAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            Guid? reassignUserId,
+            CancellationToken cancellationToken = default) {
+            OlderThanValues.Add(olderThanUtc);
+            BatchSizes.Add(batchSize);
+            ReassignUserIds.Add(reassignUserId);
+            int value = _results.Count > 0 ? _results.Dequeue() : 0;
+            return Task.FromResult(value);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationCleanupService(IEnumerable<int> results) : IRequestHandler<CleanupExpiredNotificationsCommand, int> {
+        private readonly Queue<int> _results = new(results);
+
+        public List<NotificationCleanupPolicy> Policies { get; } = [];
+
+        public Task<int> Handle(CleanupExpiredNotificationsCommand request, CancellationToken cancellationToken) {
+            Policies.Add(request.Policy);
+            int value = _results.Count > 0 ? _results.Dequeue() : 0;
+            return Task.FromResult(value);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingImageObjectDeletionOutboxProcessor(int processed) : IImageObjectDeletionOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingImageObjectDeletionOutboxProcessor : IImageObjectDeletionOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("Image object deletion outbox processor failed.");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingEmailOutboxProcessor(int processed) : IEmailOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingEmailOutboxProcessor : IEmailOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("Email outbox processor failed.");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationWebPushOutboxProcessor(int processed) : INotificationWebPushOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingAchievementEvaluationOutboxProcessor(int processed) : IAchievementEvaluationOutboxProcessor {
+        public int? BatchSize { get; private set; }
+
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
+            BatchSize = batchSize;
+            return Task.FromResult(processed);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingAchievementEvaluationOutboxProcessor : IAchievementEvaluationOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("failure");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingNotificationWebPushOutboxProcessor : INotificationWebPushOutboxProcessor {
+        public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("Notification web-push outbox processor failed.");
+    }
+
+    private static BillingSubscription CreateSubscriptionSnapshot(
+        User user,
+        string provider,
+        string externalCustomerId,
+        string? externalSubscriptionId,
+        string? externalPaymentMethodId,
+        string status,
+        DateTime periodStartUtc,
+        DateTime periodEndUtc,
+        string eventId,
+        DateTime eventCreatedAtUtc) {
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            provider,
+            externalCustomerId,
+            "price_monthly",
+            "monthly");
+        subscription.ApplyProviderSnapshot(
+            provider,
+            externalSubscriptionId,
+            externalPaymentMethodId,
+            "price_monthly",
+            "monthly",
+            status,
+            periodStartUtc,
+            periodEndUtc,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
+            eventId,
+            eventCreatedAtUtc);
+        return subscription;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FakeUserRepository(params User[] users) : RequestTestSender, IUserRepository {
+        private readonly List<User> _users = [.. users];
+        private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
+
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user =>
+                IsAccessible(user) &&
+                string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)));
+
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user =>
+                string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)));
+
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user => IsAccessible(user) && user.Id == id));
+
+        public Task<Result<UserBillingProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            return Task.FromResult(user is null
+                ? Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken)
+                : Result.Success(ToBillingProfile(user)));
+        }
+
+        public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Result<UserBillingProfileModel> result = await GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+            return result.IsFailure ? result.Error : null;
+        }
+
+        public async Task<UserBillingProfileModel?> GetProfileIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
+            User? user = await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToBillingProfile(user);
+        }
+
+        public Task<Result<UserBillingProfileModel>> StartPremiumTrialAsync(
+            UserId userId,
+            DateTime startedAtUtc,
+            TimeSpan duration,
+            CancellationToken cancellationToken = default) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            if (user is null) {
+                return Task.FromResult(Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken));
+            }
+
+            user.StartPremiumTrial(startedAtUtc, duration);
+            return Task.FromResult(Result.Success(ToBillingProfile(user)));
+        }
+
+        public Task EnsurePremiumRoleAsync(UserId userId, CancellationToken cancellationToken = default) {
+            User user = _users.Single(candidate => candidate.Id == userId);
+            if (!user.HasRole(RoleNames.Premium)) {
+                user.ReplaceRoles([.. user.UserRoles.Select(userRole => userRole.Role), _premiumRole]);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task RemovePremiumRoleAsync(UserId userId, CancellationToken cancellationToken = default) {
+            User user = _users.Single(candidate => candidate.Id == userId);
+            if (user.HasRole(RoleNames.Premium)) {
+                user.ReplaceRoles([
+                    .. user.UserRoles
+                        .Select(userRole => userRole.Role)
+                        .Where(role => !string.Equals(role.Name, RoleNames.Premium, StringComparison.Ordinal)),
+                ]);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_users.FirstOrDefault(user => user.Id == id));
+
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(null);
+
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(
+            long telegramUserId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(null);
+
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
+            string? search,
+            int page,
+            int limit,
+            bool includeDeleted,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<(IReadOnlyList<User> Items, int TotalItems)>((_users, _users.Count));
+
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
+            GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
+            Task.FromResult((_users.Count, _users.Count, 0, 0, (IReadOnlyList<User>)[.. _users.Take(recentLimit)]));
+
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(
+            IReadOnlyList<string> names,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<Role> roles = names.Contains(RoleNames.Premium, StringComparer.Ordinal)
+                ? [_premiumRole]
+                : [];
+            return Task.FromResult(roles);
+        }
+
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
+            _users.Add(user);
+            return Task.FromResult(user);
+        }
+
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
+
+        private static UserBillingProfileModel ToBillingProfile(User user) =>
+            new(
+                user.Id,
+                user.Email,
+                user.IsActive,
+                user.DeletedAt is not null,
+                user.HasRole(RoleNames.Premium),
+                user.PremiumTrialStartedAtUtc,
+                user.PremiumTrialEndsAtUtc);
+
+        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            GetUserBillingProfileQuery r => (Task<TResponse>)(object)GetAccessibleProfileAsync(r.UserId, cancellationToken),
+            GetUserBillingProfileIncludingDeletedQuery r => (Task<TResponse>)(object)GetProfileIncludingDeletedAsync(r.UserId, cancellationToken),
+            StartUserPremiumTrialCommand r => (Task<TResponse>)(object)StartPremiumTrialAsync(r.UserId, r.StartedAtUtc, r.Duration, cancellationToken),
+            EnsureUserPremiumRoleCommand r => (Task<TResponse>)(object)AsUnitAsync(EnsurePremiumRoleAsync(r.UserId, cancellationToken)),
+            RemoveUserPremiumRoleCommand r => (Task<TResponse>)(object)AsUnitAsync(RemovePremiumRoleAsync(r.UserId, cancellationToken)),
+            CheckUserAccessQuery r => (Task<TResponse>)(object)EnsureCanAccessAsync(r.UserId, cancellationToken),
+            _ => throw new InvalidOperationException(request.GetType().Name),
+        };
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryBillingSubscriptionRepository(params BillingSubscription[] subscriptions)
+        : IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
+        public List<BillingSubscription> Subscriptions { get; } = [.. subscriptions];
+
+        public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription => subscription.UserId == userId));
+        public Task<BillingSubscriptionOverviewReadModel?> GetOverviewReadModelByUserIdAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            BillingSubscription? subscription = Subscriptions.FirstOrDefault(subscription => subscription.UserId == userId);
+            return Task.FromResult(subscription is null
+                ? null
+                : new BillingSubscriptionOverviewReadModel(
+                    subscription.Id,
+                    subscription.UserId.Value,
+                    subscription.Provider,
+                    subscription.ExternalCustomerId,
+                    subscription.Plan,
+                    subscription.Status,
+                    subscription.CurrentPeriodStartUtc,
+                    subscription.CurrentPeriodEndUtc,
+                    subscription.CancelAtPeriodEnd,
+                    subscription.NextBillingAttemptUtc));
+        }
+
+        public Task<BillingSubscription?> GetByExternalCustomerIdAsync(
+            string provider,
+            string externalCustomerId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription =>
+                string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(subscription.ExternalCustomerId, externalCustomerId, StringComparison.Ordinal)));
+
+        public Task<BillingSubscription?> GetByExternalSubscriptionIdAsync(
+            string provider,
+            string externalSubscriptionId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription =>
+                string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(subscription.ExternalSubscriptionId, externalSubscriptionId, StringComparison.Ordinal)));
+
+        public Task<BillingSubscription?> GetByExternalPaymentMethodIdAsync(
+            string provider,
+            string externalPaymentMethodId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Subscriptions.FirstOrDefault(subscription =>
+                string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(subscription.ExternalPaymentMethodId, externalPaymentMethodId, StringComparison.Ordinal)));
+
+        public Task<IReadOnlyList<BillingSubscription>> GetDueForRenewalAsync(
+            string provider,
+            DateTime dueAtUtc,
+            int limit,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<BillingSubscription> dueSubscriptions = Subscriptions
+                .Where(subscription =>
+                    string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                    subscription.NextBillingAttemptUtc.HasValue &&
+                    subscription.NextBillingAttemptUtc <= dueAtUtc)
+                .Take(limit)
+                .ToList();
+            return Task.FromResult(dueSubscriptions);
+        }
+
+        public Task<BillingSubscription> AddAsync(
+            BillingSubscription subscription,
+            CancellationToken cancellationToken = default) {
+            Subscriptions.Add(subscription);
+            return Task.FromResult(subscription);
+        }
+
+        public Task UpdateAsync(BillingSubscription subscription, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingBillingPaymentRepository : IBillingPaymentReadRepository, IBillingPaymentWriteRepository {
+        public List<BillingPayment> Payments { get; } = [];
+
+        public Task<BillingPayment?> GetByExternalPaymentIdAsync(
+            string provider,
+            string externalPaymentId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Payments.FirstOrDefault(payment =>
+                string.Equals(payment.Provider, provider, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(payment.ExternalPaymentId, externalPaymentId, StringComparison.Ordinal)));
+
+        public Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
+            Payments.Add(payment);
+            return Task.FromResult(payment);
+        }
+
+        public Task UpdateAsync(BillingPayment payment, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FakeRecurringBillingGateway(
+        string provider,
+        BillingRecurringPaymentModel renewal)
+        : IBillingRecurringProviderGateway {
+        public string Provider { get; } = provider;
+
+        public Task<Result<BillingRecurringPaymentModel>> GetRecurringPaymentAsync(string paymentId,
+            BillingRecurringPaymentRequestModel request, CancellationToken cancellationToken = default) =>
+            CreateRecurringPaymentAsync(request, cancellationToken);
+
+        public Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
+            BillingRecurringPaymentRequestModel request,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Result.Success(renewal));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NoOpBillingTransactionRunner : IBillingTransactionRunner {
+        public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
+            operation(cancellationToken);
+
+        public Task ExecuteSerializedAsync(
+            string serializationKey,
+            Func<CancellationToken, Task> operation,
+            CancellationToken cancellationToken = default) =>
+            operation(cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingUserCleanupService : IUserCleanupService {
+        public Task<int> CleanupDeletedUsersAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            Guid? reassignUserId,
+            CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("cleanup failed");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingNotificationCleanupService : IRequestHandler<CleanupExpiredNotificationsCommand, int> {
+        public Task<int> Handle(CleanupExpiredNotificationsCommand request, CancellationToken cancellationToken) =>
+            throw new InvalidOperationException("notification cleanup failed");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private static RecurringJobsHostedService CreateRecurringJobsHostedService(
+        IRecurringJobManager recurringJobManager,
+        IRecurringJobRegistrationVerifier verifier) =>
+        new(
+            recurringJobManager,
+            verifier,
+            Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
+            Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
+            Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new EmailOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new NotificationCleanupOptions {
+                TransientTypes = ["Test"],
+                Cron = "15 4 * * *",
+            }),
+            Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
+            Options.Create(new MarketingAttributionCleanupOptions { Cron = "30 3 * * *" }),
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
+            Options.Create(new ClientTaskReminderOptions { Cron = "0 * * * *" }),
+            Options.Create(new WeeklyGoalReminderOptions { Cron = "0 * * * *" }),
+            NullLogger<RecurringJobsHostedService>.Instance);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingRecurringJobManager(string? transientLockJobId = null) : IRecurringJobManager {
+        private bool _shouldTimeout = transientLockJobId is not null;
+
+        public List<string> JobIds { get; } = [];
+        public Dictionary<string, int> RegistrationAttempts { get; } = [];
+
+        public void AddOrUpdate(string recurringJobId, Job job, string cronExpression, RecurringJobOptions options) {
+            RegistrationAttempts[recurringJobId] = RegistrationAttempts.GetValueOrDefault(recurringJobId) + 1;
+
+            if (_shouldTimeout && string.Equals(recurringJobId, transientLockJobId, StringComparison.Ordinal)) {
+                _shouldTimeout = false;
+                throw new DistributedLockTimeoutException(recurringJobId);
+            }
+
+            JobIds.Add(recurringJobId);
+        }
+
+        public void Trigger(string recurringJobId) => throw new NotSupportedException();
+
+        public void RemoveIfExists(string recurringJobId) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingRecurringJobRegistrationVerifier : IRecurringJobRegistrationVerifier {
+        public List<string> ExpectedJobIds { get; } = [];
+
+        public void EnsureRegistered(IReadOnlyCollection<string> expectedJobIds) {
+            ExpectedJobIds.AddRange(expectedJobIds);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingRecurringJobRegistrationVerifier : IRecurringJobRegistrationVerifier {
+        public void EnsureRegistered(IReadOnlyCollection<string> expectedJobIds) {
+            throw new InvalidOperationException("verification failed");
+        }
+    }
+}

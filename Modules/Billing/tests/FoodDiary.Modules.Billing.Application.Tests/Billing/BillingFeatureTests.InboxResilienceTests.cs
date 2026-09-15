@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfileIncludingDeleted;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;

@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Commands.EnsureUserPremiumRole;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Users.Commands.EnsureUserPremiumRole;
+namespace FoodDiary.Modules.Users.Application.Commands.EnsureUserPremiumRole;
 
 public sealed class EnsureUserPremiumRoleCommandHandler(IUserRoleMembershipService roleMembershipService) : IRequestHandler<EnsureUserPremiumRoleCommand, Unit> {
     public async Task<Unit> Handle(EnsureUserPremiumRoleCommand request, CancellationToken cancellationToken) {

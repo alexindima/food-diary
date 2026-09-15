@@ -17,7 +17,7 @@ using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Commands.CreateProduct;
 using FoodDiary.Modules.Products.Application.Commands.UpdateProduct;
 
@@ -28,8 +28,8 @@ using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Services;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Application.Models;
 
 namespace FoodDiary.Modules.Products.Application.Tests.CentralRelocated;

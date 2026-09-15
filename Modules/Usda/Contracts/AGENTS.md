@@ -1,13 +1,5 @@
-# USDA Contracts
+# USDA consumer contracts
 
-Own stable USDA read DTOs and the cross-module capabilities for food search,
-local suggestions, product linking and meal nutrition input. Preserve CLR namespaces,
-method signatures, result errors and cancellation behavior. Depend only on Results
-and scalar Products/Users Domain.Contracts; never reference aggregates or storage.
+SearchUsdaFoodsQuery is the shared combined local/provider search use case. Its handler belongs to Application; Products dispatches it through ISender and maps the result to suggestions. Do not restore IUsdaProductSuggestionReadService or duplicate fallback search in consumers.
 
-USDA supplies food search and suggestion services. Products implements
-IUsdaProductLinkService and retains ownership/access checks and aggregate writes.
-Meals implements IUsdaMealNutritionReadService through its read repository.
-These consumer-owned integration ports belong here so suppliers need not acquire
-USDA repositories. Provider HTTP/options/cache implementations remain Infrastructure;
-USDA repositories and the internal daily-summary service stay in Abstractions.
+IUsdaFoodSearchService remains the external provider port. IUsdaProductLinkService is implemented by Products; IUsdaMealNutritionReadService by Meals. Preserve owner access, errors, cancellation and caller-owned writes. Expose no aggregates, repositories or provider SDK types. Use canonical project/folder namespaces.

@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Application.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
 
-namespace FoodDiary.Application.Users.Services;
+namespace FoodDiary.Modules.Users.Application.Services;
 
 internal sealed class UserIdentityMutationService(
     IUserWriteRepository userWriteRepository,

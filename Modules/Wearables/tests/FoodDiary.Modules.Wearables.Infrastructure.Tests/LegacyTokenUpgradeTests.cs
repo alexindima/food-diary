@@ -1,18 +1,18 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Wearables.Common;
-using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Commands.SyncWearableData;
-using FoodDiary.Domain.Entities.Wearables;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Models;
+using FoodDiary.Modules.Wearables.Application.Commands.SyncWearableData;
+using FoodDiary.Modules.Wearables.Domain.Entities;
+using FoodDiary.Modules.Wearables.Domain.Enums;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Wearables;
+using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Tests;
+namespace FoodDiary.Modules.Wearables.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class LegacyTokenUpgradeTests {
