@@ -1,8 +1,8 @@
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.ContentReports.Common;
+namespace FoodDiary.Modules.ContentReports.Application.Common;
 
-public static class ContentReportErrors {
+internal static class ContentReportErrors {
     public static Error NotFound(Guid id) => new(
         "ContentReport.NotFound",
         $"Content report with ID {id} was not found.",

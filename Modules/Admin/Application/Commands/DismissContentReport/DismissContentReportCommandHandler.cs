@@ -1,5 +1,6 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
-using OwnerDismissContentReportCommand = FoodDiary.Application.ContentReports.Commands.DismissContentReport.DismissContentReportCommand;
+using OwnerDismissContentReportCommand = FoodDiary.Modules.ContentReports.Contracts.Commands.DismissContentReport.DismissContentReportCommand;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects.Ids;

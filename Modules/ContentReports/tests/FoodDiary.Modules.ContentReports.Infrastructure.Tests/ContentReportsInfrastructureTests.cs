@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

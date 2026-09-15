@@ -1,25 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.ContentReports.Infrastructure</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.ContentReports.Infrastructure</RootNamespace>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Npgsql" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>

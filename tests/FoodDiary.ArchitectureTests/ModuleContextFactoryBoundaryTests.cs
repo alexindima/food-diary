@@ -28,6 +28,8 @@ public sealed class ModuleContextFactoryBoundaryTests {
     [InlineData("RecentItems")]
     [InlineData("Products")]
     [InlineData("Recipes")]
+    [InlineData("Users")]
+    [InlineData("Dietologist")]
     public void CoordinatedAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
         string project = $"FoodDiary.Modules.{module}.Infrastructure";
@@ -115,5 +117,14 @@ public sealed class ModuleContextFactoryBoundaryTests {
         Assert.Contains("GetRequiredService<IIndependentModuleContextOptionsFactory>()", source, StringComparison.Ordinal);
         Assert.Contains(".CreateOptions<AiDbContext>()", source, StringComparison.Ordinal);
         Assert.Contains(".CreateModuleContext<AiDbContext>", source, StringComparison.Ordinal);
+    }
+    [Theory]
+    [InlineData("Users", "Users/UserCleanupService.cs")]
+    [InlineData("Dietologist", "Interceptors/CollaborationAuditInterceptor.cs")]
+    public void LifecycleAndAuditBridges_DoNotAccessConcreteSharedContext(string module, string relativePath) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", module, "Infrastructure", "Persistence", relativePath));
+        IEnumerable<IdentifierNameSyntax> identifiers = CSharpSyntaxTree.ParseText(source).GetRoot()
+            .DescendantNodes().OfType<IdentifierNameSyntax>();
+        Assert.DoesNotContain(identifiers, identifier => identifier.Identifier.ValueText is "FoodDiaryDbContext" or "SharedTransactionBoundary");
     }
 }

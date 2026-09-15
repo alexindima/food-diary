@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.ContentReports.Requests;
+namespace FoodDiary.Modules.ContentReports.Presentation.Requests;
 
 public sealed record CreateContentReportHttpRequest(
     string TargetType,

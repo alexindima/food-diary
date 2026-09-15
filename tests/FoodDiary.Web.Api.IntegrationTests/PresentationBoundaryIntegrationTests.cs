@@ -31,7 +31,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
-public sealed class PresentationBoundaryIntegrationTests(
+public sealed partial class PresentationBoundaryIntegrationTests(
     ApiWebApplicationFactory apiFactory,
     TestAuthApiWebApplicationFactory testAuthFactory)
     : IClassFixture<ApiWebApplicationFactory>, IClassFixture<TestAuthApiWebApplicationFactory> {

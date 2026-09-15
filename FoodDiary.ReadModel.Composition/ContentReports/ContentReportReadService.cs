@@ -1,9 +1,9 @@
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Contracts.Models;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Application.ContentReports.Models;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Social;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

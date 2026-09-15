@@ -186,12 +186,12 @@
   </Folder>
   <Folder Name="/Modules/ContentReports/">
     <Project Path="Modules/ContentReports/Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj" />
-    <Project Path="Modules/ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
+    <Project Path="Modules/ContentReports/Application.Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <Project Path="Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />
     <Project Path="Modules/ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />
     <Project Path="Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <Project Path="Modules/ContentReports/Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
-    <Project Path="Modules/ContentReports/Infrastructure/Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
+    <Project Path="Modules/ContentReports/PersistenceModel/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
     <Project Path="Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/ContentReports/tests/">

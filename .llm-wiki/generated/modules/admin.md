@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Ai, Audit, Authentication, Email, Lessons, Users
+- Abstraction-contract dependencies: Ai, Audit, Authentication, ContentReports, Email, Lessons, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -103,6 +103,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ContentReportDispatchTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/CreateAdminUserCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ExchangeAdminImpersonationTests.cs`
@@ -119,7 +120,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/BugAcknowledgementReceiptIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs`
-- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Authentication/AdminImpersonationHandoffServiceTests.cs`
 
 ## Working Rule
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1589,
+    "productionProjectEdges": 1587,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -14,7 +14,7 @@
     "routedStandaloneComponents": 62,
     "componentsWithoutDirectSpecs": 145,
     "criticalSymbolsWithoutTestReferences": 31,
-    "explicitDebtMarkers": 11
+    "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
   "unusedProjectAllowances": [],
@@ -5501,11 +5501,6 @@
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
-    },
-    {
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 12,
-      "marker": "#pragma warning disable"
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",

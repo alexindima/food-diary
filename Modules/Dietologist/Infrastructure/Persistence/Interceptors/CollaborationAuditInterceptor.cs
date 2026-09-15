@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence.Audit;
@@ -31,10 +32,10 @@ internal sealed class CollaborationAuditInterceptor(TimeProvider timeProvider) :
             return;
         }
 
-        DbContext[] sources = context is FoodDiaryDbContext shared
-            ? [context, .. shared.ModuleContexts.OfType<DietologistDbContext>()]
-            : [context];
-        if (sources.Skip(1).Any(source => source.ChangeTracker.HasChanges()) && !context.Database.IsRelational()) {
+        IReadOnlyList<EntityEntry> ownerEntries = context is IModuleChangeTrackerSource source
+            ? source.GetModuleEntries<DietologistDbContext>()
+            : [];
+        if (ownerEntries.Any(entry => entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted) && !context.Database.IsRelational()) {
             throw new InvalidOperationException("Atomic collaboration audit requires a relational provider.");
         }
         foreach (object entity in _pendingEntries.Where(pair => context.Entry(pair.Value).State != EntityState.Added)
@@ -42,7 +43,7 @@ internal sealed class CollaborationAuditInterceptor(TimeProvider timeProvider) :
             _pendingEntries.Remove(entity);
         }
         DateTime timestamp = timeProvider.GetUtcNow().UtcDateTime;
-        foreach (EntityEntry change in sources.SelectMany(source => source.ChangeTracker.Entries()).ToArray()) {
+        foreach (EntityEntry change in context.ChangeTracker.Entries().Concat(ownerEntries).ToArray()) {
             AuditEntry? entry = CreateEntry(change, timestamp);
             if (entry is null) {
                 continue;

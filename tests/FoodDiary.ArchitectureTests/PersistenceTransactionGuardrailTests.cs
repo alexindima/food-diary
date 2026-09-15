@@ -26,6 +26,8 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiDbContext.cs"),
             // Framework save override translates exact provider conflicts; the shared unit of work still owns completion.
             ArchitectureTestPaths.FromRoot("Modules", "BodyMetrics", "Infrastructure", "Persistence", "BodyMetricsDbContext.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Infrastructure", "Persistence", "ContentReportsDbContext.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Infrastructure", "Persistence", "ContentReportsDbContext.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetCleanupBatch.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "FoodDiaryDbContext.Modules.cs"),
@@ -36,7 +38,6 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "Outbox", "OutboxMessageClaimer.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxDeadLetterReplayService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
-            ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
 
@@ -64,7 +65,6 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(infrastructureRoot, "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
-            ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
         string[] forbiddenPatterns = [

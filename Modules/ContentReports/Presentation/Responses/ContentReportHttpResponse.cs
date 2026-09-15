@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.ContentReports.Responses;
+namespace FoodDiary.Modules.ContentReports.Presentation.Responses;
 
 public sealed record ContentReportHttpResponse(
     Guid Id,

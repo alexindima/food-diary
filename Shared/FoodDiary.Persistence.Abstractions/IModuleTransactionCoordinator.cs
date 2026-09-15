@@ -8,6 +8,15 @@ public interface IModuleTransactionCoordinator {
     DbTransaction? CurrentTransaction { get; }
 
     /// <summary>
+    /// Runs one independently committed batch item with whole-attempt retries and shared tracker reset.
+    /// A true result always saves the unit of work; false commits without saving (an ineligible item).
+    /// Preserves the batch boundary's existing policy of leaving post-commit actions untouched.
+    /// </summary>
+    Task<bool> ExecuteItemAsync(
+        Func<DbTransaction, CancellationToken, Task<bool>> operation,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Requires a clean scope. Retries reset tracked changes and post-commit actions; a failed Result rolls back.
     /// The operation may use the transaction for owner SQL but must not commit or dispose it.
     /// Saving and transaction completion remain owned by the shared coordinator.

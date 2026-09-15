@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using System.Data.Common;
+using FoodDiary.Persistence.Abstractions;
+using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
@@ -18,13 +19,13 @@ public sealed class UserCleanupServiceTests {
         IUserDataPurgeParticipant[] participants = duplicate
             ? [Substitute.For<IUserDataPurgeParticipant>(), Substitute.For<IUserDataPurgeParticipant>()] : [];
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() =>
-            new UserCleanupService(dbContext: null!, participants, NullLogger<UserCleanupService>.Instance, unitOfWork: Substitute.For<IUnitOfWork>()));
+            new UserCleanupService(dbContext: null!, participants, NullLogger<UserCleanupService>.Instance, transactionCoordinator: Substitute.For<IModuleTransactionCoordinator>(), scopeGuard: Substitute.For<IModuleScopeGuard>()));
         Assert.Contains("unique ordering", error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task CleanupDeletedUsersAsync_WithNonPositiveBatchSize_Throws() {
-        var service = new UserCleanupService(dbContext: null!, participants: [Substitute.For<IUserDataPurgeParticipant>()], logger: NullLogger<UserCleanupService>.Instance, unitOfWork: Substitute.For<IUnitOfWork>());
+        var service = new UserCleanupService(dbContext: null!, participants: [Substitute.For<IUserDataPurgeParticipant>()], logger: NullLogger<UserCleanupService>.Instance, transactionCoordinator: Substitute.For<IModuleTransactionCoordinator>(), scopeGuard: Substitute.For<IModuleScopeGuard>());
 
         ArgumentOutOfRangeException ex = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             service.CleanupDeletedUsersAsync(DateTime.UtcNow, 0, reassignUserId: null, CancellationToken.None));
@@ -34,12 +35,16 @@ public sealed class UserCleanupServiceTests {
 
     [Fact]
     public async Task CleanupDeletedUsersAsync_WhenCleanupUserFails_ContinuesAndReturnsZeroRemoved() {
-        await using FoodDiaryDbContext context = CreateInMemoryContext();
+        await using UsersDbContext context = CreateInMemoryContext();
         var deletedUser = User.Create("deleted@example.com", "hash");
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
         context.Users.Add(deletedUser);
         await context.SaveChangesAsync();
-        var service = new UserCleanupService(context, [Substitute.For<IUserDataPurgeParticipant>()], NullLogger<UserCleanupService>.Instance, unitOfWork: Substitute.For<IUnitOfWork>());
+        IModuleTransactionCoordinator coordinator = Substitute.For<IModuleTransactionCoordinator>();
+        coordinator.ExecuteItemAsync(Arg.Any<Func<DbTransaction, CancellationToken, Task<bool>>>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<bool>(new InvalidOperationException("Injected item failure.")));
+        var service = new UserCleanupService(context, [Substitute.For<IUserDataPurgeParticipant>()], NullLogger<UserCleanupService>.Instance,
+            coordinator, Substitute.For<IModuleScopeGuard>());
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -62,12 +67,12 @@ public sealed class UserCleanupServiceTests {
         Assert.Equal(unspecified, DateTime.SpecifyKind(normalizedUnspecified, DateTimeKind.Unspecified));
     }
 
-    private static FoodDiaryDbContext CreateInMemoryContext() {
-        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+    private static UsersDbContext CreateInMemoryContext() {
+        DbContextOptions<UsersDbContext> options = new DbContextOptionsBuilder<UsersDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
 
-        return new FoodDiaryDbContext(options);
+        return new UsersDbContext(options);
     }
 
     private static T InvokePrivateStatic<T>(string methodName, params object[] args) {

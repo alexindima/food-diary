@@ -135,12 +135,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.images.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.meals.contracts": {
         "type": "Project",
         "dependencies": {
@@ -150,17 +144,6 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.meals.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
-          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.meals.domain.contracts": {
         "type": "Project",
         "dependencies": {
@@ -168,12 +151,6 @@
         }
       },
       "fooddiary.modules.products.domain.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.recipes.domain.contracts": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )"

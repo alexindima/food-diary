@@ -74,7 +74,7 @@
         "tracked:ContentReport"
       ],
       "reason": "Registers only owned reports with the shared connection and unit of work; host registers composed readers.",
-      "technicalSourceSha256": "c17ab2d3411275b6354cdf0adb654454fea92f5532b237c9b3796e539e24e1be"
+      "technicalSourceSha256": "c8c5a96d2c1d8bdcae7a3e494e6114b1d67a64358b7ef5f50ee32014ce1ea105"
     },
     "FoodDiary.ReadModel.Composition/ContentReports/ContentReportReadService.cs": {
       "module": "ReadModelComposition",
@@ -543,13 +543,12 @@
         "context:ChangeTracker",
         "context:Database",
         "context:Entry",
-        "context:ModuleContexts",
         "entity:AuditEntry",
         "tracked:AuditEntry",
         "write:AuditEntry"
       ],
-      "reason": "Audits central and registered Dietologist tracker changes into central storage before coordinated owner saves; pending entries are reused across failed persistence attempts.",
-      "technicalSourceSha256": "fa42705fdb131c2ef2c3ea070959717f89e03c15b69f0f9efbc819e803999eff"
+      "reason": "Dietologist audits central and typed owner entries through IModuleChangeTrackerSource, without concrete shared context access. Central audit storage, relational guard, timing and pending event deduplication remain unchanged.",
+      "technicalSourceSha256": "adf9f4b0d42c873fe25b2e20b599a7eab75d5cef8b1a476099baffa71b2155aa"
     },
     "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs": {
       "module": "Dietologist",
@@ -1187,8 +1186,9 @@
     "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs": {
       "module": "Users",
       "capabilities": [
-        "context:ChangeTracker",
+        "context:CurrentTransaction",
         "context:Database",
+        "context:ExecuteItemAsync",
         "entity:User",
         "entity:UserRole",
         "tracked:User",
@@ -1196,8 +1196,8 @@
         "write:User",
         "write:UserRole"
       ],
-      "reason": "Users lifecycle coordinator locks eligibility, invokes ordered owner purge participants, deletes only User/UserRole rows and commits once per account. Owner adapters govern foreign data lifecycle. Reject pending caller state; reset the central and all registered module trackers through SharedTransactionBoundary before retry attempts and after failed accounts so rolled-back outbox additions cannot leak into later commits.",
-      "technicalSourceSha256": "74f80a411087b0641e80107bdf402ce8dae36db9dee7df046f084032d8444d32"
+      "reason": "Users owner context executes eligibility SQL, profile unlink and User/UserRole deletion. The shared item coordinator owns per-account retries, unconditional successful UoW save, commit and all-owner tracker reset. Ordered owner participants never save. Scope guard rejects pending caller state; post-commit actions retain their existing untouched policy.",
+      "technicalSourceSha256": "5f4cb65a8db0ded6f61a3b1d1cd96be405473d55fc823c469f19326ca4588799"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",
@@ -1680,6 +1680,14 @@
       ],
       "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
       "technicalSourceSha256": "6fb450e73966150dd2092cce660c5b7b3e9b82397ffa2bbb0e2501a9cac1d580"
+    },
+    "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
+      "module": "ContentReports",
+      "capabilities": [
+        "context:SaveChangesAsync"
+      ],
+      "reason": "Owner context delegates saving to EF and translates only the public ContentReports UserId/TargetType/TargetId unique constraint into a concurrency conflict. No retry or independent commit; caller unit of work retains rollback ownership.",
+      "technicalSourceSha256": "2f7d77fbe79715f49f029ee58244307ff895e07a03403b2998f5daf7c7827635"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs": {
       "module": "BodyMetrics",

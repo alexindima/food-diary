@@ -3,11 +3,11 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ContentReportsModuleExtractionTests {
     [Theory]
-    [InlineData(typeof(FoodDiary.Domain.Enums.ReportStatus))]
-    [InlineData(typeof(FoodDiary.Domain.Enums.ReportTargetType))]
+    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus))]
+    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType))]
     public void ReportEnums_AreOwnedOnlyByContentReportsDomainContracts(Type enumType) {
         Assert.Equal("FoodDiary.Modules.ContentReports.Domain.Contracts", enumType.Assembly.GetName().Name);
-        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.Equal("FoodDiary.Modules.ContentReports.Domain.Contracts.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Domain.Contracts", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
@@ -25,7 +25,7 @@ public sealed class ContentReportsModuleExtractionTests {
     public void ExtractedContentReportsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.ContentReports.Application.Abstractions", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.ContentReports.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.ContentReports.Application.Abstractions", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.ContentReports.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], references);
     }
 
     [Theory]

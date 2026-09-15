@@ -1,8 +1,8 @@
-using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Contracts.Models;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.ContentReports.Queries.GetContentReportsForAdministration;
+namespace FoodDiary.Modules.ContentReports.Contracts.Queries.GetContentReportsForAdministration;
 
 public sealed record GetContentReportsForAdministrationQuery(
     ReportStatus? Status,

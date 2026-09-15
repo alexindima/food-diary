@@ -2199,7 +2199,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ShoppingListItemSources");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Social.ContentReport", b => {
+            modelBuilder.Entity("FoodDiary.Modules.ContentReports.Domain.Entities.ContentReport", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -5147,7 +5147,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("ShoppingListItem");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Social.ContentReport", b => {
+            modelBuilder.Entity("FoodDiary.Modules.ContentReports.Domain.Entities.ContentReport", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")

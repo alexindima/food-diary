@@ -59,11 +59,11 @@ COPY Modules/Lessons/Application/Abstractions/*.csproj Modules/Lessons/Applicati
 COPY Modules/Lessons/Application/*.csproj Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/*.csproj Modules/Lessons/Infrastructure/
 COPY Modules/Lessons/Infrastructure/Model/*.csproj Modules/Lessons/Infrastructure/Model/
-COPY Modules/ContentReports/Application/Abstractions/*.csproj Modules/ContentReports/Application/Abstractions/
+COPY Modules/ContentReports/Application.Abstractions/*.csproj Modules/ContentReports/Application.Abstractions/
 COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Domain.Contracts/*.csproj Modules/ContentReports/Domain.Contracts/
 COPY Modules/ContentReports/Contracts/*.csproj Modules/ContentReports/Contracts/
-COPY Modules/ContentReports/Infrastructure/Model/*.csproj Modules/ContentReports/Infrastructure/Model/
+COPY Modules/ContentReports/PersistenceModel/*.csproj Modules/ContentReports/PersistenceModel/
 COPY Modules/Favorites/Application/*.csproj Modules/Favorites/Application/
 COPY Modules/Favorites/Application/Abstractions/*.csproj Modules/Favorites/Application/Abstractions/
 COPY Modules/Favorites/Contracts/*.csproj Modules/Favorites/Contracts/
@@ -281,11 +281,11 @@ COPY Modules/Lessons/Application/Abstractions/ Modules/Lessons/Application/Abstr
 COPY Modules/Lessons/Application/ Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/ Modules/Lessons/Infrastructure/
 COPY Modules/Lessons/Infrastructure/Model/ Modules/Lessons/Infrastructure/Model/
-COPY Modules/ContentReports/Application/Abstractions/ Modules/ContentReports/Application/Abstractions/
+COPY Modules/ContentReports/Application.Abstractions/ Modules/ContentReports/Application.Abstractions/
 COPY Modules/ContentReports/Domain/ Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Domain.Contracts/ Modules/ContentReports/Domain.Contracts/
 COPY Modules/ContentReports/Contracts/ Modules/ContentReports/Contracts/
-COPY Modules/ContentReports/Infrastructure/Model/ Modules/ContentReports/Infrastructure/Model/
+COPY Modules/ContentReports/PersistenceModel/ Modules/ContentReports/PersistenceModel/
 COPY Modules/Favorites/ Modules/Favorites/
 COPY Modules/Favorites/Application/ Modules/Favorites/Application/
 COPY Modules/Favorites/Application/Abstractions/ Modules/Favorites/Application/Abstractions/

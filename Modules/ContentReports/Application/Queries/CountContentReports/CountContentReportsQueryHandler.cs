@@ -1,13 +1,10 @@
-using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.ContentReports.Queries.CountContentReports;
+namespace FoodDiary.Modules.ContentReports.Application.Queries.CountContentReports;
 
 public sealed class CountContentReportsQueryHandler(IContentReportReadModelRepository readModelRepository) : IRequestHandler<CountContentReportsQuery, int> {
-    public Task<int> Handle(CountContentReportsQuery request, CancellationToken cancellationToken) {
-        ReportStatus status = request.Status;
-        return readModelRepository.CountByStatusAsync(status, cancellationToken);
-    }
-
+    public Task<int> Handle(CountContentReportsQuery request, CancellationToken cancellationToken) =>
+        readModelRepository.CountByStatusAsync(request.Status, cancellationToken);
 }

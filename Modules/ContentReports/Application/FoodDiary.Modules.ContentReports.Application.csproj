@@ -1,15 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Application.ContentReports</AssemblyName>
-    <RootNamespace>FoodDiary.Application.ContentReports</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Abstractions/**/*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
@@ -17,6 +9,7 @@
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
   </ItemGroup>
 
   <ItemGroup>

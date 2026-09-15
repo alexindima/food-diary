@@ -32,8 +32,8 @@ public sealed class ProjectFileConventionTests {
 
     [Fact]
     public void ProjectGroups_UseMultilineLayoutAndBlankLineSeparators() {
-        string[] violations = [.. Directory
-            .GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
+        string[] violations = [.. RepositoryFileDiscovery
+            .EnumerateFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj")
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .SelectMany(FindGroupLayoutViolations)
             .Order(StringComparer.Ordinal)];
@@ -75,8 +75,8 @@ public sealed class ProjectFileConventionTests {
 
     [Fact]
     public void ItemGroups_DoNotMixReferenceTypes() {
-        string[] violations = [.. Directory
-            .GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
+        string[] violations = [.. RepositoryFileDiscovery
+            .EnumerateFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj")
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .SelectMany(FindMixedReferenceGroups)
             .Order(StringComparer.Ordinal)];
@@ -108,8 +108,8 @@ public sealed class ProjectFileConventionTests {
 
     [Fact]
     public void UnconditionalProjectReferences_AreGroupedInSingleItemGroup() {
-        string[] violations = [.. Directory
-            .GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
+        string[] violations = [.. RepositoryFileDiscovery
+            .EnumerateFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj")
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .Where(static path => !path.Contains(
                 $"{Path.DirectorySeparatorChar}.llm-wiki{Path.DirectorySeparatorChar}tools{Path.DirectorySeparatorChar}",
@@ -125,8 +125,8 @@ public sealed class ProjectFileConventionTests {
 
     [Fact]
     public void ItemGroups_AreNotEmpty() {
-        string[] violations = [.. Directory
-            .GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
+        string[] violations = [.. RepositoryFileDiscovery
+            .EnumerateFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj")
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .Where(static path => !path.Contains(
                 $"{Path.DirectorySeparatorChar}.llm-wiki{Path.DirectorySeparatorChar}tools{Path.DirectorySeparatorChar}",

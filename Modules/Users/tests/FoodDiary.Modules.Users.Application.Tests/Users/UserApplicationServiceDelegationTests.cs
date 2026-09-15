@@ -1,10 +1,10 @@
+using FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports;
 using FoodDiary.Testing;
 using FoodDiary.Application.Users.Queries.GetFilteredUsersForAdministration;
 using FoodDiary.Application.Users.Queries.GetUserAdministrationSummary;
 using FoodDiary.Application.Users.Queries.GetUserForAdministration;
 using FoodDiary.Application.Users.Queries.GetUsersForAdministration;
 using FoodDiary.Mediator;
-using FoodDiary.Application.ContentReports.Queries.CountContentReports;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserForAdministration;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUsersForAdministration;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -67,8 +67,8 @@ public sealed class UserApplicationServiceDelegationTests {
         UserAdminReadModel? byId = await service.Send(new GetUserForAdministrationQuery(UserId: userId), cancellationTokenSource.Token);
         (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await service.Send(new GetUsersForAdministrationQuery(Search: "adm", Page: 2, Limit: 5, Status: UserAccountStatusFilter.Deleted), cancellationTokenSource.Token);
         ISender reports = Substitute.For<ISender>();
-        reports.Send(new CountContentReportsQuery(Status: FoodDiary.Domain.Enums.ReportStatus.Pending), cancellationTokenSource.Token).Returns(4);
-        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(RequestTestSender.Route((service, [typeof(global::FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (reports, [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)])))
+        reports.Send(new CountContentReportsQuery(Status: FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus.Pending), cancellationTokenSource.Token).Returns(4);
+        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(RequestTestSender.Route((service, [typeof(global::FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (reports, [typeof(global::FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports.CountContentReportsQuery)])))
             .GetSummaryAsync(3, cancellationTokenSource.Token)).Value;
 
         Assert.Multiple(

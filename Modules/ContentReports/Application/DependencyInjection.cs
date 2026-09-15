@@ -2,7 +2,7 @@ using FluentValidation;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.ContentReports;
+namespace FoodDiary.Modules.ContentReports.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddContentReportsApplication(this IServiceCollection services) {

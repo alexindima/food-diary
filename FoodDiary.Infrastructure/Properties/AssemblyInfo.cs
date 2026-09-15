@@ -13,5 +13,3 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Products.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Meals.Infrastructure")]
-[assembly: InternalsVisibleTo("FoodDiary.Modules.Users.Infrastructure")]
-[assembly: InternalsVisibleTo("FoodDiary.Modules.Dietologist.Infrastructure")]

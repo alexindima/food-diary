@@ -1,15 +1,16 @@
+using FoodDiary.Modules.ContentReports.Infrastructure;
+using Npgsql;
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -56,10 +57,53 @@ public sealed class SharedReportsContextCompositionIntegrationTests(PostgresData
         central.Users.Add(user);
         await provider.GetRequiredService<IContentReportWriteRepository>().AddAsync(
             ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Spam"));
-        await Assert.ThrowsAsync<DbUpdateException>(() => provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync());
+        DbUpdateException exception = await Assert.ThrowsAsync<DbUpdateException>(() => provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync());
+        Assert.Equal(PostgresErrorCodes.ForeignKeyViolation, Assert.IsType<PostgresException>(exception.InnerException).SqlState);
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         Assert.False(await read.Users.AnyAsync(item => item.Id == user.Id));
         Assert.False(await read.ContentReports.AnyAsync());
+    }
+
+    [RequiresDockerTheory]
+    [InlineData(ReportTargetType.Recipe)]
+    [InlineData(ReportTargetType.Comment)]
+    public async Task CompetingReportsReturnConflictAndRollBackLosingScopeAsync(ReportTargetType targetType) {
+        await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
+        var reporter = User.Create("reporter@example.com", "hash");
+        seed.Users.Add(reporter);
+        await seed.SaveChangesAsync();
+        string connection = seed.Database.GetConnectionString()!;
+        await using FoodDiaryDbContext first = databaseFixture.CreateDbContext(connection);
+        await using FoodDiaryDbContext second = databaseFixture.CreateDbContext(connection);
+        await using ServiceProvider firstProvider = CreateProvider(first);
+        await using ServiceProvider secondProvider = CreateProvider(second);
+        var targetId = Guid.NewGuid();
+        IContentReportWriteRepository firstReports = firstProvider.GetRequiredService<IContentReportWriteRepository>();
+        IContentReportWriteRepository secondReports = secondProvider.GetRequiredService<IContentReportWriteRepository>();
+        // Both requests pass the duplicate check before either transaction saves.
+        Assert.False(await firstReports.HasUserReportedAsync(reporter.Id, targetType, targetId));
+        Assert.False(await secondReports.HasUserReportedAsync(reporter.Id, targetType, targetId));
+        await firstReports.AddAsync(ContentReport.Create(reporter.Id, targetType, targetId, "Spam"));
+        await secondReports.AddAsync(ContentReport.Create(reporter.Id, targetType, targetId, "Spam"));
+        var firstSideEffect = User.Create("report-first@example.com", "hash");
+        var secondSideEffect = User.Create("report-second@example.com", "hash");
+        first.Users.Add(firstSideEffect);
+        second.Users.Add(secondSideEffect);
+
+        Exception?[] outcomes = await Task.WhenAll(
+            Record.ExceptionAsync(() => firstProvider.GetRequiredService<IUnitOfWork>().SaveChangesAsync()),
+            Record.ExceptionAsync(() => secondProvider.GetRequiredService<IUnitOfWork>().SaveChangesAsync()));
+
+        Assert.Single(outcomes, exception => exception is null);
+        DbUpdateConcurrencyException conflict = Assert.IsType<DbUpdateConcurrencyException>(Assert.Single(outcomes.OfType<Exception>()));
+        DbUpdateException providerFailure = Assert.IsType<DbUpdateException>(conflict.InnerException);
+        PostgresException postgres = Assert.IsType<PostgresException>(providerFailure.InnerException);
+        Assert.Equal(PostgresErrorCodes.UniqueViolation, postgres.SqlState);
+        Assert.Equal("IX_ContentReports_UserId_TargetType_TargetId", postgres.ConstraintName);
+        await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(connection);
+        Assert.Equal(1, await read.ContentReports.CountAsync(report => report.UserId == reporter.Id && report.TargetType == targetType && report.TargetId == targetId));
+        Assert.Equal(outcomes[0] is null, await read.Users.AnyAsync(user => user.Id == firstSideEffect.Id));
+        Assert.Equal(outcomes[1] is null, await read.Users.AnyAsync(user => user.Id == secondSideEffect.Id));
     }
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {

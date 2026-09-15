@@ -1,5 +1,6 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
-using OwnerReviewContentReportCommand = FoodDiary.Application.ContentReports.Commands.ReviewContentReport.ReviewContentReportCommand;
+using OwnerReviewContentReportCommand = FoodDiary.Modules.ContentReports.Contracts.Commands.ReviewContentReport.ReviewContentReportCommand;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects.Ids;

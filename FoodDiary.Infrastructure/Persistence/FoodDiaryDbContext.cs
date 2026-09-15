@@ -1,3 +1,4 @@
+using FoodDiary.Modules.ContentReports.PersistenceModel;
 using FoodDiary.Modules.BodyMetrics.PersistenceModel;
 using FoodDiary.Modules.Billing.PersistenceModel;
 using FoodDiary.Modules.Ai.PersistenceModel;
@@ -13,7 +14,6 @@ using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
-using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;

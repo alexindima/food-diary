@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Modules.Images.Infrastructure;
@@ -86,8 +87,9 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         await central.SaveChangesAsync();
         await using ServiceProvider provider = CreateProvider(central);
         IUserDataPurgeParticipant[] participants = [.. Participants(provider), new FailingParticipant(failed.User.Id)];
-        var service = new UserCleanupService(central, participants, NullLogger<UserCleanupService>.Instance,
-            provider.GetRequiredService<IUnitOfWork>());
+        var service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
+            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
+            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleScopeGuard>());
 
         Assert.Equal(1, await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null));
 
@@ -223,6 +225,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
     private static ServiceProvider CreateProvider(FoodDiaryDbContext central) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddUsersPersistence();
         services.AddSingleton(central);
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddHydrationModule().AddBodyMetricsModule().AddCyclesModule();

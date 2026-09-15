@@ -1,8 +1,9 @@
-using FoodDiary.Domain.Entities.Social;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.ContentReports.Common;
+namespace FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 
 public interface IContentReportWriteRepository {
     Task<ContentReport?> GetByIdAsync(

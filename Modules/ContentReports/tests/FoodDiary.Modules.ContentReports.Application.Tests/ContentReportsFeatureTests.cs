@@ -1,13 +1,13 @@
-using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Application.Models;
+using FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Social;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.ContentReports.Models;
 
-namespace FoodDiary.Application.Tests.ContentReports;
+namespace FoodDiary.Modules.ContentReports.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public class ContentReportsFeatureTests {

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.ContentReports.Models;
+namespace FoodDiary.Modules.ContentReports.Application.Models;
 
 public sealed record ContentReportModel(
     Guid Id,

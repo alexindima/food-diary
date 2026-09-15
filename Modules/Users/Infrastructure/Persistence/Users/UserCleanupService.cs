@@ -1,17 +1,18 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Infrastructure.Persistence.Shared;
+using FoodDiary.Persistence.Abstractions;
+using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
 public sealed class UserCleanupService(
-    FoodDiaryDbContext dbContext,
+    UsersDbContext dbContext,
     IEnumerable<IUserDataPurgeParticipant> participants,
-    ILogger<UserCleanupService> logger, IUnitOfWork unitOfWork) : IUserCleanupService {
+    ILogger<UserCleanupService> logger,
+    IModuleTransactionCoordinator transactionCoordinator,
+    IModuleScopeGuard scopeGuard) : IUserCleanupService {
     private readonly IReadOnlyList<IUserDataPurgeParticipant> _participants = ValidateParticipants(participants);
 
     private static IReadOnlyList<IUserDataPurgeParticipant> ValidateParticipants(IEnumerable<IUserDataPurgeParticipant> participants) {
@@ -31,7 +32,10 @@ public sealed class UserCleanupService(
             throw new ArgumentOutOfRangeException(nameof(batchSize), "Batch size must be greater than zero.");
         }
 
-        SharedTransactionBoundary.EnsureCleanEntry(dbContext);
+        scopeGuard.EnsureCleanEntry();
+        if (dbContext.Database.IsRelational()) {
+            await dbContext.Database.UseTransactionAsync(transactionCoordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+        }
         UserId? reassignTarget = await ResolveReassignTargetAsync(reassignUserId, cancellationToken).ConfigureAwait(false);
         DateTime thresholdUtc = NormalizeUtc(olderThanUtc);
         IReadOnlyList<UserId> userIds = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, cancellationToken).ConfigureAwait(false);
@@ -43,7 +47,6 @@ public sealed class UserCleanupService(
                     removed++;
                 }
             } catch (Exception ex) {
-                dbContext.ChangeTracker.Clear();
                 logger.LogError(ex, "Failed to clean up deleted user {UserId}. Continuing with the next deleted user.", userId.Value);
             }
         }
@@ -88,46 +91,40 @@ public sealed class UserCleanupService(
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    internal async Task<bool> CleanupUserAsync(
+    internal Task<bool> CleanupUserAsync(
         UserId userId,
         UserId? reassignTarget,
         DateTime thresholdUtc,
         CancellationToken cancellationToken) {
-        IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-        return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(dbContext, postCommitActionQueue: null, async () => {
-            IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
-                FormattableString eligibilitySql = $"""
-                    SELECT 1 AS "Value"
-                    FROM "Users"
-                    WHERE "Id" = {userId.Value}
-                      AND "DeletedAt" IS NOT NULL
-                      AND "DeletedAt" <= {thresholdUtc}
-                      AND "IsActive" = FALSE
-                    FOR UPDATE
-                    """;
-                int? eligible = await dbContext.Database
-                    .SqlQuery<int>(eligibilitySql)
-                    .SingleOrDefaultAsync(cancellationToken)
-                    .ConfigureAwait(false);
-                if (eligible != 1) {
-                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                    return false;
-                }
-
-                await dbContext.Users.Where(user => user.Id == userId)
-                    .ExecuteUpdateAsync(setters => setters.SetProperty(user => user.ProfileImageAssetId, (ImageAssetId?)null), cancellationToken)
-                    .ConfigureAwait(false);
-
-                foreach (IUserDataPurgeParticipant participant in _participants) {
-                    await participant.PurgeAsync(userId, reassignTarget, cancellationToken).ConfigureAwait(false);
-                }
-                await DeleteUserRowsAsync(userId, cancellationToken).ConfigureAwait(false);
-                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                return true;
+        return transactionCoordinator.ExecuteItemAsync(async (transaction, token) => {
+            await dbContext.Database.UseTransactionAsync(transaction, token).ConfigureAwait(false);
+            FormattableString eligibilitySql = $"""
+                SELECT 1 AS "Value"
+                FROM "Users"
+                WHERE "Id" = {userId.Value}
+                  AND "DeletedAt" IS NOT NULL
+                  AND "DeletedAt" <= {thresholdUtc}
+                  AND "IsActive" = FALSE
+                FOR UPDATE
+                """;
+            int? eligible = await dbContext.Database
+                .SqlQuery<int>(eligibilitySql)
+                .SingleOrDefaultAsync(token)
+                .ConfigureAwait(false);
+            if (eligible != 1) {
+                return false;
             }
-        }, cancellationToken)).ConfigureAwait(false);
+
+            await dbContext.Users.Where(user => user.Id == userId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(user => user.ProfileImageAssetId, (ImageAssetId?)null), token)
+                .ConfigureAwait(false);
+
+            foreach (IUserDataPurgeParticipant participant in _participants) {
+                await participant.PurgeAsync(userId, reassignTarget, token).ConfigureAwait(false);
+            }
+            await DeleteUserRowsAsync(userId, token).ConfigureAwait(false);
+            return true;
+        }, cancellationToken);
     }
 
     private async Task DeleteUserRowsAsync(UserId userId, CancellationToken cancellationToken) {

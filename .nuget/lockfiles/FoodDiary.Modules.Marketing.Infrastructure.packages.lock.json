@@ -108,7 +108,6 @@
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Billing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
@@ -121,12 +120,6 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
-      "fooddiary.modules.billing.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Mediator": "[1.0.0, )"
         }
       },
       "fooddiary.modules.marketing.application.abstractions": {

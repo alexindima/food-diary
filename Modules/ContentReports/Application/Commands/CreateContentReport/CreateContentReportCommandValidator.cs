@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
+namespace FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
 
 public sealed class CreateContentReportCommandValidator : AbstractValidator<CreateContentReportCommand> {
     public CreateContentReportCommandValidator() {

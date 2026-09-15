@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -39,11 +40,14 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
     [InlineData("WeeklyGoals", true)]
     [InlineData("Billing", false)]
     [InlineData("Billing", true)]
+    [InlineData("BatchItem", false)]
+    [InlineData("BatchItem", true)]
     public async Task Retry_DiscardsFailedAttemptEntitiesOutboxAndCallbacks(string owner, bool afterSave) {
         await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("retry-boundary@example.com", "hash");
         seed.Users.Add(user);
         await seed.SaveChangesAsync();
+        var weekStartUtc = new DateTime(2026, 9, 14, 0, 0, 0, DateTimeKind.Utc);
         var fault = new RetryFault(afterSave);
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(seed.Database.GetConnectionString(), provider => provider.EnableRetryOnFailure(2, TimeSpan.Zero, errorCodesToAdd: null))
@@ -56,19 +60,30 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         var queue = new RecordingActionQueue();
         int attempts = 0;
         int delivered = 0;
+        if (owner.Equals("BatchItem", StringComparison.Ordinal)) {
+            queue.Enqueue("existing", _ => { delivered++; return Task.CompletedTask; });
+        }
         async Task<Result> MutateAsync(CancellationToken cancellationToken) {
             attempts++;
             if (weeklyOwner is not null) {
-                weeklyOwner.WeeklyGoals.Add(FoodDiary.Domain.Entities.WeeklyGoals.WeeklyGoal.Create(user.Id, DateTime.UtcNow.Date,
+                weeklyOwner.WeeklyGoals.Add(FoodDiary.Domain.Entities.WeeklyGoals.WeeklyGoal.Create(user.Id, weekStartUtc,
                     WeeklyGoalType.DiaryLogging, targetDays: 5, reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null));
             }
             context.Products.Add(CreateProduct(user.Id, "one product"));
             await new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync("one-object", isConfirmed: true, cancellationToken);
-            queue.Enqueue("notify", _ => { delivered++; return Task.CompletedTask; });
+            if (!owner.Equals("BatchItem", StringComparison.Ordinal)) {
+                queue.Enqueue("notify", _ => { delivered++; return Task.CompletedTask; });
+            }
             return Result.Success();
         }
 
         switch (owner) {
+            case "BatchItem":
+                await new EfModuleTransactionCoordinator(context, unitOfWork, queue).ExecuteItemAsync(async (_, token) => {
+                    await MutateAsync(token);
+                    return true;
+                });
+                break;
             case "Products":
                 await new EfProductMutationTransactionRunner(new EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteAsync(MutateAsync);
                 break;
@@ -76,7 +91,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
                 await new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteAsync(MutateAsync);
                 break;
             case "WeeklyGoals":
-                await new EfWeeklyGoalTransactionRunner(new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteSerializedAsync(user.Id, DateTime.UtcNow.Date, MutateAsync);
+                await new EfWeeklyGoalTransactionRunner(new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteSerializedAsync(user.Id, weekStartUtc, MutateAsync);
                 break;
             case "Billing":
                 await new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance), queue)).ExecuteAsync(async token => await MutateAsync(token));
@@ -94,6 +109,24 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
             Assert.Equal(1, await weeklyOwner.WeeklyGoals.AsNoTracking().CountAsync());
             Assert.False(weeklyOwner.ChangeTracker.HasChanges());
         }
+    }
+
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task BatchItem_SavesOnlyProcessedItemsEvenWithoutTrackedChanges(bool processed) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.HasPendingChanges.Returns(returnThis: false);
+        using var cancellation = new CancellationTokenSource();
+        var coordinator = new EfModuleTransactionCoordinator(context, unitOfWork);
+        Assert.Equal(processed, await coordinator.ExecuteItemAsync((transaction, token) => {
+            Assert.Same(context.Database.CurrentTransaction!.GetDbTransaction(), transaction);
+            Assert.Equal(cancellation.Token, token);
+            return Task.FromResult(processed);
+        }, cancellation.Token));
+        await unitOfWork.Received(processed ? 1 : 0).SaveChangesAsync(cancellation.Token);
+        Assert.Null(context.Database.CurrentTransaction);
     }
 
     [RequiresDockerFact]

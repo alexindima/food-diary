@@ -247,13 +247,14 @@
           "Modules/ContentReports/Application"
         ],
         "abstractionAreas": [
-          "Modules/ContentReports/Application/Abstractions"
+          "Modules/ContentReports/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/ContentReports/Domain"
         ],
         "persistenceAreas": [
-          "Modules/ContentReports/Infrastructure"
+          "Modules/ContentReports/Infrastructure",
+          "Modules/ContentReports/PersistenceModel"
         ]
       }
     },

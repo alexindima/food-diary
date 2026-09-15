@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
+namespace FoodDiary.Modules.ContentReports.PersistenceModel;
 
 public static class ContentReportsPersistenceModelRegistration {
     public static ModelBuilder ApplyContentReportsPersistenceModel(this ModelBuilder modelBuilder) {

@@ -1,8 +1,7 @@
 # Users infrastructure
 
-Own separable Users persistence adapters and complete module DI. Depend on the
-central Infrastructure project only for the shared DbContext compatibility seam.
-Do not absorb Identity repositories or provider services. UserCleanupService coordinates ordered owner-side IUserDataPurgeParticipant extensions inside its per-user transaction and only mutates Users/UserRoles itself; participants never save or commit.
+Own separable Users persistence adapters and complete module DI. Use narrow persistence coordination contracts; do not reference central Infrastructure.
+Do not absorb Identity repositories or provider services. UserCleanupService coordinates ordered owner-side IUserDataPurgeParticipant extensions inside the shared coordinator's per-user transaction and only mutates Users/UserRoles itself; participants never save or commit.
 
 Own `UserAccessTokenSecurityReader`, scoped through `AddUsersPersistence`. Its
 unchanged no-tracking query reads persisted active/deleted/security-version state;
@@ -29,16 +28,18 @@ related-data projections intentionally retain all account states, matching the
 former joins. Query only requested distinct IDs and scalar columns, no tracking,
 saves, caches or transactions; empty input performs no SQL and cancellation is honored.
 
-UserCleanupService saves through IUnitOfWork inside its existing per-user transaction, so image-deletion outbox entries tracked in ImagesDbContext commit or roll back with user cleanup. Participants still never save or commit.
+UserCleanupService delegates successful item saving to IModuleTransactionCoordinator.ExecuteItemAsync, so image-deletion outbox entries tracked in ImagesDbContext commit or roll back with user cleanup. Participants still never save or commit.
 
 Current weight and waist implementations live in host ReadModel.Composition, reading only scalar BodyMetrics values through the existing Users consumer ports. AddUsersPersistence no longer registers these cross-module readers; hosts register AddReadModelComposition. Preserve date/creation ordering and nullable empty results.
 
-UsersDbContext owns User, Role, UserRole, UserRoleAuditEvent, WeightGoal and WaistGoal. Runtime adapters receive only owner sets (and DatabaseFacade for role SQL), synchronizing the live shared transaction before operations. Save through IUnitOfWork. Users saves at priority -100 before the central context and dependent modules, independently of DI resolution order. Its options explicitly include TelegramIdentityConflictInterceptor; provider uniqueness details must remain hidden. UserCleanupService remains the ordered central purge coordinator and profile-image unlink bridge.
+UsersDbContext owns User, Role, UserRole, UserRoleAuditEvent, WeightGoal and WaistGoal. Runtime adapters receive only owner sets (and DatabaseFacade for role SQL), synchronizing the live shared transaction before operations. Save through IUnitOfWork. Users saves at priority -100 before the central context and dependent modules, independently of DI resolution order. Its options explicitly include TelegramIdentityConflictInterceptor; provider uniqueness details must remain hidden. UserCleanupService performs owner SQL through UsersDbContext, including the profile-image unlink, and invokes ordered foreign-owner purge participants.
 
 Billing profile reads for webhook/renewal processing use IUserBillingProfileReadModelRepository on UserProfileProjectionService. Read persisted scalar account/role state without tracking, including deleted accounts; do not use cached tracked Users for this capability.
 
 Registration uses IModuleTransactionCoordinator for live transaction synchronization,
 without resolving FoodDiaryDbContext. Retain the relational guard, operation
-cancellation, save priority -100 and conflict interceptor. Cleanup remains separate.
+cancellation, save priority -100 and conflict interceptor. Cleanup uses the same transaction coordinator through its distinct batch-item boundary.
 
-Each cleanup retry uses SharedTransactionBoundary.ExecuteAttemptAsync to reset all registered owner trackers after rollback. Clearing only the central tracker is insufficient: unsaved Images outbox entries must never survive a failed user into the next user transaction.
+Each cleanup retry is owned by ExecuteItemAsync, which resets all registered owner trackers after rollback. Clearing only the central tracker is insufficient: unsaved Images outbox entries must never survive a failed user into the next user transaction.
+
+ExecuteItemAsync preserves the existing batch semantics: eligibility FOR UPDATE inside each attempt, false means commit without save, true means unconditional coordinated save then commit, and failures roll back/reset before the next user. Initial scope inspection rejects caller changes even for an empty batch. Post-commit actions are intentionally left untouched, matching the former null queue boundary. Keep external effects out of item retries. Bind UsersDbContext to the live transaction on every attempt; preserve account ordering, reassignment and cancellation behavior.

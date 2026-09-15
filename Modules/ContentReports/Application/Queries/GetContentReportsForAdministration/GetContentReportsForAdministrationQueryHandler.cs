@@ -1,17 +1,11 @@
-using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.ContentReports.Contracts.Queries.GetContentReportsForAdministration;
+using FoodDiary.Modules.ContentReports.Contracts.Models;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.ContentReports.Queries.GetContentReportsForAdministration;
+namespace FoodDiary.Modules.ContentReports.Application.Queries.GetContentReportsForAdministration;
 
 public sealed class GetContentReportsForAdministrationQueryHandler(IContentReportReadModelRepository readModelRepository) : IRequestHandler<GetContentReportsForAdministrationQuery, (IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> {
-    public Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> Handle(GetContentReportsForAdministrationQuery request, CancellationToken cancellationToken) {
-        ReportStatus? status = request.Status;
-        int page = request.Page;
-        int limit = request.Limit;
-        ContentReportAdminFilter? filter = request.Filter;
-        return readModelRepository.GetPagedAdminReadModelsAsync(status, page, limit, cancellationToken, filter);
-    }
-
+    public Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> Handle(GetContentReportsForAdministrationQuery request, CancellationToken cancellationToken) =>
+        readModelRepository.GetPagedAdminReadModelsAsync(request.Status, request.Page, request.Limit, cancellationToken, request.Filter);
 }

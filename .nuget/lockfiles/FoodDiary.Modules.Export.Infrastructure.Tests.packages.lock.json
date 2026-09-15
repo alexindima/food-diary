@@ -195,7 +195,6 @@
         "dependencies": {
           "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "QuestPDF": "[2026.7.3, )",

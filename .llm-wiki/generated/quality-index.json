@@ -5,13 +5,13 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5390,
+    "productionFiles": 5393,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 892,
-    "criticalSymbolsWithTestReferences": 861,
+    "criticalSymbols": 894,
+    "criticalSymbolsWithTestReferences": 863,
     "criticalSymbolsWithoutTestReferences": 31,
-    "debtMarkers": 11
+    "debtMarkers": 10
   },
   "hotspots": [
     {
@@ -3362,11 +3362,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Modules.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 49,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.42
+      "structuralRiskScore": 8.48
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
@@ -3538,11 +3538,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/EfModuleTransactionCoordinator.cs",
-      "nonBlankLines": 79,
-      "decisionPoints": 9,
+      "nonBlankLines": 97,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.08
+      "structuralRiskScore": 16.94
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/ModuleContextSaveCoordinator.cs",
@@ -3562,11 +3562,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -5042,11 +5042,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 186,
+      "nonBlankLines": 187,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.72
+      "structuralRiskScore": 6.74
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -14346,11 +14346,11 @@
     },
     {
       "path": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
@@ -14434,11 +14434,11 @@
     },
     {
       "path": "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs",
@@ -18426,11 +18426,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/AssemblyInfo.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs",
@@ -19249,15 +19249,7 @@
       "structuralRiskScore": 3.14
     },
     {
-      "path": "Modules/ContentReports/Application/Abstractions/Common/ContentReportErrors.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportReadModelRepository.cs",
+      "path": "Modules/ContentReports/Application.Abstractions/Common/IContentReportReadModelRepository.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19265,7 +19257,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportTargetReadService.cs",
+      "path": "Modules/ContentReports/Application.Abstractions/Common/IContentReportTargetReadService.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19273,12 +19265,12 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportWriteRepository.cs",
-      "nonBlankLines": 17,
+      "path": "Modules/ContentReports/Application.Abstractions/Common/IContentReportWriteRepository.cs",
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommand.cs",
@@ -19306,19 +19298,43 @@
     },
     {
       "path": "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 24,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.66
+      "structuralRiskScore": 5.48
+    },
+    {
+      "path": "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.72
     },
     {
       "path": "Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 24,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.66
+      "structuralRiskScore": 5.48
+    },
+    {
+      "path": "Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.72
+    },
+    {
+      "path": "Modules/ContentReports/Application/Common/ContentReportErrors.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/ContentReports/Application/Common/ContentReportTargetTypeParser.cs",
@@ -19346,35 +19362,35 @@
     },
     {
       "path": "Modules/ContentReports/Application/Queries/CountContentReports/CountContentReportsQueryHandler.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
+      "structuralRiskScore": 2.16
     },
     {
       "path": "Modules/ContentReports/Application/Queries/GetContentReportsForAdministration/GetContentReportsForAdministrationQueryHandler.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/ContentReports/Contracts/Commands/DismissContentReport/DismissContentReportCommand.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/ContentReports/Contracts/Commands/ReviewContentReport/ReviewContentReportCommand.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/ContentReports/Contracts/Models/ContentReportAdminFilter.cs",
@@ -19433,15 +19449,15 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "nonBlankLines": 75,
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "nonBlankLines": 74,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9
+      "structuralRiskScore": 8.98
     },
     {
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
+      "path": "Modules/ContentReports/Domain/Entities/ContentReportsDomainGuard.cs",
       "nonBlankLines": 17,
       "decisionPoints": 2,
       "criticalSymbols": 0,
@@ -19457,22 +19473,6 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
-    },
-    {
-      "path": "Modules/ContentReports/Infrastructure/Model/ContentReportsPersistenceModelRegistration.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "Modules/ContentReports/Infrastructure/ModuleRegistration.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
@@ -19482,30 +19482,38 @@
     },
     {
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 28,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.54
+      "structuralRiskScore": 3.56
     },
     {
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.98
+    },
+    {
+      "path": "Modules/ContentReports/PersistenceModel/Configurations/ContentReportConfiguration.cs",
+      "nonBlankLines": 30,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.6
     },
     {
-      "path": "Modules/ContentReports/Presentation/Extensions/ContentReportsPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 7,
+      "path": "Modules/ContentReports/PersistenceModel/ContentReportsPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/ContentReportsController.cs",
+      "path": "Modules/ContentReports/Presentation/Controllers/ContentReportsController.cs",
       "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 1,
@@ -19513,7 +19521,15 @@
       "structuralRiskScore": 2.44
     },
     {
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/Mappings/ContentReportHttpMappings.cs",
+      "path": "Modules/ContentReports/Presentation/Extensions/ContentReportsPresentationServiceCollectionExtensions.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/ContentReports/Presentation/Mappings/ContentReportHttpMappings.cs",
       "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19521,7 +19537,7 @@
       "structuralRiskScore": 0.36
     },
     {
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/Requests/CreateContentReportHttpRequest.cs",
+      "path": "Modules/ContentReports/Presentation/Requests/CreateContentReportHttpRequest.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19529,7 +19545,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/Responses/ContentReportHttpResponse.cs",
+      "path": "Modules/ContentReports/Presentation/Responses/ContentReportHttpResponse.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -22874,11 +22890,11 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs",
-      "nonBlankLines": 212,
+      "nonBlankLines": 213,
       "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.24
+      "structuralRiskScore": 43.26
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
@@ -39338,11 +39354,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "nonBlankLines": 122,
-      "decisionPoints": 14,
+      "nonBlankLines": 119,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.44
+      "structuralRiskScore": 24.88
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
@@ -43873,6 +43889,14 @@
       "structuralRiskScore": 1.72
     },
     {
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleChangeTrackerSource.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
       "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleContextFactory.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -43906,11 +43930,11 @@
     },
     {
       "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs",
-      "nonBlankLines": 32,
+      "nonBlankLines": 40,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.64
+      "structuralRiskScore": 3.8
     },
     {
       "path": "Shared/FoodDiary.Results/Error.cs",
@@ -44355,7 +44379,7 @@
       "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportsFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44866,10 +44890,11 @@
       "name": "DismissContentReportCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "line": 8,
-      "testReferenceCount": 2,
+      "line": 9,
+      "testReferenceCount": 3,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ContentReportDispatchTests.cs",
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportModerationTests.cs",
         "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44879,10 +44904,11 @@
       "name": "DismissContentReportCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "line": 8,
-      "testReferenceCount": 2,
+      "line": 10,
+      "testReferenceCount": 3,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ContentReportDispatchTests.cs",
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportModerationTests.cs",
         "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -45571,10 +45597,11 @@
       "name": "ReviewContentReportCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "line": 8,
-      "testReferenceCount": 2,
+      "line": 9,
+      "testReferenceCount": 3,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ContentReportDispatchTests.cs",
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportModerationTests.cs",
         "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -45584,10 +45611,11 @@
       "name": "ReviewContentReportCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "line": 8,
-      "testReferenceCount": 2,
+      "line": 10,
+      "testReferenceCount": 3,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ContentReportDispatchTests.cs",
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportModerationTests.cs",
         "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -46925,11 +46953,12 @@
     {
       "name": "ContentReportsController",
       "role": "Controller",
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/ContentReportsController.cs",
+      "path": "Modules/ContentReports/Presentation/Controllers/ContentReportsController.cs",
       "line": 15,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ContentReportRecipeLikeControllerTests.cs"
+        "tests/FoodDiary.Presentation.Api.Tests/ContentReportRecipeLikeControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49585,7 +49614,7 @@
       "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
+        "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/HistoryPageSummaryHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -49725,7 +49754,7 @@
       "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
+        "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/HistoryPageSummaryHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50296,7 +50325,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsValidatorTests.cs"
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50603,6 +50632,18 @@
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "DismissContentReportCommandValidator",
+      "role": "Validator",
+      "path": "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandValidator.cs",
+      "line": 5,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -52021,6 +52062,18 @@
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationAdditionalValidatorTests.cs",
         "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "ReviewContentReportCommandValidator",
+      "role": "Validator",
+      "path": "Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandValidator.cs",
+      "line": 5,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -55450,11 +55503,6 @@
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
-    },
-    {
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 12,
-      "marker": "#pragma warning disable"
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",

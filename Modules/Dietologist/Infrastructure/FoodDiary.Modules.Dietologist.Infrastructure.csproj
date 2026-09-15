@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +23,7 @@
     <ProjectReference Include="../Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
 </Project>

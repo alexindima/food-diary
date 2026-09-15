@@ -1,7 +1,7 @@
-using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Contracts.Models;
 
-namespace FoodDiary.Application.Abstractions.ContentReports.Common;
+namespace FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 
 public interface IContentReportReadModelRepository {
     Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> GetPagedAdminReadModelsAsync(

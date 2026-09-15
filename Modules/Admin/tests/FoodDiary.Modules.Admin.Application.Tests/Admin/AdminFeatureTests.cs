@@ -1,5 +1,3 @@
-using OwnerDismissContentReportCommandHandler = FoodDiary.Application.ContentReports.Commands.DismissContentReport.DismissContentReportCommandHandler;
-using OwnerReviewContentReportCommandHandler = FoodDiary.Application.ContentReports.Commands.ReviewContentReport.ReviewContentReportCommandHandler;
 using FoodDiary.Application.Identity.Email.Commands.UpsertEmailTemplate;
 using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
 using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
@@ -13,9 +11,7 @@ using FoodDiary.Testing;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Modules.Admin.Application.Commands.DismissContentReport;
 using FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessageRead;
-using FoodDiary.Modules.Admin.Application.Commands.ReviewContentReport;
 using FoodDiary.Modules.Admin.Application.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
@@ -32,11 +28,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Modules.Ai.Domain.Entities;
-using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -422,88 +415,6 @@ public partial class AdminFeatureTests {
         Assert.Equal("MailInbox.MessageNotFound", result.Error.Code);
     }
 
-    [Fact]
-    public async Task ReviewContentReportHandler_WhenReportMissing_ReturnsNotFound() {
-        var handler = new ReviewContentReportCommandHandler(
-            RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(new CountingContentReportRepository(0)), new OwnerDismissContentReportCommandHandler(new CountingContentReportRepository(0))));
-        var reportId = Guid.NewGuid();
-
-        Result result = await handler.Handle(new ReviewContentReportCommand(reportId, Guid.NewGuid(), "handled"), CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("ContentReport.NotFound", result.Error.Code);
-    }
-
-    [Fact]
-    public async Task ReviewContentReportHandler_WithExistingReport_MarksReviewed() {
-        var report = ContentReport.Create(
-            UserId.New(),
-            ReportTargetType.Recipe,
-            Guid.NewGuid(),
-            "Incorrect content");
-        var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new ReviewContentReportCommandHandler(RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(repository), new OwnerDismissContentReportCommandHandler(repository)));
-
-        var reviewerUserId = UserId.New();
-        Result result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, reviewerUserId.Value, "  verified  "), CancellationToken.None);
-
-        ResultAssert.Success(result);
-        Assert.Equal(ReportStatus.Reviewed, report.Status);
-        Assert.Equal("verified", report.AdminNote);
-        Assert.Equal(reviewerUserId, report.ReviewedByUserId);
-        Assert.Equal(1, repository.UpdateCallCount);
-    }
-
-    [Fact]
-    public async Task DismissContentReportHandler_WhenReportMissing_ReturnsNotFound() {
-        var handler = new DismissContentReportCommandHandler(
-            RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(new CountingContentReportRepository(0)), new OwnerDismissContentReportCommandHandler(new CountingContentReportRepository(0))));
-        var reportId = Guid.NewGuid();
-
-        Result result = await handler.Handle(new DismissContentReportCommand(reportId, Guid.NewGuid(), "duplicate"), CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("ContentReport.NotFound", result.Error.Code);
-    }
-
-    [Fact]
-    public async Task DismissContentReportHandler_WithExistingReport_MarksDismissed() {
-        var report = ContentReport.Create(
-            UserId.New(),
-            ReportTargetType.Recipe,
-            Guid.NewGuid(),
-            "Incorrect content");
-        var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new DismissContentReportCommandHandler(RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(repository), new OwnerDismissContentReportCommandHandler(repository)));
-
-        var reviewerUserId = UserId.New();
-        Result result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, reviewerUserId.Value, "  duplicate  "), CancellationToken.None);
-
-        ResultAssert.Success(result);
-        Assert.Equal(ReportStatus.Dismissed, report.Status);
-        Assert.Equal("duplicate", report.AdminNote);
-        Assert.Equal(reviewerUserId, report.ReviewedByUserId);
-        Assert.Equal(1, repository.UpdateCallCount);
-    }
-
-    [Fact]
-    public async Task DismissContentReportHandler_WhenReportAlreadyResolved_ReturnsConflictWithoutUpdate() {
-        var report = ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Incorrect content");
-        report.MarkReviewed(UserId.New(), "verified");
-        var repository = new CountingContentReportRepository(0, [report]);
-        var handler = new DismissContentReportCommandHandler(RequestTestSender.Create(new OwnerReviewContentReportCommandHandler(repository), new OwnerDismissContentReportCommandHandler(repository)));
-
-        Result result = await handler.Handle(
-            new DismissContentReportCommand(report.Id.Value, Guid.NewGuid(), "overwrite"),
-            CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Multiple(
-            () => Assert.Equal("ContentReport.AlreadyResolved", result.Error.Code),
-            () => Assert.Equal(ReportStatus.Reviewed, report.Status),
-            () => Assert.Equal(0, repository.UpdateCallCount));
-    }
-
     private static User CreateUserWithRoles(string email, IReadOnlyList<string> roleNames) {
         var user = User.Create(email, "hash");
         Role[] roles = [.. roleNames.Select(name => Role.Create(name))];
@@ -816,53 +727,6 @@ public partial class AdminFeatureTests {
             GetUserAdministrationSummaryQuery r => (Task<TResponse>)(object)GetDashboardSummaryForRequestAsync(r.RecentLimit, cancellationToken),
             _ => throw new InvalidOperationException(request.GetType().Name),
         };
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class CountingContentReportRepository(int pendingCount, IReadOnlyList<ContentReport>? reports = null)
-        : IContentReportReadModelRepository, IContentReportWriteRepository {
-        public ReportStatus? LastStatus { get; private set; }
-        public int LastPage { get; private set; }
-        public int LastLimit { get; private set; }
-        public int UpdateCallCount { get; private set; }
-
-        public Task<int> CountByStatusAsync(ReportStatus status, CancellationToken cancellationToken = default) =>
-            Task.FromResult(status == ReportStatus.Pending ? pendingCount : 0);
-
-        public Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<ContentReport?> GetByIdAsync(ContentReportId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult((reports ?? []).FirstOrDefault(report => report.Id == id));
-
-        public Task UpdateAsync(ContentReport report, CancellationToken cancellationToken = default) {
-            UpdateCallCount++;
-            return Task.CompletedTask;
-        }
-
-        public Task<bool> HasUserReportedAsync(UserId userId, ReportTargetType targetType, Guid targetId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> GetPagedAdminReadModelsAsync(
-            ReportStatus? status,
-            int page,
-            int limit,
-            CancellationToken cancellationToken = default, ContentReportAdminFilter? filter = null) {
-            LastStatus = status;
-            LastPage = page;
-            LastLimit = limit;
-            IReadOnlyList<ContentReport> filtered = reports ?? [];
-            IReadOnlyList<ContentReportAdminReadModel> models = [
-                .. filtered.Select(static report => new ContentReportAdminReadModel(
-                    report.Id.Value,
-                    report.UserId.Value,
-                    report.TargetType.ToString(),
-                    report.TargetId,
-                    report.Reason,
-                    report.Status.ToString(),
-                    report.AdminNote,
-                    report.CreatedOnUtc,
-                    report.ReviewedAtUtc)),
-            ];
-            return Task.FromResult((models, models.Count));
-        }
     }
 
     [ExcludeFromCodeCoverage]

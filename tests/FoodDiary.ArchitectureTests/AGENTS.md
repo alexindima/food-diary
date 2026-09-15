@@ -28,7 +28,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Current Guardrails
 
-- `MigratedModuleNamespaceTests` enforces canonical project names and folder namespaces across Billing and BodyMetrics, including tests. BodyMetrics keeps only separate write and read-model repository ports. PhysicalProjectLayoutTests has no remaining BodyMetrics nesting exceptions.
+- `MigratedModuleNamespaceTests` enforces canonical project names and folder namespaces across Billing, BodyMetrics and ContentReports, including tests. BodyMetrics keeps only separate write and read-model repository ports. PhysicalProjectLayoutTests has no remaining BodyMetrics nesting exceptions.
 
 - `PhysicalProjectLayoutTests` scans physical `.csproj` paths, including projects not yet in the solution, while pruning build caches and package folders. It rejects new nesting and stale entries in the exact legacy baseline. Move projects to sibling folders and remove resolved baseline entries; do not extend the baseline for new projects.
 
@@ -160,3 +160,5 @@ WeeklyGoals joins the adapters without a central Infrastructure dependency. Coor
 RepositoryFileDiscovery prunes build/cache/package directories before recursive descent. SourceScanner retains generated C# filtering; ProjectReferenceReader retains production/test and Wiki-tool classification. Discovery still includes unlisted projects and nested module tests; do not replace physical discovery with the solution list or filter after walking artifact worktrees.
 
 ADR 0041 owner requests preserve read projections. Users request namespaces explicitly include Users; Billing's RecordPremiumConversion request belongs to Marketing, and the manifest records Billing -> Marketing without a reverse edge. Query handler guards remain in force for owner aggregate reads.
+
+ProjectFileConventionTests also uses RepositoryFileDiscovery to prune generated/package folders before descent, retaining its existing per-rule Wiki exclusions. ModuleContextFactoryBoundaryTests rejects concrete shared-context and SharedTransactionBoundary references in Users cleanup and Dietologist audit. Users Infrastructure has no central Infrastructure project reference.

@@ -1,9 +1,9 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.ContentReports.Common;
+namespace FoodDiary.Modules.ContentReports.Application.Common;
 
 internal static class ContentReportTargetTypeParser {
     public static Result<ReportTargetType> ParseRequired(string? value, string fieldName, string message) =>

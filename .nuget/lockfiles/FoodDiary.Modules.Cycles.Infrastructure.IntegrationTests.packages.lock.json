@@ -806,22 +806,6 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
-      "FoodDiary.Application.ContentReports": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
       "fooddiary.application.contracts": {
         "type": "Project",
         "dependencies": {
@@ -1779,6 +1763,23 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.contentreports.application": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.contentreports.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1814,7 +1815,7 @@
       "fooddiary.modules.contentreports.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.ContentReports": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Application": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
@@ -1823,6 +1824,7 @@
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
@@ -1994,7 +1996,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Dietologist": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Audit.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Domain": "[1.0.0, )",
@@ -2003,7 +2005,8 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
       "fooddiary.modules.dietologist.persistencemodel": {
@@ -3077,7 +3080,6 @@
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Users": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
@@ -3086,7 +3088,8 @@
           "FoodDiary.Modules.Users.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
         }
       },
       "fooddiary.modules.users.persistencemodel": {

@@ -22,3 +22,5 @@ Additional provider tests cover filtered versus inclusive account lookup, exact
 issuer/subject matching, tracked identity/goal hydration, staged add/detached update,
 role-audit commit/rollback and cancellation. Register all aggregate aliases through
 Users in both composition orders; central AddInfrastructure must not own them.
+
+Users provider tests reference central Infrastructure explicitly for their shared PostgreSQL fixture and composition checks; production Users Infrastructure no longer supplies it transitively.

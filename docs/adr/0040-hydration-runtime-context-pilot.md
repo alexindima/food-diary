@@ -425,3 +425,11 @@ The dependency matrix and transitive graph tests prohibit the removed central
 reference. Owner PostgreSQL tests cover concurrent serialization, transient saves,
 provider timeout/cancellation, durable intermediate saves and scope reuse.
 Deploy as a coordinated application rebuild; no schema or HTTP change is required.
+
+## Users cleanup and collaboration audit coordination
+
+Users cleanup now executes its eligibility lock, profile-image unlink and final account deletions through UsersDbContext. The shared IModuleTransactionCoordinator.ExecuteItemAsync boundary retains one transaction per account, provider retries, all-owner tracker reset and unconditional IUnitOfWork saving for a processed account. An ineligible account commits without saving. The existing batch boundary deliberately leaves post-commit actions untouched. Owner purge participants still cannot save or commit. Users Infrastructure no longer references central Infrastructure; provider tests reference it explicitly for the shared fixture.
+
+Dietologist collaboration audit still runs at central SaveChanges before coordinated owner persistence. The save context implements IModuleChangeTrackerSource and returns live entries from the requested owner context type. The interceptor continues to inspect the save tracker and only Dietologist entries, with the existing relational-only guard, synchronous/asynchronous timing and pending-event deduplication. AuditEntry storage remains in the existing shared audit persistence model, now referenced directly by Dietologist; coordinated saving remains central. Its existing narrow audit-model internal access is retained, and the obsolete central Infrastructure reference and friend grant are removed. No DI lookup of the shared context is introduced during interceptor construction.
+
+This removes concrete context coupling from those modules; it does not introduce independent databases or change SQL mappings, foreign keys, HTTP contracts, audit payloads or transaction ownership.

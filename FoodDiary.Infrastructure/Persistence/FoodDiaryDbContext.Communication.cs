@@ -1,8 +1,8 @@
+using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Outbox;

@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/ContentReports/Application`
-- `Modules/ContentReports/Application/Abstractions`
+- `Modules/ContentReports/Application.Abstractions`
 - `Modules/ContentReports/Presentation`
 
 ## HTTP Surface
@@ -37,19 +37,18 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ContentReport
-- Public contract files: 4
+- Public contract files: 3
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
+- Public contract types: 3
 - Interfaces: 3
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 2
-- Contracts referencing domain entities: 1
-- `class ContentReportErrors`
+- Contracts referencing domain entities: 0
 - `interface IContentReportReadModelRepository`
 - `interface IContentReportTargetReadService`
 - `interface IContentReportWriteRepository`
@@ -58,8 +57,9 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportModerationTests.cs`
+- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReportsValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Domain.Tests/ContentReportContractTests.cs`
 - [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/ContentReportsInfrastructureTests.cs`

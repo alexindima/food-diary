@@ -1,9 +1,10 @@
-using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Modules.ContentReports.Infrastructure.Persistence.Configurations;
+namespace FoodDiary.Modules.ContentReports.PersistenceModel.Configurations;
 
 internal sealed class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport> {
     public void Configure(EntityTypeBuilder<ContentReport> builder) {

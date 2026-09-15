@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 
 public enum ReportStatus {
     Pending = 0,

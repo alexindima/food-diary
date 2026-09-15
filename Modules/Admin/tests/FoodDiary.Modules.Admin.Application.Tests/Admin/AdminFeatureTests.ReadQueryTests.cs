@@ -1,6 +1,10 @@
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
+using FoodDiary.Modules.ContentReports.Contracts.Models;
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Application.Queries.GetContentReportsForAdministration;
+using FoodDiary.Modules.ContentReports.Application.Queries.CountContentReports;
 using FoodDiary.Testing;
-using FoodDiary.Application.ContentReports.Queries.CountContentReports;
-using FoodDiary.Application.ContentReports.Queries.GetContentReportsForAdministration;
 using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplateRevisions;
 using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplates;
 using FoodDiary.Application.Users.Queries.GetFilteredUsersForAdministration;
@@ -34,7 +38,6 @@ using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Modules.Ai.Domain.Entities;
-using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -456,7 +459,7 @@ public partial class AdminFeatureTests {
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
         var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(
-RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)]))));
+RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports.CountContentReportsQuery)]))));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 
@@ -603,4 +606,24 @@ RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Application.A
         Assert.Equal(50, repository.LastLimit);
     }
 
+    [ExcludeFromCodeCoverage]
+    private sealed class CountingContentReportRepository(int pendingCount, IReadOnlyList<ContentReport>? reports = null) : IContentReportReadModelRepository {
+        public ReportStatus? LastStatus { get; private set; }
+        public int LastPage { get; private set; }
+        public int LastLimit { get; private set; }
+
+        public Task<int> CountByStatusAsync(ReportStatus status, CancellationToken cancellationToken = default) =>
+            Task.FromResult(status == ReportStatus.Pending ? pendingCount : 0);
+
+        public Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> GetPagedAdminReadModelsAsync(
+            ReportStatus? status, int page, int limit, CancellationToken cancellationToken = default, ContentReportAdminFilter? filter = null) {
+            LastStatus = status;
+            LastPage = page;
+            LastLimit = limit;
+            IReadOnlyList<ContentReportAdminReadModel> models = [.. (reports ?? []).Select(static report => new ContentReportAdminReadModel(
+                report.Id.Value, report.UserId.Value, report.TargetType.ToString(), report.TargetId, report.Reason,
+                report.Status.ToString(), report.AdminNote, report.CreatedOnUtc, report.ReviewedAtUtc))];
+            return Task.FromResult((models, models.Count));
+        }
+    }
 }

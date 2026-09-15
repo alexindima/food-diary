@@ -1,13 +1,13 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Contracts.Queries.GetContentReportsForAdministration;
+using FoodDiary.Modules.ContentReports.Contracts.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Application.ContentReports.Queries.GetContentReportsForAdministration;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Modules.Admin.Application.Models;
-using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminContentReports;

@@ -25,7 +25,7 @@
     <ProjectReference Include="../../../Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="../../../Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
     <ProjectReference Include="../../../Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
-    <ProjectReference Include="../../../ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../ContentReports/Application.Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="../../../ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />
     <ProjectReference Include="../../../ContentReports/Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj" />
@@ -48,6 +48,7 @@
     <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 

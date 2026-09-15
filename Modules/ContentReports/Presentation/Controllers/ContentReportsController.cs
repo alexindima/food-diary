@@ -1,14 +1,14 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Presentation.Api.Features.ContentReports.Mappings;
-using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
-using FoodDiary.Presentation.Api.Features.ContentReports.Responses;
+using FoodDiary.Modules.ContentReports.Presentation.Mappings;
+using FoodDiary.Modules.ContentReports.Presentation.Requests;
+using FoodDiary.Modules.ContentReports.Presentation.Responses;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Features.ContentReports;
+namespace FoodDiary.Modules.ContentReports.Presentation.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/reports")]

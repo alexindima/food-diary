@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.ContentReports.Common;
+namespace FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 
 public interface IContentReportTargetReadService {
     Task<bool> IsReportableAsync(

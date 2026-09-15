@@ -25,11 +25,11 @@ public sealed class AdminScalarBoundaryTests {
 
     [Theory]
     [InlineData(typeof(FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames), "Billing", "")]
-    [InlineData(typeof(FoodDiary.Domain.Enums.ReportStatus), "ContentReports", "Enums")]
-    [InlineData(typeof(FoodDiary.Domain.Enums.ReportTargetType), "ContentReports", "Enums")]
+    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus), "ContentReports", "Enums")]
+    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType), "ContentReports", "Enums")]
     [InlineData(typeof(FoodDiary.Domain.Enums.AchievementMetric), "Gamification", "Enums")]
     [InlineData(typeof(FoodDiary.Domain.Entities.Achievements.AchievementDefinitionLimits), "Gamification", "Entities/Achievements")]
-    [InlineData(typeof(FoodDiary.Domain.ValueObjects.Ids.ContentReportId), "ContentReports", "ValueObjects/Ids")]
+    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids.ContentReportId), "ContentReports", "ValueObjects/Ids")]
     public void Scalars_HaveOneNarrowOwner(Type type, string owner, string folder) {
         string projectName = $"FoodDiary.Modules.{owner}.Domain.Contracts";
         Assert.Equal(projectName, type.Assembly.GetName().Name);
@@ -44,7 +44,7 @@ public sealed class AdminScalarBoundaryTests {
 
         string[] expectedTypes = owner switch {
             "Billing" => ["FoodDiary.Modules.Billing.Domain.Contracts.BillingPremiumAccessPolicy", "FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames"],
-            "ContentReports" => ["FoodDiary.Domain.Enums.ReportStatus", "FoodDiary.Domain.Enums.ReportTargetType", "FoodDiary.Domain.ValueObjects.Ids.ContentReportId"],
+            "ContentReports" => ["FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus", "FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType", "FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids.ContentReportId"],
             "Gamification" => ["FoodDiary.Domain.Entities.Achievements.AchievementDefinitionLimits", "FoodDiary.Domain.Enums.AchievementMetric"],
             _ => throw new ArgumentOutOfRangeException(nameof(owner)),
         };

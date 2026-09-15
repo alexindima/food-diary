@@ -1,8 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.ContentReports.Domain</AssemblyName>
-    <RootNamespace>FoodDiary.Domain</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.ContentReports.Domain.Contracts.csproj" />

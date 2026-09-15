@@ -13,6 +13,25 @@ internal sealed class EfModuleTransactionCoordinator(
     IPostCommitActionQueue? postCommitActionQueue = null) : IModuleTransactionCoordinator {
     public DbTransaction? CurrentTransaction => context.Database.CurrentTransaction?.GetDbTransaction();
 
+    public async Task<bool> ExecuteItemAsync(
+        Func<DbTransaction, CancellationToken, Task<bool>> operation,
+        CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(operation);
+        SharedTransactionBoundary.EnsureCleanEntry(context);
+        IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
+            IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await using (transaction.ConfigureAwait(false)) {
+                bool processed = await operation(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+                if (processed) {
+                    await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                }
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                return processed;
+            }
+        }, cancellationToken)).ConfigureAwait(false);
+    }
+
     public async Task<T> ExecuteAsync<T>(
         Func<DbTransaction, CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default) {

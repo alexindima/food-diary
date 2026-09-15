@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -148,8 +149,10 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         central.ImageAssets.Add(ImageAsset.Create(user.Id, "purged-image", "https://example.com/image"));
         await central.SaveChangesAsync();
         await using ServiceProvider provider = CreateProvider(central);
-        var cleanup = new UserCleanupService(central, provider.GetServices<IUserDataPurgeParticipant>(),
-            NullLogger<UserCleanupService>.Instance, provider.GetRequiredService<IUnitOfWork>());
+        var cleanup = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), provider.GetServices<IUserDataPurgeParticipant>(),
+            NullLogger<UserCleanupService>.Instance,
+            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
+            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleScopeGuard>());
         Assert.Equal(1, await cleanup.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null));
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         Assert.False(await read.Users.AnyAsync(item => item.Id == user.Id));
@@ -182,6 +185,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context, IAchievementReconciliationHandler? reconciliation = null) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddUsersPersistence();
         services.AddSingleton(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddNotificationsPersistence();

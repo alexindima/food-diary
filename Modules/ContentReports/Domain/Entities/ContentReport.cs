@@ -1,16 +1,15 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Social;
+namespace FoodDiary.Modules.ContentReports.Domain.Entities;
 
 public sealed class ContentReport : AggregateRoot<ContentReportId> {
     private const int ReasonMaxLength = 1000;
     private const int AdminNoteMaxLength = 2000;
 
     public UserId UserId { get; private set; }
-#pragma warning disable RCS1170 // EF Core navigation property requires a private setter.
-#pragma warning restore RCS1170
     public ReportTargetType TargetType { get; private set; }
     public Guid TargetId { get; private set; }
     public string Reason { get; private set; } = string.Empty;

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.ContentReports.Infrastructure;
+using FoodDiary.Modules.ContentReports.Presentation.Extensions;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Modules.BodyMetrics.Presentation.Extensions;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
@@ -34,7 +36,6 @@ using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
-using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Application.Export;

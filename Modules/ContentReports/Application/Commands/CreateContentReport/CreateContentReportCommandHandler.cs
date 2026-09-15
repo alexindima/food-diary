@@ -1,14 +1,14 @@
+using FoodDiary.Modules.ContentReports.Domain.Entities;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Application.ContentReports.Common;
-using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Domain.Entities.Social;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
+using FoodDiary.Modules.ContentReports.Application.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
+namespace FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
 
 public sealed class CreateContentReportCommandHandler(
     IContentReportWriteRepository reportRepository,

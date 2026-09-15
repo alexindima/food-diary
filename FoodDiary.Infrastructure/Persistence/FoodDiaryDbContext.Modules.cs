@@ -2,15 +2,19 @@ using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public sealed partial class FoodDiaryDbContext : IModuleContextFactory {
+public sealed partial class FoodDiaryDbContext : IModuleContextFactory, IModuleChangeTrackerSource {
     private readonly List<DbContext> _moduleContexts = [];
     private readonly Dictionary<DbContext, int> _moduleSaveOrders = [];
 
     internal bool IsCoordinatingModuleSave { get; set; }
     internal IReadOnlyList<DbContext> ModuleContexts => _moduleContexts;
+
+    IReadOnlyList<EntityEntry> IModuleChangeTrackerSource.GetModuleEntries<TContext>() =>
+        [.. _moduleContexts.OfType<TContext>().SelectMany(module => module.ChangeTracker.Entries())];
 
     public TContext CreateModuleContext<TContext>(Func<DbContextOptions<TContext>, TContext> factory, int saveOrder = 100)
         where TContext : DbContext {

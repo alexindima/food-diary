@@ -5,7 +5,6 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
@@ -118,9 +117,6 @@ public sealed class SecondPassDomainHardeningTests {
         Assert.Throws<ArgumentOutOfRangeException>(() => DietologistInvitation.Create(
             UserId.New(), "diet@example.com", "hash", new DateTime(2026, 1, 1), DietologistPermissions.AllEnabled));
 
-        var report = ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Reason");
-        Assert.Throws<ArgumentOutOfRangeException>(() => report.MarkReviewed(UserId.New(), new string('x', 2001)));
-        Assert.Equal(ReportStatus.Pending, report.Status);
     }
 
     private static ProtectedWearableToken ProtectedToken(string value) =>
@@ -175,7 +171,8 @@ public sealed class SecondPassDomainHardeningTests {
         BillingPayment payment = CreatePayment(amount: 12.34m, currency: " usd ");
 
         Assert.Equal("USD", payment.Currency);
-        Assert.Throws<ArgumentOutOfRangeException>(() => CreatePayment(amount: 12.345m));
+        Assert.Equal(12.345m, CreatePayment(amount: 12.345m).Amount);
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreatePayment(amount: 12.3456m));
         Assert.Throws<ArgumentOutOfRangeException>(() => CreatePayment(amount: 10_000_000_000_000_000m));
         Assert.Throws<ArgumentException>(() => CreatePayment(currency: "US1"));
         Assert.Throws<ArgumentException>(() => CreatePayment(currency: "US"));

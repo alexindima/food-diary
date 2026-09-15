@@ -24,7 +24,8 @@ internal static class PresentationTestDiscovery {
     internal static string GetFeatureSourceRoot(string presentationRoot) =>
         (File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Admin.Presentation.csproj"))
             || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Ai.Presentation.csproj"))
-            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Billing.Presentation.csproj")))
+            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.Billing.Presentation.csproj"))
+            || File.Exists(Path.Combine(presentationRoot, "FoodDiary.Modules.ContentReports.Presentation.csproj")))
             ? presentationRoot : Path.Combine(presentationRoot, "Features");
 
     internal static string AdminPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Admin", "Presentation");
@@ -32,6 +33,8 @@ internal static class PresentationTestDiscovery {
     internal static string AiPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Ai", "Presentation");
 
     internal static string BillingPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "Billing", "Presentation");
+
+    internal static string ContentReportsPresentationRoot => Path.Combine(GetRepositoryRoot(), "Modules", "ContentReports", "Presentation");
 
     private static Assembly[] DiscoverAssemblies() => [
         typeof(BaseApiController).Assembly,

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
@@ -44,7 +45,6 @@ using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
-using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
@@ -806,13 +806,13 @@ public sealed class DependencyInjectionTests {
         { "FoodDiary.Modules.Ai.Application.Abstractions.Common.IFoodRecognitionJobStore", ["FoodDiary.Modules.Ai.Application.Abstractions.Common.IFoodRecognitionJobReader"] },
         {
             "FoodDiary.Modules.ContentReports.Infrastructure.Persistence.ContentReportRepository",
-            ["FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportWriteRepository"]
+            ["FoodDiary.Modules.ContentReports.Application.Abstractions.Common.IContentReportWriteRepository"]
         },
         {
             "FoodDiary.ReadModel.Composition.ContentReports.ContentReportReadService",
             [
-                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportReadModelRepository",
-                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportTargetReadService",
+                "FoodDiary.Modules.ContentReports.Application.Abstractions.Common.IContentReportReadModelRepository",
+                "FoodDiary.Modules.ContentReports.Application.Abstractions.Common.IContentReportTargetReadService",
             ]
         },
         {

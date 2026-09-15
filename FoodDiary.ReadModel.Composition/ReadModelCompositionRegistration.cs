@@ -17,7 +17,7 @@ using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.ReadModel.Composition.Images;
 using FoodDiary.ReadModel.Composition.Gamification;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.ReadModel.Composition.ContentReports;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.ReadModel.Composition.MealPlanning;

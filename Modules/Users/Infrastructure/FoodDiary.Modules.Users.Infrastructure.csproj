@@ -16,12 +16,12 @@
     <ProjectReference Include="../Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Npgsql" />
   </ItemGroup>
 </Project>

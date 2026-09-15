@@ -37,12 +37,6 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
-      "fooddiary.modules.billing.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Mediator": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.marketing.application.abstractions": {
         "type": "Project"
       },

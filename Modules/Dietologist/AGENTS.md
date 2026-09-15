@@ -15,7 +15,7 @@ Rules for `Modules/Dietologist/`.
   `AddDietologistModule` registers one scoped EF `ISaveChangesInterceptor` with
   `TryAddEnumerable`; central persistence installs module interceptors after domain
   event dispatch. Preserve synchronous/asynchronous SaveChanges timing and the
-  shared transaction. AuditEntry/table/writer stay central; the exact module IVT
+  shared transaction. AuditEntry/model belong to Shared/FoodDiary.Audit.PersistenceModel; the writer and coordinated save stay central. The shared audit model IVT
   grants internal storage access without making a public audit entity API.
 - Focused audit rule/composition tests live in the existing module Infrastructure
   tests. Central PostgreSQL tests retain the shared dispatch/transaction boundary.
@@ -44,12 +44,15 @@ Joined invitation, recommendation and comment DTO reads are implemented and regi
 DietologistDbContext owns the six collaboration entities at runtime. Repositories
 receive owner sets (the invitation repository uses the typed context for detached
 reconciliation). Central mappings and ten User FKs remain migration-owned.
-CollaborationAuditInterceptor inspects the central tracker plus registered
-Dietologist contexts during the central save, before owner persistence. Pending
+CollaborationAuditInterceptor inspects the save tracker plus registered
+Dietologist entries through IModuleChangeTrackerSource during the central save, before owner persistence. Pending
 audit entries are reused across retries; successful saves/reset release their
 tracking state. Coordinated saves always invoke central interception, including
 when only an owner changed. Audit and owner writes require a relational provider;
 non-relational coordinated audit is rejected before persistence. User purge uses
 DietologistDbContext and rebinds the live coordinator transaction on each call.
-Preserve order 40 and both client/dietologist predicates. Only the audit interceptor
-retains direct central context access. See ADR 0040 and shared PostgreSQL tests.
+Preserve order 40 and both client/dietologist predicates. The audit interceptor retains central AuditEntry storage access, but does not depend on the concrete shared context. See ADR 0040 and shared PostgreSQL tests.
+
+IModuleChangeTrackerSource is implemented by the save context, not resolved through DI; this avoids creating a context/interceptor dependency cycle. Inspect only DietologistDbContext entries, preserve registration order and DetectChanges behavior, and keep the existing synchronous/asynchronous central save timing and pending-event deduplication.
+
+Dietologist Infrastructure references Audit.PersistenceModel directly and has no central Infrastructure project reference or friend grant. Its infrastructure tests explicitly reference central Infrastructure and persistence abstractions for coordinated-save fixtures. The shared audit model retains its exact existing Dietologist friend grant.

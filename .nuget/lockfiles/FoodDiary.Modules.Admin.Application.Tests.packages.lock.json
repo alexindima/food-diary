@@ -165,45 +165,12 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
-      "FoodDiary.Application.ContentReports": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
       "fooddiary.application.contracts": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "FoodDiary.Application.Gamification": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Gamification.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Gamification.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Gamification.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Gamification.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
       "FoodDiary.Application.Identity": {
@@ -329,6 +296,23 @@
       "fooddiary.modules.billing.domain.contracts": {
         "type": "Project"
       },
+      "fooddiary.modules.contentreports.application": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.contentreports.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -361,28 +345,12 @@
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.gamification.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Gamification.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.gamification.contracts": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.gamification.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
-          "FoodDiary.Modules.Gamification.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.gamification.domain.contracts": {
@@ -460,31 +428,10 @@
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.meals.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.meals.domain.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.notifications.contracts": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.products.domain.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
       "fooddiary.modules.users.application.abstractions": {

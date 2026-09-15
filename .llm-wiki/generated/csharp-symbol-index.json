@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4102,
-    "symbols": 4043,
+    "sourceFiles": 4105,
+    "symbols": 4046,
     "interfaceImplementationLinks": 240,
     "dependencyInjectionRegistrations": 134,
     "kinds": {
-      "class": 2127,
+      "class": 2129,
       "enum": 64,
-      "interface": 447,
+      "interface": 448,
       "record": 1284,
       "record struct": 121
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1644,
+      "Other": 1645,
       "Query": 237,
       "QueryHandler": 165,
       "ReadModelRepository": 32,
@@ -41,7 +41,7 @@
       "Request": 150,
       "Response": 213,
       "Service": 261,
-      "Validator": 223,
+      "Validator": 225,
       "ValueObject": 115,
       "WriteRepository": 45
     }
@@ -836,7 +836,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Modules.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FoodDiaryDbContext",
@@ -2264,7 +2264,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 54
+      "line": 55
     },
     {
       "name": "ApiTelemetry",
@@ -2845,7 +2845,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ExchangeAdminImpersonationCommandHandler",
@@ -2922,7 +2922,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "SendAdminEmailTemplateTestCommand",
@@ -7083,32 +7083,25 @@
       "line": 17
     },
     {
-      "name": "ContentReportErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/ContentReports/Application/Abstractions/Common/ContentReportErrors.cs",
-      "line": 4
-    },
-    {
       "name": "IContentReportReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportReadModelRepository.cs",
+      "path": "Modules/ContentReports/Application.Abstractions/Common/IContentReportReadModelRepository.cs",
       "line": 5
     },
     {
       "name": "IContentReportTargetReadService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportTargetReadService.cs",
+      "path": "Modules/ContentReports/Application.Abstractions/Common/IContentReportTargetReadService.cs",
       "line": 5
     },
     {
       "name": "IContentReportWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportWriteRepository.cs",
-      "line": 6
+      "path": "Modules/ContentReports/Application.Abstractions/Common/IContentReportWriteRepository.cs",
+      "line": 7
     },
     {
       "name": "CreateContentReportCommand",
@@ -7136,14 +7129,35 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "line": 8
+      "line": 10
+    },
+    {
+      "name": "DismissContentReportCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/ContentReports/Application/Commands/DismissContentReport/DismissContentReportCommandValidator.cs",
+      "line": 5
     },
     {
       "name": "ReviewContentReportCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "line": 8
+      "line": 10
+    },
+    {
+      "name": "ReviewContentReportCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "ContentReportErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Application/Common/ContentReportErrors.cs",
+      "line": 4
     },
     {
       "name": "ContentReportTargetTypeParser",
@@ -7185,14 +7199,14 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/ContentReports/Contracts/Commands/DismissContentReport/DismissContentReportCommand.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ReviewContentReportCommand",
       "kind": "record",
       "role": "Command",
       "path": "Modules/ContentReports/Contracts/Commands/ReviewContentReport/ReviewContentReportCommand.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ContentReportAdminFilter",
@@ -7247,29 +7261,15 @@
       "name": "ContentReport",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 6
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 7
     },
     {
       "name": "ContentReportsDomainGuard",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
+      "path": "Modules/ContentReports/Domain/Entities/ContentReportsDomainGuard.cs",
       "line": 2
-    },
-    {
-      "name": "ContentReportConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "ContentReportsPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/ContentReports/Infrastructure/Model/ContentReportsPersistenceModelRegistration.cs",
-      "line": 4
     },
     {
       "name": "ModuleRegistration",
@@ -7283,48 +7283,62 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ContentReportsDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs",
-      "line": 5
+      "line": 7
     },
     {
-      "name": "ContentReportsPresentationServiceCollectionExtensions",
+      "name": "ContentReportConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/ContentReports/PersistenceModel/Configurations/ContentReportConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "ContentReportsPersistenceModelRegistration",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/ContentReports/Presentation/Extensions/ContentReportsPresentationServiceCollectionExtensions.cs",
+      "path": "Modules/ContentReports/PersistenceModel/ContentReportsPersistenceModelRegistration.cs",
       "line": 4
     },
     {
       "name": "ContentReportsController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/ContentReportsController.cs",
+      "path": "Modules/ContentReports/Presentation/Controllers/ContentReportsController.cs",
       "line": 15
+    },
+    {
+      "name": "ContentReportsPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Presentation/Extensions/ContentReportsPresentationServiceCollectionExtensions.cs",
+      "line": 5
     },
     {
       "name": "ContentReportHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/Mappings/ContentReportHttpMappings.cs",
+      "path": "Modules/ContentReports/Presentation/Mappings/ContentReportHttpMappings.cs",
       "line": 7
     },
     {
       "name": "CreateContentReportHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/Requests/CreateContentReportHttpRequest.cs",
+      "path": "Modules/ContentReports/Presentation/Requests/CreateContentReportHttpRequest.cs",
       "line": 2
     },
     {
       "name": "ContentReportHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/ContentReports/Presentation/Features/ContentReports/Responses/ContentReportHttpResponse.cs",
+      "path": "Modules/ContentReports/Presentation/Responses/ContentReportHttpResponse.cs",
       "line": 2
     },
     {
@@ -10216,7 +10230,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ClientTaskRepository",
@@ -24377,7 +24391,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "UserProfileProjectionService",
@@ -28286,6 +28300,13 @@
       "line": 6
     },
     {
+      "name": "IModuleChangeTrackerSource",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/IModuleChangeTrackerSource.cs",
+      "line": 7
+    },
+    {
       "name": "IModuleContextFactory",
       "kind": "interface",
       "role": "Factory",
@@ -30226,7 +30247,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 185
+      "line": 186
     },
     {
       "service": "IAdminDashboardReadService",

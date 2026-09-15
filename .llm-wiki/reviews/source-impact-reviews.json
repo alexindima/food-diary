@@ -64,40 +64,48 @@
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "c754c8ac412a0292e3b08416eeb1ce65064017fbe43fe20578bf8d660cd6eb7f",
+      "pageSha256": "1f2d93b0ccd86a9a9aecd6ac712685b0936eba4ccc90213b6a8ae77189c78e86",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "ed3d088a858200660c3a8ac94a9464762b8244b57700755e45f08cf48e60905d"
+          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
+          "sha256": "8b3edcf5ee1a8dc04880796a20fbc0c3a2f2e5788e11bb32bc0238a9972ca7b0"
         },
         {
-          "path": "Modules/Billing/Infrastructure/AGENTS.md",
-          "sha256": "d1b5ab02052c5789733a867ff36b4b4026738b4222674caa3a27cebd042b7140"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "9635144912989b085b54fd13d7060d9a2a5242f779ff5d0aed404a179b9c8297"
         }
       ],
-      "reason": "Reviewed source-backed navigation for Billing session-lease extraction. Owner numeric key and caller disposal remain; shared adapter owns independent connection acquisition without saving or retrying provider work. Contract/DI consumers and project removal inspected; no HTTP/schema/privacy lifecycle changes in this bounded task. Generated indexes remain navigation, not executed coverage.",
+      "reason": "Verified unchanged ContentReports DTO and controller bodies after namespace/import normalization, unchanged HTTP snapshots, and passing Swagger/Admin/ContentReports and presentation tests. New ports are infrastructure-only.",
       "baseRef": "HEAD",
-      "gitHead": "9ad52aa4e6bfa61f0a968db2c1cad12e373e4a0a",
-      "reviewedAtUtc": "2026-09-14T19:29:06.7189481Z"
+      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
+      "reviewedAtUtc": "2026-09-15T04:30:24.5885810Z"
     },
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "75a4b660c413fe4b1c86c9db282cbf40c0dbeaabbd80edbbeed8bc59830b3c80",
+      "pageSha256": "c247b430bbc9df2977a31d15bd2ccae1d483fc8e800dfab92db6fd031097f948",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "4f83c94c5d21bc880065f1857a705aab52b5a574f23d39f561da695f74f24522"
+          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
+          "sha256": "8b3edcf5ee1a8dc04880796a20fbc0c3a2f2e5788e11bb32bc0238a9972ca7b0"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d1be525d3e40166a223fa2863af2cec3c63719b3e2b96d48c946f9b66e658a26"
+          "sha256": "82446d72bf86bca2bade30562654b54f2f6e961f45ce7c3b855b4741cd318d5b"
         }
       ],
-      "reason": "Reviewed owner-query and contract changes against ADR 0041 and current guides: Users requests have explicit owner namespaces; query handlers consume persisted Users/Identity projections and a narrow Gamification administration projection; Billing references Marketing with no reverse edge. Shared transaction ownership and migration composition remain unchanged. Existing Wiki architecture/read-model statements remain accurate; detailed follow-up is recorded in docs/ai/cross-module-mediator-refactor.md and owner guides. Generated contracts, symbols, topology, project graph and health indexes have been refreshed. Concurrent BodyMetrics error translation is module-owned and verified by rollback/provider tests.",
+      "reason": "Reviewed owner-context cleanup, per-item retry/save/reset semantics, typed Dietologist audit inspection and direct shared audit model ownership against current sources and ADR 0040.",
       "baseRef": "HEAD",
-      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
-      "reviewedAtUtc": "2026-09-15T02:37:32.2764112Z"
+      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
+      "reviewedAtUtc": "2026-09-15T04:30:25.9935918Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -150,14 +158,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "4f83c94c5d21bc880065f1857a705aab52b5a574f23d39f561da695f74f24522"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
         }
       ],
-      "reason": "Reviewed owner-query and contract changes against ADR 0041 and current guides: Users requests have explicit owner namespaces; query handlers consume persisted Users/Identity projections and a narrow Gamification administration projection; Billing references Marketing with no reverse edge. Shared transaction ownership and migration composition remain unchanged. Existing Wiki architecture/read-model statements remain accurate; detailed follow-up is recorded in docs/ai/cross-module-mediator-refactor.md and owner guides. Generated contracts, symbols, topology, project graph and health indexes have been refreshed. Concurrent BodyMetrics error translation is module-owned and verified by rollback/provider tests.",
+      "reason": "Reviewed ContentReports canonical sibling project paths and explicit PersistenceModel source coverage. Primary-backend ownership, scalar Contracts boundary, shared transaction composition and catalog limitations remain accurate; Swagger snapshots and all 2162 selected cases passed after focused architecture recheck.",
       "baseRef": "HEAD",
-      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
-      "reviewedAtUtc": "2026-09-15T02:37:32.4805096Z"
+      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
+      "reviewedAtUtc": "2026-09-15T03:58:46.0651385Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -214,14 +222,18 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d1be525d3e40166a223fa2863af2cec3c63719b3e2b96d48c946f9b66e658a26"
+          "sha256": "82446d72bf86bca2bade30562654b54f2f6e961f45ce7c3b855b4741cd318d5b"
         }
       ],
-      "reason": "Reviewed BodyMetrics Presentation reference cleanup: unused owner Domain/Abstractions references removed, actual ISender use now references Mediator directly. Owner-request boundaries and shared transaction ownership are unchanged. The exact matrix and focused architecture checks passed; these pages still accurately describe the architecture and review process.",
+      "reason": "Reviewed transitive dependency guards, restricted tracker consumer, project discovery coverage, Docker relocation paths and deterministic regression corrections; test receipts distinguish complete focused runs from the stopped supplemental run.",
       "baseRef": "HEAD",
-      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
-      "reviewedAtUtc": "2026-09-15T02:25:44.2145456Z"
+      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
+      "reviewedAtUtc": "2026-09-15T04:30:27.7205410Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -492,14 +504,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "771e947503b026e01d7b017ba0f52ef655daacb798554940e0e48d46fc75fe3e"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "9635144912989b085b54fd13d7060d9a2a5242f779ff5d0aed404a179b9c8297"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed transitive dependency guards, restricted tracker consumer, project discovery coverage, Docker relocation paths and deterministic regression corrections; test receipts distinguish complete focused runs from the stopped supplemental run.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:27.2860485Z"
+      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
+      "reviewedAtUtc": "2026-09-15T04:30:29.6489359Z"
     },
     {
       "pageId": "workflow-durable-memory",

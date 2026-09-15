@@ -1,6 +1,6 @@
+using FoodDiary.Modules.ContentReports.PersistenceModel;
 using FoodDiary.Modules.Billing.PersistenceModel;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
-using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure.Model;
 using FoodDiary.Modules.BodyMetrics.PersistenceModel;

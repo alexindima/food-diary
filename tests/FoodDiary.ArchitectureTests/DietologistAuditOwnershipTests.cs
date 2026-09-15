@@ -25,4 +25,17 @@ public sealed class DietologistAuditOwnershipTests {
             name.TypeArgumentList.Arguments.SingleOrDefault() is IdentifierNameSyntax type &&
             string.Equals(type.Identifier.ValueText, "ISaveChangesInterceptor", StringComparison.Ordinal));
     }
+
+    [Fact]
+    public void ModuleTrackerInspection_RemainsLimitedToDietologistAudit() {
+        string[] consumers = [.. SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules"))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => File.ReadAllText(path).Contains("GetModuleEntries", StringComparison.Ordinal))
+            .Where(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetRoot()
+                .DescendantNodes().OfType<GenericNameSyntax>()
+                .Any(name => name.Identifier.ValueText.Equals("GetModuleEntries", StringComparison.Ordinal)))];
+        string consumer = Assert.Single(consumers);
+        Assert.Equal(ArchitectureTestPaths.FromRoot("Modules", "Dietologist", "Infrastructure", "Persistence", "Interceptors", "CollaborationAuditInterceptor.cs"), consumer);
+        Assert.Contains("GetModuleEntries<DietologistDbContext>()", File.ReadAllText(consumer), StringComparison.Ordinal);
+    }
 }

@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Entities.Social;
+namespace FoodDiary.Modules.ContentReports.Domain.Entities;
 
 internal static class ContentReportsDomainGuard {
     public static void Defined<TEnum>(TEnum value, string paramName) where TEnum : struct, Enum {

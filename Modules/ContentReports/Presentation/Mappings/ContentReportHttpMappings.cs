@@ -1,9 +1,9 @@
-using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
-using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
-using FoodDiary.Presentation.Api.Features.ContentReports.Responses;
+using FoodDiary.Modules.ContentReports.Application.Models;
+using FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
+using FoodDiary.Modules.ContentReports.Presentation.Requests;
+using FoodDiary.Modules.ContentReports.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Features.ContentReports.Mappings;
+namespace FoodDiary.Modules.ContentReports.Presentation.Mappings;
 
 public static class ContentReportHttpMappings {
     extension(CreateContentReportHttpRequest request) {

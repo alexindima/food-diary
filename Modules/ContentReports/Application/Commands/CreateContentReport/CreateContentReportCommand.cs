@@ -1,8 +1,8 @@
+using FoodDiary.Modules.ContentReports.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.ContentReports.Models;
 
-namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
+namespace FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
 
 public record CreateContentReportCommand(
     Guid? UserId,

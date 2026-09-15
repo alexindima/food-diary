@@ -91,7 +91,7 @@ cleanup and its separate checkout lease. See ADR 0040.
 Wearables consumes the narrow IModuleSessionCoordinator and has no direct or transitive central Infrastructure dependency. The central session coordinator retains a separate advisory lease, one provider callback, durable intermediate saves and final unit-of-work persistence. Transaction retries must never replay provider calls. See ADR 0040 and the runtime-context dependency inventory.
 
 ADR 0041 makes owner Contracts requests the public boundary for the migrated
-Admin, Ai, Billing and BodyMetrics use cases. Consumers dispatch through ISender;
+Admin, Ai, Billing, BodyMetrics and ContentReports use cases. Consumers dispatch through ISender;
 owner Application handlers implement the operations. Technical ports remain
 explicit exceptions. Nested mutations preserve caller-owned commits, and Billing
 references Marketing.Contracts for conversion recording. Request-boundary and

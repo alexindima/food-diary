@@ -182,8 +182,8 @@
       "area": "FoodDiary",
       "name": "ContentReport",
       "role": "entity",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 6
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 7
     },
     {
       "area": "FoodDiary",
@@ -1913,56 +1913,56 @@
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 27
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 26
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"TargetId is required.\", nameof(targetId))",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 31
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 30
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"ReviewerUserId is required.\", nameof(reviewerUserId))",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 74
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 73
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Only pending content reports can be resolved.\")",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 78
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 77
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Reason is required.\", nameof(reason))",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 84
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 83
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(reason), $\"Reason must be at most {ReasonMaxLength} characters.\")",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 89
+      "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
+      "line": 88
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName)",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
+      "path": "Modules/ContentReports/Domain/Entities/ContentReportsDomainGuard.cs",
       "line": 6
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, FormattableString.Invariant($\"Value must be at most {maxLength} characters.\"))",
-      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
+      "path": "Modules/ContentReports/Domain/Entities/ContentReportsDomainGuard.cs",
       "line": 17
     },
     {
@@ -5366,7 +5366,7 @@
         "e => new { e.UserId, e.TargetType, e.TargetId }).IsUnique()"
       ],
       "relationships": [],
-      "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs"
+      "path": "Modules/ContentReports/PersistenceModel/Configurations/ContentReportConfiguration.cs"
     },
     {
       "area": "FoodDiary",

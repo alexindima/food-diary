@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
@@ -281,6 +282,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(
             new FoodDiary.Infrastructure.Persistence.Shared.EfModuleTransactionCoordinator(context,
                 new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance)));
+        services.AddUsersPersistence();
         services.AddAdminPersistence();
         services.AddAiPersistence();
         services.AddBodyMetricsModule();
@@ -299,8 +301,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         ServiceProvider provider = services.BuildServiceProvider();
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
         Assert.Equal(extra is null ? 13 : 14, participants.Length);
-        service = new UserCleanupService(context, participants, NullLogger<UserCleanupService>.Instance,
-            new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance));
+        service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
+            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
+            new FoodDiary.Infrastructure.Persistence.Shared.EfModuleScopeGuard(context));
         return provider;
     }
 

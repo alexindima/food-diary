@@ -28,5 +28,14 @@
   "waist-entry-duplicate-date": {
     "Error": "WaistEntry.AlreadyExists",
     "Message": "Waist entry for 2026-03-25 already exists."
+  },
+  "admin-report-note-too-long": {
+    "Error": "Validation.Invalid",
+    "Message": "Admin note must be at most 2000 characters.",
+    "Errors": {
+      "adminNote": [
+        "Admin note must be at most 2000 characters."
+      ]
+    }
   }
 }

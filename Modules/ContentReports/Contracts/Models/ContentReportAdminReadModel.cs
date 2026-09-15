@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodDiary.Application.ContentReports.Models;
+namespace FoodDiary.Modules.ContentReports.Contracts.Models;
 
 [ExcludeFromCodeCoverage]
 public sealed record ContentReportAdminReadModel(
