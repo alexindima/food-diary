@@ -21,8 +21,16 @@ to that assembly.
 
 Tooling/Testing owns TestProjects.props, test.runsettings, xunit.runner.json and
 shared testing guidance. Each group imports the common settings directly through
-its Directory.Build.props. Root tests retains only the two mixed donor suites and
-their forwarding import while module extraction continues.
+its Directory.Build.props. Root tests retains the mixed Domain donor suite and
+its forwarding import while module extraction continues.
+
+The Application donor has now been semantically extracted: shared Runtime,
+Application.Contracts and Email.Contracts have focused suites under Shared/tests;
+module scenarios live with their owners. Actual assembly-ownership and runtime
+registration boundary checks live in ArchitectureTests. Only Domain.Tests remains
+in root tests. Shared suites must not acquire business-module dependencies, even
+transitively. Modules reference the reusable assertion helper assembly instead of
+linking sources from a different test suite.
 
 Keep project and assembly identities, direct dependencies, test categories and
 snapshot contents unchanged. Production host/platform paths do not move as part

@@ -179,9 +179,9 @@ public sealed partial class WeeklyCheckInFeatureTests {
         Assert.Equal(1600, model.ThisWeek.TotalCalories);
         Assert.Equal(3, model.ThisWeek.MealsLogged);
         Assert.Equal(2, model.ThisWeek.DaysLogged);
-        Assert.Equal(11.4, model.ThisWeek.AvgProteins);
-        Assert.Equal(7.1, model.ThisWeek.AvgFats);
-        Assert.Equal(28.6, model.ThisWeek.AvgCarbs);
+        Assert.Equal(80, model.ThisWeek.AvgProteins);
+        Assert.Equal(50, model.ThisWeek.AvgFats);
+        Assert.Equal(200, model.ThisWeek.AvgCarbs);
     }
 
     [Fact]
@@ -282,7 +282,8 @@ public sealed partial class WeeklyCheckInFeatureTests {
         ISender? weightEntryReadService = null,
         ISender? waistEntryReadService = null,
         ISender? hydrationEntryReadService = null,
-        IUserWeeklyCheckInProfileReadService? profileService = null) =>
+        IUserWeeklyCheckInProfileReadService? profileService = null,
+        DateTime? today = null) =>
         new(
             RequestTestSender.Route(
                 (mealActivityReadService ?? CreateMealActivityReadService(), [typeof(ReadMealCountQuery)]),
@@ -292,7 +293,7 @@ public sealed partial class WeeklyCheckInFeatureTests {
                 (hydrationEntryReadService ?? CreateHydrationEntryReadService(), [typeof(ReadHydrationDailyTotalsQuery)])),
             Substitute.For<ICurrentUserAccessService>(),
             profileService ?? CreateProfileService(user: null),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(today));
 
     private static ISender CreateMealActivityReadService() {
         ISender service = Substitute.For<ISender>();
@@ -365,8 +366,8 @@ public sealed partial class WeeklyCheckInFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : TimeProvider {
-        public override DateTimeOffset GetUtcNow() => new(Today);
+    private sealed class StubDateTimeProvider(DateTime? today = null) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(today ?? Today);
     }
 
 }

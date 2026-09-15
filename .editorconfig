@@ -315,7 +315,7 @@ dotnet_diagnostic.MA0051.severity = warning
 [Tooling/tests/FoodDiary.ArchitectureTests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.Application.Tests/**/*.cs]
+[Shared/tests/FoodDiary.Application.Runtime.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [Platform/tests/FoodDiary.Infrastructure.Tests/**/*.cs]

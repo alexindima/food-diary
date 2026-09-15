@@ -62,10 +62,12 @@ Source: `Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/Mai
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/CsvFieldEscaperTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Time/UtcDateNormalizerTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/Resources/DiaryPdfReportResourceTextProviderTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/Resources/ResourceContractTests.cs`

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1644,
-    "dependencyViolations": 1,
+    "productionProjectEdges": 1643,
+    "dependencyViolations": 0,
     "unusedAllowances": 0,
-    "untrackedProductionProjects": 1,
+    "untrackedProductionProjects": 0,
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 1,
@@ -16,22 +16,9 @@
     "criticalSymbolsWithoutTestReferences": 27,
     "explicitDebtMarkers": 10
   },
-  "projectDependencyViolations": [
-    {
-      "source": "FoodDiary.Testing",
-      "target": "FoodDiary.Mediator",
-      "sourcePath": "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj",
-      "targetPath": "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
-      "isTest": false
-    }
-  ],
+  "projectDependencyViolations": [],
   "unusedProjectAllowances": [],
-  "untrackedProductionProjects": [
-    {
-      "name": "FoodDiary.Testing",
-      "path": "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
-    }
-  ],
+  "untrackedProductionProjects": [],
   "moduleCycleNodes": [],
   "moduleHotspots": [
     {

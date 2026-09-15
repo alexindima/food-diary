@@ -29,7 +29,7 @@ public sealed class MealProductNutritionQuery(ICompositionReadContext context) :
             .Take(limit)
             .Select(item => new UsdaMealProductNutritionReadModel(
                 item.Amount,
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.BaseAmount).Single(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.BaseUnit).Single(),
                 context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.UsdaFdcId).Single()))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }

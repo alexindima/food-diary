@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="FoodDiary.Testing.Assertions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../FoodDiary.Results/FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
+  </ItemGroup>
+
+</Project>

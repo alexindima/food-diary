@@ -92,7 +92,10 @@ and dependencies. Do not run the same group concurrently in one checkout.
 | Project | Purpose |
 | --- | --- |
 | `Tooling/tests/FoodDiary.ArchitectureTests` | Project references, source conventions, layer boundaries, async/cancellation guardrails. |
-| `tests/FoodDiary.Application.Tests` | Application use cases, handlers, validation, application services. |
+| `Modules/<Owner>/tests/FoodDiary.Modules.<Owner>.Application.Tests` | Owner use cases, handlers, validators, mappings and services. |
+| `Shared/tests/FoodDiary.Application.Runtime.Tests` | Shared pipeline, transactions and post-commit queue. |
+| `Shared/tests/FoodDiary.Application.Contracts.Tests` | Generic validation, pagination, temporal policies and error resolution. |
+| `Shared/tests/FoodDiary.Email.Contracts.Tests` | Shared email options. |
 | `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests` | Weight/waist entry commands, queries, validators, mappings, read services, and date/user-scoping semantics. |
 | `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests` | Product invariants and all 43 food scoring, grade and unit contract cases from the retired Nutrition suite. |
 | `tests/FoodDiary.Domain.Tests` | Core domain invariants, value objects, entities, and domain events. |

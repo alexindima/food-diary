@@ -88,7 +88,7 @@ public sealed class LegacyTokenUpgradeTests {
         public WearableProvider Provider => WearableProvider.Fitbit;
         public string GetAuthorizationUrl(string state) => throw new NotSupportedException();
         public Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<Result<WearableTokenResult>> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<Result<IReadOnlyList<WearableDataPoint>>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken cancellationToken = default) =>
             Task.FromResult(Result.Success<IReadOnlyList<WearableDataPoint>>([]));
     }

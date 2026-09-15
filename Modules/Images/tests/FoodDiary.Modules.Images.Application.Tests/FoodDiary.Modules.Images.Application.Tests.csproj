@@ -9,22 +9,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Testing.Assertions" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\tests\FoodDiary.Application.Tests\Support\ResultAssert.cs" Link="Support\ResultAssert.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../../Application/FoodDiary.Modules.Images.Application.csproj" />
     <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.Images.Application.csproj" />
     <ProjectReference Include="../../Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Application/FoodDiary.Modules.Users.Application.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 </Project>

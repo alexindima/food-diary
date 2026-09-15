@@ -127,6 +127,6 @@ public sealed class GetWeeklyCheckInQueryHandler(
             weights,
             waists,
             hydration,
-            daysInPeriod: 7));
+            daysInPeriod: (dateTo.Date - dateFrom.Date).Days + 1));
     }
 }

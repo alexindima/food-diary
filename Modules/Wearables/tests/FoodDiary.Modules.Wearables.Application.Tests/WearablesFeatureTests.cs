@@ -18,7 +18,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Wearables.Application.Tests;
 
 [ExcludeFromCodeCoverage]
-public class WearablesFeatureTests {
+public sealed partial class WearablesFeatureTests {
     private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     private const string RequestHash = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
 
@@ -268,7 +268,7 @@ public class WearablesFeatureTests {
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(connection);
 
-        var handler = new DisconnectWearableCommandHandler(repo, CreateCurrentUserAccessService());
+        var handler = new DisconnectWearableCommandHandler(repo, CreateCurrentUserAccessService(), new SerializedWearableTransactionRunner());
         Result result = await handler.Handle(
             new DisconnectWearableCommand(userId.Value, "Fitbit"),
             CancellationToken.None);
@@ -279,7 +279,7 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task DisconnectWearable_WhenNotConnected_ReturnsFailure() {
-        var handler = new DisconnectWearableCommandHandler(new InMemoryWearableConnectionRepository(), CreateCurrentUserAccessService());
+        var handler = new DisconnectWearableCommandHandler(new InMemoryWearableConnectionRepository(), CreateCurrentUserAccessService(), new SerializedWearableTransactionRunner());
 
         Result result = await handler.Handle(
             new DisconnectWearableCommand(Guid.NewGuid(), "Fitbit"),
@@ -291,7 +291,7 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task DisconnectWearable_WithInvalidProvider_ReturnsFailure() {
-        var handler = new DisconnectWearableCommandHandler(new InMemoryWearableConnectionRepository(), CreateCurrentUserAccessService());
+        var handler = new DisconnectWearableCommandHandler(new InMemoryWearableConnectionRepository(), CreateCurrentUserAccessService(), new SerializedWearableTransactionRunner());
 
         Result result = await handler.Handle(
             new DisconnectWearableCommand(Guid.NewGuid(), "Unknown"),
@@ -302,7 +302,7 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task DisconnectWearable_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new DisconnectWearableCommandHandler(new InMemoryWearableConnectionRepository(), CreateCurrentUserAccessService());
+        var handler = new DisconnectWearableCommandHandler(new InMemoryWearableConnectionRepository(), CreateCurrentUserAccessService(), new SerializedWearableTransactionRunner());
 
         Result result = await handler.Handle(
             new DisconnectWearableCommand(Guid.Empty, "Fitbit"),
@@ -525,7 +525,7 @@ public class WearablesFeatureTests {
         Assert.Equal(250, result.Value.CaloriesBurned);
         Assert.Equal(2, syncRepository.AddedCount);
         Assert.True(connectionRepository.UpdateCalled);
-        Assert.Equal($"wearable-sync:{userId.Value:N}:Fitbit:2026-05-06", transactionRunner.LastSerializationKey);
+        Assert.Equal($"wearable-connection:{userId.Value:N}:Fitbit", transactionRunner.LastSerializationKey);
     }
 
     [Fact]
@@ -813,20 +813,37 @@ public class WearablesFeatureTests {
         public WearableTokenResult? RefreshTokenResult { get; init; } = new("new-access", "new-refresh", "ext", DateTime.UtcNow.AddHours(1));
         public IReadOnlyList<WearableDataPoint> DataPoints { get; init; } = [];
         public Error? DataError { get; init; }
+        public Error? RefreshError { get; init; }
+        public int RefreshCallCount { get; private set; }
+        public Func<CancellationToken, Task>? BeforeRefresh { get; init; }
+        public Func<CancellationToken, Task>? BeforeExchange { get; init; }
         public int ExchangeCodeCallCount { get; private set; }
         public TimeSpan ExchangeDelay { get; init; }
 
         public string GetAuthorizationUrl(string state) => $"https://auth.example.com?state={state}";
         public async Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
             ExchangeCodeCallCount++;
+            if (BeforeExchange is not null) {
+                await BeforeExchange(cancellationToken);
+            }
             if (ExchangeDelay > TimeSpan.Zero) {
                 await Task.Delay(ExchangeDelay, cancellationToken);
             }
 
             return tokenResult;
         }
-        public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) =>
-            Task.FromResult(RefreshTokenResult);
+        public async Task<Result<WearableTokenResult>> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) {
+            RefreshCallCount++;
+            if (BeforeRefresh is not null) {
+                await BeforeRefresh(cancellationToken);
+            }
+            if (RefreshError is not null) {
+                return Result.Failure<WearableTokenResult>(RefreshError);
+            }
+            return RefreshTokenResult is not null
+                ? Result.Success(RefreshTokenResult)
+                : Result.Failure<WearableTokenResult>(WearableErrors.AuthFailed(Provider.ToString()));
+        }
         public Task<Result<IReadOnlyList<WearableDataPoint>>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken cancellationToken = default) =>
             Task.FromResult(DataError is null
                 ? Result.Success(DataPoints)
@@ -886,7 +903,7 @@ public class WearablesFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class SerializedWearableTransactionRunner : IWearableTransactionRunner {
-        private readonly SemaphoreSlim _gate = new(1, 1);
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<string, SemaphoreSlim> _gates = new(StringComparer.Ordinal);
         private int _concurrentOperations;
 
         public int MaxConcurrentOperations { get; private set; }
@@ -897,14 +914,15 @@ public class WearablesFeatureTests {
             Func<CancellationToken, Task<TResult>> operation,
             CancellationToken cancellationToken = default) {
             LastSerializationKey = serializationKey;
-            await _gate.WaitAsync(cancellationToken);
+            SemaphoreSlim gate = _gates.GetOrAdd(serializationKey, static _ => new SemaphoreSlim(1, 1));
+            await gate.WaitAsync(cancellationToken);
             try {
                 int concurrentOperations = Interlocked.Increment(ref _concurrentOperations);
                 MaxConcurrentOperations = Math.Max(MaxConcurrentOperations, concurrentOperations);
                 return await operation(cancellationToken);
             } finally {
                 Interlocked.Decrement(ref _concurrentOperations);
-                _gate.Release();
+                gate.Release();
             }
         }
     }

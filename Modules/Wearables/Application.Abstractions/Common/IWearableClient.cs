@@ -13,7 +13,7 @@ public interface IWearableClient {
         string code,
         CancellationToken cancellationToken = default);
 
-    Task<WearableTokenResult?> RefreshTokenAsync(
+    Task<Result<WearableTokenResult>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default);
 

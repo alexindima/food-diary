@@ -84,6 +84,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ProcessNextFoodRecognitionCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/StartFoodRecognitionCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/AiUsageModelTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Behaviors/OwnerRequestTransactionTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/AiIdConversionTests.cs`

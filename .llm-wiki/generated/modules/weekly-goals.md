@@ -26,6 +26,7 @@ sources:
 
 - `Modules/WeeklyGoals/Application`
 - `Modules/WeeklyGoals/Application.Abstractions`
+- `Modules/WeeklyGoals/PersistenceModel`
 - `Modules/WeeklyGoals/Presentation`
 
 ## HTTP Surface
@@ -56,9 +57,9 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/SendWeeklyGoalRemindersCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalReminderProcessorTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalIdInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoals/WeeklyGoalTests.cs`

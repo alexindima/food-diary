@@ -85,7 +85,7 @@
     { "id": "posttune-front-004", "cohort": "frontend", "query": "service публичного auth dialog", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/public/lib/public-auth-dialog.service.ts"] },
     { "id": "posttune-front-005", "cohort": "frontend", "query": "facade целей пользователя", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.ts"] },
 
-    { "id": "posttune-test-001", "cohort": "behavior-to-test", "query": "тест parser значений enum", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Application.Tests/Validation/EnumValueParserTests.cs"] },
+    { "id": "posttune-test-001", "cohort": "behavior-to-test", "query": "тест parser значений enum", "changeType": "Tests", "expectedPaths": ["Shared/tests/FoodDiary.Application.Contracts.Tests/Validation/EnumValueParserTests.cs"] },
     { "id": "posttune-test-002", "cohort": "behavior-to-test", "query": "тест sender Web Push notification", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs"] },
     { "id": "posttune-test-003", "cohort": "behavior-to-test", "query": "тест job очистки fasting telemetry", "changeType": "Tests", "expectedPaths": ["Hosts/tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs"] },
     { "id": "posttune-test-004", "cohort": "behavior-to-test", "query": "тест API controller push notifications", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs"] },

@@ -12,7 +12,6 @@ public static class DependencyInjection {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
-        services.AddScoped<IUserIdentityMutationService, UserIdentityMutationService>();
         services.AddScoped<IUserAuthenticationIdentityService, UserAuthenticationIdentityService>();
         services.AddScoped<IUserAuthenticationRegistrationService, UserAuthenticationRegistrationService>();
         services.AddScoped<IUserTelegramAccountService, UserTelegramAccountService>();

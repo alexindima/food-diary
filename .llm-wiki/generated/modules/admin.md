@@ -111,6 +111,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/SendBugAcknowledgementsCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Support/ResultAssert.cs`
@@ -119,7 +120,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminRetentionIntegrationTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/BugAcknowledgementReceiptIntegrationTests.cs`
-- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs`
 
 ## Working Rule
 

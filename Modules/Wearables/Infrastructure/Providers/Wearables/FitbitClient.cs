@@ -84,7 +84,7 @@ internal sealed class FitbitClient(
         }
     }
 
-    public async Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) {
+    public async Task<Result<WearableTokenResult>> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) {
         FitbitOptions config = options.Value;
         try {
             using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.fitbit.com/oauth2/token") {
@@ -100,7 +100,17 @@ internal sealed class FitbitClient(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode) {
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) {
+                    JsonElement error = await BoundedHttpContentReader.ReadFromJsonAsync<JsonElement>(
+                        response.Content, JsonOptions, BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                        BoundedHttpContentReader.DefaultReadTimeout, cancellationToken).ConfigureAwait(false);
+                    if (IsInvalidRefreshGrant(error)) {
+                        return Result.Failure<WearableTokenResult>(WearableErrors.AuthFailed(Provider.ToString()));
+                    }
+                }
+                return Result.Failure<WearableTokenResult>(WearableErrors.SyncFailed(Provider.ToString()));
+            }
 
             FitbitTokenResponse? token = await BoundedHttpContentReader.ReadFromJsonAsync<FitbitTokenResponse>(
                 response.Content,
@@ -110,20 +120,35 @@ internal sealed class FitbitClient(
                 cancellationToken).ConfigureAwait(false);
             if (!IsValidTokenResponse(token)) {
                 logger.LogWarning("Fitbit token refresh returned an invalid token response.");
-                return null;
+                return Result.Failure<WearableTokenResult>(WearableErrors.SyncFailed(Provider.ToString()));
             }
 
-            return new WearableTokenResult(
+            return Result.Success(new WearableTokenResult(
                 token.AccessToken,
                 token.RefreshToken,
                 token.UserId,
-                timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
+                timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn)));
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Fitbit token refresh failed");
-            return null;
+            return Result.Failure<WearableTokenResult>(WearableErrors.SyncFailed(Provider.ToString()));
         }
+    }
+
+    private static bool IsInvalidRefreshGrant(JsonElement response) {
+        if (response.ValueKind != JsonValueKind.Object ||
+            !response.TryGetProperty("errors", out JsonElement errors) || errors.ValueKind != JsonValueKind.Array) {
+            return false;
+        }
+        foreach (JsonElement error in errors.EnumerateArray()) {
+            if (error.ValueKind == JsonValueKind.Object &&
+                error.TryGetProperty("errorType", out JsonElement type) &&
+                type.ValueKind == JsonValueKind.String && string.Equals(type.GetString(), "invalid_grant", StringComparison.Ordinal)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public async Task<Result<IReadOnlyList<WearableDataPoint>>> FetchDailyDataAsync(

@@ -459,6 +459,9 @@
     <Project Path="FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj" />
   </Folder>
   <Folder Name="/Shared/tests/">
+    <Project Path="Shared/tests/FoodDiary.Application.Runtime.Tests/FoodDiary.Application.Runtime.Tests.csproj" />
+    <Project Path="Shared/tests/FoodDiary.Application.Contracts.Tests/FoodDiary.Application.Contracts.Tests.csproj" />
+    <Project Path="Shared/tests/FoodDiary.Email.Contracts.Tests/FoodDiary.Email.Contracts.Tests.csproj" />
     <Project Path="Shared/tests/FoodDiary.Authentication.Infrastructure.Tests/FoodDiary.Authentication.Infrastructure.Tests.csproj" />
     <Project Path="Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj" />
     <Project Path="Shared/tests/FoodDiary.Email.MailRelay.Tests/FoodDiary.Email.MailRelay.Tests.csproj" />
@@ -473,7 +476,6 @@
     <Project Path="Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />
     <Project Path="tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj" />
   </Folder>
   <Folder Name="/Services/MailInbox/Tests/">

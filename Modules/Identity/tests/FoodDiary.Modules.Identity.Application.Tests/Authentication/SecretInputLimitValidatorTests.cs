@@ -1,0 +1,100 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
+using FluentValidation.TestHelper;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RefreshToken;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Register;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreAccount;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramLoginWidget;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
+
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
+
+[ExcludeFromCodeCoverage]
+public sealed class SecretInputLimitValidatorTests {
+    private static readonly string OversizedPassword =
+        new('p', AuthenticationInputLimits.MaximumPasswordLength + 1);
+
+    private static readonly string OversizedToken =
+        new('t', AuthenticationInputLimits.MaximumOpaqueTokenLength + 1);
+
+    [Fact]
+    public void IdentityPasswordValidators_RejectOversizedPasswords() {
+        new LoginCommandValidator()
+            .TestValidate(new LoginCommand("user@example.com", OversizedPassword))
+            .ShouldHaveValidationErrorFor(command => command.Password);
+        new RegisterCommandValidator()
+            .TestValidate(new RegisterCommand("user@example.com", OversizedPassword, "en"))
+            .ShouldHaveValidationErrorFor(command => command.Password);
+        new RestoreAccountCommandValidator()
+            .TestValidate(new RestoreAccountCommand("user@example.com", OversizedPassword))
+            .ShouldHaveValidationErrorFor(command => command.Password);
+    }
+
+    [Fact]
+    public void PasswordResetValidator_RejectsOversizedPasswordAndToken() {
+        new ConfirmPasswordResetCommandValidator()
+            .TestValidate(new ConfirmPasswordResetCommand(Guid.NewGuid(), OversizedToken, OversizedPassword))
+            .ShouldHaveValidationErrorFor(command => command.Token);
+        new ConfirmPasswordResetCommandValidator()
+            .TestValidate(new ConfirmPasswordResetCommand(Guid.NewGuid(), OversizedToken, OversizedPassword))
+            .ShouldHaveValidationErrorFor(command => command.NewPassword);
+    }
+
+    [Fact]
+    public void OpaqueTokenValidators_RejectOversizedTokens() {
+        new VerifyEmailCommandValidator()
+            .TestValidate(new VerifyEmailCommand(Guid.NewGuid(), OversizedToken))
+            .ShouldHaveValidationErrorFor(command => command.Token);
+    }
+
+    [Fact]
+    public void ExternalAuthenticationValidators_RejectOversizedAssertions() {
+        new TelegramVerifyCommandValidator()
+            .TestValidate(new TelegramVerifyCommand(
+                new string('t', IdentityInputLimits.MaximumTelegramInitDataLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.InitData);
+        new LinkTelegramCommandValidator()
+            .TestValidate(new LinkTelegramCommand(
+                Guid.NewGuid(),
+                new string('t', IdentityInputLimits.MaximumTelegramInitDataLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.InitData);
+        new GoogleLoginCommandValidator()
+            .TestValidate(new GoogleLoginCommand(
+                new string('g', IdentityInputLimits.MaximumGoogleCredentialLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.Credential);
+        new RefreshTokenCommandValidator()
+            .TestValidate(new RefreshTokenCommand(OversizedToken))
+            .ShouldHaveValidationErrorFor(command => command.RefreshToken);
+        new AdminSsoExchangeCommandValidator()
+            .TestValidate(new AdminSsoExchangeCommand(
+                new string('s', IdentityInputLimits.MaximumAdminSsoCodeLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.Code);
+    }
+
+    [Fact]
+    public void TelegramLoginWidgetValidator_RejectsOversizedTextFields() {
+        var command = new TelegramLoginWidgetCommand(
+            Id: 1,
+            AuthDate: 1,
+            Hash: new string('h', IdentityInputLimits.MaximumTelegramHashLength + 1),
+            Username: new string('u', IdentityInputLimits.MaximumTelegramUsernameLength + 1),
+            FirstName: new string('f', IdentityInputLimits.MaximumTelegramNameLength + 1),
+            LastName: new string('l', IdentityInputLimits.MaximumTelegramNameLength + 1),
+            PhotoUrl: new string('p', IdentityInputLimits.MaximumTelegramPhotoUrlLength + 1));
+        TestValidationResult<TelegramLoginWidgetCommand> result =
+            new TelegramLoginWidgetCommandValidator().TestValidate(command);
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(value => value.Hash),
+            () => result.ShouldHaveValidationErrorFor(value => value.Username),
+            () => result.ShouldHaveValidationErrorFor(value => value.FirstName),
+            () => result.ShouldHaveValidationErrorFor(value => value.LastName),
+            () => result.ShouldHaveValidationErrorFor(value => value.PhotoUrl));
+    }
+}

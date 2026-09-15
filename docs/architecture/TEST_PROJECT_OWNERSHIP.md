@@ -17,10 +17,26 @@ Hosts and Platform are physical test groups and existing solution groups.
 Production host and platform projects retain their root paths in this step.
 Do not nest test projects inside a production project directory.
 
-`tests/FoodDiary.Application.Tests` and `tests/FoodDiary.Domain.Tests` remain mixed
-donor suites. Extract their owner-specific cases after the corresponding module
-moves stabilize; keep genuinely cross-module compatibility coverage explicit.
-Do not relocate these suites wholesale into Shared.
+`tests/FoodDiary.Domain.Tests` is the remaining mixed donor suite. Extract its
+owner-specific cases after the corresponding module moves stabilize.
+
+The mixed Application.Tests project has been removed. Runtime pipeline and queue
+tests live in `Shared/tests/FoodDiary.Application.Runtime.Tests`; generic validation,
+pagination, temporal policy and error resolution tests live in
+`Shared/tests/FoodDiary.Application.Contracts.Tests`; email option tests live in
+`Shared/tests/FoodDiary.Email.Contracts.Tests`. These suites have no business-module
+dependencies. Handler, validator, mapper, repository-default and module DI cases
+live in the existing owner application test projects.
+
+ArchitectureTests owns actual CLR assembly ownership, error catalog and runtime
+registration boundary checks. Ai Application.Tests retains the real nested prompt
+command transaction scenario, including rollback and post-commit delivery.
+Nutrition mapper compatibility inputs are asserted independently by Products,
+Meals and Recipes against the same fixed scores and grades.
+
+`FoodDiary.Testing.Assertions.ResultAssert` is the reusable result assertion helper. Module
+projects reference the helper assembly instead of linking source from another
+test project. Image-access helpers used only by Users remain local to Users.
 
 ## Build configuration and discovery
 

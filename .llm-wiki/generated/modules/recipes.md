@@ -70,6 +70,7 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ApplicationDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.CreateCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DeleteCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DuplicateCommandTests.cs`
@@ -80,6 +81,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CreateRecipeCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ExploreRecipesQueryValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/FeatureErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Nutrition/NutritionMappingCompatibilityTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/RecipeNutritionCalculatorTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/RecipesAdditionalValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/AllowImageAssetAccessService.cs`

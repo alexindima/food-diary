@@ -10,12 +10,12 @@
   "summary": {
     "sourceFiles": 4106,
     "symbols": 4036,
-    "interfaceImplementationLinks": 190,
-    "dependencyInjectionRegistrations": 75,
+    "interfaceImplementationLinks": 189,
+    "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2137,
+      "class": 2138,
       "enum": 64,
-      "interface": 397,
+      "interface": 396,
       "record": 1318,
       "record struct": 120
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1671,
+      "Other": 1673,
       "Query": 261,
       "QueryHandler": 189,
       "ReadModelRepository": 33,
@@ -40,7 +40,7 @@
       "Repository": 98,
       "Request": 150,
       "Response": 213,
-      "Service": 163,
+      "Service": 161,
       "Validator": 225,
       "ValueObject": 114,
       "WriteRepository": 45
@@ -647,7 +647,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 46
+      "line": 44
     },
     {
       "name": "FoodDiaryDbContext",
@@ -759,7 +759,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 378
+      "line": 373
     },
     {
       "name": "UsdaCsvReader",
@@ -780,7 +780,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 99
+      "line": 95
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -1466,21 +1466,21 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Ai/AiUsageQuery.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "ContentReportReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/ContentReports/ContentReportReadService.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "DashboardBodyReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "DashboardFavoriteMealProjection",
@@ -1508,7 +1508,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealFavoritesLoader.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "DashboardMealItemsLoader",
@@ -1529,70 +1529,70 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealsReadService.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "AttentionSignalMetricsReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "DietologistInvitationReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "RecommendationCommentReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "RecommendationReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationReadService.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "FavoriteMealQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteMealQuery.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "FavoriteProductQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "FavoriteRecipeQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "AchievementMetricReader",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UserLoginEventQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "ImageAssetUsageQuery",
@@ -1641,21 +1641,21 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "ProductUsageQuery",
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductUsageQuery.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "ReadModelCompositionRegistration",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
-      "line": 43
+      "line": 42
     },
     {
       "name": "RecipeOverviewReadService",
@@ -1669,21 +1669,21 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "UserCurrentWaistProvider",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Users/UserCurrentWaistProvider.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UserCurrentWeightProvider",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "BotInputParser",
@@ -1963,7 +1963,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 101
     },
     {
       "name": "ApiTelemetry",
@@ -2509,7 +2509,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "CreateAdminUserCommandValidator",
@@ -2663,7 +2663,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "SetAdminUserPasswordCommandValidator",
@@ -2684,7 +2684,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-      "line": 19
+      "line": 18
     },
     {
       "name": "StartAdminImpersonationCommandValidator",
@@ -2747,7 +2747,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "UpdateAdminUserCommandValidator",
@@ -3391,7 +3391,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "GetAdminUserLoginEventsQuery",
@@ -3440,7 +3440,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "GetAdminUsersQuery",
@@ -4637,7 +4637,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "AnalyzeFoodImageCommandValidator",
@@ -4658,7 +4658,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "CalculateFoodNutritionCommandValidator",
@@ -4791,7 +4791,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "GetUserAiUsageSummaryQueryValidator",
@@ -6114,7 +6114,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "CreateWaistEntryCommandValidator",
@@ -6135,7 +6135,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "DeleteWaistEntryCommandValidator",
@@ -6156,7 +6156,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateWaistEntryCommandValidator",
@@ -6289,7 +6289,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "CreateWeightEntryCommandValidator",
@@ -6310,7 +6310,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "DeleteWeightEntryCommandValidator",
@@ -6331,7 +6331,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateWeightEntryCommandValidator",
@@ -6674,7 +6674,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "CreateWaistEntryHttpRequest",
@@ -6744,7 +6744,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "CreateWeightEntryHttpRequest",
@@ -7136,7 +7136,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "ClearCycleDayCommandValidator",
@@ -7199,7 +7199,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "DeleteCycleProfileCommandValidator",
@@ -8235,7 +8235,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "SendDashboardTestEmailCommandValidator",
@@ -8298,7 +8298,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "ReadDashboardStatisticsQueryHandler",
@@ -8984,7 +8984,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/CreateRecommendation/CreateRecommendationCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "CreateRecommendationCommandValidator",
@@ -9082,7 +9082,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "InviteDietologistCommand",
@@ -9117,7 +9117,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "RevokeInvitationCommand",
@@ -9131,7 +9131,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "SendClientTaskRemindersCommandHandler",
@@ -9152,7 +9152,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "SetAttentionSignalStateCommandValidator",
@@ -9173,7 +9173,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "UpdateRecommendationTemplateCommand",
@@ -9432,7 +9432,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "GetClientTasksForDietologistQuery",
@@ -9572,7 +9572,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "SearchRecommendationTemplatesQuery",
@@ -9929,7 +9929,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
-      "line": 24
+      "line": 23
     },
     {
       "name": "DietologistClientTasksController",
@@ -10251,7 +10251,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "UpdateExerciseEntryCommand",
@@ -11119,7 +11119,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Fasting/Application/Common/FastingCurrentUserResolver.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "FastingTelemetryEventNames",
@@ -12064,7 +12064,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "AddFavoriteMealCommandValidator",
@@ -12085,7 +12085,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "FavoriteMealMappings",
@@ -12162,7 +12162,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "AddFavoriteProductCommandValidator",
@@ -12183,7 +12183,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "UpdateFavoriteProductCommand",
@@ -12197,7 +12197,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateFavoriteProductCommandValidator",
@@ -12267,7 +12267,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "AddFavoriteRecipeCommandValidator",
@@ -12288,7 +12288,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "FavoriteRecipeMappings",
@@ -13100,7 +13100,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "CreateHydrationEntryCommandValidator",
@@ -13135,7 +13135,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "DeleteHydrationEntryCommandValidator",
@@ -13156,7 +13156,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "UpdateHydrationEntryCommandValidator",
@@ -13828,7 +13828,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "AdminSsoStartCommandValidator",
@@ -13933,7 +13933,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "ConfirmPasswordResetCommandValidator",
@@ -13996,7 +13996,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "LinkGoogleCommandValidator",
@@ -14017,7 +14017,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "LinkTelegramCommandValidator",
@@ -14164,7 +14164,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "ResendEmailVerificationCommandValidator",
@@ -14346,7 +14346,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "VerifyEmailCommandValidator",
@@ -15060,7 +15060,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs",
-      "line": 30
+      "line": 29
     },
     {
       "name": "AuthSessionLifecycleController",
@@ -15081,7 +15081,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramController.cs",
-      "line": 28
+      "line": 27
     },
     {
       "name": "AuthTelegramOnboardingController",
@@ -15109,7 +15109,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "TelegramOnboardingHttpMappings",
@@ -15508,7 +15508,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "ConfirmImageUploadResult",
@@ -15529,7 +15529,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "GetImageUploadUrlCommand",
@@ -15543,7 +15543,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "GetImageUploadUrlResult",
@@ -16866,7 +16866,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "DeleteShoppingListCommandValidator",
@@ -17510,7 +17510,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValuePreparer.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "CreateMealValues",
@@ -17559,7 +17559,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-      "line": 21
+      "line": 20
     },
     {
       "name": "RepeatMealCommandValidator",
@@ -17622,7 +17622,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValuePreparer.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "UpdateMealValues",
@@ -18700,7 +18700,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "MarkAllNotificationsReadCommand",
@@ -18714,7 +18714,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "MarkNotificationReadCommand",
@@ -18728,7 +18728,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "RemoveWebPushSubscriptionCommand",
@@ -18742,7 +18742,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "ScheduleTestNotificationCommand",
@@ -18798,7 +18798,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "UpsertWebPushSubscriptionCommandValidator",
@@ -19694,7 +19694,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValuePreparer.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "CreateProductValues",
@@ -19715,7 +19715,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "DeleteProductCommandValidator",
@@ -19736,7 +19736,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "DuplicateProductCommandValidator",
@@ -19764,7 +19764,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "ProductUpdateValues",
@@ -20898,7 +20898,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "DeleteRecipeCommandValidator",
@@ -20919,7 +20919,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "line": 19
+      "line": 18
     },
     {
       "name": "DuplicateRecipeCommandValidator",
@@ -21948,7 +21948,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Usda/Application/DependencyInjection.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "HealthAreaScoreMappings",
@@ -21969,7 +21969,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetMicronutrientsQuery",
@@ -21997,7 +21997,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Usda/Application/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "SearchUsdaFoodsQueryValidator",
@@ -22102,7 +22102,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Usda/Contracts/Models/UsdaMealProductNutritionReadModel.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UsdaNutrientReadModel",
@@ -22228,14 +22228,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "UsdaProviderRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Usda/Infrastructure/UsdaProviderRegistration.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "DailyReferenceValueConfiguration",
@@ -22284,7 +22284,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Usda/Presentation/Controllers/UsdaController.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "UsdaPresentationServiceCollectionExtensions",
@@ -22298,7 +22298,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Usda/Presentation/Mappings/UsdaHttpMappings.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "LinkProductToUsdaFoodHttpRequest",
@@ -22550,7 +22550,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "UpdateDesiredWaistCommand",
@@ -22606,7 +22606,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateGoalsCommandValidator",
@@ -22677,13 +22677,6 @@
       "role": "Service",
       "path": "Modules/Users/Application/Common/IUserContextService.cs",
       "line": 7
-    },
-    {
-      "name": "IUserIdentityMutationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Users/Application/Common/IUserIdentityMutationService.cs",
-      "line": 4
     },
     {
       "name": "UserAppearancePreferences",
@@ -22809,7 +22802,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "GetProfileOverviewQueryValidator",
@@ -22823,21 +22816,21 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQueryHandler.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "GetUserBillingProfileQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "GetUserBillingProfileIncludingDeletedQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQueryHandler.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "GetUserByIdQuery",
@@ -22865,7 +22858,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserForAdministration/GetUserForAdministrationQueryHandler.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "GetUserGoalsQuery",
@@ -22943,13 +22936,6 @@
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserCredentialVerificationService.cs",
       "line": 9
-    },
-    {
-      "name": "UserIdentityMutationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Users/Application/Services/UserIdentityMutationService.cs",
-      "line": 7
     },
     {
       "name": "UserNotificationProfileService",
@@ -23936,7 +23922,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "UserProfileProjectionService",
@@ -23957,28 +23943,28 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UserRoleCatalogService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "UserRoleMembershipService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UsersDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Infrastructure/Persistence/UsersDbContext.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "UsersModuleRegistration",
@@ -24391,7 +24377,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "DisconnectWearableCommandValidator",
@@ -24422,6 +24408,13 @@
       "line": 6
     },
     {
+      "name": "WearableConnectionLock",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Common/WearableConnectionLock.cs",
+      "line": 5
+    },
+    {
       "name": "WearableDateRules",
       "kind": "class",
       "role": "Other",
@@ -24447,7 +24440,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Application/DependencyInjection.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "GetWearableAuthUrlQuery",
@@ -24482,7 +24475,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Wearables/Application/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "GetWearableDailySummaryQuery",
@@ -24608,7 +24601,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "WearableTokenProtector",
@@ -24622,7 +24615,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/WearablesProviderRegistration.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "WearableConnectionConfiguration",
@@ -24650,7 +24643,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Wearables/Presentation/Controllers/WearablesController.cs",
-      "line": 20
+      "line": 19
     },
     {
       "name": "WearablesPresentationServiceCollectionExtensions",
@@ -24671,7 +24664,7 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Wearables/Presentation/Requests/ConnectWearableHttpRequest.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "WearableAuthUrlHttpResponse",
@@ -24706,7 +24699,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyCheckIn/Application/DependencyInjection.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "WeeklyCheckInModel",
@@ -24930,7 +24923,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "EfWeeklyGoalTransactionRunner",
@@ -24944,7 +24937,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
-      "line": 10
+      "line": 8
     },
     {
       "name": "WeeklyGoalsDbContext",
@@ -28272,6 +28265,13 @@
       "line": 73
     },
     {
+      "name": "ResultAssert",
+      "kind": "class",
+      "role": "Other",
+      "path": "Tooling/FoodDiary.Testing/Assertions/ResultAssert.cs",
+      "line": 8
+    },
+    {
       "name": "DockerAvailability",
       "kind": "class",
       "role": "Other",
@@ -29506,13 +29506,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IUserIdentityMutationService",
-      "interfacePath": "Modules/Users/Application/Common/IUserIdentityMutationService.cs",
-      "implementation": "UserIdentityMutationService",
-      "implementationPath": "Modules/Users/Application/Services/UserIdentityMutationService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IUserLoginEventQuery",
       "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
       "implementation": "UserLoginEventQuery",
@@ -29666,21 +29659,21 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 420
+      "line": 415
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 421
+      "line": 416
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 90
+      "line": 86
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -29736,7 +29729,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 236
+      "line": 232
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30026,46 +30019,39 @@
       "line": 19
     },
     {
-      "service": "IUserIdentityMutationService",
-      "implementation": "UserIdentityMutationService",
-      "lifetime": "Scoped",
-      "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 15
-    },
-    {
       "service": "IUserAuthenticationIdentityService",
       "implementation": "UserAuthenticationIdentityService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 16
+      "line": 15
     },
     {
       "service": "IUserAuthenticationRegistrationService",
       "implementation": "UserAuthenticationRegistrationService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 16
     },
     {
       "service": "IUserTelegramAccountService",
       "implementation": "UserTelegramAccountService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 17
     },
     {
       "service": "IUserCredentialVerificationService",
       "implementation": "UserCredentialVerificationService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 18
     },
     {
       "service": "IUserNotificationProfileService",
       "implementation": "UserNotificationProfileService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 19
     },
     {
       "service": "IInboundMailExportStore",

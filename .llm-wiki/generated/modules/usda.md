@@ -26,10 +26,10 @@ sources:
 
 - `Modules/Usda/Application`
 - `Modules/Usda/Application.Abstractions`
-- `Modules/Usda/Application/Abstractions`
 - `Modules/Usda/Contracts`
 - `Modules/Usda/Domain`
 - `Modules/Usda/Infrastructure/Providers`
+- `Modules/Usda/PersistenceModel`
 - `Modules/Usda/Presentation`
 
 ## HTTP Surface

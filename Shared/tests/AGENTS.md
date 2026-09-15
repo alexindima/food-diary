@@ -2,7 +2,7 @@
 
 Rules for `Shared/tests/`. Follow `Tooling/Testing/AGENTS.md` for cross-repository test rules.
 
-- Own focused tests for Domain.Primitives, Mediator and Results here.
+- Own focused tests for Domain.Primitives, Mediator, Results, Application.Runtime, Application.Contracts and Email.Contracts here.
 - Keep projects under `/Shared/tests/` in `FoodDiary.slnx`.
 - Reuse `Tooling/Testing/TestProjects.props`, runsettings and runner configuration; do not duplicate them.
 - Preserve project/assembly names and each test project's direct dependency on its owner.

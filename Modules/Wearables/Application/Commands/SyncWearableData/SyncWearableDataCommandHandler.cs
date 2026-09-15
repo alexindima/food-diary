@@ -44,8 +44,7 @@ public sealed class SyncWearableDataCommandHandler(
             return Result.Failure<WearableDailySummaryModel>(WearableErrors.ProviderNotConfigured(command.Provider));
         }
 
-        string serializationKey = FormattableString.Invariant(
-            $"wearable-sync:{userIdResult.Value.Value:N}:{provider}:{command.Date.Date:yyyy-MM-dd}");
+        string serializationKey = WearableConnectionLock.Key(userIdResult.Value, provider);
         Result<bool> syncResult = await transactionRunner.ExecuteSerializedAsync(
             serializationKey,
             token => SynchronizeAsync(command, userIdResult.Value, provider, client, token),
@@ -72,12 +71,15 @@ public sealed class SyncWearableDataCommandHandler(
         // Refresh token if expired
         if (connection.IsTokenExpired() && connection.RefreshToken is not null) {
             string refreshToken = tokenProtector.Unprotect(connection.RefreshToken.Value);
-            WearableTokenResult? refreshResult = await client.RefreshTokenAsync(refreshToken, cancellationToken).ConfigureAwait(false);
-            if (refreshResult is null) {
-                connection.Deactivate();
-                await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
-                return Result.Failure<bool>(WearableErrors.AuthFailed(command.Provider));
+            Result<WearableTokenResult> refreshed = await client.RefreshTokenAsync(refreshToken, cancellationToken).ConfigureAwait(false);
+            if (refreshed.IsFailure) {
+                if (string.Equals(refreshed.Error.Code, WearableErrors.AuthFailed(command.Provider).Code, StringComparison.Ordinal)) {
+                    connection.Deactivate();
+                    await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
+                }
+                return Result.Failure<bool>(refreshed.Error);
             }
+            WearableTokenResult refreshResult = refreshed.Value;
             ProtectedWearableToken protectedAccessToken = tokenProtector.Protect(refreshResult.AccessToken);
             ProtectedWearableToken? protectedRefreshToken = refreshResult.RefreshToken is null ? null : tokenProtector.Protect(refreshResult.RefreshToken);
             connection.UpdateTokens(protectedAccessToken, protectedRefreshToken, refreshResult.ExpiresAtUtc);

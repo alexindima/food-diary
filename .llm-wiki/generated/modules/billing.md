@@ -96,6 +96,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/NoopBillingCheckoutLock.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/BillingPaymentAlreadyExistsExceptionTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingPaymentGuardTests.cs`
@@ -110,7 +111,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs`
 - [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs`
 - [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingWebhookControllerTests.cs`
-- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/BillingModuleExtractionTests.cs`
 
 ## Working Rule
 

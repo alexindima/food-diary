@@ -215,6 +215,32 @@ public sealed class UsdaQueryHandlerTests {
         Assert.Equal(27.8, iron.PercentDailyValue);
     }
 
+    [Theory]
+    [InlineData(MeasurementUnit.Pcs)]
+    [InlineData(MeasurementUnit.Ml)]
+    public async Task GetDailyMicronutrients_WithUnsupportedUnit_DoesNotTreatQuantityAsGrams(MeasurementUnit unit) {
+        var userId = UserId.New();
+        var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
+        IUsdaMealNutritionReadService meals = Substitute.For<IUsdaMealNutritionReadService>();
+        meals.GetForDateAsync(userId, date, Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<UsdaMealProductNutritionReadModel>>([
+                new(50, MeasurementUnit.G, 10),
+                new(1, unit, 10),
+            ]));
+        IUsdaFoodRepository repository = CreateUsdaFoodRepository(
+            nutrientsByFdcId: new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>> {
+                [10] = [CreateNutrient(10, 301, "Calcium", "mg", 120)],
+            });
+        var handler = new GetDailyMicronutrientsQueryHandler(meals, repository, Substitute.For<ICurrentUserAccessService>());
+
+        Result<DailyMicronutrientSummaryModel> result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.TotalProductCount);
+        Assert.Equal(1, result.Value.LinkedProductCount);
+        Assert.Equal(60, Assert.Single(result.Value.Nutrients).TotalAmount);
+    }
+
     [Fact]
     public async Task GetDailyMicronutrients_WithNoLinkedProducts_ReturnsEmptySummaryWithoutUsdaLookup() {
         var userId = UserId.New();
@@ -259,7 +285,7 @@ public sealed class UsdaQueryHandlerTests {
                 Arg.Any<CancellationToken>())
             .Returns(Enumerable
                 .Repeat(
-                    new UsdaMealProductNutritionReadModel(Amount: 1, ProductBaseAmount: 100, UsdaFdcId: null),
+                    new UsdaMealProductNutritionReadModel(Amount: 1, ProductBaseUnit: MeasurementUnit.G, UsdaFdcId: null),
                     GetDailyMicronutrientsQueryHandler.MaximumProductItemsPerDay + 1)
                 .ToList());
         var service = new GetDailyMicronutrientsQueryHandler(mealNutrition, CreateUsdaFoodRepository(), Substitute.For<ICurrentUserAccessService>());
@@ -555,7 +581,7 @@ public sealed class UsdaQueryHandlerTests {
                     .Where(static item => item.IsProduct && item.SnapshotBaseAmount.HasValue)
                     .Select(static item => new UsdaMealProductNutritionReadModel(
                         item.Amount,
-                        item.SnapshotBaseAmount!.Value,
+                        Enum.Parse<MeasurementUnit>(item.SnapshotUnit!),
                         ProductUsdaLinks.GetValueOrDefault(item.ProductId!.Value))),
             ]));
 

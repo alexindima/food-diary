@@ -989,7 +989,6 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Wearables.Infrastructure": "[1.0.0, )",
-          "FoodDiary.Modules.WeeklyGoals.Application": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Infrastructure": "[1.0.0, )",
           "FoodDiary.Outbox.Infrastructure": "[1.0.0, )",
@@ -3101,6 +3100,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )",
           "xunit": "[2.9.3, )"
         }
       },

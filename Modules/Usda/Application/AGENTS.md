@@ -19,3 +19,5 @@ Rules for `Modules/Usda/Application/`.
 - Architecture: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 SearchUsdaFoodsQuery belongs to Contracts and is handled here. Products delegates combined local/provider search through ISender. Detail and daily-summary orchestration live in their handlers. IUsdaProductLinkService and IUsdaMealNutritionReadService remain consumer-owned technical ports in Contracts.
+
+Scale USDA daily nutrients by grams / 100, never by Product.BaseAmount. Exclude non-gram quantities until an explicit mass conversion exists, and report them as uncovered products.

@@ -103,6 +103,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealsFeatureTests.UpdateCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealsFeatureTests.ValidatorAndCalculatorTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Nutrition/NutritionMappingCompatibilityTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/ReadMealCountQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Support/AllowImageAssetAccessService.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Support/RecordingImageAssetAccessService.cs`
@@ -112,6 +113,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/UndoRecognizedMealTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/UpdateMealCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/UtcDateNormalizerTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Validation/EnumValueParserTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/MealAiInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/MealEnumContractTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/MealExtractedInvariantTests.cs`
@@ -119,8 +121,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/MealInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/MealRecognitionReceiptTests.cs`
 - [integration] `Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealItemDisplayReadServiceIntegrationTests.cs`
-- [integration] `Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRecognitionReceiptIntegrationTests.cs`
-- [integration] `Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRecognitionTransactionIntegrationTests.cs`
 
 ## Working Rule
 

@@ -31,4 +31,14 @@ if ($toolProjects.Count -ne 0) {
     throw "Internal Wiki tool projects must not be treated as production projects: $($toolProjects.path -join ', ')"
 }
 
+$supportPath = 'Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj'
+$supportProjects = @($catalog.dotnet.projects | Where-Object { [string]$_.path -eq $supportPath })
+if ($supportProjects.Count -ne 1 -or [bool]$supportProjects[0].isTestProject -or $supportPath -in @($catalog.dotnet.testProjects)) {
+    throw 'FoodDiary.Testing must remain a cataloged support library, not a runnable test project.'
+}
+if (@($index.untrackedProductionProjects | Where-Object { [string]$_.path -eq $supportPath }).Count -ne 0 -or
+    @($index.projectDependencyViolations | Where-Object { [string]$_.sourcePath -eq $supportPath }).Count -ne 0) {
+    throw 'Test-support dependencies must not be compared against the production dependency matrix.'
+}
+
 Write-Host 'Architecture health internal-tool exclusion regression passed.'

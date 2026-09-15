@@ -27,6 +27,7 @@ sources:
 - `Modules/Users/Application`
 - `Modules/Users/Application.Abstractions`
 - `Modules/Users/Contracts`
+- `Modules/Users/PersistenceModel`
 - `Modules/Users/Presentation`
 
 ## HTTP Surface
@@ -101,15 +102,19 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/AiConsentTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/CurrentUserAccessPolicyTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Support/AllowImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Support/RecordingImageAssetAccessService.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramIdentityRecoveryTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UpdateUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserApplicationServiceDelegationTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserCredentialVerificationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserNotificationProfileServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserRepositoryDefaultMethodTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserTelegramAccountServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.DesiredGoalIdempotency.cs`
@@ -126,10 +131,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserProfileMeasurementInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserRoleAuditInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserRoleDeduplicationTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserSecurityCoverageTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserSecurityVersionTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserValueObjectsInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/ValueObjects/AdditionalValueObjectsInvariantTestsDesiredTests.cs`
 
 ## Working Rule
 

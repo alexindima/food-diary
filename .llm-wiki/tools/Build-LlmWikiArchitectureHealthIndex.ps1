@@ -35,8 +35,13 @@ foreach ($project in $projects) {
     if (-not $projectByPath.ContainsKey($project.path)) { $projectByPath[$project.path] = $project }
 }
 $actualEdges = [System.Collections.Generic.List[object]]::new()
+function Test-IsTestOrSupportProject([object]$Project) {
+    return [bool]$Project.isTestProject -or
+        [string]$Project.path -match '(^|/)tests/' -or
+        [string]$Project.path -eq 'Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj'
+}
 foreach ($project in $projects) {
-    $isTestProject = [bool]$project.isTestProject -or $project.path -match '^tests/'
+    $isTestProject = Test-IsTestOrSupportProject $project
     foreach ($reference in @($project.projectReferences)) {
         $targetProject = $projectByPath[$reference]
         $actualEdges.Add([pscustomobject]@{
@@ -105,8 +110,8 @@ foreach ($source in @($allowed.Keys | Sort-Object)) {
 $untrackedProductionProjects = @(
     $projects |
         Where-Object {
-            -not $_.isTestProject -and
-            $_.path -notmatch '^(?:tests/|\.llm-wiki/tools/)' -and
+            -not (Test-IsTestOrSupportProject $_) -and
+            $_.path -notmatch '^\.llm-wiki/tools/' -and
             -not $allowed.ContainsKey($_.name)
         } |
         Select-Object name, path

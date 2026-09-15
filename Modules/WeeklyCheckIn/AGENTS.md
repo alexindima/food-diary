@@ -25,3 +25,5 @@ Rules for `Modules/WeeklyCheckIn/`.
 - Architecture: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 All module projects and tests use `FoodDiary.Modules.WeeklyCheckIn.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
+
+Use the inclusive elapsed calendar-day count for current-week daily averages; completed historical weeks still use seven days.

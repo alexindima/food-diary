@@ -37,7 +37,7 @@ public sealed class ConnectWearableCommandHandler(
 
         WearableProvider provider = providerResult.Value;
 
-        string serializationKey = $"wearable-connect:{userIdResult.Value.Value:N}:{provider}";
+        string serializationKey = WearableConnectionLock.Key(userIdResult.Value, provider);
         return await transactionRunner.ExecuteSerializedAsync(
             serializationKey,
             token => ConnectAsync(command, userIdResult.Value, provider, token),

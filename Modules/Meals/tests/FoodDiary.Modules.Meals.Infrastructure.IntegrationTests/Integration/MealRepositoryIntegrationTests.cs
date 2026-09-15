@@ -389,7 +389,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var linkedProduct = Product.Create(user.Id, "Spinach", MeasurementUnit.G, 100, 50, 23, 2.9, 0.4, 3.6, 2.2, 0);
         linkedProduct.LinkToUsdaFood(10);
-        var unlinkedProduct = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100, 130, 2.7, 0.3, 28, 0.4, 0);
+        var unlinkedProduct = Product.Create(user.Id, "Drink", MeasurementUnit.Ml, 100, 100, 130, 2.7, 0.3, 28, 0.4, 0);
         context.Products.AddRange(linkedProduct, unlinkedProduct);
         await context.SaveChangesAsync();
 
@@ -412,12 +412,12 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             items.OrderBy(item => item.Amount),
             linkedItem => {
                 Assert.Equal(50, linkedItem.Amount);
-                Assert.Equal(100, linkedItem.ProductBaseAmount);
+                Assert.Equal(MeasurementUnit.G, linkedItem.ProductBaseUnit);
                 Assert.Equal(10, linkedItem.UsdaFdcId);
             },
             unlinkedItem => {
                 Assert.Equal(125, unlinkedItem.Amount);
-                Assert.Equal(100, unlinkedItem.ProductBaseAmount);
+                Assert.Equal(MeasurementUnit.Ml, unlinkedItem.ProductBaseUnit);
                 Assert.Null(unlinkedItem.UsdaFdcId);
             });
 

@@ -12,7 +12,6 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Services;
-using FoodDiary.Modules.Users.Application.Services;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -20,34 +19,6 @@ namespace FoodDiary.Modules.Users.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserApplicationServiceDelegationTests {
-    [Fact]
-    public async Task UserIdentityMutationService_EnsureRolesByNamesAsync_DelegatesToRoleCatalog() {
-        IUserRoleCatalogService roleCatalog = Substitute.For<IUserRoleCatalogService>();
-        IReadOnlyList<string> names = ["Admin"];
-        IReadOnlyList<Role> roles = [Role.Create("Admin")];
-        roleCatalog.EnsureRolesByNamesAsync(names, Arg.Any<CancellationToken>()).Returns(roles);
-        var service = new UserIdentityMutationService(Substitute.For<IUserWriteRepository>(), roleCatalog);
-
-        IReadOnlyList<Role> result = await service.EnsureRolesByNamesAsync(names, CancellationToken.None);
-
-        Assert.Same(roles, result);
-        await roleCatalog.Received(1).EnsureRolesByNamesAsync(names, CancellationToken.None);
-    }
-
-    [Fact]
-    public async Task UserIdentityMutationService_AddAndUpdate_DelegateToWriteRepository() {
-        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
-        var user = User.Create("identity-mutation@example.com", "hash");
-        writer.AddAsync(user, Arg.Any<CancellationToken>()).Returns(user);
-        var service = new UserIdentityMutationService(writer, Substitute.For<IUserRoleCatalogService>());
-
-        User added = await service.AddAsync(user, CancellationToken.None);
-        await service.UpdateAsync(user, CancellationToken.None);
-
-        Assert.Same(user, added);
-        await writer.Received(1).UpdateAsync(user, CancellationToken.None);
-    }
-
     [Fact]
     public async Task UserAdministrationReadService_DelegatesReadsAndFeedsAdminSummary() {
         IUserAdminReadModelRepository adminReadRepository = Substitute.For<IUserAdminReadModelRepository>();

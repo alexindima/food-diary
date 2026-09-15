@@ -73,7 +73,6 @@
         "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj",
         "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj",
         "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj",
-        "tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/FoodDiary.Modules.Admin.Presentation.Tests.csproj",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodDiary.Modules.Ai.Presentation.Tests.csproj",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/FoodDiary.Modules.Billing.Presentation.Tests.csproj",
@@ -121,7 +120,10 @@
         "Platform/tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
         "Hosts/tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj",
         "Hosts/tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
-        "Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj"
+        "Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
+        "Shared/tests/FoodDiary.Application.Runtime.Tests/FoodDiary.Application.Runtime.Tests.csproj",
+        "Shared/tests/FoodDiary.Application.Contracts.Tests/FoodDiary.Application.Contracts.Tests.csproj",
+        "Shared/tests/FoodDiary.Email.Contracts.Tests/FoodDiary.Email.Contracts.Tests.csproj"
       ]
     },
     {

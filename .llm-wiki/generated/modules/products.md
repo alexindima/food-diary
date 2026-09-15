@@ -68,10 +68,13 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ApplicationDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductSearchSuggestionTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.ReadQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/FeatureErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Nutrition/NutritionMappingCompatibilityTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductRepositoryDefaultMethodTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductSearchSuggestionTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductUsdaLinkServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.CreateCommandTests.cs`

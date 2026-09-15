@@ -13,7 +13,9 @@ Shared rules for every backend test project. Import `Tooling/Testing/TestProject
 - `FoodDiary.Web.Api.IntegrationTests`: HTTP contract, OpenAPI, and end-to-end API host behavior.
 - `FoodDiary.Web.Api.Tests`: Web.Api host options, middleware, health check, and service unit behavior.
 - `FoodDiary.Presentation.Api.Tests`: shared presentation-kernel, conventions, filters, binders, composite endpoints, and cross-module HTTP behavior. Module-owned controller and mapping tests live in each module's nested Presentation test project.
-- `FoodDiary.Application.Tests`: use case and application service behavior.
+- `FoodDiary.Application.Runtime.Tests`: shared execution pipeline, transaction and post-commit queue behavior.
+- `FoodDiary.Application.Contracts.Tests`: generic parsing, pagination, temporal policy and error resolution.
+- `FoodDiary.Email.Contracts.Tests`: shared email configuration behavior.
 - `FoodDiary.Domain.Tests`: core domain entity, value object, domain event, and invariant behavior.
 - `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
 - `FoodDiary.Infrastructure.Tests`: infrastructure unit behavior that does not require external services.
@@ -26,11 +28,11 @@ Shared rules for every backend test project. Import `Tooling/Testing/TestProject
 - Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.
 
 ## Rules
-- Shared-library tests live in `Shared/tests`; module and service tests live with their owners. Host tests live in `Hosts/tests`, platform composition tests in `Platform/tests`, and architecture/analyzer/development MCP tests in `Tooling/tests`. `FoodDiary.Testing` lives in `Tooling/FoodDiary.Testing`. Only mixed Application/Domain donor suites remain in root `tests` pending ownership extraction.
+- Shared-library tests live in `Shared/tests`; module and service tests live with their owners. Host tests live in `Hosts/tests`, platform composition tests in `Platform/tests`, and architecture/analyzer/development MCP tests in `Tooling/tests`. `FoodDiary.Testing` lives in `Tooling/FoodDiary.Testing`. Only the mixed Domain donor suite remains in root `tests` pending ownership extraction.
 - Prefer focused tests near the layer being changed.
 - Use NSubstitute for simple interface substitutes in unit tests when it avoids noisy hand-written `Fake`/`Stub`/`Recording` types.
 - Keep hand-written `InMemory`/`Recording` helpers when they make stateful behavior, call history, or side effects clearer than a mock setup.
-- Prefer shared assertion helpers for common result shapes. In `FoodDiary.Application.Tests`, use `ResultAssert.Success(...)` and `ResultAssert.Failure(...)` instead of bare `Assert.True(result.IsSuccess)` / `Assert.True(result.IsFailure)` so failures include useful error context.
+- Prefer shared assertion helpers for common result shapes. Use `FoodDiary.Testing.Assertions.ResultAssert` across owner suites: `ResultAssert.Success(...)` and `ResultAssert.Failure(...)` instead of bare `Assert.True(result.IsSuccess)` / `Assert.True(result.IsFailure)` so failures include useful error context.
 - Use `Assert.Multiple(...)` for groups of independent assertions over an already-created result, especially DTO, HTTP response, read-model, mapping, and domain-event field coverage. Keep assert-and-extract steps outside `Assert.Multiple(...)`: use plain `Assert.Single`, `Assert.IsType`, `Assert.NotNull`, `ResultAssert.Success(...)`, and similar guards first, then wrap the independent field checks.
 - Avoid raw sleeps in async tests. Prefer a task-completion signal with a bounded wait helper and a failure message; use polling only when checking an external resource such as a TCP port or broker message, and keep the timeout explicit.
 - When feature-test files grow large, split new coverage by command/query/service instead of adding unrelated scenarios to an already-large file.

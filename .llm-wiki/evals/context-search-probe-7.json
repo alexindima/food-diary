@@ -267,7 +267,7 @@
       "query": "тесты нормализации page/page size, feature-specific bounds, collection limit и fallback на default",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Common/PaginationPolicyTests.cs"
+        "Shared/tests/FoodDiary.Application.Contracts.Tests/Validation/PaginationPolicyTests.cs"
       ]
     },
     {
@@ -276,7 +276,7 @@
       "query": "где тестируют inclusive date buckets, quantization, overflow у DateTime.MaxValue и reversed range",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Common/TemporalRangePolicyTests.cs"
+        "Shared/tests/FoodDiary.Application.Contracts.Tests/Validation/TemporalRangePolicyTests.cs"
       ]
     },
     {

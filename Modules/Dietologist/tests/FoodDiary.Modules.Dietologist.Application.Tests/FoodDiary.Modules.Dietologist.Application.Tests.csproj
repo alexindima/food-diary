@@ -40,5 +40,7 @@
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>
 </Project>

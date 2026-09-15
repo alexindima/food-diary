@@ -36,7 +36,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 110
+      "line": 105
     },
     {
       "category": "credential",
@@ -876,14 +876,14 @@
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
-      "line": 215
+      "line": 239
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
-      "line": 218
+      "line": 242
     },
     {
       "category": "credential",
@@ -2080,14 +2080,14 @@
       "name": "Calories",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 94
+      "line": 93
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 96
+      "line": 95
     },
     {
       "category": "health",
@@ -2115,7 +2115,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 187
+      "line": 186
     },
     {
       "category": "health",
@@ -5251,7 +5251,7 @@
       "name": "GramWeight",
       "type": "double?",
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
-      "line": 233
+      "line": 232
     },
     {
       "category": "health",
@@ -8135,21 +8135,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 181
+      "line": 180
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 182
+      "line": 181
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 183
+      "line": 182
     },
     {
       "category": "privateContent",

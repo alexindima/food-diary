@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Usda.Application.Mappings;
 using FoodDiary.Modules.Usda.Application.Abstractions.Common;
 using FoodDiary.Modules.Usda.Contracts.Common;
@@ -49,7 +50,7 @@ public sealed class GetDailyMicronutrientsQueryHandler(
         }
 
         var linkedItems = productItems
-            .Where(static item => item.UsdaFdcId.HasValue)
+            .Where(static item => item.UsdaFdcId.HasValue && item.ProductBaseUnit == MeasurementUnit.G)
             .ToList();
 
         int totalProductCount = productItems.Count;
@@ -96,7 +97,8 @@ public sealed class GetDailyMicronutrientsQueryHandler(
                 continue;
             }
 
-            double scale = item.ProductBaseAmount > 0 ? item.Amount / item.ProductBaseAmount : 0;
+            // USDA reference values are per 100 grams, independent of product nutrition settings.
+            double scale = item.Amount / 100d;
 
             foreach (UsdaNutrientReadModel nutrient in nutrients) {
                 double scaledAmount = nutrient.Amount * scale;

@@ -58,7 +58,9 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/ApplicationDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/DeliverTestNotificationCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationContractTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationFactoryTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationReadServiceCoverageTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationWriterTests.cs`

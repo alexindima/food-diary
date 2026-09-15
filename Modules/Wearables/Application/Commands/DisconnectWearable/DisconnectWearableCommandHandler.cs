@@ -12,7 +12,8 @@ namespace FoodDiary.Modules.Wearables.Application.Commands.DisconnectWearable;
 
 public sealed class DisconnectWearableCommandHandler(
     IWearableConnectionWriteRepository connectionRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IWearableTransactionRunner transactionRunner)
     : ICommandHandler<DisconnectWearableCommand, Result> {
     public async Task<Result> Handle(
         DisconnectWearableCommand command,
@@ -32,9 +33,16 @@ public sealed class DisconnectWearableCommandHandler(
 
         WearableProvider provider = providerResult.Value;
 
-        WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
+        return await transactionRunner.ExecuteSerializedAsync(
+            WearableConnectionLock.Key(userIdResult.Value, provider),
+            token => DisconnectAsync(userIdResult.Value, provider, token),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result> DisconnectAsync(UserId userId, WearableProvider provider, CancellationToken cancellationToken) {
+        WearableConnection? connection = await connectionRepository.GetAsync(userId, provider, cancellationToken).ConfigureAwait(false);
         if (connection is null) {
-            return Result.Failure(WearableErrors.NotConnected(command.Provider));
+            return Result.Failure(WearableErrors.NotConnected(provider.ToString()));
         }
 
         connection.Deactivate();

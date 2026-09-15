@@ -118,23 +118,24 @@ public sealed class WearableClientTests {
         });
         FitbitClient client = CreateFitbitClient(handler);
 
-        WearableTokenResult? result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+        Result<WearableTokenResult> result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
 
-        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
         Assert.Multiple(
-            () => Assert.Equal("access-next", result.AccessToken),
-            () => Assert.Equal("refresh-next", result.RefreshToken),
-            () => Assert.Equal("fitbit-user", result.ExternalUserId),
-            () => Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc));
+            () => Assert.Equal("access-next", result.Value.AccessToken),
+            () => Assert.Equal("refresh-next", result.Value.RefreshToken),
+            () => Assert.Equal("fitbit-user", result.Value.ExternalUserId),
+            () => Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.Value.ExpiresAtUtc));
     }
 
     [Fact]
-    public async Task FitbitRefreshTokenAsync_WhenTokenResponseIsNull_ReturnsNull() {
+    public async Task FitbitRefreshTokenAsync_WhenTokenResponseIsNull_ReturnsExternalFailure() {
         FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => JsonResponse("null")));
 
-        WearableTokenResult? result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+        Result<WearableTokenResult> result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
 
-        Assert.Null(result);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
     }
 
     [Theory]
@@ -142,12 +143,13 @@ public sealed class WearableClientTests {
     [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"\",\"user_id\":\"user\",\"expires_in\":3600}")]
     [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"refresh\",\"user_id\":\"\",\"expires_in\":3600}")]
     [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"refresh\",\"user_id\":\"user\",\"expires_in\":0}")]
-    public async Task FitbitRefreshTokenAsync_WhenRequiredTokenFieldIsInvalid_ReturnsNull(string json) {
+    public async Task FitbitRefreshTokenAsync_WhenRequiredTokenFieldIsInvalid_ReturnsExternalFailure(string json) {
         FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => JsonResponse(json)));
 
-        WearableTokenResult? result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+        Result<WearableTokenResult> result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
 
-        Assert.Null(result);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
     }
 
     [Fact]
@@ -162,13 +164,43 @@ public sealed class WearableClientTests {
     }
 
     [Fact]
-    public async Task FitbitRefreshTokenAsync_WhenRequestFails_ReturnsNull() {
+    public async Task FitbitRefreshTokenAsync_WhenRequestFails_ReturnsExternalFailure() {
         FitbitClient client = CreateFitbitClient(
             new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.BadRequest)));
 
-        WearableTokenResult? result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+        Result<WearableTokenResult> result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
 
-        Assert.Null(result);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.BadRequest, "invalid_grant", "Wearable.AuthFailed")]
+    [InlineData(HttpStatusCode.BadRequest, "invalid_client", "Wearable.SyncFailed")]
+    [InlineData(HttpStatusCode.Unauthorized, "invalid_client", "Wearable.SyncFailed")]
+    [InlineData(HttpStatusCode.TooManyRequests, "invalid_grant", "Wearable.SyncFailed")]
+    [InlineData(HttpStatusCode.InternalServerError, "invalid_grant", "Wearable.SyncFailed")]
+    public async Task FitbitRefreshTokenAsync_OnlyDeactivatesForExplicitInvalidGrant(HttpStatusCode status, string errorType, string expectedCode) {
+        FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => {
+            HttpResponseMessage response = JsonResponse("{\"errors\":[{\"errorType\":\"" + errorType + "\"}]}");
+            response.StatusCode = status;
+            return response;
+        }));
+
+        Result<WearableTokenResult> result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(expectedCode, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task FitbitRefreshTokenAsync_WhenTransportFails_ReturnsExternalFailure() {
+        FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => throw new HttpRequestException("Unavailable")));
+
+        Result<WearableTokenResult> result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
     }
 
     [Fact]

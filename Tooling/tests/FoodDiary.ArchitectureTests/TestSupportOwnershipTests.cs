@@ -4,6 +4,43 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TestSupportOwnershipTests {
+    [Theory]
+    [InlineData("FoodDiary.Application.Runtime.Tests")]
+    [InlineData("FoodDiary.Application.Contracts.Tests")]
+    [InlineData("FoodDiary.Email.Contracts.Tests")]
+    public void SharedApplicationTests_KeepBusinessModulesOutOfTheirDependencyClosure(string project) {
+        var graph = ProjectReferenceReader.ReadProductionProjectReferences()
+            .Concat(ProjectReferenceReader.ReadTestProjectReferences())
+            .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        var pending = new Stack<string>();
+        pending.Push(project);
+
+        while (pending.TryPop(out string? current)) {
+            if (!visited.Add(current)) {
+                continue;
+            }
+
+            Assert.False(current.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal),
+                $"{project} depends on business module assembly {current}.");
+            Assert.True(graph.TryGetValue(current, out string[]? references), $"Missing project {current}.");
+            foreach (string reference in references) {
+                pending.Push(reference);
+            }
+        }
+    }
+
+    [Fact]
+    public void RetiredApplicationTestProject_IsNotRecreatedOrUsedAsLinkedSource() {
+        string[] projects = [.. RepositoryFileDiscovery.EnumerateFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj")
+            .Where(path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))];
+
+        Assert.Multiple(
+            () => Assert.DoesNotContain(projects, path => string.Equals(Path.GetFileName(path), "FoodDiary.Application.Tests.csproj", StringComparison.Ordinal)),
+            () => Assert.All(projects, path => Assert.DoesNotContain(XDocument.Load(path).Descendants("Compile"),
+                item => ((string?)item.Attribute("Include"))?.Contains("FoodDiary.Application.Tests", StringComparison.Ordinal) == true)));
+    }
+
     [Fact]
     public void TestSupport_RemainsOutsideProductionDependencyGraph() {
         Assert.Multiple(

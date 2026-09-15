@@ -1,0 +1,32 @@
+using FoodDiary.Modules.Dietologist.Application.Common.Validation;
+using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+
+namespace FoodDiary.ArchitectureTests;
+
+[ExcludeFromCodeCoverage]
+public sealed class UsersIdentityContractAssemblyTests {
+    [Theory]
+    [InlineData(typeof(IUserProfileReadService), "FoodDiary.Modules.Users.Contracts")]
+    [InlineData(typeof(IUserAccessTokenSecurityReader), "FoodDiary.Modules.Users.Contracts")]
+    [InlineData(typeof(UserErrors), "FoodDiary.Modules.Users.Contracts")]
+    [InlineData(typeof(IUserRepository), "FoodDiary.Modules.Users.Application.Abstractions")]
+    [InlineData(typeof(IUserRoleCatalogService), "FoodDiary.Modules.Users.Application.Abstractions")]
+    [InlineData(typeof(IUserAdminReadRepository), "FoodDiary.Modules.Users.Application.Abstractions")]
+    [InlineData(typeof(IPasswordHasher), "FoodDiary.Authentication.Contracts")]
+    [InlineData(typeof(IEmailTemplateRepository), "FoodDiary.Modules.Identity.Application.Abstractions")]
+    [InlineData(typeof(IAdminUserRoleAuditRepository), "FoodDiary.Modules.Admin.Application.Abstractions")]
+    [InlineData(typeof(RecordPremiumConversionCommand), "FoodDiary.Modules.Marketing.Contracts")]
+    [InlineData(typeof(DietologistRequiredIdParser), "FoodDiary.Modules.Dietologist.Application")]
+    [InlineData(typeof(DietologistEnumValueParser), "FoodDiary.Modules.Dietologist.Application")]
+    [InlineData(typeof(CurrentUserAccessResolver), "FoodDiary.Modules.Users.Contracts")]
+    [InlineData(typeof(IAdminSsoCodeStore), "FoodDiary.Authentication.Contracts")]
+    public void ExistingSourceContracts_ResolveToTheirOwner(Type type, string expectedAssembly) {
+        Assert.Equal(expectedAssembly, type.Assembly.GetName().Name);
+    }
+}

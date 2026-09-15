@@ -9,13 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Testing.Assertions" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\tests\FoodDiary.Application.Tests\Support\ResultAssert.cs" Link="Support\ResultAssert.cs" />
     <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Marketing.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
