@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Options;
+namespace FoodDiary.Modules.Identity.Presentation.Options;
 
 public sealed class TelegramBotAuthOptions {
     public const string SectionName = "TelegramBot";

@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
-using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
@@ -20,7 +21,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Services;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed partial class AuthenticationCommandHandlerTests : IDisposable {

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -36,7 +37,7 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
         }
 
         if (string.IsNullOrWhiteSpace(_options.ClientId)) {
-            return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleNotConfigured);
+            return Result.Failure<GoogleIdentityPayload>(IdentityErrors.GoogleNotConfigured);
         }
 
         try {
@@ -56,18 +57,18 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
             string? email = GetClaimValue(principal, ClaimTypes.Email) ??
                         GetClaimValue(principal, "email");
             if (string.IsNullOrWhiteSpace(email)) {
-                return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleInvalidToken);
+                return Result.Failure<GoogleIdentityPayload>(IdentityErrors.GoogleInvalidToken);
             }
 
             string? emailVerified = GetClaimValue(principal, "email_verified");
             if (!bool.TryParse(emailVerified, out bool isEmailVerified) || !isEmailVerified) {
-                return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleEmailNotVerified);
+                return Result.Failure<GoogleIdentityPayload>(IdentityErrors.GoogleEmailNotVerified);
             }
 
             string? issuer = validatedToken.Issuer;
             string? subject = GetClaimValue(principal, ClaimTypes.NameIdentifier) ?? GetClaimValue(principal, "sub");
             if (string.IsNullOrWhiteSpace(issuer) || string.IsNullOrWhiteSpace(subject)) {
-                return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleInvalidToken);
+                return Result.Failure<GoogleIdentityPayload>(IdentityErrors.GoogleInvalidToken);
             }
 
             return Result.Success(new GoogleIdentityPayload(
@@ -81,10 +82,10 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
             throw;
         } catch (Exception ex) when (ex is SecurityTokenException or InvalidOperationException or ArgumentException) {
             logger.LogWarning(ex, "Google credential validation failed.");
-            return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleInvalidToken);
+            return Result.Failure<GoogleIdentityPayload>(IdentityErrors.GoogleInvalidToken);
         } catch (Exception ex) {
             logger.LogWarning(ex, "Google OpenID configuration retrieval failed.");
-            return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleInvalidToken);
+            return Result.Failure<GoogleIdentityPayload>(IdentityErrors.GoogleInvalidToken);
         }
     }
 

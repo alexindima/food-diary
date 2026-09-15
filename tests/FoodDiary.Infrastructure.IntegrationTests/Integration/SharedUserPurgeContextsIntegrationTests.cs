@@ -1,23 +1,29 @@
-using FoodDiary.Persistence.Runtime.Persistence;
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Persistence.Runtime.Persistence;
+
 using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.PersistenceModel.Images;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -32,7 +38,7 @@ using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
-using FoodDiary.Modules.Hydration.Infrastructure;
+
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -229,7 +235,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext central) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddUsersPersistence();
         services.AddSingleton(central);
         services.AddSingleton<SharedPersistenceDbContext>(central);

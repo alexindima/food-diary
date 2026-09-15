@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Images.Models;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
@@ -210,8 +211,6 @@ public partial class UpdateRecipeCommandHandlerTests {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(new DeleteImageAssetResult(Deleted: true));
 
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
     }
 
     [ExcludeFromCodeCoverage]
@@ -223,8 +222,6 @@ public partial class UpdateRecipeCommandHandlerTests {
             return Task.FromResult(new DeleteImageAssetResult(Deleted: true));
         }
 
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
     }
 
     [ExcludeFromCodeCoverage]

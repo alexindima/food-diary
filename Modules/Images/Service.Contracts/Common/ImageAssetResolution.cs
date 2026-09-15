@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Images.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 
-namespace FoodDiary.Application.Images.Common;
+namespace FoodDiary.Modules.Images.Service.Contracts.Common;
 
 public sealed record ImageAssetResolution(ImageAssetId? ImageAssetId, ImageAssetReadModel? ImageAsset);

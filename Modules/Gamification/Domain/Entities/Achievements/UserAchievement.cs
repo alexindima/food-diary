@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Achievements;
+namespace FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 
 public sealed class UserAchievement : Entity<UserAchievementId> {
     public const int AchievementKeyMaxLength = 100;

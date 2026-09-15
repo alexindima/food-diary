@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
 using FoodDiary.Testing;
-using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplateRevisions;
-using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplates;
+using FoodDiary.Modules.Identity.Application.Email.Queries.GetEmailTemplateRevisions;
+using FoodDiary.Modules.Identity.Application.Email.Queries.GetEmailTemplates;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiPromptRevisions;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiPromptTemplates;
@@ -9,7 +9,7 @@ using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageForUser;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageSummary;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetAiUsageForUser;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -41,7 +41,7 @@ public sealed class AdminTemplateHistoryTests {
         ISender ai = RequestTestSender.Create(new GetAiPromptRevisionsQueryHandler(aiRepository), new GetAiUsageForUserQueryHandler(Substitute.For<IAiUsageQuery>()), new GetAiUsageSummaryQueryHandler(Substitute.For<IAiUsageQuery>()), new GetAiPromptTemplatesQueryHandler(aiRepository));
         var revision = new EmailTemplateRevisionReadModel(Guid.NewGuid(), "subject", "html", "text", IsActive: false, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1));
         emailRepository.GetRevisionsAsync("welcome", "en", cancellation.Token).Returns([revision]);
-        var service = new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (ai, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)])));
+        var service = new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (ai, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)])));
         AdminTemplateRevisionModel actual = Assert.Single((await service.Handle(new GetAdminTemplateRevisionsQuery("welcome", "en", IsAiPrompt: false), cancellation.Token)).Value);
         Assert.Equal(new AdminTemplateRevisionModel(revision.Id, "subject", "html", "text", IsActive: false, Version: null, revision.SavedOnUtc, revision.ArchivedOnUtc), actual);
         Assert.Empty(aiRepository.ReceivedCalls());
@@ -56,7 +56,7 @@ public sealed class AdminTemplateHistoryTests {
         ISender ai = RequestTestSender.Create(new GetAiPromptRevisionsQueryHandler(aiRepository), new GetAiUsageForUserQueryHandler(Substitute.For<IAiUsageQuery>()), new GetAiUsageSummaryQueryHandler(Substitute.For<IAiUsageQuery>()), new GetAiPromptTemplatesQueryHandler(aiRepository));
         var revision = new AiPromptRevisionReadModel(Guid.NewGuid(), "prompt", 3, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1));
         aiRepository.GetRevisionsAsync("welcome", "ru", cancellation.Token).Returns([revision]);
-        var service = new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (ai, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)])));
+        var service = new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (ai, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)])));
         AdminTemplateRevisionModel actual = Assert.Single((await service.Handle(new GetAdminTemplateRevisionsQuery("welcome", "ru", IsAiPrompt: true), cancellation.Token)).Value);
         Assert.Equal(new AdminTemplateRevisionModel(revision.Id, Subject: null, HtmlBody: null, "prompt", IsActive: true, 3, revision.SavedOnUtc, revision.ArchivedOnUtc), actual);
         Assert.Empty(emailRepository.ReceivedCalls());

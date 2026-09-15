@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Services;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Services;
 
 public sealed class TelegramOperationService(ITelegramOperationStore store, ITelegramOperationPolicy policy,
     IUserAuthenticationIdentityService identities, TimeProvider timeProvider) {

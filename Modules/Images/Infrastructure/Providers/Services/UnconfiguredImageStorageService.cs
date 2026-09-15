@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 
 internal sealed class UnconfiguredImageStorageService : IImageStorageService {
     private const string ErrorMessage = "Image storage is not configured.";

@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Integrations.Services;
 using FoodDiary.Results;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

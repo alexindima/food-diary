@@ -1,7 +1,8 @@
-using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests.Achievements;
+namespace FoodDiary.Modules.Gamification.Domain.Tests.Achievements;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserAchievementTests {

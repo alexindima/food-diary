@@ -5,3 +5,6 @@ ports, generic result mapping, pagination and temporal validation primitives.
 Keep feature models, repositories, provider contracts and business rules with
 their module owners. This project may depend only on generic shared libraries.
 Preserve the legacy CLR namespaces while consumers migrate by coordinated build.
+
+Google/Telegram/SSO protocol factories belong to Identity.Contracts/Errors.
+Do not restore those feature factories here or reference Identity from this project.

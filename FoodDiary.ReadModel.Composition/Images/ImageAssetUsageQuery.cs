@@ -1,5 +1,7 @@
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Application.Abstractions.Models;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,11 +21,12 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<IReadOnlyList<ImageAssetId>> GetUnusedIdsOlderThanAsync(
+    public async Task<IReadOnlyList<ImageCleanupCandidate>> GetUnusedCandidatesOlderThanAsync(
         DateTime olderThanUtc,
         int batchSize,
+        ImageCleanupCandidate? after = null,
         CancellationToken cancellationToken = default) {
-        return await context.ImageAssets
+        IQueryable<ImageAsset> candidates = context.ImageAssets
             .AsNoTracking()
             .Where(asset =>
                 asset.CreatedOnUtc < olderThanUtc &&
@@ -32,10 +35,16 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
                 !context.RecipeSteps.AsNoTracking().Any(s => s.ImageAssetId == asset.Id) &&
                 !context.Meals.AsNoTracking().Any(m => m.ImageAssetId == asset.Id) &&
                 !context.MealAiSessions.AsNoTracking().Any(s => s.ImageAssetId == asset.Id) &&
-                !context.Users.AsNoTracking().Any(u => u.ProfileImageAssetId == asset.Id))
+                !context.Users.AsNoTracking().Any(u => u.ProfileImageAssetId == asset.Id));
+        if (after is not null) {
+            candidates = candidates.Where(asset => EF.Functions.GreaterThan(
+                ValueTuple.Create(asset.CreatedOnUtc, asset.Id), ValueTuple.Create(after.CreatedOnUtc, after.Id)));
+        }
+        return await candidates
             .OrderBy(asset => asset.CreatedOnUtc)
+            .ThenBy(asset => asset.Id)
             .Take(batchSize)
-            .Select(asset => asset.Id)
+            .Select(asset => new ImageCleanupCandidate(asset.Id, asset.CreatedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

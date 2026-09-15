@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
-using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Dietologist.Domain.Entities;

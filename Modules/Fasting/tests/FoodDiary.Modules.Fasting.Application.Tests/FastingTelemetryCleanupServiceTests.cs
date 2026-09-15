@@ -8,6 +8,19 @@ namespace FoodDiary.Modules.Fasting.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FastingTelemetryCleanupServiceTests {
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task CleanupAsync_WhenBatchSizeIsNotPositive_RejectsBeforeDeleting(int batchSize) {
+        IFastingTelemetryEventWriteRepository repository = Substitute.For<IFastingTelemetryEventWriteRepository>();
+        var handler = new CleanupFastingTelemetryCommandHandler(repository);
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => handler.Handle(
+            new CleanupFastingTelemetryCommand(DateTime.UtcNow, batchSize), CancellationToken.None));
+
+        await repository.DidNotReceiveWithAnyArgs().DeleteOlderThanAsync(default, default, default);
+    }
+
     [Fact]
     public async Task CleanupAsync_DeletesFullBatchesUntilRepositoryReturnsPartialBatch() {
         IFastingTelemetryEventWriteRepository repository = Substitute.For<IFastingTelemetryEventWriteRepository>();

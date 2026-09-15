@@ -1,0 +1,91 @@
+using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
+
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
+using FoodDiary.Presentation.Api.Features.Users.Mappings;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/auth/telegram")]
+[RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
+[RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
+[ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+public sealed class AuthTelegramController(ISender mediator) : BaseApiController(mediator) {
+    [Authorize]
+    [HttpPost("backup-email")]
+    [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    public Task<IActionResult> RequestBackupEmail([FromCurrentUser] Guid userId, [FromBody] TelegramBackupEmailHttpRequest request) =>
+        HandleNoContent(request.ToBackupEmailCommand(userId));
+
+    [Authorize]
+    [HttpPost("unlink")]
+    [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> UnlinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
+        HandleNoContent(request.ToUnlinkCommand(userId));
+
+    [AllowAnonymous]
+    [HttpPost("verify")]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> TelegramVerify([FromBody] TelegramAuthHttpRequest request) =>
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
+
+    [AllowAnonymous]
+    [HttpPost("login-widget")]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> TelegramLoginWidget([FromBody] TelegramLoginWidgetHttpRequest request) =>
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
+
+    [Authorize]
+    [HttpPost("link")]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [BlockImpersonatedAccess]
+    public Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
+        HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());
+
+    [AllowAnonymous]
+    [HttpPost("bot/auth")]
+    [RequireTelegramBotSecret]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    public Task<IActionResult> TelegramBotAuth([FromBody] TelegramBotAuthHttpRequest request) =>
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
+}

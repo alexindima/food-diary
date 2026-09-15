@@ -1,14 +1,18 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Email;
-using FoodDiary.Modules.Hydration.Infrastructure;
+
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -89,7 +93,7 @@ public sealed class SharedRuntimeSessionIntegrationTests(PostgresDatabaseFixture
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Database:EnableRetries"] = "true",
-        }).Build());
+        }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddHydrationModule();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         return services.BuildServiceProvider();

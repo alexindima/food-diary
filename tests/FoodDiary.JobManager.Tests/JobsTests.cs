@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
 using FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole;
 using FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole;
 using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
@@ -17,9 +18,10 @@ using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
@@ -62,7 +64,7 @@ public sealed class JobsTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new ImageCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageCleanupJob>.Instance);
@@ -97,7 +99,7 @@ public sealed class JobsTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new ImageCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             Options.Create(new ImageCleanupOptions { BatchSize = 1, OlderThanHours = 12 }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<ImageCleanupJob>.Instance);
@@ -637,14 +639,14 @@ public sealed class JobsTests {
         IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 0, OlderThanHours = 12 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var job = new ImageCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<ImageCleanupJob>.Instance);
 
         await job.Execute();
 
-        Assert.Equal([1, 1], cleanupService.BatchSizes);
+        Assert.Equal([1], cleanupService.BatchSizes);
         Assert.Equal(now.AddHours(-12), cleanupService.OlderThanValues[0]);
     }
 
@@ -654,7 +656,7 @@ public sealed class JobsTests {
         IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 10, OlderThanHours = 0 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var job = new ImageCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<ImageCleanupJob>.Instance);
@@ -725,7 +727,7 @@ public sealed class JobsTests {
 
         await job.Execute();
 
-        Assert.Equal([1, 1], cleanupService.BatchSizes);
+        Assert.Equal([1], cleanupService.BatchSizes);
         Assert.Equal(now.AddDays(-30), cleanupService.OlderThanValues[0]);
     }
 
@@ -1396,16 +1398,18 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingImageCleanupService(IEnumerable<int> results) : IImageAssetCleanupService {
+    private sealed class RecordingImageCleanupService(IEnumerable<int> results) : IRequestHandler<CleanupOrphanImagesCommand, int> {
         private readonly Queue<int> _results = new(results);
 
         public List<int> BatchSizes { get; } = [];
         public List<DateTime> OlderThanValues { get; } = [];
 
-        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(global::FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(new DeleteImageAssetResult(Deleted: false));
 
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
+        public Task<int> Handle(CleanupOrphanImagesCommand request, CancellationToken cancellationToken) {
+            DateTime olderThanUtc = request.OlderThanUtc;
+            int batchSize = request.BatchSize;
             OlderThanValues.Add(olderThanUtc);
             BatchSizes.Add(batchSize);
             int value = _results.Count > 0 ? _results.Dequeue() : 0;

@@ -4,7 +4,7 @@ using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]

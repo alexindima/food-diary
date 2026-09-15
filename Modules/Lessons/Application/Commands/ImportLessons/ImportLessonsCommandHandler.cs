@@ -1,15 +1,15 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using System.Globalization;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Modules.Lessons.Contracts.Common;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Commands.ImportLessons;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Lessons.Commands.ImportLessons;
+namespace FoodDiary.Modules.Lessons.Application.Commands.ImportLessons;
 
 public sealed class ImportLessonsCommandHandler(INutritionLessonReadRepository readRepository,
     INutritionLessonWriteRepository repository) : IRequestHandler<ImportLessonsCommand, Result<IReadOnlyList<LessonAdminReadModel>>> {

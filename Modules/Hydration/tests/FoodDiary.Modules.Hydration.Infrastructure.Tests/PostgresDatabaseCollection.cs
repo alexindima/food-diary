@@ -1,4 +1,4 @@
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Hydration.Infrastructure.Tests;
 
 [CollectionDefinition("postgres-database")]
 [ExcludeFromCodeCoverage]

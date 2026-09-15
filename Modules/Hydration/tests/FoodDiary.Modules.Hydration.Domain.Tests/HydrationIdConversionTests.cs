@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Hydration.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Hydration.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class HydrationIdConversionTests {

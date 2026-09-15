@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Users.Commands.CreateUserByAdministrator;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;

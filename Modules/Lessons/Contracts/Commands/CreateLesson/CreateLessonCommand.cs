@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
 using FoodDiary.Mediator;
 

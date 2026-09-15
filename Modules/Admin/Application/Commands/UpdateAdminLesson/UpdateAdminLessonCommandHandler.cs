@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Lessons.Contracts.Commands.UpdateLesson;
 using FoodDiary.Modules.Admin.Application.Common;
@@ -6,9 +8,7 @@ using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
 

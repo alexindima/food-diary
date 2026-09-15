@@ -1,13 +1,12 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using Amazon.S3;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Images.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderRegistrationTests {

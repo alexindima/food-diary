@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Lessons.Models;
+namespace FoodDiary.Modules.Lessons.Application.Models;
 
 public sealed record LessonPageModel(
     IReadOnlyList<LessonSummaryModel> Items,

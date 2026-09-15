@@ -3,7 +3,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Queries.GetTelegramConfiguration;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Queries.GetTelegramConfiguration;
 
 public sealed class GetTelegramConfigurationQueryHandler(ITelegramIdentityPolicy policy, ITelegramOidcProvider oidc)
     : IQueryHandler<GetTelegramConfigurationQuery, Result<TelegramConfigurationModel>> {

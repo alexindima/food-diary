@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreAccount;
 
 public sealed class RestoreAccountCommandValidator : AbstractValidator<RestoreAccountCommand> {
     public RestoreAccountCommandValidator() {

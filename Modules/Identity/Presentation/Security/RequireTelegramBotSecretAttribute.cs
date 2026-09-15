@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Security;
+namespace FoodDiary.Modules.Identity.Presentation.Security;
 
 public sealed class RequireTelegramBotSecretAttribute() : TypeFilterAttribute(typeof(TelegramBotSecretAuthorizationFilter));

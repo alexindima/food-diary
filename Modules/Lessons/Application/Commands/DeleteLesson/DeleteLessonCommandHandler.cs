@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Commands.DeleteLesson;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Lessons.Commands.DeleteLesson;
+namespace FoodDiary.Modules.Lessons.Application.Commands.DeleteLesson;
 
 public sealed class DeleteLessonCommandHandler(INutritionLessonWriteRepository repository) : IRequestHandler<DeleteLessonCommand, Result> {
     public async Task<Result> Handle(DeleteLessonCommand request, CancellationToken cancellationToken) {

@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Authentication;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Authentication;
+using FoodDiary.Authentication.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Authentication;
 
 namespace FoodDiary.Modules.Admin.Infrastructure.Tests.Authentication;

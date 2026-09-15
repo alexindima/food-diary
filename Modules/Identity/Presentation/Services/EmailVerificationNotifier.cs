@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Identity.Presentation.Hubs;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Presentation.Api.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
-namespace FoodDiary.Presentation.Api.Services;
+namespace FoodDiary.Modules.Identity.Presentation.Services;
 
 public sealed class EmailVerificationNotifier(IHubContext<EmailVerificationHub> hubContext)
     : IEmailVerificationNotifier {

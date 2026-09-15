@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Identity.Presentation.Services;
+using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Identity.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Presentation.Api.Extensions;
-using FoodDiary.Presentation.Api.Security;
-using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class IdentityPresentationCompositionTests {

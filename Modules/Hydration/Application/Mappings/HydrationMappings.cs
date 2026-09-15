@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Hydration.Models;
-using FoodDiary.Application.Hydration.Models;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Application.Abstractions.Models;
+using FoodDiary.Modules.Hydration.Contracts.Models;
 
-namespace FoodDiary.Application.Hydration.Mappings;
+namespace FoodDiary.Modules.Hydration.Application.Mappings;
 
 public static class HydrationMappings {
     public static HydrationEntryModel ToModel(this HydrationEntry entry) =>

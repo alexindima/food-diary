@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.ValueObjects;
 

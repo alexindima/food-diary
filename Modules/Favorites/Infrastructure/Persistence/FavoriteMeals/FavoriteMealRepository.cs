@@ -105,5 +105,9 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
         CancellationToken cancellationToken = default) =>
         queries.GetAllReadModelsAsync(userId, cancellationToken);
 
+    public Task<(IReadOnlyList<FavoriteMealReadModel> Items, int TotalItems)> GetOverviewReadModelsAsync(
+        UserId userId, int limit, CancellationToken cancellationToken = default) =>
+        queries.GetOverviewReadModelsAsync(userId, limit, cancellationToken);
+
     private sealed record FavoriteMealIdByMealIdReadModel(MealId MealId, FavoriteMealId FavoriteMealId);
 }

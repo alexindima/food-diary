@@ -8,7 +8,6 @@ Rules for `Modules/Lessons/`.
 
 - Own nutrition lessons, user lesson progress, application use cases, administration contracts, persistence ports, adapters, and EF configuration.
 - Keep the real application assembly at `Application/FoodDiary.Modules.Lessons.Application.csproj`; do not create a root wrapper project.
-- Preserve legacy `FoodDiary.Application.Lessons.*`, `FoodDiary.Application.Abstractions.Lessons.*`, and `FoodDiary.Domain.*` CLR namespaces and the `FoodDiary.Application.Lessons` application assembly name.
 - External business modules consume only `Contracts`; repository ports and persistence projections remain internal module abstractions.
 - Shared lesson IDs/enums belong to Domain.Contracts; consumer Contracts never reference aggregate-bearing Domain.
 - Administration capabilities return immutable LessonAdminReadModel snapshots. Never return NutritionLesson aggregates to consumers; construct and mutate them only inside Lessons.
@@ -38,3 +37,7 @@ Lessons owns its two-entity runtime `LessonsDbContext`. Its repository receives 
 NutritionLesson and UserLessonProgress sets from that context; publication, locale
 filters and completion-count SQL stay together. Shared unit-of-work saving, central
 migrations and User cascade relationships remain unchanged (ADR 0040).
+
+Use canonical FoodDiary.Modules.Lessons project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+MarkLessonRead runs the progress check, insert and achievement evaluation enqueue inside ILessonProgressTransactionRunner. Infrastructure acquires a transaction-scoped advisory lock for the user/lesson pair before reading progress. The shared coordinator saves and commits both owner contexts; do not enqueue outside that transaction or rely on a check-then-insert without serialization.

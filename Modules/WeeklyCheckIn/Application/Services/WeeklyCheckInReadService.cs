@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
@@ -5,7 +6,6 @@ using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEn
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Models;
@@ -15,7 +15,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeeklyCheckIn.Services;
 
 public sealed class WeeklyCheckInReadService(
-    IMealActivityReadService mealActivityReadService, ISender sender, IHydrationEntryReadService hydrationEntryReadService)
+    IMealActivityReadService mealActivityReadService, ISender sender)
     : IWeeklyCheckInReadService {
     public async Task<Result<WeekSummaryModel>> LoadWeekSummaryAsync(
         UserId userId,
@@ -41,8 +41,7 @@ public sealed class WeeklyCheckInReadService(
             .ConfigureAwait(false);
         IReadOnlyList<WaistEntryModel> waists = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken)
             .ConfigureAwait(false);
-        IReadOnlyList<(DateTime Date, int TotalMl)> hydration = await hydrationEntryReadService
-            .GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken)
+        IReadOnlyList<(DateTime Date, int TotalMl)> hydration = await sender.Send(new ReadHydrationDailyTotalsQuery(userId, dateFrom, dateTo), cancellationToken)
             .ConfigureAwait(false);
 
         return Result.Success(WeeklyCheckInCalculator.BuildSummary(

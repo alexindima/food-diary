@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Modules.Products.Infrastructure.Persistence;
 using System.Data;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -130,7 +133,7 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Database:EnableRetries"] = enableRetries.ToString(),
             ["Database:MaxRetryDelaySeconds"] = "1",
-        }).Build());
+        }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddProductsPersistence();
         services.AddReadModelComposition();

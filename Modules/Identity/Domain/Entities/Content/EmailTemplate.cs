@@ -2,7 +2,7 @@ using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities.Content;
+namespace FoodDiary.Modules.Identity.Domain.Entities.Content;
 
 public sealed class EmailTemplate : Entity<Guid> {
     private readonly List<EmailTemplateRevision> _revisions = [];

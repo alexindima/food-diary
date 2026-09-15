@@ -7,7 +7,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class OutboxReplayOwnershipTests {
     [Fact]
     public void Coordinator_HasNoConcreteStreamTypes_AndRetainsTransactionOwnership() {
-        string code = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs"));
+        string code = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs"));
         string[] identifiers = Identifiers(code);
         Assert.Contains("IUnitOfWork", identifiers, StringComparer.Ordinal);
         foreach (string concrete in new[] { "EmailOutboxMessage", "ImageObjectDeletionOutboxMessage", "NotificationWebPushOutboxMessage", "AchievementEvaluationOutboxMessage" }) {
@@ -23,7 +23,7 @@ public sealed class OutboxReplayOwnershipTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutboxReplayStream.cs")]
+    [InlineData("Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutboxReplayStream.cs")]
     [InlineData("Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs")]
     [InlineData("Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs")]
     [InlineData("Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs")]

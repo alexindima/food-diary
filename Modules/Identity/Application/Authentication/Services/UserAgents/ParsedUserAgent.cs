@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Identity.Authentication.Services.UserAgents;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Services.UserAgents;
 
 internal sealed record ParsedUserAgent(
     string? BrowserName,

@@ -1,15 +1,15 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
-using FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordReset;
-using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RequestPasswordReset;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
     private static RequestPasswordResetCommandHandler CreateRequestPasswordResetHandler(

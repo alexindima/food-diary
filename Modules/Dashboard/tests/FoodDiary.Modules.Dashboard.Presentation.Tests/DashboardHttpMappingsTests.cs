@@ -2,7 +2,7 @@ using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Modules.Hydration.Contracts.Models;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Abstractions.Users.Models;

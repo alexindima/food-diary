@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
 
 public sealed class GoogleLoginCommandValidator : AbstractValidator<GoogleLoginCommand> {
     public GoogleLoginCommandValidator() {

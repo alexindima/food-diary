@@ -1,20 +1,21 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
-using FoodDiary.Application.Identity.Authentication.Commands.TelegramBotAuth;
-using FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget;
-using FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramBotAuth;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramLoginWidget;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Auth;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthTelegramControllerTests {

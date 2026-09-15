@@ -5,7 +5,7 @@ using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserAuthenticationRegistrationServiceTests {

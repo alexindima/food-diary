@@ -1,3 +1,7 @@
+using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotal;
+using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotals;
+using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationEntries;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Testing;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadLatestWaistEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.ReadWaistEntries;
@@ -8,13 +12,12 @@ using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeight
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation.Results;
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
@@ -26,7 +29,6 @@ using FoodDiary.Modules.Dashboard.Application.Common;
 using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
 using FoodDiary.Modules.Dashboard.Application.Services;
-using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -205,7 +207,7 @@ public class DashboardFeatureTests {
                 new(Guid.NewGuid(), userId.Value, trendStart, 80),
                 new(Guid.NewGuid(), userId.Value, dayStart, 82),
             ]));
-        RepositoryDashboardBodyReadService service = new(global::FoodDiary.Testing.RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightRepository), new ReadLatestWeightEntryQueryHandler(weightRepository), new ReadWeightSummariesQueryHandler(weightRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry.ReadLatestWeightEntryQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(Substitute.For<IWaistEntryReadModelRepository>()), new ReadLatestWaistEntryQueryHandler(Substitute.For<IWaistEntryReadModelRepository>()), new ReadWaistSummariesQueryHandler(Substitute.For<IWaistEntryReadModelRepository>())), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadLatestWaistEntry.ReadLatestWaistEntryQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), new HydrationEntryReadService(Substitute.For<IHydrationEntryReadModelRepository>()));
+        RepositoryDashboardBodyReadService service = new(global::FoodDiary.Testing.RequestTestSender.Route((global::FoodDiary.Testing.RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightRepository), new ReadLatestWeightEntryQueryHandler(weightRepository), new ReadWeightSummariesQueryHandler(weightRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry.ReadLatestWeightEntryQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(Substitute.For<IWaistEntryReadModelRepository>()), new ReadLatestWaistEntryQueryHandler(Substitute.For<IWaistEntryReadModelRepository>()), new ReadWaistSummariesQueryHandler(Substitute.For<IWaistEntryReadModelRepository>())), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadLatestWaistEntry.ReadLatestWaistEntryQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)]), (RequestTestSender.Create(new ReadHydrationEntriesQueryHandler(Substitute.For<IHydrationEntryReadModelRepository>()), new ReadHydrationDailyTotalQueryHandler(Substitute.For<IHydrationEntryReadModelRepository>()), new ReadHydrationDailyTotalsQueryHandler(Substitute.For<IHydrationEntryReadModelRepository>())), [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals.ReadHydrationDailyTotalsQuery)])));
 
         DashboardBodyReadModel result = await service.GetBodyAsync(
             userId,

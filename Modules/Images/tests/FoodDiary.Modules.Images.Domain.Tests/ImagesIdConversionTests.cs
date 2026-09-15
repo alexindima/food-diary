@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Images.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ImagesIdConversionTests {

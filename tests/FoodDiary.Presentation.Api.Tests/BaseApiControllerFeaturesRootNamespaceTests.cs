@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Presentation.Extensions;
+using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Mvc;

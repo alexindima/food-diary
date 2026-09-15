@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using Microsoft.AspNetCore.Http;
 
-namespace FoodDiary.Presentation.Api.Security;
+namespace FoodDiary.Modules.Identity.Presentation.Security;
 
 public sealed class TelegramBrowserBindingHttpProcessor(TimeProvider timeProvider) {
     public const string CookieName = "fooddiary.telegram-browser";

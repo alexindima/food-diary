@@ -5,8 +5,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Images.Common;
+namespace FoodDiary.Modules.Images.Service.Contracts.Common;
 
 public interface IImageAssetContentService {
     // The owner validates access and confirmation. Content is transient and must not be logged or persisted.

@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions;
-using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Admin.Application.Models;

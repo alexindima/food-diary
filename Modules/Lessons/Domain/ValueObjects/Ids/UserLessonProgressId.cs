@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Lessons.Domain.ValueObjects.Ids;
 
 public readonly record struct UserLessonProgressId(Guid Value) : IEntityId<Guid> {
     public static UserLessonProgressId New() => new(Guid.NewGuid());

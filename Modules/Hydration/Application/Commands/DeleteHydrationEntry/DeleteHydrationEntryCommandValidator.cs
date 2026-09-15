@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
+namespace FoodDiary.Modules.Hydration.Application.Commands.DeleteHydrationEntry;
 
 public sealed class DeleteHydrationEntryCommandValidator : AbstractValidator<DeleteHydrationEntryCommand> {
     public DeleteHydrationEntryCommandValidator() {

@@ -8,39 +8,39 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4114,
+    "sourceFiles": 4117,
     "symbols": 4053,
-    "interfaceImplementationLinks": 223,
-    "dependencyInjectionRegistrations": 108,
+    "interfaceImplementationLinks": 214,
+    "dependencyInjectionRegistrations": 98,
     "kinds": {
-      "class": 2138,
+      "class": 2137,
       "enum": 64,
-      "interface": 430,
-      "record": 1301,
+      "interface": 422,
+      "record": 1310,
       "record struct": 120
     },
     "roles": {
-      "Command": 203,
-      "CommandHandler": 199,
+      "Command": 206,
+      "CommandHandler": 202,
       "Configuration": 95,
       "Controller": 104,
       "Entity": 97,
       "Event": 19,
       "Factory": 14,
-      "Handler": 9,
+      "Handler": 7,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1652,
-      "Query": 251,
-      "QueryHandler": 179,
-      "ReadModelRepository": 32,
+      "Other": 1656,
+      "Query": 255,
+      "QueryHandler": 183,
+      "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 98,
       "Request": 150,
       "Response": 213,
-      "Service": 230,
+      "Service": 213,
       "Validator": 225,
       "ValueObject": 114,
       "WriteRepository": 45
@@ -475,32 +475,11 @@
       "line": 6
     },
     {
-      "name": "InMemoryAdminSsoCodeStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Authentication/InMemoryAdminSsoCodeStore.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 8
-    },
-    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Options.cs",
-      "line": 8
+      "line": 5
     },
     {
       "name": "DependencyInjection",
@@ -598,7 +577,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/IdentityCrossModuleRelationships.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ImagesCrossModuleRelationships",
@@ -724,7 +703,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 30
+      "line": 35
     },
     {
       "name": "FoodDiaryDbContext",
@@ -752,7 +731,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "FoodDiaryDbContext",
@@ -766,14 +745,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "FoodDiaryDbContext",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Users.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FoodDiaryDbContext",
@@ -794,14 +773,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 22
-    },
-    {
-      "name": "StructuredAuditLogger",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
-      "line": 6
+      "line": 23
     },
     {
       "name": "InitialAdminBootstrapOptions",
@@ -815,7 +787,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/InitialAdminBootstrapper.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "InitializerCommand",
@@ -843,7 +815,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 355
+      "line": 363
     },
     {
       "name": "UsdaCsvReader",
@@ -864,7 +836,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 80
+      "line": 87
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -927,7 +899,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/EmailOutboxOptions.cs",
-      "line": 3
+      "line": 2
     },
     {
       "name": "FastingNotificationJob",
@@ -983,7 +955,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/ImageCleanupJob.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ImageCleanupOptions",
@@ -1039,7 +1011,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "JobManagerTelemetry",
@@ -1130,14 +1102,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 3
+      "line": 2
     },
     {
       "name": "RecurringJobsHostedService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "TelemetryPrivacyProcessor",
@@ -1172,7 +1144,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/UserLoginEventCleanupJob.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UserLoginEventCleanupOptions",
@@ -1194,209 +1166,6 @@
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/WeeklyGoalReminderOptions.cs",
       "line": 2
-    },
-    {
-      "name": "DomainEventNotification",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Events/DomainEventNotification.cs",
-      "line": 5
-    },
-    {
-      "name": "MediatorDomainEventPublisher",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Events/MediatorDomainEventPublisher.cs",
-      "line": 6
-    },
-    {
-      "name": "DatabaseOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Persistence.Runtime/Options/DatabaseOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "AuditEntryService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Audit/AuditEntryService.cs",
-      "line": 8
-    },
-    {
-      "name": "EfUnitOfWork",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/EfUnitOfWork.cs",
-      "line": 9
-    },
-    {
-      "name": "EmailOutbox",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutbox.cs",
-      "line": 5
-    },
-    {
-      "name": "EmailOutboxProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutboxProcessor.cs",
-      "line": 8
-    },
-    {
-      "name": "EmailOutboxReplayStream",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutboxReplayStream.cs",
-      "line": 7
-    },
-    {
-      "name": "DomainEventDispatcher",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatcher.cs",
-      "line": 8
-    },
-    {
-      "name": "DomainEventDispatchInterceptor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatchInterceptor.cs",
-      "line": 6
-    },
-    {
-      "name": "PostgresAdvisoryLockLease",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Locking/PostgresAdvisoryLockLease.cs",
-      "line": 4
-    },
-    {
-      "name": "OutboxDeadLetterReplayService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 11
-    },
-    {
-      "name": "EfIndependentModuleContextOptionsFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfIndependentModuleContextOptionsFactory.cs",
-      "line": 5
-    },
-    {
-      "name": "EfModuleScopeGuard",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleScopeGuard.cs",
-      "line": 4
-    },
-    {
-      "name": "EfModuleSessionCoordinator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleSessionCoordinator.cs",
-      "line": 7
-    },
-    {
-      "name": "EfModuleSessionLock",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleSessionLock.cs",
-      "line": 6
-    },
-    {
-      "name": "EfModuleTransactionCoordinator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleTransactionCoordinator.cs",
-      "line": 9
-    },
-    {
-      "name": "ModuleContextSaveCoordinator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/ModuleContextSaveCoordinator.cs",
-      "line": 7
-    },
-    {
-      "name": "PersistenceSession",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/PersistenceSession.cs",
-      "line": 11
-    },
-    {
-      "name": "SharedTransactionBoundary",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/SharedTransactionBoundary.cs",
-      "line": 8
-    },
-    {
-      "name": "SharedPersistenceDbContext",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/SharedPersistenceDbContext.cs",
-      "line": 10
-    },
-    {
-      "name": "SharedPersistenceDbContext",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/SharedPersistenceDbContext.Session.cs",
-      "line": 7
-    },
-    {
-      "name": "SharedRuntimeDbContext",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/SharedRuntimeDbContext.cs",
-      "line": 4
-    },
-    {
-      "name": "PersistenceRuntimeRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Audit.cs",
-      "line": 6
-    },
-    {
-      "name": "PersistenceRuntimeRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.cs",
-      "line": 22
-    },
-    {
-      "name": "PersistenceRuntimeRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Email.cs",
-      "line": 6
-    },
-    {
-      "name": "PersistenceRuntimeRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Options.cs",
-      "line": 7
-    },
-    {
-      "name": "DatabaseCommandTelemetryInterceptor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Services/DatabaseCommandTelemetryInterceptor.cs",
-      "line": 5
-    },
-    {
-      "name": "InfrastructureTelemetry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Persistence.Runtime/Services/InfrastructureTelemetry.cs",
-      "line": 4
     },
     {
       "name": "PresentationRoleNames",
@@ -1788,7 +1557,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionsLoader.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DashboardMealFavoritesLoader",
@@ -1886,7 +1655,7 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "MealPlanCompositionReader",
@@ -1921,14 +1690,14 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ProductOverviewReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ProductUsageQuery",
@@ -1949,7 +1718,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "RecipeUsageQuery",
@@ -2201,7 +1970,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ApiAuthenticationServiceCollectionExtensions",
@@ -2236,7 +2005,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "ApiOptionsServiceCollectionExtensions",
@@ -2250,7 +2019,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 58
+      "line": 76
     },
     {
       "name": "ApiTelemetry",
@@ -4917,7 +4686,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "AnalyzeFoodImageCommandValidator",
@@ -4987,7 +4756,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "StartFoodRecognitionCommandValidator",
@@ -5330,7 +5099,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "OpenAiOptions",
@@ -5421,14 +5190,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Ai/PersistenceModel/Configurations/FoodRecognitionJobConfiguration.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FoodRecognitionJob",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AiFoodController",
@@ -8858,7 +8627,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Presentation.Mappings/Mappings/DashboardHttpResponseMappings.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "DashboardController",
@@ -11654,25 +11423,11 @@
       "line": 6
     },
     {
-      "name": "FastingNotificationCreationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
-      "line": 4
-    },
-    {
       "name": "FastingNotificationFactory",
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Fasting/Application/Services/FastingNotificationFactory.cs",
       "line": 4
-    },
-    {
-      "name": "FastingNotificationPushDispatcher",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Fasting/Application/Services/FastingNotificationPushDispatcher.cs",
-      "line": 5
     },
     {
       "name": "FastingOccurrenceAnalysis",
@@ -12980,56 +12735,49 @@
       "name": "AchievementDefinitionErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
+      "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
       "line": 4
     },
     {
       "name": "IAchievementDefinitionReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs",
+      "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs",
       "line": 4
     },
     {
       "name": "IAchievementDefinitionStore",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
+      "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
       "line": 5
     },
     {
       "name": "IAchievementEvaluationOutboxProcessor",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
+      "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
       "line": 2
     },
     {
       "name": "IAchievementMetricReader",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs",
-      "line": 4
-    },
-    {
-      "name": "IAchievementReconciliationHandler",
-      "kind": "interface",
-      "role": "Handler",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
+      "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs",
       "line": 4
     },
     {
       "name": "IUserAchievementStore",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs",
+      "path": "Modules/Gamification/Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
       "line": 6
     },
     {
       "name": "AchievementGrantModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Gamification/Application/Abstractions/Achievements/Models/AchievementGrantModel.cs",
+      "path": "Modules/Gamification/Application.Abstractions/Achievements/Models/AchievementGrantModel.cs",
       "line": 2
     },
     {
@@ -13037,6 +12785,13 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Gamification/Application/Commands/CreateAchievementDefinition/CreateAchievementDefinitionCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "ReconcileAchievementsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Gamification/Application/Commands/ReconcileAchievements/ReconcileAchievementsCommandHandler.cs",
       "line": 11
     },
     {
@@ -13044,7 +12799,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Gamification/Application/Commands/UpdateAchievementDefinition/UpdateAchievementDefinitionCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "IAchievementAwardService",
@@ -13054,32 +12809,11 @@
       "line": 5
     },
     {
-      "name": "IGamificationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IGamificationUserProfile",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Gamification/Application/Common/IGamificationUserProfile.cs",
-      "line": 2
-    },
-    {
-      "name": "IGamificationUserProfileService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs",
-      "line": 5
-    },
-    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Application/DependencyInjection.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "AchievementMetricSnapshot",
@@ -13107,7 +12841,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "GetGamificationQuery",
@@ -13121,7 +12855,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
-      "line": 9
+      "line": 14
     },
     {
       "name": "AchievementAwardService",
@@ -13131,32 +12865,11 @@
       "line": 9
     },
     {
-      "name": "AchievementReconciliationHandler",
-      "kind": "class",
-      "role": "Handler",
-      "path": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
-      "line": 8
-    },
-    {
       "name": "GamificationCalculator",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Application/Services/GamificationCalculator.cs",
       "line": 6
-    },
-    {
-      "name": "GamificationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Gamification/Application/Services/GamificationReadService.cs",
-      "line": 10
-    },
-    {
-      "name": "GamificationUserProfileService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
-      "line": 9
     },
     {
       "name": "IAchievementEvaluationOutbox",
@@ -13171,6 +12884,13 @@
       "role": "Command",
       "path": "Modules/Gamification/Contracts/Commands/CreateAchievementDefinition/CreateAchievementDefinitionCommand.cs",
       "line": 8
+    },
+    {
+      "name": "ReconcileAchievementsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Gamification/Contracts/Commands/ReconcileAchievements/ReconcileAchievementsCommand.cs",
+      "line": 4
     },
     {
       "name": "UpdateAchievementDefinitionCommand",
@@ -13226,14 +12946,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "UserAchievement",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "AchievementDefinitionId",
@@ -13250,46 +12970,11 @@
       "line": 4
     },
     {
-      "name": "AchievementEvaluationOutboxMessage",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Gamification/Infrastructure/Model/Achievements/AchievementEvaluationOutboxMessage.cs",
-      "line": 5
-    },
-    {
-      "name": "AchievementDefinitionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "AchievementEvaluationOutboxMessageConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserAchievementConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "GamificationPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Gamification/Infrastructure/Model/GamificationPersistenceModelRegistration.cs",
-      "line": 4
-    },
-    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "AchievementDefinitionStore",
@@ -13310,7 +12995,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "AchievementEvaluationOutboxReplayStream",
@@ -13324,7 +13009,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/GamificationDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "UserAchievementStore",
@@ -13334,80 +13019,115 @@
       "line": 9
     },
     {
-      "name": "GamificationPresentationServiceCollectionExtensions",
+      "name": "AchievementEvaluationOutboxMessage",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Gamification/Presentation/Extensions/GamificationPresentationServiceCollectionExtensions.cs",
+      "path": "Modules/Gamification/PersistenceModel/Achievements/AchievementEvaluationOutboxMessage.cs",
+      "line": 5
+    },
+    {
+      "name": "AchievementDefinitionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Gamification/PersistenceModel/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "AchievementEvaluationOutboxMessageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Gamification/PersistenceModel/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserAchievementConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Gamification/PersistenceModel/Configurations/Achievements/UserAchievementConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "GamificationPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/PersistenceModel/GamificationPersistenceModelRegistration.cs",
       "line": 4
     },
     {
       "name": "GamificationController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Gamification/Presentation/Features/Gamification/GamificationController.cs",
-      "line": 12
+      "path": "Modules/Gamification/Presentation/Controllers/GamificationController.cs",
+      "line": 13
+    },
+    {
+      "name": "GamificationPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Presentation/Extensions/GamificationPresentationServiceCollectionExtensions.cs",
+      "line": 5
     },
     {
       "name": "GamificationHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Gamification/Presentation/Features/Gamification/Mappings/GamificationHttpMappings.cs",
+      "path": "Modules/Gamification/Presentation/Mappings/GamificationHttpMappings.cs",
       "line": 7
     },
     {
       "name": "BadgeHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Gamification/Presentation/Features/Gamification/Responses/BadgeHttpResponse.cs",
+      "path": "Modules/Gamification/Presentation/Responses/BadgeHttpResponse.cs",
       "line": 2
     },
     {
       "name": "GamificationHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Gamification/Presentation/Features/Gamification/Responses/GamificationHttpResponse.cs",
+      "path": "Modules/Gamification/Presentation/Responses/GamificationHttpResponse.cs",
       "line": 2
     },
     {
       "name": "HydrationEntryErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Hydration/Application/Abstractions/Common/HydrationEntryErrors.cs",
+      "path": "Modules/Hydration/Application.Abstractions/Common/HydrationEntryErrors.cs",
       "line": 4
     },
     {
       "name": "IHydrationEntryReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs",
+      "path": "Modules/Hydration/Application.Abstractions/Common/IHydrationEntryReadModelRepository.cs",
       "line": 5
     },
     {
       "name": "IHydrationEntryWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryWriteRepository.cs",
+      "path": "Modules/Hydration/Application.Abstractions/Common/IHydrationEntryWriteRepository.cs",
       "line": 5
     },
     {
-      "name": "IHydrationGoalService",
+      "name": "IHydrationIntervalReadModelRepository",
       "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationGoalService.cs",
-      "line": 5
+      "role": "ReadModelRepository",
+      "path": "Modules/Hydration/Application.Abstractions/Common/IHydrationIntervalReadModelRepository.cs",
+      "line": 4
     },
     {
       "name": "IHydrationOperationReceiptRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationOperationReceiptRepository.cs",
+      "path": "Modules/Hydration/Application.Abstractions/Common/IHydrationOperationReceiptRepository.cs",
       "line": 5
     },
     {
       "name": "HydrationEntryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Hydration/Application/Abstractions/Models/HydrationEntryReadModel.cs",
+      "path": "Modules/Hydration/Application.Abstractions/Models/HydrationEntryReadModel.cs",
       "line": 2
     },
     {
@@ -13422,7 +13142,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CreateHydrationEntryCommandValidator",
@@ -13457,7 +13177,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "DeleteHydrationEntryCommandValidator",
@@ -13478,7 +13198,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "UpdateHydrationEntryCommandValidator",
@@ -13492,7 +13212,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Hydration/Application/DependencyInjection.cs",
-      "line": 9
+      "line": 6
     },
     {
       "name": "RequiredIdParser",
@@ -13534,7 +13254,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetHydrationDailyTotalQueryValidator",
@@ -13555,7 +13275,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetHydrationEntriesQueryValidator",
@@ -13565,18 +13285,32 @@
       "line": 4
     },
     {
-      "name": "HydrationEntryReadService",
+      "name": "ReadHydrationDailyTotalQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Hydration/Application/Services/HydrationEntryReadService.cs",
+      "role": "QueryHandler",
+      "path": "Modules/Hydration/Application/Queries/ReadHydrationDailyTotal/ReadHydrationDailyTotalQueryHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "ReadHydrationDailyTotalsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Hydration/Application/Queries/ReadHydrationDailyTotals/ReadHydrationDailyTotalsQueryHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "ReadHydrationEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Hydration/Application/Queries/ReadHydrationEntries/ReadHydrationEntriesQueryHandler.cs",
       "line": 9
     },
     {
-      "name": "HydrationGoalService",
+      "name": "ReadHydrationIntervalQueryHandler",
       "kind": "class",
-      "role": "Service",
-      "path": "Modules/Hydration/Application/Services/HydrationGoalService.cs",
-      "line": 8
+      "role": "QueryHandler",
+      "path": "Modules/Hydration/Application/Queries/ReadHydrationInterval/ReadHydrationIntervalQueryHandler.cs",
+      "line": 6
     },
     {
       "name": "HydrationValidators",
@@ -13584,20 +13318,6 @@
       "role": "Other",
       "path": "Modules/Hydration/Application/Validators/HydrationValidators.cs",
       "line": 6
-    },
-    {
-      "name": "IHydrationEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IHydrationIntervalReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Hydration/Contracts/Common/IHydrationIntervalReadService.cs",
-      "line": 4
     },
     {
       "name": "HydrationDailyModel",
@@ -13614,45 +13334,52 @@
       "line": 2
     },
     {
+      "name": "ReadHydrationDailyTotalQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Hydration/Contracts/Queries/ReadHydrationDailyTotal/ReadHydrationDailyTotalQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "ReadHydrationDailyTotalsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Hydration/Contracts/Queries/ReadHydrationDailyTotals/ReadHydrationDailyTotalsQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "ReadHydrationEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Hydration/Contracts/Queries/ReadHydrationEntries/ReadHydrationEntriesQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "ReadHydrationIntervalQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Hydration/Contracts/Queries/ReadHydrationInterval/ReadHydrationIntervalQuery.cs",
+      "line": 4
+    },
+    {
       "name": "HydrationEntry",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "HydrationOperationReceipt",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationOperationReceipt.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "HydrationEntryId",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Hydration/Domain/ValueObjects/Ids/HydrationEntryId.cs",
-      "line": 4
-    },
-    {
-      "name": "HydrationEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "HydrationOperationReceiptConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationOperationReceiptConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "HydrationPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Hydration/Infrastructure/Model/HydrationPersistenceModelRegistration.cs",
       "line": 4
     },
     {
@@ -13667,14 +13394,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "HydrationEntryRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "HydrationIntervalReadService",
@@ -13698,94 +13425,115 @@
       "line": 7
     },
     {
+      "name": "HydrationEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Hydration/PersistenceModel/Configurations/HydrationEntryConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "HydrationOperationReceiptConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Hydration/PersistenceModel/Configurations/HydrationOperationReceiptConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "HydrationPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/PersistenceModel/HydrationPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
       "name": "HydrationDailyHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationDailyHttpResponse.cs",
+      "path": "Modules/Hydration/Presentation.Contracts/Responses/HydrationDailyHttpResponse.cs",
       "line": 2
     },
     {
       "name": "HydrationEntryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Hydration/Presentation.Contracts/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
+      "path": "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "HydrationHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Hydration/Presentation.Mappings/Features/Hydration/Mappings/HydrationHttpResponseMappings.cs",
+      "path": "Modules/Hydration/Presentation.Mappings/Mappings/HydrationHttpResponseMappings.cs",
       "line": 5
+    },
+    {
+      "name": "HydrationEntriesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Hydration/Presentation/Controllers/HydrationEntriesController.cs",
+      "line": 18
     },
     {
       "name": "HydrationPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Hydration/Presentation/Extensions/HydrationPresentationServiceCollectionExtensions.cs",
-      "line": 4
-    },
-    {
-      "name": "HydrationEntriesController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/HydrationEntriesController.cs",
-      "line": 15
+      "line": 5
     },
     {
       "name": "HydrationHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationHttpMappings.cs",
+      "path": "Modules/Hydration/Presentation/Mappings/HydrationHttpMappings.cs",
       "line": 7
     },
     {
       "name": "HydrationHttpQueryMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationHttpQueryMappings.cs",
+      "path": "Modules/Hydration/Presentation/Mappings/HydrationHttpQueryMappings.cs",
       "line": 6
     },
     {
       "name": "HydrationOperationHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Mappings/HydrationOperationHttpMappings.cs",
+      "path": "Modules/Hydration/Presentation/Mappings/HydrationOperationHttpMappings.cs",
       "line": 7
     },
     {
       "name": "CreateHydrationEntryHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Requests/CreateHydrationEntryHttpRequest.cs",
+      "path": "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs",
       "line": 2
     },
     {
       "name": "CreateHydrationFromOperationHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Requests/CreateHydrationFromOperationHttpRequest.cs",
+      "path": "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs",
       "line": 2
     },
     {
       "name": "GetHydrationEntriesHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Requests/GetHydrationEntriesHttpQuery.cs",
+      "path": "Modules/Hydration/Presentation/Requests/GetHydrationEntriesHttpQuery.cs",
       "line": 2
     },
     {
       "name": "UpdateHydrationEntryHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Requests/UpdateHydrationEntryHttpRequest.cs",
+      "path": "Modules/Hydration/Presentation/Requests/UpdateHydrationEntryHttpRequest.cs",
       "line": 2
     },
     {
       "name": "HydrationOperationHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Hydration/Presentation/Features/Hydration/Responses/HydrationOperationHttpResponse.cs",
+      "path": "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs",
       "line": 2
     },
     {
@@ -13919,13 +13667,6 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
-      "line": 2
-    },
-    {
-      "name": "IAuthenticationLoginEventCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "line": 2
     },
     {
@@ -14122,7 +13863,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "AdminSsoStartCommandValidator",
@@ -14153,39 +13894,11 @@
       "line": 4
     },
     {
-      "name": "BootstrapInitialAdminCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-      "line": 5
-    },
-    {
       "name": "BootstrapInitialAdminCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
-      "line": 5
-    },
-    {
-      "name": "BootstrapInitialAdminModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BootstrapInitialAdminStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "IInitialAdminBootstrapService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
-      "line": 4
+      "line": 10
     },
     {
       "name": "CheckpointTelegramOperationCommand",
@@ -14199,6 +13912,13 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/CheckpointTelegramOperation/CheckpointTelegramOperationCommandHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "CleanupLoginEventsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommandHandler.cs",
       "line": 6
     },
     {
@@ -14234,7 +13954,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramBackupEmail/CompleteTelegramBackupEmailCommandHandler.cs",
-      "line": 6
+      "line": 11
     },
     {
       "name": "ConfirmPasswordResetCommand",
@@ -14332,7 +14052,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "LinkTelegramCommandValidator",
@@ -14388,7 +14108,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "RefreshTokenCommandValidator",
@@ -14479,7 +14199,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ResendEmailVerificationCommandValidator",
@@ -14549,7 +14269,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommandHandler.cs",
-      "line": 7
+      "line": 16
     },
     {
       "name": "StartTelegramOidcCommand",
@@ -14671,6 +14391,13 @@
       "line": 5
     },
     {
+      "name": "TelegramBackupEmailOidcAttempt",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Common/TelegramBackupEmailOidcAttempt.cs",
+      "line": 2
+    },
+    {
       "name": "ActiveSessionModel",
       "kind": "record",
       "role": "Other",
@@ -14769,13 +14496,6 @@
       "line": 6
     },
     {
-      "name": "AuthenticationLoginEventCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
-      "line": 4
-    },
-    {
       "name": "AuthenticationTokenService",
       "kind": "class",
       "role": "Service",
@@ -14790,13 +14510,6 @@
       "line": 6
     },
     {
-      "name": "InitialAdminBootstrapService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Authentication/Services/InitialAdminBootstrapService.cs",
-      "line": 9
-    },
-    {
       "name": "TelegramAuthenticationIntentService",
       "kind": "class",
       "role": "Service",
@@ -14809,13 +14522,6 @@
       "role": "Other",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
       "line": 33
-    },
-    {
-      "name": "TelegramBackupEmailOidcService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
-      "line": 13
     },
     {
       "name": "TelegramBackupEmailService",
@@ -14850,7 +14556,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "UpsertEmailTemplateCommandHandler",
@@ -14886,6 +14592,34 @@
       "role": "Other",
       "path": "Modules/Identity/Contracts/Admin/Models/EmailTemplateRevisionReadModel.cs",
       "line": 2
+    },
+    {
+      "name": "BootstrapInitialAdminCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Contracts/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "BootstrapInitialAdminModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BootstrapInitialAdminStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "CleanupLoginEventsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Contracts/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommand.cs",
+      "line": 3
     },
     {
       "name": "AccountCreatedMessage",
@@ -15007,6 +14741,13 @@
       "line": 5
     },
     {
+      "name": "IdentityErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Errors/IdentityErrors.cs",
+      "line": 4
+    },
+    {
       "name": "EmailTemplate",
       "kind": "class",
       "role": "Entity",
@@ -15061,6 +14802,13 @@
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
       "line": 9
+    },
+    {
+      "name": "IdentityEmailOptionsRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/IdentityEmailOptionsRegistration.cs",
+      "line": 7
     },
     {
       "name": "IdentityModuleRegistration",
@@ -15123,7 +14871,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RefreshTokenSessionRepository",
@@ -15144,7 +14892,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "TelegramAuthTimestampValidator",
@@ -15165,7 +14913,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "TelegramLoginWidgetValidator",
@@ -15305,28 +15053,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 9
-    },
-    {
-      "name": "AdminSsoController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AdminSsoController.cs",
-      "line": 20
-    },
-    {
-      "name": "AuthImpersonationController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthImpersonationController.cs",
-      "line": 22
-    },
-    {
-      "name": "AuthPasswordController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthPasswordController.cs",
-      "line": 23
+      "line": 10
     },
     {
       "name": "AuthRequestLimits",
@@ -15336,39 +15063,67 @@
       "line": 2
     },
     {
+      "name": "AdminSsoController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs",
+      "line": 21
+    },
+    {
+      "name": "AuthImpersonationController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthImpersonationController.cs",
+      "line": 23
+    },
+    {
+      "name": "AuthPasswordController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthPasswordController.cs",
+      "line": 24
+    },
+    {
       "name": "AuthSessionController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthSessionController.cs",
-      "line": 26
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs",
+      "line": 28
     },
     {
       "name": "AuthSessionLifecycleController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthSessionLifecycleController.cs",
-      "line": 23
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionLifecycleController.cs",
+      "line": 25
     },
     {
       "name": "AuthTelegramBackupEmailController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramBackupEmailController.cs",
-      "line": 28
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramBackupEmailController.cs",
+      "line": 30
     },
     {
       "name": "AuthTelegramController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramController.cs",
-      "line": 24
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramController.cs",
+      "line": 26
     },
     {
       "name": "AuthTelegramOnboardingController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/AuthTelegramOnboardingController.cs",
-      "line": 28
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramOnboardingController.cs",
+      "line": 29
+    },
+    {
+      "name": "TelegramOperationsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
+      "line": 30
     },
     {
       "name": "AuthHttpMappings",
@@ -15609,13 +15364,6 @@
       "line": 2
     },
     {
-      "name": "TelegramOperationsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "Modules/Identity/Presentation/Features/Auth/TelegramOperationsController.cs",
-      "line": 30
-    },
-    {
       "name": "AuthenticationCookieResultFilter",
       "kind": "class",
       "role": "Other",
@@ -15662,7 +15410,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Security/TelegramBotSecretAuthorizationFilter.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "TelegramBrowserBindingHttpProcessor",
@@ -15682,78 +15430,92 @@
       "name": "IImageAssetCleanupBatch",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupBatch.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/IImageAssetCleanupBatch.cs",
       "line": 4
     },
     {
       "name": "IImageAssetReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetReadRepository.cs",
-      "line": 5
+      "path": "Modules/Images/Application.Abstractions/Common/IImageAssetReadRepository.cs",
+      "line": 6
     },
     {
       "name": "IImageAssetRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetRepository.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/IImageAssetRepository.cs",
       "line": 2
     },
     {
       "name": "IImageAssetUsageQuery",
       "kind": "interface",
       "role": "Query",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetUsageQuery.cs",
-      "line": 4
+      "path": "Modules/Images/Application.Abstractions/Common/IImageAssetUsageQuery.cs",
+      "line": 5
     },
     {
       "name": "IImageAssetWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Images/Application.Abstractions/Common/IImageAssetWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "IImageObjectDeletionOutbox",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutbox.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutbox.cs",
       "line": 2
     },
     {
       "name": "IImageObjectDeletionOutboxProcessor",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs",
       "line": 2
     },
     {
       "name": "IImageStorageService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/IImageStorageService.cs",
       "line": 4
     },
     {
       "name": "ImageErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Images/Application/Abstractions/Common/ImageErrors.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/ImageErrors.cs",
       "line": 4
     },
     {
       "name": "ImageObjectValidationResult",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Images/Application/Abstractions/Common/ImageObjectValidationResult.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/ImageObjectValidationResult.cs",
       "line": 2
     },
     {
       "name": "PresignedUpload",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Images/Application/Abstractions/Common/PresignedUpload.cs",
+      "path": "Modules/Images/Application.Abstractions/Common/PresignedUpload.cs",
       "line": 2
+    },
+    {
+      "name": "ImageCleanupCandidate",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application.Abstractions/Models/ImageCleanupCandidate.cs",
+      "line": 4
+    },
+    {
+      "name": "CleanupOrphanImagesCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Images/Application/Commands/CleanupOrphanImages/CleanupOrphanImagesCommandHandler.cs",
+      "line": 8
     },
     {
       "name": "ConfirmImageUploadCommand",
@@ -15767,7 +15529,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ConfirmImageUploadResult",
@@ -15788,7 +15550,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetImageUploadUrlCommand",
@@ -15823,7 +15585,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "ImageAssetCleanupService",
@@ -15844,21 +15606,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ImageAssetContentService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "ImagesProviderRegistration",
@@ -15868,39 +15630,11 @@
       "line": 13
     },
     {
-      "name": "ImageAssetConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "ImageObjectDeletionOutboxMessageConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Images/Infrastructure/Model/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "ImageObjectDeletionOutboxMessage",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Images/Infrastructure/Model/Images/ImageObjectDeletionOutboxMessage.cs",
-      "line": 4
-    },
-    {
-      "name": "ImagesPersistenceModelBuilderExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Images/Infrastructure/Model/ImagesPersistenceModelBuilderExtensions.cs",
-      "line": 4
-    },
-    {
       "name": "ImageAssetCleanupBatch",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetCleanupBatch.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ImageAssetOwnershipService",
@@ -15914,7 +15648,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ImageDeletionOutboxReplayStream",
@@ -15928,14 +15662,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ImageObjectDeletionOutboxProcessor",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ImagesDbContext",
@@ -15956,7 +15690,7 @@
       "kind": "class",
       "role": "Options",
       "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "IObjectStorageClient",
@@ -15970,7 +15704,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "S3ObjectStorageClient",
@@ -15998,56 +15732,91 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/UserProfileImageService.cs",
+      "line": 9
+    },
+    {
+      "name": "ImageAssetConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Images/PersistenceModel/Configurations/ImageAssetConfiguration.cs",
       "line": 8
     },
     {
-      "name": "ImagesPresentationServiceCollectionExtensions",
+      "name": "ImageObjectDeletionOutboxMessageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Images/PersistenceModel/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "ImageObjectDeletionOutboxMessage",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Images/Presentation/Extensions/ImagesPresentationServiceCollectionExtensions.cs",
+      "path": "Modules/Images/PersistenceModel/Images/ImageObjectDeletionOutboxMessage.cs",
+      "line": 4
+    },
+    {
+      "name": "ImagesPersistenceModelBuilderExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/PersistenceModel/ImagesPersistenceModelBuilderExtensions.cs",
       "line": 4
     },
     {
       "name": "ImagesController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Images/Presentation/Features/Images/ImagesController.cs",
-      "line": 17
+      "path": "Modules/Images/Presentation/Controllers/ImagesController.cs",
+      "line": 18
+    },
+    {
+      "name": "ImagesPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Presentation/Extensions/ImagesPresentationServiceCollectionExtensions.cs",
+      "line": 5
     },
     {
       "name": "ImageHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Images/Presentation/Features/Images/Mappings/ImageHttpMappings.cs",
+      "path": "Modules/Images/Presentation/Mappings/ImageHttpMappings.cs",
       "line": 7
     },
     {
       "name": "ImageHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Images/Presentation/Features/Images/Mappings/ImageHttpResponseMappings.cs",
+      "path": "Modules/Images/Presentation/Mappings/ImageHttpResponseMappings.cs",
       "line": 6
     },
     {
       "name": "GetImageUploadUrlHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Images/Presentation/Features/Images/Requests/GetImageUploadUrlHttpRequest.cs",
+      "path": "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs",
       "line": 2
     },
     {
       "name": "ConfirmImageUploadHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Images/Presentation/Features/Images/Responses/ConfirmImageUploadHttpResponse.cs",
+      "path": "Modules/Images/Presentation/Responses/ConfirmImageUploadHttpResponse.cs",
       "line": 2
     },
     {
       "name": "GetImageUploadUrlHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Images/Presentation/Features/Images/Responses/GetImageUploadUrlHttpResponse.cs",
+      "path": "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "CleanupOrphanImagesCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Images/Service.Contracts/Commands/CleanupOrphanImages/CleanupOrphanImagesCommand.cs",
+      "line": 4
     },
     {
       "name": "DeleteImageAssetResult",
@@ -16061,7 +15830,7 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "IImageAssetCleanupService",
@@ -16075,14 +15844,14 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IImageAssetOwnershipService",
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ImageAssetIdParser",
@@ -16113,66 +15882,73 @@
       "line": 4
     },
     {
+      "name": "ILessonProgressTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Lessons/Application.Abstractions/Common/ILessonProgressTransactionRunner.cs",
+      "line": 5
+    },
+    {
       "name": "INutritionLessonReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs",
-      "line": 7
+      "path": "Modules/Lessons/Application.Abstractions/Common/INutritionLessonReadModelRepository.cs",
+      "line": 8
     },
     {
       "name": "INutritionLessonReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs",
-      "line": 6
+      "path": "Modules/Lessons/Application.Abstractions/Common/INutritionLessonReadRepository.cs",
+      "line": 7
     },
     {
       "name": "INutritionLessonRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs",
+      "path": "Modules/Lessons/Application.Abstractions/Common/INutritionLessonRepository.cs",
       "line": 2
     },
     {
       "name": "INutritionLessonWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs",
+      "path": "Modules/Lessons/Application.Abstractions/Common/INutritionLessonWriteRepository.cs",
       "line": 5
     },
     {
       "name": "LessonErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Lessons/Application/Abstractions/Common/LessonErrors.cs",
+      "path": "Modules/Lessons/Application.Abstractions/Common/LessonErrors.cs",
       "line": 4
     },
     {
       "name": "LessonDetailReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Lessons/Application/Abstractions/Models/LessonDetailReadModel.cs",
+      "path": "Modules/Lessons/Application.Abstractions/Models/LessonDetailReadModel.cs",
       "line": 2
     },
     {
       "name": "LessonSortOption",
       "kind": "enum",
       "role": "Other",
-      "path": "Modules/Lessons/Application/Abstractions/Models/LessonSortOption.cs",
+      "path": "Modules/Lessons/Application.Abstractions/Models/LessonSortOption.cs",
       "line": 2
     },
     {
       "name": "LessonSummaryPageReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Lessons/Application/Abstractions/Models/LessonSummaryPageReadModel.cs",
+      "path": "Modules/Lessons/Application.Abstractions/Models/LessonSummaryPageReadModel.cs",
       "line": 2
     },
     {
       "name": "LessonSummaryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Lessons/Application/Abstractions/Models/LessonSummaryReadModel.cs",
+      "path": "Modules/Lessons/Application.Abstractions/Models/LessonSummaryReadModel.cs",
       "line": 2
     },
     {
@@ -16208,7 +15984,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "UpdateLessonCommandHandler",
@@ -16218,18 +15994,11 @@
       "line": 11
     },
     {
-      "name": "ILessonReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Lessons/Application/Common/ILessonReadService.cs",
-      "line": 7
-    },
-    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Lessons/Application/DependencyInjection.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "LessonMappings",
@@ -16271,7 +16040,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "GetLessonsQuery",
@@ -16285,7 +16054,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetLessonsQueryValidator",
@@ -16300,13 +16069,6 @@
       "role": "QueryHandler",
       "path": "Modules/Lessons/Application/Queries/GetLessonsForAdministration/GetLessonsForAdministrationQueryHandler.cs",
       "line": 7
-    },
-    {
-      "name": "LessonReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Lessons/Application/Services/LessonReadService.cs",
-      "line": 10
     },
     {
       "name": "CreateLessonCommand",
@@ -16397,34 +16159,13 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "UserLessonProgressId",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Lessons/Domain/ValueObjects/Ids/UserLessonProgressId.cs",
-      "line": 4
-    },
-    {
-      "name": "NutritionLessonConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Lessons/Infrastructure/Model/Configurations/NutritionLessonConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserLessonProgressConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Lessons/Infrastructure/Model/Configurations/UserLessonProgressConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "LessonsPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Lessons/Infrastructure/Model/LessonsPersistenceModelRegistration.cs",
       "line": 4
     },
     {
@@ -16435,66 +16176,94 @@
       "line": 8
     },
     {
+      "name": "EfLessonProgressTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Infrastructure/Persistence/EfLessonProgressTransactionRunner.cs",
+      "line": 9
+    },
+    {
       "name": "LessonsDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Lessons/Infrastructure/Persistence/LessonsDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "NutritionLessonRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
-      "line": 10
+      "line": 11
     },
     {
-      "name": "LessonsPresentationServiceCollectionExtensions",
+      "name": "NutritionLessonConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Lessons/PersistenceModel/Configurations/NutritionLessonConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserLessonProgressConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Lessons/PersistenceModel/Configurations/UserLessonProgressConfiguration.cs",
+      "line": 9
+    },
+    {
+      "name": "LessonsPersistenceModelRegistration",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Lessons/Presentation/Extensions/LessonsPresentationServiceCollectionExtensions.cs",
+      "path": "Modules/Lessons/PersistenceModel/LessonsPersistenceModelRegistration.cs",
       "line": 4
     },
     {
       "name": "LessonsController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Lessons/Presentation/Features/Lessons/LessonsController.cs",
-      "line": 14
+      "path": "Modules/Lessons/Presentation/Controllers/LessonsController.cs",
+      "line": 15
+    },
+    {
+      "name": "LessonsPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Presentation/Extensions/LessonsPresentationServiceCollectionExtensions.cs",
+      "line": 5
     },
     {
       "name": "LessonHttpMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Lessons/Presentation/Features/Lessons/Mappings/LessonHttpMappings.cs",
+      "path": "Modules/Lessons/Presentation/Mappings/LessonHttpMappings.cs",
       "line": 9
     },
     {
       "name": "GetLessonsHttpQuery",
       "kind": "record",
       "role": "Query",
-      "path": "Modules/Lessons/Presentation/Features/Lessons/Requests/GetLessonsHttpQuery.cs",
+      "path": "Modules/Lessons/Presentation/Requests/GetLessonsHttpQuery.cs",
       "line": 5
     },
     {
       "name": "LessonDetailHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Lessons/Presentation/Features/Lessons/Responses/LessonDetailHttpResponse.cs",
+      "path": "Modules/Lessons/Presentation/Responses/LessonDetailHttpResponse.cs",
       "line": 2
     },
     {
       "name": "LessonPageHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Lessons/Presentation/Features/Lessons/Responses/LessonPageHttpResponse.cs",
+      "path": "Modules/Lessons/Presentation/Responses/LessonPageHttpResponse.cs",
       "line": 2
     },
     {
       "name": "LessonSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Lessons/Presentation/Features/Lessons/Responses/LessonSummaryHttpResponse.cs",
+      "path": "Modules/Lessons/Presentation/Responses/LessonSummaryHttpResponse.cs",
       "line": 2
     },
     {
@@ -17755,7 +17524,7 @@
       "kind": "interface",
       "role": "Query",
       "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealSourceSnapshotQuery.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IMealWriteRepository",
@@ -17804,14 +17573,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValuePreparer.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "CreateMealValues",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValues.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "CreateMealFromRecognitionCommand",
@@ -17923,7 +17692,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "IMealReadService",
@@ -18364,7 +18133,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MealAiItem",
@@ -18385,7 +18154,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MealItem",
@@ -18462,14 +18231,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiSessionConfiguration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MealConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MealItemConfiguration",
@@ -18525,7 +18294,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "MealsDbContext",
@@ -20009,7 +19778,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "DeleteProductCommand",
@@ -20023,7 +19792,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "DeleteProductCommandValidator",
@@ -20079,7 +19848,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "UpdateProductCommand",
@@ -20149,7 +19918,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Common/ProductImageAssetResolver.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "ProductRequiredIdParser",
@@ -20373,7 +20142,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ProductQueryFilters",
@@ -20415,7 +20184,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ProductIdentityState",
@@ -20485,7 +20254,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProductsPersistenceModelRegistration",
@@ -20534,7 +20303,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProductsModuleRegistration",
@@ -21192,14 +20961,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "CreateRecipeValues",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValues.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RecipeCreateFactory",
@@ -21220,7 +20989,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "DeleteRecipeCommandValidator",
@@ -21262,7 +21031,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "UpdateRecipeCommand",
@@ -21297,7 +21066,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValues.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "IRecentRecipeReadService",
@@ -21598,7 +21367,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "RecipeOverviewStepReadItem",
@@ -21640,7 +21409,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RecipeIngredient",
@@ -21661,7 +21430,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeStep.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RecipeAutoNutritionEnabledDomainEvent",
@@ -21724,7 +21493,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeConfiguration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RecipeIngredientConfiguration",
@@ -21738,7 +21507,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeStepConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipesPersistenceModelRegistration",
@@ -21773,7 +21542,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecipesModuleRegistration",
@@ -23005,7 +22774,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UpdateUserCommandValidator",
@@ -23551,7 +23320,7 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Users/Contracts/Users/Common/IUserProfileImageService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IUserProfileReadService",
@@ -24020,7 +23789,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "User",
@@ -24321,7 +24090,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UserRoleAuditEventConfiguration",
@@ -24370,7 +24139,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "UserProfileProjectionService",
@@ -27866,6 +27635,27 @@
       "line": 4
     },
     {
+      "name": "AuditInfrastructureRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Infrastructure/AuditInfrastructureRegistration.cs",
+      "line": 8
+    },
+    {
+      "name": "AuditEntryService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Shared/FoodDiary.Audit.Infrastructure/Persistence/AuditEntryService.cs",
+      "line": 9
+    },
+    {
+      "name": "StructuredAuditLogger",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Infrastructure/Persistence/StructuredAuditLogger.cs",
+      "line": 6
+    },
+    {
       "name": "AuditEntry",
       "kind": "class",
       "role": "Other",
@@ -27913,6 +27703,20 @@
       "role": "Options",
       "path": "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs",
       "line": 4
+    },
+    {
+      "name": "AuthenticationInfrastructureRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Authentication.Infrastructure/AuthenticationInfrastructureRegistration.cs",
+      "line": 8
+    },
+    {
+      "name": "InMemoryAdminSsoCodeStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Authentication.Infrastructure/InMemoryAdminSsoCodeStore.cs",
+      "line": 5
     },
     {
       "name": "AggregateRoot",
@@ -28046,6 +27850,34 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Email.Contracts/Email/Common/OutgoingEmailJournalPage.cs",
       "line": 2
+    },
+    {
+      "name": "EmailInfrastructureRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Infrastructure/EmailInfrastructureRegistration.cs",
+      "line": 8
+    },
+    {
+      "name": "EmailOutbox",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutbox.cs",
+      "line": 6
+    },
+    {
+      "name": "EmailOutboxProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutboxProcessor.cs",
+      "line": 9
+    },
+    {
+      "name": "EmailOutboxReplayStream",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutboxReplayStream.cs",
+      "line": 8
     },
     {
       "name": "MailRelayDependencyInjection",
@@ -28391,6 +28223,174 @@
       "line": 6
     },
     {
+      "name": "DomainEventNotification",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Events/DomainEventNotification.cs",
+      "line": 5
+    },
+    {
+      "name": "MediatorDomainEventPublisher",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Events/MediatorDomainEventPublisher.cs",
+      "line": 6
+    },
+    {
+      "name": "DatabaseOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Options/DatabaseOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "EfUnitOfWork",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/EfUnitOfWork.cs",
+      "line": 9
+    },
+    {
+      "name": "DomainEventDispatcher",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatcher.cs",
+      "line": 8
+    },
+    {
+      "name": "DomainEventDispatchInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatchInterceptor.cs",
+      "line": 6
+    },
+    {
+      "name": "PostgresAdvisoryLockLease",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Locking/PostgresAdvisoryLockLease.cs",
+      "line": 4
+    },
+    {
+      "name": "OutboxDeadLetterReplayService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
+      "line": 11
+    },
+    {
+      "name": "EfIndependentModuleContextOptionsFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfIndependentModuleContextOptionsFactory.cs",
+      "line": 5
+    },
+    {
+      "name": "EfModuleScopeGuard",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleScopeGuard.cs",
+      "line": 4
+    },
+    {
+      "name": "EfModuleSessionCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleSessionCoordinator.cs",
+      "line": 7
+    },
+    {
+      "name": "EfModuleSessionLock",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleSessionLock.cs",
+      "line": 6
+    },
+    {
+      "name": "EfModuleTransactionCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleTransactionCoordinator.cs",
+      "line": 9
+    },
+    {
+      "name": "ModuleContextSaveCoordinator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/ModuleContextSaveCoordinator.cs",
+      "line": 7
+    },
+    {
+      "name": "PersistenceSession",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/PersistenceSession.cs",
+      "line": 11
+    },
+    {
+      "name": "SharedTransactionBoundary",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/SharedTransactionBoundary.cs",
+      "line": 8
+    },
+    {
+      "name": "SharedPersistenceDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/SharedPersistenceDbContext.cs",
+      "line": 10
+    },
+    {
+      "name": "SharedPersistenceDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/SharedPersistenceDbContext.Session.cs",
+      "line": 7
+    },
+    {
+      "name": "SharedRuntimeDbContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/SharedRuntimeDbContext.cs",
+      "line": 4
+    },
+    {
+      "name": "PersistenceRuntimeRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.cs",
+      "line": 18
+    },
+    {
+      "name": "PersistenceRuntimeRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Options.cs",
+      "line": 7
+    },
+    {
+      "name": "PersistenceRuntimeRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.Replay.cs",
+      "line": 6
+    },
+    {
+      "name": "DatabaseCommandTelemetryInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Services/DatabaseCommandTelemetryInterceptor.cs",
+      "line": 5
+    },
+    {
+      "name": "InfrastructureTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Services/InfrastructureTelemetry.cs",
+      "line": 4
+    },
+    {
       "name": "Error",
       "kind": "record",
       "role": "Other",
@@ -28429,7 +28429,7 @@
     },
     {
       "interface": "IAchievementDefinitionStore",
-      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
+      "interfacePath": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
       "implementation": "AchievementDefinitionStore",
       "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
       "confidence": "naming-convention"
@@ -28443,23 +28443,16 @@
     },
     {
       "interface": "IAchievementEvaluationOutboxProcessor",
-      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
+      "interfacePath": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
       "implementation": "AchievementEvaluationOutboxProcessor",
       "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAchievementMetricReader",
-      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs",
+      "interfacePath": "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs",
       "implementation": "AchievementMetricReader",
       "implementationPath": "FoodDiary.ReadModel.Composition/Gamification/AchievementMetricReader.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAchievementReconciliationHandler",
-      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
-      "implementation": "AchievementReconciliationHandler",
-      "implementationPath": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28551,13 +28544,6 @@
       "interfacePath": "Modules/Dietologist/Application.Abstractions/Common/IAttentionSignalMetricsReadService.cs",
       "implementation": "AttentionSignalMetricsReadService",
       "implementationPath": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IAuthenticationLoginEventCleanupService",
-      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
-      "implementation": "AuthenticationLoginEventCleanupService",
-      "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28809,14 +28795,14 @@
       "interface": "IEmailOutbox",
       "interfacePath": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutbox.cs",
       "implementation": "EmailOutbox",
-      "implementationPath": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutbox.cs",
+      "implementationPath": "Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailOutboxProcessor",
       "interfacePath": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutboxProcessor.cs",
       "implementation": "EmailOutboxProcessor",
-      "implementationPath": "FoodDiary.Persistence.Runtime/Persistence/Email/EmailOutboxProcessor.cs",
+      "implementationPath": "Shared/FoodDiary.Email.Infrastructure/Persistence/EmailOutboxProcessor.cs",
       "confidence": "naming-convention"
     },
     {
@@ -28960,20 +28946,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IGamificationReadService",
-      "interfacePath": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
-      "implementation": "GamificationReadService",
-      "implementationPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IGamificationUserProfileService",
-      "interfacePath": "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs",
-      "implementation": "GamificationUserProfileService",
-      "implementationPath": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IGoogleTokenValidator",
       "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
       "implementation": "GoogleTokenValidator",
@@ -28981,29 +28953,8 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IHydrationEntryReadService",
-      "interfacePath": "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs",
-      "implementation": "HydrationEntryReadService",
-      "implementationPath": "Modules/Hydration/Application/Services/HydrationEntryReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IHydrationGoalService",
-      "interfacePath": "Modules/Hydration/Application/Abstractions/Common/IHydrationGoalService.cs",
-      "implementation": "HydrationGoalService",
-      "implementationPath": "Modules/Hydration/Application/Services/HydrationGoalService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IHydrationIntervalReadService",
-      "interfacePath": "Modules/Hydration/Contracts/Common/IHydrationIntervalReadService.cs",
-      "implementation": "HydrationIntervalReadService",
-      "implementationPath": "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IHydrationOperationReceiptRepository",
-      "interfacePath": "Modules/Hydration/Application/Abstractions/Common/IHydrationOperationReceiptRepository.cs",
+      "interfacePath": "Modules/Hydration/Application.Abstractions/Common/IHydrationOperationReceiptRepository.cs",
       "implementation": "HydrationOperationReceiptRepository",
       "implementationPath": "Modules/Hydration/Infrastructure/Persistence/HydrationOperationReceiptRepository.cs",
       "confidence": "naming-convention"
@@ -29017,7 +28968,7 @@
     },
     {
       "interface": "IImageAssetCleanupBatch",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupBatch.cs",
+      "interfacePath": "Modules/Images/Application.Abstractions/Common/IImageAssetCleanupBatch.cs",
       "implementation": "ImageAssetCleanupBatch",
       "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetCleanupBatch.cs",
       "confidence": "naming-convention"
@@ -29045,28 +28996,28 @@
     },
     {
       "interface": "IImageAssetRepository",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetRepository.cs",
+      "interfacePath": "Modules/Images/Application.Abstractions/Common/IImageAssetRepository.cs",
       "implementation": "ImageAssetRepository",
       "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IImageAssetUsageQuery",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetUsageQuery.cs",
+      "interfacePath": "Modules/Images/Application.Abstractions/Common/IImageAssetUsageQuery.cs",
       "implementation": "ImageAssetUsageQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IImageObjectDeletionOutbox",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutbox.cs",
+      "interfacePath": "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutbox.cs",
       "implementation": "ImageObjectDeletionOutbox",
       "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IImageObjectDeletionOutboxProcessor",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs",
+      "interfacePath": "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs",
       "implementation": "ImageObjectDeletionOutboxProcessor",
       "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
       "confidence": "naming-convention"
@@ -29076,13 +29027,6 @@
       "interfacePath": "Modules/Identity/Contracts/Authentication/Services/IImpersonationTokenIssuer.cs",
       "implementation": "ImpersonationTokenIssuer",
       "implementationPath": "Modules/Identity/Infrastructure/Authentication/ImpersonationTokenIssuer.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IInitialAdminBootstrapService",
-      "interfacePath": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
-      "implementation": "InitialAdminBootstrapService",
-      "implementationPath": "Modules/Identity/Application/Authentication/Services/InitialAdminBootstrapService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29097,13 +29041,6 @@
       "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
       "implementation": "JwtTokenGenerator",
       "implementationPath": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "ILessonReadService",
-      "interfacePath": "Modules/Lessons/Application/Common/ILessonReadService.cs",
-      "implementation": "LessonReadService",
-      "implementationPath": "Modules/Lessons/Application/Services/LessonReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29409,7 +29346,7 @@
     },
     {
       "interface": "INutritionLessonRepository",
-      "interfacePath": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs",
+      "interfacePath": "Modules/Lessons/Application.Abstractions/Common/INutritionLessonRepository.cs",
       "implementation": "NutritionLessonRepository",
       "implementationPath": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
       "confidence": "naming-convention"
@@ -29453,7 +29390,7 @@
       "interface": "IOutboxDeadLetterReplayService",
       "interfacePath": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs",
       "implementation": "OutboxDeadLetterReplayService",
-      "implementationPath": "FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
+      "implementationPath": "Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -29766,7 +29703,7 @@
     },
     {
       "interface": "IUserAchievementStore",
-      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs",
+      "interfacePath": "Modules/Gamification/Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
       "implementation": "UserAchievementStore",
       "implementationPath": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
       "confidence": "naming-convention"
@@ -30019,67 +29956,53 @@
       "line": 115
     },
     {
-      "service": "IAdminSsoCodeStore",
-      "implementation": "InMemoryAdminSsoCodeStore",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 11
-    },
-    {
-      "service": "IAuditLogger",
-      "implementation": "StructuredAuditLogger",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 12
-    },
-    {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 397
+      "line": 405
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 398
+      "line": 406
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 71
+      "line": 78
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 99
+      "line": 98
     },
     {
       "service": "INotificationTestScheduler",
       "implementation": "UnavailableNotificationTestScheduler",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 100
+      "line": 99
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 101
+      "line": 100
     },
     {
       "service": "IJobExecutionStateTracker",
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 122
+      "line": 121
     },
     {
       "service": "IIdempotencyStore",
@@ -30107,7 +30030,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 189
+      "line": 207
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30222,81 +30145,32 @@
       "line": 14
     },
     {
-      "service": "IGamificationReadService",
-      "implementation": "GamificationReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Gamification/Application/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IGamificationUserProfileService",
-      "implementation": "GamificationUserProfileService",
-      "lifetime": "Scoped",
-      "path": "Modules/Gamification/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
       "service": "IAchievementAwardService",
       "implementation": "AchievementAwardService",
       "lifetime": "Scoped",
       "path": "Modules/Gamification/Application/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IAchievementReconciliationHandler",
-      "implementation": "AchievementReconciliationHandler",
-      "lifetime": "Scoped",
-      "path": "Modules/Gamification/Application/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IHydrationEntryReadService",
-      "implementation": "HydrationEntryReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Hydration/Application/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IHydrationGoalService",
-      "implementation": "HydrationGoalService",
-      "lifetime": "Scoped",
-      "path": "Modules/Hydration/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IAuthenticationLoginEventCleanupService",
-      "implementation": "AuthenticationLoginEventCleanupService",
-      "lifetime": "Scoped",
-      "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 14
     },
     {
       "service": "IAuthenticationTokenService",
       "implementation": "AuthenticationTokenService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IInitialAdminBootstrapService",
-      "implementation": "InitialAdminBootstrapService",
-      "lifetime": "Scoped",
-      "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 24
+      "line": 16
     },
     {
       "service": "IEmailSender",
       "implementation": "EmailSender",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 25
+      "line": 20
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 16
+      "line": 17
     },
     {
       "service": "IImageAssetAccessService",
@@ -30317,35 +30191,28 @@
       "implementation": "ImageAssetOwnershipService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IImageAssetContentService",
       "implementation": "ImageAssetContentService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IUserProfileImageService",
       "implementation": "UserProfileImageService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IImageAssetCleanupBatch",
       "implementation": "ImageAssetCleanupBatch",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 24
-    },
-    {
-      "service": "ILessonReadService",
-      "implementation": "LessonReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Lessons/Application/DependencyInjection.cs",
-      "line": 14
+      "line": 25
     },
     {
       "service": "IMarketingAttributionCleanupService",

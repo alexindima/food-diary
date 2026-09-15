@@ -1,9 +1,10 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using System.Globalization;
 using System.Net;
 using System.Reflection;
 using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;

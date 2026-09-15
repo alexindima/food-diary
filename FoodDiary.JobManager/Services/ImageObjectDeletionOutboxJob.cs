@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

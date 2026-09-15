@@ -29,6 +29,8 @@ public sealed class SharedRuntimeBoundaryTests {
             foreach (string dependency in graph[project]) { pending.Push(dependency); }
         }
         Assert.Contains("FoodDiary.Persistence.Abstractions", visited);
+        Assert.DoesNotContain("FoodDiary.Audit.Infrastructure", visited);
+        Assert.DoesNotContain("FoodDiary.Email.Infrastructure", visited);
     }
 
     [Fact]
@@ -45,10 +47,6 @@ public sealed class SharedRuntimeBoundaryTests {
 
     [Theory]
     [InlineData("EfUnitOfWork.cs")]
-    [InlineData("Audit/AuditEntryService.cs")]
-    [InlineData("Email/EmailOutbox.cs")]
-    [InlineData("Email/EmailOutboxProcessor.cs")]
-    [InlineData("Email/EmailOutboxReplayStream.cs")]
     [InlineData("Outbox/OutboxDeadLetterReplayService.cs")]
     [InlineData("Shared/EfModuleTransactionCoordinator.cs")]
     [InlineData("Shared/EfModuleSessionCoordinator.cs")]
@@ -58,13 +56,24 @@ public sealed class SharedRuntimeBoundaryTests {
     [InlineData("Shared/ModuleContextSaveCoordinator.cs")]
     [InlineData("Shared/PersistenceSession.cs")]
     public void RuntimeServicesDoNotDependOnFullMigrationContext(string relativePath) {
-        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", relativePath));
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", relativePath));
         Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("FoodDiary.Audit.Infrastructure", "AuditEntryService.cs")]
+    [InlineData("FoodDiary.Email.Infrastructure", "EmailOutbox.cs")]
+    [InlineData("FoodDiary.Email.Infrastructure", "EmailOutboxProcessor.cs")]
+    [InlineData("FoodDiary.Email.Infrastructure", "EmailOutboxReplayStream.cs")]
+    public void OptionalAdaptersDoNotDependOnFullMigrationContext(string project, string file) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared", project, "Persistence", file));
+        Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+        Assert.DoesNotContain(project, ProjectReferenceReader.ReadProductionProjectReferences()["FoodDiary.Persistence.Runtime"], StringComparer.Ordinal);
     }
 
     [Fact]
     public void SharedRuntimeModelDoesNotApplyModuleModels() {
-        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "SharedPersistenceDbContext.cs"));
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "SharedPersistenceDbContext.cs"));
         Assert.DoesNotContain("FoodDiary.Modules.", source, StringComparison.Ordinal);
         Assert.Contains("ApplyAuditPersistenceModel", source, StringComparison.Ordinal);
         Assert.Contains("ApplyEmailPersistenceModel", source, StringComparison.Ordinal);

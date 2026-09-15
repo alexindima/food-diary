@@ -1,20 +1,22 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Lessons.Commands.MarkLessonRead;
+namespace FoodDiary.Modules.Lessons.Application.Commands.MarkLessonRead;
 
 public sealed class MarkLessonReadCommandHandler(
     INutritionLessonReadRepository readRepository,
     INutritionLessonWriteRepository writeRepository,
     TimeProvider dateTimeProvider,
     ICurrentUserAccessService currentUserAccessService,
-    IAchievementEvaluationOutbox achievementEvaluationOutbox)
+    IAchievementEvaluationOutbox achievementEvaluationOutbox,
+    ILessonProgressTransactionRunner transactionRunner)
     : ICommandHandler<MarkLessonReadCommand, Result> {
     public async Task<Result> Handle(
         MarkLessonReadCommand command,
@@ -34,21 +36,26 @@ public sealed class MarkLessonReadCommandHandler(
         }
 
         var lessonId = (NutritionLessonId)command.LessonId;
+        return await transactionRunner.ExecuteSerializedAsync(userIdResult.Value, lessonId,
+            token => MarkReadAsync(userIdResult.Value, lessonId, token), cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result> MarkReadAsync(UserId userId, NutritionLessonId lessonId, CancellationToken cancellationToken) {
         NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
-            return Result.Failure(LessonErrors.NotFound(command.LessonId));
+            return Result.Failure(LessonErrors.NotFound(lessonId.Value));
         }
 
         UserLessonProgress? existing = await readRepository.GetUserProgressForLessonAsync(
-            userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
+            userId, lessonId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Success();
         }
 
         DateTime readAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        var progress = UserLessonProgress.Create(userIdResult.Value, lessonId, readAtUtc);
+        var progress = UserLessonProgress.Create(userId, lessonId, readAtUtc);
         await writeRepository.AddProgressAsync(progress, cancellationToken).ConfigureAwait(false);
-        await achievementEvaluationOutbox.EnqueueAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        await achievementEvaluationOutbox.EnqueueAsync(userId, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

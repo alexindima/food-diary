@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.Login;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
 
 public sealed class LoginCommandValidator : AbstractValidator<LoginCommand> {
     public LoginCommandValidator() {

@@ -1,5 +1,5 @@
 using FoodDiary.Persistence.Abstractions;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.ResendEmailVerification;
 
 public sealed class ResendEmailVerificationCommandValidator : AbstractValidator<ResendEmailVerificationCommand> {
     public ResendEmailVerificationCommandValidator() {

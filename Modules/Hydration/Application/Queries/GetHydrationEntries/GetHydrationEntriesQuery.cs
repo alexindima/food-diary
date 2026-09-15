@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Modules.Hydration.Contracts.Models;
 
-namespace FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
+namespace FoodDiary.Modules.Hydration.Application.Queries.GetHydrationEntries;
 
 public record GetHydrationEntriesQuery(
     Guid? UserId,

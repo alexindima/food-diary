@@ -1,8 +1,9 @@
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.Integration;
 
 [ExcludeFromCodeCoverage]
 internal static class IdentityContextTestFactory {

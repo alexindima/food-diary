@@ -140,7 +140,28 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Modules.Export.Application": {
+      "fooddiary.authentication.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.domain.primitives": {
+        "type": "Project"
+      },
+      "fooddiary.mediator": {
+        "type": "Project"
+      },
+      "fooddiary.modules.cycles.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.cycles.domain.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.export.application": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -157,28 +178,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.authentication.contracts": {
-        "type": "Project"
-      },
-      "fooddiary.domain.primitives": {
-        "type": "Project"
-      },
-      "fooddiary.mediator": {
-        "type": "Project"
-      },
-      "fooddiary.modules.cycles.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Cycles.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.cycles.domain.contracts": {
-        "type": "Project"
-      },
       "fooddiary.modules.export.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -191,8 +190,8 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
-          "FoodDiary.Modules.Export.Application": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Export.Application": "[1.0.0, )",
           "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
@@ -245,8 +244,8 @@
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Export.Application": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Export.Application": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Email;
@@ -5,9 +6,8 @@ using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 using FoodDiary.Modules.Identity.PersistenceModel;
 using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
+using FoodDiary.Modules.Identity.Domain.Entities.Content;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

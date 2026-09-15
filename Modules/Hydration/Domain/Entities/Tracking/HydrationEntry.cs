@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Hydration.Domain.ValueObjects.Ids;
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking;
+namespace FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 
 public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     public const int MaximumAmountMl = 10000;

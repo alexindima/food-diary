@@ -7,3 +7,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Dietologist.Infrastructure.Tests")]
 
 [assembly: InternalsVisibleTo("FoodDiary.Persistence.Runtime")]
+[assembly: InternalsVisibleTo("FoodDiary.Audit.Infrastructure")]

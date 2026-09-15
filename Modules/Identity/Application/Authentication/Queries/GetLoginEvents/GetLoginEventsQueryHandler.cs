@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Abstractions.Authentication.Queries.GetLoginEvents;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Queries.GetLoginEvents;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Identity.Authentication.Queries.GetLoginEvents;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginEvents;
 
 public sealed class GetLoginEventsQueryHandler(IUserLoginEventQuery repository)
     : IRequestHandler<GetLoginEventsQuery, (IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> {

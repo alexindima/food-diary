@@ -1,10 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
+
   <ItemGroup>
-    <ProjectReference Include="../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
-    <ProjectReference Include="../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="5.9.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" VersionOverride="5.9.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" VersionOverride="5.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj" />
-    <ProjectReference Include="../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
-    <ProjectReference Include="../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Admin/PersistenceModel/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
@@ -28,17 +42,17 @@
     <ProjectReference Include="../Modules/Fasting/PersistenceModel/FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="../Modules/Favorites/PersistenceModel/FoodDiary.Modules.Favorites.PersistenceModel.csproj" />
-    <ProjectReference Include="../Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Gamification/Application.Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj" />
-    <ProjectReference Include="../Modules/Gamification/Infrastructure/Model/FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Gamification/PersistenceModel/FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
-    <ProjectReference Include="../Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Hydration/PersistenceModel/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj" />
     <ProjectReference Include="../Modules/Identity/PersistenceModel/FoodDiary.Modules.Identity.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
-    <ProjectReference Include="../Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Images/PersistenceModel/FoodDiary.Modules.Images.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
-    <ProjectReference Include="../Modules/Lessons/Infrastructure/Model/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Lessons/PersistenceModel/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj" />
     <ProjectReference Include="../Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
@@ -69,25 +83,6 @@
     <ProjectReference Include="../Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="5.9.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" VersionOverride="5.9.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" VersionOverride="5.9.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
-    <PackageReference Include="Microsoft.Extensions.Http" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
-  </ItemGroup>
-
-
 </Project>

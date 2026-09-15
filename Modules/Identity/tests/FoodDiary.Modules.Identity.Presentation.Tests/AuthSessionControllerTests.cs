@@ -1,26 +1,27 @@
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Results;
-using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
-using FoodDiary.Application.Identity.Authentication.Commands.LinkGoogle;
-using FoodDiary.Application.Identity.Authentication.Commands.Login;
-using FoodDiary.Application.Identity.Authentication.Commands.RefreshToken;
-using FoodDiary.Application.Identity.Authentication.Commands.Register;
-using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
-using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
-using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkGoogle;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RefreshToken;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Register;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreAccount;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Auth;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
-using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthSessionControllerTests {

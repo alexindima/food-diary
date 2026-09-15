@@ -1,0 +1,60 @@
+using FoodDiary.Modules.Hydration.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Hydration.Presentation.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+
+using FoodDiary.Modules.Hydration.Presentation.Requests;
+using FoodDiary.Modules.Hydration.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Hydration.Presentation.Responses;
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Hydration.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/hydrations")]
+public sealed class HydrationEntriesController(ISender mediator, TimeProvider timeProvider) : AuthorizedController(mediator) {
+    [HttpGet]
+    [ProducesResponseType<List<HydrationEntryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetByDate([FromCurrentUser] Guid userId, [FromQuery] GetHydrationEntriesHttpQuery query) =>
+        HandleOk(query.ToEntriesQuery(userId, timeProvider.GetUtcNow().UtcDateTime), static value => value.Select(item => item.ToHttpResponse()).ToList());
+
+    [HttpGet("daily")]
+    [ProducesResponseType<HydrationDailyHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetDaily([FromCurrentUser] Guid userId, [FromQuery] GetHydrationEntriesHttpQuery query) =>
+        HandleOk(query.ToDailyQuery(userId, timeProvider.GetUtcNow().UtcDateTime), static value => value.ToHttpResponse());
+
+    [HttpPost]
+    [EnableIdempotency(requireKey: true)]
+    [ProducesResponseType<HydrationEntryHttpResponse>(StatusCodes.Status201Created)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateHydrationEntryHttpRequest request) =>
+        HandleCreated(request.ToCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType<HydrationEntryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateHydrationEntryHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
+        HandleNoContent(id.ToDeleteCommand(userId));
+
+    [HttpPost("operations/{operationId:guid}")]
+    [ProducesResponseType<HydrationOperationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> CreateFromOperation(Guid operationId, [FromCurrentUser] Guid userId,
+        [FromBody] CreateHydrationFromOperationHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, operationId), static value => value.ToHttpResponse());
+}

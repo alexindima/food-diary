@@ -96,7 +96,7 @@ public sealed class ApplicationConsumerBoundaryTests {
             .Where(entity => typeof(IOutboxMessage).IsAssignableFrom(entity.ClrType))];
         Assert.Equal(4, streams.Length);
         Assert.All(streams, entity => Assert.True(entity.FindProperty(nameof(IOutboxMessage.LockedBy))!.IsConcurrencyToken));
-        Assert.True(context.Model.FindEntityType(typeof(FoodDiary.Infrastructure.Persistence.Achievements.AchievementEvaluationOutboxMessage))!
+        Assert.True(context.Model.FindEntityType(typeof(FoodDiary.Modules.Gamification.PersistenceModel.Achievements.AchievementEvaluationOutboxMessage))!
             .FindProperty("Revision")!.IsConcurrencyToken);
         Assert.False(context.Database.HasPendingModelChanges());
     }

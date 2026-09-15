@@ -1,17 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.Hydration.Infrastructure</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.Hydration.Infrastructure</RootNamespace>
-  </PropertyGroup>
-
   <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />

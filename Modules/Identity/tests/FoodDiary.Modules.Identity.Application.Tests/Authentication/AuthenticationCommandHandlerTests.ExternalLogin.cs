@@ -1,16 +1,16 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
-using FoodDiary.Application.Identity.Authentication.Commands.LinkGoogle;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkGoogle;
 using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FluentValidation.TestHelper;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
     private const string GoogleIssuer = "https://accounts.google.com";

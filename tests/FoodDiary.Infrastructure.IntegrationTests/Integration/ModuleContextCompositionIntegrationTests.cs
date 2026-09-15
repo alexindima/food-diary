@@ -1,3 +1,8 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Exercises.Domain.Enums;
 using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Persistence.Runtime.Persistence;
@@ -7,14 +12,13 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
-using FoodDiary.Modules.Hydration.Infrastructure;
+
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.Exercises.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
@@ -142,7 +146,7 @@ public sealed class ModuleContextCompositionIntegrationTests(PostgresDatabaseFix
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

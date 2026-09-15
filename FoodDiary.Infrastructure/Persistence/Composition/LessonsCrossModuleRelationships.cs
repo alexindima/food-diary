@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 

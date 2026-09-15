@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Infrastructure.Persistence;
@@ -62,7 +65,7 @@ public sealed class SharedRuntimeRegistrationTests {
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(
             new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=runtime_model;Username=test",
-            }).Build());
+            }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         return services.BuildServiceProvider();
     }

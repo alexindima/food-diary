@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FluentValidation;
-using FoodDiary.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
+namespace FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationEntry;
 
 public sealed class CreateHydrationEntryCommandValidator : AbstractValidator<CreateHydrationEntryCommand> {
     public CreateHydrationEntryCommandValidator() {

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -26,24 +27,24 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
         }
 
         if (string.IsNullOrWhiteSpace(_options.BotToken) || !TelegramAuthOptions.HasValidAuthTtl(_options)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramNotConfigured);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramNotConfigured);
         }
 
         Dictionary<string, StringValues> parsed = QueryHelpers.ParseQuery(initData);
         if (!parsed.TryGetValue("hash", out StringValues hashValues)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         string hash = hashValues.ToString();
         if (string.IsNullOrWhiteSpace(hash)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         string dataCheckString = BuildDataCheckString(parsed);
         if (!IsValidHash(dataCheckString, hash) ||
             !parsed.TryGetValue("auth_date", out StringValues authDateValues) ||
             !long.TryParse(authDateValues.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long authDateSeconds)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         TelegramAuthTimestampValidator.Status timestampStatus = TelegramAuthTimestampValidator.Validate(
@@ -52,21 +53,21 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             dateTimeProvider.GetUtcNow().UtcDateTime,
             out DateTime authDateUtc);
         if (timestampStatus == TelegramAuthTimestampValidator.Status.Invalid) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         if (timestampStatus == TelegramAuthTimestampValidator.Status.Expired) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramAuthExpired);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramAuthExpired);
         }
 
         if (!parsed.TryGetValue("user", out StringValues userValues)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         TelegramWebAppUser? user = DeserializeUser(userValues.ToString());
 
         if (user is not { Id: > 0 }) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         var telegramInitData = new TelegramInitData(

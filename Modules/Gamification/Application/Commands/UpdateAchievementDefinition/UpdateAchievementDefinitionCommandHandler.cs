@@ -1,14 +1,15 @@
+using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
+using FoodDiary.Modules.Gamification.Contracts.Commands.UpdateAchievementDefinition;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Gamification.Contracts.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Results;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Gamification.Commands.UpdateAchievementDefinition;
+namespace FoodDiary.Modules.Gamification.Application.Commands.UpdateAchievementDefinition;
 
 public sealed class UpdateAchievementDefinitionCommandHandler(IAchievementDefinitionStore store) : IRequestHandler<UpdateAchievementDefinitionCommand, Result<AchievementDefinitionAdminModel>> {
     public async Task<Result<AchievementDefinitionAdminModel>> Handle(UpdateAchievementDefinitionCommand request, CancellationToken cancellationToken) {

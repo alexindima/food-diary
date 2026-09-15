@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Exercises.Domain.Enums;
@@ -35,17 +38,17 @@ using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Lessons.Models;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.ShoppingLists.Models;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
@@ -55,7 +58,6 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
@@ -71,7 +73,8 @@ using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteProducts;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteRecipes;
-using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.PersistenceModel.Images;
 using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Products;
@@ -1171,7 +1174,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await repository.GetByIdAsync(asset.Id));
         Assert.True(await repository.IsAssetInUseAsync(usedAsset.Id));
         Assert.False(await repository.IsAssetInUseAsync(asset.Id));
-        Assert.Contains(await repository.GetUnusedOlderThanAsync(DateTime.UtcNow.AddDays(1), batchSize: 10), item => item.Id == asset.Id);
+        Assert.Contains(await new FoodDiary.ReadModel.Composition.Images.ImageAssetUsageQuery(context).GetUnusedCandidatesOlderThanAsync(DateTime.UtcNow.AddDays(1), batchSize: 10), item => item.Id == asset.Id);
 
         await repository.DeleteAsync(asset);
         await context.SaveChangesAsync();
@@ -1289,9 +1292,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             now));
         await context.SaveChangesAsync();
 
-        (IReadOnlyList<Application.Abstractions.Authentication.Models.UserLoginEventReadModel> items, int total) =
+        (IReadOnlyList<global::FoodDiary.Modules.Identity.Contracts.Authentication.Models.UserLoginEventReadModel> items, int total) =
             await repository.GetPagedAsync(page: 0, limit: 500, userId.Value, search: "Chrome");
-        IReadOnlyList<Application.Abstractions.Authentication.Models.UserLoginDeviceSummaryModel> summary =
+        IReadOnlyList<global::FoodDiary.Modules.Identity.Contracts.Authentication.Models.UserLoginDeviceSummaryModel> summary =
             await repository.GetDeviceSummaryAsync(now.AddDays(-3), now.AddDays(1));
         int deletedNone = await repository.DeleteOlderThanAsync(now.AddDays(-10), batchSize: 0);
         int deleted = await repository.DeleteOlderThanAsync(now.AddDays(-1), batchSize: 0);

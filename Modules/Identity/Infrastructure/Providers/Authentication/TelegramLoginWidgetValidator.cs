@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,16 +14,16 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
 
     public Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) {
         if (data.Id <= 0 || data.AuthDate <= 0 || string.IsNullOrWhiteSpace(data.Hash)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         if (string.IsNullOrWhiteSpace(_options.BotToken) || !TelegramAuthOptions.HasValidAuthTtl(_options)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramNotConfigured);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramNotConfigured);
         }
 
         string dataCheckString = BuildDataCheckString(data);
         if (!IsValidHash(dataCheckString, data.Hash)) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         TelegramAuthTimestampValidator.Status timestampStatus = TelegramAuthTimestampValidator.Validate(
@@ -32,11 +32,11 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
             dateTimeProvider.GetUtcNow().UtcDateTime,
             out DateTime authDateUtc);
         if (timestampStatus == TelegramAuthTimestampValidator.Status.Invalid) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
 
         if (timestampStatus == TelegramAuthTimestampValidator.Status.Expired) {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramAuthExpired);
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramAuthExpired);
         }
 
         var telegramInitData = new TelegramInitData(

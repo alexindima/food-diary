@@ -1,5 +1,7 @@
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
@@ -7,7 +9,6 @@ using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Modules.Ai.Domain.Entities;

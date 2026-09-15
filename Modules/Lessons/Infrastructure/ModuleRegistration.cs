@@ -1,6 +1,6 @@
 using FoodDiary.Persistence.Abstractions;
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Application.Lessons;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
+using FoodDiary.Modules.Lessons.Application;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +9,7 @@ namespace FoodDiary.Modules.Lessons.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddLessonsModule(this IServiceCollection services) {
         services.AddLessonsApplication();
+        services.AddScoped<ILessonProgressTransactionRunner, EfLessonProgressTransactionRunner>();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<LessonsDbContext>(static options => new LessonsDbContext(options)));
         services.AddScoped<INutritionLessonRepository>(static provider => new NutritionLessonRepository(

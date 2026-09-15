@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.LinkGoogle;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkGoogle;
 
 public sealed class LinkGoogleCommandValidator : AbstractValidator<LinkGoogleCommand> {
     public LinkGoogleCommandValidator() {

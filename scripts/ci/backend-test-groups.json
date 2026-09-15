@@ -111,6 +111,8 @@
         "Services/MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj",
         "Services/MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj",
         "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
+        "Shared/tests/FoodDiary.Authentication.Infrastructure.Tests/FoodDiary.Authentication.Infrastructure.Tests.csproj",
+        "Shared/tests/FoodDiary.Persistence.Runtime.Tests/FoodDiary.Persistence.Runtime.Tests.csproj",
         "Shared/tests/FoodDiary.Email.MailRelay.Tests/FoodDiary.Email.MailRelay.Tests.csproj",
         "Shared/tests/FoodDiary.Integrations.Http.Tests/FoodDiary.Integrations.Http.Tests.csproj",
         "Shared/tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj",

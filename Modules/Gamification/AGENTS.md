@@ -7,7 +7,6 @@ Rules for `Modules/Gamification/`.
 ## Boundary
 
 - Own achievement evaluation, awarding, reconciliation, administration, reads, achievement domain types, application ports, EF adapters, and owned EF configurations.
-- Preserve the legacy `FoodDiary.Application.Gamification` assembly and existing CLR namespaces.
 - Register the complete module through Infrastructure's `AddGamificationModule`; hosts remain composition roots.
 - Keep `FoodDiaryDbContext`, historical migrations, snapshot and dead-letter replay coordination central. Generic claiming/retry live in shared Outbox.Infrastructure. Gamification's evaluation outbox record and EF mapping belong to its PersistenceModel project, using the shared Outbox.Abstractions contract. Preserve revision/coalescing and claim-release behavior.
 - Read Meals, Dashboard, Users, and Lessons only through application-level capabilities.
@@ -41,7 +40,7 @@ Reference that owner directly without acquiring aggregate capabilities.
 AchievementDefinitionLimits owns shared length limits. AchievementDefinition retains constant aliases for compatibility; Admin validators consume the narrow limits directly.
 
 IAchievementEvaluationOutbox is the consumer enqueue capability used by Lessons.
-It belongs to Contracts; processing, repositories and reconciliation remain internal
+It belongs to Contracts; processing and repositories remain internal
 Abstractions. Preserve ambient transaction and coalescing behavior in its adapter.
 
 Runtime writes and normal outbox processing use the owner context registered through
@@ -60,3 +59,7 @@ do not conflate that invariant with read-only transaction access.
 The administration definitions query receives only IAchievementDefinitionReadModelRepository. AchievementDefinitionStore implements that projection alias on the same scoped adapter, preserving SQL ordering and distinct award counts; commands and evaluation retain their aggregate store. Query handlers must not map AchievementDefinition aggregates.
 
 Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.
+
+Use canonical FoodDiary.Modules.Gamification project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+Outbox evaluation dispatches ReconcileAchievementsCommand through ISender. The outbox engine owns saving and transaction/fencing; the request has no automatic transactional-command marker. AchievementAwardService remains shared between reconciliation and the authenticated overview handler.

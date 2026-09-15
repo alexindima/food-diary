@@ -70,3 +70,7 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0042: Shared runtime persistence session](0042-shared-runtime-persistence-session.md)
 
 - [0043: Persistence runtime assembly and composed read facade](0043-persistence-runtime-assembly-and-read-facade.md)
+
+- [0044: Central persistence composition ownership](0044-central-persistence-composition-ownership.md)
+
+- [0045: Explicit shared adapter composition](0045-optional-shared-adapters.md)

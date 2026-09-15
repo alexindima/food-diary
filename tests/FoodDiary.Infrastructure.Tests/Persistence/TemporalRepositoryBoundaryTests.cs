@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.ReadModel.Composition.Meals;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Meals;

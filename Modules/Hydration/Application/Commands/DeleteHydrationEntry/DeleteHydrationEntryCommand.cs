@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
+namespace FoodDiary.Modules.Hydration.Application.Commands.DeleteHydrationEntry;
 
 public record DeleteHydrationEntryCommand(
     Guid? UserId,

@@ -1,12 +1,13 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Images.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class ImageCleanupJob(
-    IImageAssetCleanupService cleanupService,
+    ISender sender,
     IOptions<ImageCleanupOptions> options,
     JobExecutionObserver observer,
     ILogger<ImageCleanupJob> logger) {
@@ -23,7 +24,8 @@ public sealed class ImageCleanupJob(
         int totalDeleted = 0;
 
         try {
-            totalDeleted = await DeleteOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            totalDeleted = await sender.Send(new CleanupOrphanImagesCommand(olderThanUtc, batchSize), cancellationToken).ConfigureAwait(false);
 
             if (totalDeleted > 0) {
                 logger.LogInformation("Removed {Count} orphaned image assets older than {OlderThan}", totalDeleted, olderThanUtc);
@@ -40,20 +42,6 @@ public sealed class ImageCleanupJob(
             throw;
         } finally {
             JobExecutionObserver.RecordDuration(JobName, stopwatch);
-        }
-    }
-
-    private async Task<int> DeleteOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken) {
-        int totalDeleted = 0;
-
-        while (true) {
-            cancellationToken.ThrowIfCancellationRequested();
-            int deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
-            totalDeleted += deleted;
-
-            if (deleted < batchSize) {
-                return totalDeleted;
-            }
         }
     }
 }

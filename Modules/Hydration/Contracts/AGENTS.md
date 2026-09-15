@@ -1,3 +1,3 @@
-# Hydration Contracts Guidelines
+# Hydration consumer API
 
-Stable Hydration read models and `IHydrationEntryReadService` live here for Dashboard and Weekly Check-In. Preserve their legacy CLR namespaces and do not add repositories, handlers, EF types, or host concerns.
+Own immutable read models and owner queries for entries, daily totals and half-open UTC interval totals. Consumers dispatch through ISender; Contracts must not export service interfaces or repositories. Preserve user scoping, dates, ordering and cancellation.

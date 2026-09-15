@@ -22,3 +22,5 @@ Resolve IModuleScopeGuard for the processor's clean-entry callback instead of th
 ImagesUserDataPurgeParticipant uses ImagesDbContext with live coordinator transaction binding on every call. Order 135 follows Ai job removal (120) so restrictive image FKs remain valid. Enqueue deletion for staging and published variants as before; only Users saves and commits. The generic outbox engine and options belong to Shared/FoodDiary.Outbox.Infrastructure.
 
 Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.
+
+Use canonical FoodDiary.Modules.Images project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

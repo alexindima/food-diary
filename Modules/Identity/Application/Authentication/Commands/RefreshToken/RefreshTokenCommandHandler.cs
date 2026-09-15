@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
@@ -7,11 +9,10 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.RefreshToken;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RefreshToken;
 
 public sealed class RefreshTokenCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 
 public sealed class VerifyEmailCommandValidator : AbstractValidator<VerifyEmailCommand> {
     public VerifyEmailCommandValidator() {

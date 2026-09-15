@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.CompleteTelegramAuthentication;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramAuthentication;
 
 public sealed record CompleteTelegramAuthenticationCommand(
     string Ticket,

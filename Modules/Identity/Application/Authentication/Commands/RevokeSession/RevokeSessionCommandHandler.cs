@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.RevokeSession;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeSession;
 
 public sealed class RevokeSessionCommandHandler(
     IRefreshTokenSessionWriteRepository repository,

@@ -1,6 +1,9 @@
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Modules.Identity.Infrastructure;
+
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
@@ -11,24 +14,23 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Modules.Hydration.Infrastructure;
+
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Application.Abstractions.Users.Common;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Admin.Domain.Entities;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Hydration.Models;
+namespace FoodDiary.Modules.Hydration.Contracts.Models;
 
 public sealed record HydrationEntryModel(
     Guid Id,

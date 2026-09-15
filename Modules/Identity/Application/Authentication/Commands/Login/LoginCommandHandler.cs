@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.Login;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
 
 public sealed class LoginCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

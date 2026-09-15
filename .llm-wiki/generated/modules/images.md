@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Images/Application/FoodDiary.Application.Images.csproj`
+- Extracted project: `Modules/Images/Application/FoodDiary.Modules.Images.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
@@ -25,12 +25,12 @@ sources:
 ## Source Areas
 
 - `Modules/Images/Application`
-- `Modules/Images/Application/Abstractions`
+- `Modules/Images/Application.Abstractions`
 - `Modules/Images/Contracts`
 - `Modules/Images/Domain`
 - `Modules/Images/Infrastructure`
-- `Modules/Images/Infrastructure/Model`
 - `Modules/Images/Infrastructure/Providers`
+- `Modules/Images/PersistenceModel`
 - `Modules/Images/Presentation`
 - `Modules/Images/Service.Contracts`
 
@@ -43,18 +43,18 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 21
+- Public contract files: 23
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 21
+- Public contract types: 23
 - Interfaces: 12
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 2
+- Contracts referencing domain entities: 0
 - `class ImageAssetIdParser`
 - `class ImageAssetResolver`
 - `class ImageErrors`
@@ -70,9 +70,11 @@ No literal attribute-routed controller was associated with this module.
 - `interface IImageObjectDeletionOutbox`
 - `interface IImageObjectDeletionOutboxProcessor`
 - `interface IImageStorageService`
+- `record CleanupOrphanImagesCommand`
 - `record DeleteImageAssetResult`
 - `record ImageAssetReadModel`
 - `record ImageAssetResolution`
+- `record ImageCleanupCandidate`
 - `record ImageObjectValidationResult`
 - `record PresignedUpload`
 - `record struct ImageAssetId`
@@ -81,9 +83,10 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/CleanupOrphanImagesCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FeatureErrorContractTests.cs`
-- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/Domain/ImageAssetInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ImagesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/ImageAssetInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/ImagesIdConversionTests.cs`
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageAssetRepositoryIntegrationTests.cs`
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageObjectDeletionOutboxMessageTests.cs`

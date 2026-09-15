@@ -1,21 +1,21 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Identity.Authentication.Commands.BeginTelegramMiniApp;
-using FoodDiary.Application.Identity.Authentication.Commands.CompleteTelegramAuthentication;
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.BeginTelegramMiniApp;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramAuthentication;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramOnboardingTests {

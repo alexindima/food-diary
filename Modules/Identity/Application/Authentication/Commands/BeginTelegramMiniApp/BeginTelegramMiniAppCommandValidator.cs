@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.BeginTelegramMiniApp;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.BeginTelegramMiniApp;
 
 public sealed class BeginTelegramMiniAppCommandValidator : AbstractValidator<BeginTelegramMiniAppCommand> {
     public BeginTelegramMiniAppCommandValidator() {

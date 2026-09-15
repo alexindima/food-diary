@@ -1102,7 +1102,7 @@ public class UserInvariantTests {
     [Fact]
     public void UpdateProfileMedia_WithValues_UpdatesImageFields() {
         var user = User.Create("test@example.com", "hash");
-        var assetId = FoodDiary.Domain.ValueObjects.Ids.ImageAssetId.New();
+        var assetId = FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId.New();
 
         user.UpdateProfileMedia(profileImage: " https://cdn.example.com/avatar.webp ", profileImageAssetId: assetId);
 
@@ -1113,7 +1113,7 @@ public class UserInvariantTests {
     [Fact]
     public void UpdateProfileMedia_WithTypedUpdate_UpdatesImageFields() {
         var user = User.Create("test@example.com", "hash");
-        var assetId = FoodDiary.Domain.ValueObjects.Ids.ImageAssetId.New();
+        var assetId = FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId.New();
 
         user.UpdateProfileMedia(new UserProfileMediaUpdate(
             ProfileImage: " https://cdn.example.com/avatar-2.webp ",

@@ -19,17 +19,16 @@ public sealed class FavoriteMealReadServiceCoverageTests {
         var userId = UserId.New();
         IReadOnlyList<FavoriteMealReadModel> favorites = [
             CreateReadModel("First", hour: 8),
-            CreateReadModel("Second", hour: 9),
         ];
         IFavoriteMealReadModelRepository repository = Substitute.For<IFavoriteMealReadModelRepository>();
-        repository.GetAllReadModelsAsync(userId, Arg.Any<CancellationToken>()).Returns(favorites);
+        repository.GetOverviewReadModelsAsync(userId, 1, Arg.Any<CancellationToken>()).Returns((favorites, 1_001));
         ISender service = RequestTestSender.Create(new ReadFavoriteMealsQueryHandler(repository), new ReadMealFavoriteStatusQueryHandler(repository), new ReadMealFavoriteIdsQueryHandler(repository), new ReadMealFavoritesOverviewQueryHandler(repository));
 
         (IReadOnlyList<MealFavoriteMealModel> items, int totalItems) =
             await service.Send(new ReadMealFavoritesOverviewQuery(userId, 1), CancellationToken.None);
 
         Assert.Multiple(
-            () => Assert.Equal(2, totalItems),
+            () => Assert.Equal(1_001, totalItems),
             () => Assert.Equal("First", Assert.Single(items).Name));
     }
 

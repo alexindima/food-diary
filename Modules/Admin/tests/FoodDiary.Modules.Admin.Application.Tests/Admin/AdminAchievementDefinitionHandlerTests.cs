@@ -1,11 +1,11 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Gamification.Commands.CreateAchievementDefinition;
-using FoodDiary.Application.Gamification.Commands.UpdateAchievementDefinition;
-using FoodDiary.Application.Gamification.Queries.GetAchievementDefinitionsForAdministration;
+using FoodDiary.Modules.Gamification.Contracts.Commands.CreateAchievementDefinition;
+using FoodDiary.Modules.Gamification.Contracts.Commands.UpdateAchievementDefinition;
+using FoodDiary.Modules.Gamification.Contracts.Queries.GetAchievementDefinitionsForAdministration;
 using FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
-using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Modules.Gamification.Contracts.Models;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Tests.Admin;

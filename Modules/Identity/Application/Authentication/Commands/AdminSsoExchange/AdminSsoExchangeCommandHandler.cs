@@ -1,15 +1,15 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 
 public sealed class AdminSsoExchangeCommandHandler(
     IAdminSsoService adminSsoService,
@@ -22,7 +22,7 @@ public sealed class AdminSsoExchangeCommandHandler(
         CancellationToken cancellationToken) {
         UserId? userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
         if (userId is null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoInvalidCode);
+            return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoInvalidCode);
         }
 
         Result<UserAuthenticationPrincipalModel> principalResult = await userIdentityService
@@ -40,7 +40,7 @@ public sealed class AdminSsoExchangeCommandHandler(
 
         UserAuthenticationPrincipalModel principal = principalResult.Value;
         if (!principal.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoForbidden);
+            return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoForbidden);
         }
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService

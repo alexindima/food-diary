@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Commands.Login;
-using FoodDiary.Application.Identity.Authentication.Commands.Register;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Register;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
 

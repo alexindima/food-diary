@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
 
 public readonly record struct UserAchievementId(Guid Value) : IEntityId<Guid> {
     public static UserAchievementId New() => new(Guid.NewGuid());

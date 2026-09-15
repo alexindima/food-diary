@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Gamification.Models;
+namespace FoodDiary.Modules.Gamification.Application.Models;
 
 public sealed record GamificationModel(
     int CurrentStreak,

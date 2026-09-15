@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Abstractions.Authentication.Queries.GetLoginDeviceSummary;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Queries.GetLoginDeviceSummary;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Identity.Authentication.Queries.GetLoginDeviceSummary;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginDeviceSummary;
 
 public sealed class GetLoginDeviceSummaryQueryHandler(IUserLoginEventQuery repository)
     : IRequestHandler<GetLoginDeviceSummaryQuery, IReadOnlyList<UserLoginDeviceSummaryModel>> {

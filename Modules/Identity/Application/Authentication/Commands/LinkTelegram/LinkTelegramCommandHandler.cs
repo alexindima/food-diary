@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -8,7 +9,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkTelegram;
 
 public sealed class LinkTelegramCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,
@@ -32,7 +33,7 @@ public sealed class LinkTelegramCommandHandler(
             .TryConsumeAsync(command.InitData, initData.AuthDateUtc.AddDays(1), cancellationToken)
             .ConfigureAwait(false);
         if (!consumed) {
-            return Result.Failure<UserModel>(Errors.Authentication.TelegramAssertionAlreadyUsed);
+            return Result.Failure<UserModel>(IdentityErrors.TelegramAssertionAlreadyUsed);
         }
 
         return await userIdentityService

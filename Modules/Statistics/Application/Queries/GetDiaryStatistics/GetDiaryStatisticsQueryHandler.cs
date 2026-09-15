@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Statistics.Common;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +13,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Statistics.Queries.GetDiaryStatistics;
 
 public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService accessService, IUserDashboardProfileReadService profiles,
-    ISender sender, IHydrationIntervalReadService hydration, TimeProvider timeProvider)
+    ISender sender, TimeProvider timeProvider)
     : IQueryHandler<GetDiaryStatisticsQuery, Result<DiaryStatisticsSummaryModel>> {
     public Task<Result<DiaryStatisticsSummaryModel>> Handle(GetDiaryStatisticsQuery query, CancellationToken cancellationToken) =>
         HandleAsync(query, TimeZoneInfo.FindSystemTimeZoneById, cancellationToken);
@@ -56,7 +56,7 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
                     return Result.Failure<DiaryStatisticsSummaryModel>(result.Error);
                 }
                 buckets = result.Value;
-                waterMl = await hydration.GetTotalAsync(owner.Value, day.StartUtc, day.EndExclusiveUtc, cancellationToken).ConfigureAwait(false);
+                waterMl = await sender.Send(new ReadHydrationIntervalQuery(owner.Value, day.StartUtc, day.EndExclusiveUtc), cancellationToken).ConfigureAwait(false);
             }
             summaries.Add(new DiaryStatisticsDayModel(day.Date, buckets.Sum(bucket => bucket.TotalCalories), buckets.Sum(bucket => bucket.TotalProteins),
                 buckets.Sum(bucket => bucket.TotalFats), buckets.Sum(bucket => bucket.TotalCarbs), buckets.Sum(bucket => bucket.TotalFiber),

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Hydration;
+using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
+using FoodDiary.Modules.Hydration.Application;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +14,7 @@ public static class ModuleRegistration {
         services.AddHydrationApplication();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<HydrationDbContext>(static options => new HydrationDbContext(options)));
-        services.AddScoped<FoodDiary.Application.Hydration.Common.IHydrationIntervalReadService>(static provider => new HydrationIntervalReadService(
+        services.AddScoped<FoodDiary.Modules.Hydration.Application.Abstractions.Common.IHydrationIntervalReadModelRepository>(static provider => new HydrationIntervalReadService(
             provider.GetRequiredService<HydrationDbContext>().HydrationEntries));
         services.AddScoped<IHydrationOperationReceiptRepository>(static provider => new HydrationOperationReceiptRepository(
             provider.GetRequiredService<HydrationDbContext>().HydrationOperationReceipts));

@@ -1,8 +1,7 @@
 # Images logical module
 
 Images owns the dependency-free `ImageAssetId` contract, the `ImageAsset` domain
-entity, application policies, persistence mapping and repository adapters. Preserve
-their legacy CLR namespaces. ID-only consumers reference Images Contracts; Images Domain
+entity, application policies, persistence mapping and repository adapters. Use canonical project-and-folder namespaces. ID-only consumers reference Images Contracts; Images Domain
 references Users Domain.Contracts for UserId.
 
 `MealAiSession` retains only `ImageAssetId`; Meals and Dashboard resolve image URLs
@@ -43,3 +42,7 @@ Shared URI validation and integration telemetry are owned by `Shared/FoodDiary.I
 Image service reads return immutable Id/Url projections from Service.Contracts; legacy Contracts remains ID-only. Orphan cleanup uses a fresh scope per candidate and propagates cancellation. Six image FKs restrict deletion to preserve concurrent references; ordinary cleanup still defers SaveChanges to its caller. See ADR 0032.
 
 Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.
+
+Use canonical FoodDiary.Modules.Images project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+CleanupOrphanImagesCommand owns the full scan using bounded pages and a stable (CreatedOnUtc, Id) cursor from IImageAssetUsageQuery. Advance after every candidate page, including failed/deleted/in-use candidates; never stop based on successful deletions. Keep per-candidate isolated cleanup scopes. JobManager dispatches one request and reports its total.

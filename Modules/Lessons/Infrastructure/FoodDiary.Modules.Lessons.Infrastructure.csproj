@@ -1,12 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.Lessons.Infrastructure</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.Lessons.Infrastructure</RootNamespace>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
@@ -15,8 +7,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj" />

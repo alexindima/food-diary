@@ -1,12 +1,13 @@
+using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Net.Mime;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;
 using SkiaSharp;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 
 public sealed class S3ImageStorageService(
     IObjectStorageClient storageClient,

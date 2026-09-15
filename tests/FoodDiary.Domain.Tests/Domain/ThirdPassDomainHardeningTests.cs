@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using System.Reflection;
 using FoodDiary.Modules.Billing.Domain.Contracts;

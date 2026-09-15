@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using System.Globalization;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.ValueObjects;
 

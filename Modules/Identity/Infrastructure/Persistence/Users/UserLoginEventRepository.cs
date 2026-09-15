@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;

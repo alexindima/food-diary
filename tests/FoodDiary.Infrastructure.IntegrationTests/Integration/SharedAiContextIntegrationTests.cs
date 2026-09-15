@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
@@ -9,7 +12,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
@@ -131,7 +134,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Database:EnableRetries"] = "false",
-        }).Build());
+        }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddAiPersistence();
         services.AddAiApplication();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

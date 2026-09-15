@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.RefreshToken;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RefreshToken;
 
 public sealed class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand> {
     public RefreshTokenCommandValidator() {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace FoodDiary.Presentation.Api.Security;
+namespace FoodDiary.Modules.Identity.Presentation.Security;
 
 public sealed class RefreshTokenCookieService(TimeProvider timeProvider) {
     public const string CookieName = "fooddiary.refresh";

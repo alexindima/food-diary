@@ -1,8 +1,10 @@
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;
-using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
@@ -10,8 +12,6 @@ using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.OpenFoodFacts;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Domain.Tests.Domain;
 

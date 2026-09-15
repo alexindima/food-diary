@@ -2,15 +2,15 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstrac
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Identity.Authentication.Commands.BeginTelegramMiniApp;
-using FoodDiary.Application.Identity.Authentication.Commands.ExchangeTelegramOidc;
-using FoodDiary.Application.Identity.Authentication.Commands.StartTelegramOidc;
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Queries.GetTelegramConfiguration;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.BeginTelegramMiniApp;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ExchangeTelegramOidc;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramOidc;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetTelegramConfiguration;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramAuthenticationBoundaryTests {

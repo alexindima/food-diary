@@ -1,8 +1,8 @@
+using FoodDiary.Authentication.Infrastructure;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Authentication;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -79,7 +79,7 @@ public sealed class AdminSsoProtocolTests {
         var time = new MutableTimeProvider();
         var services = new ServiceCollection();
         services.AddSingleton<TimeProvider>(time);
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddSharedAuthentication(new ConfigurationBuilder().Build());
         services.AddIdentityAuthenticationInfrastructure();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAdminSsoService service = provider.GetRequiredService<IAdminSsoService>();
@@ -98,7 +98,7 @@ public sealed class AdminSsoProtocolTests {
     [Fact]
     public async Task SharedStoreCancellation_PropagatesWithoutConsumingValidCode() {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddSharedAuthentication(new ConfigurationBuilder().Build());
         services.AddIdentityAuthenticationInfrastructure();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAdminSsoService service = provider.GetRequiredService<IAdminSsoService>();
@@ -118,7 +118,7 @@ public sealed class AdminSsoProtocolTests {
     public async Task AuthenticationRegistration_UsesHostSelectedStoreWithoutOverridingIt(bool replaceBeforeModule) {
         var store = new RecordingStore();
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddSharedAuthentication(new ConfigurationBuilder().Build());
         if (replaceBeforeModule) {
             services.Replace(ServiceDescriptor.Singleton<IAdminSsoCodeStore>(store));
         }

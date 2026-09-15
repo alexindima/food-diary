@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj" />
+    <ProjectReference Include="../FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
+    <ProjectReference Include="../FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
+    <ProjectReference Include="../FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
+    <ProjectReference Include="../FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />
+    <ProjectReference Include="../FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
+    <ProjectReference Include="../FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj" />
+    <ProjectReference Include="../FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

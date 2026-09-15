@@ -5,3 +5,5 @@ application/scalar contracts, HTTP DTO contracts and other pure Presentation.Map
 Never reference a whole Application, Domain, Presentation, Infrastructure or host
 assembly; no ASP.NET framework, DI, I/O or side effects. Request-to-command mapping
 stays in Presentation. Preserve nulls, ordering, dates, enum encodings and wire fields.
+
+Use canonical FoodDiary.Modules.Hydration project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

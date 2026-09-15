@@ -2,12 +2,12 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Services.UserAgents;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Services.UserAgents;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSessions;
 
 public sealed class GetActiveSessionsQueryHandler(IRefreshTokenSessionReadModelRepository repository)
     : IQueryHandler<GetActiveSessionsQuery, Result<IReadOnlyList<ActiveSessionModel>>> {

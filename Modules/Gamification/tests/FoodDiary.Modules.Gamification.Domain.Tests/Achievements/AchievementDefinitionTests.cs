@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 
-namespace FoodDiary.Domain.Tests.Achievements;
+namespace FoodDiary.Modules.Gamification.Domain.Tests.Achievements;
 
 [ExcludeFromCodeCoverage]
 public sealed class AchievementDefinitionTests {

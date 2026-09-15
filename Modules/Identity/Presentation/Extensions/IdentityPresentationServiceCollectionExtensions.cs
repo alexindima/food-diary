@@ -1,11 +1,12 @@
+using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Modules.Identity.Presentation.Services;
+using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
-using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Presentation.Api.Security;
-using FoodDiary.Presentation.Api.Services;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Identity.Presentation.Extensions;
 
 public static class IdentityPresentationServiceCollectionExtensions {
     public static IServiceCollection AddIdentityPresentation(this IServiceCollection services) {

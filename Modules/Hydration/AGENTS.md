@@ -10,10 +10,9 @@ Rules for `Modules/Hydration/`.
 - Keep the real application assembly at `Application/FoodDiary.Modules.Hydration.Application.csproj`; do not recreate a root module project or an empty wrapper.
 - Do not reference the core `FoodDiary.Application` project.
 - Register application behavior through `AddHydrationApplication`; composition roots use Infrastructure's `AddHydrationModule` facade.
-- Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
+- Depend on other business areas through their owner Contracts and scalar Domain.Contracts projects.
 - Keep migrations and the full migration model in central Infrastructure. Hydration Infrastructure owns the two-entity runtime HydrationDbContext; shared IUnitOfWork coordinates saves and transactions across contexts. Central composition reads remain explicit pilot bridges; owner purge joins the live shared transaction; see ADR 0040.
-- Keep `HydrationEntry` and `HydrationEntryId` in `Domain` with their legacy CLR namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse `User.HydrationEntries` navigation.
-- Preserve legacy `FoodDiary.Application.Hydration.*` and Hydration domain CLR namespaces during this extraction.
+- Keep `HydrationEntry` and `HydrationEntryId` in `Domain` with canonical project-and-folder namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse `User.HydrationEntries` navigation.
 
 ## Tests
 
@@ -29,3 +28,5 @@ reference the exact owner; shared guards and generic values belong to
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+Use canonical FoodDiary.Modules.Hydration project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

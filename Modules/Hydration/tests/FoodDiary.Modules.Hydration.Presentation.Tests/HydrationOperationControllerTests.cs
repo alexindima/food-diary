@@ -1,14 +1,15 @@
-using FoodDiary.Application.Hydration.Commands.CreateHydrationFromOperation;
-using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationFromOperation;
+using FoodDiary.Modules.Hydration.Application.Models;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Hydration;
-using FoodDiary.Presentation.Api.Features.Hydration.Requests;
-using FoodDiary.Presentation.Api.Features.Hydration.Responses;
+using FoodDiary.Modules.Hydration.Presentation.Controllers;
+using FoodDiary.Modules.Hydration.Presentation.Requests;
+using FoodDiary.Modules.Hydration.Presentation.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Hydration.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class HydrationOperationControllerTests {

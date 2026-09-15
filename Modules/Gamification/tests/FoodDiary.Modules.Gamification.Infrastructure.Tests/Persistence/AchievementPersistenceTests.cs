@@ -1,16 +1,18 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
+using FoodDiary.Modules.Gamification.PersistenceModel;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Outbox.Infrastructure.Options;
-using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Gamification.Contracts.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Achievements;
+using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Gamification.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class AchievementPersistenceTests {
@@ -24,8 +26,8 @@ public sealed class AchievementPersistenceTests {
         var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
         context.Add(message);
         await context.SaveChangesAsync();
-        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
-        handler.ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>()).Returns(async _ => {
+        ISender handler = Substitute.For<ISender>();
+        handler.Send(new ReconcileAchievementsCommand(message.UserId, message.CreatedOnUtc), Arg.Any<CancellationToken>()).Returns(async _ => {
             await using var writer = new FoodDiaryDbContext(options);
             AchievementEvaluationOutboxMessage current = await writer.AchievementEvaluationOutbox.SingleAsync();
             if (removed) {
@@ -116,7 +118,7 @@ public sealed class AchievementPersistenceTests {
         var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
         context.AchievementEvaluationOutbox.Add(message);
         await context.SaveChangesAsync();
-        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
+        ISender handler = Substitute.For<ISender>();
         var processor = new AchievementEvaluationOutboxProcessor(
             context, context.AchievementEvaluationOutbox,
             handler,
@@ -127,7 +129,7 @@ public sealed class AchievementPersistenceTests {
         int processed = await processor.ProcessDueAsync(batchSize: 10);
 
         Assert.Equal(1, processed);
-        await handler.Received(1).ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>());
+        await handler.Received(1).Send(new ReconcileAchievementsCommand(message.UserId, message.CreatedOnUtc), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -136,9 +138,8 @@ public sealed class AchievementPersistenceTests {
         var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
         context.AchievementEvaluationOutbox.Add(message);
         await context.SaveChangesAsync();
-        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
-        handler
-            .ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>())
+        ISender handler = Substitute.For<ISender>();
+        handler.Send(new ReconcileAchievementsCommand(message.UserId, message.CreatedOnUtc), Arg.Any<CancellationToken>())
             .Returns(Task.FromException(new InvalidOperationException("Simulated reconciliation failure.")));
         var processor = new AchievementEvaluationOutboxProcessor(
             context, context.AchievementEvaluationOutbox,
@@ -171,8 +172,8 @@ public sealed class AchievementPersistenceTests {
         }
         context.AchievementEvaluationOutbox.Add(message);
         await context.SaveChangesAsync();
-        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
-        handler.ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>())
+        ISender handler = Substitute.For<ISender>();
+        handler.Send(new ReconcileAchievementsCommand(message.UserId, message.CreatedOnUtc), Arg.Any<CancellationToken>())
             .Returns(async _ => {
                 await using var writer = new FoodDiaryDbContext(options);
                 AchievementEvaluationOutboxMessage updated = await writer.AchievementEvaluationOutbox.SingleAsync();

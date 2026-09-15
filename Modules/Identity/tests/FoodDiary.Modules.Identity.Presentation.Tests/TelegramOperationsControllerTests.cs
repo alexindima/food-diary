@@ -1,15 +1,16 @@
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using System.Reflection;
-using FoodDiary.Application.Identity.Authentication.Commands.RegisterTelegramOperation;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Auth;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Auth.Responses;
-using FoodDiary.Presentation.Api.Security;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramOperationsControllerTests {

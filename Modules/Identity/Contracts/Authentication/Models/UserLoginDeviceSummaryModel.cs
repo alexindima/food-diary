@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Authentication.Models;
+namespace FoodDiary.Modules.Identity.Contracts.Authentication.Models;
 
 public sealed record UserLoginDeviceSummaryModel(
     string Key,

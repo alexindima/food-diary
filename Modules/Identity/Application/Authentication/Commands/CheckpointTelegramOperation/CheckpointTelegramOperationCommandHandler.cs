@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.CheckpointTelegramOperation;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.CheckpointTelegramOperation;
 
 public sealed class CheckpointTelegramOperationCommandHandler(TelegramOperationService service) : ICommandHandler<CheckpointTelegramOperationCommand, Result> {
     public Task<Result> Handle(CheckpointTelegramOperationCommand command, CancellationToken cancellationToken) =>

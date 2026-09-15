@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -5,11 +6,11 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoStart;
 
 public sealed class AdminSsoStartCommandHandler(
     IAdminSsoService adminSsoService,
@@ -41,7 +42,7 @@ public sealed class AdminSsoStartCommandHandler(
         }
 
         if (!principalResult.Value.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
-            return Result.Failure<AdminSsoStartModel>(Errors.Authentication.AdminSsoForbidden);
+            return Result.Failure<AdminSsoStartModel>(IdentityErrors.AdminSsoForbidden);
         }
 
         AdminSsoCode code = await adminSsoService.CreateCodeAsync(userId, cancellationToken).ConfigureAwait(false);

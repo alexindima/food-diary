@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Application.Abstractions.Lessons.Models;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

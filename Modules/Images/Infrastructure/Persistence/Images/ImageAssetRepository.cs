@@ -1,9 +1,10 @@
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Images;
+namespace FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 
 public sealed class ImageAssetRepository(DbSet<ImageAsset> assets, IImageAssetUsageQuery usageQuery) : IImageAssetRepository {
     public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
@@ -35,11 +36,4 @@ public sealed class ImageAssetRepository(DbSet<ImageAsset> assets, IImageAssetUs
 
     public Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
         usageQuery.IsAssetInUseAsync(assetId, cancellationToken);
-
-    public async Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
-        DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
-        IReadOnlyList<ImageAssetId> candidates = await usageQuery.GetUnusedIdsOlderThanAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
-        return await assets.AsNoTracking().Where(asset => candidates.Contains(asset.Id))
-            .OrderBy(asset => asset.CreatedOnUtc).ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
 }

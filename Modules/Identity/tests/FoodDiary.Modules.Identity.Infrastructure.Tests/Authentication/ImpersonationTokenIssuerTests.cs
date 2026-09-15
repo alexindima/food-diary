@@ -3,8 +3,8 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstrac
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

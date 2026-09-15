@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Assets;
+namespace FoodDiary.Modules.Images.Domain.Entities.Assets;
 
 public sealed class ImageAsset : Entity<ImageAssetId> {
     public UserId UserId { get; private set; }

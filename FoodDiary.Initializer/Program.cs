@@ -1,5 +1,14 @@
-using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.Lessons.Infrastructure;
+using FoodDiary.Mediator;
+using FoodDiary.Authentication.Infrastructure;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
@@ -13,14 +22,14 @@ using System.Globalization;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Modules.Dashboard.Application;
-using FoodDiary.Modules.Hydration.Infrastructure;
+
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
-using FoodDiary.Application.Identity;
-using FoodDiary.Application.Images;
-using FoodDiary.Modules.Lessons.Infrastructure;
+using FoodDiary.Modules.Identity.Application;
+using FoodDiary.Modules.Images.Application;
+
 using FoodDiary.Application.Statistics;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Application.Tdee;
@@ -34,9 +43,8 @@ using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Modules.Gamification.Infrastructure;
+
 using FoodDiary.Modules.Export.Application;
-using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Initializer;
@@ -124,7 +132,7 @@ static async Task ExecuteAsync(
             await UpdateDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(command.TargetMigration)) {
                 await InitialAdminBootstrapper.BootstrapAsync(
-                    services.GetRequiredService<IInitialAdminBootstrapService>(),
+                    services.GetRequiredService<ISender>(),
                     InitialAdminBootstrapOptions.FromConfiguration(configuration)).ConfigureAwait(false);
             }
             break;
@@ -355,7 +363,7 @@ Examples:
 public partial class Program {
     internal static void ConfigureServices(IServiceCollection services, IConfiguration configuration, InitializerCommand command) {
         services.AddApplicationRuntime();
-        services.AddInfrastructure(configuration);
+        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration);
         services.AddDietologistModule();
         services.AddDistributedMemoryCache();
         if (command.Name.Equals("update", StringComparison.Ordinal) && string.IsNullOrWhiteSpace(command.TargetMigration)) {

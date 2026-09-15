@@ -92,7 +92,7 @@ public sealed class ProductsModuleExtractionTests {
         string runnerSource = File.ReadAllText(runner);
         Assert.Contains("coordinator.ExecuteSerializableAsync(operation, cancellationToken)", runnerSource, StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiaryDbContext", runnerSource, StringComparison.Ordinal);
-        string coordinator = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleTransactionCoordinator.cs"));
+        string coordinator = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleTransactionCoordinator.cs"));
         Assert.Contains("IsolationLevel.Serializable", coordinator, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeCompositionTransactionLock", runnerSource, StringComparison.Ordinal);
         Assert.DoesNotContain("BeginTransactionAsync", runnerSource, StringComparison.Ordinal);

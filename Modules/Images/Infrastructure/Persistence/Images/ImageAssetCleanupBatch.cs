@@ -1,9 +1,10 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Persistence.Images;
+namespace FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 
 internal sealed class ImageAssetCleanupBatch(IServiceScopeFactory scopeFactory) : IImageAssetCleanupBatch {
     public async Task<bool> DeleteUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {

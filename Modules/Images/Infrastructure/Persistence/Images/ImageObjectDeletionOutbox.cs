@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Images.PersistenceModel.Images;
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 
-namespace FoodDiary.Infrastructure.Persistence.Images;
+namespace FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 
 internal sealed class ImageObjectDeletionOutbox(
     DbSet<ImageObjectDeletionOutboxMessage> messages,

@@ -18,3 +18,5 @@ OutboxReplayStreamTests exercises Images-owned list/metadata/tracking on Postgre
 The common four-stream replay transaction/concurrency tests remain central.
 
 Domain and PostgreSQL checks preserve scalar User FK semantics; Users profile updates exercise the owner URL/cleanup port. No foreign User aggregate navigation remains.
+
+Use canonical FoodDiary.Modules.Images project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

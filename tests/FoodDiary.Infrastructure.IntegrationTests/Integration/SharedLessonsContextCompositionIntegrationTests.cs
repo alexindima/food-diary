@@ -1,14 +1,18 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Modules.Lessons.Infrastructure;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Lessons.Infrastructure;
+
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -85,7 +89,7 @@ public sealed class SharedLessonsContextCompositionIntegrationTests(PostgresData
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

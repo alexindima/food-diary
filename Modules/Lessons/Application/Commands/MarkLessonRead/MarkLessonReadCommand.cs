@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Lessons.Commands.MarkLessonRead;
+namespace FoodDiary.Modules.Lessons.Application.Commands.MarkLessonRead;
 
 public record MarkLessonReadCommand(
     Guid? UserId,

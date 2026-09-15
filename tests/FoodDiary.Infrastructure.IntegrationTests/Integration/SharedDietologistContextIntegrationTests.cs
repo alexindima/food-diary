@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using System.Data.Common;
@@ -115,7 +118,7 @@ public sealed class SharedDietologistContextIntegrationTests(PostgresDatabaseFix
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Database:MaxRetryDelaySeconds"] = "1",
-        }).Build());
+        }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddDietologistModule();
         services.AddReadModelComposition();

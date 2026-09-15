@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Identity.Authentication.Commands.Register;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Register;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public class RegisterCommandValidatorTests {

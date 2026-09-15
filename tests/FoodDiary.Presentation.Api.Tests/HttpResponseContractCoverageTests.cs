@@ -6,7 +6,7 @@ using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
-using FoodDiary.Presentation.Api.Features.Lessons.Responses;
+using FoodDiary.Modules.Lessons.Presentation.Responses;
 using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
 using FoodDiary.Presentation.Api.Features.Usda.Responses;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;

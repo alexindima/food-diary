@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Presentation.Api.Features.Auth.Requests;
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
 public sealed record TelegramLoginWidgetHttpRequest(
     [Range(1, long.MaxValue)] long Id,

@@ -11,6 +11,14 @@ namespace FoodDiary.Persistence.Runtime.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class RuntimeRegistrationTests {
     [Fact]
+    public void CoordinationDoesNotRegisterOptionalAuditEmailOrReplayServices() {
+        ServiceCollection services = CreateServices();
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType.Name is
+            "IAuditLogger" or "IAuditEntryWriter" or "IAuditEntryReadService" or
+            "IEmailOutbox" or "IEmailOutboxProcessor" or "IOutboxDeadLetterReplayService" or "IOutboxReplayStream");
+    }
+
+    [Fact]
     public void RuntimeResolvesAndBuildsSharedModelWithoutFullModelAssembly() {
         ServiceCollection services = CreateServices();
         Assert.DoesNotContain(services, descriptor =>

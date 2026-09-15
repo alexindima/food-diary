@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Domain.Entities.Meals;
 

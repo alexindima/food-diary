@@ -1,12 +1,13 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
+namespace FoodDiary.Modules.Images.Application.Commands.DeleteImageAsset;
 
 public sealed class DeleteImageAssetCommandHandler(
     IImageAssetReadRepository imageAssetRepository,

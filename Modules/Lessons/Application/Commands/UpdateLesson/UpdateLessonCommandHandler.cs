@@ -1,13 +1,13 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Commands.UpdateLesson;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Lessons.Commands.UpdateLesson;
+namespace FoodDiary.Modules.Lessons.Application.Commands.UpdateLesson;
 
 public sealed class UpdateLessonCommandHandler(INutritionLessonWriteRepository repository) : IRequestHandler<UpdateLessonCommand, Result<LessonAdminReadModel>> {
     public async Task<Result<LessonAdminReadModel>> Handle(UpdateLessonCommand request, CancellationToken cancellationToken) {

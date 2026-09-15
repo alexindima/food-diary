@@ -29,14 +29,14 @@ Own `JwtTokenGenerator` under Authentication and `PasswordHasher` under Services
 (using project-and-folder CLR namespaces). Register their
 existing ports as singletons through `AddIdentityAuthenticationInfrastructure`,
 separately from persistence. Preserve claims, signatures, expiry, refresh checks
-and legacy/enhanced bcrypt compatibility. Keep JwtOptions in Shared/FoodDiary.Authentication.Contracts/Options with binding central and
+and legacy/enhanced bcrypt compatibility. Keep JwtOptions in Shared/FoodDiary.Authentication.Contracts/Options with binding in Shared/FoodDiary.Authentication.Infrastructure and
 Users credential operations with Users; relocation must not redesign security.
 
 Own ordinary `AdminSsoService` under Authentication, registered as the existing
 singleton by `AddIdentityAuthenticationInfrastructure`. Despite its name, the
 service is consumed by Identity's AdminSsoStart/Exchange application flows; Admin's
 impersonation adapter is a distinct protocol. Keep shared `IAdminSsoCodeStore`,
-the central in-memory implementation and API Redis override outside this module.
+the Shared/FoodDiary.Authentication.Infrastructure in-memory implementation and API Redis override outside this module.
 Preserve 32-byte randomness, 43-character URL-safe codes, two-minute expiry,
 validation before consume, GUID payload parsing and cancellation.
 
@@ -50,3 +50,7 @@ operation cancellation token to UseTransactionAsync. Purge uses IdentityDbContex
 and binds the live coordinator transaction on every invocation. Preserve order 130,
 scalar user filtering and journal/deduplication deletion. Users retains transaction
 completion; There is no central Infrastructure reference. Shared authentication options and HTTP dependencies are referenced explicitly.
+
+ADR 0044: hosts explicitly compose AddSharedAuthentication and AddIdentityEmailOptions. Identity owns email link option binding; shared authentication owns JWT binding and fallback SSO storage.
+
+Use canonical FoodDiary.Modules.Identity project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

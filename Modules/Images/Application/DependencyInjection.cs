@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Images.Services;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Application.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Images;
+namespace FoodDiary.Modules.Images.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddImagesModule(this IServiceCollection services) {

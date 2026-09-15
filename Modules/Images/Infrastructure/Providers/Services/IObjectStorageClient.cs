@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 
 public interface IObjectStorageClient {
     string GetPreSignedUploadUrl(

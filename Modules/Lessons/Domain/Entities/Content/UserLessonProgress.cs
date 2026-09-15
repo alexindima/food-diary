@@ -1,7 +1,9 @@
+using FoodDiary.Modules.Lessons.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Content;
+namespace FoodDiary.Modules.Lessons.Domain.Entities.Content;
 
 public sealed class UserLessonProgress : Entity<UserLessonProgressId> {
     public UserId UserId { get; private set; }

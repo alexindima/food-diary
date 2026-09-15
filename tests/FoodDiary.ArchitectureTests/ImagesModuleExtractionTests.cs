@@ -13,7 +13,7 @@ public sealed class ImagesModuleExtractionTests {
     [Fact]
     public void ExtractedImagesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Images/Application/FoodDiary.Application.Images.csproj");
+            "Modules/Images/Application/FoodDiary.Modules.Images.Application.csproj");
         Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 

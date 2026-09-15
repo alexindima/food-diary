@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Testing;
-using FoodDiary.Application.Lessons.Commands.CreateLesson;
-using FoodDiary.Application.Lessons.Commands.DeleteLesson;
-using FoodDiary.Application.Lessons.Commands.ImportLessons;
-using FoodDiary.Application.Lessons.Commands.UpdateLesson;
+using FoodDiary.Modules.Lessons.Application.Commands.CreateLesson;
+using FoodDiary.Modules.Lessons.Application.Commands.DeleteLesson;
+using FoodDiary.Modules.Lessons.Application.Commands.ImportLessons;
+using FoodDiary.Modules.Lessons.Application.Commands.UpdateLesson;
 using FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminLesson;
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Admin.Application.Models;
 

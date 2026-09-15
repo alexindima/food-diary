@@ -1,0 +1,37 @@
+using FoodDiary.Modules.Lessons.Presentation.Mappings;
+using FoodDiary.Presentation.Api.Controllers;
+
+using FoodDiary.Modules.Lessons.Presentation.Responses;
+using FoodDiary.Modules.Lessons.Presentation.Requests;
+using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Mediator;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FoodDiary.Modules.Lessons.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/lessons")]
+public sealed class LessonsController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet]
+    [ProducesResponseType<LessonPageHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetAll(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] GetLessonsHttpQuery query) =>
+        HandleOk(userId.ToQuery(query), static value => value.ToHttpResponse());
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType<LessonDetailHttpResponse>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetById(
+        [FromCurrentUser] Guid userId,
+        Guid id) =>
+        HandleOk(userId.ToGetByIdQuery(id), static value => value.ToHttpResponse());
+
+    [HttpPost("{id:guid}/read")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public Task<IActionResult> MarkRead(
+        [FromCurrentUser] Guid userId,
+        Guid id) =>
+        HandleNoContent(userId.ToMarkReadCommand(id));
+}

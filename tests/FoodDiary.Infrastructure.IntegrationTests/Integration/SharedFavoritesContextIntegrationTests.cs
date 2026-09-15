@@ -1,3 +1,10 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -24,6 +31,37 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class SharedFavoritesContextIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task MealOverviewCountsBeyondCollectionLimitAndScopesRowsToUserAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(context);
+        var owner = User.Create("favorite-overview@example.com", "hash");
+        var other = User.Create("favorite-overview-other@example.com", "hash");
+        context.Users.AddRange(owner, other);
+        for (int index = 0; index < 1_001; index++) {
+            var meal = Meal.Create(owner.Id, DateTime.UtcNow);
+            context.Meals.Add(meal);
+            context.FavoriteMeals.Add(FavoriteMeal.Create(owner.Id, meal.Id));
+        }
+        var otherMeal = Meal.Create(other.Id, DateTime.UtcNow);
+        context.Meals.Add(otherMeal);
+        context.FavoriteMeals.Add(FavoriteMeal.Create(other.Id, otherMeal.Id));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        IFavoriteMealReadModelRepository repository = provider.GetRequiredService<IFavoriteMealReadModelRepository>();
+
+        (IReadOnlyList<FavoriteMealReadModel> items, int totalItems) = await repository.GetOverviewReadModelsAsync(owner.Id, 2);
+        (IReadOnlyList<FavoriteMealReadModel> emptyItems, int emptyTotal) = await repository.GetOverviewReadModelsAsync(owner.Id, 0);
+
+        Assert.Multiple(
+            () => Assert.Equal(1_001, totalItems),
+            () => Assert.Equal(2, items.Count),
+            () => Assert.DoesNotContain(items, item => item.MealId == otherMeal.Id.Value),
+            () => Assert.Empty(emptyItems),
+            () => Assert.Equal(1_001, emptyTotal),
+            () => Assert.Empty(context.ChangeTracker.Entries()));
+    }
+
     [RequiresDockerFact]
     public async Task SharedSaveTracksOnlyFavoritesAndVisibilityChangesRevokeReadsAsync() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -94,7 +132,7 @@ public sealed class SharedFavoritesContextIntegrationTests(PostgresDatabaseFixtu
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

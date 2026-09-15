@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;

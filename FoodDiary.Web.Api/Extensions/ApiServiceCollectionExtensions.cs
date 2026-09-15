@@ -1,9 +1,22 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Modules.Images.Presentation.Extensions;
+using FoodDiary.Modules.Hydration.Presentation.Extensions;
+using FoodDiary.Modules.Lessons.Presentation.Extensions;
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Gamification.Infrastructure;
+using FoodDiary.Modules.Lessons.Infrastructure;
+using FoodDiary.Modules.Gamification.Presentation.Extensions;
+using FoodDiary.Modules.Identity.Presentation.Extensions;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Authentication.Infrastructure;
 using FoodDiary.Modules.Favorites.Presentation.Extensions;
 using FoodDiary.Modules.Fasting.Presentation.Extensions;
 using FoodDiary.Modules.Export.Presentation.Extensions;
 using FoodDiary.Modules.Export.Application;
 using FoodDiary.Modules.Exercises.Presentation.Extensions;
-using FoodDiary.Modules.Identity.Infrastructure;
+
 using FoodDiary.Modules.Dashboard.Presentation.Extensions;
 using FoodDiary.Modules.Dietologist.Presentation.Extensions;
 using FoodDiary.Modules.Cycles.Presentation.Extensions;
@@ -26,14 +39,14 @@ using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Modules.Dashboard.Application;
-using FoodDiary.Modules.Hydration.Infrastructure;
+
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
-using FoodDiary.Application.Identity;
-using FoodDiary.Application.Images;
-using FoodDiary.Modules.Lessons.Infrastructure;
+using FoodDiary.Modules.Identity.Application;
+using FoodDiary.Modules.Images.Application;
+
 using FoodDiary.Application.Statistics;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Application.Tdee;
@@ -46,7 +59,7 @@ using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Modules.Gamification.Infrastructure;
+
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -112,7 +125,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddBillingModule()
                 .AddMarketingModule()
                 .AddModulePresentations()
-                .AddInfrastructure(configuration)
+                .AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration)
                 .AddExportInfrastructure()
                 .AddIdentityPersistence()
                 .AddIdentityAuthenticationInfrastructure()

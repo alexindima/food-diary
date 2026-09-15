@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Gamification.Queries.GetAchievementDefinitionsForAdministration;
+using FoodDiary.Modules.Gamification.Contracts.Queries.GetAchievementDefinitionsForAdministration;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Modules.Gamification.Contracts.Models;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;

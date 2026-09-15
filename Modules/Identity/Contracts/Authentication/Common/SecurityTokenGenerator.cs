@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FoodDiary.Application.Abstractions.Authentication.Common;
+namespace FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 
 public static class SecurityTokenGenerator {
     private const string Sha256StoragePrefix = "sha256:";

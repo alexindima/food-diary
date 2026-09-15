@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Content;
+namespace FoodDiary.Modules.Lessons.Domain.Entities.Content;
 
 public sealed class NutritionLesson : Entity<NutritionLessonId> {
     private const int TitleMaxLength = 256;

@@ -4,7 +4,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="SSH.NET" />
@@ -21,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
@@ -29,6 +30,7 @@
     <ProjectReference Include="../../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
   </ItemGroup>

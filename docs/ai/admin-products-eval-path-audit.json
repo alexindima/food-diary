@@ -964,11 +964,11 @@
     },
     {
       "old": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs",
-      "current": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
+      "current": "Modules/Images/PersistenceModel/Configurations/ImageAssetConfiguration.cs",
       "gitRenameChain": [
         {
           "old": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs",
-          "new": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
+          "new": "Modules/Images/PersistenceModel/Configurations/ImageAssetConfiguration.cs",
           "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
           "score": "R092"
         }

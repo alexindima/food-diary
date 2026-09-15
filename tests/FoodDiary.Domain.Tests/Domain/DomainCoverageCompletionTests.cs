@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using System.Reflection;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Dietologist.Domain.Entities;

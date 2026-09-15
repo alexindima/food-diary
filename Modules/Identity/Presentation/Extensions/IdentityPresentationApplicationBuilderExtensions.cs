@@ -1,8 +1,8 @@
-using FoodDiary.Presentation.Api.Hubs;
+using FoodDiary.Modules.Identity.Presentation.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Identity.Presentation.Extensions;
 
 public static class IdentityPresentationApplicationBuilderExtensions {
     public static WebApplication MapIdentityPresentationHub(

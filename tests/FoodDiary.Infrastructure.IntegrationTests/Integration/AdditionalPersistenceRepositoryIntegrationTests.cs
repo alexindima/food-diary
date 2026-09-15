@@ -4,7 +4,7 @@ using FoodDiary.Modules.Identity.Infrastructure.Persistence.Admin;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using Microsoft.EntityFrameworkCore.Storage;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
@@ -774,9 +774,9 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await repository.UpsertAsync("reset", "ru", "Reset", "<p>Reset</p>", "Reset", isActive: true);
         await context.SaveChangesAsync();
 
-        IReadOnlyList<FoodDiary.Domain.Entities.Content.EmailTemplate> templates = await repository.GetAllAsync();
+        IReadOnlyList<FoodDiary.Modules.Identity.Domain.Entities.Content.EmailTemplate> templates = await repository.GetAllAsync();
         IReadOnlyList<EmailTemplateReadModel> templateReadModels = await repository.GetAllReadModelsAsync();
-        FoodDiary.Domain.Entities.Content.EmailTemplate? template = await repository.GetByKeyAsync("welcome", "en");
+        FoodDiary.Modules.Identity.Domain.Entities.Content.EmailTemplate? template = await repository.GetByKeyAsync("welcome", "en");
 
         Assert.Contains(
             templates,

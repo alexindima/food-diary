@@ -1,9 +1,9 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplates;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplates;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Identity.Email.Queries.GetEmailTemplates;
+namespace FoodDiary.Modules.Identity.Application.Email.Queries.GetEmailTemplates;
 
 public sealed class GetEmailTemplatesQueryHandler(IEmailTemplateReadModelRepository repository) : IRequestHandler<GetEmailTemplatesQuery, IReadOnlyList<EmailTemplateReadModel>> {
     public Task<IReadOnlyList<EmailTemplateReadModel>> Handle(GetEmailTemplatesQuery request, CancellationToken cancellationToken) {

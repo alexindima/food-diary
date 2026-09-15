@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -72,7 +75,7 @@ public sealed class SharedFastingContextCompositionIntegrationTests(PostgresData
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

@@ -8,7 +8,7 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void PersistenceRepositories_UseTimeProviderInsteadOfDirectUtcNow() {
         string[] persistenceRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence"),
         ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(persistenceRoots, [
@@ -32,16 +32,16 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Infrastructure", "Persistence", "ContentReportsDbContext.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Infrastructure", "Persistence", "ContentReportsDbContext.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetCleanupBatch.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "EfUnitOfWork.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "SharedPersistenceDbContext.Session.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfModuleSessionCoordinator.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "EfUnitOfWork.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "SharedPersistenceDbContext.Session.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfModuleSessionCoordinator.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Meals", "Infrastructure", "Persistence", "Meals", "EfMealRecognitionTransactionRunner.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxProcessingEngine.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxMessageClaimer.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -65,10 +65,10 @@ public sealed class PersistenceTransactionGuardrailTests {
         string[] allowedFiles = [
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "FoodRecognitionJobStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiQuotaRepository.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxMessageClaimer.cs"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
         string[] forbiddenPatterns = [
             "BeginTransaction(",

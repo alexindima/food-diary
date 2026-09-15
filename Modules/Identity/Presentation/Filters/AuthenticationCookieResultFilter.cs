@@ -1,9 +1,9 @@
-using FoodDiary.Presentation.Api.Features.Auth.Responses;
-using FoodDiary.Presentation.Api.Security;
+using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace FoodDiary.Presentation.Api.Filters;
+namespace FoodDiary.Modules.Identity.Presentation.Filters;
 
 public sealed class AuthenticationCookieResultFilter(RefreshTokenCookieService refreshTokenCookies) : IAsyncResultFilter {
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next) {

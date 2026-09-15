@@ -1,13 +1,11 @@
-using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application.Identity;
+namespace FoodDiary.Modules.Identity.Application;
 
 public static class DependencyInjection {
     public static IServiceCollection AddIdentityModule(this IServiceCollection services) {
@@ -15,13 +13,10 @@ public static class DependencyInjection {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
 
-        services.AddScoped<IAuthenticationLoginEventCleanupService, AuthenticationLoginEventCleanupService>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
         services.AddScoped<TelegramAuthenticationIntentService>();
         services.AddScoped<TelegramOperationService>();
         services.AddScoped<TelegramBackupEmailService>();
-        services.AddScoped<TelegramBackupEmailOidcService>();
-        services.AddScoped<IInitialAdminBootstrapService, InitialAdminBootstrapService>();
         services.AddScoped<IEmailSender, EmailSender>();
 
         return services;

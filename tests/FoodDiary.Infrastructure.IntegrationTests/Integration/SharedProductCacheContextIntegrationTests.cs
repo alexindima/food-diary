@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -30,7 +33,7 @@ public sealed class SharedProductCacheContextIntegrationTests(PostgresDatabaseFi
     public async Task CacheFollowsTransactionOpenedAfterResolutionAndResetsAfterCompletionAsync(bool commit) {
         await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(central);
         services.AddSingleton<SharedPersistenceDbContext>(central);
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());

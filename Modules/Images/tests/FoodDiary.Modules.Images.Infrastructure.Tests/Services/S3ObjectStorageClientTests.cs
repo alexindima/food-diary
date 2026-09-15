@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using System.Net;
 using System.Reflection;
 using Amazon.S3;
 using Amazon.S3.Model;
-using FoodDiary.Integrations.Services;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class S3ObjectStorageClientTests {

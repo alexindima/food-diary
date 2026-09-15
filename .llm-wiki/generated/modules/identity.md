@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Admin, Authentication, Email, Notifications, Users
+- Abstraction-contract dependencies: Authentication, Email, Notifications, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -42,24 +42,23 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: EmailTemplate, UserRefreshTokenSession, UserLoginEvent
-- Public contract files: 41
+- Public contract files: 40
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 41
-- Interfaces: 27
+- Public contract types: 40
+- Interfaces: 26
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 13
-- Contracts referencing domain entities: 5
+- Contracts referencing domain entities: 0
 - `class JwtImpersonationClaimNames`
 - `class JwtSecurityClaimNames`
 - `class JwtTokenUseClaimNames`
 - `class TelegramIdentityErrors`
 - `interface IAdminSsoService`
-- `interface IAuthenticationLoginEventCleanupService`
 - `interface IAuthenticationTokenService`
 - `interface IEmailTemplateReadModelRepository`
 - `interface IEmailTemplateReadRepository`
@@ -84,7 +83,8 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserLoginEventQuery`
 - `interface IUserLoginEventReadRepository`
 - `interface IUserLoginEventRepository`
-- ... 11 more type(s)
+- `interface IUserLoginEventWriteRepository`
+- ... 10 more type(s)
 
 ## Focused Tests
 
@@ -104,12 +104,12 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationValidatorsTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/BootstrapInitialAdminCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/CleanupLoginEventsCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/EmailSenderTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RegisterCommandValidatorTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailHandlersTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOperationServiceTests.cs`

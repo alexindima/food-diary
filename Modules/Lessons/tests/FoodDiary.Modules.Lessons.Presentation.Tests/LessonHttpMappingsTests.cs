@@ -1,12 +1,13 @@
-using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
-using FoodDiary.Application.Lessons.Models;
-using FoodDiary.Application.Lessons.Queries.GetLessonById;
-using FoodDiary.Application.Lessons.Queries.GetLessons;
-using FoodDiary.Presentation.Api.Features.Lessons.Mappings;
-using FoodDiary.Presentation.Api.Features.Lessons.Responses;
-using FoodDiary.Presentation.Api.Features.Lessons.Requests;
+using FoodDiary.Modules.Lessons.Presentation.Mappings;
+using FoodDiary.Modules.Lessons.Application.Commands.MarkLessonRead;
+using FoodDiary.Modules.Lessons.Application.Models;
+using FoodDiary.Modules.Lessons.Application.Queries.GetLessonById;
+using FoodDiary.Modules.Lessons.Application.Queries.GetLessons;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Lessons.Presentation.Responses;
+using FoodDiary.Modules.Lessons.Presentation.Requests;
+
+namespace FoodDiary.Modules.Lessons.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class LessonHttpMappingsTests {

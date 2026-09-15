@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Modules.Ai.Infrastructure;
@@ -18,7 +21,7 @@ public sealed class IndependentModuleContextOptionsFactoryTests {
             new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=independent_options_test;Username=test;Password=test",
                 ["Database:EnableRetries"] = "true",
-            }).Build());
+            }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddDbContext<SharedPersistenceDbContext>(builder => builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         services.AddAiPersistence();

@@ -902,9 +902,9 @@ public sealed class BusinessModuleBoundaryTests {
         if (fileName.StartsWith("Favorite", StringComparison.Ordinal)) {
             expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Favorites", "PersistenceModel", "Configurations", fileName);
         } else if (string.Equals(fileName, "ImageAssetConfiguration.cs", StringComparison.Ordinal)) {
-            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", "Configurations", fileName);
+            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "PersistenceModel", "Configurations", fileName);
         } else {
-            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
+            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "PersistenceModel", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
         }
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
@@ -975,7 +975,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Theory]
     [InlineData("WeightEntryConfiguration.cs", "Modules/BodyMetrics/PersistenceModel/Configurations")]
     [InlineData("WaistEntryConfiguration.cs", "Modules/BodyMetrics/PersistenceModel/Configurations")]
-    [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
+    [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/PersistenceModel/Configurations")]
     [InlineData("ExerciseEntryConfiguration.cs", "Modules/Exercises/PersistenceModel/Configurations/Exercises")]
     [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
     [InlineData("CycleFactorConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
@@ -1061,7 +1061,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("UserLessonProgressConfiguration.cs")]
     public void LessonConfigurations_StayInLessonsPersistenceModel(string fileName) {
         string expectedPath = ArchitectureTestPaths.FromRoot(
-            "Modules", "Lessons", "Infrastructure", "Model", "Configurations", fileName);
+            "Modules", "Lessons", "PersistenceModel", "Configurations", fileName);
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in the Lessons persistence model.");
     }
 

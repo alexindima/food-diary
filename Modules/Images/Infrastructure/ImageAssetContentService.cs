@@ -1,9 +1,11 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using Amazon.S3;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
 using FoodDiary.Results;
 using Microsoft.Extensions.Options;
 

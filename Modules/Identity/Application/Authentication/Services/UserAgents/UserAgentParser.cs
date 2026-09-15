@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Identity.Authentication.Services.UserAgents;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Services.UserAgents;
 
 internal static class UserAgentParser {
     public static ParsedUserAgent Parse(string? userAgent) {

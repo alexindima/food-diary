@@ -1,7 +1,7 @@
-using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Modules.Gamification.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Gamification.Common;
+namespace FoodDiary.Modules.Gamification.Application.Common;
 
 public interface IAchievementAwardService {
     Task<IReadOnlyList<BadgeModel>> EvaluateAndGrantAsync(

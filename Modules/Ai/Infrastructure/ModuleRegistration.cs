@@ -11,6 +11,7 @@ namespace FoodDiary.Modules.Ai.Infrastructure;
 public static class ModuleRegistration {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static IServiceCollection AddAiPersistence(this IServiceCollection services) {
+        services.AddMemoryCache();
         services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<AiDbContext>(options => new AiDbContext(options)));
         services.AddScoped(provider => provider.GetRequiredService<IIndependentModuleContextOptionsFactory>()

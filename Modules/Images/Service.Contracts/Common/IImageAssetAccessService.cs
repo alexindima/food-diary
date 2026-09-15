@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Models;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Images.Common;
+namespace FoodDiary.Modules.Images.Service.Contracts.Common;
 
 public interface IImageAssetAccessService {
     Task<Result<ImageAssetReadModel?>> ResolveOptionalAsync(

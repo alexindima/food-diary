@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
+namespace FoodDiary.Modules.Images.Application.Commands.GetUploadUrl;
 
 public sealed record GetImageUploadUrlResult(
     string UploadUrl,

@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Identity.Presentation.Security;
 using System.Diagnostics;
 using FoodDiary.Presentation.Api.Extensions;
-using FoodDiary.Presentation.Api.Options;
+using FoodDiary.Modules.Identity.Presentation.Options;
 using FoodDiary.Presentation.Api.Responses;
-using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [Collection(IdentityPresentationTelemetryCollection.Name)]
 [ExcludeFromCodeCoverage]

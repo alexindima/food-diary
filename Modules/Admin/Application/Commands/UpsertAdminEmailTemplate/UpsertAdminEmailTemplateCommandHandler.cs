@@ -1,6 +1,6 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Email.Commands.UpsertEmailTemplate;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Email.Commands.UpsertEmailTemplate;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;

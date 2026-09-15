@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
+    <ProjectReference Include="../../Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -27,6 +27,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../FoodDiary.Testing/FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
@@ -79,22 +81,22 @@
     <ProjectReference Include="../../Modules/Favorites/Application.Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Gamification/Application.Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Gamification/Domain.Contracts/FoodDiary.Modules.Gamification.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Hydration/Application.Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
     <ProjectReference Include="../../Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Identity/PersistenceModel/FoodDiary.Modules.Identity.PersistenceModel.csproj" />
-    <ProjectReference Include="../../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../../Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Lessons/Application.Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Lessons/Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
@@ -145,8 +147,7 @@
     <ProjectReference Include="../../Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../../FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />
   </ItemGroup>
-
-
 </Project>

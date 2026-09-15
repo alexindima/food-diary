@@ -1,4 +1,13 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Images.Application;
+using FoodDiary.Modules.Identity.Application;
+using FoodDiary.Modules.Gamification.Infrastructure;
+using FoodDiary.Authentication.Infrastructure;
+
 using FoodDiary.Modules.Billing.Infrastructure.Providers;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
@@ -13,13 +22,11 @@ using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
-using FoodDiary.Modules.Gamification.Infrastructure;
-using FoodDiary.Application.Identity;
-using FoodDiary.Application.Images;
+
 using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
-using FoodDiary.Modules.Images.Infrastructure;
+
 using FoodDiary.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using FoodDiary.Integrations;
@@ -45,7 +52,7 @@ builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsModule();
 builder.Services.AddRecentItemsModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
+builder.Services.AddInfrastructure(builder.Configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(builder.Configuration).AddIdentityEmailOptions(builder.Configuration).AddExportInfrastructure().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddBillingIntegrations(builder.Configuration)
     .AddAdminMailInboxIntegration(builder.Configuration)

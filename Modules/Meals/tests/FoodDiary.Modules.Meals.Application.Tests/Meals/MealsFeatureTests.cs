@@ -1,17 +1,19 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadFavoriteMeals;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoritesOverview;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteIds;
 using FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoriteStatus;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Images.Models;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
@@ -741,8 +743,6 @@ public partial class MealsFeatureTests {
                 : new DeleteImageAssetResult(Deleted: false, errorCode));
         }
 
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
     }
 
     [ExcludeFromCodeCoverage]
@@ -779,6 +779,11 @@ public partial class MealsFeatureTests {
         public Task DeleteAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<FavoriteMeal>>(_favorites);
+
+        public Task<(IReadOnlyList<FavoriteMealReadModel> Items, int TotalItems)> GetOverviewReadModelsAsync(
+            UserId userId, int limit, CancellationToken cancellationToken = default) =>
+            Task.FromResult<(IReadOnlyList<FavoriteMealReadModel>, int)>((
+                [.. _favorites.Take(limit).Select(ToReadModel)], _favorites.Length));
 
         public Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<FavoriteMealReadModel>>([.. _favorites.Select(ToReadModel)]);

@@ -1,13 +1,14 @@
+using FoodDiary.Mediator;
 using System.Diagnostics;
 using System.Globalization;
-using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Results;
 
 namespace FoodDiary.Initializer;
 
 internal static class InitialAdminBootstrapper {
     public static async Task BootstrapAsync(
-        IInitialAdminBootstrapService bootstrapService,
+        ISender bootstrapService,
         InitialAdminBootstrapOptions options,
         CancellationToken cancellationToken = default) {
         long startedTimestamp = Stopwatch.GetTimestamp();
@@ -19,7 +20,7 @@ internal static class InitialAdminBootstrapper {
         Result<BootstrapInitialAdminModel> result;
         try {
             result = await bootstrapService
-                .BootstrapAsync(options.Email, options.Password, timeoutSource.Token)
+                .Send(new BootstrapInitialAdminCommand(options.Email, options.Password), timeoutSource.Token)
                 .ConfigureAwait(false);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
             throw new TimeoutException(

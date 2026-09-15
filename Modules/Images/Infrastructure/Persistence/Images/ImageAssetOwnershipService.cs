@@ -1,9 +1,9 @@
-using FoodDiary.Modules.Images.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Images;
+namespace FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 
 internal sealed class ImageAssetOwnershipService(ImagesDbContext context) : IImageAssetOwnershipService {
     public async Task ReassignAsync(IReadOnlyCollection<ImageAssetId> assetIds, UserId targetUserId, CancellationToken cancellationToken) {

@@ -13,6 +13,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared application contracts: `Shared/FoodDiary.Application.Contracts/AGENTS.md`
 - Shared audit contracts: `Shared/FoodDiary.Audit.Contracts/AGENTS.md`
 - Shared audit persistence model: `Shared/FoodDiary.Audit.PersistenceModel/AGENTS.md`
+- Shared authentication infrastructure: `Shared/FoodDiary.Authentication.Infrastructure/AGENTS.md`
 - Shared authentication contracts: `Shared/FoodDiary.Authentication.Contracts/AGENTS.md`
 - Shared email contracts: `Shared/FoodDiary.Email.Contracts/AGENTS.md`
 - Shared email persistence model: `Shared/FoodDiary.Email.PersistenceModel/AGENTS.md`
@@ -71,11 +72,11 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Favorites application ports: `Modules/Favorites/Application.Abstractions/AGENTS.md`
 - Favorites consumer contracts: `Modules/Favorites/Contracts/AGENTS.md`
 - Hydration logical module: `Modules/Hydration/AGENTS.md`
-- Hydration application abstractions: `Modules/Hydration/Application/Abstractions/AGENTS.md`
+- Hydration application abstractions: `Modules/Hydration/Application.Abstractions/AGENTS.md`
 - Hydration contracts: `Modules/Hydration/Contracts/AGENTS.md`
 - Hydration domain: `Modules/Hydration/Domain/AGENTS.md`
 - Hydration infrastructure: `Modules/Hydration/Infrastructure/AGENTS.md`
-- Hydration persistence model: `Modules/Hydration/Infrastructure/Model/AGENTS.md`
+- Hydration persistence model: `Modules/Hydration/PersistenceModel/AGENTS.md`
 - Hydration tests: `Modules/Hydration/tests/AGENTS.md`
 - Identity logical module: `Modules/Identity/AGENTS.md`
 - Identity application contracts: `Modules/Identity/Application.Abstractions/AGENTS.md`
@@ -223,7 +224,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Dashboard tests: `Modules/Dashboard/tests/AGENTS.md`
 - Read model composition: `FoodDiary.ReadModel.Composition/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
-- Shared persistence runtime: `FoodDiary.Persistence.Runtime/AGENTS.md`
+- Shared persistence runtime: `Shared/FoodDiary.Persistence.Runtime/AGENTS.md`
 - Initializer: `FoodDiary.Initializer/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`
 - Development MCP: `FoodDiary.Development.Mcp/AGENTS.md`
@@ -259,6 +260,9 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared persistence coordination contracts: `Shared/FoodDiary.Persistence.Abstractions/AGENTS.md`
 
 ## Cross-Repo Rules
+
+- Shared audit adapter: `Shared/FoodDiary.Audit.Infrastructure/AGENTS.md`
+- Shared email persistence adapter: `Shared/FoodDiary.Email.Infrastructure/AGENTS.md`
 
 - Identity consumer contracts: `Modules/Identity/Contracts/AGENTS.md`
 - BodyMetrics consumer contracts: `Modules/BodyMetrics/Contracts/AGENTS.md`

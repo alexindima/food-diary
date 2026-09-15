@@ -1,5 +1,5 @@
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Audit.Infrastructure.Persistence;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Infrastructure.Tests.Services;

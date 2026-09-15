@@ -1,5 +1,5 @@
 using System.Reflection;
-using FoodDiary.Presentation.Api.Features.Auth;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using FoodDiary.Presentation.Api.Features.Notifications;
 using FoodDiary.Presentation.Api.Features.ShoppingLists;
 using FoodDiary.Presentation.Api.Filters;

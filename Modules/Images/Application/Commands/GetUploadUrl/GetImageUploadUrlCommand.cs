@@ -1,7 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
-namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
+namespace FoodDiary.Modules.Images.Application.Commands.GetUploadUrl;
 
 public sealed record GetImageUploadUrlCommand(
     Guid UserId,

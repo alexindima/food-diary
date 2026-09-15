@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;

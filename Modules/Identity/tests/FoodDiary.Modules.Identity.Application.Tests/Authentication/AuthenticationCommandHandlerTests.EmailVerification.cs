@@ -1,11 +1,11 @@
-using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
-using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
     private static VerifyEmailCommandHandler CreateVerifyEmailHandler(

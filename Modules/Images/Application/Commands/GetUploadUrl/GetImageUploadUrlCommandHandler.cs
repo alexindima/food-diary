@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
+namespace FoodDiary.Modules.Images.Application.Commands.GetUploadUrl;
 
 public sealed class GetImageUploadUrlCommandHandler(
     IImageStorageService imageStorageService,

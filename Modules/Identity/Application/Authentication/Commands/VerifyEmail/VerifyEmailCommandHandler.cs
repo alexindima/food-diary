@@ -7,14 +7,14 @@ using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 
 public sealed class VerifyEmailCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,
     TimeProvider dateTimeProvider,
     IPostCommitActionQueue postCommitActionQueue,
     IEmailVerificationNotifier emailVerificationNotifier,
-    FoodDiary.Application.Identity.Authentication.Services.TelegramBackupEmailService? backupEmails = null)
+    FoodDiary.Modules.Identity.Application.Authentication.Services.TelegramBackupEmailService? backupEmails = null)
     : ICommandHandler<VerifyEmailCommand, Result> {
     public async Task<Result> Handle(VerifyEmailCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(
@@ -25,7 +25,7 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        if (command.Token.StartsWith(FoodDiary.Application.Identity.Authentication.Services.TelegramBackupEmailService.TokenPrefix, StringComparison.Ordinal)) {
+        if (command.Token.StartsWith(FoodDiary.Modules.Identity.Application.Authentication.Services.TelegramBackupEmailService.TokenPrefix, StringComparison.Ordinal)) {
             return backupEmails is null
                 ? Result.Failure(new Error("Authentication.TelegramProofRequired", "Request a new confirmation.", ErrorKind.Unauthorized))
                 : await backupEmails.ConfirmAsync(userId.Value, command.Token, cancellationToken).ConfigureAwait(false);

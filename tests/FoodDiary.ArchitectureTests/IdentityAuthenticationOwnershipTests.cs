@@ -34,8 +34,8 @@ public sealed class IdentityAuthenticationOwnershipTests {
     }
 
     [Fact]
-    public void CentralInfrastructure_BindsSharedOptionsWithoutOwningAuthenticationAdapters() {
-        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/DependencyInjection.Authentication.cs"));
+    public void SharedAuthentication_BindsOptionsWithoutOwningIdentityAdapters() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared/FoodDiary.Authentication.Infrastructure/AuthenticationInfrastructureRegistration.cs"));
         string[] identifiers = [.. CSharpSyntaxTree.ParseText(source).GetRoot().DescendantTokens()
             .Where(token => token.RawKind == (int)SyntaxKind.IdentifierToken)
             .Select(token => token.ValueText)];

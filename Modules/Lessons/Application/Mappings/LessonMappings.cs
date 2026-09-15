@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Lessons.Models;
-using FoodDiary.Application.Lessons.Models;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Models;
+using FoodDiary.Modules.Lessons.Application.Models;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 
-namespace FoodDiary.Application.Lessons.Mappings;
+namespace FoodDiary.Modules.Lessons.Application.Mappings;
 
 public static class LessonMappings {
     extension(NutritionLesson lesson) {

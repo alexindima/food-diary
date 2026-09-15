@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Presentation.Extensions;
 using FoodDiary.Modules.Ai.Presentation.Extensions;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Telemetry;

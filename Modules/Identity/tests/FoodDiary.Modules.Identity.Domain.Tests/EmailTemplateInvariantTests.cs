@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Identity.Domain.Entities.Content;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Identity.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public class EmailTemplateInvariantTests {

@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
 
 namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 

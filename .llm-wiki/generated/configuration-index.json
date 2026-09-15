@@ -178,7 +178,7 @@
         "MaxRetryCount",
         "MaxRetryDelaySeconds"
       ],
-      "path": "FoodDiary.Persistence.Runtime/Options/DatabaseOptions.cs"
+      "path": "Shared/FoodDiary.Persistence.Runtime/Options/DatabaseOptions.cs"
     },
     {
       "type": "DirectMxOptions",

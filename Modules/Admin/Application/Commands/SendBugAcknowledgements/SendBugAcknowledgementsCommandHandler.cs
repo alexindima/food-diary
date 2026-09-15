@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplates;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplates;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using System.Net;

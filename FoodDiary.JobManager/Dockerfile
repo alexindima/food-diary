@@ -51,15 +51,15 @@ COPY Modules/Fasting/Domain/*.csproj Modules/Fasting/Domain/
 COPY Modules/Fasting/Infrastructure/*.csproj Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/PersistenceModel/*.csproj Modules/Fasting/PersistenceModel/
 COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
-COPY Modules/Hydration/Application/Abstractions/*.csproj Modules/Hydration/Application/Abstractions/
+COPY Modules/Hydration/Application.Abstractions/*.csproj Modules/Hydration/Application.Abstractions/
 COPY Modules/Hydration/Domain/*.csproj Modules/Hydration/Domain/
-COPY Modules/Hydration/Infrastructure/Model/*.csproj Modules/Hydration/Infrastructure/Model/
+COPY Modules/Hydration/PersistenceModel/*.csproj Modules/Hydration/PersistenceModel/
 COPY Modules/Lessons/Domain/*.csproj Modules/Lessons/Domain/
 COPY Modules/Lessons/Contracts/*.csproj Modules/Lessons/Contracts/
-COPY Modules/Lessons/Application/Abstractions/*.csproj Modules/Lessons/Application/Abstractions/
+COPY Modules/Lessons/Application.Abstractions/*.csproj Modules/Lessons/Application.Abstractions/
 COPY Modules/Lessons/Application/*.csproj Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/*.csproj Modules/Lessons/Infrastructure/
-COPY Modules/Lessons/Infrastructure/Model/*.csproj Modules/Lessons/Infrastructure/Model/
+COPY Modules/Lessons/PersistenceModel/*.csproj Modules/Lessons/PersistenceModel/
 COPY Modules/ContentReports/Application.Abstractions/*.csproj Modules/ContentReports/Application.Abstractions/
 COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Domain.Contracts/*.csproj Modules/ContentReports/Domain.Contracts/
@@ -157,12 +157,12 @@ COPY Modules/RecentItems/Domain/*.csproj Modules/RecentItems/Domain/
 COPY Modules/RecentItems/Infrastructure/*.csproj Modules/RecentItems/Infrastructure/
 COPY Modules/RecentItems/Infrastructure/Model/*.csproj Modules/RecentItems/Infrastructure/Model/
 COPY Modules/Images/Application/*.csproj Modules/Images/Application/
-COPY Modules/Images/Application/Abstractions/*.csproj Modules/Images/Application/Abstractions/
+COPY Modules/Images/Application.Abstractions/*.csproj Modules/Images/Application.Abstractions/
 COPY Modules/Images/Contracts/*.csproj Modules/Images/Contracts/
 COPY Modules/Images/Service.Contracts/*.csproj Modules/Images/Service.Contracts/
 COPY Modules/Images/Domain/*.csproj Modules/Images/Domain/
 COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
-COPY Modules/Images/Infrastructure/Model/*.csproj Modules/Images/Infrastructure/Model/
+COPY Modules/Images/PersistenceModel/*.csproj Modules/Images/PersistenceModel/
 COPY Modules/Ai/Application.Abstractions/*.csproj Modules/Ai/Application.Abstractions/
 COPY Modules/Admin/Application/*.csproj Modules/Admin/Application/
 COPY Modules/Admin/Application.Abstractions/*.csproj Modules/Admin/Application.Abstractions/
@@ -203,11 +203,11 @@ COPY Modules/Favorites/Domain.Contracts/*.csproj Modules/Favorites/Domain.Contra
 COPY Modules/Meals/Domain.Contracts/*.csproj Modules/Meals/Domain.Contracts/
 COPY Modules/Marketing/Contracts/*.csproj Modules/Marketing/Contracts/
 COPY Modules/Admin/Contracts/*.csproj Modules/Admin/Contracts/
-COPY Modules/Gamification/Application/Abstractions/*.csproj Modules/Gamification/Application/Abstractions/
+COPY Modules/Gamification/Application.Abstractions/*.csproj Modules/Gamification/Application.Abstractions/
 COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
 COPY Modules/Gamification/Domain.Contracts/*.csproj Modules/Gamification/Domain.Contracts/
 COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
-COPY Modules/Gamification/Infrastructure/Model/*.csproj Modules/Gamification/Infrastructure/Model/
+COPY Modules/Gamification/PersistenceModel/*.csproj Modules/Gamification/PersistenceModel/
 COPY Modules/Export/Application/*.csproj Modules/Export/Application/
 COPY Modules/Export/Infrastructure/*.csproj Modules/Export/Infrastructure/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/*.csproj Services/MailInbox/FoodDiary.MailInbox.Client/
@@ -216,6 +216,10 @@ COPY FoodDiary.ReadModel.Composition/*.csproj FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.JobManager/*.csproj FoodDiary.JobManager/
 
+COPY Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj Shared/FoodDiary.Authentication.Infrastructure/
+COPY Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj Shared/FoodDiary.Persistence.Runtime/
+COPY Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj Shared/FoodDiary.Email.Infrastructure/
+COPY Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj Shared/FoodDiary.Audit.Infrastructure/
 RUN dotnet restore FoodDiary.JobManager/FoodDiary.JobManager.csproj --locked-mode
 
 # Keep restore and source-copy layers below filesystem overlay mount limits.
@@ -274,15 +278,15 @@ COPY Modules/Fasting/Domain/ Modules/Fasting/Domain/
 COPY Modules/Fasting/Infrastructure/ Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/PersistenceModel/ Modules/Fasting/PersistenceModel/
 COPY Modules/Hydration/Contracts/ Modules/Hydration/Contracts/
-COPY Modules/Hydration/Application/Abstractions/ Modules/Hydration/Application/Abstractions/
+COPY Modules/Hydration/Application.Abstractions/ Modules/Hydration/Application.Abstractions/
 COPY Modules/Hydration/Domain/ Modules/Hydration/Domain/
-COPY Modules/Hydration/Infrastructure/Model/ Modules/Hydration/Infrastructure/Model/
+COPY Modules/Hydration/PersistenceModel/ Modules/Hydration/PersistenceModel/
 COPY Modules/Lessons/Domain/ Modules/Lessons/Domain/
 COPY Modules/Lessons/Contracts/ Modules/Lessons/Contracts/
-COPY Modules/Lessons/Application/Abstractions/ Modules/Lessons/Application/Abstractions/
+COPY Modules/Lessons/Application.Abstractions/ Modules/Lessons/Application.Abstractions/
 COPY Modules/Lessons/Application/ Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/ Modules/Lessons/Infrastructure/
-COPY Modules/Lessons/Infrastructure/Model/ Modules/Lessons/Infrastructure/Model/
+COPY Modules/Lessons/PersistenceModel/ Modules/Lessons/PersistenceModel/
 COPY Modules/ContentReports/Application.Abstractions/ Modules/ContentReports/Application.Abstractions/
 COPY Modules/ContentReports/Domain/ Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Domain.Contracts/ Modules/ContentReports/Domain.Contracts/
@@ -382,12 +386,12 @@ COPY Modules/RecentItems/Domain/ Modules/RecentItems/Domain/
 COPY Modules/RecentItems/Infrastructure/ Modules/RecentItems/Infrastructure/
 COPY Modules/RecentItems/Infrastructure/Model/ Modules/RecentItems/Infrastructure/Model/
 COPY Modules/Images/Application/ Modules/Images/Application/
-COPY Modules/Images/Application/Abstractions/ Modules/Images/Application/Abstractions/
+COPY Modules/Images/Application.Abstractions/ Modules/Images/Application.Abstractions/
 COPY Modules/Images/Contracts/ Modules/Images/Contracts/
 COPY Modules/Images/Service.Contracts/ Modules/Images/Service.Contracts/
 COPY Modules/Images/Domain/ Modules/Images/Domain/
 COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/
-COPY Modules/Images/Infrastructure/Model/ Modules/Images/Infrastructure/Model/
+COPY Modules/Images/PersistenceModel/ Modules/Images/PersistenceModel/
 COPY Modules/Admin/Application/ Modules/Admin/Application/
 COPY Modules/Admin/Application.Abstractions/ Modules/Admin/Application.Abstractions/
 COPY Modules/Admin/Domain/ Modules/Admin/Domain/
@@ -430,11 +434,11 @@ COPY Modules/Favorites/Domain.Contracts/ Modules/Favorites/Domain.Contracts/
 COPY Modules/Meals/Domain.Contracts/ Modules/Meals/Domain.Contracts/
 COPY Modules/Marketing/Contracts/ Modules/Marketing/Contracts/
 COPY Modules/Admin/Contracts/ Modules/Admin/Contracts/
-COPY Modules/Gamification/Application/Abstractions/ Modules/Gamification/Application/Abstractions/
+COPY Modules/Gamification/Application.Abstractions/ Modules/Gamification/Application.Abstractions/
 COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
 COPY Modules/Gamification/Domain.Contracts/ Modules/Gamification/Domain.Contracts/
 COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/
-COPY Modules/Gamification/Infrastructure/Model/ Modules/Gamification/Infrastructure/Model/
+COPY Modules/Gamification/PersistenceModel/ Modules/Gamification/PersistenceModel/
 COPY Modules/Export/Application/ Modules/Export/Application/
 COPY Modules/Export/Infrastructure/ Modules/Export/Infrastructure/
 COPY Services/MailInbox/FoodDiary.MailInbox.Client/ Services/MailInbox/FoodDiary.MailInbox.Client/
@@ -443,6 +447,10 @@ COPY FoodDiary.ReadModel.Composition/ FoodDiary.ReadModel.Composition/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.JobManager/ FoodDiary.JobManager/
 
+COPY Shared/FoodDiary.Authentication.Infrastructure/ Shared/FoodDiary.Authentication.Infrastructure/
+COPY Shared/FoodDiary.Persistence.Runtime/ Shared/FoodDiary.Persistence.Runtime/
+COPY Shared/FoodDiary.Email.Infrastructure/ Shared/FoodDiary.Email.Infrastructure/
+COPY Shared/FoodDiary.Audit.Infrastructure/ Shared/FoodDiary.Audit.Infrastructure/
 RUN dotnet publish FoodDiary.JobManager/FoodDiary.JobManager.csproj -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:c4b29bf368004ad9076c1ab9bc91fb373561e3905b4345637e14e8b8c57e3be8

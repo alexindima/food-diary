@@ -6,7 +6,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.UnlinkTelegram;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.UnlinkTelegram;
 
 public sealed class UnlinkTelegramCommandHandler(ITelegramAuthValidator validator, ITelegramAssertionReplayGuard replayGuard,
     IUserAuthenticationIdentityService identities, IUserTelegramAccountService accounts, TimeProvider timeProvider,

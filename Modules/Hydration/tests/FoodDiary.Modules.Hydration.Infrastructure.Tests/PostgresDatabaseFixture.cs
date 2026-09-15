@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Testcontainers.PostgreSql;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Hydration.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class PostgresDatabaseFixture : IAsyncLifetime {

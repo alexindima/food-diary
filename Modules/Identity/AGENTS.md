@@ -11,12 +11,12 @@ login auditing, initial-admin bootstrap, and application email-template use case
 Authentication and Email remain logical areas inside one application assembly.
 
 Consumer email/template and login-event APIs live in Identity.Contracts.
-Application/Abstractions retains internal repository and provider ports. Admin
+Application.Abstractions retains internal repository and provider ports. Admin
 uses IImpersonationTokenIssuer, not the generic JWT generator. JWT implementation
 and claims remain owned by Identity Infrastructure.
 
-Preserve the legacy `FoodDiary.Application.Identity` assembly and CLR namespaces.
-Internal authentication/provider and repository ports belong to Identity Application/Abstractions; consumer email/template and login-event capabilities belong to Identity.Contracts. Shared email transport/outbox and IAdminSsoCodeStore remain central. The User/Role CLR graph and credential state belong to Users Domain. Users Infrastructure owns the tracked UserRepository; Identity application uses Users capabilities, not aggregate repository ports. Keep shared DbContext and migrations/snapshot central. External provider implementations and shared SSO/Redis storage,
+Application, Domain, Contracts and Presentation now use their canonical project-and-folder namespaces.
+Internal authentication/provider and repository ports belong to Identity Application.Abstractions; consumer email/template and login-event capabilities belong to Identity.Contracts. Shared email transport/outbox and IAdminSsoCodeStore remain central. The User/Role CLR graph and credential state belong to Users Domain. Users Infrastructure owns the tracked UserRepository; Identity application uses Users capabilities, not aggregate repository ports. Keep shared DbContext and migrations/snapshot central. External provider implementations and shared SSO/Redis storage,
 MailInbox/MailRelay integration and hosts remain with their current owners. Identity-specific SignalR, refresh-cookie and Telegram-secret presentation adapters belong to `Modules/Identity/Presentation`; Google/Telegram validators and options are owned by Identity
 Infrastructure/Providers with explicit AddIdentityProvider composition.
 The ordinary `AdminSsoService` protocol now belongs to Identity Infrastructure;
@@ -50,4 +50,10 @@ payload semantics. Do not register the shared store here or override host Redis 
 
 IdentityDbContext owns runtime persistence for Identity records and template revisions. Central FoodDiaryDbContext remains the migration/composed-read model and shared transaction coordinator; tracked owner changes save through IUnitOfWork.
 
-Infrastructure, PersistenceModel and Application.Abstractions now use project-and-folder namespaces. The latter two projects are siblings of Application and Infrastructure. Application, Domain and HTTP CLR names are unchanged in this wave. JwtOptions is a shared technical configuration type; central registration still binds and validates it. No module Infrastructure may reference central Infrastructure.
+Infrastructure, PersistenceModel and Application.Abstractions now use project-and-folder namespaces. The latter two projects are siblings of Application and Infrastructure. All module layers use canonical project-and-folder namespaces. JwtOptions is a shared technical configuration type; central registration still binds and validates it. No module Infrastructure may reference central Infrastructure.
+
+ADR 0044: hosts explicitly compose AddSharedAuthentication and AddIdentityEmailOptions. Identity owns email link option binding; shared authentication owns JWT binding and fallback SSO storage.
+
+Use canonical FoodDiary.Modules.Identity project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+Initializer dispatches BootstrapInitialAdminCommand from Contracts. Bootstrap retains its explicit save. Login-event cleanup dispatches CleanupLoginEventsCommand and rejects nonpositive batch sizes before independently committed deletes. Neither request uses the automatic transactional-command marker.

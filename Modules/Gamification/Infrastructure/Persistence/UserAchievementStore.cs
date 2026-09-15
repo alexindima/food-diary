@@ -1,7 +1,7 @@
 using System.Data.Common;
-using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Achievements.Models;
-using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

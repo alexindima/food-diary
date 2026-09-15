@@ -4,7 +4,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
     private static readonly DateTime IdentityCoverageNow = new(2026, 8, 14, 12, 0, 0, DateTimeKind.Utc);

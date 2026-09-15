@@ -3,12 +3,12 @@ using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Achievements;
-using FoodDiary.Modules.Gamification.Infrastructure;
+using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Gamification.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class OutboxReplayStreamTests {

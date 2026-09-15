@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Hydration.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Tracking;
+namespace FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 
 public sealed class HydrationOperationReceipt {
     public Guid OperationId { get; private init; }

@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodDiary.Application.Abstractions.Admin.Models;
+namespace FoodDiary.Modules.Identity.Contracts.Admin.Models;
 
 [ExcludeFromCodeCoverage]
 public sealed record EmailTemplateReadModel(

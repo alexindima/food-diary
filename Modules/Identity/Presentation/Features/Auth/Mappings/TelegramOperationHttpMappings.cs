@@ -1,10 +1,10 @@
-using FoodDiary.Application.Identity.Authentication.Commands.AcquireTelegramOperation;
-using FoodDiary.Application.Identity.Authentication.Commands.CheckpointTelegramOperation;
-using FoodDiary.Application.Identity.Authentication.Commands.RegisterTelegramOperation;
-using FoodDiary.Application.Identity.Authentication.Queries.ListReadyTelegramOperations;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.AcquireTelegramOperation;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.CheckpointTelegramOperation;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.ListReadyTelegramOperations;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
-namespace FoodDiary.Presentation.Api.Features.Auth.Mappings;
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 
 public static class TelegramOperationHttpMappings {
     public static RegisterTelegramOperationCommand ToCommand(this RegisterTelegramOperationHttpRequest request) =>

@@ -1,18 +1,18 @@
-using FoodDiary.Application.Identity.Authentication.Commands.BeginTelegramMiniApp;
-using FoodDiary.Application.Identity.Authentication.Commands.CompleteTelegramAuthentication;
-using FoodDiary.Application.Identity.Authentication.Commands.ExchangeTelegramOidc;
-using FoodDiary.Application.Identity.Authentication.Commands.StartTelegramOidc;
-using FoodDiary.Application.Identity.Authentication.Commands.StartTelegramBackupEmail;
-using FoodDiary.Application.Identity.Authentication.Commands.CompleteTelegramBackupEmail;
-using FoodDiary.Application.Identity.Authentication.Commands.RequestTelegramBackupEmail;
-using FoodDiary.Application.Identity.Authentication.Commands.UnlinkTelegram;
-using FoodDiary.Application.Identity.Authentication.Queries.GetTelegramConfiguration;
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.BeginTelegramMiniApp;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramAuthentication;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ExchangeTelegramOidc;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramOidc;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramBackupEmail;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramBackupEmail;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RequestTelegramBackupEmail;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.UnlinkTelegram;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetTelegramConfiguration;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using Microsoft.AspNetCore.Http;
 
-namespace FoodDiary.Presentation.Api.Features.Auth.Mappings;
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 
 public static class TelegramOnboardingHttpMappings {
     public static GetTelegramConfigurationQuery ToConfigurationQuery() => new();

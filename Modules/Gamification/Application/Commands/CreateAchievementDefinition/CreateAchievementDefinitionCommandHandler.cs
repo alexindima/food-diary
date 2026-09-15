@@ -1,13 +1,14 @@
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
+using FoodDiary.Modules.Gamification.Contracts.Commands.CreateAchievementDefinition;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Gamification.Contracts.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Results;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Gamification.Commands.CreateAchievementDefinition;
+namespace FoodDiary.Modules.Gamification.Application.Commands.CreateAchievementDefinition;
 
 public sealed class CreateAchievementDefinitionCommandHandler(IAchievementDefinitionStore store) : IRequestHandler<CreateAchievementDefinitionCommand, Result<AchievementDefinitionAdminModel>> {
     public async Task<Result<AchievementDefinitionAdminModel>> Handle(CreateAchievementDefinitionCommand request, CancellationToken cancellationToken) {

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Gamification.Models;
+namespace FoodDiary.Modules.Gamification.Contracts.Models;
 
 public sealed record AchievementDefinitionCreateInput(
     string Key,

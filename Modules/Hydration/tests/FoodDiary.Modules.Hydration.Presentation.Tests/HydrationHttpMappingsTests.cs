@@ -1,12 +1,13 @@
-using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
-using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
-using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
-using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
-using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
-using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
-using FoodDiary.Presentation.Api.Features.Hydration.Requests;
+using FoodDiary.Modules.Hydration.Presentation.Mappings;
+using FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationEntry;
+using FoodDiary.Modules.Hydration.Application.Commands.DeleteHydrationEntry;
+using FoodDiary.Modules.Hydration.Application.Commands.UpdateHydrationEntry;
+using FoodDiary.Modules.Hydration.Application.Queries.GetHydrationDailyTotal;
+using FoodDiary.Modules.Hydration.Application.Queries.GetHydrationEntries;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Hydration.Presentation.Requests;
+
+namespace FoodDiary.Modules.Hydration.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class HydrationHttpMappingsTests {

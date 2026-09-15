@@ -22,3 +22,5 @@ Shared rendered-email transport/outbox contracts also remain central.
 Password hashing contracts live in Shared/FoodDiary.Authentication.Contracts.
 Identity implements Users-owned IUserSessionRevocationService through its scoped
 refresh-token repository; Users does not consume Identity repository ports.
+
+Use canonical FoodDiary.Modules.Identity project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

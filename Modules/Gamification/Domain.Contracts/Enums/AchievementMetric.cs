@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 
 public enum AchievementMetric {
     LongestStreak = 1,

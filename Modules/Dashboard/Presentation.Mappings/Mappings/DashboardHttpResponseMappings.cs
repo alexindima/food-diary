@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Hydration.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Fasting.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WeightEntries.Mappings;
 using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WaistEntries.Mappings;
@@ -6,7 +7,7 @@ using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Presentation.Api.Features.Meals.Mappings;
 using FoodDiary.Modules.Cycles.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
-using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
+
 using FoodDiary.Presentation.Api.Features.Tdee.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 

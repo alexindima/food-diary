@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions;
+namespace FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions;
 
 public sealed record GetEmailTemplateRevisionsQuery(
     string Key,

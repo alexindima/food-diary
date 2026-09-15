@@ -16,7 +16,7 @@ public sealed class DietologistAuditOwnershipTests {
 
     [Fact]
     public void CentralPersistence_UsesEfPortNotDietologistImplementation() {
-        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/DependencyInjection.Persistence.cs"));
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("Shared/FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.cs"));
         SyntaxNode syntax = CSharpSyntaxTree.ParseText(source).GetRoot();
         Assert.DoesNotContain(syntax.DescendantNodes().OfType<IdentifierNameSyntax>(),
             name => string.Equals(name.Identifier.ValueText, "CollaborationAuditInterceptor", StringComparison.Ordinal));

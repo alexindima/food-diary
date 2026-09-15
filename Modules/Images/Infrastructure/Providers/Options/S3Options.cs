@@ -1,4 +1,5 @@
-namespace FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 
 public sealed class S3Options {
     public const string SectionName = "S3";

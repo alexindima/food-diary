@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
@@ -7,7 +8,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
-using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
@@ -317,10 +317,10 @@ public class WeeklyCheckInFeatureTests {
         ISender? statisticsReadService = null,
         ISender? weightEntryReadService = null,
         ISender? waistEntryReadService = null,
-        IHydrationEntryReadService? hydrationEntryReadService = null,
+        ISender? hydrationEntryReadService = null,
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
-            new WeeklyCheckInReadService(mealActivityReadService ?? CreateMealActivityReadService(), RequestTestSender.Route((statisticsReadService ?? CreateStatisticsReadService(), [typeof(ReadDashboardStatisticsQuery)]), (RequestTestSender.Route((weightEntryReadService ?? CreateWeightEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery)]), (waistEntryReadService ?? CreateWaistEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery)])), [typeof(ReadWeightEntriesQuery), typeof(ReadWaistEntriesQuery)])), hydrationEntryReadService ?? CreateHydrationEntryReadService()),
+            new WeeklyCheckInReadService(mealActivityReadService ?? CreateMealActivityReadService(), global::FoodDiary.Testing.RequestTestSender.Route((RequestTestSender.Route((statisticsReadService ?? CreateStatisticsReadService(), [typeof(ReadDashboardStatisticsQuery)]), (RequestTestSender.Route((weightEntryReadService ?? CreateWeightEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery)]), (waistEntryReadService ?? CreateWaistEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery)])), [typeof(ReadWeightEntriesQuery), typeof(ReadWaistEntriesQuery)])), [typeof(global::FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics.ReadDashboardStatisticsQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery)]), (hydrationEntryReadService ?? CreateHydrationEntryReadService(), [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals.ReadHydrationDailyTotalsQuery)]))),
             profileService ?? CreateProfileService(user: null),
             new StubDateTimeProvider());
 
@@ -355,10 +355,9 @@ public class WeeklyCheckInFeatureTests {
         return service;
     }
 
-    private static IHydrationEntryReadService CreateHydrationEntryReadService() {
-        IHydrationEntryReadService service = Substitute.For<IHydrationEntryReadService>();
-        service
-            .GetDailyTotalsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+    private static ISender CreateHydrationEntryReadService() {
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Is<ReadHydrationDailyTotalsQuery>(q => true), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<(DateTime Date, int TotalMl)>>([]));
         return service;
     }

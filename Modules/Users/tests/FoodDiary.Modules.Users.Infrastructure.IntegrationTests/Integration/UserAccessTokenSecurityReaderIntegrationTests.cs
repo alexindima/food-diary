@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -63,7 +66,7 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
     public async Task ScopedReader_UsesPersistedStateWhileRepositoryPreservesTrackedAggregate() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddUsersPersistence();
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.Replace(ServiceDescriptor.Scoped(_ => databaseFixture.CreateDbContext(connectionString)));

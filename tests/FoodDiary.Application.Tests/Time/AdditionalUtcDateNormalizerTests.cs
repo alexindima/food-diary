@@ -1,6 +1,6 @@
 using DashboardUtcDateNormalizer = FoodDiary.Modules.Dashboard.Application.Internal.UtcDateNormalizer;
 using ExportUtcDateNormalizer = FoodDiary.Modules.Export.Application.Internal.UtcDateNormalizer;
-using HydrationUtcDateNormalizer = FoodDiary.Application.Hydration.Internal.UtcDateNormalizer;
+using HydrationUtcDateNormalizer = FoodDiary.Modules.Hydration.Application.Internal.UtcDateNormalizer;
 
 namespace FoodDiary.Application.Tests.Time;
 

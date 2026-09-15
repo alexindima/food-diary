@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Abstractions.Images.Models;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 

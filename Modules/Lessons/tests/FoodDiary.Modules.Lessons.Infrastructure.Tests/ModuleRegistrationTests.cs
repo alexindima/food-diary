@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +13,9 @@ public sealed class ModuleRegistrationTests {
         IServiceCollection returned = services.AddLessonsModule();
 
         Assert.Same(services, returned);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(ILessonProgressTransactionRunner)
+            && descriptor.ImplementationType == typeof(EfLessonProgressTransactionRunner)
+            && descriptor.Lifetime == ServiceLifetime.Scoped);
         ServiceDescriptor repository = Assert.Single(services, descriptor => descriptor.ServiceType == typeof(INutritionLessonRepository));
         Assert.NotNull(repository.ImplementationFactory);
         Assert.Equal(ServiceLifetime.Scoped, repository.Lifetime);

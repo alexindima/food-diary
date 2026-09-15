@@ -1,15 +1,13 @@
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.ValueObjects.Ids;
-using Microsoft.Extensions.Logging;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 
-namespace FoodDiary.Application.Images.Services;
+namespace FoodDiary.Modules.Images.Application.Services;
 
 public sealed class ImageAssetCleanupService(
     IImageAssetWriteRepository imageAssetRepository,
-    IImageObjectDeletionOutbox imageObjectDeletionOutbox,
-    ILogger<ImageAssetCleanupService> logger,
-    IImageAssetCleanupBatch cleanupBatch) : IImageAssetCleanupService {
+    IImageObjectDeletionOutbox imageObjectDeletionOutbox) : IImageAssetCleanupService {
     public async Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         if (assetId == ImageAssetId.Empty) {
             return new DeleteImageAssetResult(Deleted: false, "invalid");
@@ -28,35 +26,6 @@ public sealed class ImageAssetCleanupService(
         await EnqueueObjectDeletionAsync(asset, cancellationToken).ConfigureAwait(false);
         await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
         return new DeleteImageAssetResult(Deleted: true);
-    }
-
-    public async Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
-        if (batchSize <= 0) {
-            return 0;
-        }
-
-        DateTime normalizedOlderThanUtc = olderThanUtc.Kind switch {
-            DateTimeKind.Utc => olderThanUtc,
-            _ => olderThanUtc.ToUniversalTime(),
-        };
-
-        IReadOnlyList<ImageAsset> candidates = await imageAssetRepository.GetUnusedOlderThanAsync(normalizedOlderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
-        int removed = 0;
-
-        foreach (ImageAsset asset in candidates) {
-            try {
-                cancellationToken.ThrowIfCancellationRequested();
-                if (await cleanupBatch.DeleteUnusedAsync(asset.Id, cancellationToken).ConfigureAwait(false)) {
-                    removed++;
-                }
-            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
-                throw;
-            } catch (Exception ex) {
-                logger.LogWarning(ex, "Failed to remove orphan image asset {AssetId}", asset.Id);
-            }
-        }
-
-        return removed;
     }
 
     private async Task EnqueueObjectDeletionAsync(ImageAsset asset, CancellationToken cancellationToken) {

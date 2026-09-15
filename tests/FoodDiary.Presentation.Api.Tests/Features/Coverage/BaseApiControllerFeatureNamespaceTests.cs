@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Auth;
-using FoodDiary.Presentation.Api.Features.Images;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Images.Presentation.Controllers;
 
 namespace FoodDiary.Presentation.Api.Tests.Features.Coverage;
 

@@ -1,4 +1,5 @@
-﻿using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.PersistenceModel;
 using System.Text.Json;
 using System.Runtime.CompilerServices;

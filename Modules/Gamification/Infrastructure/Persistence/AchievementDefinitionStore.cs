@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
 using System.Data.Common;
-using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Contracts.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;

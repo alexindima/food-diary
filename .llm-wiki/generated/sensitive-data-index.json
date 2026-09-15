@@ -36,7 +36,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 87
+      "line": 95
     },
     {
       "category": "credential",
@@ -334,13 +334,6 @@
     },
     {
       "category": "credential",
-      "name": "Password",
-      "type": "string",
-      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "credential",
       "name": "Token",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
@@ -422,6 +415,13 @@
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
       "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "Password",
+      "type": "string",
+      "path": "Modules/Identity/Contracts/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+      "line": 8
     },
     {
       "category": "credential",
@@ -568,7 +568,7 @@
       "name": "SecretAccessKey",
       "type": "string",
       "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "credential",
@@ -680,70 +680,70 @@
       "name": "Password",
       "type": "string",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 19
-    },
-    {
-      "category": "credential",
-      "name": "HasPassword",
-      "type": "bool",
-      "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 20
     },
     {
       "category": "credential",
-      "name": "MustChangePassword",
+      "name": "HasPassword",
       "type": "bool",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 21
     },
     {
       "category": "credential",
+      "name": "MustChangePassword",
+      "type": "bool",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 22
+    },
+    {
+      "category": "credential",
       "name": "EmailConfirmationTokenHash",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 25
+      "line": 26
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenExpiresAtUtc",
       "type": "DateTime?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 29
+      "line": 30
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "DateTime?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 30
+      "line": 31
     },
     {
       "category": "credential",
       "name": "HasPassword",
       "type": "Password,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 375
+      "line": 376
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 381
+      "line": 382
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 383
+      "line": 384
     },
     {
       "category": "credential",
@@ -1114,35 +1114,28 @@
       "name": "BillingPayments",
       "type": "IQueryable<BillingPayment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 25
+      "line": 26
     },
     {
       "category": "financial",
       "name": "BillingSubscriptions",
       "type": "IQueryable<BillingSubscription>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 26
+      "line": 27
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvents",
       "type": "IQueryable<BillingWebhookEvent>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "financial",
       "name": "BillingRenewal",
       "type": "UsersCleanup,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 25
-    },
-    {
-      "category": "financial",
-      "name": "ActiveTransaction",
-      "type": "DbTransaction?",
-      "path": "FoodDiary.Persistence.Runtime/Persistence/Shared/PersistenceSession.cs",
-      "line": 18
+      "line": 24
     },
     {
       "category": "financial",
@@ -2013,32 +2006,39 @@
       "line": 8
     },
     {
+      "category": "financial",
+      "name": "ActiveTransaction",
+      "type": "DbTransaction?",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/PersistenceSession.cs",
+      "line": 18
+    },
+    {
       "category": "health",
       "name": "HydrationEntries",
       "type": "IQueryable<HydrationEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 33
+      "line": 34
     },
     {
       "category": "health",
       "name": "WaistEntries",
       "type": "IQueryable<WaistEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 51
+      "line": 52
     },
     {
       "category": "health",
       "name": "WeightEntries",
       "type": "IQueryable<WeightEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 52
+      "line": 53
     },
     {
       "category": "health",
       "name": "FastingTelemetryCleanup",
       "type": "MarketingAttributionCleanup,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 35
+      "line": 34
     },
     {
       "category": "health",
@@ -2115,35 +2115,35 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 184
+      "line": 185
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 363
+      "line": 364
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 369
+      "line": 370
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 370
+      "line": 371
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 382
+      "line": 383
     },
     {
       "category": "health",
@@ -2451,14 +2451,14 @@
       "name": "NutritionJson",
       "type": "string?",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "health",
       "name": "NutritionErrorCode",
       "type": "string?",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "health",
@@ -4306,56 +4306,56 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 21
+      "line": 22
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 34
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
       "type": "int",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
       "line": 35
     },
     {
       "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 36
+    },
+    {
+      "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "Id,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 224
+      "line": 225
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "ImageAssetId,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 282
+      "line": 283
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 305
+      "line": 306
     },
     {
       "category": "health",
@@ -4719,7 +4719,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 22
+      "line": 23
     },
     {
       "category": "health",
@@ -4733,7 +4733,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 37
+      "line": 38
     },
     {
       "category": "health",
@@ -4873,49 +4873,49 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
-      "line": 24
+      "line": 25
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
-      "line": 25
+      "line": 26
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 25
+      "line": 26
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 31
+      "line": 32
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 32
+      "line": 33
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 497
+      "line": 498
     },
     {
       "category": "health",
@@ -5342,28 +5342,28 @@
       "name": "ActivityLevel",
       "type": "ActivityLevel?",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 22
+      "line": 23
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 26
+      "line": 27
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "ActivityLevel?",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 32
+      "line": 33
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 36
+      "line": 37
     },
     {
       "category": "health",
@@ -5972,224 +5972,224 @@
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 35
+      "line": 36
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 36
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 37
     },
     {
       "category": "health",
-      "name": "DesiredWeightKg",
+      "name": "WeightKg",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 38
     },
     {
       "category": "health",
-      "name": "DesiredWaistCm",
+      "name": "DesiredWeightKg",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 39
     },
     {
       "category": "health",
-      "name": "HeightCm",
+      "name": "DesiredWaistCm",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 40
     },
     {
       "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 41
+    },
+    {
+      "category": "health",
       "name": "ActivityLevel",
       "type": "ActivityLevel",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 41
+      "line": 42
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 49
+      "line": 50
     },
     {
       "category": "health",
       "name": "MondayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 51
-    },
-    {
-      "category": "health",
-      "name": "TuesdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 52
     },
     {
       "category": "health",
-      "name": "WednesdayCalories",
+      "name": "TuesdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 53
     },
     {
       "category": "health",
-      "name": "ThursdayCalories",
+      "name": "WednesdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 54
     },
     {
       "category": "health",
-      "name": "FridayCalories",
+      "name": "ThursdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 55
     },
     {
       "category": "health",
-      "name": "SaturdayCalories",
+      "name": "FridayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 56
     },
     {
       "category": "health",
-      "name": "SundayCalories",
+      "name": "SaturdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 57
     },
     {
       "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 58
+    },
+    {
+      "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 66
+      "line": 67
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 68
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
       "type": "int",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 69
     },
     {
       "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 70
+    },
+    {
+      "category": "health",
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 240
+      "line": 241
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 242
+      "line": 243
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 244
+      "line": 245
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 257
+      "line": 258
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 259
+      "line": 260
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 261
+      "line": 262
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 263
+      "line": 264
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 265
+      "line": 266
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 300
+      "line": 301
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 312
+      "line": 313
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 314
+      "line": 315
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 316
+      "line": 317
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 324
+      "line": 325
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 326
+      "line": 327
     },
     {
       "category": "health",
@@ -7350,20 +7350,6 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-      "line": 7
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommand.cs",
       "line": 9
     },
@@ -7418,6 +7404,13 @@
     },
     {
       "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Common/TelegramBackupEmailOidcAttempt.cs",
+      "line": 3
+    },
+    {
+      "category": "identity",
       "name": "TelegramUserId",
       "type": "long",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
@@ -7427,15 +7420,22 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
-      "line": 64
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
+      "line": 85
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
-      "line": 85
+      "path": "Modules/Identity/Contracts/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Identity/Contracts/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
+      "line": 5
     },
     {
       "category": "identity",
@@ -7820,70 +7820,70 @@
       "name": "Email",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "identity",
       "name": "GoogleSubject",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 23
+      "line": 24
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "bool",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 24
+      "line": 25
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
-      "type": "DateTime?",
-      "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 26
-    },
-    {
-      "category": "identity",
-      "name": "EmailConfirmationSentAtUtc",
       "type": "DateTime?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 27
     },
     {
       "category": "identity",
+      "name": "EmailConfirmationSentAtUtc",
+      "type": "DateTime?",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 28
+    },
+    {
+      "category": "identity",
       "name": "TelegramUserId",
       "type": "long?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 70
+      "line": 71
     },
     {
       "category": "identity",
       "name": "TelegramOidcIssuer",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 71
+      "line": 72
     },
     {
       "category": "identity",
       "name": "TelegramOidcSubject",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 72
+      "line": 73
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 377
+      "line": 378
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 379
+      "line": 380
     },
     {
       "category": "identity",
@@ -8051,21 +8051,21 @@
       "name": "ImageAssets",
       "type": "IQueryable<ImageAsset>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 34
+      "line": 35
     },
     {
       "category": "privateContent",
       "name": "RecipeComments",
       "type": "IQueryable<RecipeComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 41
+      "line": 42
     },
     {
       "category": "privateContent",
       "name": "RecommendationComments",
       "type": "IQueryable<RecommendationComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 45
+      "line": 46
     },
     {
       "category": "privateContent",
@@ -8135,42 +8135,42 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 178
+      "line": 179
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 179
+      "line": 180
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 180
+      "line": 181
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 356
+      "line": 357
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 358
+      "line": 359
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
-      "line": 359
+      "line": 360
     },
     {
       "category": "privateContent",
@@ -8310,14 +8310,14 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 8
+      "line": 9
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
-      "line": 9
+      "line": 10
     },
     {
       "category": "privateContent",
@@ -8989,14 +8989,14 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValues.cs",
-      "line": 10
+      "line": 11
     },
     {
       "category": "privateContent",
       "name": "ImageAsset",
       "type": "ImageAssetReadModel?",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValues.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "privateContent",
@@ -9024,14 +9024,14 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageAsset",
       "type": "ImageAssetReadModel?",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
@@ -9122,77 +9122,77 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 19
+      "line": 20
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 66
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrlMaxLength",
-      "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
       "line": 67
     },
     {
       "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 68
+    },
+    {
+      "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 77
+      "line": 78
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 94
+      "line": 95
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "Comment,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 280
+      "line": 281
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 43
+      "line": 44
     },
     {
       "category": "privateContent",
@@ -9465,35 +9465,35 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
       "name": "HasResolvedImageAsset",
       "type": "bool",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "privateContent",
@@ -9591,21 +9591,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "privateContent",
@@ -9619,63 +9619,63 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 30
+      "line": 31
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 31
+      "line": 32
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 32
+      "line": 33
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 91
+      "line": 92
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 92
+      "line": 93
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 166
+      "line": 167
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 218
+      "line": 219
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 324
+      "line": 325
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 520
+      "line": 521
     },
     {
       "category": "privateContent",
@@ -9829,14 +9829,14 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValues.cs",
-      "line": 10
+      "line": 11
     },
     {
       "category": "privateContent",
       "name": "ImageAsset",
       "type": "ImageAssetReadModel?",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValues.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "privateContent",
@@ -9885,14 +9885,14 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValues.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
       "name": "ImageAsset",
       "type": "ImageAssetReadModel?",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValues.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "privateContent",
@@ -9948,21 +9948,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
@@ -9983,91 +9983,91 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 21
+      "line": 22
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 71
+      "line": 72
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 73
+      "line": 74
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 119
+      "line": 120
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "update.ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 121
+      "line": 122
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 284
+      "line": 285
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 349
+      "line": 350
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 468
+      "line": 469
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeStep.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeStep.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeStep.cs",
-      "line": 88
+      "line": 89
     },
     {
       "category": "privateContent",
@@ -10242,7 +10242,7 @@
       "name": "ProfileImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "privateContent",
@@ -10263,14 +10263,14 @@
       "name": "ProfileImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 59
+      "line": 60
     },
     {
       "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "line": 318
+      "line": 319
     },
     {
       "category": "privateContent",
@@ -10975,14 +10975,14 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
+      "path": "Modules/Identity/Application/Authentication/Common/TelegramBackupEmailOidcAttempt.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
       "categories": [
         "identity"
       ],

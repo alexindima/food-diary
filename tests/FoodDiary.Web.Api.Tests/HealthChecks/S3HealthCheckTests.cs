@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Reflection;
 using Amazon.S3;
 using Amazon.S3.Model;
-using FoodDiary.Integrations.Options;
 using FoodDiary.Web.Api.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OptionsFactory = Microsoft.Extensions.Options.Options;

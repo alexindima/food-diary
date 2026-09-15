@@ -1,6 +1,8 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -10,7 +12,7 @@ namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 internal sealed class AchievementEvaluationOutboxProcessor(
     DbContext context,
     DbSet<AchievementEvaluationOutboxMessage> messages,
-    IAchievementReconciliationHandler reconciliationHandler,
+    ISender sender,
     IOptions<OutboxProcessingOptions> options,
     TimeProvider timeProvider,
     ILogger<AchievementEvaluationOutboxProcessor> logger, Action? ensureCleanEntry = null) : IAchievementEvaluationOutboxProcessor {
@@ -23,7 +25,7 @@ internal sealed class AchievementEvaluationOutboxProcessor(
             batchSize,
             options.Value,
             timeProvider,
-            (message, token) => reconciliationHandler.ReconcileAsync(message.UserId, message.CreatedOnUtc, token),
+            (message, token) => sender.Send(new ReconcileAchievementsCommand(message.UserId, message.CreatedOnUtc), token),
             static message => message.UserId.Value,
             logger,
             cancellationToken: cancellationToken,

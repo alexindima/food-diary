@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Hydration.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class HydrationOperationReceiptTests {

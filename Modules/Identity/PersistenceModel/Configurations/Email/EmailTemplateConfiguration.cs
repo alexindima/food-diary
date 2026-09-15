@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Identity.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

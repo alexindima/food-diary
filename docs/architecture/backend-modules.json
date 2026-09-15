@@ -515,7 +515,7 @@
           "Modules/Gamification/Application"
         ],
         "abstractionAreas": [
-          "Modules/Gamification/Application/Abstractions"
+          "Modules/Gamification/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/Gamification/Domain"
@@ -541,7 +541,7 @@
           "Modules/Hydration/Application"
         ],
         "abstractionAreas": [
-          "Modules/Hydration/Application/Abstractions"
+          "Modules/Hydration/Application.Abstractions"
         ],
         "contractAreas": [
           "Modules/Hydration/Contracts"
@@ -568,7 +568,7 @@
           "Modules/Images/Application"
         ],
         "abstractionAreas": [
-          "Modules/Images/Application/Abstractions"
+          "Modules/Images/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Images/Contracts",
@@ -581,7 +581,7 @@
           "Modules/Images/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/Images/Infrastructure/Model"
+          "Modules/Images/PersistenceModel"
         ],
         "adapterAreas": [
           "Modules/Images/Infrastructure/Providers"
@@ -602,7 +602,7 @@
           "Modules/Lessons/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Lessons/Application/Abstractions"
+          "Modules/Lessons/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Lessons/Contracts"
@@ -611,7 +611,7 @@
           "Modules/Lessons/Domain"
         ],
         "persistenceModelProjects": [
-          "Modules/Lessons/Infrastructure/Model"
+          "Modules/Lessons/PersistenceModel"
         ],
         "infrastructureProjects": [
           "Modules/Lessons/Infrastructure"

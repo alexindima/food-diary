@@ -1,13 +1,13 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
+using FoodDiary.Modules.Identity.Domain.Entities.Content;
 using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Email.Commands.UpsertEmailTemplate;
+using FoodDiary.Modules.Identity.Contracts.Email.Commands.UpsertEmailTemplate;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Identity.Email.Commands.UpsertEmailTemplate;
+namespace FoodDiary.Modules.Identity.Application.Email.Commands.UpsertEmailTemplate;
 
 public sealed class UpsertEmailTemplateCommandHandler(IEmailTemplateWriteRepository repository) : IRequestHandler<UpsertEmailTemplateCommand, Result<EmailTemplateReadModel>> {
     public async Task<Result<EmailTemplateReadModel>> Handle(UpsertEmailTemplateCommand request, CancellationToken cancellationToken) {

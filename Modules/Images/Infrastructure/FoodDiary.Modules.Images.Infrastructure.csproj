@@ -1,12 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>FoodDiary.Modules.Images.Infrastructure</RootNamespace>
     <NoWarn>$(NoWarn);IDE0130</NoWarn>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" />
@@ -16,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/FoodDiary.Application.Images.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Images.PersistenceModel.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Images.Application.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />

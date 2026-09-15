@@ -1,13 +1,13 @@
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Images;
-using FoodDiary.Modules.Images.Infrastructure;
+using FoodDiary.Modules.Images.PersistenceModel.Images;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Images.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

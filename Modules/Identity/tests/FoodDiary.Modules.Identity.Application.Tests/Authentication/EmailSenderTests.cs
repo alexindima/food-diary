@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Modules.Dietologist.Application.Services;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class EmailSenderTests {

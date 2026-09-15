@@ -1,14 +1,18 @@
+using FoodDiary.Modules.Gamification.Infrastructure;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging.Abstractions;
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Achievements;
-using FoodDiary.Modules.Gamification.Infrastructure;
+using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,7 +41,7 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
         services.AddSingleton<IModuleScopeGuard>(new EfModuleScopeGuard(worker));
         services.AddSingleton(TimeProvider.System);
         services.AddGamificationModule();
-        services.AddSingleton<IAchievementReconciliationHandler>(new ReplaceClaimHandler(seed, updateRevision, failDispatch));
+        services.AddSingleton<ISender>(RequestTestSender.Create(new ReplaceClaimHandler(seed, updateRevision, failDispatch)));
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAchievementEvaluationOutboxProcessor processor = provider.GetRequiredService<IAchievementEvaluationOutboxProcessor>();
         Assert.Equal(0, await processor.ProcessDueAsync(1));
@@ -72,7 +76,7 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
         services.AddSingleton<IModuleScopeGuard>(new EfModuleScopeGuard(worker));
         services.AddSingleton(TimeProvider.System);
         services.AddGamificationModule();
-        services.AddSingleton<IAchievementReconciliationHandler>(new RequestNewRevisionHandler(seed, failDispatch));
+        services.AddSingleton<ISender>(RequestTestSender.Create(new RequestNewRevisionHandler(seed, failDispatch)));
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAchievementEvaluationOutboxProcessor processor = provider.GetRequiredService<IAchievementEvaluationOutboxProcessor>();
 
@@ -93,8 +97,10 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RequestNewRevisionHandler(FoodDiaryDbContext context, bool failDispatch) : IAchievementReconciliationHandler {
-        public async Task ReconcileAsync(UserId userId, DateTime occurredAtUtc, CancellationToken cancellationToken = default) {
+    private sealed class RequestNewRevisionHandler(FoodDiaryDbContext context, bool failDispatch) : IRequestHandler<ReconcileAchievementsCommand, Unit> {
+        public async Task<Unit> Handle(ReconcileAchievementsCommand request, CancellationToken cancellationToken) {
+            UserId userId = request.UserId;
+            DateTime occurredAtUtc = request.OccurredAtUtc;
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddSingleton(context);
@@ -109,12 +115,15 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
             if (failDispatch) {
                 throw new InvalidOperationException("Old revision failed after a new request.");
             }
+            return Unit.Value;
         }
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ReplaceClaimHandler(FoodDiaryDbContext context, bool updateRevision, bool failDispatch) : IAchievementReconciliationHandler {
-        public async Task ReconcileAsync(UserId userId, DateTime occurredAtUtc, CancellationToken cancellationToken = default) {
+    private sealed class ReplaceClaimHandler(FoodDiaryDbContext context, bool updateRevision, bool failDispatch) : IRequestHandler<ReconcileAchievementsCommand, Unit> {
+        public async Task<Unit> Handle(ReconcileAchievementsCommand request, CancellationToken cancellationToken) {
+            UserId userId = request.UserId;
+            DateTime occurredAtUtc = request.OccurredAtUtc;
             context.ChangeTracker.Clear();
             AchievementEvaluationOutboxMessage message = await context.AchievementEvaluationOutbox.SingleAsync(cancellationToken);
             if (updateRevision) {
@@ -125,6 +134,7 @@ public sealed class AchievementLeaseOwnershipIntegrationTests(PostgresDatabaseFi
             if (failDispatch) {
                 throw new InvalidOperationException("Old worker failed after losing its claim.");
             }
+            return Unit.Value;
         }
     }
 }

@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.StartTelegramOidc;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramOidc;
 
 public sealed class StartTelegramOidcCommandHandler(ITelegramOidcProvider provider, ITelegramLoginTicketStore tickets,
     ITelegramIdentityPolicy policy, TimeProvider timeProvider) : ICommandHandler<StartTelegramOidcCommand, Result<TelegramOidcStartModel>> {

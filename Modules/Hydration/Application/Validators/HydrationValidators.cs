@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.Hydration.Validators;
+namespace FoodDiary.Modules.Hydration.Application.Validators;
 
 public static class HydrationValidators {
     public static Result ValidateAmount(int amountMl) {

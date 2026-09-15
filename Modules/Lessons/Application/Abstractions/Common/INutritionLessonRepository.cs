@@ -1,3 +1,0 @@
-namespace FoodDiary.Application.Abstractions.Lessons.Common;
-
-public interface INutritionLessonRepository : INutritionLessonReadRepository, INutritionLessonReadModelRepository, INutritionLessonWriteRepository;

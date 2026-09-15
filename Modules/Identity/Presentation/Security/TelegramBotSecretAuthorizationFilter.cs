@@ -1,6 +1,8 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
+using FoodDiary.Presentation.Api.Security;
 using System.Diagnostics;
 using FoodDiary.Results;
-using FoodDiary.Presentation.Api.Options;
+using FoodDiary.Modules.Identity.Presentation.Options;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Presentation.Api.Security;
+namespace FoodDiary.Modules.Identity.Presentation.Security;
 
 public sealed class TelegramBotSecretAuthorizationFilter(
     IOptions<TelegramBotAuthOptions> telegramBotOptions,
@@ -29,7 +31,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
             TrackFailure(activity, "Authentication.TelegramBotNotConfigured");
             context.Result = CreateErrorResult(
                 context,
-                Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotNotConfigured);
+                IdentityErrors.TelegramBotNotConfigured);
             return Task.CompletedTask;
         }
 
@@ -47,7 +49,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
         TrackFailure(activity, "Authentication.TelegramBotInvalidSecret");
         context.Result = CreateErrorResult(
             context,
-            Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotInvalidSecret);
+            IdentityErrors.TelegramBotInvalidSecret);
         return Task.CompletedTask;
     }
 

@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Images.Common;
+namespace FoodDiary.Modules.Images.Service.Contracts.Common;
 
 public static class ImageAssetIdParser {
     public static Result<ImageAssetId> ParseRequired(Guid value, Error requiredError) =>

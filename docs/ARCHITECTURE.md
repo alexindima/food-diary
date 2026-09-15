@@ -7,9 +7,11 @@ The primary product backend is a modular monolith:
 - module-owned Domain and Domain.Contracts projects with generic shared Primitives
 - narrow shared contract projects under `Shared/` (`FoodDiary.Application.Contracts`, Audit, Authentication, Email, Nutrition, and Outbox Management)
 - `FoodDiary.Application.Runtime`
+- `Shared/FoodDiary.Audit.Infrastructure` and `Shared/FoodDiary.Email.Infrastructure`: explicitly composed adapters over the shared persistence session (ADR 0045).
 - independently compiled `FoodDiary.Application.<Feature>` modules
 - `FoodDiary.Infrastructure`
-- `FoodDiary.Persistence.Runtime`: shared context and transaction/save coordination without module implementations; see [ADR 0043](adr/0043-persistence-runtime-assembly-and-read-facade.md)
+- `Shared/FoodDiary.Authentication.Infrastructure`: JWT binding and shared SSO storage; hosts register it explicitly (ADR 0044).
+- `Shared/FoodDiary.Persistence.Runtime`: shared context and transaction/save coordination without module implementations; see [ADR 0043](adr/0043-persistence-runtime-assembly-and-read-facade.md)
 - `FoodDiary.ReadModel.Composition`: host-registered cross-module SQL read projections
 - owner-module provider adapters plus `Shared/FoodDiary.Integrations.Http` and `Shared/FoodDiary.Email.MailRelay`
 - `FoodDiary.Presentation.Api`
@@ -187,7 +189,7 @@ DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
-Identity application ownership is physically grouped under `Modules/Identity/Application`, while preserving the `FoodDiary.Application.Identity` AssemblyName, RootNamespace, public types, and `AddIdentityModule` composition contract. Authentication and Email remain logical areas in that one application project. Shared Authentication/Email abstractions, the User CLR/security graph, combined `UserRepository`, refresh-token/login-event entities and persistence, shared DbContext, migrations/snapshot, provider integrations, HTTP transport, and executable hosts remain with their current owners. The physical extraction has no EF model delta and introduces no migration.
+Identity uses sibling Application, Application.Abstractions, Contracts, Domain, Infrastructure, PersistenceModel and Presentation projects under `Modules/Identity`. Assembly names and folder namespaces follow `FoodDiary.Modules.Identity.<Layer>`. Authentication and Email remain feature areas in Application. Public bootstrap and login-event cleanup requests are dispatched through the mediator; handlers retain explicit save and batch boundaries. The namespace migration preserves the relational schema and historical migration metadata.
 
 ## Admin physical ownership
 

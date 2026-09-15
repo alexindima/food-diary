@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
-using FoodDiary.Application.Abstractions.Lessons.Common;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Commands.CreateLesson;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Lessons.Commands.CreateLesson;
+namespace FoodDiary.Modules.Lessons.Application.Commands.CreateLesson;
 
 public sealed class CreateLessonCommandHandler(INutritionLessonWriteRepository repository) : IRequestHandler<CreateLessonCommand, Result<LessonAdminReadModel>> {
     public async Task<Result<LessonAdminReadModel>> Handle(CreateLessonCommand request, CancellationToken cancellationToken) {

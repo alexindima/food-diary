@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Lessons.Contracts.Commands.DeleteLesson;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.DeleteAdminLesson;
 

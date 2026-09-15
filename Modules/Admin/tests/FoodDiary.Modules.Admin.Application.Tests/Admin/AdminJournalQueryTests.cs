@@ -1,9 +1,9 @@
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions;
-using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions;
+using FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Audit.Common;
@@ -97,7 +97,7 @@ public class AdminJournalQueryTests {
         var id = Guid.NewGuid();
         email.Send(new GetEmailTemplateRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token).Returns([new EmailTemplateRevisionReadModel(id, "subject", "html", "text", IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
         prompts.Send(new GetAiPromptRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token).Returns([new AiPromptRevisionReadModel(id, "text", 2, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
-        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (prompts, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)]))).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
+        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (prompts, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)]))).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
         ResultAssert.Success(result);
         Assert.Equal(id, Assert.Single(result.Value).Id);
         if (ai) {

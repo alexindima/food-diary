@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition;
@@ -321,7 +324,7 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = context.Database.GetConnectionString(),
             ["Database:MaxRetryDelaySeconds"] = "1",
-        }).Build());
+        }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/Hydration/Application`
-- `Modules/Hydration/Application/Abstractions`
+- `Modules/Hydration/Application.Abstractions`
 - `Modules/Hydration/Presentation`
 
 ## HTTP Surface
@@ -47,12 +47,12 @@ No literal attribute-routed controller was associated with this module.
 - Interfaces: 4
 - DTO/read-model/projection types: 1
 - Enums: 0
-- Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 2
+- Exported repository-shaped contracts: 4
+- Contracts referencing domain entities: 0
 - `class HydrationEntryErrors`
 - `interface IHydrationEntryReadModelRepository`
 - `interface IHydrationEntryWriteRepository`
-- `interface IHydrationGoalService`
+- `interface IHydrationIntervalReadModelRepository`
 - `interface IHydrationOperationReceiptRepository`
 - `record HydrationEntryReadModel`
 
@@ -61,12 +61,12 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/CreateHydrationFromOperationTests.cs`
-- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationEntryReadModelTests.cs`
-- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationEntryReadModelTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Support/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/Domain/HydrationEntryInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationEntryInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationOperationReceiptTests.cs`
 - [integration] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationDbContextIntegrationTests.cs`

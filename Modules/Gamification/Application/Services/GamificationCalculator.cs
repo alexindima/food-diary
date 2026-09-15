@@ -1,8 +1,8 @@
-using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
+using FoodDiary.Modules.Gamification.Application.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 
-namespace FoodDiary.Application.Gamification.Services;
+namespace FoodDiary.Modules.Gamification.Application.Services;
 
 public static class GamificationCalculator {
     public static (int CurrentStreak, int LongestStreak) CalculateStreaks(IReadOnlyList<DateTime> sortedDatesDesc, DateTime today) {

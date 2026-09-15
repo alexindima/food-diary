@@ -41,10 +41,8 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
 
             checkInLookup.TryGetValue(occurrence.Id, out IReadOnlyList<FastingCheckIn>? occurrenceCheckIns);
             foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now, active.ReminderHours, active.FollowUpReminderHours)) {
-                bool created = await FastingNotificationCreationService.TryCreateAsync(
+                bool created = await TryCreateAsync(
                     notification,
-                    notificationDeduplicationService,
-                    notificationWriter,
                     cancellationToken).ConfigureAwait(false);
 
                 if (created) {
@@ -60,9 +58,8 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
 
         if (usersToPush.Count > 0) {
             UserId[] pushUserIds = [.. usersToPush];
-            postCommitActionQueue.Enqueue("fasting.notifications.push", ct => FastingNotificationPushDispatcher.PushAsync(
+            postCommitActionQueue.Enqueue("fasting.notifications.push", ct => PushAsync(
                 pushUserIds,
-                notificationClientRefreshService,
                 ct));
         }
 
@@ -80,4 +77,29 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
         return createdCount;
     }
 
+    private async Task<bool> TryCreateAsync(
+        FastingNotificationCandidate candidate,
+        CancellationToken cancellationToken) {
+        if (await notificationDeduplicationService.ExistsAsync(
+                candidate.UserId,
+                candidate.Type,
+                candidate.ReferenceId,
+                cancellationToken).ConfigureAwait(false)) {
+            return false;
+        }
+
+        NotificationRequest notification = FastingNotificationFactory.Create(candidate);
+        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    private async Task PushAsync(
+        IReadOnlyCollection<UserId> usersToPush,
+        CancellationToken cancellationToken) {
+        foreach (UserId userId in usersToPush) {
+            await notificationClientRefreshService
+                .RefreshAsync(userId, pushChanged: true, cancellationToken)
+                .ConfigureAwait(false);
+        }
+    }
 }

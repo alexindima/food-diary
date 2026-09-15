@@ -25,6 +25,12 @@ Do not move owner writes or application orchestration into this project.
 
 Verify host DI, the architecture suite and affected PostgreSQL query tests.
 
+ComposedReadIsolationTests additionally rejects mapped EF entities in public
+reader results, including nested DTO members. Keep cross-module EF relationships
+navigation-free by module ownership, while allowing owner-internal navigations
+across that module's Domain/PersistenceModel assemblies. See
+docs/architecture/COMPOSED_READ_BOUNDARIES.md for the remaining boundary assessment.
+
 MealPlanning composition implements IMealPlanCompositionReader. Return only the
 immutable detail model and recipe snapshot dictionary. Preserve inner joins,
 serving fallback and ingredient batching; aggregate mutation/attachment stays in

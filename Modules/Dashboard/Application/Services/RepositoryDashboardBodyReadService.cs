@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
@@ -5,7 +6,6 @@ using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEn
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
-using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Dashboard.Application.Services;
 
 internal sealed class RepositoryDashboardBodyReadService(
-    ISender sender, IHydrationEntryReadService hydrationEntryReadService) : IDashboardBodyReadService {
+    ISender sender) : IDashboardBodyReadService {
     public async Task<DashboardBodyReadModel> GetBodyAsync(
         UserId userId,
         DateTime dayStart,
@@ -38,8 +38,7 @@ internal sealed class RepositoryDashboardBodyReadService(
             ? await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: trendStart, DateTo: dayStart, QuantizationDays: normalizedTrendQuantizationDays), cancellationToken).ConfigureAwait(false)
             : [];
         IReadOnlyList<(DateTime Date, int TotalMl)> hydrationTotals = includeHydration
-            ? await hydrationEntryReadService.GetDailyTotalsAsync(
-                userId, dayStart, dayEndStart, cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadHydrationDailyTotalsQuery(userId, dayStart, dayEndStart), cancellationToken).ConfigureAwait(false)
             : [];
 
         return new DashboardBodyReadModel(

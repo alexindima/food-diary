@@ -1,8 +1,9 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Achievements;
+namespace FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 
 public sealed class AchievementDefinition : Entity<AchievementDefinitionId> {
     public const int KeyMaxLength = AchievementDefinitionLimits.KeyMaxLength;

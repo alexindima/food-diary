@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoStart;
 
 public sealed class AdminSsoStartCommandValidator : AbstractValidator<AdminSsoStartCommand> {
     public AdminSsoStartCommandValidator() {

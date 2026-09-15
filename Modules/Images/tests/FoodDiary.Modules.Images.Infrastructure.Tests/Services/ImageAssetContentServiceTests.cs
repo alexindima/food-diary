@@ -1,12 +1,12 @@
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
-using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Results;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class ImageAssetContentServiceTests {
@@ -140,7 +140,6 @@ public sealed class ImageAssetContentServiceTests {
             Task.FromResult<ImageAsset?>(id == asset.Id && userId == asset.UserId ? asset : null);
         public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

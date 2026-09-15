@@ -1,9 +1,10 @@
-using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Application.Gamification.Queries.GetGamification;
-using FoodDiary.Presentation.Api.Features.Gamification.Mappings;
-using FoodDiary.Presentation.Api.Features.Gamification.Responses;
+using FoodDiary.Modules.Gamification.Presentation.Mappings;
+using FoodDiary.Modules.Gamification.Application.Models;
+using FoodDiary.Modules.Gamification.Application.Queries.GetGamification;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Gamification.Presentation.Responses;
+
+namespace FoodDiary.Modules.Gamification.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class GamificationHttpMappingsTests {

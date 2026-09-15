@@ -4,12 +4,12 @@ using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.CompleteTelegramAuthentication;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramAuthentication;
 
 public sealed class CompleteTelegramAuthenticationCommandHandler(
     ITelegramLoginTicketStore tickets,

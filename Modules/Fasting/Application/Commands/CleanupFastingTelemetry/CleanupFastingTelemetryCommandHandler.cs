@@ -7,6 +7,7 @@ public sealed class CleanupFastingTelemetryCommandHandler(IFastingTelemetryEvent
     public async Task<int> Handle(CleanupFastingTelemetryCommand request, CancellationToken cancellationToken) {
         DateTime olderThanUtc = request.OlderThanUtc;
         int batchSize = request.BatchSize;
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(request.BatchSize, nameof(request));
         int totalDeletedCount = 0;
         int deletedCount;
         do {

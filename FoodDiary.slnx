@@ -202,12 +202,12 @@
     <Project Path="Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Presentation.Tests/FoodDiary.Modules.ContentReports.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Images/">
-    <Project Path="Modules/Images/Application/FoodDiary.Application.Images.csproj" />
-    <Project Path="Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <Project Path="Modules/Images/Application/FoodDiary.Modules.Images.Application.csproj" />
+    <Project Path="Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <Project Path="Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
     <Project Path="Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <Project Path="Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
-    <Project Path="Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
+    <Project Path="Modules/Images/PersistenceModel/FoodDiary.Modules.Images.PersistenceModel.csproj" />
     <Project Path="Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj" />
     <Project Path="Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
   </Folder>
@@ -284,11 +284,11 @@
   <Folder Name="/Modules/Gamification/">
     <Project Path="Modules/Gamification/Domain.Contracts/FoodDiary.Modules.Gamification.Domain.Contracts.csproj" />
     <Project Path="Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />
-    <Project Path="Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
+    <Project Path="Modules/Gamification/Application.Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <Project Path="Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj" />
     <Project Path="Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj" />
     <Project Path="Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj" />
-    <Project Path="Modules/Gamification/Infrastructure/Model/FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
+    <Project Path="Modules/Gamification/PersistenceModel/FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
     <Project Path="Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Gamification/tests/">
@@ -299,11 +299,11 @@
   </Folder>
   <Folder Name="/Modules/Hydration/">
     <Project Path="Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
-    <Project Path="Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
+    <Project Path="Modules/Hydration/Application.Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
     <Project Path="Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
     <Project Path="Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
-    <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
+    <Project Path="Modules/Hydration/PersistenceModel/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <Project Path="Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj" />
     <Project Path="Modules/Hydration/Presentation.Contracts/FoodDiary.Modules.Hydration.Presentation.Contracts.csproj" />
     <Project Path="Modules/Hydration/Presentation.Mappings/FoodDiary.Modules.Hydration.Presentation.Mappings.csproj" />
@@ -317,11 +317,11 @@
   <Folder Name="/Modules/Lessons/">
     <Project Path="Modules/Lessons/Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj" />
     <Project Path="Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
-    <Project Path="Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
+    <Project Path="Modules/Lessons/Application.Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <Project Path="Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
     <Project Path="Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
     <Project Path="Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj" />
-    <Project Path="Modules/Lessons/Infrastructure/Model/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
+    <Project Path="Modules/Lessons/PersistenceModel/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
     <Project Path="Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Lessons/tests/">
@@ -396,7 +396,6 @@
   </Folder>
   <Folder Name="/Platform/">
     <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
-    <Project Path="FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <Project Path="FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <Project Path="FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />
   </Folder>
@@ -435,6 +434,10 @@
     <Project Path="Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj" />
   </Folder>
   <Folder Name="/Shared/">
+    <Project Path="Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj" />
+    <Project Path="Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
+    <Project Path="Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj" />
+    <Project Path="Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj" />
     <Project Path="Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
     <Project Path="Shared/FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj" />
     <Project Path="Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
@@ -458,6 +461,7 @@
     <Project Path="FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj" />
   </Folder>
   <Folder Name="/Shared/tests/">
+    <Project Path="Shared/tests/FoodDiary.Authentication.Infrastructure.Tests/FoodDiary.Authentication.Infrastructure.Tests.csproj" />
     <Project Path="Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj" />
     <Project Path="Shared/tests/FoodDiary.Email.MailRelay.Tests/FoodDiary.Email.MailRelay.Tests.csproj" />
     <Project Path="Shared/tests/FoodDiary.Integrations.Http.Tests/FoodDiary.Integrations.Http.Tests.csproj" />

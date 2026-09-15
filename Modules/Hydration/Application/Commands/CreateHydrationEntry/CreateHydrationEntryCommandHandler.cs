@@ -1,16 +1,17 @@
+using FoodDiary.Modules.Hydration.Application.Mappings;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Hydration.Internal;
-using FoodDiary.Application.Hydration.Mappings;
-using FoodDiary.Application.Hydration.Models;
-using FoodDiary.Application.Hydration.Validators;
+using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
+using FoodDiary.Modules.Hydration.Application.Internal;
+
+using FoodDiary.Modules.Hydration.Contracts.Models;
+using FoodDiary.Modules.Hydration.Application.Validators;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
+namespace FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationEntry;
 
 public sealed class CreateHydrationEntryCommandHandler(
     IHydrationEntryWriteRepository repository,

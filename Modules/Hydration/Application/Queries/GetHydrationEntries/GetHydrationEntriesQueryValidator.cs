@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
+namespace FoodDiary.Modules.Hydration.Application.Queries.GetHydrationEntries;
 
 public sealed class GetHydrationEntriesQueryValidator : AbstractValidator<GetHydrationEntriesQuery> {
     public GetHydrationEntriesQueryValidator() {

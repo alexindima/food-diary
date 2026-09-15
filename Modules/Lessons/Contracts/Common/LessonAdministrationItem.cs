@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 
 namespace FoodDiary.Modules.Lessons.Contracts.Common;
 

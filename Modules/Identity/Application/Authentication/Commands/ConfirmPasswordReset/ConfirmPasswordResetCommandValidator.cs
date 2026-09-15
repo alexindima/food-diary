@@ -1,7 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
 
 public sealed class ConfirmPasswordResetCommandValidator : AbstractValidator<ConfirmPasswordResetCommand> {
     public ConfirmPasswordResetCommandValidator() {

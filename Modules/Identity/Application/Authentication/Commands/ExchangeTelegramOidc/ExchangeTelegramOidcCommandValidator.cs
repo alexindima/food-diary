@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.ExchangeTelegramOidc;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.ExchangeTelegramOidc;
 
 public sealed class ExchangeTelegramOidcCommandValidator : AbstractValidator<ExchangeTelegramOidcCommand> {
     public ExchangeTelegramOidcCommandValidator() {

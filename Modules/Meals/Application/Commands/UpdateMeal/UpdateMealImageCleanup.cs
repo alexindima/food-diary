@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 
 namespace FoodDiary.Application.Meals.Commands.UpdateMeal;
 

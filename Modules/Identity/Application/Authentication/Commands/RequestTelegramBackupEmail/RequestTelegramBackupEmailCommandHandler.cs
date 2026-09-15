@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.RequestTelegramBackupEmail;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RequestTelegramBackupEmail;
 
 public sealed class RequestTelegramBackupEmailCommandHandler(TelegramBackupEmailService service)
     : ICommandHandler<RequestTelegramBackupEmailCommand, Result> {

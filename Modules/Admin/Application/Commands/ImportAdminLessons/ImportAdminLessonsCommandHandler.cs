@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Lessons.Contracts.Commands.ImportLessons;
 using System.Globalization;
@@ -7,7 +8,6 @@ using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Lessons.Contracts.Common;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.ImportAdminLessons;

@@ -64,7 +64,7 @@ public class LayeringTests {
     public void InfrastructureProject_ReferencesOnly_DomainAndApplicationAbstractions_AmongCoreProjects() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 
-        Assert.Contains("FoodDiary.Application.Contracts", references);
+        Assert.Contains("FoodDiary.Persistence.Runtime", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
@@ -192,8 +192,6 @@ public class LayeringTests {
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.Configuration.Json",
             "Microsoft.Extensions.Configuration.UserSecrets",
-            "Microsoft.Extensions.Http",
-            "Microsoft.Extensions.Options.ConfigurationExtensions",
             "Npgsql.EntityFrameworkCore.PostgreSQL",
         ];
 
@@ -254,14 +252,7 @@ public class LayeringTests {
     public void InfrastructureCompositionRoot_StaysLimitedToApprovedTechnicalModules() {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.cs");
         string[] expectedRegistrations = [
-            "services.TryAddSingleton(TimeProvider.System);",
-            "services.AddMemoryCache();",
-            "services.AddLogging();",
-            "services.AddInfrastructureOptions(configuration);",
             "services.AddPersistence(configuration);",
-            "services.AddAuditPersistence();",
-            "services.AddEmailPersistence();",
-            "services.AddAuthenticationInfrastructure();",
         ];
 
         string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)

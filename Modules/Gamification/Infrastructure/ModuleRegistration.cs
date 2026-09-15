@@ -4,8 +4,9 @@ using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Gamification;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -39,7 +40,7 @@ public static class ModuleRegistration {
             GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
             IModuleScopeGuard scopeGuard = provider.GetRequiredService<IModuleScopeGuard>();
             return new AchievementEvaluationOutboxProcessor(owned, owned.AchievementEvaluationOutbox,
-                provider.GetRequiredService<IAchievementReconciliationHandler>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
+                provider.GetRequiredService<FoodDiary.Mediator.ISender>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
                 provider.GetRequiredService<TimeProvider>(), provider.GetRequiredService<ILogger<AchievementEvaluationOutboxProcessor>>(),
                 scopeGuard.EnsureCleanEntry);
         });

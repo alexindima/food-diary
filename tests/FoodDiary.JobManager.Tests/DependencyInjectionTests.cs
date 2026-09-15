@@ -1,4 +1,10 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Gamification.Infrastructure;
+using FoodDiary.Authentication.Infrastructure;
+
 using FoodDiary.Modules.Billing.Infrastructure.Providers;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
@@ -13,9 +19,9 @@ using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
-using FoodDiary.Modules.Gamification.Infrastructure;
-using FoodDiary.Application.Identity;
-using FoodDiary.Application.Images;
+
+using FoodDiary.Modules.Identity.Application;
+using FoodDiary.Modules.Images.Application;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Notifications;
@@ -162,7 +168,7 @@ public sealed class DependencyInjectionTests {
         services.AddRecentItemsModule();
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
         services.AddBillingIntegrations(configuration)
             .AddAdminMailInboxIntegration(configuration)
             .AddMailRelayIntegration(configuration)

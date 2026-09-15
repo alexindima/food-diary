@@ -1,4 +1,7 @@
-using FoodDiary.Persistence.Runtime.Persistence.Audit;
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure.Persistence;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
@@ -74,7 +77,7 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
             }).Build();
         var services = new ServiceCollection();
         services.AddSingleton(FixedTime);
-        services.AddInfrastructure(configuration);
+        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddDietologistModule().AddDietologistModule();
         services.AddScoped(_ => Substitute.For<IDomainEventPublisher>());
         await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);

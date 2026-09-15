@@ -1,19 +1,20 @@
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Results;
-using FoodDiary.Presentation.Api.Features.Auth;
-using FoodDiary.Presentation.Api.Security;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Application.Identity.Authentication.Commands.RevokeOtherSessions;
-using FoodDiary.Application.Identity.Authentication.Commands.RevokeSession;
-using FoodDiary.Application.Identity.Authentication.Commands.Logout;
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeOtherSessions;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeSession;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.Logout;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSessions;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthSessionLifecycleControllerTests {

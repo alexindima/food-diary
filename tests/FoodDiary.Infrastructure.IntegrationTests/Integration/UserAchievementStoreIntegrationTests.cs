@@ -1,16 +1,18 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Outbox.Infrastructure.Options;
-using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Modules.Gamification.Contracts.Models;
 using FoodDiary.ReadModel.Composition.Gamification;
-using FoodDiary.Application.Abstractions.Achievements.Models;
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Achievements;
+using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Application.Abstractions.Achievements.Common;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
@@ -75,7 +77,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
             await enqueueContext.SaveChangesAsync();
         }
 
-        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
+        ISender handler = Substitute.For<ISender>();
         await using FoodDiaryDbContext processContext = databaseFixture.CreateDbContext(connectionString);
         var processor = new AchievementEvaluationOutboxProcessor(
             processContext, processContext.AchievementEvaluationOutbox,
@@ -87,7 +89,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         int processed = await processor.ProcessDueAsync(batchSize: 10);
 
         Assert.Equal(1, processed);
-        await handler.Received(1).ReconcileAsync(user.Id, timeProvider.GetUtcNow().UtcDateTime, Arg.Any<CancellationToken>());
+        await handler.Received(1).Send(new ReconcileAchievementsCommand(user.Id, timeProvider.GetUtcNow().UtcDateTime), Arg.Any<CancellationToken>());
         Assert.NotNull((await processContext.AchievementEvaluationOutbox.SingleAsync()).ProcessedOnUtc);
     }
 
@@ -124,8 +126,8 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
             await new AchievementEvaluationOutbox(setupContext, setupContext.AchievementEvaluationOutbox, timeProvider).EnqueueAsync(user.Id);
         }
 
-        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
-        handler.ReconcileAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+        ISender handler = Substitute.For<ISender>();
+        handler.Send(Arg.Is<ReconcileAchievementsCommand>(q => q.UserId == user.Id), Arg.Any<CancellationToken>())
             .Returns(async _ => {
                 await using FoodDiaryDbContext concurrentContext = databaseFixture.CreateDbContext(connectionString);
                 await new AchievementEvaluationOutbox(concurrentContext, concurrentContext.AchievementEvaluationOutbox, timeProvider).EnqueueAsync(user.Id);
@@ -252,7 +254,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
     }
 
     private static AchievementDefinition CreateDefinition(string key) => AchievementDefinition.Create(
-        key, "habits", FoodDiary.Domain.Enums.AchievementMetric.TotalMeals, 10,
+        key, "habits", FoodDiary.Modules.Gamification.Domain.Contracts.Enums.AchievementMetric.TotalMeals, 10,
         "Название", "Title", "Описание", "Description", "trophy", 1);
 
     [ExcludeFromCodeCoverage]

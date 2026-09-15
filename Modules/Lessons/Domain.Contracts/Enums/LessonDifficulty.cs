@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 
 public enum LessonDifficulty {
     Beginner = 0,

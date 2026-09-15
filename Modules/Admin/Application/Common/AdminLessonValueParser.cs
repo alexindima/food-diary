@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
-using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Modules.Admin.Application.Common;
 

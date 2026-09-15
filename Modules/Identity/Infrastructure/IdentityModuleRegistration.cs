@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Admin;
@@ -9,7 +10,6 @@ using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -17,6 +17,7 @@ namespace FoodDiary.Modules.Identity.Infrastructure;
 
 public static class IdentityModuleRegistration {
     public static IServiceCollection AddIdentityPersistence(this IServiceCollection services) {
+        services.AddMemoryCache();
         services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<IdentityDbContext>(options => new IdentityDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, IdentityUserDataPurgeParticipant>());

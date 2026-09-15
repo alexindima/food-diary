@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Achievements, Meals, Users
+- Abstraction-contract dependencies: Meals, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/Gamification/Application`
-- `Modules/Gamification/Application/Abstractions`
+- `Modules/Gamification/Application.Abstractions`
 - `Modules/Gamification/Contracts`
 - `Modules/Gamification/Presentation`
 
@@ -45,18 +45,17 @@ No literal attribute-routed controller was associated with this module.
 ## Public Surface
 
 - Public contract types: 15
-- Interfaces: 7
+- Interfaces: 6
 - DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 2
+- Contracts referencing domain entities: 0
 - `class AchievementDefinitionErrors`
 - `interface IAchievementDefinitionReadModelRepository`
 - `interface IAchievementDefinitionStore`
 - `interface IAchievementEvaluationOutbox`
 - `interface IAchievementEvaluationOutboxProcessor`
 - `interface IAchievementMetricReader`
-- `interface IAchievementReconciliationHandler`
 - `interface IUserAchievementStore`
 - `record AchievementDefinitionAdminModel`
 - `record AchievementDefinitionCreateInput`
@@ -64,21 +63,22 @@ No literal attribute-routed controller was associated with this module.
 - `record AchievementGrantModel`
 - `record CreateAchievementDefinitionCommand`
 - `record GetAchievementDefinitionsForAdministrationQuery`
+- `record ReconcileAchievementsCommand`
 - `record UpdateAchievementDefinitionCommand`
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementAwardServiceTests.cs`
-- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs`
-- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs`
-- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationCalculatorTests.cs`
-- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/AchievementAwardServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/AchievementDefinitionAdministrationServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/ReconcileAchievementsCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Achievements/AchievementDefinitionTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Achievements/UserAchievementTests.cs`
-- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Domain/GamificationIdConversionTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/GamificationIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/OutboxReplayStreamTests.cs`
 - [presentation] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Presentation.Tests/GamificationHttpMappingsTests.cs`

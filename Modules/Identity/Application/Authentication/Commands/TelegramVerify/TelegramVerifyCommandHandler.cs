@@ -1,14 +1,14 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
 
 public sealed class TelegramVerifyCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,
@@ -27,7 +27,7 @@ public sealed class TelegramVerifyCommandHandler(
             .TryConsumeAsync(command.InitData, initData.AuthDateUtc.AddDays(1), cancellationToken)
             .ConfigureAwait(false);
         if (!consumed) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramAssertionAlreadyUsed);
+            return Result.Failure<AuthenticationModel>(IdentityErrors.TelegramAssertionAlreadyUsed);
         }
 
         Result<UserAuthenticationPrincipalModel> authenticationResult = await userIdentityService

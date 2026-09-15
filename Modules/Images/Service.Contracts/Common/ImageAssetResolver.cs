@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Abstractions.Images.Models;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Images.Common;
+namespace FoodDiary.Modules.Images.Service.Contracts.Common;
 
 public static class ImageAssetResolver {
     public static async Task<Result<ImageAssetResolution>> ResolveOptionalAsync(

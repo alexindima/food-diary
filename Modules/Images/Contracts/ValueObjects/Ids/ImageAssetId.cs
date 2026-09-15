@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 
 public readonly record struct ImageAssetId(Guid Value) : IEntityId<Guid> {
     public static ImageAssetId New() => new(Guid.NewGuid());

@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Achievements.Models;
-using FoodDiary.Application.Gamification.Common;
-using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Models;
+using FoodDiary.Modules.Gamification.Application.Common;
+using FoodDiary.Modules.Gamification.Application.Models;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Gamification.Services;
+namespace FoodDiary.Modules.Gamification.Application.Services;
 
 public sealed class AchievementAwardService(
     IUserAchievementStore achievementStore,

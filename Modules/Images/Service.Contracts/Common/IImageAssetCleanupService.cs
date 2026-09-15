@@ -1,8 +1,7 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Images.Common;
+namespace FoodDiary.Modules.Images.Service.Contracts.Common;
 
 public interface IImageAssetCleanupService {
     Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default);
-    Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default);
 }

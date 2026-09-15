@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Options;
+using FoodDiary.Modules.Identity.Presentation.Options;
 using FoodDiary.Web.Api.Options;
 
 namespace FoodDiary.Web.Api.Extensions;

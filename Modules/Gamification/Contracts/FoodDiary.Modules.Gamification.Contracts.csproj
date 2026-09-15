@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>FoodDiary.Application.Gamification</RootNamespace>
     <NoWarn>$(NoWarn);IDE0130</NoWarn>
   </PropertyGroup>
 

@@ -1,3 +1,7 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Authentication.Infrastructure;
 using FoodDiary.Application.Abstractions.Options;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Authentication;
@@ -24,7 +28,7 @@ public sealed class IdentityAuthenticationRegistrationTests {
             Assert.Same(services, services.AddIdentityAuthenticationInfrastructure());
         }
 
-        services.AddInfrastructure(configuration);
+        services.AddSharedAuthentication(configuration);
         if (!moduleFirst) {
             Assert.Same(services, services.AddIdentityAuthenticationInfrastructure());
         }
@@ -55,7 +59,7 @@ public sealed class IdentityAuthenticationRegistrationTests {
     [Fact]
     public void AddIdentityAuthenticationInfrastructure_ResolvesWithoutPersistenceAndPreservesContracts() {
         var storageServices = new ServiceCollection();
-        storageServices.AddInfrastructure(new ConfigurationBuilder().Build());
+        storageServices.AddSharedAuthentication(new ConfigurationBuilder().Build());
         using ServiceProvider storage = storageServices.BuildServiceProvider();
         var services = new ServiceCollection();
         services.AddSingleton(storage.GetRequiredService<IAdminSsoCodeStore>());
@@ -83,7 +87,7 @@ public sealed class IdentityAuthenticationRegistrationTests {
     [Fact]
     public void AddInfrastructure_DoesNotOwnIdentityAuthenticationImplementations() {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
 
         Assert.Multiple(
             () => Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IJwtTokenGenerator)),

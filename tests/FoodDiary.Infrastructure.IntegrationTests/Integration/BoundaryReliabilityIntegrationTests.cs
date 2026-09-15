@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Images.Application.Commands.CleanupOrphanImages;
+using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Persistence.Runtime.Persistence;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -7,15 +10,13 @@ using FoodDiary.ReadModel.Composition;
 using FoodDiary.ReadModel.Composition.Images;
 using System.Data.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Images.Services;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Infrastructure.Persistence.Recipes;
 using FoodDiary.Infrastructure.Persistence.WeeklyGoals;
@@ -195,11 +196,11 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         services.AddReadModelComposition();
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-        services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
+        services.AddScoped<CleanupOrphanImagesCommandHandler>();
         await using ServiceProvider provider = services.BuildServiceProvider();
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
-        int removed = await scope.ServiceProvider.GetRequiredService<IImageAssetCleanupService>()
-            .CleanupOrphansAsync(DateTime.UtcNow.AddDays(1), 10);
+        int removed = await scope.ServiceProvider.GetRequiredService<CleanupOrphanImagesCommandHandler>()
+            .Handle(new CleanupOrphanImagesCommand(DateTime.UtcNow.AddDays(1), 10), CancellationToken.None);
 
         Assert.Equal(1, removed);
         Assert.Equal(first.Id, await seed.ImageAssets.AsNoTracking().Select(asset => asset.Id).SingleAsync());

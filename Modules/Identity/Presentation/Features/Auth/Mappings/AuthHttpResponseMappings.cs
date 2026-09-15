@@ -1,8 +1,8 @@
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
 
-namespace FoodDiary.Presentation.Api.Features.Auth.Mappings;
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 
 public static class AuthHttpResponseMappings {
     extension(AuthenticationModel model) {

@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Abstractions.Images.Models;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Results;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserProfileImageServiceTests {
@@ -61,6 +61,5 @@ public sealed class UserProfileImageServiceTests {
             Call = (assetId, cancellationToken);
             return Task.FromResult(new DeleteImageAssetResult(Deleted: true));
         }
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

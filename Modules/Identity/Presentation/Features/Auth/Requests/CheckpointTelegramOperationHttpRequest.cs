@@ -1,3 +1,3 @@
-namespace FoodDiary.Presentation.Api.Features.Auth.Requests;
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
 public sealed record CheckpointTelegramOperationHttpRequest(Guid LeaseId, string Checkpoint, bool Completed, DateTime NextAttemptAtUtc);

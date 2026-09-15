@@ -1,7 +1,7 @@
-using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.PersistenceModel;
+using FoodDiary.Modules.Images.PersistenceModel.Images;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Images.Infrastructure.IntegrationTests.Integration;
 
 [ExcludeFromCodeCoverage]
 public sealed class ImageObjectDeletionOutboxMessageTests {

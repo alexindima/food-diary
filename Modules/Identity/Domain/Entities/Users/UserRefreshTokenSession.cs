@@ -2,7 +2,7 @@ using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Users;
+namespace FoodDiary.Modules.Identity.Domain.Entities.Users;
 
 public sealed class UserRefreshTokenSession : Entity<Guid> {
     public UserId UserId { get; private set; }

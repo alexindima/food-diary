@@ -9,3 +9,5 @@ HydrationOperationReceiptRepository also receives only its owned DbSet. The crea
 Hydration registration consumes IModuleContextFactory from FoodDiary.Persistence.Abstractions. Do not restore concrete FoodDiaryDbContext access in ModuleRegistration; the purge participant receives only its owner context and the narrow live transaction coordinator.
 
 Purge retains its existing order and user predicates, with no independent save or commit. Rebind the current transaction for scope reuse after commit/rollback; do not capture it when constructing the participant. The module has no direct or transitive central Infrastructure dependency. Users still owns final user deletion and its FK cascades.
+
+Use canonical FoodDiary.Modules.Hydration project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

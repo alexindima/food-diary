@@ -1,7 +1,7 @@
 using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
-using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Modules.Hydration.Contracts.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;

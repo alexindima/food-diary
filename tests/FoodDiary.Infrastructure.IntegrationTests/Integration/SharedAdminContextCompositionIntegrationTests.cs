@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Persistence;
@@ -94,7 +97,7 @@ public sealed class SharedAdminContextCompositionIntegrationTests(PostgresDataba
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["MailInboxClient:BaseUrl"] = "http://localhost:5098",
         }).Build();
-        services.AddInfrastructure(configuration);
+        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

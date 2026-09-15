@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.BeginTelegramMiniApp;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.BeginTelegramMiniApp;
 
 public sealed class BeginTelegramMiniAppCommandHandler(
     ITelegramAuthValidator validator,

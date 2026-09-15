@@ -1,8 +1,8 @@
+using FoodDiary.Authentication.Infrastructure;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Authentication;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -88,7 +88,7 @@ public sealed class AdminSsoServiceTests : IDisposable {
     private static ServiceProvider CreateProvider() {
         var services = new ServiceCollection();
         services.AddSingleton<TimeProvider>(new StubDateTimeProvider());
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddSharedAuthentication(new ConfigurationBuilder().Build());
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
     }
 

@@ -11,11 +11,11 @@ public sealed class ReadMealFavoritesOverviewQueryHandler(IFavoriteMealReadModel
     public async Task<(IReadOnlyList<MealFavoriteMealModel> Items, int TotalItems)> Handle(ReadMealFavoritesOverviewQuery request, CancellationToken cancellationToken) {
         UserId userId = request.UserId;
         int limit = request.Limit;
-        IReadOnlyList<FavoriteMealReadModel> favorites = await favoriteMealReadModelRepository
-            .GetAllReadModelsAsync(userId, cancellationToken)
+        (IReadOnlyList<FavoriteMealReadModel> favorites, int totalItems) = await favoriteMealReadModelRepository
+            .GetOverviewReadModelsAsync(userId, limit, cancellationToken)
             .ConfigureAwait(false);
 
-        return ([.. favorites.Take(limit).Select(ToMealModel)], favorites.Count);
+        return ([.. favorites.Select(ToMealModel)], totalItems);
     }
 
     private static MealFavoriteMealModel ToMealModel(FavoriteMealReadModel favorite) =>

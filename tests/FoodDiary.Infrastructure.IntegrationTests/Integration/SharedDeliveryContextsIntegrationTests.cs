@@ -1,21 +1,29 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Modules.Gamification.Infrastructure;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.Extensions.Logging.Abstractions;
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
+using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Gamification.Infrastructure;
+
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
@@ -114,7 +122,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         await using ServiceProvider provider = CreateProvider(central);
         IImageAssetWriteRepository repository = provider.GetRequiredService<IImageAssetWriteRepository>();
         Assert.True(await repository.IsAssetInUseAsync(image.Id));
-        Assert.Empty(await repository.GetUnusedOlderThanAsync(DateTime.UtcNow.AddDays(1), 10));
+        Assert.Empty(await provider.GetRequiredService<FoodDiary.Modules.Images.Application.Abstractions.Common.IImageAssetUsageQuery>().GetUnusedCandidatesOlderThanAsync(DateTime.UtcNow.AddDays(1), 10));
         await repository.DeleteAsync(image);
         await provider.GetRequiredService<IImageObjectDeletionOutbox>().EnqueueAsync(image.ObjectKey);
         await Assert.ThrowsAsync<DbUpdateException>(() => provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync());
@@ -167,8 +175,8 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         var user = User.Create($"delivery-revision-{Guid.NewGuid():N}@example.com", "hash");
         central.Users.Add(user);
         await central.SaveChangesAsync();
-        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
-        handler.ReconcileAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(async _ => {
+        ISender handler = Substitute.For<ISender>();
+        handler.Send(Arg.Is<ReconcileAchievementsCommand>(q => q.UserId == user.Id), Arg.Any<CancellationToken>()).Returns(async _ => {
             await using FoodDiaryDbContext concurrent = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
             await using ServiceProvider producer = CreateProvider(concurrent);
             await producer.GetRequiredService<IAchievementEvaluationOutbox>().EnqueueAsync(user.Id);
@@ -176,16 +184,16 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         await using ServiceProvider provider = CreateProvider(central, handler);
         await provider.GetRequiredService<IAchievementEvaluationOutbox>().EnqueueAsync(user.Id);
         Assert.Equal(0, await provider.GetRequiredService<IAchievementEvaluationOutboxProcessor>().ProcessDueAsync(1));
-        FoodDiary.Infrastructure.Persistence.Achievements.AchievementEvaluationOutboxMessage message =
+        FoodDiary.Modules.Gamification.PersistenceModel.Achievements.AchievementEvaluationOutboxMessage message =
             await central.AchievementEvaluationOutbox.AsNoTracking().SingleAsync();
         Assert.Equal(2, message.Revision);
         Assert.Null(message.ProcessedOnUtc);
         Assert.Null(message.LockedBy);
     }
 
-    private static ServiceProvider CreateProvider(FoodDiaryDbContext context, IAchievementReconciliationHandler? reconciliation = null) {
+    private static ServiceProvider CreateProvider(FoodDiaryDbContext context, ISender? reconciliation = null) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddUsersPersistence();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
@@ -196,7 +204,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         services.AddReadModelComposition();
         services.AddSingleton(Substitute.For<IWebPushNotificationSender>());
         services.AddSingleton(Substitute.For<IImageStorageService>());
-        services.AddSingleton(reconciliation ?? Substitute.For<IAchievementReconciliationHandler>());
+        services.AddSingleton(reconciliation ?? Substitute.For<ISender>());
         return services.BuildServiceProvider();
     }
 

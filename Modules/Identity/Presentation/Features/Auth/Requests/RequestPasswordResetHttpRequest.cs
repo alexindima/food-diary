@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FoodDiary.Presentation.Api.Features.Auth.Requests;
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
 public sealed record RequestPasswordResetHttpRequest(
     [Required, MaxLength(320)] string Email,

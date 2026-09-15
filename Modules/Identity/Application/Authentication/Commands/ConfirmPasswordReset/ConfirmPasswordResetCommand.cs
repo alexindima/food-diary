@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 
-namespace FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
 
 public record ConfirmPasswordResetCommand(
     Guid UserId,

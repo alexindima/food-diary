@@ -1,9 +1,13 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence.Outbox;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Gamification.Infrastructure;
+
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +26,7 @@ public sealed class OutboxReplayRegistrationTests {
         if (modulesFirst) {
             AddModules(services);
         }
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         if (!modulesFirst) {
             AddModules(services);
         }
@@ -34,7 +38,7 @@ public sealed class OutboxReplayRegistrationTests {
         using IServiceScope second = provider.CreateScope();
         IOutboxReplayStream[] streams = [.. first.ServiceProvider.GetServices<IOutboxReplayStream>().OrderBy(stream => stream.Order)];
         Assert.Equal(new[] { "email", "image_object_deletion", "notification_web_push", "achievement_evaluation" }, streams.Select(stream => stream.Name), StringComparer.Ordinal);
-        Assert.Equal(new[] { "FoodDiary.Infrastructure", "FoodDiary.Modules.Images.Infrastructure", "FoodDiary.Modules.Notifications.Infrastructure", "FoodDiary.Modules.Gamification.Infrastructure" }, streams.Select(stream => stream.GetType().Assembly.GetName().Name), StringComparer.Ordinal);
+        Assert.Equal(new[] { "FoodDiary.Email.Infrastructure", "FoodDiary.Modules.Images.Infrastructure", "FoodDiary.Modules.Notifications.Infrastructure", "FoodDiary.Modules.Gamification.Infrastructure" }, streams.Select(stream => stream.GetType().Assembly.GetName().Name), StringComparer.Ordinal);
         foreach (IOutboxReplayStream stream in streams) {
             Assert.Same(stream, first.ServiceProvider.GetServices<IOutboxReplayStream>().Single(item => string.Equals(item.Name, stream.Name, StringComparison.Ordinal)));
             Assert.NotSame(stream, second.ServiceProvider.GetServices<IOutboxReplayStream>().Single(item => string.Equals(item.Name, stream.Name, StringComparison.Ordinal)));
@@ -53,11 +57,11 @@ public sealed class OutboxReplayRegistrationTests {
     }
 
     [Fact]
-    public void CentralInfrastructure_RegistersOnlyItsEmailStream() {
+    public void ExplicitEmailAdapter_RegistersOnlyItsEmailStream() {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(IOutboxReplayStream));
-        Assert.Equal("FoodDiary.Persistence.Runtime.Persistence.Email.EmailOutboxReplayStream", descriptor.ImplementationType?.FullName);
+        Assert.Equal("FoodDiary.Email.Infrastructure.Persistence.EmailOutboxReplayStream", descriptor.ImplementationType?.FullName);
     }
 
     private static void AddModules(IServiceCollection services) {

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation;
@@ -9,7 +10,6 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Runtime.Common.Behaviors;
@@ -58,8 +58,8 @@ public class CommonAbstractionsTests {
                 typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common.FavoriteMealErrors),
                 typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common.FavoriteProductErrors),
                 typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common.FavoriteRecipeErrors),
-                typeof(FoodDiary.Application.Abstractions.Images.Common.ImageErrors),
-                typeof(FoodDiary.Application.Abstractions.Lessons.Common.LessonErrors),
+                typeof(FoodDiary.Modules.Images.Application.Abstractions.Common.ImageErrors),
+                typeof(FoodDiary.Modules.Lessons.Application.Abstractions.Common.LessonErrors),
                 typeof(FoodDiary.Modules.Admin.Application.Abstractions.Common.AdminMailInboxErrors),
                 typeof(FoodDiary.Application.Abstractions.Meals.Common.MealErrors),
                 typeof(FoodDiary.Application.Abstractions.MealPlans.Common.MealPlanErrors),
@@ -681,8 +681,8 @@ public class CommonAbstractionsTests {
                 typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common.FavoriteMealErrors),
                 typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common.FavoriteProductErrors),
                 typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common.FavoriteRecipeErrors),
-                typeof(FoodDiary.Application.Abstractions.Images.Common.ImageErrors),
-                typeof(FoodDiary.Application.Abstractions.Lessons.Common.LessonErrors),
+                typeof(FoodDiary.Modules.Images.Application.Abstractions.Common.ImageErrors),
+                typeof(FoodDiary.Modules.Lessons.Application.Abstractions.Common.LessonErrors),
                 typeof(FoodDiary.Modules.Admin.Application.Abstractions.Common.AdminMailInboxErrors),
                 typeof(FoodDiary.Application.Abstractions.Meals.Common.MealErrors),
                 typeof(FoodDiary.Application.Abstractions.MealPlans.Common.MealPlanErrors),

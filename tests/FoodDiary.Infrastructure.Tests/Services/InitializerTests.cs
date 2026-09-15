@@ -1,7 +1,8 @@
+using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Initializer;
-using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Results;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +31,7 @@ public sealed class InitializerTests {
         FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
         Assert.NotEmpty(context.Database.GetMigrations());
-        Assert.Null(scope.ServiceProvider.GetService<IInitialAdminBootstrapService>());
+        Assert.Null(scope.ServiceProvider.GetService<ISender>());
         Assert.DoesNotContain(services, descriptor => descriptor.ImplementationType?.Namespace?.StartsWith(
             "FoodDiary.Modules.Dashboard.Application", StringComparison.Ordinal) == true);
     }
@@ -47,7 +48,7 @@ public sealed class InitializerTests {
         Assert.NotNull(scope.ServiceProvider.GetRequiredService<IOutboxDeadLetterReplayService>());
         Assert.Equal(["achievement_evaluation", "email", "image_object_deletion", "notification_web_push"],
             scope.ServiceProvider.GetServices<IOutboxReplayStream>().Select(stream => stream.Name).Order(StringComparer.Ordinal), StringComparer.Ordinal);
-        Assert.Null(scope.ServiceProvider.GetService<IInitialAdminBootstrapService>());
+        Assert.Null(scope.ServiceProvider.GetService<ISender>());
     }
 
     [Theory]
@@ -61,7 +62,7 @@ public sealed class InitializerTests {
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
-        Assert.Equal(expectsBootstrap, scope.ServiceProvider.GetService<IInitialAdminBootstrapService>() is not null);
+        Assert.Equal(expectsBootstrap, scope.ServiceProvider.GetService<ISender>() is not null);
         Assert.NotEmpty(scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>().Database.GetMigrations());
     }
 
@@ -125,24 +126,21 @@ public sealed class InitializerTests {
     [InlineData(BootstrapInitialAdminStatus.Created)]
     public async Task InitialAdminBootstrapper_BootstrapAsync_AcceptsKnownOutcomes(
         BootstrapInitialAdminStatus status) {
-        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
-        service.BootstrapAsync(Arg.Any<string>(), "password", Arg.Any<CancellationToken>())
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Is<BootstrapInitialAdminCommand>(q => q.Password == "password"), Arg.Any<CancellationToken>())
             .Returns(Result.Success(new BootstrapInitialAdminModel(status, "admin@example.com")));
 
         await InitialAdminBootstrapper.BootstrapAsync(
             service,
             new InitialAdminBootstrapOptions(" admin@example.com ", "password", TimeSpan.FromSeconds(1)));
 
-        await service.Received(1).BootstrapAsync(
-            " admin@example.com ",
-            "password",
-            Arg.Any<CancellationToken>());
+        await service.Received(1).Send(new BootstrapInitialAdminCommand(" admin@example.com ", "password"), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task InitialAdminBootstrapper_BootstrapAsync_WhenServiceFails_Throws() {
-        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
-        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Is<BootstrapInitialAdminCommand>(q => true), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<BootstrapInitialAdminModel>(
                 new Error("InitialAdmin.Failed", "failed")));
 
@@ -156,12 +154,12 @@ public sealed class InitializerTests {
 
     [Fact]
     public async Task InitialAdminBootstrapper_BootstrapAsync_WhenInternalTimeoutExpires_ThrowsTimeout() {
-        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
-        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Is<BootstrapInitialAdminCommand>(q => true), Arg.Any<CancellationToken>())
             .Returns(async call => {
                 await Task.Delay(
                     Timeout.InfiniteTimeSpan,
-                    call.ArgAt<CancellationToken>(2)).ConfigureAwait(false);
+                    call.ArgAt<CancellationToken>(1)).ConfigureAwait(false);
                 return Result.Success(new BootstrapInitialAdminModel(
                     BootstrapInitialAdminStatus.Created,
                     "admin@example.com"));
@@ -180,10 +178,10 @@ public sealed class InitializerTests {
     public async Task InitialAdminBootstrapper_BootstrapAsync_WhenCallerCancels_PropagatesCancellation() {
         using var cancellationSource = new CancellationTokenSource();
         await cancellationSource.CancelAsync();
-        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
-        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Is<BootstrapInitialAdminCommand>(q => true), Arg.Any<CancellationToken>())
             .Returns(call => Task.FromCanceled<Result<BootstrapInitialAdminModel>>(
-                call.ArgAt<CancellationToken>(2)));
+                call.ArgAt<CancellationToken>(1)));
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
             InitialAdminBootstrapper.BootstrapAsync(
@@ -197,8 +195,8 @@ public sealed class InitializerTests {
 
     [Fact]
     public async Task InitialAdminBootstrapper_BootstrapAsync_WhenOutcomeIsUnknown_Throws() {
-        IInitialAdminBootstrapService service = Substitute.For<IInitialAdminBootstrapService>();
-        service.BootstrapAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+        ISender service = Substitute.For<ISender>();
+        service.Send(Arg.Is<BootstrapInitialAdminCommand>(q => true), Arg.Any<CancellationToken>())
             .Returns(Result.Success(new BootstrapInitialAdminModel(
                 (BootstrapInitialAdminStatus)999,
                 "admin@example.com")));

@@ -1,6 +1,11 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Email.Infrastructure;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Modules.Identity.Infrastructure;
+
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
@@ -107,7 +112,7 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Database:EnableRetries"] = "false",
-        }).Build());
+        }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddUsersPersistence();
         services.AddIdentityPersistence();
         services.AddReadModelComposition();

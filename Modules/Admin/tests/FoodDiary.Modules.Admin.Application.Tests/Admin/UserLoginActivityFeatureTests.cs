@@ -1,11 +1,11 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Authentication.Models;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserLoginSummary;
-using FoodDiary.Application.Identity.Authentication.Queries.GetLoginEvents;
-using FoodDiary.Application.Identity.Authentication.Queries.GetLoginDeviceSummary;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginEvents;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginDeviceSummary;
 using FoodDiary.Testing;
 using FoodDiary.Application.Abstractions.Common.Models;
 

@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Hydration.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class HydrationErrorContractTests {

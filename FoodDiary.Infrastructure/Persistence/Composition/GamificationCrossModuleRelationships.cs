@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 

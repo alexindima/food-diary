@@ -1,6 +1,11 @@
+using FoodDiary.Modules.Images.PersistenceModel;
+using FoodDiary.Modules.Gamification.PersistenceModel;
+using FoodDiary.Modules.Lessons.PersistenceModel;
+using FoodDiary.Modules.Hydration.PersistenceModel;
+using FoodDiary.Modules.Identity.PersistenceModel;
 using FoodDiary.Modules.Exercises.PersistenceModel;
 using FoodDiary.Persistence.Runtime.Persistence;
-using FoodDiary.Modules.Identity.PersistenceModel;
+
 using FoodDiary.Modules.Dietologist.PersistenceModel;
 using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.ContentReports.PersistenceModel;
@@ -15,9 +20,9 @@ using FoodDiary.Infrastructure.Persistence.Audit;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Fasting.PersistenceModel;
-using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
+
 using FoodDiary.Modules.DailyAdvices.PersistenceModel;
-using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
+
 using FoodDiary.Modules.Favorites.PersistenceModel;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.PersistenceModel;

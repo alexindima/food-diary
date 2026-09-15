@@ -1,4 +1,5 @@
-using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Commands.CleanupLoginEvents;
 using System.Diagnostics;
 using Hangfire;
 using Microsoft.Extensions.Options;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.JobManager.Services;
 
 public sealed class UserLoginEventCleanupJob(
-    IAuthenticationLoginEventCleanupService cleanupService,
+    ISender sender,
     IOptions<UserLoginEventCleanupOptions> options,
     JobExecutionObserver observer,
     ILogger<UserLoginEventCleanupJob> logger) {
@@ -28,8 +29,7 @@ public sealed class UserLoginEventCleanupJob(
             }
 
             DateTime cutoffUtc = observer.UtcNow.AddDays(-settings.RetentionDays);
-            totalDeletedCount = await cleanupService
-                .CleanupAsync(cutoffUtc, settings.BatchSize, cancellationToken)
+            totalDeletedCount = await sender.Send(new CleanupLoginEventsCommand(cutoffUtc, settings.BatchSize), cancellationToken)
                 .ConfigureAwait(false);
 
             if (totalDeletedCount > 0) {

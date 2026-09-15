@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using FoodDiary.Persistence.Runtime.Services;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
@@ -66,7 +69,7 @@ public sealed class CollaborationAuditRegistrationTests {
             new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=audit_composition;Username=test;Password=test",
             }).Build();
-        services.AddInfrastructure(configuration);
+        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddScoped(_ => Substitute.For<IDomainEventPublisher>());
     }
 }

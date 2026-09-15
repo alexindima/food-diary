@@ -1,10 +1,10 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Identity.Authentication.Services;
+namespace FoodDiary.Modules.Identity.Application.Authentication.Services;
 
 public sealed class TelegramAuthenticationIntentService(
     ITelegramLoginTicketStore tickets, IUserTelegramAccountService accounts, TimeProvider timeProvider) {

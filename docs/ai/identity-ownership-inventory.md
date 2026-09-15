@@ -2,8 +2,8 @@
 
 ## Moved to Modules/Identity
 
-- `Application`: all legacy `FoodDiary.Application.Identity` Authentication and Email commands, queries, validators, models, parsers, and services. `AssemblyName`, `RootNamespace`, public CLR namespaces, and `AddIdentityModule` remain `FoodDiary.Application.Identity` compatible.
-- `tests`: 171 focused Authentication tests. The test assembly retains `FoodDiary.Application.Tests` for existing `InternalsVisibleTo` compatibility.
+- `Application`: Authentication and Email commands, queries, validators, models, parsers and services use `FoodDiary.Modules.Identity.Application` and folder-aligned namespaces. Public requests live in Contracts; technical ports live in Application.Abstractions.
+- `tests`: focused tests use owner-specific `FoodDiary.Modules.Identity.<Layer>.Tests` assemblies and matching friend declarations.
 
 ## Central and collaborating seams
 

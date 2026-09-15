@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Users;
+namespace FoodDiary.Modules.Identity.Domain.Entities.Users;
 
 public sealed class UserLoginEvent : Entity<Guid> {
     public UserId UserId { get; private set; }

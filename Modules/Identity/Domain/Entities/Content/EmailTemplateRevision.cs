@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Entities.Content;
+namespace FoodDiary.Modules.Identity.Domain.Entities.Content;
 
 public sealed class EmailTemplateRevision {
     public Guid Id { get; private set; }

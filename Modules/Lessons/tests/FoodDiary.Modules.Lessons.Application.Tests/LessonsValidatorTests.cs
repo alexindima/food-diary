@@ -1,0 +1,33 @@
+using FluentValidation.TestHelper;
+using FoodDiary.Modules.Lessons.Application.Queries.GetLessons;
+
+namespace FoodDiary.Modules.Lessons.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public class LessonsValidatorTests {
+    private readonly GetLessonsQueryValidator _validator = new();
+
+    [Fact]
+    public async Task Validate_WithEmptyUserId_HasError() {
+        var query = new GetLessonsQuery(UserId: null, "en", Category: null);
+        TestValidationResult<GetLessonsQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.UserId);
+    }
+
+    [Fact]
+    public async Task Validate_WithValidQuery_NoErrors() {
+        var query = new GetLessonsQuery(Guid.NewGuid(), "en", Category: null);
+        TestValidationResult<GetLessonsQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task Validate_WithPageAboveSupportedBound_HasError() {
+        var query = new GetLessonsQuery(Guid.NewGuid(), "en", Category: null, Page: 10_001);
+        TestValidationResult<GetLessonsQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.Page);
+    }
+}

@@ -1,0 +1,20 @@
+using FoodDiary.Results;
+
+namespace FoodDiary.Modules.Hydration.Application.Abstractions.Common;
+
+public static class HydrationEntryErrors {
+    public static Error NotFound(Guid id) => new(
+        "HydrationEntry.NotFound",
+        $"Hydration entry with id '{id}' not found",
+        Kind: ErrorKind.NotFound);
+
+    public static Error NotAccessible(Guid id) => new(
+        "HydrationEntry.NotAccessible",
+        $"Hydration entry with id '{id}' was not found or is not accessible.",
+        Kind: ErrorKind.NotFound);
+
+    public static Error AlreadyExists(DateTime timestampUtc) => new(
+        "HydrationEntry.AlreadyExists",
+        $"A hydration entry already exists at '{timestampUtc:O}'.",
+        Kind: ErrorKind.Conflict);
+}

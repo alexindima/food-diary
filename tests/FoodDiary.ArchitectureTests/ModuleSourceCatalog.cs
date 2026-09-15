@@ -33,7 +33,7 @@ internal static class ModuleSourceCatalog {
             .Where(Directory.Exists)
             .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure"))
             .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure"))
-            .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.Persistence.Runtime"))
+            .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime"))
             .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition"));
 
     public static IEnumerable<string> InfrastructureFiles() =>

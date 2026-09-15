@@ -1,9 +1,10 @@
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class ImageAssetCleanupBatchTests {
@@ -38,8 +39,6 @@ public sealed class ImageAssetCleanupBatchTests {
             Call = (assetId, cancellationToken);
             return Task.FromResult(new DeleteImageAssetResult(Deleted: false));
         }
-
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public ValueTask DisposeAsync() {
             Disposed = true;

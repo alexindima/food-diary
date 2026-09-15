@@ -1,12 +1,12 @@
-using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
-using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Identity.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Models;
 
-namespace FoodDiary.Application.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
 

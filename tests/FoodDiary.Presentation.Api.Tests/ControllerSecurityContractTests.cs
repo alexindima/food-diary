@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Fasting.Presentation.Features.Logs;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
@@ -12,12 +13,13 @@ using FoodDiary.Modules.Ai.Presentation.Controllers;
 using FoodDiary.Modules.Dietologist.Presentation.Controllers;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Meals;
-using FoodDiary.Presentation.Api.Features.Auth;
-using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Billing.Presentation.Controllers;
 using FoodDiary.Modules.Dashboard.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Images;
-using FoodDiary.Presentation.Api.Features.Hydration;
+using FoodDiary.Modules.Images.Presentation.Controllers;
+using FoodDiary.Modules.Hydration.Presentation.Controllers;
 using FoodDiary.Modules.Export.Presentation.Controllers;
 using FoodDiary.Modules.Export.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Marketing;
@@ -308,9 +310,9 @@ public sealed class ControllerSecurityContractTests {
         (Type QueryType, string ParameterName, string AcceptedValue)[] expectations = [
             (typeof(global::FoodDiary.Modules.Admin.Presentation.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),
             (typeof(global::FoodDiary.Modules.Admin.Presentation.Requests.GetAdminUsersHttpQuery), "Status", PresentationQueryValues.Active),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
+            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
+            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
+            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
             (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
             (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests.GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
             (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests.GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),

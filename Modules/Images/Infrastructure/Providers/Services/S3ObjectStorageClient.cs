@@ -4,7 +4,7 @@ using System.Buffers;
 using System.Net;
 using System.Runtime.CompilerServices;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 
 internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorageClient {
     public string GetPreSignedUploadUrl(

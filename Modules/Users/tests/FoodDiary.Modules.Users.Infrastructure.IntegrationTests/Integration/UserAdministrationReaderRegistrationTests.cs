@@ -1,3 +1,6 @@
+using FoodDiary.Persistence.Runtime;
+using FoodDiary.Audit.Infrastructure;
+using FoodDiary.Email.Infrastructure;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using NSubstitute;
@@ -21,7 +24,7 @@ public sealed class UserAdministrationReaderRegistrationTests {
             services.AddUsersPersistence();
         }
 
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         if (!moduleFirst) {
             services.AddUsersPersistence();
@@ -65,7 +68,7 @@ public sealed class UserAdministrationReaderRegistrationTests {
     [Fact]
     public void AddInfrastructure_DoesNotOwnUsersRepositoryOrReadAliases() {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
 
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadRepository));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadModelRepository));

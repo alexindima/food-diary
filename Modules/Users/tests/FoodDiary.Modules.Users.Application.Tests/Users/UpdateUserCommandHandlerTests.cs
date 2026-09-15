@@ -1,8 +1,10 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Text.Json;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Users.Commands.UpdateUser;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -393,7 +395,7 @@ public sealed class UpdateUserCommandHandlerTests {
         IUserProfileImageService service = Substitute.For<IUserProfileImageService>();
         service.ResolveOptionalUrlAsync(Arg.Any<ImageAssetId?>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(async call => {
-                Result<FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel?> result = await access.ResolveOptionalAsync(
+                Result<FoodDiary.Modules.Images.Service.Contracts.Models.ImageAssetReadModel?> result = await access.ResolveOptionalAsync(
                     call.Arg<ImageAssetId?>(), call.Arg<UserId>(), call.Arg<CancellationToken>()).ConfigureAwait(false);
                 return result.IsFailure ? Result.Failure<string?>(result.Error) : Result.Success(result.Value?.Url);
             });
@@ -417,9 +419,6 @@ public sealed class UpdateUserCommandHandlerTests {
             .Returns(Task.FromResult(errorCode is null
                 ? new DeleteImageAssetResult(Deleted: true)
                 : new DeleteImageAssetResult(Deleted: false, errorCode)));
-        service
-            .CleanupOrphansAsync(Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(0));
         return service;
     }
 }

@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Entities.Achievements;
+namespace FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements;
 
 public static class AchievementDefinitionLimits {
     public const int KeyMaxLength = 100;

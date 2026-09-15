@@ -1,5 +1,5 @@
-using FoodDiary.Domain.Entities.Achievements;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements;
 using FluentValidation;
 using FoodDiary.Modules.Admin.Application.Internal.Validation;
 

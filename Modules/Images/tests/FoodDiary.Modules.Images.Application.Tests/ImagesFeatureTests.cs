@@ -1,0 +1,779 @@
+using FoodDiary.Modules.Images.Application.Abstractions.Models;
+using FoodDiary.Modules.Images.Application.Commands.CleanupOrphanImages;
+using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
+using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Application.Commands.DeleteImageAsset;
+using FoodDiary.Modules.Images.Application.Commands.ConfirmUpload;
+using FoodDiary.Modules.Images.Application.Commands.GetUploadUrl;
+using FoodDiary.Modules.Images.Application.Services;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
+using FoodDiary.Domain.ValueObjects.Ids;
+using Microsoft.Extensions.Logging.Abstractions;
+
+namespace FoodDiary.Modules.Images.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public class ImagesFeatureTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task CleanupOrphans_PropagatesCancellationAndStopsBeforeNextCandidate(bool cancelInsideBatch) {
+        var repository = new FakeImageAssetRepository();
+        var first = ImageAsset.Create(UserId.New(), "images/first.jpg", "https://cdn/first.jpg");
+        var second = ImageAsset.Create(UserId.New(), "images/second.jpg", "https://cdn/second.jpg");
+        await repository.AddAsync(first, CancellationToken.None);
+        await repository.AddAsync(second, CancellationToken.None);
+        using var cancellation = new CancellationTokenSource();
+        IImageAssetCleanupBatch batch = Substitute.For<IImageAssetCleanupBatch>();
+        batch.DeleteUnusedAsync(Arg.Any<ImageAssetId>(), cancellation.Token).Returns(async _ => {
+            await cancellation.CancelAsync();
+            return await Task.FromCanceled<bool>(cancellation.Token);
+        });
+        var service = new CleanupOrphanImagesCommandHandler(repository, batch, NullLogger<CleanupOrphanImagesCommandHandler>.Instance);
+        if (!cancelInsideBatch) { await cancellation.CancelAsync(); }
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.Handle(new CleanupOrphanImagesCommand(DateTime.UtcNow.AddYears(1), 10), cancellation.Token));
+
+        Assert.Equal(cancelInsideBatch ? 1 : 0, batch.ReceivedCalls().Count());
+        Assert.NotNull(await repository.GetByIdAsync(second.Id, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ImageAbstraction_DefaultOverloads_ForwardSemanticDefaults() {
+        var storage = new DefaultMethodImageStorageService();
+        var outbox = new DefaultMethodImageDeletionOutbox();
+
+        ImageObjectValidationResult validation = await ((IImageStorageService)storage)
+            .ConfirmUploadedObjectAsync("images/object.jpg", CancellationToken.None);
+        await ((IImageObjectDeletionOutbox)outbox)
+            .EnqueueAsync("images/object.jpg", CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(validation.IsValid),
+            () => Assert.Equal("images/object.jpg", storage.ValidatedObjectKey),
+            () => Assert.Equal(("images/object.jpg", true), outbox.Enqueued));
+    }
+    [Fact]
+    public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_ReturnsFailure() {
+        var handler = new GetImageUploadUrlCommandHandler(
+            CreateImageStorageService(),
+            new FakeImageAssetRepository());
+
+        var command = new GetImageUploadUrlCommand(Guid.Empty, "file.jpg", "image/jpeg", 100);
+        Result<GetImageUploadUrlResult> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("", "image/jpeg", 100, "File name")]
+    [InlineData("photo.jpg", " ", 100, "Content type")]
+    [InlineData("photo.jpg", "image/jpeg", 0, "File size")]
+    public async Task GetImageUploadUrlCommandHandler_WithInvalidUploadMetadata_ReturnsFailure(
+        string fileName,
+        string contentType,
+        long fileSizeBytes,
+        string expectedMessage) {
+        var handler = new GetImageUploadUrlCommandHandler(
+            CreateImageStorageService(),
+            new FakeImageAssetRepository());
+
+        Result<GetImageUploadUrlResult> result = await handler.Handle(
+            new GetImageUploadUrlCommand(Guid.NewGuid(), fileName, contentType, fileSizeBytes),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains(expectedMessage, result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetImageUploadUrlCommandHandler_WithValidRequest_PersistsAssetAndReturnsPresignedUrl() {
+        var repository = new FakeImageAssetRepository();
+        var handler = new GetImageUploadUrlCommandHandler(
+            CreateImageStorageService(),
+            repository);
+
+        Result<GetImageUploadUrlResult> result = await handler.Handle(
+            new GetImageUploadUrlCommand(Guid.NewGuid(), "photo.jpg", "image/jpeg", 1024),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("https://upload.example", result.Value.UploadUrl);
+        Assert.Equal("https://cdn.example/file.jpg", result.Value.FileUrl);
+        Assert.NotEqual(Guid.Empty, result.Value.AssetId);
+        Assert.Equal(1, repository.Count);
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WithValidOwnedUpload_ConfirmsAndPersistsAsset() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/pending.jpg", "https://cdn.example/pending.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        var outbox = new FakeImageObjectDeletionOutbox();
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var handler = new ConfirmImageUploadCommandHandler(repository, CreateImageStorageService(), outbox, unitOfWork);
+
+        Result<ConfirmImageUploadResult> result = await handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.True(asset.IsConfirmed);
+        Assert.Equal(asset.Url, result.Value.FileUrl);
+        Assert.Equal(asset.ObjectKey, Assert.Single(outbox.ObjectKeys));
+        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WithInvalidIdentifiers_ReturnsValidationFailuresWithoutStorageAccess() {
+        IImageStorageService storage = CreateImageStorageService();
+        var handler = new ConfirmImageUploadCommandHandler(
+            new FakeImageAssetRepository(), storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+
+        Result<ConfirmImageUploadResult> emptyUser = await handler.Handle(
+            new ConfirmImageUploadCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+        Result<ConfirmImageUploadResult> emptyAsset = await handler.Handle(
+            new ConfirmImageUploadCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal("Image.InvalidData", emptyUser.Error.Code),
+            () => Assert.Contains("UserId", emptyUser.Error.Message, StringComparison.OrdinalIgnoreCase),
+            () => Assert.Equal("Image.InvalidData", emptyAsset.Error.Code),
+            () => Assert.Contains("AssetId", emptyAsset.Error.Message, StringComparison.OrdinalIgnoreCase));
+        await storage.DidNotReceive().ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WhenStorageValidationFails_ReturnsStorageError() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/error.jpg", "https://cdn.example/error.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository, CreateThrowingImageStorageService(), new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+
+        Result<ConfirmImageUploadResult> result = await handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        Assert.Equal("Image.StorageError", result.Error.Code);
+        Assert.False(asset.IsConfirmed);
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WhenCancelledDuringValidation_PropagatesCancellation() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/cancel.jpg", "https://cdn.example/cancel.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        using var source = new CancellationTokenSource();
+        IImageStorageService storage = Substitute.For<IImageStorageService>();
+        storage.ConfirmUploadedObjectAsync(asset.ObjectKey, source.Token)
+            .Returns(async _ => {
+                await source.CancelAsync();
+                return await Task.FromCanceled<ImageObjectValidationResult>(source.Token);
+            });
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), source.Token));
+        await storage.Received(1).ConfirmUploadedObjectAsync(asset.ObjectKey, source.Token);
+        Assert.False(asset.IsConfirmed);
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WhenStorageThrowsCancellationWithoutCallerCancellation_ReturnsStorageError() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/storage-cancel.jpg", "https://cdn.example/storage-cancel.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        IImageStorageService storage = Substitute.For<IImageStorageService>();
+        storage.ConfirmUploadedObjectAsync(asset.ObjectKey, Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<ImageObjectValidationResult>(new OperationCanceledException("Storage timeout.")));
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+
+        Result<ConfirmImageUploadResult> result = await handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.StorageError", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WithInvalidUploadWithoutMessage_UsesStableFallbackMessage() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/incomplete.jpg", "https://cdn.example/incomplete.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository,
+            CreateImageStorageService(new ImageObjectValidationResult(IsValid: false)),
+            new FakeImageObjectDeletionOutbox(),
+            CreateUnitOfWork());
+
+        Result<ConfirmImageUploadResult> result = await handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("has not completed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ConfirmImageUploadCommandHandler_WhenPersistenceFails_PreservesOriginalFailureAfterRollback(bool rollbackFails) {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/rollback.jpg", "https://cdn.example/rollback.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        var persistenceFailure = new InvalidOperationException("Database unavailable.");
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.FromException(persistenceFailure));
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository, rollbackFails ? CreateSelectivelyThrowingImageStorageService(asset.ObjectKey) : CreateImageStorageService(), new FakeImageObjectDeletionOutbox(), unitOfWork);
+
+        InvalidOperationException thrown = await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None));
+
+        Assert.Same(persistenceFailure, thrown);
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WithAlreadyConfirmedAsset_IsIdempotent() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/confirmed.jpg", "https://cdn.example/confirmed.jpg");
+        asset.Confirm();
+        await repository.AddAsync(asset, CancellationToken.None);
+        IImageStorageService storage = CreateImageStorageService();
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository, storage, new FakeImageObjectDeletionOutbox(), unitOfWork);
+
+        Result<ConfirmImageUploadResult> result = await handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(asset.Url, result.Value.FileUrl);
+        await storage.DidNotReceive().ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WithForeignAsset_ReturnsSameNotFoundAsMissing() {
+        var repository = new FakeImageAssetRepository();
+        var asset = ImageAsset.Create(UserId.New(), "images/foreign.jpg", "https://cdn.example/foreign.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository,
+            CreateImageStorageService(),
+            new FakeImageObjectDeletionOutbox(),
+            CreateUnitOfWork());
+
+        Result<ConfirmImageUploadResult> foreign = await handler.Handle(
+            new ConfirmImageUploadCommand(UserId.New().Value, asset.Id.Value),
+            CancellationToken.None);
+        Result<ConfirmImageUploadResult> missing = await handler.Handle(
+            new ConfirmImageUploadCommand(UserId.New().Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(foreign);
+        ResultAssert.Failure(missing);
+        Assert.Equal("Image.NotFound", foreign.Error.Code);
+        Assert.Equal(missing.Error.Code, foreign.Error.Code);
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WithInvalidBytes_DoesNotConfirmAsset() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/invalid.jpg", "https://cdn.example/invalid.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository,
+            CreateImageStorageService(new ImageObjectValidationResult(IsValid: false, "invalid_content", "Invalid image.")),
+            new FakeImageObjectDeletionOutbox(),
+            CreateUnitOfWork());
+
+        Result<ConfirmImageUploadResult> result = await handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.False(asset.IsConfirmed);
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WhenPersistenceFails_DeletesPublishedObject() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/pending.jpg", "https://cdn.example/pending.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        IImageStorageService storage = CreateImageStorageService();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns<Task>(_ => throw new InvalidOperationException("Database unavailable."));
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository,
+            storage,
+            new FakeImageObjectDeletionOutbox(),
+            unitOfWork);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value),
+            CancellationToken.None));
+
+        await storage.Received(1).DeleteAsync(asset.ObjectKey, isConfirmed: true, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task DeleteImageAssetCommandHandler_WhenAssetMissing_ReturnsNotFound() {
+        var handler = new DeleteImageAssetCommandHandler(
+            new FakeImageAssetRepository(),
+            CreateCleanupService());
+
+        var assetId = Guid.NewGuid();
+        Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), assetId), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteImageAssetCommandHandler_WithOtherOwner_ReturnsNotFound() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var anotherUser = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/a.jpg", "https://cdn/a.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+
+        var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService());
+        Result result = await handler.Handle(new DeleteImageAssetCommand(anotherUser.Value, asset.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteImageAssetCommandHandler_WhenCleanupReturnsStorageError_ReturnsStorageError() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/a.jpg", "https://cdn/a.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+
+        var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService("storage_error"));
+        Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.StorageError", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("invalid", "Image.InvalidData")]
+    [InlineData("not_found", "Image.NotFound")]
+    [InlineData("in_use", "Image.InUse")]
+    [InlineData("storage_error", "Image.StorageError")]
+    [InlineData("unexpected", "Image.InvalidData")]
+    public async Task DeleteImageAssetCommandHandler_WhenCleanupFails_MapsErrorCode(string cleanupErrorCode, string expectedErrorCode) {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/a.jpg", "https://cdn/a.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+
+        var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService(cleanupErrorCode));
+        Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(expectedErrorCode, result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteImageAssetCommandHandler_WithEmptyAssetId_ReturnsInvalidDataFailure() {
+        var handler = new DeleteImageAssetCommandHandler(
+            new FakeImageAssetRepository(),
+            CreateCleanupService());
+
+        Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("AssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteImageAssetCommandHandler_WithEmptyUserId_ReturnsInvalidDataFailure() {
+        var handler = new DeleteImageAssetCommandHandler(
+            new FakeImageAssetRepository(),
+            CreateCleanupService());
+
+        Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_CleanupOrphans_WithNonPositiveBatch_ReturnsZero() {
+        var service = new CleanupOrphanImagesCommandHandler(new FakeImageAssetRepository(), new FakeImageAssetCleanupBatch(new FakeImageAssetRepository(), new FakeImageObjectDeletionOutbox()), NullLogger<CleanupOrphanImagesCommandHandler>.Instance);
+
+        int removed = await service.Handle(new CleanupOrphanImagesCommand(DateTime.UtcNow, 0), CancellationToken.None);
+
+        Assert.Equal(0, removed);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_CleanupOrphans_DeletesEligibleAssetsAndKeepsInUseAssets() {
+        var repository = new FakeImageAssetRepository();
+        var removable = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
+        var inUse = ImageAsset.Create(UserId.New(), "images/in-use.jpg", "https://cdn/in-use.jpg");
+        await repository.AddAsync(removable, CancellationToken.None);
+        await repository.AddAsync(inUse, CancellationToken.None);
+        repository.InUseIds.Add(inUse.Id);
+        var service = new CleanupOrphanImagesCommandHandler(repository, new FakeImageAssetCleanupBatch(repository, new FakeImageObjectDeletionOutbox()), NullLogger<CleanupOrphanImagesCommandHandler>.Instance);
+
+        int removed = await service.Handle(new CleanupOrphanImagesCommand(DateTime.UtcNow.AddYears(1), 10), CancellationToken.None);
+
+        Assert.Equal(1, removed);
+        Assert.Null(await repository.GetByIdAsync(removable.Id, CancellationToken.None));
+        Assert.NotNull(await repository.GetByIdAsync(inUse.Id, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_CleanupOrphans_WithLocalCutoff_NormalizesToUtc() {
+        var repository = new FakeImageAssetRepository();
+        var service = new CleanupOrphanImagesCommandHandler(repository, new FakeImageAssetCleanupBatch(repository, new FakeImageObjectDeletionOutbox()), NullLogger<CleanupOrphanImagesCommandHandler>.Instance);
+        var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
+
+        int removed = await service.Handle(new CleanupOrphanImagesCommand(localCutoff, 10), CancellationToken.None);
+
+        Assert.Equal(0, removed);
+        Assert.Equal(localCutoff.ToUniversalTime(), repository.LastUnusedOlderThanUtc);
+        Assert.Equal(DateTimeKind.Utc, repository.LastUnusedOlderThanUtc!.Value.Kind);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenInUse_ReturnsInUse() {
+        var repo = new FakeImageAssetRepository();
+        var asset = ImageAsset.Create(UserId.New(), "images/in-use.jpg", "https://cdn/in-use.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        repo.InUseIds.Add(asset.Id);
+
+        var service = new ImageAssetCleanupService(repo, new FakeImageObjectDeletionOutbox());
+
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
+
+        Assert.False(result.Deleted);
+        Assert.Equal("in_use", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WithEmptyAssetId_ReturnsInvalid() {
+        var service = new ImageAssetCleanupService(new FakeImageAssetRepository(), new FakeImageObjectDeletionOutbox());
+
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
+
+        Assert.False(result.Deleted);
+        Assert.Equal("invalid", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenAssetMissing_ReturnsNotFound() {
+        var service = new ImageAssetCleanupService(new FakeImageAssetRepository(), new FakeImageObjectDeletionOutbox());
+
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
+
+        Assert.False(result.Deleted);
+        Assert.Equal("not_found", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenDeleted_EnqueuesObjectDeletion() {
+        var repo = new FakeImageAssetRepository();
+        var outbox = new FakeImageObjectDeletionOutbox();
+        var asset = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+
+        var service = new ImageAssetCleanupService(repo, outbox);
+
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
+        ImageAsset? storedAsset = await repo.GetByIdAsync(asset.Id, CancellationToken.None);
+
+        Assert.True(result.Deleted);
+        Assert.Null(result.ErrorCode);
+        Assert.Null(storedAsset);
+        Assert.Equal(
+            [("images/removable.jpg", false), ("images/removable.jpg", true)],
+            outbox.Deletions);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenDeleted_DefersSaveToCaller() {
+        var repo = new FakeImageAssetRepository();
+        var asset = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var service = new ImageAssetCleanupService(repo, new FakeImageObjectDeletionOutbox());
+
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
+
+        Assert.True(result.Deleted);
+        Assert.Null(await repo.GetByIdAsync(asset.Id, CancellationToken.None));
+        await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_CleanupOrphans_WhenOneDeleteFails_ContinuesWithNextAsset() {
+        var repo = new FakeImageAssetRepository();
+        var failing = ImageAsset.Create(UserId.New(), "images/fail.jpg", "https://cdn/fail.jpg");
+        var removable = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
+        await repo.AddAsync(failing, CancellationToken.None);
+        await repo.AddAsync(removable, CancellationToken.None);
+        var service = new CleanupOrphanImagesCommandHandler(repo, new FakeImageAssetCleanupBatch(repo, new SelectivelyThrowingImageObjectDeletionOutbox("images/fail.jpg")), NullLogger<CleanupOrphanImagesCommandHandler>.Instance);
+
+        int removed = await service.Handle(new CleanupOrphanImagesCommand(DateTime.UtcNow.AddYears(1), 10), CancellationToken.None);
+
+        Assert.Equal(1, removed);
+        Assert.NotNull(await repo.GetByIdAsync(failing.Id, CancellationToken.None));
+        Assert.Null(await repo.GetByIdAsync(removable.Id, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ImageAssetAccessService_WhenAssetMissing_ReturnsNotFound() {
+        var service = new ImageAssetAccessService(new FakeImageAssetRepository());
+        var assetId = ImageAssetId.New();
+
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+        Assert.Contains(assetId.Value.ToString(), result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ImageAssetAccessService_WithOwnedUploadedAsset_ReturnsAsset() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/owned.jpg", "https://cdn.example/owned.jpg");
+        asset.Confirm();
+        await repo.AddAsync(asset, CancellationToken.None);
+        var service = new ImageAssetAccessService(repo);
+
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(asset.Url, result.Value!.Url);
+    }
+
+    [Fact]
+    public async Task ImageAssetAccessService_WithOtherOwner_ReturnsNotFound() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/owned.jpg", "https://cdn.example/owned.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        var service = new ImageAssetAccessService(repo);
+
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ImageAssetAccessService_WithIncompleteUpload_ReturnsValidationFailure() {
+        var repo = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/pending.jpg", "https://cdn.example/pending.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        var service = new ImageAssetAccessService(repo);
+
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("not been confirmed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static IImageAssetCleanupService CreateCleanupService(string? errorCode = null) {
+        IImageAssetCleanupService service = Substitute.For<IImageAssetCleanupService>();
+        service
+            .DeleteIfUnusedAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(errorCode is null
+                ? new DeleteImageAssetResult(Deleted: true)
+                : new DeleteImageAssetResult(Deleted: false, errorCode)));
+        return service;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DefaultMethodImageStorageService : IImageStorageService {
+        public string? ValidatedObjectKey { get; private set; }
+
+        public Task<PresignedUpload> CreatePresignedUploadAsync(UserId userId, string fileName, string contentType, long fileSizeBytes, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken) {
+            ValidatedObjectKey = objectKey;
+            return Task.FromResult(new ImageObjectValidationResult(IsValid: true));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DefaultMethodImageDeletionOutbox : IImageObjectDeletionOutbox {
+        public (string ObjectKey, bool IsConfirmed) Enqueued { get; private set; }
+
+        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
+            Enqueued = (objectKey, isConfirmed);
+            return Task.CompletedTask;
+        }
+    }
+
+    private static IImageStorageService CreateImageStorageService(ImageObjectValidationResult? validationResult = null) {
+        IImageStorageService service = Substitute.For<IImageStorageService>();
+        service
+            .CreatePresignedUploadAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<long>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new PresignedUpload(
+                "https://upload.example",
+                "https://cdn.example/file.jpg",
+                "images/file.jpg",
+                DateTime.UtcNow.AddMinutes(10))));
+        service
+            .DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        service
+            .ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(validationResult ?? new ImageObjectValidationResult(IsValid: true)));
+        return service;
+    }
+
+    private static IImageStorageService CreateThrowingImageStorageService() {
+        IImageStorageService service = Substitute.For<IImageStorageService>();
+        var exception = new InvalidOperationException("Simulated storage failure.");
+        service
+            .DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(exception));
+        service
+            .ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<ImageObjectValidationResult>(exception));
+        return service;
+    }
+
+    private static IImageStorageService CreateSelectivelyThrowingImageStorageService(string failingObjectKey) {
+        IImageStorageService service = Substitute.For<IImageStorageService>();
+        service
+            .DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                string objectKey = call.Arg<string>()!;
+                return string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)
+                    ? Task.FromException(new InvalidOperationException("Simulated storage failure."))
+                    : Task.CompletedTask;
+            });
+        service
+            .ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new ImageObjectValidationResult(IsValid: true)));
+        return service;
+    }
+
+    private static IUnitOfWork CreateUnitOfWork() {
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        return unitOfWork;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FakeImageObjectDeletionOutbox : IImageObjectDeletionOutbox {
+        public List<string> ObjectKeys { get; } = [];
+        public List<(string ObjectKey, bool IsConfirmed)> Deletions { get; } = [];
+
+        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
+            ObjectKeys.Add(objectKey);
+            Deletions.Add((objectKey, isConfirmed));
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SelectivelyThrowingImageObjectDeletionOutbox(string failingObjectKey) : IImageObjectDeletionOutbox {
+        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
+            if (string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)) {
+                throw new InvalidOperationException("Object deletion outbox enqueue failed.");
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+    [ExcludeFromCodeCoverage]
+    private sealed class FakeImageAssetRepository : IImageAssetRepository, IImageAssetUsageQuery {
+        private readonly Dictionary<ImageAssetId, ImageAsset> _assets = [];
+        public HashSet<ImageAssetId> InUseIds { get; } = [];
+        public int Count => _assets.Count;
+        public DateTime? LastUnusedOlderThanUtc { get; private set; }
+
+        public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
+            _assets[asset.Id] = asset;
+            return Task.FromResult(asset);
+        }
+
+        public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) {
+            _assets.TryGetValue(id, out ImageAsset? asset);
+            return Task.FromResult(asset);
+        }
+
+        public Task<ImageAsset?> GetOwnedByIdAsync(ImageAssetId id, UserId userId, CancellationToken cancellationToken = default) {
+            _assets.TryGetValue(id, out ImageAsset? asset);
+            return Task.FromResult(asset?.UserId == userId ? asset : null);
+        }
+
+        public Task<ImageAsset?> GetOwnedForUpdateAsync(ImageAssetId id, UserId userId, CancellationToken cancellationToken = default) =>
+            GetOwnedByIdAsync(id, userId, cancellationToken);
+
+        public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
+            _assets.Remove(asset.Id);
+            return Task.CompletedTask;
+        }
+
+        public Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(InUseIds.Contains(assetId));
+
+        public Task<IReadOnlyList<ImageCleanupCandidate>> GetUnusedCandidatesOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            ImageCleanupCandidate? after = null,
+            CancellationToken cancellationToken = default) {
+            LastUnusedOlderThanUtc = olderThanUtc;
+            var result = _assets.Values
+                .Where(a => a.CreatedOnUtc < olderThanUtc && !InUseIds.Contains(a.Id))
+                .Where(a => after is null || a.CreatedOnUtc > after.CreatedOnUtc ||
+                    (a.CreatedOnUtc == after.CreatedOnUtc && a.Id.Value.CompareTo(after.Id.Value) > 0))
+                .OrderBy(a => a.CreatedOnUtc).ThenBy(a => a.Id.Value)
+                .Take(batchSize)
+                .Select(a => new ImageCleanupCandidate(a.Id, a.CreatedOnUtc)).ToList();
+            return Task.FromResult<IReadOnlyList<ImageCleanupCandidate>>(result);
+        }
+    }
+    [ExcludeFromCodeCoverage]
+    private sealed class FakeImageAssetCleanupBatch(
+        IImageAssetWriteRepository repository,
+        IImageObjectDeletionOutbox outbox) : IImageAssetCleanupBatch {
+        public async Task<bool> DeleteUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
+            var service = new ImageAssetCleanupService(repository, outbox);
+            return (await service.DeleteIfUnusedAsync(assetId, cancellationToken)).Deleted;
+        }
+    }
+
+}

@@ -9,9 +9,13 @@ direct repository access to consumers.
 The existing ImageAssetIdParser, ImageAssetResolution and ImageAssetResolver are small
 consumer-side input adapters over IImageAssetAccessService; they preserve validation
 and optional-image behavior without exposing Images Application to consumers.
-Images.Contracts remains the legacy ID-only package. Preserve CLR namespaces, owner
+Images.Contracts remains the legacy ID-only package. Preserve owner
 checks, confirmation requirements, null behavior and existing error codes.
 
 IImageAssetContentService supplies transient data URLs for provider requests after
 owner and confirmation checks. Consumers must not log, persist or enqueue image
 content; persisted recognition jobs continue to contain asset identifiers.
+
+Use canonical FoodDiary.Modules.Images project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+CleanupOrphanImagesCommand is the background entrypoint. The owner handler preserves independent per-candidate scopes and saves; ordinary IImageAssetCleanupService.DeleteIfUnusedAsync remains a reusable caller-transaction capability. Do not apply the transactional-command marker to orphan cleanup.

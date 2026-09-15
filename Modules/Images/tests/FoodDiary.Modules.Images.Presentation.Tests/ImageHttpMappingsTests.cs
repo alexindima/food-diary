@@ -1,10 +1,11 @@
-using FoodDiary.Application.Images.Commands.DeleteImageAsset;
-using FoodDiary.Application.Images.Commands.GetUploadUrl;
-using FoodDiary.Presentation.Api.Features.Images.Mappings;
-using FoodDiary.Presentation.Api.Features.Images.Requests;
-using FoodDiary.Presentation.Api.Features.Images.Responses;
+using FoodDiary.Modules.Images.Presentation.Mappings;
+using FoodDiary.Modules.Images.Application.Commands.DeleteImageAsset;
+using FoodDiary.Modules.Images.Application.Commands.GetUploadUrl;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Images.Presentation.Requests;
+using FoodDiary.Modules.Images.Presentation.Responses;
+
+namespace FoodDiary.Modules.Images.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ImageHttpMappingsTests {

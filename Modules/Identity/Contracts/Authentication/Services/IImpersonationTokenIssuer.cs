@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Authentication.Models;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
 
-namespace FoodDiary.Application.Abstractions.Authentication.Services;
+namespace FoodDiary.Modules.Identity.Contracts.Authentication.Services;
 
 public interface IImpersonationTokenIssuer {
     string IssueAccessToken(ImpersonationTokenRequest request);

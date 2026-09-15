@@ -7,3 +7,5 @@ Preserve existing CLR namespaces and wire fields during coordinated rebuilds. Do
 IAchievementEvaluationOutbox is the consumer enqueue capability used by Lessons.
 It belongs to Contracts; processing, repositories and reconciliation remain internal
 Abstractions. Preserve ambient transaction and coalescing behavior in its adapter.
+
+Use canonical FoodDiary.Modules.Gamification project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

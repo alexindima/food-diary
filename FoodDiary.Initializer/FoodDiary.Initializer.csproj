@@ -6,14 +6,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../Modules/Exercises/Application/FoodDiary.Modules.Exercises.Application.csproj" />
-    <ProjectReference Include="../Modules/Images/Application/FoodDiary.Application.Images.csproj" />
+    <ProjectReference Include="../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
+    <ProjectReference Include="../Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj" />
+    <ProjectReference Include="../Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Images/Application/FoodDiary.Modules.Images.Application.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="../Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="../Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj" />
     <ProjectReference Include="../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="../Modules/Usda/Application/FoodDiary.Application.Usda.csproj" />
+    <ProjectReference Include="../Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj" />
     <ProjectReference Include="../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
@@ -28,6 +37,7 @@
     <ProjectReference Include="../Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Exercises/Application/FoodDiary.Modules.Exercises.Application.csproj" />
     <ProjectReference Include="../Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj" />
     <ProjectReference Include="../Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj" />
@@ -63,11 +73,4 @@
     <ProjectReference Include="../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <ProjectReference Include="../FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" />
-  </ItemGroup>
-
 </Project>

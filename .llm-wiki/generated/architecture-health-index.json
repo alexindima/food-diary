@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1605,
+    "productionProjectEdges": 1621,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 62,
     "componentsWithoutDirectSpecs": 145,
-    "criticalSymbolsWithoutTestReferences": 32,
+    "criticalSymbolsWithoutTestReferences": 30,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -5166,16 +5166,6 @@
       "coveredThrough": []
     },
     {
-      "name": "CompleteTelegramBackupEmailCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramBackupEmail/CompleteTelegramBackupEmailCommandHandler.cs",
-      "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "RegisterTelegramOperationCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommandHandler.cs",
@@ -5190,16 +5180,6 @@
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "StartTelegramBackupEmailCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommandHandler.cs",
-      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5499,7 +5479,7 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "line": 51,
+      "line": 53,
       "marker": "#pragma warning disable"
     },
     {

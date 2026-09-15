@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Hydration.Internal;
+namespace FoodDiary.Modules.Hydration.Application.Internal;
 
 internal static class RequiredIdParser {
     public static Result<TId> Parse<TId>(Guid value, string parameterName, string message, Func<Guid, TId> createId) =>

@@ -2,7 +2,7 @@ using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Admin.Application.Commands.CreateAdminAchievementDefinition;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminAchievementDefinition;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAchievementDefinitions;
-using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Modules.Gamification.Contracts.Models;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Modules.Admin.Presentation.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Requests;

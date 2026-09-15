@@ -1,11 +1,11 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Diagnostics.Metrics;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
 using SkiaSharp;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Images.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class S3ImageStorageServiceTests {

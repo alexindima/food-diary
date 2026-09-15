@@ -1,4 +1,5 @@
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Application.Products.Commands.UpdateProduct;

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;

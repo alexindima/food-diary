@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Modules.Identity.Contracts.Admin.Models;
+using FoodDiary.Modules.Identity.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Admin;

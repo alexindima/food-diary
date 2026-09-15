@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;

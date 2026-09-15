@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Hydration.Commands.CreateHydrationFromOperation;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationFromOperation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Hydration.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CreateHydrationFromOperationTests {
@@ -25,7 +25,7 @@ public sealed class CreateHydrationFromOperationTests {
         DateTime timestamp = string.Equals(scenario, "timestamp", StringComparison.Ordinal) ? DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified) : DateTime.UtcNow;
         int amount = string.Equals(scenario, "amount", StringComparison.Ordinal) ? 0 : 250;
 
-        FoodDiary.Results.Result<FoodDiary.Application.Hydration.Models.HydrationOperationModel> result = await new CreateHydrationFromOperationCommandHandler(entries, receipts, access)
+        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await new CreateHydrationFromOperationCommandHandler(entries, receipts, access)
             .Handle(new CreateHydrationFromOperationCommand(owner.Value, operation, timestamp, amount), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -42,7 +42,7 @@ public sealed class CreateHydrationFromOperationTests {
         IHydrationOperationReceiptRepository receipts = Substitute.For<IHydrationOperationReceiptRepository>();
         var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>());
 
-        FoodDiary.Results.Result<FoodDiary.Application.Hydration.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, 250), CancellationToken.None);
+        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, 250), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         await entries.Received(1).AddAsync(Arg.Is<HydrationEntry>(entry => entry.Id.Value == result.Value.EntryId && entry.AmountMl == 250 && entry.Timestamp == timestamp), Arg.Any<CancellationToken>());
@@ -63,7 +63,7 @@ public sealed class CreateHydrationFromOperationTests {
         receipts.FindAsync(owner, operationId, Arg.Any<CancellationToken>()).Returns(receipt);
         var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>());
 
-        FoodDiary.Results.Result<FoodDiary.Application.Hydration.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, amount), CancellationToken.None);
+        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, amount), CancellationToken.None);
 
         Assert.Equal(matches, result.IsSuccess);
         if (matches) {

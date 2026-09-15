@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 

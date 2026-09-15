@@ -1,6 +1,6 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Images.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderOptionsTests {

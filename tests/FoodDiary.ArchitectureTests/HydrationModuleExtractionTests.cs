@@ -74,7 +74,7 @@ public sealed class HydrationModuleExtractionTests {
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Tracking", "HydrationEntryRepository.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Configurations", "Hydration", "HydrationEntryConfiguration.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Infrastructure", "Persistence", "HydrationEntryRepository.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Infrastructure", "Model", "Configurations", "HydrationEntryConfiguration.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "PersistenceModel", "Configurations", "HydrationEntryConfiguration.cs")));
     }
 
     [Theory]

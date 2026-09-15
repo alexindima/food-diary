@@ -1,8 +1,10 @@
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Lessons.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
+using FoodDiary.Modules.Lessons.Domain.Entities.Content;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Lessons.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class LessonsDomainInvariantTests {

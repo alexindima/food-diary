@@ -1,4 +1,6 @@
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -11,7 +13,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
 
     [Fact]
     public async Task Execute_WhenNoOrphans_RecordsSuccess() {
-        var cleanup = new StubImageCleanupService(itemsPerBatch: 0);
+        var cleanup = new StubImageCleanupService(totalAvailable: 0);
         ImageCleanupJob job = CreateJob(cleanup);
 
         await job.Execute();
@@ -23,15 +25,15 @@ public sealed class ImageCleanupJobTests : IDisposable {
     }
 
     [Fact]
-    public async Task Execute_WithOrphans_DeletesInBatches() {
-        var cleanup = new StubImageCleanupService(itemsPerBatch: 3, totalAvailable: 5);
+    public async Task Execute_WithOrphans_DispatchesOneBoundedCleanupRequest() {
+        var cleanup = new StubImageCleanupService(totalAvailable: 5);
         var options = new ImageCleanupOptions { BatchSize = 3, OlderThanHours = 12 };
         ImageCleanupJob job = CreateJob(cleanup, options);
 
         await job.Execute();
 
         Assert.Equal(5, cleanup.TotalDeleted);
-        Assert.Equal(2, cleanup.CallCount);
+        Assert.Equal(1, cleanup.CallCount);
     }
 
     [Fact]
@@ -46,10 +48,10 @@ public sealed class ImageCleanupJobTests : IDisposable {
     }
 
     private ImageCleanupJob CreateJob(
-        IImageAssetCleanupService cleanupService,
+        IRequestHandler<CleanupOrphanImagesCommand, int> cleanupService,
         ImageCleanupOptions? options = null) {
         return new ImageCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             Options.Create(options ?? new ImageCleanupOptions()),
             new JobExecutionObserver(new FixedDateTimeProvider(), _stateTracker),
             NullLogger<ImageCleanupJob>.Instance);
@@ -58,31 +60,24 @@ public sealed class ImageCleanupJobTests : IDisposable {
     public void Dispose() => _stateTracker.Dispose();
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubImageCleanupService(int itemsPerBatch, int totalAvailable = 0) : IImageAssetCleanupService {
+    private sealed class StubImageCleanupService(int totalAvailable) : IRequestHandler<CleanupOrphanImagesCommand, int> {
         public int TotalDeleted { get; private set; }
         public int CallCount { get; private set; }
 
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
+        public Task<int> Handle(CleanupOrphanImagesCommand request, CancellationToken cancellationToken) {
             CallCount++;
-            int remaining = totalAvailable - TotalDeleted;
-            int toDelete = Math.Min(Math.Min(itemsPerBatch, batchSize), remaining);
+            int toDelete = totalAvailable - TotalDeleted;
             TotalDeleted += toDelete;
             return Task.FromResult(toDelete);
         }
 
-        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(
-            Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ThrowingImageCleanupService : IImageAssetCleanupService {
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+    private sealed class ThrowingImageCleanupService : IRequestHandler<CleanupOrphanImagesCommand, int> {
+        public Task<int> Handle(CleanupOrphanImagesCommand request, CancellationToken cancellationToken) =>
             throw new InvalidOperationException("S3 error");
 
-        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(
-            Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

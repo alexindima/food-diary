@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Identity.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserRefreshTokenSessionInvariantTests {

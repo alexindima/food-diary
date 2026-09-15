@@ -11,3 +11,5 @@ reference the central context or Identity adapter project from this model projec
 Use Users.Domain.Contracts for scalar UserId. IdentityCrossModuleRelationships in
 central Infrastructure composes foreign User relationships after owned models.
 UserLoginEvent and UserRefreshTokenSession retain UserId Cascade deletion. Do not restore Users.Domain to PersistenceModel.
+
+Use canonical FoodDiary.Modules.Identity project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.

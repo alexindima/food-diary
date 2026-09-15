@@ -18,6 +18,7 @@ public static class ProductsModuleRegistration {
         services.AddProductsApplication().AddProductsPersistence();
 
     public static IServiceCollection AddProductsPersistence(this IServiceCollection services) {
+        services.AddMemoryCache();
         services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<ProductsDbContext>(options => new ProductsDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ProductsUserDataPurgeParticipant>());

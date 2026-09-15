@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
@@ -74,10 +75,10 @@ public sealed class PresentationErrorHttpMapperTests {
             _ => throw new InvalidOperationException($"Unknown test factory: {factoryName}"),
         };
 
-    private static Error CreateTelegramInvalidData() => Errors.Authentication.TelegramInvalidData;
-    private static Error CreateTelegramBotNotConfigured() => Errors.Authentication.TelegramBotNotConfigured;
-    private static Error CreateTelegramBotInvalidSecret() => Errors.Authentication.TelegramBotInvalidSecret;
-    private static Error CreateAdminSsoForbidden() => Errors.Authentication.AdminSsoForbidden;
+    private static Error CreateTelegramInvalidData() => IdentityErrors.TelegramInvalidData;
+    private static Error CreateTelegramBotNotConfigured() => IdentityErrors.TelegramBotNotConfigured;
+    private static Error CreateTelegramBotInvalidSecret() => IdentityErrors.TelegramBotInvalidSecret;
+    private static Error CreateAdminSsoForbidden() => IdentityErrors.AdminSsoForbidden;
     private static Error CreateAccountNotDeleted() => Errors.Authentication.AccountNotDeleted;
     private static Error CreateAiInvalidResponse() => AiErrors.InvalidResponse("bad response");
     private static Error CreateAiImageNotFound() => AiErrors.ImageNotFound(Guid.Empty);

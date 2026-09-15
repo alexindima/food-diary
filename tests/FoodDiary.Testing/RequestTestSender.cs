@@ -10,7 +10,7 @@ public abstract class RequestTestSender : ISender {
     public abstract Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
 
     public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest =>
-        throw new NotSupportedException("Register a typed request handler in this fixture.");
+        Send<Unit>(request, cancellationToken);
 
     public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("Use the typed request overload in this fixture.");

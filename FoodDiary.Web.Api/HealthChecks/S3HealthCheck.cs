@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using Amazon.S3;
 using Amazon.S3.Model;
-using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 

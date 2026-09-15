@@ -1,6 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Images.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Common;

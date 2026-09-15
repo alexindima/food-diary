@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Lessons.Models;
+using FoodDiary.Modules.Lessons.Application.Models;
 
-namespace FoodDiary.Application.Lessons.Queries.GetLessons;
+namespace FoodDiary.Modules.Lessons.Application.Queries.GetLessons;
 
 public record GetLessonsQuery(
     Guid? UserId,

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Authentication.Common;
+namespace FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 
 public sealed record AccountCreatedMessage(
     string ToEmail,

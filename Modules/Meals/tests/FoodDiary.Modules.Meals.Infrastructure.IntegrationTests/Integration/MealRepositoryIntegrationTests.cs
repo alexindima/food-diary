@@ -24,7 +24,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
     public async Task Projection_LoadsAiImageAndLegacyRecipeWithoutTrackingForeignEntities() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"projection-{Guid.NewGuid():N}@example.com", "hash");
-        var image = FoodDiary.Domain.Entities.Assets.ImageAsset.Create(user.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
+        var image = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(user.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
         var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Legacy recipe", 2);
         recipe.SetManualNutrition(600, 20, 30, 50, fiber: null, alcohol: null);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);

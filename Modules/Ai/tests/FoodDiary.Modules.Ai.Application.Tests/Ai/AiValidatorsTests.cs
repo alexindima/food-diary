@@ -1,7 +1,8 @@
-﻿using FoodDiary.Modules.Ai.Application.Services;
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
-using FoodDiary.Application.Images.Services;
+using FoodDiary.Modules.Images.Application.Services;
 using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
 using FoodDiary.Modules.Ai.Application.Commands.ParseFoodText;
 
@@ -10,11 +11,12 @@ using FoodDiary.Modules.Ai.Application.Abstractions.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Ai.Application.Queries.GetUserAiUsageSummary;
-using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Abstractions.Images.Models;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
