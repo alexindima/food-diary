@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
@@ -20,7 +21,7 @@ public sealed class ModuleContextFactoryRegistrationTests {
             new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=factory_test;Username=test;Password=test",
             }).Build();
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         RegisterModules(services);
         Type[] ownerTypes = [.. services.Select(service => service.ServiceType)
@@ -70,7 +71,7 @@ public sealed class ModuleContextFactoryRegistrationTests {
         global::FoodDiary.Modules.OpenFoodFacts.Infrastructure.ModuleRegistration.AddOpenFoodFactsModule(services);
         global::FoodDiary.Modules.Usda.Infrastructure.ModuleRegistration.AddUsdaModule(services);
         global::FoodDiary.Infrastructure.UsersModuleRegistration.AddUsersPersistence(services);
-        global::FoodDiary.Infrastructure.MealsModuleRegistration.AddMealsPersistence(services);
+        global::FoodDiary.Modules.Meals.Infrastructure.MealsModuleRegistration.AddMealsPersistence(services);
         global::FoodDiary.Modules.MealPlanning.Infrastructure.ModuleRegistration.AddMealPlanningModule(services);
         global::FoodDiary.Modules.Notifications.Infrastructure.ModuleRegistration.AddNotificationsPersistence(services);
         global::FoodDiary.Infrastructure.RecipesModuleRegistration.AddRecipesPersistence(services);

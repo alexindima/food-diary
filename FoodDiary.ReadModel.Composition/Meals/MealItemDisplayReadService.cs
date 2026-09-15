@@ -1,5 +1,6 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;

@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
 
@@ -9,7 +9,7 @@ public sealed class GoogleLoginCommandValidator : AbstractValidator<GoogleLoginC
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("credential is required.")
-            .MaximumLength(AuthenticationInputLimits.MaximumGoogleCredentialLength)
+            .MaximumLength(IdentityInputLimits.MaximumGoogleCredentialLength)
             .WithErrorCode("Validation.Invalid");
     }
 }

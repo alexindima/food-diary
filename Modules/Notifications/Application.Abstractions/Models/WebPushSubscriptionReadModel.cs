@@ -1,0 +1,9 @@
+namespace FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+
+public sealed record WebPushSubscriptionReadModel(
+    string Endpoint,
+    DateTime? ExpirationTimeUtc,
+    string? Locale,
+    string? UserAgent,
+    DateTime CreatedAtUtc,
+    DateTime? UpdatedAtUtc);

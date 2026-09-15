@@ -22,7 +22,7 @@
     <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Dietologist.Contracts.csproj" />
-    <ProjectReference Include="../../../Notifications/Application/FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../../Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Contracts/FoodDiary.Modules.BodyMetrics.Contracts.csproj" />
     <ProjectReference Include="../../../Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />
@@ -30,7 +30,7 @@
     <ProjectReference Include="../../../Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
-    <ProjectReference Include="../../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Application/FoodDiary.Modules.Users.Application.csproj" />

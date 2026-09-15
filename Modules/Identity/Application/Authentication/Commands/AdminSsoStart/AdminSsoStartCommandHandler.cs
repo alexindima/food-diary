@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -36,7 +37,7 @@ public sealed class AdminSsoStartCommandHandler(
             .ConfigureAwait(false);
         if (principalResult.IsFailure) {
             Error error = string.Equals(principalResult.Error.Code, "User.NotFound", StringComparison.Ordinal)
-                ? Errors.Authentication.InvalidCredentials
+                ? AuthenticationErrors.InvalidCredentials
                 : principalResult.Error;
             return Result.Failure<AdminSsoStartModel>(error);
         }

@@ -1,9 +1,10 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Modules.Ai.Domain.Entities;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;

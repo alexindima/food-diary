@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
@@ -18,6 +19,10 @@ public sealed class IndependentModuleContextOptionsFactoryTests {
     public void ConfiguredOptionsPreserveProviderBehaviorWithoutJoiningScopedConnection() {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=independent_options_test;Username=test;Password=test",
+                ["Database:EnableRetries"] = "true",
+            }).Build()).AddOutboxProcessing(new ConfigurationBuilder().AddInMemoryCollection(
             new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=independent_options_test;Username=test;Password=test",
                 ["Database:EnableRetries"] = "true",

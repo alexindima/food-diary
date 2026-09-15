@@ -1,9 +1,14 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Application.Queries.ReadDistinctMealDates;
+using FoodDiary.Modules.Meals.Application.Queries.ReadTotalMealCount;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Meals.Application.Queries.ReadMealCount;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Gamification.Application.Queries.GetGamification;
 using FoodDiary.Modules.Gamification.Application.Common;
-using FoodDiary.Application.Meals.Services;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -105,7 +110,7 @@ public class GamificationFeatureTests {
         IUserGamificationProfileReadService userProfileService = Substitute.For<IUserGamificationProfileReadService>();
         userProfileService
             .GetGamificationProfileAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserGamificationProfileModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserGamificationProfileModel>(AuthenticationErrors.InvalidToken)));
         GetGamificationQueryHandler service = CreateGamificationHandler(
             CreateMealRepository(),
             CreateStatisticsReadService(),
@@ -179,7 +184,7 @@ public class GamificationFeatureTests {
         IMealNutritionStatisticsReadService statisticsReadService,
         IUserGamificationProfileReadService userProfileService, ICurrentUserAccessService? access = null) =>
         new(
-            new MealActivityReadService(mealRepository),
+            RequestTestSender.Create(new ReadMealCountQueryHandler(mealRepository), new ReadDistinctMealDatesQueryHandler(mealRepository), new ReadTotalMealCountQueryHandler(mealRepository)),
             statisticsReadService,
             userProfileService,
             CreateAchievementMetricReader(),
@@ -226,7 +231,7 @@ public class GamificationFeatureTests {
                         user.DailyCalorieTarget, user.CalorieCyclingEnabled,
                         user.MondayCalories, user.TuesdayCalories, user.WednesdayCalories,
                         user.ThursdayCalories, user.FridayCalories, user.SaturdayCalories, user.SundayCalories)))
-                    : Result.Failure<UserGamificationProfileModel>(Errors.Authentication.InvalidToken));
+                    : Result.Failure<UserGamificationProfileModel>(AuthenticationErrors.InvalidToken));
             });
         return service;
     }
@@ -241,10 +246,10 @@ public class GamificationFeatureTests {
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {
-                    return Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
+                    return Task.FromResult<Error?>(AuthenticationErrors.InvalidToken);
                 }
 
-                return Task.FromResult(user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted);
+                return Task.FromResult(user.DeletedAt is null ? null : UserAuthenticationErrors.AccountDeleted);
             });
         return service;
     }

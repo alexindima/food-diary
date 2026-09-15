@@ -1,8 +1,8 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
@@ -207,7 +207,7 @@ public partial class BillingFeatureTests {
         userContextService.Send(new CheckUserAccessQuery(UserId: userId), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService.Send(new GetUserBillingProfileQuery(UserId: userId), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken)));
         var handler = new CreateCheckoutSessionCommandHandler(
             userContextService,
             new InMemoryBillingSubscriptionRepository(),

@@ -2,11 +2,11 @@ using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.MealPlans.Common;
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning;
-using FoodDiary.Infrastructure.Persistence.MealPlans;
-using FoodDiary.Infrastructure.Persistence.ShoppingLists;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application;
+using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans;
+using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.ShoppingLists;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.MealPlanning.Infrastructure;

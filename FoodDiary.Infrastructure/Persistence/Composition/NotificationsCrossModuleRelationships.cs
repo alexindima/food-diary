@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 

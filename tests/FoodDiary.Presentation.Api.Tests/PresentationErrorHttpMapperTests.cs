@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
@@ -79,7 +80,7 @@ public sealed class PresentationErrorHttpMapperTests {
     private static Error CreateTelegramBotNotConfigured() => IdentityErrors.TelegramBotNotConfigured;
     private static Error CreateTelegramBotInvalidSecret() => IdentityErrors.TelegramBotInvalidSecret;
     private static Error CreateAdminSsoForbidden() => IdentityErrors.AdminSsoForbidden;
-    private static Error CreateAccountNotDeleted() => Errors.Authentication.AccountNotDeleted;
+    private static Error CreateAccountNotDeleted() => UserAuthenticationErrors.AccountNotDeleted;
     private static Error CreateAiInvalidResponse() => AiErrors.InvalidResponse("bad response");
     private static Error CreateAiImageNotFound() => AiErrors.ImageNotFound(Guid.Empty);
     private static Error CreateAiEmptyItems() => AiErrors.EmptyItems();
@@ -89,7 +90,7 @@ public sealed class PresentationErrorHttpMapperTests {
     private static Error CreateUserInvalidCredentials() => UserErrors.InvalidCredentials;
     private static Error CreateUserEmailAlreadyExists() => UserErrors.EmailAlreadyExists;
     private static Error CreateValidationConflict() => new("Validation.Conflict", "Failure", Kind: ErrorKindResolver.Resolve("Validation.Conflict"));
-    private static Error CreateAuthenticationInvalidToken() => Errors.Authentication.InvalidToken;
+    private static Error CreateAuthenticationInvalidToken() => AuthenticationErrors.InvalidToken;
     private static Error CreateValidationRequired() => Errors.Validation.Required("field");
     private static Error CreateProductNotAccessible() => ProductErrors.NotAccessible(Guid.Empty);
     private static Error CreateRecipeAlreadyExistsLegacy() => new("Recipe.AlreadyExists", "Failure", Kind: ErrorKindResolver.Resolve("Recipe.AlreadyExists"));

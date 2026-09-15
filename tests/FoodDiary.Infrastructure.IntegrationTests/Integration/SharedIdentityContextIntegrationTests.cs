@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
@@ -116,6 +117,9 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
     private static ServiceProvider CreateProvider(string connectionString) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = connectionString,
+            ["Database:EnableRetries"] = "false",
+        }).Build()).AddOutboxProcessing(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Database:EnableRetries"] = "false",
         }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();

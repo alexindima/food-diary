@@ -1,11 +1,11 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Commands.CancelClientTask;
 using FoodDiary.Modules.Dietologist.Application.Commands.ChangeClientTaskStatus;
 using FoodDiary.Modules.Dietologist.Application.Commands.CreateClientTask;
@@ -434,7 +434,7 @@ public sealed class ClientTaskHandlerTests {
     private static IUserContextService CreateFailingUserContext() {
         IUserContextService service = Substitute.For<IUserContextService>();
         service.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         return service;
     }
 

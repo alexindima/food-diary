@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Users.Commands.AcceptAiConsent;
 using FoodDiary.Application.Users.Commands.RevokeAiConsent;
@@ -132,7 +132,7 @@ public class AiConsentTests {
             .Returns(Task.FromResult<Error?>(null));
         userContextService
             .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<User>(AuthenticationErrors.InvalidToken)));
         return userContextService;
     }
 

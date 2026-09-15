@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Infrastructure.Persistence.Meals;
+namespace FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 
 internal sealed class MealDailyCalorieReadService(IMealNutritionStatisticsReadService nutrition) : IMealDailyCalorieReadService {
     public async Task<Result<IReadOnlyList<MealDailyCalories>>> GetDailyCaloriesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) {

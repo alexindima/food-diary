@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Modules.Notifications.Application.Common;
 
 internal static class WebPushEndpointHost {
     public static string Resolve(string endpoint) {

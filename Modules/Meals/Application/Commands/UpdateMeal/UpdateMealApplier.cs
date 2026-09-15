@@ -1,9 +1,9 @@
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Meals.Services;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Application.Services;
+using FoodDiary.Modules.Meals.Domain.Entities;
 
-namespace FoodDiary.Application.Meals.Commands.UpdateMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 
 internal static class UpdateMealApplier {
     public static async Task<Result> ApplyAsync(

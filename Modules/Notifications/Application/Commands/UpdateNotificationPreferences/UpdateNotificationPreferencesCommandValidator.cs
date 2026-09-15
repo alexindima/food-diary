@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
+namespace FoodDiary.Modules.Notifications.Application.Commands.UpdateNotificationPreferences;
 
 public sealed class UpdateNotificationPreferencesCommandValidator : AbstractValidator<UpdateNotificationPreferencesCommand> {
     public UpdateNotificationPreferencesCommandValidator() {

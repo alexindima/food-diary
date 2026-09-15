@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Meals.Common;
+namespace FoodDiary.Modules.Meals.Application.Common;
 
 public sealed record ManualNutritionInput(
     double Calories,

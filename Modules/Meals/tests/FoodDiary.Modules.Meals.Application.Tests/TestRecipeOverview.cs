@@ -4,7 +4,7 @@ using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.Meals.Application.Tests;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class TestRecipeOverview {

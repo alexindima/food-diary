@@ -15,6 +15,7 @@ namespace FoodDiary.Modules.Images.Infrastructure;
 
 public static class DependencyInjection {
     public static IServiceCollection AddImagesInfrastructure(this IServiceCollection services) {
+        services.AddScoped<IImageConfirmationTransactionRunner, EfImageConfirmationTransactionRunner>();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<ImagesDbContext>(static options => new ImagesDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ImagesUserDataPurgeParticipant>());

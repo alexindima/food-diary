@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Services;
 
 internal static class WebPushSocketsHttpHandlerFactory {
     public static SocketsHttpHandler Create() {

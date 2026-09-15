@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Testing;
 using FoodDiary.Application.Users.Queries.CheckUserAccess;
 using FoodDiary.Application.Users.Commands.RemoveUserPremiumRole;
@@ -12,7 +13,6 @@ using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
 using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
@@ -45,7 +45,7 @@ public sealed class UserBillingServiceTests {
         if (accessible) {
             Assert.Same(model, ResultAssert.Success(result));
         } else {
-            ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+            ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
         }
         await trackedReader.DidNotReceiveWithAnyArgs().GetByIdAsync(default, default);
         await reader.Received(1).GetBillingProfileIncludingDeletedAsync(trackedUser.Id, cancellation.Token);
@@ -78,7 +78,7 @@ public sealed class UserBillingServiceTests {
 
         Result<UserBillingProfileModel> result = await service.Send(new GetUserBillingProfileQuery(UserId: user.Id), CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
     }
 
     [Fact]
@@ -170,13 +170,13 @@ public sealed class UserBillingServiceTests {
             .Returns(new UserBillingProfileModel(user.Id, user.Email, user.IsActive, user.DeletedAt is not null,
                 user.HasRole(RoleNames.Premium), user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, user.IsEmailConfirmed));
         ((ICurrentUserAccessService)reader).EnsureCanAccessAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(user.IsActive && user.DeletedAt is null ? null : Errors.Authentication.InvalidToken);
+            .Returns(user.IsActive && user.DeletedAt is null ? null : AuthenticationErrors.InvalidToken);
         return reader;
     }
 
     private static ICurrentUserAccessService MissingAccessService() {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
-        service.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(Errors.Authentication.InvalidToken);
+        service.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(AuthenticationErrors.InvalidToken);
         return service;
     }
 

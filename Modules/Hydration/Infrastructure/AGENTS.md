@@ -4,7 +4,7 @@ Hydration repository implementations and the complete `AddHydrationModule` compo
 
 The shared IUnitOfWork coordinates both trackers and one transaction; repositories must not save independently. Central Infrastructure must never reference this project. Migrations and composed reads remain central. User purge uses HydrationDbContext and synchronizes IModuleTransactionCoordinator.CurrentTransaction on every invocation. PostgreSQL tests cover joint commits, retries, rollback, no-tracking reads, user cascade and unchanged constraints; see ADRs 0029 and 0040.
 
-HydrationOperationReceiptRepository also receives only its owned DbSet. The create-from-operation command stages the entry and receipt together; the existing command unit of work commits them atomically. Permanent receipt keys survive entry deletion. Duplicate-key races roll back the losing entry and are retried by the durable bot; do not independently save either record. See ADR 0037.
+HydrationOperationReceiptRepository also receives only its owned DbSet. The create-from-operation command uses IHydrationOperationTransactionRunner to lock the user/operation pair before reading its receipt and atomically commit the entry and receipt. Permanent receipt keys survive entry deletion. Concurrent retries wait for the owner lock and return the existing result or OperationConflict for different input. Do not independently save either record. See ADR 0037.
 
 Hydration registration consumes IModuleContextFactory from FoodDiary.Persistence.Abstractions. Do not restore concrete FoodDiaryDbContext access in ModuleRegistration; the purge participant receives only its owner context and the narrow live transaction coordinator.
 

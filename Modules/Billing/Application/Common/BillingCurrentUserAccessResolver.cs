@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
 using FoodDiary.Mediator;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -12,7 +12,7 @@ internal static class BillingCurrentUserAccessResolver {
         ISender sender,
         CancellationToken cancellationToken) {
         if (!userId.HasValue || userId.Value == Guid.Empty) {
-            return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
+            return Result.Failure<UserId>(AuthenticationErrors.InvalidToken);
         }
 
         var parsedUserId = new UserId(userId.Value);

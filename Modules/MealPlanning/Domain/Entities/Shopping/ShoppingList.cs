@@ -1,9 +1,10 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.Events;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Shopping;
+namespace FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
 public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
     private const int NameMaxLength = 128;

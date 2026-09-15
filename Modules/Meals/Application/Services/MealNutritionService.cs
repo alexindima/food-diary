@@ -1,12 +1,12 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 
-namespace FoodDiary.Application.Meals.Services;
+namespace FoodDiary.Modules.Meals.Application.Services;
 
 public sealed class MealNutritionService(
     IProductLookupService productLookupService,

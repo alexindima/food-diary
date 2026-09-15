@@ -1,10 +1,11 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -132,7 +133,7 @@ public sealed class SharedFavoritesContextIntegrationTests(PostgresDatabaseFixtu
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

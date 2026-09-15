@@ -480,8 +480,8 @@
     "removed": []
   },
   {
-    "path": "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
-    "project": "FoodDiary.Application.MealPlanning",
+    "path": "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
+    "project": "FoodDiary.Modules.MealPlanning.Application",
     "added": [
       "FoodDiary.Modules.Products.Contracts"
     ],
@@ -496,7 +496,7 @@
     "removed": []
   },
   {
-    "path": "Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
+    "path": "Modules/MealPlanning/PersistenceModel/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
     "project": "FoodDiary.Modules.MealPlanning.PersistenceModel",
     "added": [
       "FoodDiary.Modules.Products.Domain.Contracts"
@@ -690,7 +690,7 @@
     "removed": []
   },
   {
-    "path": "Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj",
+    "path": "Modules/Meals/PersistenceModel/FoodDiary.Modules.Meals.PersistenceModel.csproj",
     "project": "FoodDiary.Modules.Meals.PersistenceModel",
     "added": [
       "FoodDiary.Modules.Products.Domain.Contracts"

@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Services;
 
 internal sealed class WebPushEndpointValidationHandler : DelegatingHandler {
     protected override Task<HttpResponseMessage> SendAsync(

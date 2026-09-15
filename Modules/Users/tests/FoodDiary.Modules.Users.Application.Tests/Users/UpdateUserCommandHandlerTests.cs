@@ -1,6 +1,6 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Text.Json;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
@@ -199,7 +199,7 @@ public sealed class UpdateUserCommandHandlerTests {
             .Returns(Task.FromResult<Error?>(null));
         userContextService
             .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<User>(AuthenticationErrors.InvalidToken)));
         var handler = new UpdateUserCommandHandler(
             userContextService,
             CreateProfileImageService(CreateImageAssetCleanupService(),

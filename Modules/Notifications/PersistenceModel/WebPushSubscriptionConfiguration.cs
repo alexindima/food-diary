@@ -1,0 +1,41 @@
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Notifications.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Notifications.PersistenceModel;
+
+internal sealed class WebPushSubscriptionConfiguration : IEntityTypeConfiguration<WebPushSubscription> {
+    public void Configure(EntityTypeBuilder<WebPushSubscription> builder) {
+        builder.Property(e => e.Id)
+            .HasConversion(id => id.Value, value => new WebPushSubscriptionId(value))
+            .ValueGeneratedNever();
+
+        builder.Property(e => e.UserId)
+            .HasConversion(id => id.Value, value => new UserId(value));
+
+        builder.Property(e => e.Endpoint)
+            .IsRequired()
+            .HasMaxLength(2048);
+
+        builder.Property(e => e.P256Dh)
+            .IsRequired()
+            .HasMaxLength(512);
+
+        builder.Property(e => e.Auth)
+            .IsRequired()
+            .HasMaxLength(512);
+
+        builder.Property(e => e.Locale)
+            .HasMaxLength(16);
+
+        builder.Property(e => e.UserAgent)
+            .HasMaxLength(512);
+
+        builder.HasIndex(e => e.Endpoint)
+            .IsUnique();
+
+        builder.HasIndex(e => e.UserId);
+    }
+}

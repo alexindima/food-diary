@@ -10,6 +10,7 @@ namespace FoodDiary.Modules.Hydration.Infrastructure;
 
 public static class ModuleRegistration {
     public static IServiceCollection AddHydrationModule(this IServiceCollection services) {
+        services.AddScoped<IHydrationOperationTransactionRunner, EfHydrationOperationTransactionRunner>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, HydrationUserDataPurgeParticipant>());
         services.AddHydrationApplication();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()

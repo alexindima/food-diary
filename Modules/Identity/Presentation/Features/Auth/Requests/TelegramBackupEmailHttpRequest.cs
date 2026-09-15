@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
 using System.ComponentModel.DataAnnotations;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
 public sealed record TelegramBackupEmailHttpRequest(
     [Required, EmailAddress, MaxLength(254)] string Email,
-    [Required, MaxLength(AuthenticationInputLimits.MaximumTelegramInitDataLength)] string InitData);
+    [Required, MaxLength(IdentityInputLimits.MaximumTelegramInitDataLength)] string InitData);

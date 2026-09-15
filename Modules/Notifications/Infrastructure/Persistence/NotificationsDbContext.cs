@@ -1,6 +1,5 @@
-using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Infrastructure.Persistence.Notifications;
-using FoodDiary.Modules.Notifications.Infrastructure.Model;
+using FoodDiary.Modules.Notifications.Domain.Entities;
+using FoodDiary.Modules.Notifications.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Notifications.Infrastructure.Persistence;

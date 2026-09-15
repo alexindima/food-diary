@@ -2,12 +2,13 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
+namespace FoodDiary.Modules.Notifications.Application.Commands.MarkAllNotificationsRead;
 
 public sealed class MarkAllNotificationsReadCommandHandler(
     INotificationWriteRepository notificationWriteRepository,

@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Admin.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Security.Claims;
 using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Responses;
@@ -26,7 +26,7 @@ public sealed class ImpersonationAccessGuardMiddleware(
             routeLabel,
             context.TraceIdentifier);
 
-        Error error = Errors.Authentication.ImpersonationActionForbidden;
+        Error error = ImpersonationErrors.ImpersonationActionForbidden;
         context.Response.StatusCode = StatusCodes.Status403Forbidden;
         await context.Response.WriteAsJsonAsync(
             new ApiErrorHttpResponse(error.Code, error.Message, context.TraceIdentifier),

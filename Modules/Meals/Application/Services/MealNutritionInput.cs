@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Meals.Services;
+namespace FoodDiary.Modules.Meals.Application.Services;
 
 internal readonly record struct MealNutritionInput(
     bool IsNutritionAutoCalculated,

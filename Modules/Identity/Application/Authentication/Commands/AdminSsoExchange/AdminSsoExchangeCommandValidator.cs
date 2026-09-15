@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 
@@ -8,7 +8,7 @@ public sealed class AdminSsoExchangeCommandValidator : AbstractValidator<AdminSs
         RuleFor(x => x.Code)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .MaximumLength(AuthenticationInputLimits.MaximumAdminSsoCodeLength)
+            .MaximumLength(IdentityInputLimits.MaximumAdminSsoCodeLength)
             .WithErrorCode("Validation.Invalid");
     }
 }

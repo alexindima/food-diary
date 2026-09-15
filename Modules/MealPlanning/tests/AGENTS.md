@@ -3,7 +3,7 @@
 ## Scope
 
 - Own focused MealPlans and ShoppingLists tests within one module; preserve the two aggregate boundaries.
-- Application tests retain legacy namespaces and exercise validators, handlers, read models, item building, and `IShoppingListCreationService` orchestration.
+- Application tests use canonical project and folder namespaces and exercise validators, handlers, read models, item building, and `IShoppingListCreationService` orchestration.
 - Domain tests cover module-owned MealPlans and ShoppingLists, including their IDs, events, source enum and invariants. The User relationship remains one-way without a central inverse CLR navigation.
 - Relational tests use PostgreSQL with production migrations; a Docker skip is not a successful relational verification.
 - Mixed domain, shared DbContext, HTTP, host, and cross-module tests remain in central donor projects. Do not duplicate them here.

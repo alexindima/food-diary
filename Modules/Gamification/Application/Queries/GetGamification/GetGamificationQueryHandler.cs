@@ -1,8 +1,11 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadTotalMealCount;
 using FoodDiary.Modules.Gamification.Application.Services;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Gamification.Application.Common;
 using FoodDiary.Modules.Gamification.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +16,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 namespace FoodDiary.Modules.Gamification.Application.Queries.GetGamification;
 
 public sealed class GetGamificationQueryHandler(
-    IMealActivityReadService mealActivityReadService,
+    ISender mealActivityReadService,
     IMealNutritionStatisticsReadService statisticsReadService,
     IUserGamificationProfileReadService userProfileReadService,
     IAchievementMetricReader achievementMetricReader,
@@ -42,10 +45,10 @@ public sealed class GetGamificationQueryHandler(
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime streakFrom = DateTime.UnixEpoch;
 
-        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.GetDistinctMealDatesAsync(userId, streakFrom, today, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(userId, streakFrom, today), cancellationToken).ConfigureAwait(false);
         (int currentStreak, int longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
 
-        int totalMeals = await mealActivityReadService.GetTotalMealCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        int totalMeals = await mealActivityReadService.Send(new ReadTotalMealCountQuery(userId), cancellationToken).ConfigureAwait(false);
         int totalAcademyArticlesRead = await achievementMetricReader
             .GetCompletedAcademyArticleCountAsync(userId, cancellationToken)
             .ConfigureAwait(false);

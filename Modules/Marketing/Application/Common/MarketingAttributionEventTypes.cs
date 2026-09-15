@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Marketing.Common;
+namespace FoodDiary.Modules.Marketing.Application.Common;
 
 public static class MarketingAttributionEventTypes {
     public const string PageLanding = "page_landing";

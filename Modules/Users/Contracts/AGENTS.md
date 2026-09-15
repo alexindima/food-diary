@@ -4,6 +4,11 @@ Own semantic Users capabilities, profile/admin/authentication projection models,
 account-status filtering and UserErrors. Preserve legacy namespaces, signatures,
 nullability, error values and cancellation/default parameters.
 
+Users/Common/UserAuthenticationErrors owns account-state and identity-link failures.
+Preserve Authentication-prefixed wire codes, which differ from existing UserErrors.
+Shared AuthenticationErrors supplies generic credential/token failures. Never depend
+on Identity or Admin to obtain error factories.
+
 Do not expose User/Role aggregates or repository interfaces here. The existing
 UserCalorieSchedule, UserPreferenceUpdate and UserId belong to Users
 Domain.Contracts. Do not reference the aggregate-bearing Users Domain assembly.

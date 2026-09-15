@@ -95,26 +95,26 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Lessons logical module: `Modules/Lessons/AGENTS.md`
 - Meal planning logical module: `Modules/MealPlanning/AGENTS.md`
 - Meal planning Application: `Modules/MealPlanning/Application/AGENTS.md`
-- Meal planning Application/Abstractions: `Modules/MealPlanning/Application/Abstractions/AGENTS.md`
+- Meal planning Application/Abstractions: `Modules/MealPlanning/Application.Abstractions/AGENTS.md`
 - Meal planning Domain: `Modules/MealPlanning/Domain/AGENTS.md`
 - Meal planning Infrastructure: `Modules/MealPlanning/Infrastructure/AGENTS.md`
-- Meal planning Infrastructure/Model: `Modules/MealPlanning/Infrastructure/Model/AGENTS.md`
+- Meal planning Infrastructure/Model: `Modules/MealPlanning/PersistenceModel/AGENTS.md`
 - Meal planning tests: `Modules/MealPlanning/tests/AGENTS.md`
 - Meals logical module: `Modules/Meals/AGENTS.md`
 - Meals Domain.Contracts: `Modules/Meals/Domain.Contracts/AGENTS.md`
 - Meals application: `Modules/Meals/Application/AGENTS.md`
-- Meals application abstractions: `Modules/Meals/Application/Abstractions/AGENTS.md`
+- Meals application abstractions: `Modules/Meals/Application.Abstractions/AGENTS.md`
 - Meals contracts: `Modules/Meals/Contracts/AGENTS.md`
 - Meals domain: `Modules/Meals/Domain/AGENTS.md`
 - Meals infrastructure: `Modules/Meals/Infrastructure/AGENTS.md`
-- Meals persistence model: `Modules/Meals/Infrastructure/Model/AGENTS.md`
+- Meals persistence model: `Modules/Meals/PersistenceModel/AGENTS.md`
 - Meals tests: `Modules/Meals/tests/AGENTS.md`
 - Open Food Facts logical module: `Modules/OpenFoodFacts/AGENTS.md`
-- Open Food Facts application abstractions: `Modules/OpenFoodFacts/Application/Abstractions/AGENTS.md`
+- Open Food Facts application abstractions: `Modules/OpenFoodFacts/Application.Abstractions/AGENTS.md`
 - Open Food Facts contracts: `Modules/OpenFoodFacts/Contracts/AGENTS.md`
 - Open Food Facts domain: `Modules/OpenFoodFacts/Domain/AGENTS.md`
 - Open Food Facts infrastructure: `Modules/OpenFoodFacts/Infrastructure/AGENTS.md`
-- Open Food Facts persistence model: `Modules/OpenFoodFacts/Infrastructure/Model/AGENTS.md`
+- Open Food Facts persistence model: `Modules/OpenFoodFacts/PersistenceModel/AGENTS.md`
 - Products logical module: `Modules/Products/AGENTS.md`
 - Products application: `Modules/Products/Application/AGENTS.md`
 - Products ports: `Modules/Products/Application/Abstractions/AGENTS.md`
@@ -162,7 +162,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Tour engine: `FoodDiary.Web.Client/projects/fd-tour/AGENTS.md`
 - Presentation adapter: `FoodDiary.Presentation.Api/AGENTS.md`
 - API host/presentation: `FoodDiary.Web.Api/AGENTS.md`
-- Application runtime: `FoodDiary.Application.Runtime/AGENTS.md`
+- Application runtime: `Shared/FoodDiary.Application.Runtime/AGENTS.md`
 - Billing logical module: `Modules/Billing/AGENTS.md`
 - Billing application: `Modules/Billing/Application/AGENTS.md`
 - Billing application abstractions: `Modules/Billing/Application.Abstractions/AGENTS.md`
@@ -174,10 +174,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Marketing application: `Modules/Marketing/Application/AGENTS.md`
 - Notifications logical module: `Modules/Notifications/AGENTS.md`
 - Notifications application: `Modules/Notifications/Application/AGENTS.md`
-- Notifications application abstractions: `Modules/Notifications/Application/Abstractions/AGENTS.md`
+- Notifications application abstractions: `Modules/Notifications/Application.Abstractions/AGENTS.md`
 - Notifications domain: `Modules/Notifications/Domain/AGENTS.md`
 - Notifications infrastructure: `Modules/Notifications/Infrastructure/AGENTS.md`
-- Notifications persistence model: `Modules/Notifications/Infrastructure/Model/AGENTS.md`
+- Notifications persistence model: `Modules/Notifications/PersistenceModel/AGENTS.md`
 - Shared outbox record contract: `Shared/FoodDiary.Outbox.Abstractions/AGENTS.md`
 - Users logical module: `Modules/Users/AGENTS.md`
 - Users consumer contracts: `Modules/Users/Contracts/AGENTS.md`

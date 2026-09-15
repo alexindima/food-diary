@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Admin.Application.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Results;
@@ -23,7 +23,7 @@ public sealed class ExchangeAdminImpersonationTests {
 
         if (string.IsNullOrWhiteSpace(token)) {
             Assert.True(result.IsFailure);
-            Assert.Equal(Errors.Authentication.InvalidToken.Code, result.Error.Code);
+            Assert.Equal(AuthenticationErrors.InvalidToken.Code, result.Error.Code);
         } else {
             Assert.True(result.IsSuccess);
             Assert.Equal(token, result.Value);

@@ -1,12 +1,13 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Meals.Common.Validation;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Application.Common.Validation;
+using FoodDiary.Modules.Meals.Application.Common;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Services;
+namespace FoodDiary.Modules.Meals.Application.Services;
 
 internal static class MealManualItemAppender {
     public static Result Add(Meal meal, IEnumerable<MealItemInput> items) {

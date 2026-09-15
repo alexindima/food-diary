@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
@@ -7,8 +10,8 @@ using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
-using FoodDiary.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Usda;

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using FoodDiary.ReadModel.Composition.Ai;
 using System.Reflection;
 using FoodDiary.Modules.Ai.Contracts.Models;

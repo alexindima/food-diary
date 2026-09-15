@@ -1,21 +1,22 @@
+using FoodDiary.Modules.Notifications.Infrastructure.Services;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
-using FoodDiary.Application.Notifications.Services;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Application.Services;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Integrations.Services;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging.Abstractions;
 using WebPush;
-using WebPushOptions = FoodDiary.Integrations.Options.WebPushOptions;
+using WebPushOptions = FoodDiary.Modules.Notifications.Infrastructure.Options.WebPushOptions;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class WebPushNotificationSenderTests {
@@ -554,7 +555,7 @@ public sealed class WebPushNotificationSenderTests {
             CancellationToken cancellationToken = default) {
             User? user = await repository.GetByIdAsync(userId, cancellationToken);
             if (user is null) {
-                return Result.Failure<UserNotificationProfileModel>(Errors.Authentication.InvalidToken);
+                return Result.Failure<UserNotificationProfileModel>(AuthenticationErrors.InvalidToken);
             }
 
             return Result.Success(ToNotificationProfile(user));

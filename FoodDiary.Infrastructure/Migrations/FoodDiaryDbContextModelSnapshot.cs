@@ -1134,7 +1134,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("FavoriteRecipes");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlan", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1186,7 +1186,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("MealPlans");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlanDay", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanDay", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1210,7 +1210,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("MealPlanDays");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlanMeal", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanMeal", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1242,7 +1242,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("MealPlanMeals");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.Meal", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.Meal", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1332,7 +1332,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("Meals");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealAiItem", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealAiItem", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1399,7 +1399,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("MealAiItems");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealAiSession", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealAiSession", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1445,7 +1445,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("MealAiSessions");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealItem", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealItem", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1521,7 +1521,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("MealItems");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealRecognitionReceipt", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealRecognitionReceipt", b => {
                 b.Property<Guid>("OperationId")
                     .HasColumnType("uuid");
 
@@ -1563,7 +1563,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("MealRecognitionReceipts", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Notifications.Notification", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Notifications.Domain.Entities.Notification", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1605,7 +1605,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("Notifications");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Notifications.WebPushSubscription", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Notifications.Domain.Entities.WebPushSubscription", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -1654,7 +1654,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("WebPushSubscriptions");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.OpenFoodFacts.OpenFoodFactsProduct", b => {
+            modelBuilder.Entity("FoodDiary.Modules.OpenFoodFacts.Domain.Entities.OpenFoodFactsProduct", b => {
                 b.Property<string>("Barcode")
                     .HasMaxLength(64)
                     .HasColumnType("character varying(64)");
@@ -2096,7 +2096,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("RecipeSteps");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingList", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingList", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2127,7 +2127,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ShoppingLists");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingListItem", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingListItem", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -2188,7 +2188,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ShoppingListItems");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingListItemSource", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingListItemSource", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -3105,7 +3105,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("HydrationOperationReceipts", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.MarketingAttributionEvent", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Marketing.Domain.Entities.Tracking.MarketingAttributionEvent", b => {
                 b.Property<Guid>("Id")
                     .HasColumnType("uuid");
 
@@ -4621,7 +4621,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ImageObjectDeletionOutbox", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Notifications.NotificationWebPushOutboxMessage", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Notifications.PersistenceModel.NotificationWebPushOutboxMessage", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");
@@ -4948,7 +4948,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals.FavoriteMeal", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Meals.Meal", null)
+                b.HasOne("FoodDiary.Modules.Meals.Domain.Entities.Meal", null)
                     .WithMany()
                     .HasForeignKey("MealId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -4989,15 +4989,15 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlan", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlanDay", b => {
-                b.HasOne("FoodDiary.Domain.Entities.MealPlans.MealPlan", "MealPlan")
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanDay", b => {
+                b.HasOne("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan", "MealPlan")
                     .WithMany("Days")
                     .HasForeignKey("MealPlanId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5006,8 +5006,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("MealPlan");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlanMeal", b => {
-                b.HasOne("FoodDiary.Domain.Entities.MealPlans.MealPlanDay", "Day")
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanMeal", b => {
+                b.HasOne("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanDay", "Day")
                     .WithMany("Meals")
                     .HasForeignKey("MealPlanDayId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5022,7 +5022,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Day");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.Meal", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.Meal", b => {
                 b.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")
@@ -5035,8 +5035,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealAiItem", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Meals.MealAiSession", "Session")
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealAiItem", b => {
+                b.HasOne("FoodDiary.Modules.Meals.Domain.Entities.MealAiSession", "Session")
                     .WithMany("Items")
                     .HasForeignKey("MealAiSessionId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5045,13 +5045,13 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Session");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealAiSession", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealAiSession", b => {
                 b.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")
                     .OnDelete(DeleteBehavior.ClientNoAction);
 
-                b.HasOne("FoodDiary.Domain.Entities.Meals.Meal", "Meal")
+                b.HasOne("FoodDiary.Modules.Meals.Domain.Entities.Meal", "Meal")
                     .WithMany("AiSessions")
                     .HasForeignKey("MealId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5060,8 +5060,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Meal");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealItem", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Meals.Meal", "Meal")
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealItem", b => {
+                b.HasOne("FoodDiary.Modules.Meals.Domain.Entities.Meal", "Meal")
                     .WithMany("Items")
                     .HasForeignKey("MealId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5078,7 +5078,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Meal");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealRecognitionReceipt", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealRecognitionReceipt", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5086,7 +5086,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Notifications.Notification", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Notifications.Domain.Entities.Notification", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5094,7 +5094,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Notifications.WebPushSubscription", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Notifications.Domain.Entities.WebPushSubscription", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5191,7 +5191,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Recipe");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingList", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingList", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
@@ -5199,13 +5199,13 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingListItem", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingListItem", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Products.Product", null)
                     .WithMany()
                     .HasForeignKey("ProductId")
                     .OnDelete(DeleteBehavior.SetNull);
 
-                b.HasOne("FoodDiary.Domain.Entities.Shopping.ShoppingList", "ShoppingList")
+                b.HasOne("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingList", "ShoppingList")
                     .WithMany("Items")
                     .HasForeignKey("ShoppingListId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5214,8 +5214,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("ShoppingList");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingListItemSource", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Shopping.ShoppingListItem", "ShoppingListItem")
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingListItemSource", b => {
+                b.HasOne("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingListItem", "ShoppingListItem")
                     .WithMany("Sources")
                     .HasForeignKey("ShoppingListItemId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5568,8 +5568,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Notifications.NotificationWebPushOutboxMessage", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Notifications.Notification", "Notification")
+            modelBuilder.Entity("FoodDiary.Modules.Notifications.PersistenceModel.NotificationWebPushOutboxMessage", b => {
+                b.HasOne("FoodDiary.Modules.Notifications.Domain.Entities.Notification", "Notification")
                     .WithMany()
                     .HasForeignKey("NotificationId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -5578,21 +5578,21 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Notification");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlan", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan", b => {
                 b.Navigation("Days");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlanDay", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanDay", b => {
                 b.Navigation("Meals");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.Meal", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.Meal", b => {
                 b.Navigation("AiSessions");
 
                 b.Navigation("Items");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealAiSession", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Meals.Domain.Entities.MealAiSession", b => {
                 b.Navigation("Items");
             });
 
@@ -5606,11 +5606,11 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Ingredients");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingList", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingList", b => {
                 b.Navigation("Items");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingListItem", b => {
+            modelBuilder.Entity("FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping.ShoppingListItem", b => {
                 b.Navigation("Sources");
             });
 

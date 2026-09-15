@@ -1,11 +1,12 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
+using FoodDiary.Modules.Notifications.Application.Commands.CleanupExpiredNotifications;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Runtime.Common.Behaviors;
 using FoodDiary.Application.Runtime.Common.Services;
 using FoodDiary.Modules.Dashboard.Application.Services;
 using FoodDiary.Modules.Dashboard.Application;
-using FoodDiary.Application.Notifications.Services;
-using FoodDiary.Application.Notifications;
+using FoodDiary.Modules.Notifications.Application;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products;
 using FoodDiary.Application.Recipes;
@@ -24,7 +25,7 @@ public sealed class ApplicationDependencyInjectionTests {
         FoodDiary.Application.Runtime.DependencyInjection.AddApplicationRuntime(services);
 
         Assert.Contains(services, ServiceDescriptorMatches<IPostCommitActionQueue, PostCommitActionQueue>(ServiceLifetime.Scoped));
-        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(INotificationCleanupService));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRequestHandler<CleanupExpiredNotificationsCommand, int>));
         Assert.Contains(services, descriptor =>
             descriptor.ServiceType == typeof(TimeProvider) &&
             descriptor.Lifetime == ServiceLifetime.Singleton &&
@@ -74,7 +75,7 @@ public sealed class ApplicationDependencyInjectionTests {
 
         services.AddNotificationsModule();
 
-        Assert.Contains(services, ServiceDescriptorMatches<INotificationCleanupService, NotificationCleanupService>(ServiceLifetime.Scoped));
+        Assert.Contains(services, ServiceDescriptorMatches<IRequestHandler<CleanupExpiredNotificationsCommand, int>, CleanupExpiredNotificationsCommandHandler>(ServiceLifetime.Transient));
     }
 
     private static Predicate<ServiceDescriptor> ServiceDescriptorMatches<TService, TImplementation>(ServiceLifetime lifetime) =>

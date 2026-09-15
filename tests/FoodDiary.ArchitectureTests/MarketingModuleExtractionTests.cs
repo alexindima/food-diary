@@ -9,21 +9,21 @@ public sealed class MarketingModuleExtractionTests {
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
-        Assert.True(File.Exists(Path.Combine(extractedRoot, "FoodDiary.Application.Marketing.csproj")));
+        Assert.True(File.Exists(Path.Combine(extractedRoot, "FoodDiary.Modules.Marketing.Application.csproj")));
     }
 
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedMarketingAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.Marketing", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Marketing.Application", references, StringComparer.Ordinal);
     }
 
     [Fact]
     public void ExtractedMarketingAssembly_DoesNotReferenceCoreApplication() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj");
+            "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application", references, StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Application.Contracts", references, StringComparer.Ordinal);
@@ -44,6 +44,6 @@ public sealed class MarketingModuleExtractionTests {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj");
         Assert.Contains("FoodDiary.Modules.Marketing.Contracts", references, StringComparer.Ordinal);
-        Assert.DoesNotContain("FoodDiary.Application.Marketing", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Marketing.Application", references, StringComparer.Ordinal);
     }
 }

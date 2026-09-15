@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Dietologist.Application;

@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.OpenFoodFacts;
+using FoodDiary.Modules.OpenFoodFacts.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Usda;

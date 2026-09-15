@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

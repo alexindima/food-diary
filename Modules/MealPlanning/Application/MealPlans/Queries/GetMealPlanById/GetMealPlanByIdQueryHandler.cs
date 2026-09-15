@@ -1,16 +1,18 @@
-using FoodDiary.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.Common.Validation;
+using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlanning.MealPlans.Common;
-using FoodDiary.Application.MealPlanning.MealPlans.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanById;
 
 public sealed class GetMealPlanByIdQueryHandler(
-    IMealPlanReadService mealPlanReadService,
+    IMealPlanReadModelRepository mealPlanRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMealPlanByIdQuery, Result<MealPlanModel>> {
     public async Task<Result<MealPlanModel>> Handle(
@@ -34,13 +36,26 @@ public sealed class GetMealPlanByIdQueryHandler(
         }
 
         MealPlanId planId = planIdResult.Value;
-        MealPlanModel? plan = await mealPlanReadService
-            .GetAccessibleByIdAsync(planId, userIdResult.Value, cancellationToken)
+        MealPlanModel? plan = await GetAccessibleByIdAsync(planId, userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(query.PlanId));
         }
 
         return Result.Success(plan);
+    }
+    private async Task<MealPlanModel?> GetAccessibleByIdAsync(
+        MealPlanId mealPlanId,
+        UserId userId,
+        CancellationToken cancellationToken) {
+        MealPlanReadModel? plan = await mealPlanRepository
+            .GetReadModelByIdAsync(mealPlanId, cancellationToken)
+            .ConfigureAwait(false);
+
+        if (plan is null || (!plan.IsCurated && plan.UserId != userId.Value)) {
+            return null;
+        }
+
+        return plan.ToModel();
     }
 }

@@ -98,7 +98,7 @@ Keep job classes under `FoodDiary.JobManager/Services`. The project root should 
 
 ## Priority 5: Continue Feature-First Migration
 
-Keep reducing global shared areas. `FoodDiary.Application.Runtime/Common` stays limited to cross-cutting pipeline and post-commit runtime behavior. Feature-specific models, services, mappings, and helper policies live in their owning application module.
+Keep reducing global shared areas. `Shared/FoodDiary.Application.Runtime/Common` stays limited to cross-cutting pipeline and post-commit runtime behavior. Feature-specific models, services, mappings, and helper policies live in their owning application module.
 
 Do not add new legacy flat folders. New backend work should follow the feature-first layout immediately.
 

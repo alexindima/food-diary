@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
-using FoodDiary.Application.Meals.Common.Validation;
-using FoodDiary.Application.Meals.Common.Validators;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Application.Common.Validation;
+using FoodDiary.Modules.Meals.Application.Common.Validators;
 
-namespace FoodDiary.Application.Meals.Commands.UpdateMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 
 public sealed class UpdateMealCommandValidator : AbstractValidator<UpdateMealCommand> {
     public UpdateMealCommandValidator() {

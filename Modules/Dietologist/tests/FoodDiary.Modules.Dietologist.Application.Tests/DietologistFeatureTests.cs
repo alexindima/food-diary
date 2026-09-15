@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -27,11 +27,12 @@ using FoodDiary.Modules.Dietologist.Application.Queries.GetMyDietologistRelation
 using FoodDiary.Modules.Dietologist.Application.Queries.GetMyRecommendations;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationsForClient;
 using FoodDiary.Modules.Dietologist.Application.Services;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
-using FoodDiary.Application.Notifications.Services;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Application.Services;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -134,7 +135,7 @@ public partial class DietologistFeatureTests {
         IUserProfileReadService profileReadService = Substitute.For<IUserProfileReadService>();
         profileReadService.GetUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(user.ToModel()));
         profileReadService.GetUserAsync(Arg.Is<UserId>(id => id != user.Id), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserModel>(AuthenticationErrors.InvalidToken));
         var service = new DietologistUserContextService(
             Substitute.For<ICurrentUserAccessService>(),
             userLookupService,
@@ -493,7 +494,7 @@ public partial class DietologistFeatureTests {
             .Returns(Task.FromResult<Error?>(null));
         userContextService
             .GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserDietologistProfileModel>(AuthenticationErrors.InvalidToken)));
         return userContextService;
     }
 
@@ -525,9 +526,9 @@ public partial class DietologistFeatureTests {
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
             User? user = _users.FirstOrDefault(u => u.Id == userId);
             Error? error = user switch {
-                null => Errors.Authentication.InvalidToken,
-                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
-                { IsActive: false } => Errors.Authentication.InvalidToken,
+                null => AuthenticationErrors.InvalidToken,
+                { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
+                { IsActive: false } => AuthenticationErrors.InvalidToken,
                 _ => null,
             };
             return Task.FromResult(error);
@@ -536,9 +537,9 @@ public partial class DietologistFeatureTests {
         public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
             User? user = _users.FirstOrDefault(u => u.Id == userId);
             Error? error = user switch {
-                null => Errors.Authentication.InvalidToken,
-                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
-                { IsActive: false } => Errors.Authentication.InvalidToken,
+                null => AuthenticationErrors.InvalidToken,
+                { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
+                { IsActive: false } => AuthenticationErrors.InvalidToken,
                 _ => null,
             };
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
@@ -625,9 +626,9 @@ public partial class DietologistFeatureTests {
         public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
             User? user = _users.Count > 0 ? _users.Dequeue() : null;
             Error? error = user switch {
-                null => Errors.Authentication.InvalidToken,
-                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
-                { IsActive: false } => Errors.Authentication.InvalidToken,
+                null => AuthenticationErrors.InvalidToken,
+                { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
+                { IsActive: false } => AuthenticationErrors.InvalidToken,
                 _ => null,
             };
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
@@ -643,9 +644,9 @@ public partial class DietologistFeatureTests {
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
             User? user = _users.Count > 0 ? _users.Peek() : null;
             Error? error = user switch {
-                null => Errors.Authentication.InvalidToken,
-                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
-                { IsActive: false } => Errors.Authentication.InvalidToken,
+                null => AuthenticationErrors.InvalidToken,
+                { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
+                { IsActive: false } => AuthenticationErrors.InvalidToken,
                 _ => null,
             };
             return Task.FromResult(error);

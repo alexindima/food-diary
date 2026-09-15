@@ -3,7 +3,7 @@
 ## Boundary
 
 - Own attribution commands, queries, conversion state, repository ports, aggregate/id, persistence mapping/adapter, and focused tests.
-- Preserve `FoodDiary.Application.Marketing` assembly identity and existing CLR namespaces.
+- Use canonical `FoodDiary.Modules.Marketing.<Project>[.<Folder>]` namespaces and assembly names.
 - Own RecordPremiumConversionCommand in Marketing.Contracts and its Application handler; Billing consumes this request. Preserve caller-owned saving and stable event IDs.
 - Register application behavior through `AddMarketingApplication`; composition roots use Infrastructure's `AddMarketingModule` facade.
 - Keep shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
@@ -22,3 +22,5 @@ Marketing owns a single-entity runtime context and injects only its attribution
 DbSet into repositories. Shared saves retain event/conversion uniqueness; the
 existing retention job still executes immediate bounded deletion batches.
 Central migrations and reporting behavior are unchanged (ADR 0040).
+
+Summary and range query handlers own their read operations and share pure MarketingAttributionMappings. CleanupMarketingAttributionCommand runs independently committed repository batches; do not add a transaction marker or a forwarding service.

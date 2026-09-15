@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 
-namespace FoodDiary.Application.Meals.Common.Time;
+namespace FoodDiary.Modules.Meals.Application.Common.Time;
 
 internal static class UtcDateNormalizer {
     public static DateTime NormalizeInstantPreservingUnspecifiedAsUtc(DateTime value) =>

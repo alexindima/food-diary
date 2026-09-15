@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Notifications.PersistenceModel;
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 
-namespace FoodDiary.Infrastructure.Persistence.Notifications;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 
 internal sealed class NotificationWebPushOutbox(
     DbSet<NotificationWebPushOutboxMessage> messages,

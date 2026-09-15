@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Marketing.Infrastructure.Persistence;

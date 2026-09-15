@@ -1,4 +1,5 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Results;
 using FoodDiary.Web.Api.Options;
 using Microsoft.Extensions.Options;

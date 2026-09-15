@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Marketing.Domain.ValueObjects.Ids;
 
 public readonly record struct MarketingAttributionEventId(Guid Value) : IEntityId<Guid> {
     public static MarketingAttributionEventId New() => new(Guid.NewGuid());

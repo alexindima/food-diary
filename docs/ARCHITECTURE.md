@@ -6,7 +6,7 @@ FoodDiary is a modular monolith with separately deployed supporting services.
 The primary product backend is a modular monolith:
 - module-owned Domain and Domain.Contracts projects with generic shared Primitives
 - narrow shared contract projects under `Shared/` (`FoodDiary.Application.Contracts`, Audit, Authentication, Email, Nutrition, and Outbox Management)
-- `FoodDiary.Application.Runtime`
+- `Shared/FoodDiary.Application.Runtime`: host-composed execution pipeline with unchanged assembly identity (ADR 0046).
 - `Shared/FoodDiary.Audit.Infrastructure` and `Shared/FoodDiary.Email.Infrastructure`: explicitly composed adapters over the shared persistence session (ADR 0045).
 - independently compiled `FoodDiary.Application.<Feature>` modules
 - `FoodDiary.Infrastructure`
@@ -49,7 +49,7 @@ Dependency direction is intentionally inward.
 ```mermaid
 flowchart LR
     WebApi["FoodDiary.Web.Api\nhost/composition root"] --> Presentation["FoodDiary.Presentation.Api\nHTTP + SignalR transport"]
-    WebApi --> Runtime["FoodDiary.Application.Runtime\nmediator + transactions"]
+    WebApi --> Runtime["Shared\FoodDiary.Application.Runtime\nmediator + transactions"]
     WebApi --> Modules["FoodDiary.Application.Feature\nfeature use cases"]
     WebApi --> Infrastructure["FoodDiary.Infrastructure\npersistence + implementations"]
     WebApi --> Adapters["Owner Infrastructure + narrow Shared adapters\nexternal providers and service clients"]

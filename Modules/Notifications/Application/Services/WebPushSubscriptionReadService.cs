@@ -1,13 +1,14 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
+using FoodDiary.Modules.Notifications.Application.Mappings;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Notifications.Mappings;
-using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Modules.Notifications.Application.Common;
+
+using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Services;
+namespace FoodDiary.Modules.Notifications.Application.Services;
 
 internal sealed class WebPushSubscriptionReadService(
     IWebPushSubscriptionReadModelRepository webPushSubscriptionRepository)

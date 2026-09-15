@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Common;
 
-namespace FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
+namespace FoodDiary.Modules.Notifications.Application.Commands.UpsertWebPushSubscription;
 
 public sealed class UpsertWebPushSubscriptionCommandValidator : AbstractValidator<UpsertWebPushSubscriptionCommand> {
     public UpsertWebPushSubscriptionCommandValidator() {

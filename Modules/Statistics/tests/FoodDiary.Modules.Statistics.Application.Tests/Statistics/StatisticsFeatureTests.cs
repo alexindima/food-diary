@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
@@ -222,9 +223,9 @@ public class StatisticsFeatureTests {
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
                 Error? error = user switch {
-                    null => Errors.Authentication.InvalidToken,
-                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
-                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    null => AuthenticationErrors.InvalidToken,
+                    { Id: var id } when id != userId => AuthenticationErrors.InvalidToken,
+                    { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
                     _ => null,
                 };
                 return Task.FromResult(error);

@@ -1,11 +1,12 @@
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Services;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Services;
 
 internal sealed class ShoppingListCreationService(IShoppingListWriteRepository shoppingListRepository)
     : IShoppingListCreationService {

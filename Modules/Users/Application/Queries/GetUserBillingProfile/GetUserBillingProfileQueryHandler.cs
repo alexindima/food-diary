@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
@@ -13,6 +13,6 @@ public sealed class GetUserBillingProfileQueryHandler(IUserBillingProfileReadMod
         // Match the persisted access predicate of the former tracked lookup.
         return profile is { IsActive: true, IsDeleted: false }
             ? Result.Success(profile)
-            : Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken);
+            : Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken);
     }
 }

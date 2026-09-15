@@ -59,6 +59,12 @@
         "contentHash": "SXcz+kF+4Oo9b1+55zntpJFYfwb1jw66ioxptyNOOTDc8g2FHnBFWjZpsWfCvZIhzr0x+4e2trVTs4OKwQfBtw=="
       },
       "fooddiary.authentication.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.results": {
         "type": "Project"
       },
       "Microsoft.Extensions.Configuration": {

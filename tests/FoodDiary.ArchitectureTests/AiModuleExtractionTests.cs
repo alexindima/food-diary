@@ -1,4 +1,4 @@
-﻿namespace FoodDiary.ArchitectureTests;
+namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiModuleExtractionTests {
@@ -46,8 +46,8 @@ public sealed class AiModuleExtractionTests {
         Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj"));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "Meals", "MealAiSession.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "Meals", "MealAiItem.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "MealAiSession.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "MealAiItem.cs")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Ai")));
     }
 

@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;

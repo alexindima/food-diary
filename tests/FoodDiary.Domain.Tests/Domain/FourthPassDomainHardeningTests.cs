@@ -9,8 +9,8 @@ using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.OpenFoodFacts;
+using FoodDiary.Modules.Notifications.Domain.Entities;
+using FoodDiary.Modules.OpenFoodFacts.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Domain.Tests.Domain;

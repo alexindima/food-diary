@@ -65,7 +65,7 @@ Telegram Login поддерживает OIDC и идентификатор по�
 | Профиль | `FoodDiary.Web.Client/src/app/features/profile/` | Существующие настройки/безопасность, типы предполагают email |
 | Изображения | `Modules/Images/Presentation/Features/Images/ImagesController.cs` | upload-url → загрузка → confirm; принадлежность image asset |
 | Распознавание | `Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs`, `docs/backend/AI_RECOGNITION_JOBS.md` | Устойчивые задачи, UUID дедупликации, Premium, consent, квоты, JobManager |
-| Запись еды | `Modules/Meals/Presentation/Features/Meals/MealsController.cs` | POST с EnableIdempotency, PATCH, DELETE; AI-сессии в DTO |
+| Запись еды | `Modules/Meals/Presentation/MealsController.cs` | POST с EnableIdempotency, PATCH, DELETE; AI-сессии в DTO |
 | Срок HTTP-дедупликации | `FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs` | ResponseTtl 24 часа; недостаточно для вечной гарантии отсутствия повторной еды |
 | Сводки | `Modules/Statistics/Presentation/Features/Statistics/StatisticsController.cs`, `Modules/Dashboard/Presentation/Features/Dashboard/DashboardController.cs` | statistics/summary и dashboard; у dashboard есть TimeZoneOffsetMinutes |
 | Email в оплате | `Modules/Users/Application/Services/UserBillingService.cs`, `Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs` | Email передаётся платёжным адаптерам |

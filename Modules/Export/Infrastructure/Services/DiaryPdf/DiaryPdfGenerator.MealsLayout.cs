@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 

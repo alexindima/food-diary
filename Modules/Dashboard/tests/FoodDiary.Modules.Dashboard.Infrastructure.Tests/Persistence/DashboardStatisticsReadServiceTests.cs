@@ -1,9 +1,9 @@
-using FoodDiary.Infrastructure.Persistence.Meals;
+using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
+using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

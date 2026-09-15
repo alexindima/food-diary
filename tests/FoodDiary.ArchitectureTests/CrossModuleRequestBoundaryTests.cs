@@ -19,6 +19,8 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("Fasting")]
     [InlineData("Hydration")]
     [InlineData("Lessons")]
+    [InlineData("Marketing")]
+    [InlineData("OpenFoodFacts")]
     public void MigratedContracts_DoNotExportServiceInterfaces(string module) {
         var contracts = Assembly.Load($"FoodDiary.Modules.{module}.Contracts");
         Assert.DoesNotContain(contracts.GetExportedTypes(), type => type.IsInterface);
@@ -81,7 +83,7 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole.EnsureUserPremiumRoleCommand, FoodDiary.Modules.Users.Contracts", "FoodDiary.Application.Users.Commands.EnsureUserPremiumRole.EnsureUserPremiumRoleCommandHandler, FoodDiary.Application.Users")]
     [InlineData("FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole.RemoveUserPremiumRoleCommand, FoodDiary.Modules.Users.Contracts", "FoodDiary.Application.Users.Commands.RemoveUserPremiumRole.RemoveUserPremiumRoleCommandHandler, FoodDiary.Application.Users")]
     [InlineData("FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess.CheckUserAccessQuery, FoodDiary.Modules.Users.Contracts", "FoodDiary.Application.Users.Queries.CheckUserAccess.CheckUserAccessQueryHandler, FoodDiary.Application.Users")]
-    [InlineData("FoodDiary.Application.Marketing.Commands.RecordPremiumConversion.RecordPremiumConversionCommand, FoodDiary.Modules.Marketing.Contracts", "FoodDiary.Application.Marketing.Commands.RecordPremiumConversion.RecordPremiumConversionCommandHandler, FoodDiary.Application.Marketing")]
+    [InlineData("FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion.RecordPremiumConversionCommand, FoodDiary.Modules.Marketing.Contracts", "FoodDiary.Modules.Marketing.Application.Commands.RecordPremiumConversion.RecordPremiumConversionCommandHandler, FoodDiary.Modules.Marketing.Application")]
     [InlineData("FoodDiary.Modules.Identity.Contracts.Authentication.Queries.GetLoginEvents.GetLoginEventsQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginEvents.GetLoginEventsQueryHandler, FoodDiary.Modules.Identity.Application")]
     [InlineData("FoodDiary.Modules.Identity.Contracts.Authentication.Queries.GetLoginDeviceSummary.GetLoginDeviceSummaryQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Modules.Identity.Application.Authentication.Queries.GetLoginDeviceSummary.GetLoginDeviceSummaryQueryHandler, FoodDiary.Modules.Identity.Application")]
     [InlineData("FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle.GetCurrentCycleQuery, FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle.GetCurrentCycleQueryHandler, FoodDiary.Modules.Cycles.Application")]
@@ -100,6 +102,13 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoritesOverview.ReadMealFavoritesOverviewQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadMealFavoritesOverview.ReadMealFavoritesOverviewQueryHandler, FoodDiary.Modules.Favorites.Application")]
     [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadProductFavoriteStatus.ReadProductFavoriteStatusQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadProductFavoriteStatus.ReadProductFavoriteStatusQueryHandler, FoodDiary.Modules.Favorites.Application")]
     [InlineData("FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus.ReadRecipeFavoriteStatusQuery, FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus.ReadRecipeFavoriteStatusQueryHandler, FoodDiary.Modules.Favorites.Application")]
+    [InlineData("FoodDiary.Modules.Marketing.Contracts.Commands.CleanupMarketingAttribution.CleanupMarketingAttributionCommand, FoodDiary.Modules.Marketing.Contracts", "FoodDiary.Modules.Marketing.Application.Commands.CleanupMarketingAttribution.CleanupMarketingAttributionCommandHandler, FoodDiary.Modules.Marketing.Application")]
+    [InlineData("FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications.CleanupExpiredNotificationsCommand, FoodDiary.Modules.Notifications.Contracts", "FoodDiary.Modules.Notifications.Application.Commands.CleanupExpiredNotifications.CleanupExpiredNotificationsCommandHandler, FoodDiary.Modules.Notifications.Application")]
+    [InlineData("FoodDiary.Modules.Meals.Contracts.Queries.ReadMealCount.ReadMealCountQuery, FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Application.Queries.ReadMealCount.ReadMealCountQueryHandler, FoodDiary.Modules.Meals.Application")]
+    [InlineData("FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates.ReadDistinctMealDatesQuery, FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Application.Queries.ReadDistinctMealDates.ReadDistinctMealDatesQueryHandler, FoodDiary.Modules.Meals.Application")]
+    [InlineData("FoodDiary.Modules.Meals.Contracts.Queries.ReadTotalMealCount.ReadTotalMealCountQuery, FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Application.Queries.ReadTotalMealCount.ReadTotalMealCountQueryHandler, FoodDiary.Modules.Meals.Application")]
+    [InlineData("FoodDiary.Modules.Meals.Contracts.Queries.ReadMealsForExport.ReadMealsForExportQuery, FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Application.Queries.ReadMealsForExport.ReadMealsForExportQueryHandler, FoodDiary.Modules.Meals.Application")]
+    [InlineData("FoodDiary.Modules.OpenFoodFacts.Contracts.Queries.SearchProducts.SearchOpenFoodFactsQuery, FoodDiary.Modules.OpenFoodFacts.Contracts", "FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchProducts.SearchOpenFoodFactsQueryHandler, FoodDiary.Modules.OpenFoodFacts.Application")]
     public void OwnerRequest_HasMatchingHandlerAndPreservesCallerCommit(string requestName, string handlerName) {
         Type request = Type.GetType(requestName, throwOnError: true)!;
         Type handler = Type.GetType(handlerName, throwOnError: true)!;

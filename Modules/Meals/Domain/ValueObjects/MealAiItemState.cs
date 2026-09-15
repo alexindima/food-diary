@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using System.Globalization;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Meals.Domain.ValueObjects;
 
 public readonly record struct MealAiItemState {
     private const int NameMaxLength = 256;

@@ -1,8 +1,10 @@
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadTotalMealCount;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
 using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
 using FoodDiary.Modules.Gamification.Application.Commands.ReconcileAchievements;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Modules.Gamification.Application.Common;
 using FoodDiary.Modules.Gamification.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -14,10 +16,10 @@ public sealed class ReconcileAchievementsCommandHandlerTests {
     [Fact]
     public async Task ReconcileAsync_UsesCompleteHistoryAndEvaluatesAwards() {
         var userId = UserId.New();
-        IMealActivityReadService activity = Substitute.For<IMealActivityReadService>();
-        activity.GetDistinctMealDatesAsync(userId, DateTime.UnixEpoch, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+        ISender activity = Substitute.For<ISender>();
+        activity.Send(Arg.Is<ReadDistinctMealDatesQuery>(q => q.UserId == userId && q.DateFrom == DateTime.UnixEpoch), Arg.Any<CancellationToken>())
             .Returns([new DateTime(2026, 8, 10), new DateTime(2026, 8, 9), new DateTime(2026, 8, 8)]);
-        activity.GetTotalMealCountAsync(userId, Arg.Any<CancellationToken>()).Returns(10);
+        activity.Send(Arg.Is<ReadTotalMealCountQuery>(q => q.UserId == userId), Arg.Any<CancellationToken>()).Returns(10);
         IAchievementMetricReader metricReader = Substitute.For<IAchievementMetricReader>();
         metricReader.GetCompletedAcademyArticleCountAsync(userId, Arg.Any<CancellationToken>()).Returns(4);
         IAchievementAwardService awards = Substitute.For<IAchievementAwardService>();

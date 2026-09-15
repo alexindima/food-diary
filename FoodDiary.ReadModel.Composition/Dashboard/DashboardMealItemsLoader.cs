@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;

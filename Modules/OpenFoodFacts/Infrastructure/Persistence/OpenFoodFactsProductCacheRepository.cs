@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
-using FoodDiary.Domain.Entities.OpenFoodFacts;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
+using FoodDiary.Modules.OpenFoodFacts.Domain.Entities;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

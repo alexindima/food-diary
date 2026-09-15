@@ -1,8 +1,7 @@
 # MealPlanning persistence adapters
 
 Own MealPlans and ShoppingLists repositories and complete AddMealPlanningModule
-registration. Preserve existing repository CLR namespaces for in-repository
-consumers. Use the owned runtime sets for writes; do not save or begin a transaction inside
+registration. Use canonical repository namespaces and rebuild consumers together. Use the owned runtime sets for writes; do not save or begin a transaction inside
 these repositories. Keep user filters and tracking/projection behavior unchanged.
 Central Infrastructure references Model, never this adapter project.
 

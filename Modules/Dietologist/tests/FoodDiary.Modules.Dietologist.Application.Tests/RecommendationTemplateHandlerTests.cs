@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Application.Commands.ArchiveRecommendationTemplate;
@@ -332,7 +332,7 @@ public sealed class RecommendationTemplateHandlerTests {
     private static IUserContextService CreateFailingUserContext() {
         IUserContextService service = Substitute.For<IUserContextService>();
         service.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         return service;
     }
 }

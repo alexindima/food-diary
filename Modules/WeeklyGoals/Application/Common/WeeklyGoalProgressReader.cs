@@ -1,15 +1,16 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 
 namespace FoodDiary.Application.WeeklyGoals.Common;
 
-public sealed class WeeklyGoalProgressReader(IMealActivityReadService mealActivityReadService) {
+public sealed class WeeklyGoalProgressReader(ISender mealActivityReadService) {
     public async Task<int> GetProgressDaysAsync(WeeklyGoal goal, CancellationToken cancellationToken) {
         DateTime weekEndUtc = goal.WeekStartUtc.AddDays(6);
-        IReadOnlyList<DateTime> dates = await mealActivityReadService.GetDistinctMealDatesAsync(
+        IReadOnlyList<DateTime> dates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(
             goal.UserId,
             goal.WeekStartUtc,
-            weekEndUtc,
+            weekEndUtc),
             cancellationToken).ConfigureAwait(false);
         return dates.Count;
     }

@@ -1,16 +1,18 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Meals.Common.Validation;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Application.Mappings;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Meals.Application.Common.Validation;
 
-namespace FoodDiary.Application.Meals.Queries.GetMealById;
+namespace FoodDiary.Modules.Meals.Application.Queries.GetMealById;
 
 public sealed class GetMealByIdQueryHandler(
-    IMealReadService mealReadService,
+    IMealProjectionReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMealByIdQuery, Result<MealModel>> {
     public async Task<Result<MealModel>> Handle(GetMealByIdQuery request, CancellationToken cancellationToken) {
@@ -34,7 +36,7 @@ public sealed class GetMealByIdQueryHandler(
         UserId userId = userIdResult.Value;
         MealId mealId = mealIdResult.Value;
 
-        MealModel? meal = await mealReadService.GetByIdAsync(
+        MealModel? meal = await GetByIdAsync(
             userId,
             mealId,
             cancellationToken).ConfigureAwait(false);
@@ -42,5 +44,16 @@ public sealed class GetMealByIdQueryHandler(
         return meal is null
             ? Result.Failure<MealModel>(MealErrors.NotFound(request.MealId))
             : Result.Success(meal);
+    }
+    private async Task<MealModel?> GetByIdAsync(
+        UserId userId,
+        MealId mealId,
+        CancellationToken cancellationToken) {
+        MealProjectionReadModel? meal = await mealRepository.GetByIdMealProjectionAsync(
+            mealId,
+            userId,
+            cancellationToken).ConfigureAwait(false);
+
+        return meal?.ToModel();
     }
 }

@@ -1,20 +1,26 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Meals.Common.Time;
-using FoodDiary.Application.Meals.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Meals.Application.Common;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Modules.Meals.Application.Common.Time;
+using FoodDiary.Modules.Meals.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
 
-namespace FoodDiary.Application.Meals.Queries.GetMeals;
+namespace FoodDiary.Modules.Meals.Application.Queries.GetMeals;
 
 public sealed class GetMealsQueryHandler(
-    IMealReadService mealReadService,
+    IMealProjectionReadRepository mealRepository, ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMealsQuery, Result<PagedResponse<MealModel>>> {
     public async Task<Result<PagedResponse<MealModel>>> Handle(GetMealsQuery request, CancellationToken cancellationToken) {
@@ -37,7 +43,7 @@ public sealed class GetMealsQueryHandler(
             : null;
         MealQueryFilters filters = CreateFilters(request, normalizedFrom, normalizedTo);
 
-        PagedResponse<MealModel> response = await mealReadService.GetPagedAsync(
+        PagedResponse<MealModel> response = await GetPagedAsync(
             userId,
             sanitizedPage,
             sanitizedLimit,
@@ -59,4 +65,24 @@ public sealed class GetMealsQueryHandler(
 
     private static MealType[]? ParseMealTypes(IReadOnlyCollection<string>? values) =>
         EnumFilterParser.ParseMany<MealType>(values);
+    private async Task<PagedResponse<MealModel>> GetPagedAsync(
+        UserId userId,
+        int page,
+        int limit,
+        MealQueryFilters filters,
+        CancellationToken cancellationToken) {
+        (IReadOnlyList<MealProjectionReadModel> items, int totalItems) = await mealRepository.GetPagedMealProjectionsAsync(
+            userId,
+            page,
+            limit,
+            filters,
+            cancellationToken).ConfigureAwait(false);
+
+        IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await MealReadSupport.GetFavoritesByMealIdAsync(sender,
+            userId,
+            items,
+            cancellationToken).ConfigureAwait(false);
+
+        return MealReadSupport.ToPagedResponse(items, favoritesByMealId, page, limit, totalItems);
+    }
 }

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Results;
 
 namespace FoodDiary.JobManager.Services;

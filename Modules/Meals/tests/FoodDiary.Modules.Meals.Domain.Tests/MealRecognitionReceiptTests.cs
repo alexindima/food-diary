@@ -1,7 +1,8 @@
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Meals.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealRecognitionReceiptTests {

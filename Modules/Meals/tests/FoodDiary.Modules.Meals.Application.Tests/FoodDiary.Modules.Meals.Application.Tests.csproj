@@ -1,13 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Application.Tests</AssemblyName>
-    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
     <Using Include="NSubstitute" />
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Modules.Meals.Application.Tests.Support" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
 
@@ -19,15 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Application/FoodDiary.Modules.Meals.Application.csproj" />
-    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
-    <ProjectReference Include="../../Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
-    <ProjectReference Include="../../../Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
     <ProjectReference Include="../../../Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj" />
     <ProjectReference Include="../../../Favorites/Application.Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj" />
     <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
@@ -41,13 +37,11 @@
     <ProjectReference Include="../../../Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj" />
+    <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.Meals.Application.csproj" />
+    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
+    <ProjectReference Include="../../Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
-  </ItemGroup>
 </Project>

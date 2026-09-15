@@ -2,4 +2,8 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Application.Abstractions</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../FoodDiary.Results/FoodDiary.Results.csproj" />
+  </ItemGroup>
 </Project>

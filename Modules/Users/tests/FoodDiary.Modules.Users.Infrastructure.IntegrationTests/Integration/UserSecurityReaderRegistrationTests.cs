@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
@@ -24,7 +25,7 @@ public sealed class UserSecurityReaderRegistrationTests {
             Assert.Same(services, services.AddUsersPersistence());
         }
 
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         if (!moduleFirst) {
             Assert.Same(services, services.AddUsersPersistence());
@@ -57,7 +58,7 @@ public sealed class UserSecurityReaderRegistrationTests {
     [Fact]
     public void AddInfrastructure_DoesNotOwnSecurityReader() {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
 
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAccessTokenSecurityReader));
     }

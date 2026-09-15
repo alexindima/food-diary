@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-namespace FoodDiary.Application.MealPlanning.Common.Validation;
+namespace FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 
 internal static class EnumFilterParser {
     public static TEnum? ParseOptional<TEnum>(string? value)

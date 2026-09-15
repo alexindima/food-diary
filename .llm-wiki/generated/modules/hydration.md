@@ -37,14 +37,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: HydrationEntry
-- Public contract files: 6
+- Public contract files: 7
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
-- Interfaces: 4
+- Public contract types: 7
+- Interfaces: 5
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 4
@@ -54,6 +54,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IHydrationEntryWriteRepository`
 - `interface IHydrationIntervalReadModelRepository`
 - `interface IHydrationOperationReceiptRepository`
+- `interface IHydrationOperationTransactionRunner`
 - `record HydrationEntryReadModel`
 
 ## Focused Tests

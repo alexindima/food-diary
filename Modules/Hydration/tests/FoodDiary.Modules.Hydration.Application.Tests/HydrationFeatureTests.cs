@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationEntries;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 
@@ -8,7 +9,6 @@ using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotal;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Hydration.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Hydration.Application.Commands.CreateHydrationEntry;
 using FoodDiary.Modules.Hydration.Application.Commands.DeleteHydrationEntry;
 using FoodDiary.Modules.Hydration.Application.Commands.UpdateHydrationEntry;
@@ -120,7 +120,7 @@ public class HydrationFeatureTests {
     public async Task GetHydrationDailyTotalQueryHandler_WhenUserIsMissing_ReturnsInvalidToken() {
         IUserHydrationProfileReadService userProfileReadService = Substitute.For<IUserHydrationProfileReadService>();
         userProfileReadService.GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserHydrationProfileModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserHydrationProfileModel>(AuthenticationErrors.InvalidToken));
         var user = User.Create("goal-missing@example.com", "hash");
         var service = new GetHydrationDailyTotalQueryHandler(CreateHydrationSender(new RecordingHydrationEntryRepository()), userProfileReadService, CreateCurrentUserAccessService(user));
 
@@ -203,7 +203,7 @@ public class HydrationFeatureTests {
         IUserHydrationProfileReadService hydrationGoalService = Substitute.For<IUserHydrationProfileReadService>();
         hydrationGoalService
             .GetHydrationProfileAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserHydrationProfileModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserHydrationProfileModel>(AuthenticationErrors.InvalidToken)));
         var handler = new GetHydrationDailyTotalQueryHandler(CreateHydrationSender(new RecordingHydrationEntryRepository()),
             hydrationGoalService,
             CreateCurrentUserAccessService(user));
@@ -645,26 +645,26 @@ public class HydrationFeatureTests {
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
-        Error? error = user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted;
+        Error? error = user.DeletedAt is null ? null : UserAuthenticationErrors.AccountDeleted;
         service
             .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult(user.Id == id ? error : Errors.Authentication.InvalidToken);
+                return Task.FromResult(user.Id == id ? error : AuthenticationErrors.InvalidToken);
             });
         return service;
     }
 
     private static IUserHydrationProfileReadService CreateHydrationProfileService(User user) {
         IUserHydrationProfileReadService service = Substitute.For<IUserHydrationProfileReadService>();
-        Error? error = user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted;
+        Error? error = user.DeletedAt is null ? null : UserAuthenticationErrors.AccountDeleted;
         service
             .GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 return Task.FromResult(user.Id == id
                     ? Result.Success(new UserHydrationProfileModel(user.HydrationGoal ?? user.WaterGoal))
-                    : Result.Failure<UserHydrationProfileModel>(Errors.Authentication.InvalidToken));
+                    : Result.Failure<UserHydrationProfileModel>(AuthenticationErrors.InvalidToken));
             });
 
         if (error is not null) {

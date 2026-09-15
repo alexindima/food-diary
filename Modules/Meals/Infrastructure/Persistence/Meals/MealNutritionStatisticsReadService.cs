@@ -1,14 +1,14 @@
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Meals;
+namespace FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 
 public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IMealNutritionStatisticsReadService {
     public async Task<Result<IReadOnlyList<MealNutritionStatisticsBucket>>> GetStatisticsAsync(

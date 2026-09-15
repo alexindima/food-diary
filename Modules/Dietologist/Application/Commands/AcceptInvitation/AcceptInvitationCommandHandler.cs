@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;

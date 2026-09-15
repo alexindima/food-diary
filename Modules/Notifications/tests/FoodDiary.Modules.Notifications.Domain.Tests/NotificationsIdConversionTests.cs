@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests;
+namespace FoodDiary.Modules.Notifications.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationsIdConversionTests {

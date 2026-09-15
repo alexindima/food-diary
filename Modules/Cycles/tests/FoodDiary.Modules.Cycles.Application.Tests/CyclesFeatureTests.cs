@@ -1,9 +1,9 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
@@ -193,9 +193,9 @@ public partial class CyclesFeatureTests {
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
                 Error? error = user switch {
-                    null => Errors.Authentication.InvalidToken,
-                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
-                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    null => AuthenticationErrors.InvalidToken,
+                    { Id: var id } when id != userId => AuthenticationErrors.InvalidToken,
+                    { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
                     _ => null,
                 };
                 return Task.FromResult(error);

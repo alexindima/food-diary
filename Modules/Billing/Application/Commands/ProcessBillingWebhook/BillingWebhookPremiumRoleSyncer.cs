@@ -1,5 +1,5 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Marketing.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;

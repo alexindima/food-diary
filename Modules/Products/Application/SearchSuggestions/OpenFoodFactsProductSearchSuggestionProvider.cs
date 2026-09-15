@@ -1,18 +1,19 @@
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
-using FoodDiary.Application.OpenFoodFacts.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Queries.SearchProducts;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
 
 namespace FoodDiary.Application.Products.SearchSuggestions;
 
-public sealed class OpenFoodFactsProductSearchSuggestionProvider(IOpenFoodFactsCachedProductSearch cachedProductSearch) : IProductSearchSuggestionProvider {
+public sealed class OpenFoodFactsProductSearchSuggestionProvider(ISender cachedProductSearch) : IProductSearchSuggestionProvider {
     public string Source => "openFoodFacts";
 
     public async Task<IReadOnlyList<ProductSearchSuggestionModel>> SearchAsync(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        IReadOnlyList<OpenFoodFactsProductModel> products = await cachedProductSearch.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<OpenFoodFactsProductModel> products = (await cachedProductSearch.Send(new SearchOpenFoodFactsQuery(search, limit), cancellationToken).ConfigureAwait(false)).Value;
         return products
             .Select(ToSuggestion)
             .ToList();

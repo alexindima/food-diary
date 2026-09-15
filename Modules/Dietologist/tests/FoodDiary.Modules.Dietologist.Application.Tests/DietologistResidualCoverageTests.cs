@@ -1,6 +1,6 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
@@ -147,14 +147,14 @@ public sealed class DietologistResidualCoverageTests {
                 "key"),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
     }
 
     [Fact]
     public async Task GetRecommendationComments_WhenCurrentUserAccessFails_ReturnsFailure() {
         ICurrentUserAccessService users = Substitute.For<ICurrentUserAccessService>();
         users.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         var handler = new GetRecommendationCommentsQueryHandler(
             Substitute.For<IRecommendationCommentReadModelRepository>(),
             users);
@@ -163,7 +163,7 @@ public sealed class DietologistResidualCoverageTests {
             new GetRecommendationCommentsQuery(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
     }
 
     [Fact]
@@ -180,13 +180,13 @@ public sealed class DietologistResidualCoverageTests {
         var userId = UserId.New();
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
         access.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         IUserDietologistProfileReadService profiles = Substitute.For<IUserDietologistProfileReadService>();
         profiles.GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserDietologistProfileModel>(AuthenticationErrors.InvalidToken));
         IUserProfileReadService userProfiles = Substitute.For<IUserProfileReadService>();
         userProfiles.GetUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserModel>(AuthenticationErrors.InvalidToken));
         var service = new DietologistUserContextService(access, profiles, userProfiles);
 
         Result<string> email = await service.GetAccessibleUserEmailAsync(userId, CancellationToken.None);
@@ -202,14 +202,14 @@ public sealed class DietologistResidualCoverageTests {
             () => ResultAssert.Failure(email),
             () => ResultAssert.Failure(model, DietologistErrors.AccessDenied.Code),
             () => ResultAssert.Failure(accessible),
-            () => Assert.Equal(Errors.Authentication.InvalidToken, accessError),
+            () => Assert.Equal(AuthenticationErrors.InvalidToken, accessError),
             () => Assert.Null(byEmail));
     }
 
     private static IUserContextService CreateFailingUserContext() {
         IUserContextService service = Substitute.For<IUserContextService>();
         service.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         return service;
     }
 }

@@ -1,4 +1,5 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 
@@ -7,15 +8,15 @@ namespace FoodDiary.Application.Users.Common;
 public static class CurrentUserAccessPolicy {
     public static Error? EnsureCanAccess(User? user) {
         if (user is null) {
-            return Errors.Authentication.InvalidToken;
+            return AuthenticationErrors.InvalidToken;
         }
 
         if (user.DeletedAt is not null) {
-            return Errors.Authentication.AccountDeleted;
+            return UserAuthenticationErrors.AccountDeleted;
         }
 
         if (!user.IsActive) {
-            return Errors.Authentication.InvalidToken;
+            return AuthenticationErrors.InvalidToken;
         }
 
         return null;

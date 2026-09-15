@@ -1,3 +1,7 @@
+using FoodDiary.Infrastructure;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
@@ -5,18 +9,18 @@ using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Domain.Primitives;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Meals.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -322,6 +326,9 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = context.Database.GetConnectionString(),
+            ["Database:MaxRetryDelaySeconds"] = "1",
+        }).Build()).AddOutboxProcessing(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = context.Database.GetConnectionString(),
             ["Database:MaxRetryDelaySeconds"] = "1",
         }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();

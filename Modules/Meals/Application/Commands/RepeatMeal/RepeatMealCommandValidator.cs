@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Meals.Commands.RepeatMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.RepeatMeal;
 
 public sealed class RepeatMealCommandValidator : AbstractValidator<RepeatMealCommand> {
     public RepeatMealCommandValidator() {

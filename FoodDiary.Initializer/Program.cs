@@ -1,3 +1,9 @@
+using FoodDiary.Modules.Meals.Infrastructure;
+using FoodDiary.Modules.Marketing.Infrastructure;
+using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Modules.MealPlanning.Infrastructure;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
@@ -16,7 +22,7 @@ using FoodDiary.Modules.Ai.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
-using FoodDiary.Modules.Notifications.Infrastructure;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using FoodDiary.Application.Runtime;
@@ -31,11 +37,10 @@ using FoodDiary.Modules.Identity.Application;
 using FoodDiary.Modules.Images.Application;
 
 using FoodDiary.Application.Statistics;
-using FoodDiary.Modules.MealPlanning.Infrastructure;
+
 using FoodDiary.Application.Tdee;
-using FoodDiary.Application.Notifications;
-using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
-using FoodDiary.Modules.Marketing.Infrastructure;
+using FoodDiary.Modules.Notifications.Application;
+
 using FoodDiary.Modules.Wearables.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;
@@ -45,7 +50,7 @@ using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 
 using FoodDiary.Modules.Export.Application;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Initializer;
 using FoodDiary.Infrastructure;
@@ -363,7 +368,7 @@ Examples:
 public partial class Program {
     internal static void ConfigureServices(IServiceCollection services, IConfiguration configuration, InitializerCommand command) {
         services.AddApplicationRuntime();
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration);
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration);
         services.AddDietologistModule();
         services.AddDistributedMemoryCache();
         if (command.Name.Equals("update", StringComparison.Ordinal) && string.IsNullOrWhiteSpace(command.TargetMigration)) {

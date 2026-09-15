@@ -1,3 +1,11 @@
+using FoodDiary.Modules.Meals.Infrastructure;
+using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Modules.MealPlanning.Infrastructure;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
+using FoodDiary.Modules.Notifications.Infrastructure.Services;
+using FoodDiary.Modules.Notifications.Infrastructure.Options;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
@@ -21,10 +29,9 @@ using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Dashboard.Infrastructure;
-using FoodDiary.Modules.MealPlanning.Infrastructure;
+
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
-using FoodDiary.Modules.Notifications.Infrastructure;
-using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+
 using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Wearables.Infrastructure;
 using Amazon.S3;
@@ -34,8 +41,8 @@ using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
@@ -61,7 +68,6 @@ using FoodDiary.Modules.Dietologist.Infrastructure;
 
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
-using FoodDiary.Integrations.Options;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Integrations.Services;
@@ -98,7 +104,7 @@ public sealed class DependencyInjectionTests {
             ["Email:FrontendBaseUrl"] = "not-a-url",
         });
 
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
@@ -120,7 +126,7 @@ public sealed class DependencyInjectionTests {
             ["Email:AllowedFrontendBaseUrls:0"] = "not-a-url",
         });
 
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
@@ -462,7 +468,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
 
         ServiceDescriptor interceptorDescriptor = Assert.Single(
             services,
@@ -475,6 +481,8 @@ public sealed class DependencyInjectionTests {
         var services = new ServiceCollection();
         services.AddSingleton(Substitute.For<IPublisher>());
         services.AddInfrastructure(CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+        })).AddOutboxProcessing(CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
         })).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddProductsPersistence();
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(FoodDiary.Application.Abstractions.Products.Common.IProductOverviewReadService));
@@ -498,7 +506,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RefreshTokenExpirationDays"] = "7",
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddDietologistModule().AddReadModelComposition();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddDietologistModule().AddReadModelComposition();
 
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
@@ -538,7 +546,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence();
         if (compositionFirst) {
             services.AddReadModelComposition().AddDashboardReadServices();
         } else {
@@ -579,7 +587,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddHydrationModule().AddBodyMetricsModule().AddExercisesModule();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddHydrationModule().AddBodyMetricsModule().AddExercisesModule();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
@@ -631,7 +639,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services
-            .AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence()
+            .AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence()
             .AddBillingModule()
             .AddBodyMetricsModule().AddExercisesModule()
             .AddNotificationsPersistence()
@@ -671,7 +679,7 @@ public sealed class DependencyInjectionTests {
             ["Database:MaxRetryCount"] = "0",
         });
 
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<DatabaseOptions>>().Value);
@@ -694,7 +702,7 @@ public sealed class DependencyInjectionTests {
             ["OutboxProcessing:FinalizationTimeout"] = "00:00:10",
         });
 
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() =>
@@ -719,7 +727,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddSingleton<IPublisher>(new NullPublisher());
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddReadModelComposition().AddAdminPersistence().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
         using FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
@@ -858,13 +866,13 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Meals.Common.IMealRepository",
+            "FoodDiary.Modules.Meals.Application.Abstractions.Common.IMealRepository",
             [
-                "FoodDiary.Application.Abstractions.Meals.Common.IMealReadRepository",
-                "FoodDiary.Application.Abstractions.Meals.Common.IMealProjectionReadRepository",
-                "FoodDiary.Application.Abstractions.Meals.Common.IMealActivityReadRepository",
-                "FoodDiary.Application.Abstractions.Meals.Common.IMealProductNutritionReadRepository",
-                "FoodDiary.Application.Abstractions.Meals.Common.IMealWriteRepository",
+                "FoodDiary.Modules.Meals.Application.Abstractions.Common.IMealReadRepository",
+                "FoodDiary.Modules.Meals.Application.Abstractions.Common.IMealProjectionReadRepository",
+                "FoodDiary.Modules.Meals.Application.Abstractions.Common.IMealActivityReadRepository",
+                "FoodDiary.Modules.Meals.Application.Abstractions.Common.IMealProductNutritionReadRepository",
+                "FoodDiary.Modules.Meals.Application.Abstractions.Common.IMealWriteRepository",
             ]
         },
         {
@@ -928,10 +936,10 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheRepository",
+            "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common.IOpenFoodFactsProductCacheRepository",
             [
-                "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheReadRepository",
-                "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheWriteRepository",
+                "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common.IOpenFoodFactsProductCacheReadRepository",
+                "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common.IOpenFoodFactsProductCacheWriteRepository",
             ]
         },
         {
@@ -943,11 +951,11 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanRepository",
+            "FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common.IMealPlanRepository",
             [
-                "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanReadRepository",
-                "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanReadModelRepository",
-                "FoodDiary.Application.Abstractions.MealPlans.Common.IMealPlanWriteRepository",
+                "FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common.IMealPlanReadRepository",
+                "FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common.IMealPlanReadModelRepository",
+                "FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common.IMealPlanWriteRepository",
             ]
         },
         {
@@ -993,11 +1001,11 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListRepository",
+            "FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.IShoppingListRepository",
             [
-                "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListReadRepository",
-                "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListReadModelRepository",
-                "FoodDiary.Application.Abstractions.ShoppingLists.Common.IShoppingListWriteRepository",
+                "FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.IShoppingListReadRepository",
+                "FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.IShoppingListReadModelRepository",
+                "FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.IShoppingListWriteRepository",
             ]
         },
         {
@@ -1056,20 +1064,20 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Notifications.Common.INotificationRepository",
+            "FoodDiary.Modules.Notifications.Application.Abstractions.Common.INotificationRepository",
             [
-                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationReadRepository",
-                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationLookupRepository",
-                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationReadModelRepository",
-                "FoodDiary.Application.Abstractions.Notifications.Common.INotificationWriteRepository",
+                "FoodDiary.Modules.Notifications.Application.Abstractions.Common.INotificationReadRepository",
+                "FoodDiary.Modules.Notifications.Application.Abstractions.Common.INotificationLookupRepository",
+                "FoodDiary.Modules.Notifications.Application.Abstractions.Common.INotificationReadModelRepository",
+                "FoodDiary.Modules.Notifications.Application.Abstractions.Common.INotificationWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionRepository",
+            "FoodDiary.Modules.Notifications.Application.Abstractions.Common.IWebPushSubscriptionRepository",
             [
-                "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionReadRepository",
-                "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionReadModelRepository",
-                "FoodDiary.Application.Abstractions.Notifications.Common.IWebPushSubscriptionWriteRepository",
+                "FoodDiary.Modules.Notifications.Application.Abstractions.Common.IWebPushSubscriptionReadRepository",
+                "FoodDiary.Modules.Notifications.Application.Abstractions.Common.IWebPushSubscriptionReadModelRepository",
+                "FoodDiary.Modules.Notifications.Application.Abstractions.Common.IWebPushSubscriptionWriteRepository",
             ]
         },
         {

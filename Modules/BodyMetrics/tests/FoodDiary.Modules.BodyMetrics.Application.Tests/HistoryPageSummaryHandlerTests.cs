@@ -1,9 +1,9 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
@@ -150,10 +150,10 @@ public sealed class HistoryPageSummaryHandlerTests {
     private static IUserProfileReadService CreateProfiles(bool fail) {
         IUserProfileReadService profiles = Substitute.For<IUserProfileReadService>();
         Result<WeightHistoryProfileModel> weight = fail
-            ? Result.Failure<WeightHistoryProfileModel>(Errors.Authentication.InvalidToken)
+            ? Result.Failure<WeightHistoryProfileModel>(AuthenticationErrors.InvalidToken)
             : Result.Success(new WeightHistoryProfileModel(180, new UserDesiredWeightModel(72), []));
         Result<WaistHistoryProfileModel> waist = fail
-            ? Result.Failure<WaistHistoryProfileModel>(Errors.Authentication.InvalidToken)
+            ? Result.Failure<WaistHistoryProfileModel>(AuthenticationErrors.InvalidToken)
             : Result.Success(new WaistHistoryProfileModel(180, new UserDesiredWaistModel(76), []));
         profiles.GetWeightHistoryProfileAsync(UserId, Arg.Any<CancellationToken>()).Returns(weight);
         profiles.GetWaistHistoryProfileAsync(UserId, Arg.Any<CancellationToken>()).Returns(waist);

@@ -1,12 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>FoodDiary.Modules.Notifications.Infrastructure</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
@@ -18,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Notifications.Domain.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
@@ -29,6 +24,5 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
   </ItemGroup>
-
 
 </Project>

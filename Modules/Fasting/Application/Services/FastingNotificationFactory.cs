@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 
 namespace FoodDiary.Modules.Fasting.Application.Services;
 

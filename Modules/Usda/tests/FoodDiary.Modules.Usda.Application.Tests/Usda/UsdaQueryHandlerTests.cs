@@ -1,13 +1,13 @@
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 using FoodDiary.Application.Usda.Queries.GetMicronutrients;
 using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 using FoodDiary.Application.Usda.Services;
-using FoodDiary.Application.Meals.Services;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Application.Services;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Enums;

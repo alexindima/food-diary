@@ -1,11 +1,11 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
+namespace FoodDiary.Modules.Notifications.Application.Queries.GetWebPushSubscriptions;
 
 public sealed class GetWebPushSubscriptionsQueryHandler(
     IWebPushSubscriptionReadService webPushSubscriptionReadService,

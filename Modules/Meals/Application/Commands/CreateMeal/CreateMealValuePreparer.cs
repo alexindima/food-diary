@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Meals.Common.Validation;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Commands.CreateMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
 
 internal static class CreateMealValuePreparer {
     public static async Task<Result<CreateMealValues>> PrepareAsync(

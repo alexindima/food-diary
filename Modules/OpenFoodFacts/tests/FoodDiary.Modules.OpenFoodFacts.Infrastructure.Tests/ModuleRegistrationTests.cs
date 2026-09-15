@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;

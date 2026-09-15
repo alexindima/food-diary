@@ -1,10 +1,10 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Services;
+namespace FoodDiary.Modules.Notifications.Application.Services;
 
 public sealed class NotificationUserContextService(IUserNotificationProfileService userProfileService) : INotificationUserContextService {
     public async Task<Result<NotificationUserContext>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {

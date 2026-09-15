@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Results;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Common;
 
-namespace FoodDiary.Application.Meals.Services;
+namespace FoodDiary.Modules.Meals.Application.Services;
 
 public static class MealItemValidator {
     private const double MaxAmount = 1_000_000d;

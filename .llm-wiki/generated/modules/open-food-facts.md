@@ -25,11 +25,10 @@ sources:
 ## Source Areas
 
 - `Modules/OpenFoodFacts/Application`
-- `Modules/OpenFoodFacts/Application/Abstractions`
 - `Modules/OpenFoodFacts/Domain`
 - `Modules/OpenFoodFacts/Infrastructure`
-- `Modules/OpenFoodFacts/Infrastructure/Model`
 - `Modules/OpenFoodFacts/Infrastructure/Providers`
+- `Modules/OpenFoodFacts/PersistenceModel`
 - `Modules/OpenFoodFacts/Presentation`
 
 ## HTTP Surface
@@ -41,31 +40,28 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: OpenFoodFactsProduct
-- Public contract files: 4
+- Public contract files: 0
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
-- Interfaces: 4
+- Public contract types: 0
+- Interfaces: 0
 - DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 3
+- Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `interface IOpenFoodFactsProductCacheReadRepository`
-- `interface IOpenFoodFactsProductCacheRepository`
-- `interface IOpenFoodFactsProductCacheWriteRepository`
-- `interface IOpenFoodFactsService`
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFactsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFactsValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/Support/ResultAssert.cs`
-- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests/Domain/OpenFoodFactsProductTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests/OpenFoodFactsProductTests.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/OpenFoodFactsExternalFoodServiceTests.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`

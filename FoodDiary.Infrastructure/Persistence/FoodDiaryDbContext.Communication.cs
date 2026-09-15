@@ -2,8 +2,8 @@ using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Modules.Identity.Domain.Entities.Content;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
+using FoodDiary.Modules.Notifications.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;

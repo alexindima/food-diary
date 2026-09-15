@@ -200,11 +200,11 @@
           "Modules/Meals/Application"
         ],
         "abstractionAreas": [
-          "Modules/Meals/Application/Abstractions",
+          "Modules/Meals/Application.Abstractions",
           "Modules/Meals/Contracts"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Meals/Application/Abstractions"
+          "Modules/Meals/Application.Abstractions"
         ],
         "contractProjects": [
           "Modules/Meals/Contracts",
@@ -224,10 +224,10 @@
           "Modules/Meals/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/Meals/Infrastructure/Model"
+          "Modules/Meals/PersistenceModel"
         ],
         "adapterAreas": [
-          "Modules/Meals/Presentation/Features/Meals"
+          "Modules/Meals/Presentation"
         ],
         "testAreas": [
           "Modules/Meals/tests",
@@ -630,7 +630,7 @@
           "Modules/Marketing/Application"
         ],
         "abstractionAreas": [
-          "Modules/Marketing/Application/Abstractions"
+          "Modules/Marketing/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/Marketing/Domain"
@@ -661,11 +661,11 @@
           "Modules/MealPlanning/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/MealPlanning/Application/Abstractions"
+          "Modules/MealPlanning/Application.Abstractions"
         ],
         "abstractionAreas": [
-          "Modules/MealPlanning/Application/Abstractions/MealPlans",
-          "Modules/MealPlanning/Application/Abstractions/ShoppingLists"
+          "Modules/MealPlanning/Application.Abstractions/MealPlans",
+          "Modules/MealPlanning/Application.Abstractions/ShoppingLists"
         ],
         "domainProjects": [
           "Modules/MealPlanning/Domain"
@@ -678,7 +678,7 @@
           "Modules/MealPlanning/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/MealPlanning/Infrastructure/Model"
+          "Modules/MealPlanning/PersistenceModel"
         ]
       }
     },
@@ -697,7 +697,7 @@
           "Modules/Notifications/Application"
         ],
         "applicationAbstractionProjects": [
-          "Modules/Notifications/Application/Abstractions"
+          "Modules/Notifications/Application.Abstractions"
         ],
         "domainProjects": [
           "Modules/Notifications/Domain"
@@ -706,7 +706,7 @@
           "Modules/Notifications/Infrastructure"
         ],
         "persistenceModelProjects": [
-          "Modules/Notifications/Infrastructure/Model"
+          "Modules/Notifications/PersistenceModel"
         ]
       }
     },
@@ -726,7 +726,7 @@
         ],
         "infrastructureProjects": [
           "Modules/OpenFoodFacts/Infrastructure",
-          "Modules/OpenFoodFacts/Infrastructure/Model"
+          "Modules/OpenFoodFacts/PersistenceModel"
         ],
         "adapterAreas": [
           "Modules/OpenFoodFacts/Infrastructure/Providers"

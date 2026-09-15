@@ -1,7 +1,7 @@
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 
 public interface IShoppingListCreationService {
     Task<Result<ShoppingListModel>> CreateAsync(

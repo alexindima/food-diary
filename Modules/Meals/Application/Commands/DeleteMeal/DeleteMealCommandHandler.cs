@@ -1,12 +1,13 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Meals.Common.Validation;
+using FoodDiary.Modules.Meals.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 
-namespace FoodDiary.Application.Meals.Commands.DeleteMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.DeleteMeal;
 
 public sealed class DeleteMealCommandHandler(
     IMealReadRepository mealReadRepository,

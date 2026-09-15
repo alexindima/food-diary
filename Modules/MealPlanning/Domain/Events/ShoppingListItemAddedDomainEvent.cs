@@ -1,8 +1,9 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Events;
+namespace FoodDiary.Modules.MealPlanning.Domain.Events;
 
 public sealed record ShoppingListItemAddedDomainEvent : IDomainEvent {
     public ShoppingListItemAddedDomainEvent(

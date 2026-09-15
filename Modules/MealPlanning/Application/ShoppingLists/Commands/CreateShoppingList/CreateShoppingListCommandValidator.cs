@@ -1,7 +1,7 @@
 using FluentValidation;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Commands.CreateShoppingList;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.CreateShoppingList;
 
 public sealed class CreateShoppingListCommandValidator : AbstractValidator<CreateShoppingListCommand> {
     public CreateShoppingListCommandValidator() {

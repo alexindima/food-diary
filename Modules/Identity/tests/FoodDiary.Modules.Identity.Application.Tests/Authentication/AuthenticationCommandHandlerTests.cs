@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
@@ -12,9 +13,10 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;

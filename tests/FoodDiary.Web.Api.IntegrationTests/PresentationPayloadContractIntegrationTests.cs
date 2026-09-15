@@ -11,7 +11,7 @@ using FoodDiary.Modules.Hydration.Presentation.Requests;
 using FoodDiary.Modules.Images.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
-using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
+using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

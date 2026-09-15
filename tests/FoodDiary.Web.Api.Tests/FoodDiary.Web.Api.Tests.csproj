@@ -53,7 +53,7 @@
     <ProjectReference Include="../../Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj" />
     <ProjectReference Include="../../Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj" />
     <ProjectReference Include="../../Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj" />
-    <ProjectReference Include="../../Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj" />
     <ProjectReference Include="../../Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj" />

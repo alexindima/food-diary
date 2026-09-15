@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.MealPlans;
+namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 
 public sealed record MealPlanRecipeIngredientSnapshot(
     ProductId ProductId,

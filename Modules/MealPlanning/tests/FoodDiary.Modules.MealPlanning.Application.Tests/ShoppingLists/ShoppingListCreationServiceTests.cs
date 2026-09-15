@@ -1,13 +1,14 @@
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Services;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
 [ExcludeFromCodeCoverage]
 public sealed class ShoppingListCreationServiceTests {

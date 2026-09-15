@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
+namespace FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchByBarcode;
 
 public sealed class SearchByBarcodeQueryValidator : AbstractValidator<SearchByBarcodeQuery> {
     public const int MaximumBarcodeLength = 128;

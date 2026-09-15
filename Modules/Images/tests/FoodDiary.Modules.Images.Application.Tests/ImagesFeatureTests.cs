@@ -119,7 +119,7 @@ public class ImagesFeatureTests {
         await repository.AddAsync(asset, CancellationToken.None);
         var outbox = new FakeImageObjectDeletionOutbox();
         IUnitOfWork unitOfWork = CreateUnitOfWork();
-        var handler = new ConfirmImageUploadCommandHandler(repository, CreateImageStorageService(), outbox, unitOfWork);
+        var handler = new ConfirmImageUploadCommandHandler(repository, CreateImageStorageService(), outbox, unitOfWork, new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> result = await handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value),
@@ -136,7 +136,7 @@ public class ImagesFeatureTests {
     public async Task ConfirmImageUploadCommandHandler_WithInvalidIdentifiers_ReturnsValidationFailuresWithoutStorageAccess() {
         IImageStorageService storage = CreateImageStorageService();
         var handler = new ConfirmImageUploadCommandHandler(
-            new FakeImageAssetRepository(), storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+            new FakeImageAssetRepository(), storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork(), new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> emptyUser = await handler.Handle(
             new ConfirmImageUploadCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
@@ -158,7 +158,7 @@ public class ImagesFeatureTests {
         var asset = ImageAsset.Create(owner, "images/error.jpg", "https://cdn.example/error.jpg");
         await repository.AddAsync(asset, CancellationToken.None);
         var handler = new ConfirmImageUploadCommandHandler(
-            repository, CreateThrowingImageStorageService(), new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+            repository, CreateThrowingImageStorageService(), new FakeImageObjectDeletionOutbox(), CreateUnitOfWork(), new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> result = await handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
@@ -181,7 +181,7 @@ public class ImagesFeatureTests {
                 return await Task.FromCanceled<ImageObjectValidationResult>(source.Token);
             });
         var handler = new ConfirmImageUploadCommandHandler(
-            repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+            repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork(), new InlineImageTransactionRunner());
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), source.Token));
@@ -199,7 +199,7 @@ public class ImagesFeatureTests {
         storage.ConfirmUploadedObjectAsync(asset.ObjectKey, Arg.Any<CancellationToken>())
             .Returns(Task.FromException<ImageObjectValidationResult>(new OperationCanceledException("Storage timeout.")));
         var handler = new ConfirmImageUploadCommandHandler(
-            repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+            repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork(), new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> result = await handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
@@ -218,7 +218,7 @@ public class ImagesFeatureTests {
             repository,
             CreateImageStorageService(new ImageObjectValidationResult(IsValid: false)),
             new FakeImageObjectDeletionOutbox(),
-            CreateUnitOfWork());
+            CreateUnitOfWork(), new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> result = await handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
@@ -230,7 +230,7 @@ public class ImagesFeatureTests {
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task ConfirmImageUploadCommandHandler_WhenPersistenceFails_PreservesOriginalFailureAfterRollback(bool rollbackFails) {
+    public async Task ConfirmImageUploadCommandHandler_WhenPersistenceFails_DoesNotDeletePublishedObject(bool rollbackFails) {
         var repository = new FakeImageAssetRepository();
         var owner = UserId.New();
         var asset = ImageAsset.Create(owner, "images/rollback.jpg", "https://cdn.example/rollback.jpg");
@@ -238,13 +238,15 @@ public class ImagesFeatureTests {
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         var persistenceFailure = new InvalidOperationException("Database unavailable.");
         unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.FromException(persistenceFailure));
+        IImageStorageService storage = rollbackFails ? CreateSelectivelyThrowingImageStorageService(asset.ObjectKey) : CreateImageStorageService();
         var handler = new ConfirmImageUploadCommandHandler(
-            repository, rollbackFails ? CreateSelectivelyThrowingImageStorageService(asset.ObjectKey) : CreateImageStorageService(), new FakeImageObjectDeletionOutbox(), unitOfWork);
+            repository, storage, new FakeImageObjectDeletionOutbox(), unitOfWork, new InlineImageTransactionRunner());
 
         InvalidOperationException thrown = await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None));
 
         Assert.Same(persistenceFailure, thrown);
+        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -257,7 +259,7 @@ public class ImagesFeatureTests {
         IImageStorageService storage = CreateImageStorageService();
         IUnitOfWork unitOfWork = CreateUnitOfWork();
         var handler = new ConfirmImageUploadCommandHandler(
-            repository, storage, new FakeImageObjectDeletionOutbox(), unitOfWork);
+            repository, storage, new FakeImageObjectDeletionOutbox(), unitOfWork, new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> result = await handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
@@ -277,7 +279,7 @@ public class ImagesFeatureTests {
             repository,
             CreateImageStorageService(),
             new FakeImageObjectDeletionOutbox(),
-            CreateUnitOfWork());
+            CreateUnitOfWork(), new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> foreign = await handler.Handle(
             new ConfirmImageUploadCommand(UserId.New().Value, asset.Id.Value),
@@ -302,7 +304,7 @@ public class ImagesFeatureTests {
             repository,
             CreateImageStorageService(new ImageObjectValidationResult(IsValid: false, "invalid_content", "Invalid image.")),
             new FakeImageObjectDeletionOutbox(),
-            CreateUnitOfWork());
+            CreateUnitOfWork(), new InlineImageTransactionRunner());
 
         Result<ConfirmImageUploadResult> result = await handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value),
@@ -314,25 +316,25 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
-    public async Task ConfirmImageUploadCommandHandler_WhenPersistenceFails_DeletesPublishedObject() {
+    public async Task ConfirmImageUploadCommandHandler_WhenCommitOutcomeIsUnknown_DoesNotDeletePublishedObject() {
         var repository = new FakeImageAssetRepository();
         var owner = UserId.New();
         var asset = ImageAsset.Create(owner, "images/pending.jpg", "https://cdn.example/pending.jpg");
         await repository.AddAsync(asset, CancellationToken.None);
         IImageStorageService storage = CreateImageStorageService();
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
-        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns<Task>(_ => throw new InvalidOperationException("Database unavailable."));
+        var commitFailure = new InvalidOperationException("Connection lost during commit.");
         var handler = new ConfirmImageUploadCommandHandler(
             repository,
             storage,
             new FakeImageObjectDeletionOutbox(),
-            unitOfWork);
+            unitOfWork, new InlineImageTransactionRunner(commitFailure));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value),
             CancellationToken.None));
 
-        await storage.Received(1).DeleteAsync(asset.ObjectKey, isConfirmed: true, CancellationToken.None);
+        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -776,4 +778,12 @@ public class ImagesFeatureTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
+    private sealed class InlineImageTransactionRunner(Exception? commitFailure = null) : IImageConfirmationTransactionRunner {
+        public async Task<T> ExecuteSerializedAsync<T>(FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId assetId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) {
+            T result = await operation(cancellationToken);
+            if (commitFailure is not null) { throw commitFailure; }
+            return result;
+        }
+    }
 }

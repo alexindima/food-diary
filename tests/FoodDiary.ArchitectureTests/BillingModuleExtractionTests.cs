@@ -35,7 +35,7 @@ public sealed class BillingModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedBillingAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Modules.Billing.Application", references, StringComparer.Ordinal);
     }

@@ -1,7 +1,7 @@
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using FluentValidation;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
 
 public sealed class GetMealPlansQueryValidator : AbstractValidator<GetMealPlansQuery> {
     private const int MaximumDietTypeLength = 32;

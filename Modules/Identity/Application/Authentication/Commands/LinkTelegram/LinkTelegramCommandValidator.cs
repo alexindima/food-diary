@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkTelegram;
 
@@ -14,7 +14,7 @@ public sealed class LinkTelegramCommandValidator : AbstractValidator<LinkTelegra
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("initData is required.")
-            .MaximumLength(AuthenticationInputLimits.MaximumTelegramInitDataLength)
+            .MaximumLength(IdentityInputLimits.MaximumTelegramInitDataLength)
             .WithErrorCode("Validation.Invalid");
     }
 }

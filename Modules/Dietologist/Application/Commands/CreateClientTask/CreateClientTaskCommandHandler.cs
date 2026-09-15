@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;

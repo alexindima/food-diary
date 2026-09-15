@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Admin.Contracts.Errors;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Admin.Application.Models;
@@ -88,7 +89,7 @@ public sealed class StartAdminImpersonationCommandHandler(
             .GetAuthenticationPrincipalAsync(actorUserId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
             .ConfigureAwait(false);
         if (result.IsFailure || !result.Value.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.ImpersonationForbidden);
+            return Result.Failure<UserAuthenticationPrincipalModel>(ImpersonationErrors.ImpersonationForbidden);
         }
 
         return result;
@@ -104,11 +105,11 @@ public sealed class StartAdminImpersonationCommandHandler(
         if (result.IsFailure) {
             return string.Equals(result.Error.Code, "User.NotFound", StringComparison.Ordinal)
                 ? Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound(targetId))
-                : Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.ImpersonationForbidden);
+                : Result.Failure<UserAuthenticationPrincipalModel>(ImpersonationErrors.ImpersonationForbidden);
         }
 
         if (result.Value.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.ImpersonationForbidden);
+            return Result.Failure<UserAuthenticationPrincipalModel>(ImpersonationErrors.ImpersonationForbidden);
         }
 
         return result;

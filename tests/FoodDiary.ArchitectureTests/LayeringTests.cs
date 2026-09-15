@@ -50,7 +50,7 @@ public class LayeringTests {
 
     [Fact]
     public void ApplicationRuntimeProject_ReferencesOnly_ApplicationContractsAmongCoreProjects() {
-        HashSet<string> references = GetProjectReferences("FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+        HashSet<string> references = GetProjectReferences("Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.Contains("FoodDiary.Application.Contracts", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);

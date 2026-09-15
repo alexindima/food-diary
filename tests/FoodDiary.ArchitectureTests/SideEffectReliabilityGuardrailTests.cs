@@ -156,7 +156,7 @@ public sealed class SideEffectReliabilityGuardrailTests {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] outboxMessageFiles = [.. SourceScanner.SourceFiles(persistenceRoot)
-            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Model")))
+            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "PersistenceModel")))
             .Where(static path => Path.GetFileName(path).EndsWith("OutboxMessage.cs", StringComparison.Ordinal) &&
                                   !string.Equals(Path.GetFileName(path), "IOutboxMessage.cs", StringComparison.Ordinal))];
 
@@ -199,7 +199,7 @@ public sealed class SideEffectReliabilityGuardrailTests {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] outboxMessageFiles = [.. SourceScanner.SourceFiles(persistenceRoot)
-            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Model")))
+            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "PersistenceModel")))
             .Where(static path => Path.GetFileName(path).EndsWith("OutboxMessage.cs", StringComparison.Ordinal) &&
                                   !string.Equals(Path.GetFileName(path), "IOutboxMessage.cs", StringComparison.Ordinal))];
 

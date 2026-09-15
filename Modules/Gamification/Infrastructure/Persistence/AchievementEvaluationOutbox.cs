@@ -1,5 +1,5 @@
 using System.Data.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

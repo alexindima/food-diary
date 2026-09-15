@@ -1,0 +1,12 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Meals.Application.Abstractions.Common;
+
+public interface IMealRecognitionTransactionRunner {
+    Task<T> ExecuteSerializedAsync<T>(UserId userId, Func<CancellationToken, Task<T>> operation,
+        CancellationToken cancellationToken = default);
+
+    // Flush within the open transaction to capture the persisted optimistic concurrency version.
+    Task<uint> FlushCreatedMealAsync(MealId mealId, UserId userId, CancellationToken cancellationToken = default);
+}

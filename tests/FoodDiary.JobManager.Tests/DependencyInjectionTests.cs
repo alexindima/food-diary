@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Meals.Infrastructure;
+using FoodDiary.Modules.Marketing.Infrastructure;
+using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
@@ -8,10 +13,10 @@ using FoodDiary.Authentication.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure.Providers;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
-using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Usda.Infrastructure;
-using FoodDiary.Modules.Notifications.Infrastructure;
+
 using System.Diagnostics.Metrics;
 using OpenTelemetry;
 using FoodDiary.Application.Runtime;
@@ -23,8 +28,8 @@ using FoodDiary.Modules.Favorites.Infrastructure;
 using FoodDiary.Modules.Identity.Application;
 using FoodDiary.Modules.Images.Application;
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Modules.Marketing.Infrastructure;
-using FoodDiary.Application.Notifications;
+
+using FoodDiary.Modules.Notifications.Application;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
@@ -168,7 +173,7 @@ public sealed class DependencyInjectionTests {
         services.AddRecentItemsModule();
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
-        services.AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
         services.AddBillingIntegrations(configuration)
             .AddAdminMailInboxIntegration(configuration)
             .AddMailRelayIntegration(configuration)

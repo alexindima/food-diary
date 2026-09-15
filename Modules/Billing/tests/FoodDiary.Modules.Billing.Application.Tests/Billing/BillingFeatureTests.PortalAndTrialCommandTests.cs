@@ -1,9 +1,9 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
 using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
@@ -77,7 +77,7 @@ public partial class BillingFeatureTests {
         userContextService.Send(new CheckUserAccessQuery(UserId: userId), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService.Send(new GetUserBillingProfileQuery(UserId: userId), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken)));
         var handler = new CreatePortalSessionCommandHandler(
             userContextService,
             new InMemoryBillingSubscriptionRepository(),
@@ -221,7 +221,7 @@ public partial class BillingFeatureTests {
         userContextService.Send(new CheckUserAccessQuery(UserId: userId), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
         userContextService.Send(new GetUserBillingProfileQuery(UserId: userId), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken)));
         var handler = new StartPremiumTrialCommandHandler(
             userContextService,
             new InMemoryBillingSubscriptionRepository(),
@@ -251,7 +251,7 @@ public partial class BillingFeatureTests {
         userContextService.Send(new GetUserBillingProfileQuery(UserId: userId), Arg.Any<CancellationToken>())
             .Returns(Result.Success(profile));
         userContextService.Send(new StartUserPremiumTrialCommand(UserId: userId, StartedAtUtc: Now, Duration: TimeSpan.FromDays(7)), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken));
         var handler = new StartPremiumTrialCommandHandler(
             userContextService,
             new InMemoryBillingSubscriptionRepository(),

@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Meals.Domain.ValueObjects;
 
 public readonly record struct MealNutritionState(
     double TotalCalories,

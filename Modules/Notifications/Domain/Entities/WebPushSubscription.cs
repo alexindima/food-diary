@@ -1,0 +1,108 @@
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
+using System.Globalization;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Notifications.Domain.Entities;
+
+public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
+    private const int EndpointMaxLength = 2048;
+    private const int KeyMaxLength = 512;
+    private const int LocaleMaxLength = 16;
+    private const int UserAgentMaxLength = 512;
+
+    public UserId UserId { get; private set; }
+    public string Endpoint { get; private set; } = string.Empty;
+    public string P256Dh { get; private set; } = string.Empty;
+    public string Auth { get; private set; } = string.Empty;
+    public DateTime? ExpirationTimeUtc { get; private set; }
+    public string? Locale { get; private set; }
+    public string? UserAgent { get; private set; }
+
+    private WebPushSubscription() {
+    }
+
+    public static WebPushSubscription Create(
+        UserId userId,
+        string endpoint,
+        string p256Dh,
+        string auth,
+        DateTime? expirationTimeUtc = null,
+        string? locale = null,
+        string? userAgent = null) {
+        EnsureUserId(userId);
+
+        var subscription = new WebPushSubscription {
+            Id = WebPushSubscriptionId.New(),
+            UserId = userId,
+            Endpoint = NormalizeRequired(endpoint, EndpointMaxLength, nameof(endpoint)),
+            P256Dh = NormalizeRequired(p256Dh, KeyMaxLength, nameof(p256Dh)),
+            Auth = NormalizeRequired(auth, KeyMaxLength, nameof(auth)),
+            ExpirationTimeUtc = NormalizeUtc(expirationTimeUtc, nameof(expirationTimeUtc)),
+            Locale = NormalizeOptional(locale, LocaleMaxLength, nameof(locale)),
+            UserAgent = NormalizeOptional(userAgent, UserAgentMaxLength, nameof(userAgent)),
+        };
+
+        subscription.SetCreated();
+        return subscription;
+    }
+
+    public void Refresh(
+        string p256Dh,
+        string auth,
+        DateTime? expirationTimeUtc = null,
+        string? locale = null,
+        string? userAgent = null) {
+        string normalizedP256Dh = NormalizeRequired(p256Dh, KeyMaxLength, nameof(p256Dh));
+        string normalizedAuth = NormalizeRequired(auth, KeyMaxLength, nameof(auth));
+        DateTime? normalizedExpirationTime = NormalizeUtc(expirationTimeUtc, nameof(expirationTimeUtc));
+        string? normalizedLocale = NormalizeOptional(locale, LocaleMaxLength, nameof(locale));
+        string? normalizedUserAgent = NormalizeOptional(userAgent, UserAgentMaxLength, nameof(userAgent));
+
+        P256Dh = normalizedP256Dh;
+        Auth = normalizedAuth;
+        ExpirationTimeUtc = normalizedExpirationTime;
+        Locale = normalizedLocale;
+        UserAgent = normalizedUserAgent;
+        SetModified();
+    }
+
+    private static void EnsureUserId(UserId userId) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+    }
+
+    private static string NormalizeRequired(string value, int maxLength, string paramName) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            throw new ArgumentException("Value is required.", paramName);
+        }
+
+        string normalized = value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
+            : normalized;
+    }
+
+    private static string? NormalizeOptional(string? value, int maxLength, string paramName) {
+        if (value?.Trim() is not { Length: > 0 } normalized) {
+            return null;
+        }
+
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
+            : normalized;
+    }
+
+    private static DateTime? NormalizeUtc(DateTime? value, string paramName) {
+        if (!value.HasValue) {
+            return null;
+        }
+
+        if (value.Value.Kind == DateTimeKind.Unspecified) {
+            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
+        }
+
+        return value.Value.ToUniversalTime();
+    }
+}

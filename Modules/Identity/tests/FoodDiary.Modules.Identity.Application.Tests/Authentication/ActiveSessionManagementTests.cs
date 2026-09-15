@@ -1,8 +1,8 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.Logout;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeSession;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeOtherSessions;
@@ -95,7 +95,7 @@ public sealed class ActiveSessionManagementTests {
             new GetActiveSessionsQuery(userId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
     }
 
     [Fact]

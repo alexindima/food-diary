@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using System.Linq.Expressions;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
@@ -36,7 +36,7 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         return await AccessibleUsers.AsNoTracking().AnyAsync(user => user.Id == userId, cancellationToken).ConfigureAwait(false)
-            ? null : Errors.Authentication.InvalidToken;
+            ? null : AuthenticationErrors.InvalidToken;
     }
 
     public async Task<Result<UserAiProfileModel>> GetAiProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
@@ -74,7 +74,7 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         UserDietologistProfileModel? profile = await FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        return profile is null ? Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken) : Result.Success(profile);
+        return profile is null ? Result.Failure<UserDietologistProfileModel>(AuthenticationErrors.InvalidToken) : Result.Success(profile);
     }
 
     public async Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) {
@@ -122,6 +122,6 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
     private async Task<Result<T>> ReadAsync<T>(UserId userId, Expression<Func<User, T>> projection, CancellationToken cancellationToken) where T : class {
         T? profile = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId).Select(projection)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-        return profile is null ? Result.Failure<T>(Errors.Authentication.InvalidToken) : Result.Success(profile);
+        return profile is null ? Result.Failure<T>(AuthenticationErrors.InvalidToken) : Result.Success(profile);
     }
 }

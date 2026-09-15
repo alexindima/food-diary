@@ -1,0 +1,27 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+
+public interface IMealPlanReadRepository {
+    Task<MealPlan?> GetByIdAsync(
+        MealPlanId id,
+        bool includeDays = false,
+        CancellationToken cancellationToken = default);
+
+    Task<MealPlan?> GetAccessibleByIdAsync(
+        MealPlanId id,
+        UserId userId,
+        bool includeDays = false,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<MealPlan>> GetCuratedAsync(
+        DietType? dietType = null,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<MealPlan>> GetByUserAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default);
+}

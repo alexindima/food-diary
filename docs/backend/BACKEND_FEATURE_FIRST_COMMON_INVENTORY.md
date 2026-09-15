@@ -4,7 +4,7 @@ This inventory tracks backend `Common` areas that should stay cross-cutting vers
 
 ## Application Runtime and Feature Modules
 
-The legacy root `FoodDiary.Application/Common` area has been removed. Cross-cutting execution code is limited to `FoodDiary.Application.Runtime/Common`:
+The legacy root `FoodDiary.Application/Common` area has been removed. Cross-cutting execution code is limited to `Shared/FoodDiary.Application.Runtime/Common`:
 
 - `Behaviors`: mediator validation, logging, and command transaction behaviors.
 - `Services/PostCommitActionQueue.cs`: bounded post-commit execution.
@@ -27,7 +27,7 @@ Only the generic validation/authentication taxonomy remains in the shared applic
 ## Guardrails
 
 - `ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers` prevents the removed root application common area from returning.
-- Runtime-project guardrails keep `FoodDiary.Application.Runtime/Common` limited to technical execution behavior.
+- Runtime-project guardrails keep `Shared/FoodDiary.Application.Runtime/Common` limited to technical execution behavior.
 - Feature-structure tests keep feature-purpose helpers inside their owning application module.
 - `SharedApplicationContractsBoundaryTests` keeps the generic shared package dependency-light and free of feature folders.
 - `RetiredErrorFacadeTests` prevents feature error facades from returning to the shared package.

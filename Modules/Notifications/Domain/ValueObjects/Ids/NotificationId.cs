@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 
 public readonly record struct NotificationId(Guid Value) : IEntityId<Guid> {
     public static NotificationId New() => new(Guid.NewGuid());

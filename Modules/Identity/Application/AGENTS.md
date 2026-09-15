@@ -23,3 +23,5 @@ Login-event owner query handlers consume IUserLoginEventQuery directly. This exi
 Use canonical FoodDiary.Modules.Identity project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
 
 StartTelegramBackupEmail and CompleteTelegramBackupEmail own their OIDC use-case logic. The internal TelegramBackupEmailOidcAttempt record preserves the shared ticket payload, purpose and browser/account binding; do not restore a forwarding service for these single-caller operations.
+
+Register, acquire, checkpoint and list-ready Telegram operations own their orchestration in handlers. TelegramOperationChecks shares only input/policy and current-identity checks; keep the technical store port and atomic lease semantics.

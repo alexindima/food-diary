@@ -16,7 +16,7 @@ public sealed class RecipeCommunityModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedRecipeCommunityAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.RecipeCommunity", references, StringComparer.Ordinal);
     }

@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Events;
+namespace FoodDiary.Modules.Meals.Domain.Events;
 
 public sealed record MealNutritionAppliedDomainEvent : IDomainEvent {
     public MealNutritionAppliedDomainEvent(

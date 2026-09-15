@@ -35,7 +35,7 @@ public sealed class BodyMetricsModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedBodyMetricsAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Modules.BodyMetrics.Application", references, StringComparer.Ordinal);
     }

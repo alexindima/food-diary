@@ -1,6 +1,7 @@
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Queries.SearchProducts;
 using FluentValidation;
 
-namespace FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
+namespace FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchProducts;
 
 public sealed class SearchOpenFoodFactsQueryValidator : AbstractValidator<SearchOpenFoodFactsQuery> {
     public const int MaximumSearchLength = 256;

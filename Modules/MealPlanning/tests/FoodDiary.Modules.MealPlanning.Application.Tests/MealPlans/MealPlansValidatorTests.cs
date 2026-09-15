@@ -1,10 +1,10 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
-using FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
-using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
-using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.GenerateShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
 
-namespace FoodDiary.Application.Tests.MealPlans;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.MealPlans;
 
 [ExcludeFromCodeCoverage]
 public class MealPlansValidatorTests {

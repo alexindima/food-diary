@@ -5,7 +5,7 @@ status: current
 sources:
   - docs/ai/remaining-consumer-boundaries.md
   - docs/adr/0039-presentation-contracts-and-mappings.md
-  - FoodDiary.Application.Runtime/AGENTS.md
+  - Shared/FoodDiary.Application.Runtime/AGENTS.md
   - Shared/FoodDiary.Application.Contracts/AGENTS.md
   - Shared/FoodDiary.Audit.Contracts/AGENTS.md
   - Shared/FoodDiary.Authentication.Contracts/AGENTS.md

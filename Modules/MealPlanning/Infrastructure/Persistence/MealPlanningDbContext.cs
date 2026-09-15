@@ -1,6 +1,7 @@
-using FoodDiary.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Modules.MealPlanning.Infrastructure.Model;
+using FoodDiary.Modules.MealPlanning.PersistenceModel;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.MealPlanning.Infrastructure.Persistence;

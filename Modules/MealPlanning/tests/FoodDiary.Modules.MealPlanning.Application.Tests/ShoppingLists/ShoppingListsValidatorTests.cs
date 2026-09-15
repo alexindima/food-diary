@@ -1,13 +1,13 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.CreateShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.UpdateShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetCurrentShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingListById;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingLists;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.CreateShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.UpdateShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetCurrentShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListById;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists;
 
-namespace FoodDiary.Application.Tests.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
 [ExcludeFromCodeCoverage]
 public class ShoppingListsValidatorTests {

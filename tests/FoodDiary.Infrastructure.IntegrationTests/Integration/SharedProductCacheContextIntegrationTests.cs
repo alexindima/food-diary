@@ -1,13 +1,15 @@
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
-using FoodDiary.Domain.Entities.OpenFoodFacts;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
+using FoodDiary.Modules.OpenFoodFacts.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -33,7 +35,7 @@ public sealed class SharedProductCacheContextIntegrationTests(PostgresDatabaseFi
     public async Task CacheFollowsTransactionOpenedAfterResolutionAndResetsAfterCompletionAsync(bool commit) {
         await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(central);
         services.AddSingleton<SharedPersistenceDbContext>(central);
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());

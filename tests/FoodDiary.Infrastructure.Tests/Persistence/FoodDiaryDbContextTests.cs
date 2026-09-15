@@ -1,5 +1,5 @@
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;

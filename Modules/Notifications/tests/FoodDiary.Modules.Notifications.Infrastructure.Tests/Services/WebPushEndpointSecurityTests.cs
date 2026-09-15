@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Notifications.Infrastructure.Services;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using FoodDiary.Integrations.Services;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class WebPushEndpointSecurityTests {

@@ -32,5 +32,6 @@ public sealed class CentralPersistenceOwnershipTests {
         Assert.Contains("AddAuditInfrastructure(", source, StringComparison.Ordinal);
         Assert.Contains("AddEmailInfrastructure(", source, StringComparison.Ordinal);
         Assert.Contains("AddOutboxReplayManagement(", source, StringComparison.Ordinal);
+        Assert.Contains("AddOutboxProcessing(", source, StringComparison.Ordinal);
     }
 }

@@ -1,6 +1,7 @@
-using FoodDiary.Application.Abstractions.MealPlans.Common;
-using FoodDiary.Application.Abstractions.MealPlans.Models;
-using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

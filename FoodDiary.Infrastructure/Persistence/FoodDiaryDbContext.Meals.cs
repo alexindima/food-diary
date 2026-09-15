@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
-using FoodDiary.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
+using FoodDiary.Modules.Meals.Domain.Entities;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;

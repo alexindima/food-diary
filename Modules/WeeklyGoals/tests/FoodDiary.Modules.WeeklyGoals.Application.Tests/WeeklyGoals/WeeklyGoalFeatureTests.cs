@@ -1,7 +1,8 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
 using FoodDiary.Application.WeeklyGoals.Common;
@@ -111,8 +112,8 @@ public sealed class WeeklyGoalFeatureTests {
     [Fact]
     public async Task ProgressReader_CountsDistinctMealDatesAcrossWholeWeek() {
         WeeklyGoal goal = CreateGoal(UserId.New(), reminderEnabled: false);
-        IMealActivityReadService meals = Substitute.For<IMealActivityReadService>();
-        meals.GetDistinctMealDatesAsync(goal.UserId, WeekStartUtc, WeekStartUtc.AddDays(6), Arg.Any<CancellationToken>())
+        ISender meals = Substitute.For<ISender>();
+        meals.Send(Arg.Is<ReadDistinctMealDatesQuery>(q => q.UserId == goal.UserId && q.DateFrom == WeekStartUtc && q.DateTo == WeekStartUtc.AddDays(6)), Arg.Any<CancellationToken>())
             .Returns([WeekStartUtc, WeekStartUtc.AddDays(2)]);
 
         int progress = await new WeeklyGoalProgressReader(meals).GetProgressDaysAsync(goal, CancellationToken.None);
@@ -123,13 +124,13 @@ public sealed class WeeklyGoalFeatureTests {
     [Fact]
     public async Task ReadService_WhenGoalDoesNotExist_ReturnsNullWithoutReadingProgress() {
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
-        IMealActivityReadService meals = Substitute.For<IMealActivityReadService>();
+        ISender meals = Substitute.For<ISender>();
         var service = new WeeklyGoalReadService(repository, new WeeklyGoalProgressReader(meals));
 
         WeeklyGoalModel? model = await service.GetAsync(UserId.New(), WeekStartUtc, CancellationToken.None);
 
         Assert.Null(model);
-        await meals.DidNotReceiveWithAnyArgs().GetDistinctMealDatesAsync(default, default, default, default);
+        await meals.DidNotReceiveWithAnyArgs().Send(Arg.Any<ReadDistinctMealDatesQuery>(), default);
     }
 
     [Fact]
@@ -137,9 +138,9 @@ public sealed class WeeklyGoalFeatureTests {
         var userId = UserId.New();
         WeeklyGoal goal = CreateGoal(userId, reminderEnabled: false);
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
-        IMealActivityReadService meals = Substitute.For<IMealActivityReadService>();
+        ISender meals = Substitute.For<ISender>();
         repository.GetAsync(userId, WeekStartUtc, false, Arg.Any<CancellationToken>()).Returns(goal);
-        meals.GetDistinctMealDatesAsync(userId, WeekStartUtc, WeekStartUtc.AddDays(6), Arg.Any<CancellationToken>())
+        meals.Send(Arg.Is<ReadDistinctMealDatesQuery>(q => q.UserId == userId && q.DateFrom == WeekStartUtc && q.DateTo == WeekStartUtc.AddDays(6)), Arg.Any<CancellationToken>())
             .Returns([WeekStartUtc, WeekStartUtc.AddDays(2)]);
         var service = new WeeklyGoalReadService(repository, new WeeklyGoalProgressReader(meals));
 
@@ -156,8 +157,8 @@ public sealed class WeeklyGoalFeatureTests {
     public async Task UpsertHandler_WhenGoalDoesNotExist_CreatesAndMapsReminder() {
         var userId = UserId.New();
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
-        IMealActivityReadService meals = Substitute.For<IMealActivityReadService>();
-        meals.GetDistinctMealDatesAsync(userId, WeekStartUtc, WeekStartUtc.AddDays(6), Arg.Any<CancellationToken>())
+        ISender meals = Substitute.For<ISender>();
+        meals.Send(Arg.Is<ReadDistinctMealDatesQuery>(q => q.UserId == userId && q.DateFrom == WeekStartUtc && q.DateTo == WeekStartUtc.AddDays(6)), Arg.Any<CancellationToken>())
             .Returns([WeekStartUtc, WeekStartUtc.AddDays(1), WeekStartUtc.AddDays(2)]);
         UpsertWeeklyGoalCommandHandler handler = CreateUpsertHandler(repository, meals);
 
@@ -179,7 +180,7 @@ public sealed class WeeklyGoalFeatureTests {
         WeeklyGoal goal = CreateGoal(userId, reminderEnabled: true);
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
         repository.GetAsync(userId, WeekStartUtc, true, Arg.Any<CancellationToken>()).Returns(goal);
-        UpsertWeeklyGoalCommandHandler handler = CreateUpsertHandler(repository, Substitute.For<IMealActivityReadService>());
+        UpsertWeeklyGoalCommandHandler handler = CreateUpsertHandler(repository, Substitute.For<ISender>());
 
         WeeklyGoalModel model = ResultAssert.Success(await handler.Handle(
             new UpsertWeeklyGoalCommand(userId.Value, WeekStart, 7, false, null, null), CancellationToken.None));
@@ -202,7 +203,7 @@ public sealed class WeeklyGoalFeatureTests {
         repository.GetAsync(userId, WeekStartUtc, true, Arg.Any<CancellationToken>()).Returns(goal);
         UpsertWeeklyGoalCommandHandler handler = CreateUpsertHandler(
             repository,
-            Substitute.For<IMealActivityReadService>());
+            Substitute.For<ISender>());
 
         Result<WeeklyGoalModel> result = await handler.Handle(
             new UpsertWeeklyGoalCommand(userId.Value, WeekStart, 5, true, new TimeOnly(9, 30), 240),
@@ -218,7 +219,7 @@ public sealed class WeeklyGoalFeatureTests {
         var handler = new UpsertWeeklyGoalCommandHandler(
             repository,
             new InlineWeeklyGoalTransactionRunner(),
-            new WeeklyGoalProgressReader(Substitute.For<IMealActivityReadService>()),
+            new WeeklyGoalProgressReader(Substitute.For<ISender>()),
             CreateFailingUserContext(),
             TimeProvider.System);
 
@@ -237,7 +238,7 @@ public sealed class WeeklyGoalFeatureTests {
         var handler = new UpsertWeeklyGoalCommandHandler(
             repository,
             transactionRunner,
-            new WeeklyGoalProgressReader(Substitute.For<IMealActivityReadService>()),
+            new WeeklyGoalProgressReader(Substitute.For<ISender>()),
             CreateAccessibleUserContext(),
             new FixedTimeProvider(WeekStartUtc.AddDays(2)));
 
@@ -252,7 +253,7 @@ public sealed class WeeklyGoalFeatureTests {
 
     private static UpsertWeeklyGoalCommandHandler CreateUpsertHandler(
         IWeeklyGoalRepository repository,
-        IMealActivityReadService meals) => new(
+        ISender meals) => new(
             repository,
             new InlineWeeklyGoalTransactionRunner(),
             new WeeklyGoalProgressReader(meals),

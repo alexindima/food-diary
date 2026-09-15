@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Meals.PersistenceModel;
+using FoodDiary.Modules.Marketing.PersistenceModel;
+using FoodDiary.Modules.Notifications.PersistenceModel;
+using FoodDiary.Modules.MealPlanning.PersistenceModel;
+using FoodDiary.Modules.OpenFoodFacts.PersistenceModel;
 using FoodDiary.Modules.Images.PersistenceModel;
 using FoodDiary.Modules.Gamification.PersistenceModel;
 using FoodDiary.Modules.Lessons.PersistenceModel;
@@ -15,7 +20,7 @@ using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Infrastructure.Persistence.Composition;
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Modules.MealPlanning.Infrastructure.Model;
+
 using FoodDiary.Infrastructure.Persistence.Audit;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Outbox;
@@ -26,10 +31,8 @@ using FoodDiary.Modules.DailyAdvices.PersistenceModel;
 using FoodDiary.Modules.Favorites.PersistenceModel;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.PersistenceModel;
-using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Model;
-using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
+
 using FoodDiary.Modules.Usda.Infrastructure.Model;
-using FoodDiary.Modules.Notifications.Infrastructure.Model;
 
 namespace FoodDiary.Infrastructure.Persistence;
 

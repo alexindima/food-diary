@@ -24,6 +24,19 @@ public sealed class FeatureErrorContractTests {
         AssertError(UserErrors.EmailAlreadyExists, "User.EmailAlreadyExists", "A user with this email already exists.", ErrorKind.Conflict);
     }
 
+    [Fact]
+    public void UserAuthenticationErrors_PreservesWireContractsAndOwner() {
+        Assert.Equal("FoodDiary.Modules.Users.Contracts", typeof(UserAuthenticationErrors).Assembly.GetName().Name);
+        AssertError(UserAuthenticationErrors.GoogleAccountLinkRequired, "Authentication.GoogleAccountLinkRequired", "Sign in with your existing account before linking Google.", ErrorKind.Conflict);
+        AssertError(UserAuthenticationErrors.GoogleAccountEmailMismatch, "Authentication.GoogleAccountEmailMismatch", "The Google account email must match your FoodDiary account email.", ErrorKind.Conflict);
+        AssertError(UserAuthenticationErrors.GoogleIdentityAlreadyLinked, "Authentication.GoogleIdentityAlreadyLinked", "This Google account is already linked to another FoodDiary account.", ErrorKind.Conflict);
+        AssertError(UserAuthenticationErrors.GoogleIdentityDifferent, "Authentication.GoogleIdentityDifferent", "A different Google account is already linked to this FoodDiary account.", ErrorKind.Conflict);
+        AssertError(UserAuthenticationErrors.AccountDeleted, "Authentication.AccountDeleted", "Account is scheduled for deletion.", ErrorKind.Unauthorized);
+        AssertError(UserAuthenticationErrors.AccountNotDeleted, "Authentication.AccountNotDeleted", "Account is already active.", ErrorKind.Conflict);
+        AssertError(UserAuthenticationErrors.TelegramNotLinked, "Authentication.TelegramNotLinked", "Telegram account is not linked.", ErrorKind.NotFound);
+        AssertError(UserAuthenticationErrors.TelegramAlreadyLinked, "Authentication.TelegramAlreadyLinked", "Telegram account is already linked to another user.", ErrorKind.Conflict);
+    }
+
     private static void AssertError(Error error, string code, string message, ErrorKind kind) {
         Assert.Multiple(
             () => Assert.Equal(code, error.Code),

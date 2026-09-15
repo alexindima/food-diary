@@ -2,9 +2,9 @@ using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitation;
 using FoodDiary.Modules.Dietologist.Application.Commands.DeclineInvitationForCurrentUser;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 

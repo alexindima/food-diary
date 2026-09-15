@@ -30,9 +30,9 @@
     <ProjectReference Include="../Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
     <ProjectReference Include="../Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
-    <ProjectReference Include="../Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
-    <ProjectReference Include="../Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />

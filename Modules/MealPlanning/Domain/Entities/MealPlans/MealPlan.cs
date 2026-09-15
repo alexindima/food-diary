@@ -1,10 +1,10 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using System.Globalization;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.ValueObjects.Ids;
 using UserIdType = FoodDiary.Domain.ValueObjects.Ids.UserId;
 
-namespace FoodDiary.Domain.Entities.MealPlans;
+namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 
 public sealed class MealPlan : AggregateRoot<MealPlanId> {
     private const int NameMaxLength = 256;

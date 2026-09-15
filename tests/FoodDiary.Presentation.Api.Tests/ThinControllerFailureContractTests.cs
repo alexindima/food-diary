@@ -7,7 +7,7 @@ using FoodDiary.Modules.Cycles.Presentation.Controllers;
 using FoodDiary.Modules.Export.Presentation.Controllers;
 using FoodDiary.Modules.Fasting.Presentation.Controllers;
 using FoodDiary.Modules.Images.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Meals;
+using FoodDiary.Modules.Meals.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Features.Statistics;

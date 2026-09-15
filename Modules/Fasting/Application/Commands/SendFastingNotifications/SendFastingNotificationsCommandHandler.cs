@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;

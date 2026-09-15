@@ -37,7 +37,7 @@ All six cases belong to `FoodDiary.Infrastructure.Tests.DependencyInjectionTests
 | `FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentRepository` | `Type 'FoodDiary.Application.Abstractions.Billing.Common.IBillingPaymentRepository' was not found.` |
 | `FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionRepository` | `Type 'FoodDiary.Application.Abstractions.Billing.Common.IBillingSubscriptionRepository' was not found.` |
 | `FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventRepository` | `Type 'FoodDiary.Application.Abstractions.Billing.Common.IBillingWebhookEventRepository' was not found.` |
-| `FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheRepository` | `Type 'FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheRepository' was not found.` |
+| `FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common.IOpenFoodFactsProductCacheRepository` | `Type 'FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common.IOpenFoodFactsProductCacheRepository' was not found.` |
 | `FoodDiary.Application.Abstractions.Wearables.Common.IWearableConnectionRepository` | `No service for type 'FoodDiary.Application.Abstractions.Wearables.Common.IWearableConnectionRepository' has been registered.` |
 | `FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncRepository` | `No service for type 'FoodDiary.Application.Abstractions.Wearables.Common.IWearableSyncRepository' has been registered.` |
 

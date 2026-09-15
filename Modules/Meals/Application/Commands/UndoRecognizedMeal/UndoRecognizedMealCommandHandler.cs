@@ -1,12 +1,12 @@
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Application.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Meals.Commands.UndoRecognizedMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.UndoRecognizedMeal;
 
 public sealed class UndoRecognizedMealCommandHandler(
     IMealRecognitionTransactionRunner transactions,

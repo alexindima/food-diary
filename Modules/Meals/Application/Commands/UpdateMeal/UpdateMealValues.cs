@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Commands.UpdateMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 
 internal sealed record UpdateMealValues(
     UserId UserId,

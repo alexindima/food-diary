@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 
-namespace FoodDiary.Application.Meals.Commands.UpdateMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 
 internal static class UpdateMealImageCleanup {
     public static async Task DeleteOldImageAssetAsync(

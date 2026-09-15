@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
 using FoodDiary.Application.WeeklyGoals.Services;
 using FoodDiary.Domain.Entities.WeeklyGoals;

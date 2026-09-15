@@ -1,3 +1,3 @@
-namespace FoodDiary.Application.Abstractions.Notifications.Common;
+namespace FoodDiary.Modules.Notifications.Contracts.Common;
 
 public sealed record DietologistInvitationReceivedNotificationPayload(string ClientName);

@@ -1,14 +1,16 @@
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlanning.MealPlans.Mappings;
-using FoodDiary.Application.MealPlanning.MealPlans.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.MealPlans;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
+
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.AdoptMealPlan;
 
 public sealed class AdoptMealPlanCommandHandler(
     IMealPlanWriteRepository mealPlanRepository,

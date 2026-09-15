@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
+
+public interface IOpenFoodFactsProductCacheRepository : IOpenFoodFactsProductCacheReadRepository, IOpenFoodFactsProductCacheWriteRepository;

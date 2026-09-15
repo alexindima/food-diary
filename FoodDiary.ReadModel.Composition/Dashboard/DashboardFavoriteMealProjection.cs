@@ -1,4 +1,4 @@
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence;
 

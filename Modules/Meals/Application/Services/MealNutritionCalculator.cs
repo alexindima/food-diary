@@ -1,10 +1,10 @@
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Services;
+namespace FoodDiary.Modules.Meals.Application.Services;
 
 public static class MealNutritionCalculator {
     public static MealNutritionSummary Calculate(

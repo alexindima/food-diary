@@ -1,13 +1,14 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.DeleteShoppingList;
 
 public sealed class DeleteShoppingListCommandHandler(
     IShoppingListWriteRepository shoppingListRepository,

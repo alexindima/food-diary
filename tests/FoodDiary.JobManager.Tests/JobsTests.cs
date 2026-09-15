@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
 using FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole;
 using FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole;
@@ -5,13 +10,10 @@ using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
 using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
-using FoodDiary.Testing;
-using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
 using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
 using FoodDiary.Modules.Billing.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -20,7 +22,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Modules.Billing.Domain.Contracts;
@@ -799,7 +801,7 @@ public sealed class JobsTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new NotificationCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationCleanupJob>.Instance);
@@ -843,7 +845,7 @@ public sealed class JobsTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new NotificationCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 10 }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationCleanupJob>.Instance);
@@ -877,7 +879,7 @@ public sealed class JobsTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new NotificationCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 1 }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<NotificationCleanupJob>.Instance);
@@ -1439,13 +1441,13 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingNotificationCleanupService(IEnumerable<int> results) : INotificationCleanupService {
+    private sealed class RecordingNotificationCleanupService(IEnumerable<int> results) : IRequestHandler<CleanupExpiredNotificationsCommand, int> {
         private readonly Queue<int> _results = new(results);
 
         public List<NotificationCleanupPolicy> Policies { get; } = [];
 
-        public Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) {
-            Policies.Add(policy);
+        public Task<int> Handle(CleanupExpiredNotificationsCommand request, CancellationToken cancellationToken) {
+            Policies.Add(request.Policy);
             int value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
@@ -1570,7 +1572,7 @@ public sealed class JobsTests {
         public Task<Result<UserBillingProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             return Task.FromResult(user is null
-                ? Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)
+                ? Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken)
                 : Result.Success(ToBillingProfile(user)));
         }
 
@@ -1591,7 +1593,7 @@ public sealed class JobsTests {
             CancellationToken cancellationToken = default) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             if (user is null) {
-                return Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken));
+                return Task.FromResult(Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken));
             }
 
             user.StartPremiumTrial(startedAtUtc, duration);
@@ -1819,8 +1821,8 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ThrowingNotificationCleanupService : INotificationCleanupService {
-        public Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) =>
+    private sealed class ThrowingNotificationCleanupService : IRequestHandler<CleanupExpiredNotificationsCommand, int> {
+        public Task<int> Handle(CleanupExpiredNotificationsCommand request, CancellationToken cancellationToken) =>
             throw new InvalidOperationException("notification cleanup failed");
     }
 

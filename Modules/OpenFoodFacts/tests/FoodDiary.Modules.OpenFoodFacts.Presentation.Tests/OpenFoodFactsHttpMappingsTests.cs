@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
-using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
-using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
-using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Mappings;
-using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Responses;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Queries.SearchProducts;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
+using FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchByBarcode;
+using FoodDiary.Modules.OpenFoodFacts.Presentation.Mappings;
+using FoodDiary.Modules.OpenFoodFacts.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.OpenFoodFacts.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class OpenFoodFactsHttpMappingsTests {

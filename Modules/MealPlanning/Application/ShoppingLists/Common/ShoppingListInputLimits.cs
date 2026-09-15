@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 
 internal static class ShoppingListInputLimits {
     public const int NameMaxLength = 128;

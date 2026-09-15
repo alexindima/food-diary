@@ -1,9 +1,10 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Shopping;
+namespace FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
 public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
     private const int NameMaxLength = 256;

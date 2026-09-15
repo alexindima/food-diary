@@ -1,14 +1,14 @@
 using System.ComponentModel.DataAnnotations;
-using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Application.Marketing.Commands.RecordMarketingAttribution;
-using FoodDiary.Application.Marketing.Models;
-using FoodDiary.Application.Marketing.Queries.GetMarketingAttributionSummary;
-using FoodDiary.Application.Marketing.Services;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
+using FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
+using FoodDiary.Modules.Marketing.Contracts.Models;
+using FoodDiary.Modules.Marketing.Application.Queries.GetMarketingAttributionSummary;
+using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionSummary;
 using FoodDiary.Modules.Admin.Presentation.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
-using FoodDiary.Presentation.Api.Features.Marketing;
-using FoodDiary.Presentation.Api.Features.Marketing.Requests;
+using FoodDiary.Modules.Marketing.Presentation.Controllers;
+using FoodDiary.Modules.Marketing.Presentation.Requests;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
@@ -235,7 +235,7 @@ public sealed class MarketingAttributionTests {
     public async Task GetSummaryAsync_AggregatesAttributedAndOrganicEvents() {
         var repository = new InMemoryMarketingAttributionEventRepository();
         DateTime now = new(2026, 7, 9, 10, 0, 0, DateTimeKind.Utc);
-        var handler = new GetMarketingAttributionSummaryQueryHandler(new MarketingAttributionSummaryReadService(repository, new FixedTimeProvider(now)));
+        var handler = new GetMarketingAttributionSummaryQueryHandler(repository, new FixedTimeProvider(now));
         await repository.AddAsync(new MarketingAttributionEventRecord(
             EventType: "page_landing",
             OccurredAtUtc: now.AddHours(-1),
@@ -293,7 +293,7 @@ public sealed class MarketingAttributionTests {
         var repository = new InMemoryMarketingAttributionEventRepository();
         DateTime now = new(2026, 7, 9, 10, 0, 0, DateTimeKind.Utc);
         var handler = new GetMarketingAttributionSummaryQueryHandler(
-            new MarketingAttributionSummaryReadService(repository, new FixedTimeProvider(now)));
+            repository, new FixedTimeProvider(now));
         await repository.AddAsync(new MarketingAttributionEventRecord(
             EventType: "page_landing",
             OccurredAtUtc: now.AddHours(-1),

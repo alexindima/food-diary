@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
@@ -15,9 +17,9 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -27,7 +29,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
-using FoodDiary.Modules.Notifications.Infrastructure;
+
 using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition;
 using Microsoft.EntityFrameworkCore;
@@ -193,7 +195,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context, ISender? reconciliation = null) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddUsersPersistence();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);

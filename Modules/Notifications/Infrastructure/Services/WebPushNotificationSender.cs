@@ -1,14 +1,14 @@
+using FoodDiary.Modules.Notifications.Infrastructure.Options;
 using System.Collections.Concurrent;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
-using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebPush;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Services;
 
 public sealed class WebPushNotificationSender(
     IWebPushDeliveryAudienceService deliveryAudienceService,

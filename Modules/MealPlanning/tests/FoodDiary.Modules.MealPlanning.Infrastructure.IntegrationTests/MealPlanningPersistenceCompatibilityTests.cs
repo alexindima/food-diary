@@ -1,5 +1,8 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -18,21 +21,21 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         var product = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
         var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Rice dish", 2);
         recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, 250);
-        var plan = FoodDiary.Domain.Entities.MealPlans.MealPlan.CreateForUser(user.Id, "Week", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
+        var plan = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(user.Id, "Week", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         plan.AddDay(1).AddMeal(MealType.Lunch, recipe.Id, 1);
         context.AddRange(user, product, recipe, plan);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        FoodDiary.Domain.Entities.MealPlans.MealPlan? loaded = await new FoodDiary.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context)).GetByIdAsync(plan.Id, includeDays: true);
+        FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan? loaded = await new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context)).GetByIdAsync(plan.Id, includeDays: true);
 
         Assert.NotNull(loaded);
-        FoodDiary.Domain.Entities.MealPlans.MealPlanRecipeSnapshot? snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot;
+        FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanRecipeSnapshot? snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot;
         Assert.NotNull(snapshot);
         Assert.Equal(recipe.Id, snapshot.Id);
         Assert.Equal("Rice dish", snapshot.Name);
         Assert.Equal(2, snapshot.Servings);
-        FoodDiary.Domain.Entities.MealPlans.MealPlanRecipeIngredientSnapshot ingredient = Assert.Single(snapshot.Ingredients);
+        FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanRecipeIngredientSnapshot ingredient = Assert.Single(snapshot.Ingredients);
         Assert.Equal(product.Id, ingredient.ProductId);
         Assert.Equal(250, ingredient.Amount);
         Assert.Equal("Rice", ingredient.Name);

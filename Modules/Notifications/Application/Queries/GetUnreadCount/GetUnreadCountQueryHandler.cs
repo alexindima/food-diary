@@ -1,13 +1,15 @@
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
+namespace FoodDiary.Modules.Notifications.Application.Queries.GetUnreadCount;
 
 public sealed class GetUnreadCountQueryHandler(
-    INotificationFeedReadService notificationFeedReadService,
+    INotificationReadModelRepository notificationReadModelRepository,
     INotificationUserContextService notificationUserContextService,
     ICurrentUserAccessService notificationUserAccessService)
     : IQueryHandler<GetUnreadCountQuery, Result<int>> {
@@ -26,9 +28,21 @@ public sealed class GetUnreadCountQueryHandler(
             return Result.Failure<int>(contextResult.Error);
         }
 
-        int count = await notificationFeedReadService
-            .GetVisibleUnreadCountAsync(userId, contextResult.Value, cancellationToken)
+        int count = await GetVisibleUnreadCountAsync(userId, contextResult.Value, cancellationToken)
             .ConfigureAwait(false);
         return Result.Success(count);
+    }
+    private async Task<int> GetVisibleUnreadCountAsync(
+        UserId userId,
+        NotificationUserContext context,
+        CancellationToken cancellationToken) {
+        int count = await notificationReadModelRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (context.HasPassword) {
+            count -= await notificationReadModelRepository
+                .GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return count;
     }
 }

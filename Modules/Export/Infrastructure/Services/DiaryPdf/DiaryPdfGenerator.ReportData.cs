@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using System.Globalization;
 using FoodDiary.Modules.Export.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Contracts.Models;
 
 namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFavoriteRecipes;
@@ -5,7 +6,6 @@ using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipe
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Queries.ReadRecipeFavoriteStatus;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Common;
@@ -104,7 +104,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(recipe),
             CreateRecipeAccessService(recipe),
-            CreateCurrentUserAccessService(Errors.Authentication.AccountDeleted));
+            CreateCurrentUserAccessService(UserAuthenticationErrors.AccountDeleted));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Dinner"),
@@ -120,7 +120,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(recipe),
             CreateRecipeAccessService(recipe),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(Guid.NewGuid(), recipe.Id.Value, "Dinner"),
@@ -181,7 +181,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetFavoriteRecipesQueryHandler(RequestTestSender.Create(new ReadFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository())),
-            CreateCurrentUserAccessService(Errors.Authentication.AccountDeleted));
+            CreateCurrentUserAccessService(UserAuthenticationErrors.AccountDeleted));
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(user.Id.Value), CancellationToken.None);
 
@@ -193,7 +193,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task GetFavoriteRecipes_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new GetFavoriteRecipesQueryHandler(RequestTestSender.Create(new ReadFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository())),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -222,7 +222,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new IsRecipeFavoriteQueryHandler(RequestTestSender.Create(new ReadRecipeFavoriteStatusQueryHandler(
             new InMemoryFavoriteRecipeRepository())),
-            CreateCurrentUserAccessService(Errors.Authentication.AccountDeleted));
+            CreateCurrentUserAccessService(UserAuthenticationErrors.AccountDeleted));
 
         Result<bool> result = await handler.Handle(
             new IsRecipeFavoriteQuery(user.Id.Value, Guid.NewGuid()),
@@ -236,7 +236,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task IsRecipeFavorite_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new IsRecipeFavoriteQueryHandler(RequestTestSender.Create(new ReadRecipeFavoriteStatusQueryHandler(
             new InMemoryFavoriteRecipeRepository())),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result<bool> result = await handler.Handle(
             new IsRecipeFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
@@ -348,7 +348,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         Recipe recipe = CreateRecipe(user.Id, "Deleted User Tart");
         var favorite = FavoriteRecipe.Create(user.Id, recipe.Id, "Dessert");
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
-        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateCurrentUserAccessService(Errors.Authentication.AccountDeleted));
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateCurrentUserAccessService(UserAuthenticationErrors.AccountDeleted));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(user.Id.Value, favorite.Id.Value),
@@ -365,7 +365,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         Recipe recipe = CreateRecipe(new UserId(userId), "Missing User Tart");
         var favorite = FavoriteRecipe.Create(new UserId(userId), recipe.Id, "Dessert");
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
-        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(userId, favorite.Id.Value),

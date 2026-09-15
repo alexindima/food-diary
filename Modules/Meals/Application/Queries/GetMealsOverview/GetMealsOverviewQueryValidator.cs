@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Meals.Queries.GetMealsOverview;
+namespace FoodDiary.Modules.Meals.Application.Queries.GetMealsOverview;
 
 public sealed class GetMealsOverviewQueryValidator : AbstractValidator<GetMealsOverviewQuery> {
     public GetMealsOverviewQueryValidator() {

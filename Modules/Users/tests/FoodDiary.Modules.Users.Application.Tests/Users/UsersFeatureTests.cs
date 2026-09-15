@@ -2,8 +2,7 @@ using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using System.Text.Json;
-using FoodDiary.Application.Notifications.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Modules.Notifications.Application.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -13,8 +12,8 @@ using FoodDiary.Modules.Dietologist.Contracts.Models;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Mappings;
 using FoodDiary.Modules.Dietologist.Application.Models;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
@@ -33,7 +32,7 @@ using FoodDiary.Application.Users.Queries.GetUserById;
 using FoodDiary.Application.Users.Queries.GetUserGoals;
 using FoodDiary.Application.Users.Services;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -278,7 +277,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult<Error?>(null));
         userContextService
             .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<User>(AuthenticationErrors.InvalidToken)));
         ChangePasswordCommandHandler handler = CreateChangePasswordHandler(
             userContextService,
             new PassthroughPasswordHasher());
@@ -767,7 +766,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult<Error?>(null));
         userContextService
             .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<User>(AuthenticationErrors.InvalidToken)));
         var handler = new UpdateGoalsCommandHandler(userContextService);
 
         Result<GoalsModel> result = await handler.Handle(
@@ -864,7 +863,7 @@ public partial class UsersFeatureTests {
         IUserProfileReadService userProfileReadService = Substitute.For<IUserProfileReadService>();
         userProfileReadService
             .GetUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserModel>(AuthenticationErrors.InvalidToken)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
             new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
@@ -885,7 +884,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult(Result.Success(user.ToModel())));
         userProfileReadService
             .GetNotificationPreferencesAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<UserNotificationPreferencesModel>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserNotificationPreferencesModel>(AuthenticationErrors.InvalidToken)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
             new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
@@ -1115,7 +1114,7 @@ public partial class UsersFeatureTests {
             .Returns(Task.FromResult<Error?>(null));
         userContextService
             .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<User>(AuthenticationErrors.InvalidToken)));
         return userContextService;
     }
 

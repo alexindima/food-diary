@@ -1,14 +1,14 @@
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.UpdateShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 
-namespace FoodDiary.Application.Tests.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
 public partial class ShoppingListsFeatureTests {
 

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.DeleteShoppingList;
 
 public sealed class DeleteShoppingListCommandValidator : AbstractValidator<DeleteShoppingListCommand> {
     public DeleteShoppingListCommandValidator() {

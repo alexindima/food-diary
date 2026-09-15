@@ -1,7 +1,7 @@
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Notifications.Infrastructure.Services;
 using WebPush;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class WebPushClientAdapterTests {

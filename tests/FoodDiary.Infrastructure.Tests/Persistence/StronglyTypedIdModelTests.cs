@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using System.Data;
 using FoodDiary.Domain.ValueObjects.Ids;

@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.WebUtilities;
 using WebPush;
 
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Options;
 
 public sealed class WebPushOptions {
     public const string SectionName = "WebPush";

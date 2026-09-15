@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Meals.Mappings;
+namespace FoodDiary.Modules.Meals.Application.Mappings;
 
 public static class MealMappings {
     public static MealModel ToModel(

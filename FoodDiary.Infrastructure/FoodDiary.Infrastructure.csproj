@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="5.9.0" />
@@ -54,16 +53,16 @@
     <ProjectReference Include="../Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
     <ProjectReference Include="../Modules/Lessons/PersistenceModel/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj" />
-    <ProjectReference Include="../Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Marketing/PersistenceModel/FoodDiary.Modules.Marketing.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
-    <ProjectReference Include="../Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/MealPlanning/PersistenceModel/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
-    <ProjectReference Include="../Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Meals/PersistenceModel/FoodDiary.Modules.Meals.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj" />
-    <ProjectReference Include="../Modules/Notifications/Infrastructure/Model/FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Notifications/PersistenceModel/FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
-    <ProjectReference Include="../Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/OpenFoodFacts/PersistenceModel/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/RecentItems/Domain/FoodDiary.Modules.RecentItems.Domain.csproj" />

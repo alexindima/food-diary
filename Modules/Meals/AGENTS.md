@@ -4,17 +4,11 @@ MealRecognitionsController owns recognition creation and undo endpoints under
 the existing meals route. Keep ordinary CRUD in MealsController and preserve
 the shared authorized-controller contract and endpoint request limits.
 
-Meals owns Meal, MealItem, MealAiSession, MealAiItem, their IDs, meal-only states,
-nutrition event and AI item/session enums under `Modules/Meals/Domain`, with stable
-CLR namespaces. User has no inverse Meals collection; Meal.User remains a one-way
-relationship with the same required FK and cascade. Shared User/UserId, enums,
-DbContext, migrations and snapshot remain with their existing owners. Product,
-Recipe and Image links remain ID-based with unchanged batch snapshot fallbacks.
-No extra Domain.Contracts project is needed by the current acyclic graph.
-See `docs/ai/meals-ownership-inventory.md` for source evidence and remaining seams.
-
-Preserve the legacy FoodDiary.Application.Meals assembly identity. Hosts compose
-AddMealsModule; JobManager composes AddMealsPersistence only.
+Meals owns aggregates, invariants and events in Domain; scalar IDs and meal enums
+live in Domain.Contracts. Use canonical project and folder namespaces. Keep foreign
+User/Product/Recipe/Image relationships scalar and preserve database constraints,
+nutrition snapshots and source fallback behavior. Historical migrations remain central.
+Hosts compose AddMealsModule; JobManager composes AddMealsPersistence only.
 
 ## Error ownership
 
@@ -25,4 +19,6 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 ## Consumer boundary
 
-Own GetMealsQuery and its MealModel, MealItemModel, MealAiSessionModel and MealAiItemModel projections consumed by Dashboard. Meals.Contracts remains the existing daily-calorie/ID seam. Keep handlers, aggregate policy and MealOverviewModel in Application. See `Service.Contracts/AGENTS.md` and ADR 0033.
+Own GetMealsQuery and its MealModel, MealItemModel, MealAiSessionModel and MealAiItemModel projections consumed by Dashboard. Meals.Contracts owns activity/export queries and technical read capabilities. Keep handlers, aggregate policy and MealOverviewModel in Application. See `Service.Contracts/AGENTS.md` and ADR 0033.
+
+Activity and export consumers dispatch Contracts queries through ISender. Favorites uses its consumer-owned IFavoriteMealSourceReadService implemented by FavoriteMealSourceReadService. Keep paging/favorite enrichment shared in MealReadSupport; do not restore a forwarding MealReadService.

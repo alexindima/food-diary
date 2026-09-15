@@ -1,13 +1,12 @@
+using FoodDiary.Modules.Notifications.Infrastructure.Services;
+using FoodDiary.Modules.Notifications.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Infrastructure.Persistence.Notifications;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Notifications.Infrastructure.Resources;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

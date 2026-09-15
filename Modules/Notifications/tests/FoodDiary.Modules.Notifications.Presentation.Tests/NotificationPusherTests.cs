@@ -1,8 +1,8 @@
-using FoodDiary.Presentation.Api.Hubs;
-using FoodDiary.Presentation.Api.Services;
+using FoodDiary.Modules.Notifications.Presentation.Services;
+using FoodDiary.Modules.Notifications.Presentation.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Notifications.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationPusherTests {

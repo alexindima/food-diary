@@ -1,18 +1,20 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
 using FluentValidation.Results;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Meals.Commands.CreateMeal;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
+using FoodDiary.Modules.Meals.Application.Common;
+using FoodDiary.Modules.Meals.Application.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Meals.Commands.CreateMealFromRecognition;
+namespace FoodDiary.Modules.Meals.Application.Commands.CreateMealFromRecognition;
 
 public sealed class CreateMealFromRecognitionCommandHandler(
     IMealRecognitionTransactionRunner transactions,

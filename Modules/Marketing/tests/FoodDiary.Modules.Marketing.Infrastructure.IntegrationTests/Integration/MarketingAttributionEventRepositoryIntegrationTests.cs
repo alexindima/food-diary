@@ -1,9 +1,10 @@
-using FoodDiary.Application.Abstractions.Marketing.Common;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

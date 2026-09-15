@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotal;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationEntries;
@@ -33,8 +34,8 @@ using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Commo
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Application.Meals.Queries.GetMeals;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
@@ -772,10 +773,10 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
             Task.FromResult(user.Id == userId
                 ? Result.Success(ToDashboardUserContext(user))
-                : Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
+                : Result.Failure<DashboardUserContextModel>(AuthenticationErrors.InvalidToken));
 
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<Error?>(user.Id == userId ? null : Errors.Authentication.InvalidToken);
+            Task.FromResult<Error?>(user.Id == userId ? null : AuthenticationErrors.InvalidToken);
     }
 
     [ExcludeFromCodeCoverage]
@@ -922,10 +923,10 @@ public sealed class DashboardSnapshotBuilderTests {
     [ExcludeFromCodeCoverage]
     private sealed class MissingUserContextService : IDashboardUserContextService {
         public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
-            Task.FromResult(Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
+            Task.FromResult(Result.Failure<DashboardUserContextModel>(AuthenticationErrors.InvalidToken));
 
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
+            Task.FromResult<Error?>(AuthenticationErrors.InvalidToken);
     }
 
     private static DashboardUserContextModel ToDashboardUserContext(User user) =>

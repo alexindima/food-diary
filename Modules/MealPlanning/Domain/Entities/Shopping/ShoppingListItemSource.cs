@@ -1,9 +1,11 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.Shopping;
+namespace FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
 public sealed class ShoppingListItemSource : Entity<ShoppingListItemSourceId> {
     private const int LabelMaxLength = 256;
@@ -101,13 +103,13 @@ public sealed class ShoppingListItemSource : Entity<ShoppingListItemSourceId> {
     }
 
     private static void EnsureMealPlanId(MealPlanId mealPlanId) {
-        if (mealPlanId == global::FoodDiary.Domain.ValueObjects.Ids.MealPlanId.Empty) {
+        if (mealPlanId == global::FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids.MealPlanId.Empty) {
             throw new ArgumentException("MealPlanId is required.", nameof(mealPlanId));
         }
     }
 
     private static void EnsureMealPlanMealId(MealPlanMealId mealPlanMealId) {
-        if (mealPlanMealId == global::FoodDiary.Domain.ValueObjects.Ids.MealPlanMealId.Empty) {
+        if (mealPlanMealId == global::FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids.MealPlanMealId.Empty) {
             throw new ArgumentException("MealPlanMealId is required.", nameof(mealPlanMealId));
         }
     }

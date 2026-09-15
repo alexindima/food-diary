@@ -1,14 +1,16 @@
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists;
 
 public sealed class GetShoppingListsQueryHandler(
-    IShoppingListReadService shoppingListReadService,
+    IShoppingListReadModelRepository shoppingListRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetShoppingListsQuery, Result<IReadOnlyList<ShoppingListSummaryModel>>> {
     public async Task<Result<IReadOnlyList<ShoppingListSummaryModel>>> Handle(
@@ -23,10 +25,20 @@ public sealed class GetShoppingListsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        IReadOnlyList<ShoppingListSummaryModel> response = await shoppingListReadService
-            .GetAllAsync(userId, cancellationToken)
+        IReadOnlyList<ShoppingListSummaryModel> response = await GetAllAsync(userId, cancellationToken)
             .ConfigureAwait(false);
 
         return Result.Success(response);
+    }
+    private async Task<IReadOnlyList<ShoppingListSummaryModel>> GetAllAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        IReadOnlyList<ShoppingListSummaryReadModel> lists = await shoppingListRepository.GetAllSummaryReadModelsAsync(
+            userId,
+            cancellationToken).ConfigureAwait(false);
+
+        return lists
+            .Select(list => list.ToSummaryModel())
+            .ToList();
     }
 }

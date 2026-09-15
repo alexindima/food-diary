@@ -1,5 +1,5 @@
-using FoodDiary.Application.Marketing.Models;
-using FoodDiary.Application.Marketing.Queries.GetMarketingAttributionRange;
+using FoodDiary.Modules.Marketing.Contracts.Models;
+using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 

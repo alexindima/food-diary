@@ -1,6 +1,2 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Domain</AssemblyName>
-    <RootNamespace>FoodDiary.Domain</RootNamespace>
-  </PropertyGroup>
 </Project>

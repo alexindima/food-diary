@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

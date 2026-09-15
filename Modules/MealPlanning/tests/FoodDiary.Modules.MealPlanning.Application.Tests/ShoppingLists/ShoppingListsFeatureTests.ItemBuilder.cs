@@ -1,5 +1,5 @@
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Services;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using System.Reflection;
 
-namespace FoodDiary.Application.Tests.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
 public partial class ShoppingListsFeatureTests {
 

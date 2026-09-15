@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Notifications.Common;
+namespace FoodDiary.Modules.Notifications.Contracts.Common;
 
 public interface INotificationDeduplicationService {
     Task<bool> ExistsAsync(

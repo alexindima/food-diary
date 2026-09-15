@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Notifications.PersistenceModel;
 using FoodDiary.Outbox.Infrastructure.Persistence;
-using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Notifications;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 
 internal sealed class WebPushOutboxReplayStream(NotificationsDbContext context) : IOutboxReplayStream {
     public string Name => "notification_web_push";

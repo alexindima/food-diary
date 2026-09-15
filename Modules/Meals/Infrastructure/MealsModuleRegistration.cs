@@ -1,16 +1,16 @@
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Products.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Meals;
-using FoodDiary.Infrastructure.Persistence.Meals;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Modules.Meals.Application;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Meals.Infrastructure;
 
 public static class MealsModuleRegistration {
     public static IServiceCollection AddMealsModule(this IServiceCollection services) =>

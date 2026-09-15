@@ -1,11 +1,12 @@
-using FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
-using FoodDiary.Application.MealPlanning.MealPlans.Models;
-using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
-using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
-using FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
-using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
+using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Mappings;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Responses;
+
+namespace FoodDiary.Modules.MealPlanning.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanHttpMappingsTests {

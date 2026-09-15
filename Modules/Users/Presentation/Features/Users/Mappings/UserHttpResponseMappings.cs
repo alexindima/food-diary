@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Notifications.Presentation.Mappings.Mappings;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
-using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
+
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Users.Mappings;

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Application.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Meals.Commands.CreateMealFromRecognition;
+namespace FoodDiary.Modules.Meals.Application.Commands.CreateMealFromRecognition;
 
 public sealed record CreateMealFromRecognitionCommand(Guid? UserId, Guid RecognitionId, DateTime OccurredAtUtc)
     : ICommand<Result<RecognizedMealCreationModel>>, IUserRequest;

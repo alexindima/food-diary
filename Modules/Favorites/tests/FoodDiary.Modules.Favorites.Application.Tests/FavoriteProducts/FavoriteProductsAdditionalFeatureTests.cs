@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadFavoriteProducts;
@@ -5,7 +6,6 @@ using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.ReadProdu
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadProductFavoriteStatus;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common;
@@ -577,9 +577,9 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
                 Error? error = user switch {
-                    null => Errors.Authentication.InvalidToken,
-                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
-                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    null => AuthenticationErrors.InvalidToken,
+                    { Id: var id } when id != userId => AuthenticationErrors.InvalidToken,
+                    { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
                     _ => null,
                 };
                 return Task.FromResult(error);

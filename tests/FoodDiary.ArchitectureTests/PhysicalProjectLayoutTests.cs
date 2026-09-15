@@ -4,16 +4,6 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class PhysicalProjectLayoutTests {
     // Existing physical nesting only. Remove entries as projects move; do not add new exceptions.
     private static readonly string[] LegacyNesting = [
-        "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj -> Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
-        "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj -> Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
-        "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj -> Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
-        "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj -> Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
-        "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj -> Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
-        "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj -> Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj",
-        "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj -> Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-        "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj -> Modules/Notifications/Infrastructure/Model/FoodDiary.Modules.Notifications.PersistenceModel.csproj",
-        "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj -> Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
-        "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj -> Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
         "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj -> Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
         "Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj -> Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj",
         "Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj -> Modules/RecentItems/Infrastructure/Model/FoodDiary.Modules.RecentItems.PersistenceModel.csproj",

@@ -1,16 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Infrastructure</AssemblyName>
-    <RootNamespace>FoodDiary.Modules.OpenFoodFacts.Infrastructure</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Model/**/*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
-    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
+    <ProjectReference Include="../PersistenceModel/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
+    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />

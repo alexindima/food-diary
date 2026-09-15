@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
+namespace FoodDiary.Modules.Notifications.Application.Commands.ScheduleTestNotification;
 
 public sealed class ScheduleTestNotificationCommandValidator : AbstractValidator<ScheduleTestNotificationCommand> {
     public ScheduleTestNotificationCommandValidator() {

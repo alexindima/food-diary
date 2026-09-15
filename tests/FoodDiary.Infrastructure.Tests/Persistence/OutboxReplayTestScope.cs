@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence.Outbox;
 using FoodDiary.Email.Infrastructure.Persistence;
@@ -11,7 +12,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence;
 
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Modules.Notifications.Infrastructure;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;

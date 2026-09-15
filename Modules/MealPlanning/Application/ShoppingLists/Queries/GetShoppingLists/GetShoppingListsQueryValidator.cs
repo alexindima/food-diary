@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists;
 
 public sealed class GetShoppingListsQueryValidator : AbstractValidator<GetShoppingListsQuery> {
     public GetShoppingListsQueryValidator() {

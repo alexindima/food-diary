@@ -32,7 +32,7 @@ public sealed class ProductsModuleExtractionTests {
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Users/Domain/Entities/Users/User.cs"));
         string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
         string ingredient = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs"));
-        string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/Meals/MealItem.cs"));
+        string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/MealItem.cs"));
         Assert.DoesNotContain("IReadOnlyCollection<Product> Products", user, StringComparison.Ordinal);
         Assert.DoesNotContain("IReadOnlyCollection<MealItem> MealItems", product, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);
@@ -114,7 +114,7 @@ public sealed class ProductsModuleExtractionTests {
     public void ExtractedProductsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.OpenFoodFacts.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.RecentItems.Contracts", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.OpenFoodFacts.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Products.FoodQuality", "FoodDiary.Modules.RecentItems.Contracts", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

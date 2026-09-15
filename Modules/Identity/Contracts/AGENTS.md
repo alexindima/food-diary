@@ -14,5 +14,7 @@ generic token validation or refresh-token generation through this consumer seam.
 Use canonical FoodDiary.Modules.Identity project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
 
 Errors/IdentityErrors owns Google/Telegram/SSO protocol failures. Preserve their
-Authentication-prefixed wire codes, messages and kinds. Shared account errors
-consumed by Users remain outside Identity to keep the consumer graph one-way.
+Authentication-prefixed wire codes, messages and kinds. Account errors belong to
+Users.Contracts to keep the consumer graph one-way. Authentication/IdentityInputLimits
+owns Google, Telegram and SSO input bounds. Shared password and opaque-token bounds
+remain in Authentication.Contracts; preserve all numeric limits and validation text.

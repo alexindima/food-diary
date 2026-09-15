@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Meals.Common.Validation;
+namespace FoodDiary.Modules.Meals.Application.Common.Validation;
 
 internal static class OptionalEntityIdValidator {
     public static Result<TId?> Parse<TId>(Guid? value, string fieldName, string displayName, Func<Guid, TId> createId)

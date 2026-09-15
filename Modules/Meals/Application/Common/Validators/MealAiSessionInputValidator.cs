@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FluentValidation;
-using FoodDiary.Application.Meals.Common.Validation;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Meals.Application.Common.Validation;
 
-namespace FoodDiary.Application.Meals.Common.Validators;
+namespace FoodDiary.Modules.Meals.Application.Common.Validators;
 
 public sealed class MealAiSessionInputValidator : AbstractValidator<MealAiSessionInput> {
     private const int NotesMaxLength = 2048;

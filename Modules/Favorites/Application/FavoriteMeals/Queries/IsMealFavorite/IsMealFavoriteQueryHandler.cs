@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoriteStatus;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;

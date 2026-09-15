@@ -1,15 +1,19 @@
+using FoodDiary.Modules.Notifications.Application.Mappings;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Application.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Queries.GetNotifications;
+namespace FoodDiary.Modules.Notifications.Application.Queries.GetNotifications;
 
 public sealed class GetNotificationsQueryHandler(
     INotificationUserContextService notificationUserContextService,
-    INotificationFeedReadService notificationFeedReadService,
+    INotificationReadModelRepository notificationReadModelRepository, INotificationTextRenderer notificationTextRenderer,
     ICurrentUserAccessService notificationUserAccessService)
     : IQueryHandler<GetNotificationsQuery, Result<IReadOnlyList<NotificationModel>>> {
     public async Task<Result<IReadOnlyList<NotificationModel>>> Handle(
@@ -29,9 +33,23 @@ public sealed class GetNotificationsQueryHandler(
         }
 
         NotificationUserContext context = contextResult.Value;
-        IReadOnlyList<NotificationModel> models = await notificationFeedReadService
-            .GetVisibleNotificationsAsync(userId, context, cancellationToken)
+        IReadOnlyList<NotificationModel> models = await GetVisibleNotificationsAsync(userId, context, cancellationToken)
             .ConfigureAwait(false);
         return Result.Success<IReadOnlyList<NotificationModel>>(models);
+    }
+    private async Task<IReadOnlyList<NotificationModel>> GetVisibleNotificationsAsync(
+        UserId userId,
+        NotificationUserContext context,
+        CancellationToken cancellationToken) {
+        IReadOnlyList<NotificationReadModel> notifications = await notificationReadModelRepository
+            .GetByUserReadModelsAsync(userId, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        IEnumerable<NotificationReadModel> visibleNotifications = context.HasPassword
+            ? notifications.Where(notification => !string.Equals(notification.Type, NotificationTypes.PasswordSetupSuggested, StringComparison.Ordinal))
+            : notifications;
+
+        return [.. visibleNotifications.Select(notification => notification.ToModel(
+            notificationTextRenderer.RenderFromPayload(notification.Type, notification.PayloadJson, context.Language)))];
     }
 }

@@ -1,0 +1,138 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.Marketing.Application.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
+using FoodDiary.Mediator;
+
+namespace FoodDiary.Modules.Marketing.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public sealed class MarketingConversionRecorderTests {
+    private static readonly DateTime Now = new(2026, 7, 9, 10, 0, 0, DateTimeKind.Utc);
+
+    [Fact]
+    public async Task RecordPremiumStartedAsync_WithEmptyUserId_DoesNotReadOrWriteAttribution() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.Empty), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(0, repository.ExistsForUserCallCount),
+            () => Assert.Equal(0, repository.GetLatestForUserCallCount),
+            () => Assert.Empty(repository.Records));
+    }
+
+    [Fact]
+    public async Task RecordPremiumStartedAsync_WithoutUserAttribution_DoesNotRecordEvent() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.NewGuid()), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(1, repository.ExistsForUserCallCount),
+            () => Assert.Equal(1, repository.GetLatestForUserCallCount),
+            () => Assert.Empty(repository.Records));
+    }
+
+    [Fact]
+    public async Task RecordPremiumStartedAsync_WithUserAttribution_CopiesLatestAttributionContext() {
+        var userId = Guid.NewGuid();
+        var repository = new InMemoryMarketingAttributionEventRepository(
+            new MarketingAttributionEventRecord(
+                "signup_completed",
+                Now.AddMinutes(-5),
+                userId,
+                "anon-1",
+                "session-1",
+                "/?utm_source=telegram",
+                "t.me",
+                "telegram",
+                "social",
+                "2026_07_launch",
+                "story",
+                "food",
+                "1.2.3"));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
+
+        MarketingAttributionEventRecord premiumEvent = Assert.Single(repository.Records, record =>
+            string.Equals(record.EventType, "premium_started", StringComparison.Ordinal));
+        Assert.Equal(userId, premiumEvent.UserId);
+        Assert.Equal(Now, premiumEvent.OccurredAtUtc);
+        Assert.Equal("telegram", premiumEvent.UtmSource);
+        Assert.Equal("social", premiumEvent.UtmMedium);
+        Assert.Equal("2026_07_launch", premiumEvent.UtmCampaign);
+        Assert.Equal("anon-1", premiumEvent.AnonymousId);
+        Assert.Equal("session-1", premiumEvent.SessionId);
+    }
+
+    [Fact]
+    public async Task RecordPremiumStartedAsync_WhenAlreadyRecorded_DoesNotAddDuplicate() {
+        var userId = Guid.NewGuid();
+        var repository = new InMemoryMarketingAttributionEventRepository(
+            new MarketingAttributionEventRecord(
+                "premium_started",
+                Now.AddMinutes(-1),
+                userId,
+                "anon-1",
+                "session-1",
+                "/",
+                ReferrerHost: null,
+                UtmSource: null,
+                UtmMedium: null,
+                UtmCampaign: null,
+                UtmContent: null,
+                UtmTerm: null,
+                BuildVersion: null));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+
+        await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
+
+        Assert.Single(repository.Records);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryMarketingAttributionEventRepository(params MarketingAttributionEventRecord[] seedRecords)
+        : IMarketingAttributionEventRepository {
+        public List<MarketingAttributionEventRecord> Records { get; } = [.. seedRecords];
+        public int ExistsForUserCallCount { get; private set; }
+        public int GetLatestForUserCallCount { get; private set; }
+
+        public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {
+            Records.Add(record);
+            return Task.CompletedTask;
+        }
+
+        public Task<int> DeleteOlderThanAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult<MarketingAttributionEventRecord?>(null);
+
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
+            GetLatestForUserCallCount++;
+            return Task.FromResult(Records
+                .Where(record => record.UserId == userId)
+                .OrderByDescending(record => record.OccurredAtUtc)
+                .FirstOrDefault());
+        }
+
+        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) {
+            ExistsForUserCallCount++;
+            return Task.FromResult(Records.Any(record =>
+                record.UserId == userId &&
+                string.Equals(record.EventType, eventType, StringComparison.Ordinal)));
+        }
+    }
+}

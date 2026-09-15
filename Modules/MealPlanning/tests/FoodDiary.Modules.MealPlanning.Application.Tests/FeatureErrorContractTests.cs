@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.MealPlans.Common;
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class FeatureErrorContractTests {

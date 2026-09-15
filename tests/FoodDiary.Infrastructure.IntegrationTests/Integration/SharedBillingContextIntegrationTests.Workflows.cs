@@ -1,5 +1,5 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Marketing.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Users.Models;

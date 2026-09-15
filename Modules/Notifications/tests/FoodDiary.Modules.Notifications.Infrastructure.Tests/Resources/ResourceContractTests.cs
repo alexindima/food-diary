@@ -3,12 +3,13 @@ using System.Globalization;
 using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+
 using FoodDiary.Modules.Notifications.Infrastructure.Resources;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests.Resources;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Resources;
 
 [ExcludeFromCodeCoverage]
 public sealed partial class ResourceContractTests {

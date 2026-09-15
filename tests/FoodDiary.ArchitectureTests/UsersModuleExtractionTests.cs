@@ -82,7 +82,7 @@ public sealed class UsersModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedUsersAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Users", references, StringComparer.Ordinal);
     }

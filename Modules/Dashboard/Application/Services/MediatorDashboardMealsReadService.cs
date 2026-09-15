@@ -2,8 +2,8 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Application.Meals.Queries.GetMeals;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 

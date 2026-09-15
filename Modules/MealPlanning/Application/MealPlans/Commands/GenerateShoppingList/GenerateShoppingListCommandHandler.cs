@@ -1,14 +1,15 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
-using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.GenerateShoppingList;
 
 public sealed class GenerateShoppingListCommandHandler(
     IMealPlanReadRepository mealPlanRepository,
@@ -126,7 +127,7 @@ public sealed class GenerateShoppingListCommandHandler(
     private sealed class AggregatedIngredient {
         public required ProductId ProductId { get; init; }
         public required string Name { get; init; }
-        public Domain.Enums.MeasurementUnit? Unit { get; init; }
+        public global::FoodDiary.Domain.Enums.MeasurementUnit? Unit { get; init; }
         public string? Category { get; init; }
         public double TotalAmount { get; set; }
         public int SortOrder { get; init; }
@@ -140,6 +141,6 @@ public sealed class GenerateShoppingListCommandHandler(
         public required int DayNumber { get; init; }
         public required string MealType { get; init; }
         public required double Amount { get; init; }
-        public Domain.Enums.MeasurementUnit? Unit { get; init; }
+        public global::FoodDiary.Domain.Enums.MeasurementUnit? Unit { get; init; }
     }
 }

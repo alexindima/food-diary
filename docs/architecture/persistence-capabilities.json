@@ -2,6 +2,22 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "Modules/Hydration/Infrastructure/Persistence/EfHydrationOperationTransactionRunner.cs": {
+      "module": "Hydration",
+      "capabilities": [
+        "context:ExecuteAsync"
+      ],
+      "reason": "Serializes the owner operation with a transaction-scoped PostgreSQL advisory lock before reading state. Shared coordinator owns commit, rollback and retries; no foreign aggregate writes.",
+      "technicalSourceSha256": "811979e72566083be258731d1bf4d482befbfb05eb58858b39d7fe7655c5d888"
+    },
+    "Modules/Images/Infrastructure/Persistence/EfImageConfirmationTransactionRunner.cs": {
+      "module": "Images",
+      "capabilities": [
+        "context:ExecuteAsync"
+      ],
+      "reason": "Serializes the owner operation with a transaction-scoped PostgreSQL advisory lock before reading state. Shared coordinator owns commit, rollback and retries; no foreign aggregate writes.",
+      "technicalSourceSha256": "8529b58b580f828d82e4e86413b083fd3a40b4f6396c85c026f2ca348ad33370"
+    },
     "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs": {
       "module": "Ai",
       "capabilities": [
@@ -23,7 +39,7 @@
         "tracked:UserAchievement"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "de4e2a724e2867de448e3985033fa644fab2c6e1522941c3d8170bbc291bcbd2"
+      "technicalSourceSha256": "ea60f1f24224b19cce4a176f5fec283c3f03d37fbd717e7047e4eeda830bfa3b"
     },
     "Modules/Images/Infrastructure/DependencyInjection.cs": {
       "module": "Images",
@@ -35,7 +51,7 @@
         "tracked:ImageObjectDeletionOutboxMessage"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "044074bdf0fa8f134264b8f02cd308d3900a2a5cd7488863e648264bf23d4378"
+      "technicalSourceSha256": "6dbc8399ae04349bf17973de50e6dbc2b54047a7d57c53a75aca69c8f0ed8e1a"
     },
     "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs": {
       "module": "ReadModelComposition",
@@ -108,7 +124,7 @@
         "context:CurrentTransaction"
       ],
       "reason": "Registers owned cache context and read-only live accessor to the shared transaction so immediate SQL and reads preserve caller commit/rollback. No transaction ownership transfer.",
-      "technicalSourceSha256": "98580687e8cb4ac5d7568df3333f50368680c7492d4899fbaa73d7615b2490e9"
+      "technicalSourceSha256": "b8834ebef9cadb2f021c2f3e52df34b73299b2f1dd6daee2d9650b5fce9347f0"
     },
     "Modules/Marketing/Infrastructure/ModuleRegistration.cs": {
       "module": "Marketing",
@@ -118,7 +134,7 @@
         "tracked:MarketingAttributionEvent"
       ],
       "reason": "Registers only the owned attribution set with the shared connection and save coordinator; standalone batched retention semantics remain unchanged.",
-      "technicalSourceSha256": "5a246ec8cb160f151299693401f011a7ac6c0826f0914ffe3c6cf5153e41f195"
+      "technicalSourceSha256": "f3ce25c15c2a62d8cac9836694b1fb27aa94978e82ff0e03f287dfaf9a336818"
     },
     "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs": {
       "module": "DailyAdvices",
@@ -150,7 +166,7 @@
         "tracked:ShoppingList"
       ],
       "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "717277dd7ef02d3182ca9ad4f73a43c099f936e5bfacbf41c9b865e62c23e041"
+      "technicalSourceSha256": "d15ee1267ae5de4ea2c7975c46d87c876e074ab49a05a93e83664e237c26c73f"
     },
     "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs": {
       "module": "RecipeCommunity",
@@ -222,7 +238,7 @@
         "write:MealRecognitionReceipt"
       ],
       "reason": "Meals-owned receipts and owner-filtered row lock for undo. Parameterized SQL locks only the selected owned Meal. No foreign aggregate access; caller transaction owns SaveChanges and commit.",
-      "technicalSourceSha256": "0720aed697e026e291f41aad999dbd8f936100c8450fdc184ea8c4fed64c8919"
+      "technicalSourceSha256": "eda36fef629477acfa8d353867f832c7868ccf8f5acefadb17c6fc521128e2ce"
     },
     "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs": {
       "module": "Meals",
@@ -233,7 +249,7 @@
         "entity:Meal"
       ],
       "reason": "Meals owns the unchanged user advisory lock and intermediate shared unit-of-work flush for the new Meal xmin. Host IModuleTransactionCoordinator owns clean entry, retry/reset, save and commit including the receipt; no external provider or foreign aggregate writes.",
-      "technicalSourceSha256": "ed0d5f19c11df57c7656a4575a9f505b2538bc6189f63ff00662355575501e08"
+      "technicalSourceSha256": "19203fd8baee9e5b00e6e19277ce1e5b1ca673e38b3abc5bf10d0c10e8f51aae"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
       "module": "Identity",
@@ -711,7 +727,7 @@
         "write:AchievementEvaluationOutboxMessage"
       ],
       "reason": "Gamification owns evaluation outbox rows; conflict upsert coalesces requests and preserves revisions.",
-      "technicalSourceSha256": "2bc7cedec35f81d709ab0520e6d1d3719a36cb252aeffd22d5467317456ad4d3"
+      "technicalSourceSha256": "8a72db4d87f12d22d2f8b8f3a403c4975888319eb7c6387a8680bfcfdaec6e88"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs": {
       "module": "Gamification",
@@ -754,7 +770,7 @@
         "tracked:HydrationOperationReceipt"
       ],
       "reason": "Hydration composition creates its owned runtime context through the shared provider/connection factory. Only its two owned sets reach repositories; IUnitOfWork coordinates transactions and saves. Central purge remains a separate reviewed bridge; see ADR 0040.",
-      "technicalSourceSha256": "930a45a933a6d4e8adbee4c432a1229c87995dd0ac0059ab4b89ae85615a0eb4"
+      "technicalSourceSha256": "62a7a1f274ba2904532b6b7d24db6cbfd0145200f8ce99bd196c847a7f755e94"
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs": {
       "module": "Hydration",
@@ -971,7 +987,7 @@
         "write:MealItem"
       ],
       "reason": "Meals purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "7c2e0fe94680f11f5d32787e87bc32799a768f2623dfdf5091c204c1421a734d"
+      "technicalSourceSha256": "6925057c708c6ab1004fb296a1b62de36ffe059cf12905db5ccc65328b8a05a5"
     },
     "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
       "module": "Notifications",
@@ -985,7 +1001,7 @@
         "tracked:WebPushSubscription"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "f1cc95d8bcc99f6da671a7de5cab274ff7dda7301ab2b25b1257b73a0613860a"
+      "technicalSourceSha256": "600f8fc7262b2dc4d88f5fe6b0a96569d47b91cfcff909e9fd37e507ece226bf"
     },
     "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
       "module": "Notifications",
@@ -1040,7 +1056,7 @@
         "entity:OpenFoodFactsProduct"
       ],
       "reason": "OpenFoodFacts owns its cache; PostgreSQL upsert refreshes only OpenFoodFactsProducts.",
-      "technicalSourceSha256": "b87fa3fb1d3fa80b4a539121e7554baca0b23b01cb42cb081ab16808cd3e549a"
+      "technicalSourceSha256": "45e7e1991be0a3897843c40241c468b5bca65621a110bbf8cc671f750cf04ceb"
     },
     "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs": {
       "module": "Products",
@@ -1580,7 +1596,7 @@
         "tracked:Meal"
       ],
       "reason": "Compose the owner context and narrow repositories; synchronize owner queries with the live IModuleTransactionCoordinator transaction, including after intermediate recognition flush.",
-      "technicalSourceSha256": "b82425ae79bf65c8169ef881ba866956875e556f51ecb369adaf64ec6bafeb56"
+      "technicalSourceSha256": "4072256ab0bafda5fe3fb4d5009d9682f8839d67045b09882cf2ffa16a1b30a7"
     },
     "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
       "module": "ReadModelComposition",

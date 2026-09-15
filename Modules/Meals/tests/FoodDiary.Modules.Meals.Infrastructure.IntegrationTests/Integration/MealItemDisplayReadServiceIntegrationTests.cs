@@ -1,5 +1,6 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Infrastructure.IntegrationTests.Integration;
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -7,7 +8,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Meals;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
+namespace FoodDiary.Modules.Meals.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

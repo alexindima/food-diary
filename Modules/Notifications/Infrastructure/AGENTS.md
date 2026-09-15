@@ -2,7 +2,7 @@
 
 - Own repositories, web-push outbox adapter/processor and the complete web-push provider stack.
 - Own notification resource rendering and neutral/Russian templates. Preserve keys, format placeholders, encoding, culture fallback and singleton registration through AddNotificationResources.
-- Preserve legacy provider/persistence CLR namespaces, configuration keys and delivery behavior.
+- Use canonical provider/persistence namespaces; preserve configuration keys and delivery behavior.
 - Register persistence and provider components explicitly from executable composition roots. Initializer registers persistence only.
 - Use the owner context and shared Outbox.Infrastructure engine. No module migration host, queue engine or direct SMTP adapter.
 - Never log endpoint/key/private payload values or weaken endpoint network validation.

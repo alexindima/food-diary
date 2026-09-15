@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Email.Infrastructure.Persistence;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
@@ -6,7 +7,7 @@ using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Modules.Images.PersistenceModel.Images;
-using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Modules.Notifications.PersistenceModel;
 using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

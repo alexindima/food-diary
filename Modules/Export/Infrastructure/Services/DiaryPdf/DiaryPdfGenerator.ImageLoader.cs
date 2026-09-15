@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 

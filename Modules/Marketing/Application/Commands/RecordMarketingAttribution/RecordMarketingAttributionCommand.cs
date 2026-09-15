@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Marketing.Commands.RecordMarketingAttribution;
+namespace FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
 
 public sealed record RecordMarketingAttributionCommand(
     string EventType,

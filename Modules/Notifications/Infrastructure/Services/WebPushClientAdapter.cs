@@ -1,6 +1,6 @@
 using WebPush;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Services;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal sealed class WebPushClientAdapter : IWebPushClientAdapter {

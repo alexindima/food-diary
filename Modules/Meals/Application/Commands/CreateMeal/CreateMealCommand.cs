@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Application.Common;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 
-namespace FoodDiary.Application.Meals.Commands.CreateMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
 
 public record CreateMealCommand(
     Guid? UserId,

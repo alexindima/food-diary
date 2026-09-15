@@ -23,11 +23,11 @@
     <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
-    <ProjectReference Include="../../../Notifications/Application/FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../../Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj" />
     <ProjectReference Include="../../../Dietologist/Application.Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="../../../Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Application/FoodDiary.Modules.Users.Application.csproj" />
@@ -35,7 +35,7 @@
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../../../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />

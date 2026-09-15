@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Presentation.Api.Hubs;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Presentation.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
-namespace FoodDiary.Presentation.Api.Services;
+namespace FoodDiary.Modules.Notifications.Presentation.Services;
 
 public sealed class NotificationPusher(IHubContext<NotificationHub> hubContext)
     : INotificationPusher {

@@ -3,7 +3,7 @@ using FoodDiary.Modules.DailyAdvices.Contracts.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Hydration.Contracts.Models;
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
@@ -15,7 +15,7 @@ using FoodDiary.Modules.Dashboard.Application.Queries.GetDashboardSnapshot;
 using FoodDiary.Modules.Dashboard.Application.Commands.SendDashboardTestEmail;
 using FoodDiary.Modules.DailyAdvices.Contracts.Queries.GetDailyAdvice;
 using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
-using FoodDiary.Presentation.Api.Features.Meals.Responses;
+using FoodDiary.Modules.Meals.Presentation.Contracts.Responses;
 
 namespace FoodDiary.Modules.Dashboard.Presentation.Tests;
 

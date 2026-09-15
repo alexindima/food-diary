@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.AdoptMealPlan;
 
 public sealed class AdoptMealPlanCommandValidator : AbstractValidator<AdoptMealPlanCommand> {
     public AdoptMealPlanCommandValidator() {

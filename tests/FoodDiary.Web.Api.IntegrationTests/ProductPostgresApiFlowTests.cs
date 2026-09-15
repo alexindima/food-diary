@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Features.Meals.Requests;
+using FoodDiary.Modules.Meals.Presentation.Requests;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Requests;
 using System.Globalization;
 using System.Net;

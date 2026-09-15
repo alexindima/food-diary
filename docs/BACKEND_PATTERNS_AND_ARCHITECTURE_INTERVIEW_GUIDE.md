@@ -78,7 +78,7 @@ Evidence: `docs/adr/`.
 
 Commands, queries, handlers, validators, models and services are grouped by business feature rather than only by technical type. A change is therefore localized around a use case, while common folders are restricted to genuinely cross-feature concepts.
 
-Evidence: `FoodDiary.Application.<Feature>/`, `FoodDiary.Application.Runtime/`, `FoodDiary.Application.Abstractions/`, `tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`.
+Evidence: `FoodDiary.Application.<Feature>/`, `Shared/FoodDiary.Application.Runtime/`, `FoodDiary.Application.Abstractions/`, `tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`.
 
 ### 13. CQRS
 
@@ -96,7 +96,7 @@ Evidence: `Shared/FoodDiary.Mediator/DefaultMediator.cs`, request handlers throu
 
 Validation, structured logging and command transaction behavior wrap handlers as an ordered pipeline. Cross-cutting logic is implemented once without contaminating every use case.
 
-Evidence: `FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs`, `LoggingBehavior.cs`, `CommandTransactionBehavior.cs`.
+Evidence: `Shared/FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs`, `LoggingBehavior.cs`, `CommandTransactionBehavior.cs`.
 
 ### 16. Result pattern and railway-oriented error flow
 

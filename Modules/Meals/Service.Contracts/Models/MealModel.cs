@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodDiary.Application.Meals.Models;
+namespace FoodDiary.Modules.Meals.Service.Contracts.Models;
 
 [ExcludeFromCodeCoverage]
 public sealed record MealModel(

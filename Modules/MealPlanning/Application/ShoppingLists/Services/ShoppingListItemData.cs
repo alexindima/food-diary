@@ -1,7 +1,8 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Services;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Services;
 
 public sealed record ShoppingListItemData(
     ShoppingListItemId? Id,

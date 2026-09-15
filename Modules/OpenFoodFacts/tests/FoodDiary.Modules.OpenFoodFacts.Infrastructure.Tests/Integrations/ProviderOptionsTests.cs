@@ -1,4 +1,4 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
 
 namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests.Integrations;
 

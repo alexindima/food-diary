@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.GenerateShoppingList;
 
 public record GenerateShoppingListCommand(
     Guid? UserId,

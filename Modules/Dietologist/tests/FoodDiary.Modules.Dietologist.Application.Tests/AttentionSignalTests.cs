@@ -1,13 +1,13 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Dietologist.Application.Commands.SetAttentionSignalState;
 using FoodDiary.Modules.Dietologist.Application.Common;
@@ -32,7 +32,7 @@ public sealed class AttentionSignalTests {
     public async Task GetAttentionSignals_WhenCurrentUserAccessFails_ReturnsFailure() {
         IUserContextService userContext = Substitute.For<IUserContextService>();
         userContext.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         GetAttentionSignalsQueryHandler handler = CreateQueryHandler(userContext: userContext);
 
         Result<IReadOnlyList<AttentionSignalModel>> result = await handler.Handle(
@@ -40,7 +40,7 @@ public sealed class AttentionSignalTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal(Errors.Authentication.InvalidToken.Code, result.Error.Code);
+        Assert.Equal(AuthenticationErrors.InvalidToken.Code, result.Error.Code);
     }
 
     [Fact]
@@ -357,7 +357,7 @@ public sealed class AttentionSignalTests {
     public async Task SetAttentionSignalState_WhenCurrentUserAccessFails_ReturnsFailure() {
         IUserContextService userContext = Substitute.For<IUserContextService>();
         userContext.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         var handler = new SetAttentionSignalStateCommandHandler(
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<IAuditEntryWriter>(),
@@ -368,7 +368,7 @@ public sealed class AttentionSignalTests {
             new SetAttentionSignalStateCommand(Guid.NewGuid(), Guid.NewGuid(), "signal", "Acknowledge", null),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
     }
 
     [Fact]

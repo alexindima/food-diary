@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -7,7 +7,7 @@ namespace FoodDiary.Application.Abstractions.Common.Validation;
 public static class UserIdParser {
     public static Result<UserId> Parse(Guid? value) {
         return value is null || value == Guid.Empty
-            ? Result.Failure<UserId>(Errors.Authentication.InvalidToken)
+            ? Result.Failure<UserId>(AuthenticationErrors.InvalidToken)
             : Result.Success(new UserId(value.Value));
     }
 

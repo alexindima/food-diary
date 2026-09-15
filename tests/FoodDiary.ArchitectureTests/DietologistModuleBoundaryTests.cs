@@ -18,7 +18,7 @@ public sealed class DietologistModuleBoundaryTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedDietologistAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Modules.Dietologist.Application", references, StringComparer.Ordinal);
     }
@@ -47,7 +47,7 @@ public sealed class DietologistModuleBoundaryTests {
         string root = ArchitectureTestPaths.FromRoot("Modules", "Dietologist", "Application");
         string[] forbiddenPrefixes = [
             "FoodDiary.Application.Authentication",
-            "FoodDiary.Application.Notifications",
+            "FoodDiary.Modules.Notifications.Application",
         ];
 
         string[] violations = [.. SourceScanner.SourceFiles(root)

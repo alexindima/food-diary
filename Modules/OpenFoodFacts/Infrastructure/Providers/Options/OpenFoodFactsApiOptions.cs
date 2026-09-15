@@ -1,4 +1,5 @@
-namespace FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
 
 public sealed class OpenFoodFactsApiOptions {
     public const string SectionName = "OpenFoodFacts";

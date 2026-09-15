@@ -1,6 +1,6 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Application.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 using FoodDiary.Modules.Images.Application.Services;
 using FoodDiary.Modules.Ai.Application.Commands.CalculateFoodNutrition;
@@ -466,11 +466,11 @@ public class AiValidatorsTests {
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {
-                    return Task.FromResult(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<UserAiProfileModel>(AuthenticationErrors.InvalidToken));
                 }
 
                 if (!user.IsActive || user.DeletedAt is not null) {
-                    return Task.FromResult(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<UserAiProfileModel>(AuthenticationErrors.InvalidToken));
                 }
 
                 return Task.FromResult(Result.Success(new UserAiProfileModel(
@@ -490,7 +490,7 @@ public class AiValidatorsTests {
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 Error? error = user is null || user.Id != id || !user.IsActive || user.DeletedAt is not null
-                    ? Errors.Authentication.InvalidToken
+                    ? AuthenticationErrors.InvalidToken
                     : null;
                 return Task.FromResult(error);
             });

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 
 namespace FoodDiary.Modules.Dashboard.Contracts.Models;
 

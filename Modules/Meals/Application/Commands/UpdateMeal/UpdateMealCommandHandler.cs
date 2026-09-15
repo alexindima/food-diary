@@ -1,16 +1,18 @@
+using FoodDiary.Modules.Meals.Application.Mappings;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Application.Meals.Mappings;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Application.Meals.Services;
+
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
+using FoodDiary.Modules.Meals.Application.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Commands.UpdateMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
 
 public sealed class UpdateMealCommandHandler(
     IMealReadRepository mealReadRepository,

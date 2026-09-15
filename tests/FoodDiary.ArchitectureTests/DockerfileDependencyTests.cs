@@ -5,11 +5,11 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class DockerfileDependencyTests {
     [Theory]
-    [InlineData(@"..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj")]
-    [InlineData("../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj")]
+    [InlineData(@"..\Shared\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj")]
+    [InlineData("../Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj")]
     public void ProjectReferencePaths_AreNormalizedForCurrentOperatingSystem(string projectReference) {
         string separator = Path.DirectorySeparatorChar.ToString();
-        string expected = string.Join(separator, "..", "FoodDiary.Application.Runtime", "FoodDiary.Application.Runtime.csproj");
+        string expected = string.Join(separator, "..", "Shared", "FoodDiary.Application.Runtime", "FoodDiary.Application.Runtime.csproj");
 
         Assert.Equal(expected, NormalizeProjectReferencePath(projectReference));
     }
@@ -66,8 +66,9 @@ public sealed class DockerfileDependencyTests {
         foreach (string dependency in GetTransitiveProjectReferences(projectFile)) {
             string relativeDirectory = Path.GetRelativePath(root, Path.GetDirectoryName(dependency)!).Replace('\\', '/');
             string projectCopy = $"COPY {relativeDirectory}/*.csproj {relativeDirectory}/";
+            string explicitProjectCopy = $"COPY {relativeDirectory}/{Path.GetFileName(dependency)} {relativeDirectory}/";
             string sourceCopy = $"COPY {relativeDirectory}/ {relativeDirectory}/";
-            if (!docker.Contains(projectCopy, StringComparison.Ordinal)) {
+            if (!docker.Contains(projectCopy, StringComparison.Ordinal) && !docker.Contains(explicitProjectCopy, StringComparison.Ordinal)) {
                 yield return $"{Path.GetRelativePath(root, dockerfile)} missing restore copy: {projectCopy}";
             }
 

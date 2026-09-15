@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealCount;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics;
 using FoodDiary.Testing;
@@ -6,7 +8,6 @@ using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntr
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
@@ -73,7 +74,7 @@ public class WeeklyCheckInFeatureTests {
             .Returns(Task.FromResult<Error?>(null));
         profileService
             .GetAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(AuthenticationErrors.InvalidToken)));
         GetWeeklyCheckInQueryHandler handler = CreateHandler(profileService: profileService);
 
         Result<WeeklyCheckInModel> result = await handler.Handle(
@@ -159,12 +160,9 @@ public class WeeklyCheckInFeatureTests {
             new(thisWeekStart, thisWeekStart, TotalCalories: 700, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 35, TotalFats: 20, TotalCarbs: 90),
             new(Today, Today, TotalCalories: 900, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 45, TotalFats: 30, TotalCarbs: 110),
         ];
-        IMealActivityReadService mealActivityReadService = CreateMealActivityReadService();
+        ISender mealActivityReadService = CreateMealActivityReadService();
         mealActivityReadService
-            .GetCountAsync(
-                userId,
-                Arg.Is<MealQueryFilters>(filters => filters!.DateFrom == thisWeekStart && filters.DateTo == Today),
-                Arg.Any<CancellationToken>())
+            .Send(Arg.Is<ReadMealCountQuery>(q => q.UserId == userId && (q.Filters!.DateFrom == thisWeekStart && q.Filters.DateTo == Today)), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(3));
         ISender statisticsReadService = Substitute.For<ISender>();
         statisticsReadService
@@ -288,7 +286,7 @@ public class WeeklyCheckInFeatureTests {
     public async Task WeeklyCheckInUserProfileService_WithMissingUser_ReturnsInvalidToken() {
         IUserWeeklyCheckInProfileReadService userProfileReadService = Substitute.For<IUserWeeklyCheckInProfileReadService>();
         userProfileReadService.GetWeeklyCheckInProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserWeeklyCheckInProfileModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserWeeklyCheckInProfileModel>(AuthenticationErrors.InvalidToken));
         var service = new WeeklyCheckInUserProfileService(CreateUserContextService(user: null), userProfileReadService);
 
         Result<WeeklyCheckInUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
@@ -302,32 +300,37 @@ public class WeeklyCheckInFeatureTests {
         ICurrentUserAccessService currentUserAccessService = Substitute.For<ICurrentUserAccessService>();
         currentUserAccessService
             .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Error?>(Errors.Authentication.AccountDeleted));
+            .Returns(Task.FromResult<Error?>(UserAuthenticationErrors.AccountDeleted));
         var service = new WeeklyCheckInUserProfileService(
             currentUserAccessService,
             Substitute.For<IUserWeeklyCheckInProfileReadService>());
 
         Error? error = await service.EnsureCanAccessAsync(userId, CancellationToken.None);
 
-        Assert.Equal(Errors.Authentication.AccountDeleted, error);
+        Assert.Equal(UserAuthenticationErrors.AccountDeleted, error);
     }
 
     private static GetWeeklyCheckInQueryHandler CreateHandler(
-        IMealActivityReadService? mealActivityReadService = null,
+        ISender? mealActivityReadService = null,
         ISender? statisticsReadService = null,
         ISender? weightEntryReadService = null,
         ISender? waistEntryReadService = null,
         ISender? hydrationEntryReadService = null,
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
-            new WeeklyCheckInReadService(mealActivityReadService ?? CreateMealActivityReadService(), global::FoodDiary.Testing.RequestTestSender.Route((RequestTestSender.Route((statisticsReadService ?? CreateStatisticsReadService(), [typeof(ReadDashboardStatisticsQuery)]), (RequestTestSender.Route((weightEntryReadService ?? CreateWeightEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery)]), (waistEntryReadService ?? CreateWaistEntryReadService(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery)])), [typeof(ReadWeightEntriesQuery), typeof(ReadWaistEntriesQuery)])), [typeof(global::FoodDiary.Modules.Dashboard.Contracts.Queries.ReadDashboardStatistics.ReadDashboardStatisticsQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery)]), (hydrationEntryReadService ?? CreateHydrationEntryReadService(), [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals.ReadHydrationDailyTotalsQuery)]))),
+            new WeeklyCheckInReadService(RequestTestSender.Route(
+                (mealActivityReadService ?? CreateMealActivityReadService(), [typeof(ReadMealCountQuery)]),
+                (statisticsReadService ?? CreateStatisticsReadService(), [typeof(ReadDashboardStatisticsQuery)]),
+                (weightEntryReadService ?? CreateWeightEntryReadService(), [typeof(ReadWeightEntriesQuery)]),
+                (waistEntryReadService ?? CreateWaistEntryReadService(), [typeof(ReadWaistEntriesQuery)]),
+                (hydrationEntryReadService ?? CreateHydrationEntryReadService(), [typeof(ReadHydrationDailyTotalsQuery)]))),
             profileService ?? CreateProfileService(user: null),
             new StubDateTimeProvider());
 
-    private static IMealActivityReadService CreateMealActivityReadService() {
-        IMealActivityReadService service = Substitute.For<IMealActivityReadService>();
+    private static ISender CreateMealActivityReadService() {
+        ISender service = Substitute.For<ISender>();
         service
-            .GetCountAsync(Arg.Any<UserId>(), Arg.Any<MealQueryFilters>(), Arg.Any<CancellationToken>())
+            .Send(Arg.Any<ReadMealCountQuery>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(0));
         return service;
     }
@@ -370,7 +373,7 @@ public class WeeklyCheckInFeatureTests {
                 UserId userId = call.Arg<UserId>();
                 return Task.FromResult(user is not null && user.Id == userId
                     ? Result.Success(user)
-                    : Result.Failure<User>(Errors.Authentication.InvalidToken));
+                    : Result.Failure<User>(AuthenticationErrors.InvalidToken));
             });
         return service;
     }
@@ -382,11 +385,11 @@ public class WeeklyCheckInFeatureTests {
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {
-                    return Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(AuthenticationErrors.InvalidToken));
                 }
 
                 if (user.DeletedAt is not null) {
-                    return Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(Errors.Authentication.AccountDeleted));
+                    return Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(UserAuthenticationErrors.AccountDeleted));
                 }
 
                 return Task.FromResult(Result.Success(new WeeklyCheckInUserProfile(user.DailyCalorieTarget)));

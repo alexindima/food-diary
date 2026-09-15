@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Application.Models;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 
-namespace FoodDiary.Application.Notifications.Mappings;
+namespace FoodDiary.Modules.Notifications.Application.Mappings;
 
 public static class NotificationMappings {
     public static NotificationModel ToModel(this Notification notification, NotificationText notificationText) =>

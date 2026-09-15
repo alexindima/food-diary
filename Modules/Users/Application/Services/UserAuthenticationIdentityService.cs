@@ -28,15 +28,15 @@ internal sealed class UserAuthenticationIdentityService(
             .GetByEmailIncludingDeletedAsync(email, cancellationToken)
             .ConfigureAwait(false);
         if (user?.HasPassword != true || !passwordHasher.Verify(password, user.Password)) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
 
         if (user.DeletedAt is not null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.AccountDeleted);
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountDeleted);
         }
 
         if (!user.IsActive) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
 
         UpgradePasswordHashIfNeeded(user, password);
@@ -58,7 +58,7 @@ internal sealed class UserAuthenticationIdentityService(
                 .GetByEmailIncludingDeletedAsync(identity.Email, cancellationToken)
                 .ConfigureAwait(false);
             if (emailOwner is not null) {
-                return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.GoogleAccountLinkRequired);
+                return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.GoogleAccountLinkRequired);
             }
 
             user = CreateGoogleUser(identity);
@@ -68,11 +68,11 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         if (user.DeletedAt is not null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.AccountDeleted);
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountDeleted);
         }
 
         if (!user.IsActive) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
 
         ApplyGoogleProfile(user, identity);
@@ -89,7 +89,7 @@ internal sealed class UserAuthenticationIdentityService(
             .GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken)
             .ConfigureAwait(false);
         if (user is null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.TelegramNotLinked);
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.TelegramNotLinked);
         }
 
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
@@ -117,7 +117,7 @@ internal sealed class UserAuthenticationIdentityService(
             !user.PasswordResetTokenExpiresAtUtc.HasValue ||
             user.PasswordResetTokenExpiresAtUtc.Value <= completedAtUtc ||
             !passwordHasher.Verify(token, user.PasswordResetTokenHash)) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidToken);
         }
 
         user.CompletePasswordReset(passwordHasher.Hash(newPassword));
@@ -173,7 +173,7 @@ internal sealed class UserAuthenticationIdentityService(
             !user.EmailConfirmationTokenExpiresAtUtc.HasValue ||
             user.EmailConfirmationTokenExpiresAtUtc.Value <= verifiedAtUtc ||
             !passwordHasher.Verify(token, user.EmailConfirmationTokenHash)) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure<bool>(AuthenticationErrors.InvalidToken);
         }
 
         user.CompleteEmailVerification();
@@ -194,7 +194,7 @@ internal sealed class UserAuthenticationIdentityService(
 
         User user = userResult.Value;
         if (user.Email is not null && !string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)) {
-            return Result.Failure<UserModel>(Errors.Authentication.GoogleAccountEmailMismatch);
+            return Result.Failure<UserModel>(UserAuthenticationErrors.GoogleAccountEmailMismatch);
         }
 
         bool hasGoogleIdentity =
@@ -206,14 +206,14 @@ internal sealed class UserAuthenticationIdentityService(
                 string.Equals(user.GoogleSubject, subject, StringComparison.Ordinal);
             return isSameIdentity
                 ? Result.Success(user.ToModel())
-                : Result.Failure<UserModel>(Errors.Authentication.GoogleIdentityDifferent);
+                : Result.Failure<UserModel>(UserAuthenticationErrors.GoogleIdentityDifferent);
         }
 
         User? identityOwner = await googleIdentityUserDirectoryService
             .GetByGoogleIdentityIncludingDeletedAsync(issuer, subject, cancellationToken)
             .ConfigureAwait(false);
         if (identityOwner is not null && identityOwner.Id != user.Id) {
-            return Result.Failure<UserModel>(Errors.Authentication.GoogleIdentityAlreadyLinked);
+            return Result.Failure<UserModel>(UserAuthenticationErrors.GoogleIdentityAlreadyLinked);
         }
 
         if (user.Email is null) {
@@ -251,7 +251,7 @@ internal sealed class UserAuthenticationIdentityService(
             .GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken)
             .ConfigureAwait(false);
         if (identityOwner is not null && identityOwner.Id != user.Id) {
-            return Result.Failure<UserModel>(Errors.Authentication.TelegramAlreadyLinked);
+            return Result.Failure<UserModel>(UserAuthenticationErrors.TelegramAlreadyLinked);
         }
 
         user.LinkTelegram(telegramUserId);
@@ -267,15 +267,15 @@ internal sealed class UserAuthenticationIdentityService(
             .GetByIdIncludingDeletedAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         if (user is null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
 
         if (user.DeletedAt is not null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.AccountDeleted);
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountDeleted);
         }
 
         if (!user.IsActive) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
 
         user.RecordAuthenticationActivity(authenticatedAtUtc);
@@ -295,11 +295,11 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         if (user.DeletedAt is not null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.AccountDeleted);
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountDeleted);
         }
 
         if (!user.IsActive) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
 
         return Result.Success(ToAuthenticationPrincipal(user, evaluatedAtUtc));
@@ -314,11 +314,11 @@ internal sealed class UserAuthenticationIdentityService(
             .GetByEmailIncludingDeletedAsync(email, cancellationToken)
             .ConfigureAwait(false);
         if (user is null || !passwordHasher.Verify(password, user.Password)) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
 
         if (user.DeletedAt is null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.AccountNotDeleted);
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountNotDeleted);
         }
 
         user.Restore(restoredAtUtc);

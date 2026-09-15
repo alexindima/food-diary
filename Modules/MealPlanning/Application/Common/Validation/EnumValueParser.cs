@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.MealPlanning.Common.Validation;
+namespace FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 
 internal static class EnumValueParser {
     public static Result<TEnum?> ParseOptional<TEnum>(string? value, string fieldName, string message)

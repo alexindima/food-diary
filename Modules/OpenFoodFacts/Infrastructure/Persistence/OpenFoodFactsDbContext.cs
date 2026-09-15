@@ -1,5 +1,6 @@
-using FoodDiary.Domain.Entities.OpenFoodFacts;
-using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Model;
+using FoodDiary.Modules.OpenFoodFacts.PersistenceModel;
+using FoodDiary.Modules.OpenFoodFacts.Domain.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;

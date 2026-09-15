@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace FoodDiary.Domain;
+namespace FoodDiary.Modules.OpenFoodFacts.Domain;
 
 internal static class OpenFoodFactsDomainGuard {
     public static string RequiredText(string value, int maxLength, string paramName) {

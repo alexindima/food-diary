@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 
 public readonly record struct ShoppingListItemId(Guid Value) : IEntityId<Guid> {
     public static ShoppingListItemId New() => new(Guid.NewGuid());

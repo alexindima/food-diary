@@ -1,16 +1,18 @@
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingListById;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListById;
 
 public sealed class GetShoppingListByIdQueryHandler(
-    IShoppingListReadService shoppingListReadService,
+    IShoppingListReadModelRepository shoppingListRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetShoppingListByIdQuery, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(
@@ -36,7 +38,7 @@ public sealed class GetShoppingListByIdQueryHandler(
         UserId userId = userIdResult.Value;
         ShoppingListId shoppingListId = shoppingListIdResult.Value;
 
-        ShoppingListModel? list = await shoppingListReadService.GetByIdAsync(
+        ShoppingListModel? list = await GetByIdAsync(
             shoppingListId,
             userId,
             cancellationToken).ConfigureAwait(false);
@@ -44,5 +46,16 @@ public sealed class GetShoppingListByIdQueryHandler(
         return list is null
             ? Result.Failure<ShoppingListModel>(ShoppingListErrors.NotFound(query.ShoppingListId))
             : Result.Success(list);
+    }
+    private async Task<ShoppingListModel?> GetByIdAsync(
+        ShoppingListId shoppingListId,
+        UserId userId,
+        CancellationToken cancellationToken) {
+        ShoppingListReadModel? list = await shoppingListRepository.GetReadModelByIdAsync(
+            shoppingListId,
+            userId,
+            cancellationToken).ConfigureAwait(false);
+
+        return list?.ToModel();
     }
 }

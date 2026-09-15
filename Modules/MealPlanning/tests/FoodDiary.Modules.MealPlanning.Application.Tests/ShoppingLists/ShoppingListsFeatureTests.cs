@@ -1,20 +1,20 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
-using FoodDiary.Application.Abstractions.ShoppingLists.Models;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetCurrentShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingListById;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingLists;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetCurrentShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListById;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
 [ExcludeFromCodeCoverage]
 public partial class ShoppingListsFeatureTests {
@@ -218,8 +218,8 @@ public partial class ShoppingListsFeatureTests {
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
                 Error? error = user switch {
-                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
-                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    { Id: var id } when id != userId => AuthenticationErrors.InvalidToken,
+                    { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
                     _ => null,
                 };
                 return Task.FromResult(error);
@@ -231,15 +231,15 @@ public partial class ShoppingListsFeatureTests {
     private static GetCurrentShoppingListQueryHandler CreateCurrentShoppingListHandler(
         IShoppingListReadModelRepository shoppingListRepository,
         ICurrentUserAccessService currentUserAccessService) =>
-        new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
+        new(shoppingListRepository, currentUserAccessService);
 
     private static GetShoppingListByIdQueryHandler CreateShoppingListByIdHandler(
         IShoppingListReadModelRepository shoppingListRepository,
         ICurrentUserAccessService currentUserAccessService) =>
-        new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
+        new(shoppingListRepository, currentUserAccessService);
 
     private static GetShoppingListsQueryHandler CreateShoppingListsHandler(
         IShoppingListReadModelRepository shoppingListRepository,
         ICurrentUserAccessService currentUserAccessService) =>
-        new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
+        new(shoppingListRepository, currentUserAccessService);
 }

@@ -1,29 +1,31 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
-using FoodDiary.Application.Abstractions.MealPlans.Common;
-using FoodDiary.Application.Abstractions.MealPlans.Models;
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
-using FoodDiary.Application.Abstractions.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
-using FoodDiary.Application.MealPlanning.MealPlans.Common;
-using FoodDiary.Application.MealPlanning.MealPlans.Mappings;
-using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
-using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
-using FoodDiary.Application.MealPlanning.MealPlans.Services;
-using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.GenerateShoppingList;
+
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.MealPlans.Models;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 
-namespace FoodDiary.Application.Tests.MealPlans;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.MealPlans;
 
 [ExcludeFromCodeCoverage]
 public class MealPlansFeatureTests {
@@ -106,7 +108,7 @@ public class MealPlansFeatureTests {
     public async Task AdoptMealPlan_WhenUserCannotAccess_ReturnsInvalidToken() {
         var handler = new AdoptMealPlanCommandHandler(
             new StubMealPlanRepository(plan: null),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -245,7 +247,7 @@ public class MealPlansFeatureTests {
         var handler = new GenerateShoppingListCommandHandler(
             new StubMealPlanRepository(plan: null),
             new RecordingShoppingListRepository(),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new GenerateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid()),
@@ -646,9 +648,9 @@ public class MealPlansFeatureTests {
         IMealPlanReadModelRepository mealPlanRepository) =>
         new(CreateMealPlanReadService(mealPlanRepository), CreateCurrentUserAccessService());
 
-    private static IMealPlanReadService CreateMealPlanReadService(
+    private static IMealPlanReadModelRepository CreateMealPlanReadService(
         IMealPlanReadModelRepository mealPlanRepository) =>
-        new MealPlanReadService(mealPlanRepository);
+        mealPlanRepository;
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(Error? accessError = null) =>
         new StubCurrentUserAccessService(accessError);

@@ -1,15 +1,17 @@
+using FoodDiary.Modules.Marketing.Infrastructure;
+using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Marketing.Infrastructure;
+
 using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -85,7 +87,7 @@ public sealed class SharedMarketingContextCompositionIntegrationTests(PostgresDa
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

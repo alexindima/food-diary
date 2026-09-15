@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseCalories;
@@ -6,7 +7,6 @@ using FoodDiary.Modules.Exercises.Contracts.Queries.ReadExerciseEntries;
 using FoodDiary.Modules.Exercises.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Exercises.Domain.Enums;
 using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Exercises.Application.Commands.CreateExerciseEntry;
 using FoodDiary.Modules.Exercises.Application.Commands.DeleteExerciseEntry;
 using FoodDiary.Modules.Exercises.Application.Commands.UpdateExerciseEntry;
@@ -65,7 +65,7 @@ public class ExercisesFeatureTests {
     public async Task CreateExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
         var handler = new CreateExerciseEntryCommandHandler(
             new InMemoryExerciseEntryRepository(),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result<ExerciseEntryModel> result = await handler.Handle(
             new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 100, Name: null, Notes: null),
@@ -145,7 +145,7 @@ public class ExercisesFeatureTests {
     public async Task DeleteExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
         var handler = new DeleteExerciseEntryCommandHandler(
             new InMemoryExerciseEntryRepository(),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -208,7 +208,7 @@ public class ExercisesFeatureTests {
     public async Task UpdateExerciseEntry_WhenUserCannotAccess_ReturnsInvalidToken() {
         var handler = new UpdateExerciseEntryCommandHandler(
             new InMemoryExerciseEntryRepository(),
-            CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
+            CreateCurrentUserAccessService(AuthenticationErrors.InvalidToken));
 
         Result<ExerciseEntryModel> result = await handler.Handle(
             new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),

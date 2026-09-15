@@ -1,7 +1,7 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Admin.Application.Commands.ExchangeAdminImpersonation;
@@ -11,7 +11,7 @@ public sealed class ExchangeAdminImpersonationCommandHandler(IAdminImpersonation
     public async Task<Result<string>> Handle(ExchangeAdminImpersonationCommand command, CancellationToken cancellationToken) {
         string? accessToken = await handoffService.ConsumeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
         return string.IsNullOrWhiteSpace(accessToken)
-            ? Result.Failure<string>(Errors.Authentication.InvalidToken)
+            ? Result.Failure<string>(AuthenticationErrors.InvalidToken)
             : Result.Success(accessToken);
     }
 }

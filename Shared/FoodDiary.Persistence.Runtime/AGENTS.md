@@ -23,3 +23,6 @@ ADR 0045 moves audit/email adapters to their narrow Infrastructure assemblies.
 AddPersistenceRuntime does not register them. Hosts explicitly compose
 AddAuditInfrastructure, AddEmailInfrastructure and AddOutboxReplayManagement.
 Replay remains here to use internal transaction reset mechanics without exposing them.
+
+OutboxProcessing option binding/validation belongs to Outbox.Infrastructure and
+must be composed explicitly through AddOutboxProcessing(configuration).

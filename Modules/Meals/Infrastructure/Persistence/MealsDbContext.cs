@@ -1,5 +1,5 @@
-using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.PersistenceModel;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Meals.Infrastructure.Persistence;

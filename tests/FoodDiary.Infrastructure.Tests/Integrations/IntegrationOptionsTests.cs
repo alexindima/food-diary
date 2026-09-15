@@ -1,4 +1,4 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Notifications.Infrastructure.Options;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using WebPush;
 

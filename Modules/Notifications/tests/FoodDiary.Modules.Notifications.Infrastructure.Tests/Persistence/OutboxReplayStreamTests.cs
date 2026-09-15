@@ -1,14 +1,14 @@
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Notifications;
-using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Modules.Notifications.PersistenceModel;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class OutboxReplayStreamTests {

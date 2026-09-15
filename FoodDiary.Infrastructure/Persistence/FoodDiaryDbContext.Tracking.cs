@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 using FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;

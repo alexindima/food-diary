@@ -1,5 +1,6 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Mediator;
-using FoodDiary.Application.Marketing.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
 using FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole;
 using FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole;
 using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
@@ -8,10 +9,9 @@ using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Billing.Application.Commands.RenewDueSubscriptions;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Marketing.Common;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -283,7 +283,7 @@ public partial class BillingFeatureTests {
         public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             return Task.FromResult(user is null
-                ? Result.Failure<User>(Errors.Authentication.InvalidToken)
+                ? Result.Failure<User>(AuthenticationErrors.InvalidToken)
                 : Result.Success(user));
         }
 
@@ -297,7 +297,7 @@ public partial class BillingFeatureTests {
             CancellationToken cancellationToken = default) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             return Task.FromResult(user is null
-                ? Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)
+                ? Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken)
                 : Result.Success(ToBillingProfile(user)));
         }
 
@@ -315,7 +315,7 @@ public partial class BillingFeatureTests {
             CancellationToken cancellationToken = default) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             if (user is null) {
-                return Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken));
+                return Task.FromResult(Result.Failure<UserBillingProfileModel>(AuthenticationErrors.InvalidToken));
             }
 
             user.StartPremiumTrial(startedAtUtc, duration);

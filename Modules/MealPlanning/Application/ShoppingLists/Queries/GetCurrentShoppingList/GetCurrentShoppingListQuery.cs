@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetCurrentShoppingList;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 
 public record GetCurrentShoppingListQuery(
     Guid? UserId) : IQuery<Result<ShoppingListModel>>, IUserRequest;

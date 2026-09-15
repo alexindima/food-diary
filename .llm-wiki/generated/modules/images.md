@@ -43,14 +43,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 23
+- Public contract files: 24
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 23
-- Interfaces: 12
+- Public contract types: 24
+- Interfaces: 13
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
@@ -67,6 +67,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IImageAssetRepository`
 - `interface IImageAssetUsageQuery`
 - `interface IImageAssetWriteRepository`
+- `interface IImageConfirmationTransactionRunner`
 - `interface IImageObjectDeletionOutbox`
 - `interface IImageObjectDeletionOutboxProcessor`
 - `interface IImageStorageService`

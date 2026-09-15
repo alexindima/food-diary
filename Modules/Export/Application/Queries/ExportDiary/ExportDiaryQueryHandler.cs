@@ -1,5 +1,6 @@
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealsForExport;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -14,7 +15,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 
 public sealed class ExportDiaryQueryHandler(
-    IMealExportReadService mealExportReadService,
+    ISender mealExportReadService,
     ICurrentUserAccessService currentUserAccessService,
     IDiaryPdfGenerator pdfGenerator)
     : IQueryHandler<ExportDiaryQuery, Result<FileExportResult>> {
@@ -109,11 +110,11 @@ public sealed class ExportDiaryQueryHandler(
         int limit,
         CancellationToken cancellationToken) {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
-        IReadOnlyList<MealProjectionReadModel> meals = await mealExportReadService.GetByPeriodAsync(
+        IReadOnlyList<MealProjectionReadModel> meals = await mealExportReadService.Send(new ReadMealsForExportQuery(
             userId,
             dateFrom,
             dateTo,
-            checked(limit + 1),
+            checked(limit + 1)),
             cancellationToken).ConfigureAwait(false);
 
         List<MealProjectionReadModel> matchingMeals = [.. meals.Where(meal => meal.Date >= dateFrom && meal.Date <= dateTo)];

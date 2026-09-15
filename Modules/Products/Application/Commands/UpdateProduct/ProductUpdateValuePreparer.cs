@@ -1,6 +1,6 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -80,7 +80,7 @@ internal static class ProductUpdateValuePreparer {
         ICurrentUserAccessService currentUserAccessService,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
+            return Result.Failure<UserId>(AuthenticationErrors.InvalidToken);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(

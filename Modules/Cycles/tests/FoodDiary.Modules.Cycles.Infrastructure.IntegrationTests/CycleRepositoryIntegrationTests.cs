@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;

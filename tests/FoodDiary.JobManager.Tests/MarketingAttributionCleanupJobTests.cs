@@ -1,5 +1,7 @@
-using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Application.Marketing.Services;
+using FoodDiary.Modules.Marketing.Contracts.Commands.CleanupMarketingAttribution;
+using FoodDiary.Testing;
+using FoodDiary.Modules.Marketing.Application.Commands.CleanupMarketingAttribution;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -80,12 +82,26 @@ public sealed class MarketingAttributionCleanupJobTests : IDisposable {
             () => Assert.Null(snapshot.Value.LastSucceededAtUtc));
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task CleanupRequest_WithNonPositiveBatch_DoesNotDeleteEvents(int batchSize) {
+        var repository = new RecordingMarketingAttributionEventRepository();
+        var handler = new CleanupMarketingAttributionCommandHandler(repository);
+
+        int deleted = await handler.Handle(
+            new CleanupMarketingAttributionCommand(DateTime.UtcNow, batchSize), CancellationToken.None);
+
+        Assert.Equal(0, deleted);
+        Assert.Equal(0, repository.DeleteCallCount);
+    }
+
     private MarketingAttributionCleanupJob CreateJob(
         IMarketingAttributionEventWriteRepository repository,
         MarketingAttributionCleanupOptions? options = null,
         TimeProvider? timeProvider = null) =>
         new(
-            new MarketingAttributionCleanupService(repository),
+            RequestTestSender.Create(new CleanupMarketingAttributionCommandHandler(repository)),
             Options.Create(options ?? new MarketingAttributionCleanupOptions()),
             new JobExecutionObserver(timeProvider ?? new FixedTimeProvider(new DateTime(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc)), _stateTracker),
             NullLogger<MarketingAttributionCleanupJob>.Instance);

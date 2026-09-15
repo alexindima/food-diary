@@ -1,15 +1,16 @@
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.CreateShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.UpdateShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetCurrentShoppingList;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingListById;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingLists;
-using FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
-using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
-using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
+using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Mappings;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.CreateShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.UpdateShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetCurrentShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingListById;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Queries.GetShoppingLists;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Requests;
+using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Responses;
+
+namespace FoodDiary.Modules.MealPlanning.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ShoppingListHttpMappingsTests {

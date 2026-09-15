@@ -1,7 +1,7 @@
-using FoodDiary.Modules.Meals.Infrastructure.Persistence;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
 using System.Data.Common;
@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Npgsql;
 
-namespace FoodDiary.Infrastructure.Persistence.Meals;
+namespace FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 
 public sealed class EfMealRecognitionTransactionRunner(
     IModuleTransactionCoordinator coordinator,

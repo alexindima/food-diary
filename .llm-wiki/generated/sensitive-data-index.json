@@ -36,7 +36,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 95
+      "line": 101
     },
     {
       "category": "credential",
@@ -2045,35 +2045,35 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 19
+      "line": 20
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 26
+      "line": 27
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "health",
@@ -2094,21 +2094,21 @@
       "name": "SnapshotCaloriesPerBase",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
-      "line": 26
+      "line": 27
     },
     {
       "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
-      "line": 37
+      "line": 38
     },
     {
       "category": "health",
@@ -4053,21 +4053,21 @@
       "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
-      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanMealReadModel.cs",
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Models/MealPlanMealReadModel.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "TargetCaloriesPerDay",
       "type": "double?",
-      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanReadModel.cs",
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Models/MealPlanReadModel.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "TargetCaloriesPerDay",
       "type": "double?",
-      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanSummaryReadModel.cs",
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Models/MealPlanSummaryReadModel.cs",
       "line": 9
     },
     {
@@ -4102,28 +4102,28 @@
       "category": "health",
       "name": "TargetCaloriesPerDay",
       "type": "double?",
-      "path": "Modules/MealPlanning/Presentation/Features/MealPlans/Responses/MealPlanHttpResponse.cs",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanHttpResponse.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double?",
-      "path": "Modules/MealPlanning/Presentation/Features/MealPlans/Responses/MealPlanMealHttpResponse.cs",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanMealHttpResponse.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "TargetCaloriesPerDay",
       "type": "double?",
-      "path": "Modules/MealPlanning/Presentation/Features/MealPlans/Responses/MealPlanSummaryHttpResponse.cs",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanSummaryHttpResponse.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
-      "path": "Modules/Meals/Application/Abstractions/Meals/Models/MealRecipeSourceReadModel.cs",
+      "path": "Modules/Meals/Application.Abstractions/Models/MealRecipeSourceReadModel.cs",
       "line": 7
     },
     {
@@ -4221,162 +4221,162 @@
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealAiItemProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealAiItemProjectionReadModel.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealDailyCalories.cs",
+      "path": "Modules/Meals/Contracts/Models/MealDailyCalories.cs",
       "line": 3
     },
     {
       "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealItemDisplayReadModel.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealItemDisplayReadModel.cs",
       "line": 24
     },
     {
       "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 14
+      "path": "Modules/Meals/Contracts/Models/MealItemProjectionReadModel.cs",
+      "line": 15
     },
     {
       "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealNutritionStatisticsBucket.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
-      "type": "int",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealItemProjectionReadModel.cs",
       "line": 26
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 22
+      "path": "Modules/Meals/Contracts/Models/MealNutritionStatisticsBucket.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
+      "line": 12
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 28
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
+      "line": 18
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 29
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
+      "line": 19
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 35
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
+      "line": 25
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 23
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
       "line": 36
+    },
+    {
+      "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 37
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "Id,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 225
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 226
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "ImageAssetId,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 283
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 284
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 306
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 307
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealAiItem.cs",
+      "path": "Modules/Meals/Domain/Entities/MealAiItem.cs",
       "line": 15
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealAiItemData.cs",
+      "path": "Modules/Meals/Domain/Entities/MealAiItemData.cs",
       "line": 11
     },
     {
       "category": "health",
       "name": "SnapshotCaloriesPerBase",
       "type": "double?",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "line": 27
+      "path": "Modules/Meals/Domain/Entities/MealItem.cs",
+      "line": 29
     },
     {
       "category": "health",
@@ -4439,69 +4439,69 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
-      "line": 119
+      "line": 120
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealAiItemHttpResponse.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 16
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 17
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 23
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 24
     },
     {
       "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealItemHttpResponse.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealItemHttpResponse.cs",
       "line": 22
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/MealAiItemHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/MealAiItemHttpRequest.cs",
       "line": 8
     },
     {
@@ -4606,63 +4606,63 @@
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool",
-      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Responses/NotificationPreferencesHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "int",
-      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Responses/NotificationPreferencesHttpResponse.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "FastingCheckInFollowUpReminderHours",
       "type": "int",
-      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Responses/NotificationPreferencesHttpResponse.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool?",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
+      "path": "Modules/Notifications/Presentation/Requests/UpdateNotificationPreferencesHttpRequest.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "int?",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
+      "path": "Modules/Notifications/Presentation/Requests/UpdateNotificationPreferencesHttpRequest.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "FastingCheckInFollowUpReminderHours",
       "type": "int?",
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
+      "path": "Modules/Notifications/Presentation/Requests/UpdateNotificationPreferencesHttpRequest.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "CaloriesPer100G",
       "type": "double?",
-      "path": "Modules/OpenFoodFacts/Contracts/Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
+      "path": "Modules/OpenFoodFacts/Contracts/Models/OpenFoodFactsProductModel.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "CaloriesPer100G",
       "type": "double?",
-      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFactsProduct.cs",
       "line": 15
     },
     {
       "category": "health",
       "name": "CaloriesPer100G",
       "type": "double?",
-      "path": "Modules/OpenFoodFacts/Presentation/Features/OpenFoodFacts/Responses/OpenFoodFactsProductHttpResponse.cs",
+      "path": "Modules/OpenFoodFacts/Presentation/Responses/OpenFoodFactsProductHttpResponse.cs",
       "line": 9
     },
     {
@@ -7602,14 +7602,14 @@
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Notifications/Application/Abstractions/Common/WebPushSubscriptionData.cs",
+      "path": "Modules/Notifications/Application.Abstractions/Common/WebPushSubscriptionData.cs",
       "line": 9
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Notifications/Application/Abstractions/Models/WebPushSubscriptionReadModel.cs",
+      "path": "Modules/Notifications/Application.Abstractions/Models/WebPushSubscriptionReadModel.cs",
       "line": 7
     },
     {
@@ -7630,28 +7630,28 @@
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 19
+      "path": "Modules/Notifications/Domain/Entities/WebPushSubscription.cs",
+      "line": 20
     },
     {
       "category": "identity",
       "name": "UserAgentMaxLength",
       "type": "userAgent,",
-      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 42
+      "path": "Modules/Notifications/Domain/Entities/WebPushSubscription.cs",
+      "line": 43
     },
     {
       "category": "identity",
       "name": "UserAgentMaxLength",
       "type": "userAgent,",
-      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 59
+      "path": "Modules/Notifications/Domain/Entities/WebPushSubscription.cs",
+      "line": 60
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Responses/WebPushSubscriptionHttpResponse.cs",
       "line": 8
     },
     {
@@ -7659,7 +7659,7 @@
       "name": "UserAgent",
       "type": "string",
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Options/OpenFoodFactsApiOptions.cs",
-      "line": 8
+      "line": 9
     },
     {
       "category": "identity",
@@ -8072,63 +8072,63 @@
       "name": "ImageAssetId",
       "type": "Guid?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionProjection.cs",
-      "line": 10
+      "line": 11
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionProjection.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionProjection.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 10
+      "line": 11
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "SnapshotImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ProductImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
-      "line": 23
+      "line": 24
     },
     {
       "category": "privateContent",
       "name": "RecipeImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
-      "line": 35
+      "line": 36
     },
     {
       "category": "privateContent",
@@ -8960,7 +8960,7 @@
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Application/Abstractions/Meals/Models/MealRecipeSourceReadModel.cs",
+      "path": "Modules/Meals/Application.Abstractions/Models/MealRecipeSourceReadModel.cs",
       "line": 5
     },
     {
@@ -9024,14 +9024,14 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
       "name": "ImageAsset",
       "type": "ImageAssetReadModel?",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "privateContent",
@@ -9051,162 +9051,162 @@
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealAiSessionProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealAiSessionProjectionReadModel.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealAiSessionProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealAiSessionProjectionReadModel.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealAiSessionProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealAiSessionProjectionReadModel.cs",
       "line": 13
     },
     {
       "category": "privateContent",
       "name": "ProductImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealItemDisplayReadModel.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "RecipeImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealItemDisplayReadModel.cs",
       "line": 22
     },
     {
       "category": "privateContent",
       "name": "ProductImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 11
+      "path": "Modules/Meals/Contracts/Models/MealItemProjectionReadModel.cs",
+      "line": 12
     },
     {
       "category": "privateContent",
       "name": "RecipeImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 23
+      "path": "Modules/Meals/Contracts/Models/MealItemProjectionReadModel.cs",
+      "line": 24
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
       "line": 10
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Models/MealProjectionReadModel.cs",
       "line": 11
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 19
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 20
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 20
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 21
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 22
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 67
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrlMaxLength",
-      "type": "imageUrl,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
       "line": 68
     },
     {
       "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 69
+    },
+    {
+      "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 78
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 79
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 95
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 96
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "Comment,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 281
+      "path": "Modules/Meals/Domain/Entities/Meal.cs",
+      "line": 282
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
+      "path": "Modules/Meals/Domain/Entities/MealAiSession.cs",
       "line": 14
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
+      "path": "Modules/Meals/Domain/Entities/MealAiSession.cs",
       "line": 18
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
+      "path": "Modules/Meals/Domain/Entities/MealAiSession.cs",
       "line": 44
     },
     {
       "category": "privateContent",
       "name": "SnapshotImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "line": 24
+      "path": "Modules/Meals/Domain/Entities/MealItem.cs",
+      "line": 26
     },
     {
       "category": "privateContent",
       "name": "SnapshotImageUrlMaxLength",
       "type": "imageUrl,",
-      "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "line": 188
+      "path": "Modules/Meals/Domain/Entities/MealItem.cs",
+      "line": 190
     },
     {
       "category": "privateContent",
@@ -9233,112 +9233,112 @@
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealAiSessionHttpResponse.cs",
       "line": 6
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealAiSessionHttpResponse.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealAiSessionHttpResponse.cs",
       "line": 11
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "ProductImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealItemHttpResponse.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "RecipeImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealItemHttpResponse.cs",
       "line": 20
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs",
       "line": 6
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/MealAiSessionHttpRequest.cs",
       "line": 4
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/MealAiSessionHttpRequest.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/UpdateMealHttpRequest.cs",
       "line": 6
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/UpdateMealHttpRequest.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/UpdateMealHttpRequest.cs",
       "line": 8
     },
     {
@@ -9401,21 +9401,21 @@
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/OpenFoodFacts/Contracts/Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
+      "path": "Modules/OpenFoodFacts/Contracts/Models/OpenFoodFactsProductModel.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFactsProduct.cs",
       "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
-      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFactsProduct.cs",
       "line": 73
     },
     {
@@ -9423,20 +9423,20 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
-      "line": 411
+      "line": 412
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
-      "line": 428
+      "line": 429
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
-      "path": "Modules/OpenFoodFacts/Presentation/Features/OpenFoodFacts/Responses/OpenFoodFactsProductHttpResponse.cs",
+      "path": "Modules/OpenFoodFacts/Presentation/Responses/OpenFoodFactsProductHttpResponse.cs",
       "line": 8
     },
     {
@@ -11125,42 +11125,42 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/MealPlanning/Presentation/Features/MealPlans/Responses/MealPlanHttpResponse.cs",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/MealPlanning/Presentation/Features/MealPlans/Responses/MealPlanMealHttpResponse.cs",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanMealHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/MealPlanning/Presentation/Features/MealPlans/Responses/MealPlanSummaryHttpResponse.cs",
+      "path": "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanSummaryHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealAiItemHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealAiSessionHttpResponse.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -11168,7 +11168,7 @@
       "fieldCount": 8
     },
     {
-      "path": "Modules/Meals/Presentation.Contracts/Features/Meals/Responses/MealItemHttpResponse.cs",
+      "path": "Modules/Meals/Presentation.Contracts/Responses/MealItemHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -11176,56 +11176,56 @@
       "fieldCount": 4
     },
     {
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/CreateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/MealAiItemHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/MealAiItemHttpRequest.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/MealAiSessionHttpRequest.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 2
     },
     {
-      "path": "Modules/Meals/Presentation/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+      "path": "Modules/Meals/Presentation/Requests/UpdateMealHttpRequest.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/NotificationPreferencesHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Responses/NotificationPreferencesHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/Notifications/Presentation.Contracts/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
+      "path": "Modules/Notifications/Presentation.Contracts/Responses/WebPushSubscriptionHttpResponse.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Notifications/Presentation/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
+      "path": "Modules/Notifications/Presentation/Requests/UpdateNotificationPreferencesHttpRequest.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 3
     },
     {
-      "path": "Modules/OpenFoodFacts/Presentation/Features/OpenFoodFacts/Responses/OpenFoodFactsProductHttpResponse.cs",
+      "path": "Modules/OpenFoodFacts/Presentation/Responses/OpenFoodFactsProductHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"

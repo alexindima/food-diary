@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Services;
+namespace FoodDiary.Modules.Meals.Application.Services;
 
 public sealed class MealProductNutritionReadService(IMealProductNutritionReadRepository repository)
     : IUsdaMealNutritionReadService {

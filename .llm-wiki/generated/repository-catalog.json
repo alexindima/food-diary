@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 292,
-    "documentationPages": 202
+    "documentationPages": 203
   },
   "dotnet": {
     "projects": [
@@ -40,35 +40,6 @@
         "packageReferences": [
           {
             "name": "Microsoft.CodeAnalysis.CSharp",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.Application.Runtime",
-        "assemblyName": "FoodDiary.Application.Runtime",
-        "path": "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
-          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "FluentValidation",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
             "version": null
           }
         ]
@@ -144,16 +115,16 @@
           "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj",
           "Modules/Lessons/PersistenceModel/FoodDiary.Modules.Lessons.PersistenceModel.csproj",
           "Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj",
-          "Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
+          "Modules/Marketing/PersistenceModel/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
-          "Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
+          "Modules/MealPlanning/PersistenceModel/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
-          "Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj",
+          "Modules/Meals/PersistenceModel/FoodDiary.Modules.Meals.PersistenceModel.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
-          "Modules/Notifications/Infrastructure/Model/FoodDiary.Modules.Notifications.PersistenceModel.csproj",
+          "Modules/Notifications/PersistenceModel/FoodDiary.Modules.Notifications.PersistenceModel.csproj",
           "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj",
-          "Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
+          "Modules/OpenFoodFacts/PersistenceModel/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
           "Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj",
           "Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj",
           "Modules/RecentItems/Domain/FoodDiary.Modules.RecentItems.Domain.csproj",
@@ -231,7 +202,6 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
@@ -262,11 +232,11 @@
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
           "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
           "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj",
@@ -285,10 +255,12 @@
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
           "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
         ],
@@ -318,7 +290,6 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
@@ -346,11 +317,12 @@
           "Modules/Images/Application/FoodDiary.Modules.Images.Application.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
+          "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
@@ -369,12 +341,14 @@
           "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
           "Shared/FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
         ],
         "packageReferences": [
@@ -490,9 +464,9 @@
           "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj",
-          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
@@ -562,11 +536,11 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
+          "Modules/Admin/Contracts/FoodDiary.Modules.Admin.Contracts.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
@@ -611,13 +585,13 @@
           "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
           "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
           "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj",
           "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj",
           "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
@@ -650,11 +624,13 @@
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj",
           "Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
           "Shared/FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
         ],
         "packageReferences": [
@@ -1377,6 +1353,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -1545,6 +1522,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -1727,7 +1705,7 @@
           "Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj",
           "Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj",
           "Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj",
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
           "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
@@ -1735,6 +1713,7 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -2093,6 +2072,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -2764,7 +2744,8 @@
           "Modules/Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
-          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj"
+          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -3113,7 +3094,8 @@
           "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
-          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj"
+          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -3440,6 +3422,7 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -3778,8 +3761,8 @@
           "Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
           "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
@@ -3868,6 +3851,7 @@
           "Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
         ],
@@ -4112,6 +4096,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -4329,6 +4314,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -4644,12 +4630,13 @@
         "projectReferences": [
           "Modules/Fasting/Application.Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj",
           "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -5055,6 +5042,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -5361,12 +5349,13 @@
           "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj",
           "Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj",
           "Modules/Gamification/Domain.Contracts/FoodDiary.Modules.Gamification.Domain.Contracts.csproj",
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -5621,6 +5610,10 @@
           {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
           }
         ]
       },
@@ -5720,6 +5713,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -5794,6 +5788,7 @@
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -6082,15 +6077,14 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Modules/Dietologist/Application.Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj",
           "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
           "Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
           "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj",
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
           "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
@@ -6098,6 +6092,7 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
@@ -6227,6 +6222,7 @@
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
         ],
@@ -7030,7 +7026,7 @@
       {
         "name": "FoodDiary.Modules.Marketing.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Marketing.Application.Abstractions",
-        "path": "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+        "path": "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7041,9 +7037,9 @@
         "packageReferences": []
       },
       {
-        "name": "FoodDiary.Application.Marketing",
-        "assemblyName": "FoodDiary.Application.Marketing",
-        "path": "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
+        "name": "FoodDiary.Modules.Marketing.Application",
+        "assemblyName": "FoodDiary.Modules.Marketing.Application",
+        "path": "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7051,7 +7047,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
@@ -7105,10 +7101,10 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
-          "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj",
           "Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj",
-          "Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
+          "Modules/Marketing/PersistenceModel/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
         ],
@@ -7130,7 +7126,7 @@
       {
         "name": "FoodDiary.Modules.Marketing.PersistenceModel",
         "assemblyName": "FoodDiary.Modules.Marketing.PersistenceModel",
-        "path": "Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
+        "path": "Modules/Marketing/PersistenceModel/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7164,8 +7160,8 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
-          "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj",
           "Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj"
         ],
         "packageReferences": [
@@ -7188,8 +7184,8 @@
         "projectReferences": [
           "Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
           "Modules/Billing/Contracts/FoodDiary.Modules.Billing.Contracts.csproj",
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
-          "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -7261,7 +7257,7 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -7312,7 +7308,7 @@
       {
         "name": "FoodDiary.Modules.MealPlanning.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.MealPlanning.Application.Abstractions",
-        "path": "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+        "path": "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7329,9 +7325,9 @@
         "packageReferences": []
       },
       {
-        "name": "FoodDiary.Application.MealPlanning",
-        "assemblyName": "FoodDiary.Application.MealPlanning",
-        "path": "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+        "name": "FoodDiary.Modules.MealPlanning.Application",
+        "assemblyName": "FoodDiary.Modules.MealPlanning.Application",
+        "path": "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7339,7 +7335,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
@@ -7394,10 +7390,10 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
-          "Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
+          "Modules/MealPlanning/PersistenceModel/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
           "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj",
@@ -7420,7 +7416,7 @@
       {
         "name": "FoodDiary.Modules.MealPlanning.PersistenceModel",
         "assemblyName": "FoodDiary.Modules.MealPlanning.PersistenceModel",
-        "path": "Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
+        "path": "Modules/MealPlanning/PersistenceModel/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7461,8 +7457,8 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj"
         ],
@@ -7484,8 +7480,8 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
@@ -7497,6 +7493,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
         ],
         "packageReferences": [
@@ -7634,7 +7631,7 @@
       {
         "name": "FoodDiary.Modules.Meals.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Meals.Application.Abstractions",
-        "path": "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+        "path": "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7655,7 +7652,7 @@
       },
       {
         "name": "FoodDiary.Modules.Meals.Application",
-        "assemblyName": "FoodDiary.Application.Meals",
+        "assemblyName": "FoodDiary.Modules.Meals.Application",
         "path": "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
@@ -7668,7 +7665,7 @@
           "Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj",
           "Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
@@ -7718,6 +7715,7 @@
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
@@ -7769,12 +7767,12 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
-          "Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj",
+          "Modules/Meals/PersistenceModel/FoodDiary.Modules.Meals.PersistenceModel.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
           "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
           "Modules/Products/FoodQuality/FoodDiary.Modules.Products.FoodQuality.csproj",
@@ -7799,7 +7797,7 @@
       {
         "name": "FoodDiary.Modules.Meals.PersistenceModel",
         "assemblyName": "FoodDiary.Modules.Meals.PersistenceModel",
-        "path": "Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj",
+        "path": "Modules/Meals/PersistenceModel/FoodDiary.Modules.Meals.PersistenceModel.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -7872,7 +7870,7 @@
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj",
           "Modules/Favorites/Presentation.Contracts/FoodDiary.Modules.Favorites.Presentation.Contracts.csproj",
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
@@ -7907,7 +7905,7 @@
       },
       {
         "name": "FoodDiary.Modules.Meals.Application.Tests",
-        "assemblyName": "FoodDiary.Application.Tests",
+        "assemblyName": "FoodDiary.Modules.Meals.Application.Tests",
         "path": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/FoodDiary.Modules.Meals.Application.Tests.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
@@ -7923,7 +7921,7 @@
           "Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj",
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
@@ -8017,6 +8015,7 @@
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -8101,7 +8100,7 @@
       {
         "name": "FoodDiary.Modules.Notifications.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Notifications.Application.Abstractions",
-        "path": "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+        "path": "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -8117,9 +8116,9 @@
         "packageReferences": []
       },
       {
-        "name": "FoodDiary.Application.Notifications",
-        "assemblyName": "FoodDiary.Application.Notifications",
-        "path": "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+        "name": "FoodDiary.Modules.Notifications.Application",
+        "assemblyName": "FoodDiary.Modules.Notifications.Application",
+        "path": "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -8127,13 +8126,14 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -8162,7 +8162,8 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": []
       },
@@ -8193,10 +8194,10 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
-          "Modules/Notifications/Infrastructure/Model/FoodDiary.Modules.Notifications.PersistenceModel.csproj",
+          "Modules/Notifications/PersistenceModel/FoodDiary.Modules.Notifications.PersistenceModel.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj",
@@ -8234,7 +8235,7 @@
       {
         "name": "FoodDiary.Modules.Notifications.PersistenceModel",
         "assemblyName": "FoodDiary.Modules.Notifications.PersistenceModel",
-        "path": "Modules/Notifications/Infrastructure/Model/FoodDiary.Modules.Notifications.PersistenceModel.csproj",
+        "path": "Modules/Notifications/PersistenceModel/FoodDiary.Modules.Notifications.PersistenceModel.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -8298,8 +8299,8 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
           "Modules/Notifications/Presentation.Contracts/FoodDiary.Modules.Notifications.Presentation.Contracts.csproj",
@@ -8323,8 +8324,8 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
           "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
@@ -8332,7 +8333,8 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
-          "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj"
+          "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -8402,8 +8404,8 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
           "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj",
@@ -8412,6 +8414,7 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj",
           "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
@@ -8483,7 +8486,7 @@
       {
         "name": "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions",
-        "path": "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+        "path": "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -8497,7 +8500,7 @@
       },
       {
         "name": "FoodDiary.Modules.OpenFoodFacts.Application",
-        "assemblyName": "FoodDiary.Application.OpenFoodFacts",
+        "assemblyName": "FoodDiary.Modules.OpenFoodFacts.Application",
         "path": "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
@@ -8506,7 +8509,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
@@ -8536,7 +8539,10 @@
           "net10.0"
         ],
         "isTestProject": false,
-        "projectReferences": [],
+        "projectReferences": [
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+        ],
         "packageReferences": []
       },
       {
@@ -8563,11 +8569,11 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
           "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj",
-          "Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
+          "Modules/OpenFoodFacts/PersistenceModel/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
           "Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
         ],
@@ -8605,7 +8611,7 @@
       {
         "name": "FoodDiary.Modules.OpenFoodFacts.PersistenceModel",
         "assemblyName": "FoodDiary.Modules.OpenFoodFacts.PersistenceModel",
-        "path": "Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
+        "path": "Modules/OpenFoodFacts/PersistenceModel/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -8642,7 +8648,7 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
           "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj"
@@ -8734,7 +8740,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
@@ -8845,6 +8851,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
@@ -9045,7 +9052,7 @@
           "Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj",
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
           "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj",
@@ -9061,6 +9068,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -9601,7 +9609,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj",
           "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj",
@@ -9939,6 +9947,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -10107,6 +10116,7 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -10296,6 +10306,7 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -10548,7 +10559,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
@@ -10743,6 +10754,7 @@
           "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
@@ -10799,6 +10811,7 @@
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
         ],
         "packageReferences": [
@@ -10913,7 +10926,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
           "Modules/ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj",
@@ -10930,8 +10942,8 @@
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj",
           "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
           "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
@@ -10939,6 +10951,7 @@
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
@@ -11013,6 +11026,7 @@
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -11357,6 +11371,7 @@
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -11552,6 +11567,7 @@
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -11791,7 +11807,7 @@
         "isTestProject": true,
         "projectReferences": [
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
@@ -11876,6 +11892,7 @@
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
@@ -12980,6 +12997,35 @@
         "packageReferences": []
       },
       {
+        "name": "FoodDiary.Application.Runtime",
+        "assemblyName": "FoodDiary.Application.Runtime",
+        "path": "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "FluentValidation",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Audit.Contracts",
         "assemblyName": "FoodDiary.Audit.Contracts",
         "path": "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
@@ -13057,7 +13103,9 @@
           "net10.0"
         ],
         "isTestProject": false,
-        "projectReferences": [],
+        "projectReferences": [
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+        ],
         "packageReferences": []
       },
       {
@@ -13279,6 +13327,10 @@
           },
           {
             "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
             "version": null
           },
           {
@@ -13578,6 +13630,7 @@
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
         ],
@@ -13647,7 +13700,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
@@ -13680,14 +13732,14 @@
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
-          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
-          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
           "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj",
@@ -13709,6 +13761,7 @@
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
@@ -13777,7 +13830,7 @@
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj",
           "Modules/Lessons/Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj",
-          "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
+          "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
@@ -13899,7 +13952,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
@@ -13951,6 +14003,7 @@
           "Modules/Gamification/Domain.Contracts/FoodDiary.Modules.Gamification.Domain.Contracts.csproj",
           "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj",
           "Modules/Hydration/Application.Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj",
+          "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
           "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
           "Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
@@ -13958,6 +14011,7 @@
           "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
           "Modules/Identity/PersistenceModel/FoodDiary.Modules.Identity.PersistenceModel.csproj",
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Application/FoodDiary.Modules.Images.Application.csproj",
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
@@ -13967,22 +14021,22 @@
           "Modules/Lessons/Domain.Contracts/FoodDiary.Modules.Lessons.Domain.Contracts.csproj",
           "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
-          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
           "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj",
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
@@ -14010,6 +14064,7 @@
           "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
@@ -14119,15 +14174,15 @@
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj",
-          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application.Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
           "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
           "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
@@ -14215,7 +14270,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
@@ -14241,10 +14295,10 @@
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Images/Application/FoodDiary.Modules.Images.Application.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
@@ -14260,11 +14314,14 @@
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+          "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -14364,16 +14421,16 @@
           "Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj",
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
-          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application.Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
           "Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
           "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj",
@@ -14631,7 +14688,7 @@
           "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
           "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
           "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj",
           "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
           "Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj",
@@ -15054,11 +15111,11 @@
     },
     {
       "name": "Marketing",
-      "project": "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj"
+      "project": "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj"
     },
     {
       "name": "MealPlanning",
-      "project": "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj"
+      "project": "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj"
     },
     {
       "name": "Meals",
@@ -15066,7 +15123,7 @@
     },
     {
       "name": "Notifications",
-      "project": "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj"
+      "project": "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj"
     },
     {
       "name": "OpenFoodFacts",
@@ -15307,7 +15364,6 @@
     "agentGuides": [
       "AGENTS.md",
       "FoodDiary.Analyzers/AGENTS.md",
-      "FoodDiary.Application.Runtime/AGENTS.md",
       "FoodDiary.Development.Mcp/AGENTS.md",
       "FoodDiary.Infrastructure/AGENTS.md",
       "FoodDiary.Initializer/AGENTS.md",
@@ -15451,39 +15507,39 @@
       "Modules/Marketing/Application/AGENTS.md",
       "Modules/Marketing/Contracts/AGENTS.md",
       "Modules/MealPlanning/AGENTS.md",
+      "Modules/MealPlanning/Application.Abstractions/AGENTS.md",
       "Modules/MealPlanning/Application/AGENTS.md",
-      "Modules/MealPlanning/Application/Abstractions/AGENTS.md",
       "Modules/MealPlanning/Domain/AGENTS.md",
       "Modules/MealPlanning/Infrastructure/AGENTS.md",
-      "Modules/MealPlanning/Infrastructure/Model/AGENTS.md",
+      "Modules/MealPlanning/PersistenceModel/AGENTS.md",
       "Modules/MealPlanning/tests/AGENTS.md",
       "Modules/Meals/AGENTS.md",
+      "Modules/Meals/Application.Abstractions/AGENTS.md",
       "Modules/Meals/Application/AGENTS.md",
-      "Modules/Meals/Application/Abstractions/AGENTS.md",
       "Modules/Meals/Contracts/AGENTS.md",
       "Modules/Meals/Domain.Contracts/AGENTS.md",
       "Modules/Meals/Domain/AGENTS.md",
       "Modules/Meals/Infrastructure/AGENTS.md",
-      "Modules/Meals/Infrastructure/Model/AGENTS.md",
+      "Modules/Meals/PersistenceModel/AGENTS.md",
       "Modules/Meals/Presentation.Contracts/AGENTS.md",
       "Modules/Meals/Presentation.Mappings/AGENTS.md",
       "Modules/Meals/Service.Contracts/AGENTS.md",
       "Modules/Meals/tests/AGENTS.md",
       "Modules/Notifications/AGENTS.md",
+      "Modules/Notifications/Application.Abstractions/AGENTS.md",
       "Modules/Notifications/Application/AGENTS.md",
-      "Modules/Notifications/Application/Abstractions/AGENTS.md",
       "Modules/Notifications/Contracts/AGENTS.md",
       "Modules/Notifications/Domain/AGENTS.md",
       "Modules/Notifications/Infrastructure/AGENTS.md",
-      "Modules/Notifications/Infrastructure/Model/AGENTS.md",
+      "Modules/Notifications/PersistenceModel/AGENTS.md",
       "Modules/Notifications/Presentation.Contracts/AGENTS.md",
       "Modules/Notifications/Presentation.Mappings/AGENTS.md",
       "Modules/OpenFoodFacts/AGENTS.md",
-      "Modules/OpenFoodFacts/Application/Abstractions/AGENTS.md",
+      "Modules/OpenFoodFacts/Application.Abstractions/AGENTS.md",
       "Modules/OpenFoodFacts/Contracts/AGENTS.md",
       "Modules/OpenFoodFacts/Domain/AGENTS.md",
       "Modules/OpenFoodFacts/Infrastructure/AGENTS.md",
-      "Modules/OpenFoodFacts/Infrastructure/Model/AGENTS.md",
+      "Modules/OpenFoodFacts/PersistenceModel/AGENTS.md",
       "Modules/Products/AGENTS.md",
       "Modules/Products/Application/AGENTS.md",
       "Modules/Products/Application/Abstractions/AGENTS.md",
@@ -15573,6 +15629,7 @@
       "Services/MailRelay/FoodDiary.MailRelay.WebApi/AGENTS.md",
       "Services/MailRelay/tests/AGENTS.md",
       "Shared/FoodDiary.Application.Contracts/AGENTS.md",
+      "Shared/FoodDiary.Application.Runtime/AGENTS.md",
       "Shared/FoodDiary.Audit.Contracts/AGENTS.md",
       "Shared/FoodDiary.Audit.Infrastructure/AGENTS.md",
       "Shared/FoodDiary.Audit.PersistenceModel/AGENTS.md",
@@ -15649,6 +15706,7 @@
       "docs/adr/0043-persistence-runtime-assembly-and-read-facade.md",
       "docs/adr/0044-central-persistence-composition-ownership.md",
       "docs/adr/0045-optional-shared-adapters.md",
+      "docs/adr/0046-shared-authentication-contract-ownership.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

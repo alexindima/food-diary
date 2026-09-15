@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Modules.Notifications.Application.Common;
 
 internal static class NotificationIdParser {
     public static Result<TId> Parse<TId>(

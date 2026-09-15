@@ -1,16 +1,18 @@
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.Common.Validation;
+using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlanning.MealPlans.Common;
-using FoodDiary.Application.MealPlanning.MealPlans.Models;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
 
 public sealed class GetMealPlansQueryHandler(
-    IMealPlanReadService mealPlanReadService,
+    IMealPlanReadModelRepository mealPlanRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMealPlansQuery, Result<IReadOnlyList<MealPlanSummaryModel>>> {
     public async Task<Result<IReadOnlyList<MealPlanSummaryModel>>> Handle(
@@ -26,10 +28,25 @@ public sealed class GetMealPlansQueryHandler(
 
         DietType? dietTypeFilter = EnumFilterParser.ParseOptional<DietType>(query.DietType);
 
-        IReadOnlyList<MealPlanSummaryModel> all = await mealPlanReadService
-            .GetAllAsync(userIdResult.Value, dietTypeFilter, cancellationToken)
+        IReadOnlyList<MealPlanSummaryModel> all = await GetAllAsync(userIdResult.Value, dietTypeFilter, cancellationToken)
             .ConfigureAwait(false);
 
         return Result.Success(all);
+    }
+    private async Task<IReadOnlyList<MealPlanSummaryModel>> GetAllAsync(
+        UserId userId,
+        DietType? dietTypeFilter,
+        CancellationToken cancellationToken) {
+        IReadOnlyList<MealPlanSummaryReadModel> curatedPlans = await mealPlanRepository
+            .GetCuratedSummaryReadModelsAsync(dietTypeFilter, cancellationToken)
+            .ConfigureAwait(false);
+        IReadOnlyList<MealPlanSummaryReadModel> userPlans = await mealPlanRepository
+            .GetByUserSummaryReadModelsAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+
+        return curatedPlans
+            .Concat(userPlans)
+            .Select(plan => plan.ToSummaryModel())
+            .ToList();
     }
 }

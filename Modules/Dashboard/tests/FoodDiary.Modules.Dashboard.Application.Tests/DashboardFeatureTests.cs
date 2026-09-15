@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotal;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationEntries;
@@ -22,8 +23,8 @@ using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Application.Meals.Queries.GetMeals;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
 using FoodDiary.Modules.Dashboard.Application.Commands.SendDashboardTestEmail;
 using FoodDiary.Modules.Dashboard.Application.Common;
 using FoodDiary.Modules.Dashboard.Application.Models;
@@ -43,7 +44,7 @@ public class DashboardFeatureTests {
     public async Task GetDashboardSnapshot_WhenProfileLookupFails_DoesNotBuildSnapshot() {
         var userId = UserId.New();
         IDashboardUserContextService access = Substitute.For<IDashboardUserContextService>();
-        Error error = Errors.Authentication.InvalidToken;
+        Error error = AuthenticationErrors.InvalidToken;
         access.GetAccessibleDashboardUserAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<DashboardUserContextModel>(error));
         IDashboardSnapshotBuilder builder = Substitute.For<IDashboardSnapshotBuilder>();
         var handler = new GetDashboardSnapshotQueryHandler(builder, access);
@@ -574,14 +575,14 @@ public class DashboardFeatureTests {
                             user.FridayCalories,
                             user.SaturdayCalories,
                             user.SundayCalories)))
-                    : Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
+                    : Result.Failure<DashboardUserContextModel>(AuthenticationErrors.InvalidToken));
             });
         repository
             .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 Error? error = user is not null
                     ? null
-                    : Errors.Authentication.InvalidToken;
+                    : AuthenticationErrors.InvalidToken;
                 return Task.FromResult(error);
             });
         return repository;

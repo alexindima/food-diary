@@ -1,13 +1,14 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Services;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Services;
 
 public static class ShoppingListItemBuilder {
     public static async Task<Result<IReadOnlyList<ShoppingListItemData>>> BuildItemsAsync(

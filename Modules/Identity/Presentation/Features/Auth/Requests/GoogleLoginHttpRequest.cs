@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
 using System.ComponentModel.DataAnnotations;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
 public sealed record GoogleLoginHttpRequest(
-    [Required, MaxLength(AuthenticationInputLimits.MaximumGoogleCredentialLength)] string Credential,
+    [Required, MaxLength(IdentityInputLimits.MaximumGoogleCredentialLength)] string Credential,
     bool RememberMe = false
 );

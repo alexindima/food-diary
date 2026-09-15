@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Entities.MealPlans;
+namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 
 public sealed class MealPlanDay : Entity<MealPlanDayId> {
     private const int MaxDayNumber = 31;

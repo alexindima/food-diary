@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Application.Marketing.Common;
+using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
+using FoodDiary.Modules.Marketing.Application.Common;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Marketing.Commands.RecordPremiumConversion;
+namespace FoodDiary.Modules.Marketing.Application.Commands.RecordPremiumConversion;
 
 public sealed class RecordPremiumConversionCommandHandler(IMarketingAttributionEventReadRepository marketingAttributionEventReadRepository,
     IMarketingAttributionEventWriteRepository marketingAttributionEventWriteRepository,

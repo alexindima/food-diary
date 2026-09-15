@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
 

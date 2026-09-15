@@ -3,7 +3,7 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationsModuleExtractionTests {
     [Theory]
-    [InlineData("FoodDiary.Application.Notifications")]
+    [InlineData("FoodDiary.Modules.Notifications.Application")]
     [InlineData("FoodDiary.Application.Abstractions/Notifications")]
     [InlineData("FoodDiary.Domain/Entities/Notifications")]
     [InlineData("FoodDiary.Infrastructure/Persistence/Notifications")]
@@ -17,7 +17,7 @@ public sealed class NotificationsModuleExtractionTests {
     public void SharedContext_ExplicitlyRegistersModulePersistenceModel() {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "FoodDiaryDbContext.cs"));
         Assert.Contains("ApplyNotificationsPersistenceModel()", source, StringComparison.Ordinal);
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Model", "NotificationWebPushOutboxMessage.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "PersistenceModel", "NotificationWebPushOutboxMessage.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Services", "WebPushNotificationSender.cs")));
     }
 
@@ -28,22 +28,22 @@ public sealed class NotificationsModuleExtractionTests {
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
-        Assert.True(File.Exists(Path.Combine(extractedRoot, "FoodDiary.Application.Notifications.csproj")));
+        Assert.True(File.Exists(Path.Combine(extractedRoot, "FoodDiary.Modules.Notifications.Application.csproj")));
     }
 
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedNotificationsAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.Notifications", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Notifications.Application", references, StringComparer.Ordinal);
     }
 
     [Fact]
     public void ExtractedNotificationsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Notifications.Contracts", "FoodDiary.Modules.Notifications.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
+            "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj");
+        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Notifications.Contracts", "FoodDiary.Modules.Notifications.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }

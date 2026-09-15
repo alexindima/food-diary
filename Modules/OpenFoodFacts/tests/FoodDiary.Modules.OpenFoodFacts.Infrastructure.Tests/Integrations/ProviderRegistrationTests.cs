@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
-using FoodDiary.Integrations.Services;
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -27,9 +27,9 @@ public sealed class ProviderRegistrationTests {
         Assert.Multiple(
             () => Assert.IsType<OpenFoodFactsService>(client),
             () => Assert.Equal("FoodDiary.Modules.OpenFoodFacts.Infrastructure", client.GetType().Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Services.OpenFoodFactsService", client.GetType().FullName),
+            () => Assert.Equal("FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services.OpenFoodFactsService", client.GetType().FullName),
             () => Assert.Equal("FoodDiary.Modules.OpenFoodFacts.Infrastructure", typeof(OpenFoodFactsApiOptions).Assembly.GetName().Name),
-            () => Assert.Equal("FoodDiary.Integrations.Options.OpenFoodFactsApiOptions", typeof(OpenFoodFactsApiOptions).FullName),
+            () => Assert.Equal("FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options.OpenFoodFactsApiOptions", typeof(OpenFoodFactsApiOptions).FullName),
             () => Assert.Same(clock, provider.GetRequiredService<TimeProvider>()));
         using HttpClient httpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(IOpenFoodFactsService));
         Assert.Equal(TimeSpan.FromSeconds(10), httpClient.Timeout);

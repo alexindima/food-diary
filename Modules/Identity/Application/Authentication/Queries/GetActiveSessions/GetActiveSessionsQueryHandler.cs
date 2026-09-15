@@ -1,7 +1,7 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Services.UserAgents;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -18,7 +18,7 @@ public sealed class GetActiveSessionsQueryHandler(IRefreshTokenSessionReadModelR
             .GetActiveReadModelsAsync((UserId)query.UserId, cancellationToken)
             .ConfigureAwait(false);
         if (!sessions.Any(session => session.Id == query.CurrentSessionId)) {
-            return Result.Failure<IReadOnlyList<ActiveSessionModel>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<IReadOnlyList<ActiveSessionModel>>(AuthenticationErrors.InvalidToken);
         }
 
         ActiveSessionModel[] models = [.. sessions.Select(session => {

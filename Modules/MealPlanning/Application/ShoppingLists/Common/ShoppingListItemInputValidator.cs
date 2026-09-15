@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 
 internal sealed class ShoppingListItemInputValidator : AbstractValidator<ShoppingListItemInput> {
     public ShoppingListItemInputValidator() {

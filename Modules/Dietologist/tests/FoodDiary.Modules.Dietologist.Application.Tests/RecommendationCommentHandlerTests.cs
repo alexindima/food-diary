@@ -1,8 +1,8 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendationComment;
@@ -21,7 +21,7 @@ public sealed class RecommendationCommentHandlerTests {
     public async Task CreateRecommendationComment_WhenCurrentUserAccessFails_ReturnsFailure() {
         IUserContextService users = Substitute.For<IUserContextService>();
         users.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Errors.Authentication.InvalidToken);
+            .Returns(AuthenticationErrors.InvalidToken);
         var handler = new CreateRecommendationCommentCommandHandler(
             Substitute.For<IRecommendationReadRepository>(),
             Substitute.For<IRecommendationCommentRepository>(),
@@ -35,7 +35,7 @@ public sealed class RecommendationCommentHandlerTests {
             new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
     }
 
     [Fact]
@@ -65,10 +65,10 @@ public sealed class RecommendationCommentHandlerTests {
         users.EnsureCanAccessAsync(clientId, Arg.Any<CancellationToken>())
             .Returns((Error?)null);
         users.GetAccessibleUserAsync(clientId, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<User>(AuthenticationErrors.InvalidToken));
         IUserDietologistProfileReadService profiles = Substitute.For<IUserDietologistProfileReadService>();
         profiles.GetAccessibleProfileAsync(clientId, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserDietologistProfileModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserDietologistProfileModel>(AuthenticationErrors.InvalidToken));
         var handler = new CreateRecommendationCommentCommandHandler(
             CreateRecommendationRepository(recommendation),
             Substitute.For<IRecommendationCommentRepository>(),
@@ -82,7 +82,7 @@ public sealed class RecommendationCommentHandlerTests {
             new CreateRecommendationCommentCommand(clientId.Value, recommendation.Id.Value, "Text"),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Authentication.InvalidToken.Code);
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
     }
 
     [Fact]

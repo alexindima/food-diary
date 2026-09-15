@@ -1,3 +1,14 @@
+using FoodDiary.Modules.Meals.Infrastructure;
+using FoodDiary.Modules.Meals.Presentation.Extensions;
+using FoodDiary.Modules.Marketing.Infrastructure;
+using FoodDiary.Modules.Marketing.Presentation.Extensions;
+using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Modules.Notifications.Presentation.Extensions;
+using FoodDiary.Modules.MealPlanning.Infrastructure;
+using FoodDiary.Modules.MealPlanning.Presentation.Extensions;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Modules.OpenFoodFacts.Presentation.Extensions;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
@@ -35,7 +46,7 @@ using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
-using FoodDiary.Modules.Notifications.Infrastructure;
+
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Modules.Dashboard.Application;
@@ -48,11 +59,10 @@ using FoodDiary.Modules.Identity.Application;
 using FoodDiary.Modules.Images.Application;
 
 using FoodDiary.Application.Statistics;
-using FoodDiary.Modules.MealPlanning.Infrastructure;
+
 using FoodDiary.Application.Tdee;
-using FoodDiary.Application.Notifications;
-using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
-using FoodDiary.Modules.Marketing.Infrastructure;
+using FoodDiary.Modules.Notifications.Application;
+
 using FoodDiary.Modules.Wearables.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;
@@ -62,7 +72,7 @@ using FoodDiary.Modules.Images.Infrastructure;
 
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;
 using FoodDiary.Presentation.Api.Filters;
@@ -125,7 +135,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddBillingModule()
                 .AddMarketingModule()
                 .AddModulePresentations()
-                .AddInfrastructure(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration)
+                .AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration)
                 .AddExportInfrastructure()
                 .AddIdentityPersistence()
                 .AddIdentityAuthenticationInfrastructure()

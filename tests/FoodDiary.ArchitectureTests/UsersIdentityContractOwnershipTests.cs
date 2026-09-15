@@ -6,10 +6,10 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
-    [InlineData("Modules/Users/Contracts", 81)]
+    [InlineData("Modules/Users/Contracts", 82)]
     [InlineData("Modules/Users/Application/Abstractions", 8)]
     [InlineData("Modules/Identity/Application.Abstractions", 41)]
-    [InlineData("Modules/Identity/Contracts", 19)]
+    [InlineData("Modules/Identity/Contracts", 20)]
     [InlineData("Modules/BodyMetrics/Contracts", 10)]
     public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot, int count) {
         Assert.Equal(count, SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(relativeRoot)).Count());
@@ -75,7 +75,7 @@ public sealed class UsersIdentityContractOwnershipTests {
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Billing/Contracts/Common/IBillingMarketingConversionRecorder.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Marketing/Contracts/Commands/RecordPremiumConversion/RecordPremiumConversionCommand.cs")));
         Assert.DoesNotContain("FoodDiary.Modules.Billing.Contracts",
-            ProjectReferenceReader.ReadProjectReferences("Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj"),
+            ProjectReferenceReader.ReadProjectReferences("Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj"),
             StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Modules.Marketing.Contracts",
             ProjectReferenceReader.ReadProjectReferences("Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj"),

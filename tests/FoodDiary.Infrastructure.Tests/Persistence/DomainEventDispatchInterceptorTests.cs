@@ -1,7 +1,7 @@
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

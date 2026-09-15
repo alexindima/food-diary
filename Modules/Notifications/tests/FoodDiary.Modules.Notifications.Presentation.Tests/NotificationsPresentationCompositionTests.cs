@@ -1,6 +1,7 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Presentation.Services;
+using FoodDiary.Modules.Notifications.Presentation.Extensions;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Presentation.Api.Extensions;
-using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Notifications.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationsPresentationCompositionTests {

@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;

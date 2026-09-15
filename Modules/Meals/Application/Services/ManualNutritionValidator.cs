@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Common;
 
-namespace FoodDiary.Application.Meals.Services;
+namespace FoodDiary.Modules.Meals.Application.Services;
 
 public static class ManualNutritionValidator {
     private const string CaloriesField = "ManualCalories";

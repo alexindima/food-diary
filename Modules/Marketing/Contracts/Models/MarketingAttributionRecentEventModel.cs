@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Marketing.Models;
+namespace FoodDiary.Modules.Marketing.Contracts.Models;
 
 public sealed record MarketingAttributionRecentEventModel(
     DateTime OccurredAtUtc,

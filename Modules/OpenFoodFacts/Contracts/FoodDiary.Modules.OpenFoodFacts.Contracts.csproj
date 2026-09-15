@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Contracts</AssemblyName>
-    <RootNamespace>FoodDiary.Application</RootNamespace>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+  </ItemGroup>
+
 </Project>

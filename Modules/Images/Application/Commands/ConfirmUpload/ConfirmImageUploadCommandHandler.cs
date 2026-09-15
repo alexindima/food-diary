@@ -14,7 +14,8 @@ public sealed class ConfirmImageUploadCommandHandler(
     IImageAssetWriteRepository imageAssetRepository,
     IImageStorageService imageStorageService,
     IImageObjectDeletionOutbox deletionOutbox,
-    IUnitOfWork unitOfWork) : ICommandHandler<ConfirmImageUploadCommand, Result<ConfirmImageUploadResult>> {
+    IUnitOfWork unitOfWork,
+    IImageConfirmationTransactionRunner transactionRunner) : ICommandHandler<ConfirmImageUploadCommand, Result<ConfirmImageUploadResult>> {
     public async Task<Result<ConfirmImageUploadResult>> Handle(
         ConfirmImageUploadCommand request,
         CancellationToken cancellationToken) {
@@ -30,12 +31,17 @@ public sealed class ConfirmImageUploadCommandHandler(
             return Result.Failure<ConfirmImageUploadResult>(assetIdResult.Error);
         }
 
+        return await transactionRunner.ExecuteSerializedAsync(assetIdResult.Value,
+            token => ConfirmAsync(assetIdResult.Value, userIdResult.Value, token), cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result<ConfirmImageUploadResult>> ConfirmAsync(ImageAssetId assetId, UserId userId, CancellationToken cancellationToken) {
         ImageAsset? asset = await imageAssetRepository.GetOwnedForUpdateAsync(
-            assetIdResult.Value,
-            userIdResult.Value,
+            assetId,
+            userId,
             cancellationToken).ConfigureAwait(false);
         if (asset is null) {
-            return Result.Failure<ConfirmImageUploadResult>(ImageErrors.NotFound(request.AssetId));
+            return Result.Failure<ConfirmImageUploadResult>(ImageErrors.NotFound(assetId.Value));
         }
 
         if (!asset.IsConfirmed) {
@@ -55,24 +61,11 @@ public sealed class ConfirmImageUploadCommandHandler(
                     validation.Message ?? "Image upload has not completed or is invalid."));
             }
 
-            bool confirmationSaved = false;
-            try {
-                asset.Confirm();
-                await deletionOutbox.EnqueueAsync(asset.ObjectKey, isConfirmed: false, cancellationToken).ConfigureAwait(false);
-                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                confirmationSaved = true;
-            } finally {
-                if (!confirmationSaved) {
-                    try {
-                        await imageStorageService.DeleteAsync(
-                            asset.ObjectKey,
-                            isConfirmed: true,
-                            CancellationToken.None).ConfigureAwait(false);
-                    } catch {
-                        // A later orphan/user cleanup also targets both buckets for pending assets.
-                    }
-                }
-            }
+            asset.Confirm();
+            await deletionOutbox.EnqueueAsync(asset.ObjectKey, isConfirmed: false, cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            // Never delete the published object on persistence failure: commit may have succeeded.
+            // Pending assets are reclaimed by orphan cleanup, which handles both buckets.
         }
 
         return Result.Success(new ConfirmImageUploadResult(asset.Id.Value, asset.Url));

@@ -1,11 +1,12 @@
-using FoodDiary.Application.Abstractions.ShoppingLists.Models;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
+
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 
-namespace FoodDiary.Application.Tests.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
 public partial class ShoppingListsFeatureTests {
 

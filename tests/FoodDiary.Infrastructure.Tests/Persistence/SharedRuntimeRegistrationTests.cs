@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
@@ -63,6 +64,9 @@ public sealed class SharedRuntimeRegistrationTests {
     private static ServiceProvider CreateProvider() {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=runtime_model;Username=test",
+            }).Build()).AddOutboxProcessing(new ConfigurationBuilder().AddInMemoryCollection(
             new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=runtime_model;Username=test",
             }).Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();

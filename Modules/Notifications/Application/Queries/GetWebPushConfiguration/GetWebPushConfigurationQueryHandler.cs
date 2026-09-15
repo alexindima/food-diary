@@ -1,9 +1,9 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Modules.Notifications.Application.Models;
 
-namespace FoodDiary.Application.Notifications.Queries.GetWebPushConfiguration;
+namespace FoodDiary.Modules.Notifications.Application.Queries.GetWebPushConfiguration;
 
 public sealed class GetWebPushConfigurationQueryHandler(IWebPushConfigurationProvider webPushConfigurationProvider)
     : IQueryHandler<GetWebPushConfigurationQuery, Result<WebPushConfigurationModel>> {

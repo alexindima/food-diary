@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
@@ -120,7 +121,7 @@ public sealed class BodyMetricsConcurrencyIntegrationTests(PostgresDatabaseFixtu
 
     private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();

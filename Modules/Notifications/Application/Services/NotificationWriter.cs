@@ -1,7 +1,8 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 
-namespace FoodDiary.Application.Notifications.Services;
+namespace FoodDiary.Modules.Notifications.Application.Services;
 
 public sealed class NotificationWriter(
     INotificationWriteRepository notificationRepository,

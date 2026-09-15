@@ -22,6 +22,12 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
+      "fooddiary.authentication.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.domain.primitives": {
         "type": "Project"
       },

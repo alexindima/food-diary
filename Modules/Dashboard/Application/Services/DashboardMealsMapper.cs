@@ -1,6 +1,6 @@
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Dashboard.Application.Services;

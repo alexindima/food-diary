@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+
+public interface IShoppingListRepository : IShoppingListReadRepository, IShoppingListReadModelRepository, IShoppingListWriteRepository;

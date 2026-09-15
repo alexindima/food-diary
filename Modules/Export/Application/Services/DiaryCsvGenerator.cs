@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 
 namespace FoodDiary.Modules.Export.Application.Services;
 

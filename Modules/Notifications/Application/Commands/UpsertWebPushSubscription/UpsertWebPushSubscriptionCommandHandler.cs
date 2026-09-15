@@ -2,14 +2,14 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
+namespace FoodDiary.Modules.Notifications.Application.Commands.UpsertWebPushSubscription;
 
 public sealed class UpsertWebPushSubscriptionCommandHandler(
     IWebPushSubscriptionWriteRepository webPushSubscriptionRepository,

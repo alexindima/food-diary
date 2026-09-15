@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.MealPlanning.Domain.Enums;
 
 public enum ShoppingListItemSourceType {
     Manual = 0,

@@ -1,7 +1,8 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Services;
+namespace FoodDiary.Modules.Notifications.Application.Services;
 
 internal sealed class NotificationClientRefreshService(
     INotificationReadModelRepository notificationReadModelRepository,

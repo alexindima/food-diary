@@ -1,9 +1,9 @@
-using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Tests.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
 public partial class ShoppingListsFeatureTests {
 

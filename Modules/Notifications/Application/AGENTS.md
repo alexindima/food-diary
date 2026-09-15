@@ -7,7 +7,7 @@ Rules for `Modules/Notifications/Application/`.
 ## Role
 
 - Own notification feed, preferences, web-push subscription and delivery orchestration use cases.
-- Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
+- Depend on other business areas through their narrow owner contracts.
 - Keep persistence, provider implementations, HTTP transport and host configuration outside this project.
 
 ## Boundaries

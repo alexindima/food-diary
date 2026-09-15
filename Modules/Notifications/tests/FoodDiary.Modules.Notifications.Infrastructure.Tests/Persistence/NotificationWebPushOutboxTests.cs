@@ -1,14 +1,15 @@
-using FoodDiary.Outbox.Infrastructure.Options;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
+using FoodDiary.Outbox.Infrastructure.Options;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Domain.Entities;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
+using FoodDiary.Modules.Notifications.PersistenceModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationWebPushOutboxTests {
@@ -205,7 +206,7 @@ public sealed class NotificationWebPushOutboxTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingWebPushNotificationSender : IWebPushNotificationSender {
-        public List<FoodDiary.Domain.ValueObjects.Ids.NotificationId> NotificationIds { get; } = [];
+        public List<FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids.NotificationId> NotificationIds { get; } = [];
 
         public Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
             NotificationIds.Add(notification.Id);

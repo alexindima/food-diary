@@ -1,8 +1,8 @@
-using FoodDiary.Presentation.Api.Hubs;
+using FoodDiary.Modules.Notifications.Presentation.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Notifications.Presentation.Extensions;
 
 public static class NotificationsPresentationApplicationBuilderExtensions {
     public static WebApplication MapNotificationsPresentationHub(

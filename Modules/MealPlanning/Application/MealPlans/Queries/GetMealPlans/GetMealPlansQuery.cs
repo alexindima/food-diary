@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlans;
 
 public record GetMealPlansQuery(
     Guid? UserId,

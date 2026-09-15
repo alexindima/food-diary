@@ -6,5 +6,6 @@ Keep feature models, repositories, provider contracts and business rules with
 their module owners. This project may depend only on generic shared libraries.
 Preserve the legacy CLR namespaces while consumers migrate by coordinated build.
 
-Google/Telegram/SSO protocol factories belong to Identity.Contracts/Errors.
-Do not restore those feature factories here or reference Identity from this project.
+Authentication factories are owned by Authentication.Contracts, Users.Contracts,
+Admin.Contracts and Identity.Contracts. Keep only the generic validation taxonomy
+here. Do not restore the Errors.Authentication facade or add reverse owner references.

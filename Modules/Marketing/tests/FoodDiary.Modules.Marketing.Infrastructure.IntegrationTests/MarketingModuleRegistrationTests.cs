@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Marketing.Common;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Marketing.Infrastructure;
+
 using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.IntegrationTests;
+namespace FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MarketingModuleRegistrationTests {

@@ -1,9 +1,14 @@
+using FoodDiary.Modules.Meals.Application.Queries.ReadMealsForExport;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealsForExport;
+using FoodDiary.Modules.Meals.Domain.ValueObjects;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
@@ -11,14 +16,10 @@ using FoodDiary.Modules.Export.Application.Models;
 using FoodDiary.Modules.Export.Application.Queries.ExportCycle;
 using FoodDiary.Modules.Export.Application.Queries.ExportDiary;
 using FoodDiary.Modules.Export.Application.Services;
-using FoodDiary.Application.Meals.Services;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -122,7 +123,7 @@ public class ExportFeatureTests {
     private static ExportDiaryQueryHandler CreateHandler(IReadOnlyList<Meal> meals) =>
         CreateHandler(CreateMealExportReadService(meals));
 
-    private static ExportDiaryQueryHandler CreateHandler(IMealExportReadService diaryReadService) =>
+    private static ExportDiaryQueryHandler CreateHandler(ISender diaryReadService) =>
         new(diaryReadService, CreateCurrentUserAccessService(), CreatePdfGenerator(out _));
 
     [Fact]
@@ -180,7 +181,7 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
         var userId = UserId.New();
         IMealRepository repository = CreateMealRepository([], out Func<(DateTime? DateFrom, DateTime? DateTo)> getLastPeriod);
-        ExportDiaryQueryHandler handler = CreateHandler(new MealExportReadService(repository));
+        ExportDiaryQueryHandler handler = CreateHandler(RequestTestSender.Create(new ReadMealsForExportQueryHandler(repository)));
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
 
@@ -306,14 +307,9 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithMoreThanPdfMealLimit_RejectsBeforeRendering() {
         var userId = UserId.New();
-        IMealExportReadService diaryReadService = Substitute.For<IMealExportReadService>();
+        ISender diaryReadService = Substitute.For<ISender>();
         diaryReadService
-            .GetByPeriodAsync(
-                userId,
-                Arg.Any<DateTime>(),
-                Arg.Any<DateTime>(),
-                ExportDiaryQueryHandler.MaxPdfMealCount + 1,
-                Arg.Any<CancellationToken>())
+            .Send(Arg.Is<ReadMealsForExportQuery>(q => q.UserId == userId && q.Limit == ExportDiaryQueryHandler.MaxPdfMealCount + 1), Arg.Any<CancellationToken>())
             .Returns(Enumerable.Range(0, ExportDiaryQueryHandler.MaxPdfMealCount + 1).Select(_ => ToReadModel(CreateMeal(userId, TestDate))).ToArray());
         IDiaryPdfGenerator pdfGenerator = Substitute.For<IDiaryPdfGenerator>();
         var handler = new ExportDiaryQueryHandler(diaryReadService, CreateCurrentUserAccessService(), pdfGenerator);
@@ -331,12 +327,12 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_ReadsOnlyLimitPlusSentinelAndRejectsOverflow() {
         var userId = UserId.New();
-        IMealExportReadService mealExportReadService = Substitute.For<IMealExportReadService>();
+        ISender mealExportReadService = Substitute.For<ISender>();
         const int limit = ExportDiaryQueryHandler.MaxCsvMealCount;
         MealProjectionReadModel[] meals = [.. Enumerable.Range(0, limit + 1)
             .Select(_ => ToReadModel(CreateMeal(userId, TestDate)))];
         mealExportReadService
-            .GetByPeriodAsync(userId, TestDate, TestDate.AddDays(1), limit + 1, Arg.Any<CancellationToken>())
+            .Send(Arg.Is<ReadMealsForExportQuery>(q => q.UserId == userId && q.DateFrom == TestDate && q.DateTo == TestDate.AddDays(1) && q.Limit == limit + 1), Arg.Any<CancellationToken>())
             .Returns(meals);
         ExportDiaryQueryHandler handler = CreateHandler(mealExportReadService);
 
@@ -345,8 +341,7 @@ public class ExportFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
-        await mealExportReadService.Received(1).GetByPeriodAsync(
-            userId, TestDate, TestDate.AddDays(1), limit + 1, CancellationToken.None);
+        await mealExportReadService.Received(1).Send(Arg.Is<ReadMealsForExportQuery>(q => q.UserId == userId && q.DateFrom == TestDate && q.DateTo == TestDate.AddDays(1) && q.Limit == limit + 1), CancellationToken.None);
     }
 
     [Theory]
@@ -700,8 +695,8 @@ public class ExportFeatureTests {
     private static IMealRepository CreateMealRepository(IReadOnlyList<Meal> meals) =>
         CreateMealRepository(meals, out _);
 
-    private static IMealExportReadService CreateMealExportReadService(IReadOnlyList<Meal> meals) =>
-        new MealExportReadService(CreateMealRepository(meals));
+    private static ISender CreateMealExportReadService(IReadOnlyList<Meal> meals) =>
+        RequestTestSender.Create(new ReadMealsForExportQueryHandler(CreateMealRepository(meals)));
 
     private static IMealRepository CreateMealRepository(
         IReadOnlyList<Meal> meals,
@@ -743,8 +738,8 @@ public class ExportFeatureTests {
                 UserId userId = call.Arg<UserId>();
                 Error? error = user switch {
                     null => null,
-                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
-                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    { Id: var id } when id != userId => AuthenticationErrors.InvalidToken,
+                    { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
                     _ => null,
                 };
                 return Task.FromResult(error);

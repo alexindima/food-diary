@@ -4,7 +4,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class MealPlanningModuleExtractionTests {
     [Fact]
     public void DietType_IsOwnedOnlyByMealPlanningDomain() {
-        Type enumType = typeof(FoodDiary.Domain.Enums.DietType);
+        Type enumType = typeof(FoodDiary.Modules.MealPlanning.Domain.Enums.DietType);
         Assert.Equal("FoodDiary.Modules.MealPlanning.Domain", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "Enums", "DietType.cs")));
@@ -26,15 +26,15 @@ public sealed class MealPlanningModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedMealPlanningAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
+            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.MealPlanning", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.MealPlanning.Application", references, StringComparer.Ordinal);
     }
 
     [Fact]
     public void ExtractedMealPlanningAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj");
+            "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj");
         string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
@@ -58,7 +58,7 @@ public sealed class MealPlanningModuleExtractionTests {
     [InlineData("ShoppingLists", "ShoppingListItemSource")]
     public void OwnedConfigurations_LiveOnlyInModulePersistenceModel(string area, string entity) {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
-            "Modules", "MealPlanning", "Infrastructure", "Model", "Configurations", area, entity + "Configuration.cs")));
+            "Modules", "MealPlanning", "PersistenceModel", "Configurations", area, entity + "Configuration.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
             "FoodDiary.Infrastructure", "Persistence", "Configurations", area, entity + "Configuration.cs")));
     }
@@ -73,7 +73,7 @@ public sealed class MealPlanningModuleExtractionTests {
             "FoodDiary.Infrastructure", "Persistence", area, repository)));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", area)));
         Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(
-            "Modules", "MealPlanning", "Application", "Abstractions", area)));
+            "Modules", "MealPlanning", "Application.Abstractions", area)));
     }
 
     [Theory]

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.MealPlanning.MealPlans.Models;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
 
 public sealed record MealPlanDayModel(
     Guid Id,

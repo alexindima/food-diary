@@ -1,11 +1,12 @@
+using FoodDiary.Modules.Notifications.PersistenceModel;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Persistence.Notifications;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 
 internal sealed class NotificationWebPushOutboxProcessor(
     DbContext context,

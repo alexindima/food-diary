@@ -1,12 +1,12 @@
 using System.Reflection;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Tests.Persistence;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationRepositoryTests {

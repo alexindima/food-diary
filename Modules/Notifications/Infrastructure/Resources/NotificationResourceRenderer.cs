@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Resources;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 
 namespace FoodDiary.Modules.Notifications.Infrastructure.Resources;
 

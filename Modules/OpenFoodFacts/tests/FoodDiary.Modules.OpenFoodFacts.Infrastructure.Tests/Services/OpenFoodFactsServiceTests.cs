@@ -1,9 +1,9 @@
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Net;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

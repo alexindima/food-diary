@@ -15,13 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Application/FoodDiary.Modules.Hydration.Application.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.Hydration.Application.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
-  </ItemGroup>
+
 </Project>

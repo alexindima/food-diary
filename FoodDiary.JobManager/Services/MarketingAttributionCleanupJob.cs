@@ -1,12 +1,13 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Marketing.Contracts.Commands.CleanupMarketingAttribution;
 using System.Diagnostics;
-using FoodDiary.Application.Marketing.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class MarketingAttributionCleanupJob(
-    IMarketingAttributionCleanupService cleanupService,
+    ISender cleanupService,
     IOptions<MarketingAttributionCleanupOptions> options,
     JobExecutionObserver observer,
     ILogger<MarketingAttributionCleanupJob> logger) {
@@ -28,8 +29,7 @@ public sealed class MarketingAttributionCleanupJob(
             }
 
             DateTime cutoffUtc = observer.UtcNow.AddDays(-settings.RetentionDays);
-            totalDeletedCount = await cleanupService
-                .CleanupAsync(cutoffUtc, settings.BatchSize, cancellationToken)
+            totalDeletedCount = await cleanupService.Send(new CleanupMarketingAttributionCommand(cutoffUtc, settings.BatchSize), cancellationToken)
                 .ConfigureAwait(false);
 
             if (totalDeletedCount > 0) {

@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj`
+- Extracted project: `Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
@@ -25,7 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/Marketing/Application`
-- `Modules/Marketing/Application/Abstractions`
+- `Modules/Marketing/Application.Abstractions`
 - `Modules/Marketing/Contracts`
 - `Modules/Marketing/Presentation`
 
@@ -38,13 +38,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: MarketingAttributionEvent
-- Public contract files: 18
+- Public contract files: 19
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 18
+- Public contract types: 19
 - Interfaces: 4
 - DTO/read-model/projection types: 5
 - Enums: 0
@@ -54,6 +54,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IMarketingAttributionEventRepository`
 - `interface IMarketingAttributionEventWriteRepository`
 - `interface IMarketingAttributionRangeReadRepository`
+- `record CleanupMarketingAttributionCommand`
 - `record GetMarketingAttributionRangeQuery`
 - `record GetMarketingAttributionSummaryQuery`
 - `record MarketingAttributionBreakdownModel`
@@ -73,12 +74,12 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs`
-- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionRangeTests.cs`
-- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingConversionRecorderTests.cs`
-- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs`
-- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/Domain/MarketingAttributionEventInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/Domain/MarketingIdConversionTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionRangeTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConversionRecorderTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingDependencyInjectionTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingAttributionEventInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingIdConversionTests.cs`
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/MarketingModuleRegistrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`

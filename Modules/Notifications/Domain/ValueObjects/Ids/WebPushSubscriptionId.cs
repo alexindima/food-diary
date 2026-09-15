@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 
 public readonly record struct WebPushSubscriptionId(Guid Value) : IEntityId<Guid> {
     public static WebPushSubscriptionId New() => new(Guid.NewGuid());

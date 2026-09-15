@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanById;
 
 public sealed class GetMealPlanByIdQueryValidator : AbstractValidator<GetMealPlanByIdQuery> {
     public GetMealPlanByIdQueryValidator() {

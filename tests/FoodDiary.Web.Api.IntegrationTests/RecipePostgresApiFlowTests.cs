@@ -1,4 +1,4 @@
-using FoodDiary.Presentation.Api.Features.Meals.Requests;
+using FoodDiary.Modules.Meals.Presentation.Requests;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteRecipes.Requests;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;

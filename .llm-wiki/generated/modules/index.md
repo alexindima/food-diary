@@ -20,7 +20,7 @@ are reported separately; `none observed` never means proven isolation.
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [Admin](admin.md) | orchestrator | 0 | 9 | 0 | 3 | assembly-isolated |
 | [Ai](ai.md) | aggregate-owner | 0 | 2 | 0 | 3 | assembly-isolated |
-| [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
+| [Billing](billing.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 0 | 2 | project-reference-matrix |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 0 | 2 | project-reference-matrix |
@@ -37,11 +37,11 @@ are reported separately; `none observed` never means proven isolation.
 | [Images](images.md) | aggregate-owner | 0 | 0 | 0 | 3 | project-reference-matrix |
 | [Lessons](lessons.md) | aggregate-owner | 0 | 2 | 0 | 2 | project-reference-matrix-and-module-boundary-tests |
 | [Marketing](marketing.md) | aggregate-owner | 0 | 0 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
-| [MealPlanning](meal-planning.md) | aggregate-owner | 0 | 4 | 0 | 3 | project-reference-matrix |
-| [Meals](meals.md) | aggregate-owner | 0 | 9 | 0 | 0 | project-reference-matrix |
-| [Notifications](notifications.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
+| [MealPlanning](meal-planning.md) | aggregate-owner | 0 | 2 | 0 | 3 | project-reference-matrix |
+| [Meals](meals.md) | aggregate-owner | 0 | 9 | 0 | 3 | project-reference-matrix |
+| [Notifications](notifications.md) | aggregate-owner | 0 | 2 | 0 | 3 | project-reference-matrix |
 | [OpenFoodFacts](open-food-facts.md) | aggregate-owner | 0 | 0 | 0 | 3 | project-reference-matrix |
-| [Products](products.md) | aggregate-owner | 0 | 6 | 0 | 3 | project-reference-matrix |
+| [Products](products.md) | aggregate-owner | 0 | 7 | 0 | 3 | project-reference-matrix |
 | [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 0 | 0 | project-reference-matrix |
 | [RecipeCommunity](recipe-community.md) | aggregate-owner | 0 | 5 | 0 | 3 | project-reference-matrix |
 | [Recipes](recipes.md) | aggregate-owner | 0 | 6 | 0 | 3 | project-reference-matrix |

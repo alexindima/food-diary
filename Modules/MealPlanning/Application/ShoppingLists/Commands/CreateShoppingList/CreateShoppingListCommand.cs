@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
-using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Commands.CreateShoppingList;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Commands.CreateShoppingList;
 
 public record CreateShoppingListCommand(
     Guid? UserId,

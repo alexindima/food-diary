@@ -4,16 +4,15 @@ One physical module owns two explicit aggregate areas: MealPlans and ShoppingLis
 Do not extract ShoppingLists as another business module. Generation crosses the
 aggregate boundary through `IShoppingListCreationService`, never its repository.
 
-- Application owns use cases, validation, mappings and read services; preserve its
-  `FoodDiary.Application.MealPlanning` assembly and namespaces.
-- Application/Abstractions owns the two areas' repository ports, errors and read models.
+- Application owns use cases, validation and mappings with canonical assembly and folder namespaces. Keep single-operation reads in their handlers.
+- Application.Abstractions owns the two areas' repository ports, errors and read models.
 - Domain owns MealPlan, MealPlanDay, MealPlanMeal, ShoppingList, its items/sources,
-  their IDs, events and enum with legacy CLR namespaces. MealPlanId and
+  their IDs, events and enum with canonical project and folder namespaces. MealPlanId and
   MealPlanMealId are module-owned source-provenance IDs.
 - Infrastructure owns both repositories and complete `AddMealPlanningModule` DI.
-- Infrastructure/Model owns all six mappings; shared DbContext explicitly applies
+- PersistenceModel owns all six mappings; shared DbContext explicitly applies
   them. Historical migrations and the model snapshot remain central.
-- HTTP controllers remain in Presentation.Api/Features/MealPlans and ShoppingLists.
+- HTTP controllers live in Presentation/MealPlans/Controllers and Presentation/ShoppingLists/Controllers.
 
 Preserve user scoping, cancellation, request transaction ownership, tracked update
 semantics, CreatedOnUtc ordering and source-aware item projections. Generation
@@ -37,3 +36,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Keep MealPlans and ShoppingLists as meaningful areas. Query handlers own their read operations. IShoppingListCreationService remains an aggregate boundary for generation, not a single-use read facade.

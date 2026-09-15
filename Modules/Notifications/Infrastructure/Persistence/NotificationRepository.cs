@@ -1,10 +1,11 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Notifications;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 
 public sealed class NotificationRepository(DbSet<Notification> notifications, TimeProvider timeProvider) : INotificationRepository {
     public async Task<IReadOnlyList<Notification>> GetByUserAsync(

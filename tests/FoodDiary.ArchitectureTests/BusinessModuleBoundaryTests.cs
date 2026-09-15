@@ -38,6 +38,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void ApplicationRuntimeDependencyInjection_StaysFreeOfFeatureModuleRegistration() {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot(
+            "Shared",
             "FoodDiary.Application.Runtime",
             "DependencyInjection.cs");
         string source = File.ReadAllText(dependencyInjectionPath);
@@ -260,14 +261,16 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedNotificationsApplicationDependencies = new(StringComparer.Ordinal) {
+        "FoodDiary.Application.Abstractions.Authentication.Common",
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Notifications",
         "FoodDiary.Application.Abstractions.Users.Common",
-        "FoodDiary.Application.Notifications",
+        "FoodDiary.Modules.Notifications.Application",
         "FoodDiary.Application.Abstractions.Users.Models",
     };
 
     private static readonly HashSet<string> ApprovedBillingApplicationDependencies = new(StringComparer.Ordinal) {
+        "FoodDiary.Application.Abstractions.Authentication.Common",
         "FoodDiary.Modules.Billing.Application.Abstractions",
         "FoodDiary.Modules.Billing.Contracts",
         "FoodDiary.Application.Abstractions.Common",
@@ -280,6 +283,7 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedProductsApplicationDependencies = new(StringComparer.Ordinal) {
+        "FoodDiary.Application.Abstractions.Authentication.Common",
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.OpenFoodFacts.Models",
@@ -335,7 +339,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Recipes.Models",
         "FoodDiary.Application.Abstractions.Users.Common",
         "FoodDiary.Application.Common",
-        "FoodDiary.Application.Meals",
+        "FoodDiary.Modules.Meals.Application",
         "FoodDiary.Application.Images.Common",
         "FoodDiary.Modules.Meals.Application.Abstractions",
         "FoodDiary.Modules.Meals.Contracts",
@@ -352,7 +356,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Common",
         "FoodDiary.Modules.Dietologist.Application",
         "FoodDiary.Application.Images.Common",
-        "FoodDiary.Application.Notifications",
+        "FoodDiary.Modules.Notifications.Application",
         "FoodDiary.Application.Users",
     };
 
@@ -427,7 +431,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void NotificationsApplicationAbstractions_DoNotDependOnOtherFeatureContracts() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "Modules", "Notifications", "Application", "Abstractions");
+            "Modules", "Notifications", "Application.Abstractions");
 
         string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationAbstractionsNamespaceDependencies)
@@ -787,10 +791,10 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("MealConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
-    [InlineData("MealItemConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
-    [InlineData("MealAiSessionConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
-    [InlineData("MealAiItemConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
+    [InlineData("MealConfiguration.cs", "Modules/Meals/PersistenceModel/Configurations/Meals")]
+    [InlineData("MealItemConfiguration.cs", "Modules/Meals/PersistenceModel/Configurations/Meals")]
+    [InlineData("MealAiSessionConfiguration.cs", "Modules/Meals/PersistenceModel/Configurations/Meals")]
+    [InlineData("MealAiItemConfiguration.cs", "Modules/Meals/PersistenceModel/Configurations/Meals")]
     [InlineData("RecentItemConfiguration.cs", "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems")]
     public void MealAndRecentItemConfigurations_StayInOwnedFolders(
         string fileName,
@@ -1026,15 +1030,15 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("ShoppingListConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists")]
-    [InlineData("ShoppingListItemConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists")]
-    [InlineData("ShoppingListItemSourceConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists")]
-    [InlineData("MealPlanConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans")]
-    [InlineData("MealPlanDayConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans")]
-    [InlineData("MealPlanMealConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans")]
+    [InlineData("ShoppingListConfiguration.cs", "Modules/MealPlanning/PersistenceModel/Configurations/ShoppingLists")]
+    [InlineData("ShoppingListItemConfiguration.cs", "Modules/MealPlanning/PersistenceModel/Configurations/ShoppingLists")]
+    [InlineData("ShoppingListItemSourceConfiguration.cs", "Modules/MealPlanning/PersistenceModel/Configurations/ShoppingLists")]
+    [InlineData("MealPlanConfiguration.cs", "Modules/MealPlanning/PersistenceModel/Configurations/MealPlans")]
+    [InlineData("MealPlanDayConfiguration.cs", "Modules/MealPlanning/PersistenceModel/Configurations/MealPlans")]
+    [InlineData("MealPlanMealConfiguration.cs", "Modules/MealPlanning/PersistenceModel/Configurations/MealPlans")]
     [InlineData("WearableConnectionConfiguration.cs", "Modules/Wearables/Infrastructure/Model/Configurations/Wearables")]
     [InlineData("WearableSyncEntryConfiguration.cs", "Modules/Wearables/Infrastructure/Model/Configurations/Wearables")]
-    [InlineData("MarketingAttributionEventConfiguration.cs", "Modules/Marketing/Infrastructure/Model/Configurations")]
+    [InlineData("MarketingAttributionEventConfiguration.cs", "Modules/Marketing/PersistenceModel/Configurations")]
     public void PlanningWearablesAndMarketingConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {

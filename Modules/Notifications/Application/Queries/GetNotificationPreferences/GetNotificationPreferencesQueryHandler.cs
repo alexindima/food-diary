@@ -1,14 +1,15 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Notifications.Application.Mappings;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
-namespace FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
+namespace FoodDiary.Modules.Notifications.Application.Queries.GetNotificationPreferences;
 
 public sealed class GetNotificationPreferencesQueryHandler(
-    INotificationPreferencesService notificationPreferencesService,
+    IUserNotificationProfileService userProfileService,
     ICurrentUserAccessService notificationUserAccessService)
     : IQueryHandler<GetNotificationPreferencesQuery, Result<NotificationPreferencesModel>> {
     public async Task<Result<NotificationPreferencesModel>> Handle(
@@ -22,6 +23,14 @@ public sealed class GetNotificationPreferencesQueryHandler(
             return CurrentUserAccessResolver.ToFailure<NotificationPreferencesModel>(userIdResult);
         }
 
-        return await notificationPreferencesService.GetAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        return await GetAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+    }
+    private async Task<Result<NotificationPreferencesModel>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
+        Result<UserNotificationProfileModel> result = await userProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure) {
+            return Result.Failure<NotificationPreferencesModel>(result.Error);
+        }
+
+        return Result.Success(NotificationPreferenceMappings.ToModel(result.Value));
     }
 }

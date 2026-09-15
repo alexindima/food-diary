@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,7 +12,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Meals.Requests;
+using FoodDiary.Modules.Meals.Presentation.Requests;
 using FoodDiary.Modules.Images.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;

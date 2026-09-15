@@ -1,8 +1,8 @@
-﻿using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Domain.Entities.Users;
@@ -494,7 +494,7 @@ public sealed class OpenAiFoodServiceTests {
                 }
 
                 if (!resolvedUser.IsActive || resolvedUser.DeletedAt is not null) {
-                    return Task.FromResult(Result.Failure<UserAiProfileModel>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<UserAiProfileModel>(AuthenticationErrors.InvalidToken));
                 }
 
                 return Task.FromResult(Result.Success(new UserAiProfileModel(

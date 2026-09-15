@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Meals.Infrastructure;
+using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
@@ -12,7 +14,7 @@ using FoodDiary.Modules.Admin.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
-using FoodDiary.Modules.MealPlanning.Infrastructure;
+
 using FoodDiary.Modules.Images.Infrastructure;
 
 using FoodDiary.Modules.Dietologist.Infrastructure;
@@ -26,7 +28,7 @@ using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -76,7 +78,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Product, product.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "vision", "gpt-4.1-mini", 10, 20, 30);
         var recordedAt = new DateTime(2026, 7, 26, 8, 0, 0, DateTimeKind.Utc);
-        var meal = FoodDiary.Domain.Entities.Meals.Meal.Create(deletedUser.Id, recordedAt);
+        var meal = FoodDiary.Modules.Meals.Domain.Entities.Meal.Create(deletedUser.Id, recordedAt);
         var hydration = HydrationEntry.Create(deletedUser.Id, recordedAt, 250);
         var weight = WeightEntry.Create(deletedUser.Id, recordedAt, 72.5);
         var waist = WaistEntry.Create(deletedUser.Id, recordedAt, 84);
@@ -354,7 +356,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             imageAssetId: productAsset.Id);
         var recipe = Recipe.Create(deletedUser.Id, "Toast", servings: 1, imageAssetId: recipeAsset.Id);
         recipe.AddStep(1, "Toast bread", imageAssetId: stepAsset.Id);
-        var meal = FoodDiary.Domain.Entities.Meals.Meal.Create(
+        var meal = FoodDiary.Modules.Meals.Domain.Entities.Meal.Create(
             deletedUser.Id,
             new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc),
             imageAssetId: mealAsset.Id);

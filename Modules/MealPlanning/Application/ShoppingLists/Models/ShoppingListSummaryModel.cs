@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 
 public sealed record ShoppingListSummaryModel(
     Guid Id,

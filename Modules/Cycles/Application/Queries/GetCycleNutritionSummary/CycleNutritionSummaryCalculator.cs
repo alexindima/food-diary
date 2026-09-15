@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;

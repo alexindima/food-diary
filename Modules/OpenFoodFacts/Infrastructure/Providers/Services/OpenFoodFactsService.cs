@@ -1,3 +1,5 @@
+using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
@@ -5,14 +7,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Integrations.Http;
-using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Services;
+namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
 
 internal sealed class OpenFoodFactsService(
     HttpClient httpClient,

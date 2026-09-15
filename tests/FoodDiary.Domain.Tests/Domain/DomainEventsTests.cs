@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Modules.Meals.Domain.ValueObjects;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Tests.Domain;

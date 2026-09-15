@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Options;
 
 internal static class WebPushUriValidator {
     public static bool IsVapidSubject(string? value) {

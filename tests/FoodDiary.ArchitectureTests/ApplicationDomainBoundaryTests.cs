@@ -27,7 +27,7 @@ public sealed class ApplicationDomainBoundaryTests {
 
     [Theory]
     [InlineData("Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj", "Meals")]
-    [InlineData("Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj", "Meals")]
+    [InlineData("Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj", "Meals")]
     [InlineData("Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj", "Cycles")]
     [InlineData("Modules/Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj", "Cycles")]
     public void ScalarConsumers_ReferenceTheirNarrowOwner(string path, string owner) {

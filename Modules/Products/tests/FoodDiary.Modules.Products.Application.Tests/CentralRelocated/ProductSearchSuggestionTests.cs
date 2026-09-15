@@ -1,13 +1,14 @@
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
+using FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchProducts;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.Common;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.Usda.Services;
-using FoodDiary.Application.OpenFoodFacts.Common;
-using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Domain.Entities.Usda;
 
 namespace FoodDiary.Application.Tests.CentralRelocated;
@@ -136,11 +137,11 @@ public sealed class ProductSearchSuggestionTests {
         return unitOfWork;
     }
 
-    private static IOpenFoodFactsCachedProductSearch CreateCachedProductSearch(
+    private static ISender CreateCachedProductSearch(
         IOpenFoodFactsService service,
         IOpenFoodFactsProductCacheRepository cache,
         IUnitOfWork unitOfWork) =>
-        new OpenFoodFactsCachedProductSearch(service, cache, cache, unitOfWork);
+        RequestTestSender.Create(new SearchOpenFoodFactsQueryHandler(service, cache, cache, unitOfWork));
 
     private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
         IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts,

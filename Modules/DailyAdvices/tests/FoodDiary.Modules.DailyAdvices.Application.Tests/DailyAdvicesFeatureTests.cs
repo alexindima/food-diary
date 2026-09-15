@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Reflection;
 using FluentValidation.Results;
 using FoodDiary.Results;
@@ -325,12 +325,12 @@ public class DailyAdvicesFeatureTests {
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
-        Error? error = user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted;
+        Error? error = user.DeletedAt is null ? null : UserAuthenticationErrors.AccountDeleted;
         service
             .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult(user.Id == id ? error : Errors.Authentication.InvalidToken);
+                return Task.FromResult(user.Id == id ? error : AuthenticationErrors.InvalidToken);
             });
         return service;
     }

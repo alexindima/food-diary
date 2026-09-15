@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1621,
+    "productionProjectEdges": 1636,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 62,
     "componentsWithoutDirectSpecs": 145,
-    "criticalSymbolsWithoutTestReferences": 30,
+    "criticalSymbolsWithoutTestReferences": 27,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -5146,36 +5146,6 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
-      "name": "AcquireTelegramOperationCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/AcquireTelegramOperation/AcquireTelegramOperationCommandHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "CheckpointTelegramOperationCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/CheckpointTelegramOperation/CheckpointTelegramOperationCommandHandler.cs",
-      "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "RegisterTelegramOperationCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommandHandler.cs",
-      "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "RequestTelegramBackupEmailCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
@@ -5208,8 +5178,8 @@
     {
       "name": "MealRecognitionsController",
       "role": "Controller",
-      "path": "Modules/Meals/Presentation/Features/Meals/MealRecognitionsController.cs",
-      "line": 16,
+      "path": "Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs",
+      "line": 17,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5229,7 +5199,7 @@
       "name": "ListReadyTelegramOperationsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQueryHandler.cs",
-      "line": 6,
+      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5359,7 +5329,7 @@
       "name": "MealAiItemInputValidator",
       "role": "Validator",
       "path": "Modules/Meals/Application/Common/Validators/MealAiItemInputValidator.cs",
-      "line": 6,
+      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

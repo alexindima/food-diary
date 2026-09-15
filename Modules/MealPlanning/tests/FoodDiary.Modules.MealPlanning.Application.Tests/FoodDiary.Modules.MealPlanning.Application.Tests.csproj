@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,12 +14,12 @@
     <Using Include="Xunit" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="NSubstitute" />
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Modules.MealPlanning.Application.Tests.Support" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application/FoodDiary.Application.MealPlanning.csproj" />
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.MealPlanning.Application.csproj" />
+    <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
@@ -32,6 +31,7 @@
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Marketing.Models;
+using FoodDiary.Modules.Marketing.Contracts.Models;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;

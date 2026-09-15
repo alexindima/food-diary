@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.MealPlans.Models;
-using FoodDiary.Application.MealPlanning.MealPlans.Models;
-using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 
-namespace FoodDiary.Application.MealPlanning.MealPlans.Mappings;
+namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Mappings;
 
 public static class MealPlanMappings {
     extension(MealPlan plan) {

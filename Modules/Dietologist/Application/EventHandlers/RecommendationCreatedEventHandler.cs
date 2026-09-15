@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Modules.Dietologist.Domain.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Dietologist.Application.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Mediator;
 

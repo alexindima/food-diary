@@ -1,17 +1,19 @@
+using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
-using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
-using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Notifications.Queries.GetWebPushConfiguration;
-using FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
+using FoodDiary.Modules.Notifications.Application.Commands.RemoveWebPushSubscription;
+using FoodDiary.Modules.Notifications.Application.Commands.UpsertWebPushSubscription;
+using FoodDiary.Modules.Notifications.Application.Models;
+using FoodDiary.Modules.Notifications.Application.Queries.GetWebPushConfiguration;
+using FoodDiary.Modules.Notifications.Application.Queries.GetWebPushSubscriptions;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Notifications;
-using FoodDiary.Presentation.Api.Features.Notifications.Requests;
-using FoodDiary.Presentation.Api.Features.Notifications.Responses;
+using FoodDiary.Modules.Notifications.Presentation.Controllers;
+using FoodDiary.Modules.Notifications.Presentation.Requests;
+using FoodDiary.Modules.Notifications.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Notifications.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Notifications.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationPushControllerTests {

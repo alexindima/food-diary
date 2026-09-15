@@ -1,5 +1,5 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.DeleteRecipeComment;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;

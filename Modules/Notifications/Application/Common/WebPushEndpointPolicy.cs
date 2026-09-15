@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Modules.Notifications.Application.Common;
 
 internal static class WebPushEndpointPolicy {
     public static bool IsAllowed(string endpoint) {

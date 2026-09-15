@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Common;
+namespace FoodDiary.Modules.Meals.Application.Common;
 
 internal sealed class NullAchievementEvaluationOutbox : IMealAchievementEvaluationRequest {
     public static readonly NullAchievementEvaluationOutbox Instance = new();

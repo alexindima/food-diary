@@ -1,8 +1,8 @@
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
 using System.Net;
 using System.Text;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options.Options;
 

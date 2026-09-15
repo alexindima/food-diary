@@ -11,11 +11,11 @@ public sealed class MealsModuleExtractionTests {
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Domain.Enums.MealType))]
-    [InlineData(typeof(FoodDiary.Domain.Enums.AiRecognitionSource))]
+    [InlineData(typeof(FoodDiary.Modules.Meals.Domain.Contracts.Enums.MealType))]
+    [InlineData(typeof(FoodDiary.Modules.Meals.Domain.Contracts.Enums.AiRecognitionSource))]
     public void MealEnums_AreOwnedOnlyByMealsDomainContractsContracts(Type enumType) {
         Assert.Equal("FoodDiary.Modules.Meals.Domain.Contracts", enumType.Assembly.GetName().Name);
-        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.Equal("FoodDiary.Modules.Meals.Domain.Contracts.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain.Contracts", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
     }
@@ -36,11 +36,11 @@ public sealed class MealsModuleExtractionTests {
     }
 
     [Fact]
-    public void ExtractedMealsAssembly_PreservesLegacyClrIdentity() {
+    public void ExtractedMealsAssembly_UsesCanonicalClrIdentity() {
         string project = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "Modules", "Meals", "Application", "FoodDiary.Modules.Meals.Application.csproj"));
-        Assert.Contains("<AssemblyName>FoodDiary.Application.Meals</AssemblyName>", project, StringComparison.Ordinal);
-        Assert.Contains("<RootNamespace>FoodDiary.Application.Meals</RootNamespace>", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("<AssemblyName>", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("<RootNamespace>", project, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -61,9 +61,9 @@ public sealed class MealsModuleExtractionTests {
     [Fact]
     public void MealsDomain_HasSinglePhysicalOwnershipAndOneWayDependencies() {
         string[] ownedFiles = [
-            "Entities/Meals/Meal.cs", "Entities/Meals/MealItem.cs",
-            "Entities/Meals/MealAiSession.cs", "Entities/Meals/MealAiItem.cs",
-            "Entities/Meals/MealAiItemData.cs", "Events/MealNutritionAppliedDomainEvent.cs",
+            "Entities/Meal.cs", "Entities/MealItem.cs",
+            "Entities/MealAiSession.cs", "Entities/MealAiItem.cs",
+            "Entities/MealAiItemData.cs", "Events/MealNutritionAppliedDomainEvent.cs",
             "ValueObjects/Ids/MealId.cs", "ValueObjects/Ids/MealItemId.cs",
             "ValueObjects/Ids/MealAiSessionId.cs", "ValueObjects/Ids/MealAiItemId.cs",
             "ValueObjects/MealDetailsState.cs", "ValueObjects/MealNutritionState.cs",

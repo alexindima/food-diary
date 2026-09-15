@@ -3,7 +3,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Initializer;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Commands.BootstrapInitialAdmin;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Results;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

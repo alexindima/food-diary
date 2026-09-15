@@ -1,11 +1,12 @@
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
-using FoodDiary.Application.Abstractions.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.ShoppingLists;
+namespace FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.ShoppingLists;
 
 public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShoppingListRepository {
     public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {

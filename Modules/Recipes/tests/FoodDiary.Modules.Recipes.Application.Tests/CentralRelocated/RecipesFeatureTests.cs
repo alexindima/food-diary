@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFavoriteRecipes;
@@ -5,7 +6,6 @@ using FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadRecipe
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Service.Contracts.Models;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
@@ -590,8 +590,8 @@ public partial class RecipesFeatureTests {
     private sealed class StubUserRepository(User user) : ICurrentUserAccessService {
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
             Error? error = user switch {
-                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
-                { IsActive: false } => Errors.Authentication.InvalidToken,
+                { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
+                { IsActive: false } => AuthenticationErrors.InvalidToken,
                 _ => null,
             };
             return Task.FromResult(error);

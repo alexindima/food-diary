@@ -1,13 +1,13 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
+namespace FoodDiary.Modules.Notifications.Application.Commands.ScheduleTestNotification;
 
 public sealed class ScheduleTestNotificationCommandHandler(
     INotificationTestScheduler notificationTestScheduler,

@@ -4,7 +4,7 @@ using FoodDiary.ReadModel.Composition.Favorites;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

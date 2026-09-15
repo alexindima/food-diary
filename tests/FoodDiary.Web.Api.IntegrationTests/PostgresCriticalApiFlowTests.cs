@@ -10,7 +10,7 @@ using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Images.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
-using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
+using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Requests;
 using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;

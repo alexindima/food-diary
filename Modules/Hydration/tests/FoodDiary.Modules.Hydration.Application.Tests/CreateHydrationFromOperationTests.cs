@@ -25,7 +25,7 @@ public sealed class CreateHydrationFromOperationTests {
         DateTime timestamp = string.Equals(scenario, "timestamp", StringComparison.Ordinal) ? DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified) : DateTime.UtcNow;
         int amount = string.Equals(scenario, "amount", StringComparison.Ordinal) ? 0 : 250;
 
-        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await new CreateHydrationFromOperationCommandHandler(entries, receipts, access)
+        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await new CreateHydrationFromOperationCommandHandler(entries, receipts, access, new InlineHydrationTransactionRunner())
             .Handle(new CreateHydrationFromOperationCommand(owner.Value, operation, timestamp, amount), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -40,7 +40,7 @@ public sealed class CreateHydrationFromOperationTests {
         DateTime timestamp = new(2026, 9, 12, 12, 0, 0, DateTimeKind.Utc);
         IHydrationEntryWriteRepository entries = Substitute.For<IHydrationEntryWriteRepository>();
         IHydrationOperationReceiptRepository receipts = Substitute.For<IHydrationOperationReceiptRepository>();
-        var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>());
+        var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>(), new InlineHydrationTransactionRunner());
 
         FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, 250), CancellationToken.None);
 
@@ -61,7 +61,7 @@ public sealed class CreateHydrationFromOperationTests {
         IHydrationEntryWriteRepository entries = Substitute.For<IHydrationEntryWriteRepository>();
         IHydrationOperationReceiptRepository receipts = Substitute.For<IHydrationOperationReceiptRepository>();
         receipts.FindAsync(owner, operationId, Arg.Any<CancellationToken>()).Returns(receipt);
-        var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>());
+        var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>(), new InlineHydrationTransactionRunner());
 
         FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, amount), CancellationToken.None);
 
@@ -73,5 +73,9 @@ public sealed class CreateHydrationFromOperationTests {
         }
         await entries.DidNotReceive().AddAsync(Arg.Any<HydrationEntry>(), Arg.Any<CancellationToken>());
         await receipts.DidNotReceive().AddAsync(Arg.Any<HydrationOperationReceipt>(), Arg.Any<CancellationToken>());
+    }
+    [ExcludeFromCodeCoverage]
+    private sealed class InlineHydrationTransactionRunner : IHydrationOperationTransactionRunner {
+        public Task<T> ExecuteSerializedAsync<T>(FoodDiary.Domain.ValueObjects.Ids.UserId userId, Guid operationId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) => operation(cancellationToken);
     }
 }

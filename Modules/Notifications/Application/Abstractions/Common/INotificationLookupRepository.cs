@@ -1,3 +1,0 @@
-namespace FoodDiary.Application.Abstractions.Notifications.Common;
-
-public interface INotificationLookupRepository : INotificationDeduplicationService;

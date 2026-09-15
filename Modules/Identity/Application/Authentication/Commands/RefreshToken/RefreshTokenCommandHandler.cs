@@ -3,7 +3,6 @@ using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -24,23 +23,23 @@ public sealed class RefreshTokenCommandHandler(
     public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
         (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validationResult = jwtTokenGenerator.ValidateToken(command.RefreshToken);
         if (validationResult == null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
 
         (UserId userId, string? _, bool rememberMe, Guid? refreshSessionId) = validationResult.Value;
         if (!refreshSessionId.HasValue) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
 
         UserRefreshTokenSession? session = await refreshTokenSessionRepository
             .GetByIdAsync(refreshSessionId.Value, cancellationToken)
             .ConfigureAwait(false);
         if (session is null || session.UserId != userId || !session.IsActive) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
 
         if (!VerifyRefreshToken(command.RefreshToken, session.RefreshTokenHash)) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
 
         Result<UserAuthenticationPrincipalModel> authenticationResult = await userIdentityService
@@ -50,7 +49,7 @@ public sealed class RefreshTokenCommandHandler(
                 cancellationToken)
             .ConfigureAwait(false);
         if (authenticationResult.IsFailure) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
 
         UserAuthenticationPrincipalModel principal = authenticationResult.Value;
@@ -63,7 +62,7 @@ public sealed class RefreshTokenCommandHandler(
                 cancellationToken)
             .ConfigureAwait(false);
         if (tokens is null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }

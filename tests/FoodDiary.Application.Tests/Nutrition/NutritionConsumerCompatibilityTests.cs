@@ -1,11 +1,12 @@
-using FoodDiary.Application.Meals.Mappings;
+using FoodDiary.Modules.Meals.Application.Mappings;
+using FoodDiary.Modules.Meals.Domain.ValueObjects;
+
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Nutrition;
@@ -25,7 +26,7 @@ public sealed class NutritionConsumerCompatibilityTests {
         recipe.SetManualNutrition(calories, 0, 0, 0, fiber, 0);
 
         FoodDiary.Application.Products.Models.ProductModel productModel = product.ToModel();
-        FoodDiary.Application.Meals.Models.MealModel mealModel = meal.ToModel();
+        FoodDiary.Modules.Meals.Service.Contracts.Models.MealModel mealModel = meal.ToModel();
         FoodDiary.Application.Recipes.Models.RecipeModel recipeModel = recipe.ToModel(0, isOwnedByCurrentUser: true);
 
         Assert.Multiple(

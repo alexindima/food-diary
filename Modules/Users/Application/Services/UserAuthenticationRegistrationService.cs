@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
@@ -21,7 +20,7 @@ internal sealed class UserAuthenticationRegistrationService(
             .ConfigureAwait(false);
         if (existingUser is not null) {
             return existingUser.DeletedAt is not null
-                ? Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.AccountDeleted)
+                ? Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountDeleted)
                 : Result.Failure<UserAuthenticationPrincipalModel>(EmailAlreadyExists);
         }
 

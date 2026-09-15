@@ -1,14 +1,15 @@
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Queries.SearchProducts;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
-using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
-using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
+using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
+using FoodDiary.Modules.OpenFoodFacts.Application.Queries.SearchByBarcode;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.OpenFoodFacts;
-using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Responses;
+using FoodDiary.Modules.OpenFoodFacts.Presentation.Controllers;
+using FoodDiary.Modules.OpenFoodFacts.Presentation.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.OpenFoodFacts.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class OpenFoodFactsControllerTests {

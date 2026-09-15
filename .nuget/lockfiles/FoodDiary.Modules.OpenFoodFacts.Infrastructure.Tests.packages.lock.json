@@ -366,18 +366,6 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "FoodDiary.Application.OpenFoodFacts": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
       "fooddiary.domain.primitives": {
         "type": "Project"
       },
@@ -390,6 +378,18 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.openfoodfacts.application": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.openfoodfacts.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -397,7 +397,11 @@
         }
       },
       "fooddiary.modules.openfoodfacts.contracts": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.openfoodfacts.domain": {
         "type": "Project"
@@ -405,8 +409,8 @@
       "fooddiary.modules.openfoodfacts.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.OpenFoodFacts": "[1.0.0, )",
           "FoodDiary.Integrations.Http": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Application": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",

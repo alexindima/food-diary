@@ -1,19 +1,23 @@
+using FoodDiary.Modules.Meals.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Meals.Presentation.Mappings;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Meals.Commands.CreateMeal;
-using FoodDiary.Application.Meals.Commands.DeleteMeal;
-using FoodDiary.Application.Meals.Commands.RepeatMeal;
-using FoodDiary.Application.Meals.Commands.UpdateMeal;
-using FoodDiary.Application.Meals.Models;
-using FoodDiary.Application.Meals.Queries.GetMealById;
-using FoodDiary.Application.Meals.Queries.GetMeals;
-using FoodDiary.Application.Meals.Queries.GetMealsOverview;
-using FoodDiary.Presentation.Api.Features.Meals.Mappings;
-using FoodDiary.Presentation.Api.Features.Meals.Requests;
-using FoodDiary.Presentation.Api.Features.Meals.Responses;
+using FoodDiary.Modules.Meals.Application.Common;
+using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
+using FoodDiary.Modules.Meals.Application.Commands.DeleteMeal;
+using FoodDiary.Modules.Meals.Application.Commands.RepeatMeal;
+using FoodDiary.Modules.Meals.Application.Commands.UpdateMeal;
+using FoodDiary.Modules.Meals.Application.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
+using FoodDiary.Modules.Meals.Application.Queries.GetMealById;
+using FoodDiary.Modules.Meals.Service.Contracts.Queries.GetMeals;
+using FoodDiary.Modules.Meals.Application.Queries.GetMealsOverview;
 
-namespace FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Meals.Presentation.Requests;
+using FoodDiary.Modules.Meals.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Meals.Presentation.Responses;
+
+namespace FoodDiary.Modules.Meals.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealHttpMappingsTests {

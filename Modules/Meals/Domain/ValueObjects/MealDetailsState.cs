@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Modules.Meals.Domain.ValueObjects;
 
 public readonly record struct MealDetailsState(
     DateTime Date,

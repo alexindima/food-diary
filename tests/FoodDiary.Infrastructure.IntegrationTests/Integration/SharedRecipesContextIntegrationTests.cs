@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Audit.Infrastructure;
@@ -137,6 +138,10 @@ public sealed class SharedRecipesContextIntegrationTests(PostgresDatabaseFixture
     private static ServiceProvider CreateProvider(string connectionString, bool enableRetries = true) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = connectionString,
+            ["Database:EnableRetries"] = enableRetries.ToString(),
+            ["Database:MaxRetryDelaySeconds"] = "1",
+        }).Build()).AddOutboxProcessing(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["Database:EnableRetries"] = enableRetries.ToString(),
             ["Database:MaxRetryDelaySeconds"] = "1",

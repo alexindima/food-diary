@@ -1,15 +1,18 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Modules.Meals.Application.Abstractions.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
+using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Application.Abstractions.Products.Common;
 using Product = FoodDiary.Application.Abstractions.Products.Models.ProductSnapshotReadModel;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Meals;
+namespace FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 
 public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQuery nutritionQueries, IProductSnapshotReadService products, IMealSourceSnapshotQuery sourceSnapshots, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IMealRepository {
     private static DateTime StartOfUtcDay(DateTime value) =>

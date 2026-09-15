@@ -1,18 +1,19 @@
-using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
-using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
-using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
-using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
-using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
-using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
-using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
-using FoodDiary.Application.Notifications.Queries.GetNotifications;
-using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
-using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
-using FoodDiary.Presentation.Api.Features.Notifications.Requests;
-using FoodDiary.Presentation.Api.Features.Notifications.Responses;
+using FoodDiary.Modules.Notifications.Application.Commands.MarkAllNotificationsRead;
+using FoodDiary.Modules.Notifications.Application.Commands.MarkNotificationRead;
+using FoodDiary.Modules.Notifications.Application.Commands.RemoveWebPushSubscription;
+using FoodDiary.Modules.Notifications.Application.Commands.ScheduleTestNotification;
+using FoodDiary.Modules.Notifications.Application.Commands.UpdateNotificationPreferences;
+using FoodDiary.Modules.Notifications.Application.Commands.UpsertWebPushSubscription;
+using FoodDiary.Modules.Notifications.Application.Models;
+using FoodDiary.Modules.Notifications.Application.Queries.GetNotificationPreferences;
+using FoodDiary.Modules.Notifications.Application.Queries.GetNotifications;
+using FoodDiary.Modules.Notifications.Application.Queries.GetUnreadCount;
+using FoodDiary.Modules.Notifications.Presentation.Mappings;
+using FoodDiary.Modules.Notifications.Presentation.Requests;
+using FoodDiary.Modules.Notifications.Presentation.Contracts.Responses;
+using FoodDiary.Modules.Notifications.Presentation.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Notifications.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationHttpMappingsTests {

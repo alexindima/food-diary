@@ -13,6 +13,9 @@
         "requested": "[4.16.1, )",
         "resolved": "4.16.1",
         "contentHash": "AGzq3UZvIwTGSh9xyIna+Q9F666S8UaLlX/Pk3Iz21qIAWjL8iYporVCcX1k/oi5chrRZ8VJRahup4me4HZptw=="
+      },
+      "fooddiary.results": {
+        "type": "Project"
       }
     }
   }

@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Modules.MealPlanning.Application.Tests;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class TestProductOverview {

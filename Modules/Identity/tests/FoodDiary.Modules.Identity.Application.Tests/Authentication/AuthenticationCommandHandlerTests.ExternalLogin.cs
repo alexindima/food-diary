@@ -2,9 +2,9 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstrac
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkGoogle;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;

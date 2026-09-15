@@ -1,8 +1,9 @@
+using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Modules.Notifications.Presentation.Services;
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Presentation.Api.Services;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 
-namespace FoodDiary.Presentation.Api.Extensions;
+namespace FoodDiary.Modules.Notifications.Presentation.Extensions;
 
 public static class NotificationsPresentationServiceCollectionExtensions {
     public static IServiceCollection AddNotificationsPresentation(this IServiceCollection services) {

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Models;
 
 namespace FoodDiary.Modules.Export.Application.Abstractions.Models;
 

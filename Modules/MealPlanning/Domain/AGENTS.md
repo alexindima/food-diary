@@ -1,7 +1,7 @@
 # MealPlanning domain
 
 Own MealPlans and ShoppingLists entities, their IDs, ShoppingLists events and source
-enum. Preserve CLR namespaces, invariants and the two explicit aggregate boundaries.
+enum. Use canonical project and folder namespaces; preserve invariants and the two explicit aggregate boundaries.
 Depend on Users/Products/Recipes Domain.Contracts, the Meals enum owner and shared Primitives
 through the exact references in this project. No EF or application dependencies.
 

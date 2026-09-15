@@ -1,11 +1,11 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Application.Marketing.Common;
+using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
+using FoodDiary.Modules.Marketing.Application.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Marketing.Commands.RecordMarketingAttribution;
+namespace FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
 
 public sealed class RecordMarketingAttributionCommandHandler(
     IMarketingAttributionEventRepository repository,

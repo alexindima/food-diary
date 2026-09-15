@@ -1,18 +1,20 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Notifications.Application.Mappings;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using System.Globalization;
 
-namespace FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
+namespace FoodDiary.Modules.Notifications.Application.Commands.UpdateNotificationPreferences;
 
 public sealed class UpdateNotificationPreferencesCommandHandler(
-    INotificationPreferencesService notificationPreferencesService,
+    IUserNotificationProfileService userProfileService,
     IAuditLogger auditLogger,
     ICurrentUserAccessService notificationUserAccessService)
     : ICommandHandler<UpdateNotificationPreferencesCommand, Result<NotificationPreferencesModel>> {
@@ -29,7 +31,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
 
         UserId userId = userIdResult.Value;
         Result<NotificationPreferencesModel> currentPreferencesResult =
-            await notificationPreferencesService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+            await GetAsync(userId, cancellationToken).ConfigureAwait(false);
         if (currentPreferencesResult.IsFailure) {
             return Result.Failure<NotificationPreferencesModel>(currentPreferencesResult.Error);
         }
@@ -51,7 +53,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             FastingCheckInReminderHours: command.FastingCheckInReminderHours,
             FastingCheckInFollowUpReminderHours: command.FastingCheckInFollowUpReminderHours);
 
-        Result<NotificationPreferencesUpdateResult> updateResult = await notificationPreferencesService.UpdateAsync(
+        Result<NotificationPreferencesUpdateResult> updateResult = await UpdateAsync(
             userId,
             update,
             cancellationToken).ConfigureAwait(false);
@@ -70,5 +72,26 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             string.Create(CultureInfo.InvariantCulture, $"push={preferences.PushNotificationsEnabled};fasting={preferences.FastingPushNotificationsEnabled};social={preferences.SocialPushNotificationsEnabled};fastingReminder={preferences.FastingCheckInReminderHours};fastingReminderFollowUp={preferences.FastingCheckInFollowUpReminderHours}"));
 
         return Result.Success(preferences);
+    }
+    private async Task<Result<NotificationPreferencesModel>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
+        Result<UserNotificationProfileModel> result = await userProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure) {
+            return Result.Failure<NotificationPreferencesModel>(result.Error);
+        }
+
+        return Result.Success(NotificationPreferenceMappings.ToModel(result.Value));
+    }
+    private async Task<Result<NotificationPreferencesUpdateResult>> UpdateAsync(
+        UserId userId,
+        UserPreferenceUpdate update,
+        CancellationToken cancellationToken = default) {
+        Result<UserNotificationProfileModel> result = await userProfileService
+            .UpdatePreferencesAsync(userId, update, cancellationToken)
+            .ConfigureAwait(false);
+        if (result.IsFailure) {
+            return Result.Failure<NotificationPreferencesUpdateResult>(result.Error);
+        }
+
+        return Result.Success(new NotificationPreferencesUpdateResult(result.Value.UserId, NotificationPreferenceMappings.ToModel(result.Value)));
     }
 }

@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
 using System.ComponentModel.DataAnnotations;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
 public sealed record AdminSsoExchangeHttpRequest(
-    [Required, MaxLength(AuthenticationInputLimits.MaximumAdminSsoCodeLength)] string Code
+    [Required, MaxLength(IdentityInputLimits.MaximumAdminSsoCodeLength)] string Code
 );

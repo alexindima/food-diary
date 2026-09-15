@@ -24,3 +24,5 @@ ImagesUserDataPurgeParticipant uses ImagesDbContext with live coordinator transa
 Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.
 
 Use canonical FoodDiary.Modules.Images project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+Confirmation holds an asset-specific transaction advisory lock before loading and publishing the asset, through commit. Do not compensate persistence errors by deleting the published object: commit may be ambiguous. Pending assets are reclaimed through the existing two-bucket orphan cleanup.

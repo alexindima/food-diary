@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication;
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
@@ -105,23 +106,23 @@ public sealed class SecretInputLimitValidatorTests {
     public void ExternalAuthenticationValidators_RejectOversizedAssertions() {
         new TelegramVerifyCommandValidator()
             .TestValidate(new TelegramVerifyCommand(
-                new string('t', AuthenticationInputLimits.MaximumTelegramInitDataLength + 1)))
+                new string('t', IdentityInputLimits.MaximumTelegramInitDataLength + 1)))
             .ShouldHaveValidationErrorFor(command => command.InitData);
         new LinkTelegramCommandValidator()
             .TestValidate(new LinkTelegramCommand(
                 Guid.NewGuid(),
-                new string('t', AuthenticationInputLimits.MaximumTelegramInitDataLength + 1)))
+                new string('t', IdentityInputLimits.MaximumTelegramInitDataLength + 1)))
             .ShouldHaveValidationErrorFor(command => command.InitData);
         new GoogleLoginCommandValidator()
             .TestValidate(new GoogleLoginCommand(
-                new string('g', AuthenticationInputLimits.MaximumGoogleCredentialLength + 1)))
+                new string('g', IdentityInputLimits.MaximumGoogleCredentialLength + 1)))
             .ShouldHaveValidationErrorFor(command => command.Credential);
         new RefreshTokenCommandValidator()
             .TestValidate(new RefreshTokenCommand(OversizedToken))
             .ShouldHaveValidationErrorFor(command => command.RefreshToken);
         new AdminSsoExchangeCommandValidator()
             .TestValidate(new AdminSsoExchangeCommand(
-                new string('s', AuthenticationInputLimits.MaximumAdminSsoCodeLength + 1)))
+                new string('s', IdentityInputLimits.MaximumAdminSsoCodeLength + 1)))
             .ShouldHaveValidationErrorFor(command => command.Code);
     }
 
@@ -130,11 +131,11 @@ public sealed class SecretInputLimitValidatorTests {
         var command = new TelegramLoginWidgetCommand(
             Id: 1,
             AuthDate: 1,
-            Hash: new string('h', AuthenticationInputLimits.MaximumTelegramHashLength + 1),
-            Username: new string('u', AuthenticationInputLimits.MaximumTelegramUsernameLength + 1),
-            FirstName: new string('f', AuthenticationInputLimits.MaximumTelegramNameLength + 1),
-            LastName: new string('l', AuthenticationInputLimits.MaximumTelegramNameLength + 1),
-            PhotoUrl: new string('p', AuthenticationInputLimits.MaximumTelegramPhotoUrlLength + 1));
+            Hash: new string('h', IdentityInputLimits.MaximumTelegramHashLength + 1),
+            Username: new string('u', IdentityInputLimits.MaximumTelegramUsernameLength + 1),
+            FirstName: new string('f', IdentityInputLimits.MaximumTelegramNameLength + 1),
+            LastName: new string('l', IdentityInputLimits.MaximumTelegramNameLength + 1),
+            PhotoUrl: new string('p', IdentityInputLimits.MaximumTelegramPhotoUrlLength + 1));
         TestValidationResult<TelegramLoginWidgetCommand> result =
             new TelegramLoginWidgetCommandValidator().TestValidate(command);
 

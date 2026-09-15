@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Meals.Models;
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 
-namespace FoodDiary.Application.Meals.Commands.RepeatMeal;
+namespace FoodDiary.Modules.Meals.Application.Commands.RepeatMeal;
 
 public record RepeatMealCommand(
     Guid? UserId,

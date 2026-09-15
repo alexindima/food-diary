@@ -1,16 +1,18 @@
+using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Fasting.Application.Abstractions.Common;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Modules.Fasting.Application.Services;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -431,9 +433,9 @@ public partial class FastingFeatureTests {
     private sealed class StubCurrentUserAccessService(User? user) : ICurrentUserAccessService {
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
             Error? error = user switch {
-                null => Errors.Authentication.InvalidToken,
-                { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
-                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                null => AuthenticationErrors.InvalidToken,
+                { Id: var id } when id != userId => AuthenticationErrors.InvalidToken,
+                { DeletedAt: not null } => UserAuthenticationErrors.AccountDeleted,
                 _ => null,
             };
 

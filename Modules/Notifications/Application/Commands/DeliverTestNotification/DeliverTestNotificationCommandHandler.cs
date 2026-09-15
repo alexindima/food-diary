@@ -1,14 +1,14 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Application.Common;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Notifications.Commands.DeliverTestNotification;
+namespace FoodDiary.Modules.Notifications.Application.Commands.DeliverTestNotification;
 
 public sealed class DeliverTestNotificationCommandHandler(
     INotificationWriter notificationWriter,
@@ -17,7 +17,7 @@ public sealed class DeliverTestNotificationCommandHandler(
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeliverTestNotificationCommand, Result> {
     public async Task<Result> Handle(DeliverTestNotificationCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId, Errors.Authentication.InvalidToken);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId, AuthenticationErrors.InvalidToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }

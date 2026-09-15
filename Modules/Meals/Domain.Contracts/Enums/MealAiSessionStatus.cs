@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 
 public enum MealAiSessionStatus {
     Pending = 1,

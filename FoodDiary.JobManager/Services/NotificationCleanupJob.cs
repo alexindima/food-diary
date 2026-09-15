@@ -1,12 +1,14 @@
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Notifications.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class NotificationCleanupJob(
-    INotificationCleanupService notificationCleanupService,
+    ISender notificationCleanupService,
     IOptions<NotificationCleanupOptions> options,
     JobExecutionObserver observer,
     ILogger<NotificationCleanupJob> logger) {
@@ -55,7 +57,7 @@ public sealed class NotificationCleanupJob(
 
         while (true) {
             cancellationToken.ThrowIfCancellationRequested();
-            int deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken).ConfigureAwait(false);
+            int deleted = await notificationCleanupService.Send(new CleanupExpiredNotificationsCommand(policy), cancellationToken).ConfigureAwait(false);
             totalDeleted += deleted;
 
             if (deleted < batchSize) {

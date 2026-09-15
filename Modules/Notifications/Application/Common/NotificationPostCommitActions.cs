@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Notifications.Common;
+namespace FoodDiary.Modules.Notifications.Application.Common;
 
 internal static class NotificationPostCommitActions {
     public static void EnqueueUnreadCountPush(

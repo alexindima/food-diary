@@ -3,7 +3,7 @@ using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
 using FoodDiary.Modules.Gamification.Application;

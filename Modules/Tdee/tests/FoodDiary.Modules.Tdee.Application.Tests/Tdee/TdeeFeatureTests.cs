@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Exercises.Application.Queries.ReadExerciseCalories;
@@ -9,8 +10,8 @@ using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Queries.ReadWeight
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Exercises.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
@@ -53,7 +54,7 @@ public class TdeeFeatureTests {
         IUserTdeeProfileReadService userProfileReadService = Substitute.For<IUserTdeeProfileReadService>();
         userProfileReadService
             .GetTdeeProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserTdeeProfileModel>(Errors.Authentication.InvalidToken));
+            .Returns(Result.Failure<UserTdeeProfileModel>(AuthenticationErrors.InvalidToken));
         var service = new TdeeUserProfileService(userProfileReadService);
 
         Result<TdeeUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
@@ -132,11 +133,11 @@ public class TdeeFeatureTests {
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {
-                    return Task.FromResult(Result.Failure<TdeeUserProfile>(Errors.Authentication.InvalidToken));
+                    return Task.FromResult(Result.Failure<TdeeUserProfile>(AuthenticationErrors.InvalidToken));
                 }
 
                 if (user.DeletedAt is not null) {
-                    return Task.FromResult(Result.Failure<TdeeUserProfile>(Errors.Authentication.AccountDeleted));
+                    return Task.FromResult(Result.Failure<TdeeUserProfile>(UserAuthenticationErrors.AccountDeleted));
                 }
 
                 return Task.FromResult(Result.Success(new TdeeUserProfile(
@@ -164,10 +165,10 @@ public class TdeeFeatureTests {
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {
-                    return Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
+                    return Task.FromResult<Error?>(AuthenticationErrors.InvalidToken);
                 }
 
-                return Task.FromResult(user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted);
+                return Task.FromResult(user.DeletedAt is null ? null : UserAuthenticationErrors.AccountDeleted);
             });
         return service;
     }

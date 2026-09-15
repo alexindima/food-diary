@@ -1,13 +1,13 @@
 using System.Reflection;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Modules.Ai.Presentation.Responses;
-using FoodDiary.Presentation.Api.Features.Meals.Responses;
+using FoodDiary.Modules.Meals.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
 using FoodDiary.Modules.Lessons.Presentation.Responses;
-using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
+using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Responses;
 using FoodDiary.Presentation.Api.Features.Usda.Responses;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
 

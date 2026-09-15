@@ -1,10 +1,10 @@
-using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Notifications.Models;
-using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
+using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Notifications;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 
 public sealed class WebPushSubscriptionRepository(DbSet<WebPushSubscription> subscriptions) : IWebPushSubscriptionRepository {
     public async Task<WebPushSubscription?> GetByEndpointAsync(

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
@@ -9,7 +11,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Modules.Notifications.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +28,7 @@ public sealed class OutboxReplayRegistrationTests {
         if (modulesFirst) {
             AddModules(services);
         }
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         if (!modulesFirst) {
             AddModules(services);
         }
@@ -59,7 +61,7 @@ public sealed class OutboxReplayRegistrationTests {
     [Fact]
     public void ExplicitEmailAdapter_RegistersOnlyItsEmailStream() {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         ServiceDescriptor descriptor = Assert.Single(services, item => item.ServiceType == typeof(IOutboxReplayStream));
         Assert.Equal("FoodDiary.Email.Infrastructure.Persistence.EmailOutboxReplayStream", descriptor.ImplementationType?.FullName);
     }

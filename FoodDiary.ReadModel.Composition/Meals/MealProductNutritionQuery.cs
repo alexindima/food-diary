@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
