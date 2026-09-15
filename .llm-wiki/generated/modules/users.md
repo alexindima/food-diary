@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Authentication, Commands, Queries
+- Abstraction-contract dependencies: Authentication
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -64,7 +64,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserAiProfileReadService`
 - `interface IUserAuthenticationIdentityService`
 - `interface IUserAuthenticationRegistrationService`
-- `interface IUserBillingProfileReadRepository`
+- `interface IUserBillingProfileReadModelRepository`
 - `interface IUserCleanupService`
 - `interface IUserCommentAuthorReadService`
 - `interface IUserCredentialVerificationService`

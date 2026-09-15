@@ -1,35 +1,18 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Mediator;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Users.Queries.GetUserBillingProfile;
 
-public sealed class GetUserBillingProfileQueryHandler(IUserLookupRepository userLookupRepository) : IRequestHandler<GetUserBillingProfileQuery, Result<UserBillingProfileModel>> {
+public sealed class GetUserBillingProfileQueryHandler(IUserBillingProfileReadModelRepository repository) : IRequestHandler<GetUserBillingProfileQuery, Result<UserBillingProfileModel>> {
     public async Task<Result<UserBillingProfileModel>> Handle(GetUserBillingProfileQuery request, CancellationToken cancellationToken) {
-        UserId userId = request.UserId;
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        return error is null
-            ? Result.Success(ToModel(user!))
-            : Result.Failure<UserBillingProfileModel>(error);
-
+        UserBillingProfileModel? profile = await repository.GetBillingProfileIncludingDeletedAsync(request.UserId, cancellationToken).ConfigureAwait(false);
+        // Match the persisted access predicate of the former tracked lookup.
+        return profile is { IsActive: true, IsDeleted: false }
+            ? Result.Success(profile)
+            : Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken);
     }
-
-    private static UserBillingProfileModel ToModel(User user) =>
-        new(
-            user.Id,
-            user.Email,
-            user.IsActive,
-            user.DeletedAt is not null,
-            user.HasRole(RoleNames.Premium),
-            user.PremiumTrialStartedAtUtc,
-            user.PremiumTrialEndsAtUtc,
-            user.IsEmailConfirmed);
-
 }

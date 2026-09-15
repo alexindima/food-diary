@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Commands.CreateUserByAdministrator;
+using FoodDiary.Application.Abstractions.Users.Commands.CreateUserByAdministrator;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Users.Commands.CreateUserByAdministrator;

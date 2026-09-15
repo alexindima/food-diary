@@ -18,9 +18,9 @@ are reported separately; `none observed` never means proven isolation.
 
 | Module | Role | Business deps | Contract deps | App consumers | Host consumers | Enforcement |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| [Admin](admin.md) | orchestrator | 0 | 8 | 0 | 3 | assembly-isolated |
+| [Admin](admin.md) | orchestrator | 0 | 6 | 0 | 3 | assembly-isolated |
 | [Ai](ai.md) | aggregate-owner | 0 | 2 | 0 | 3 | assembly-isolated |
-| [Billing](billing.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
+| [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 0 | 2 | project-reference-matrix |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 0 | 2 | project-reference-matrix |
@@ -48,7 +48,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Statistics](statistics.md) | read-composer | 0 | 3 | 0 | 3 | project-reference-matrix |
 | [Tdee](tdee.md) | read-composer | 0 | 3 | 0 | 3 | project-reference-matrix |
 | [Usda](usda.md) | reference-data-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
-| [Users](users.md) | aggregate-owner | 0 | 3 | 0 | 2 | project-reference-matrix-and-module-boundary-tests |
+| [Users](users.md) | aggregate-owner | 0 | 1 | 0 | 2 | project-reference-matrix-and-module-boundary-tests |
 | [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 2 | assembly-isolated |
 | [WeeklyCheckIn](weekly-check-in.md) | read-composer | 0 | 4 | 0 | 2 | project-reference-matrix |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix |

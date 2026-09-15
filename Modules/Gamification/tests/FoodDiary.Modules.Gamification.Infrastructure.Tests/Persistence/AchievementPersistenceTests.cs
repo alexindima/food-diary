@@ -1,3 +1,4 @@
+using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.Enums;
@@ -214,6 +215,12 @@ public sealed class AchievementPersistenceTests {
         IReadOnlyList<AchievementDefinition> result = await new AchievementDefinitionStore(context, context.AchievementDefinitions, context.UserAchievements).GetAllAsync();
 
         Assert.Equal(["a", "b", "second"], result.Select(static item => item.Key), StringComparer.Ordinal);
+        context.ChangeTracker.Clear();
+        IReadOnlyList<AchievementDefinitionAdminModel> models = await new AchievementDefinitionStore(context, context.AchievementDefinitions, context.UserAchievements).GetForAdministrationAsync();
+        Assert.Multiple(
+            () => Assert.Equal(["a", "b", "second"], models.Select(static item => item.Key), StringComparer.Ordinal),
+            () => Assert.All(models, item => Assert.Equal(0, item.AwardedUsers)),
+            () => Assert.Empty(context.ChangeTracker.Entries()));
     }
 
     private static AchievementDefinition CreateDefinition(string key, int sortOrder) => AchievementDefinition.Create(

@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Commands.EnsureUserPremiumRole;
-using FoodDiary.Application.Abstractions.Commands.RemoveUserPremiumRole;
-using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
-using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole;
+using FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole;
+using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;

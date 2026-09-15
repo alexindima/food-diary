@@ -5,7 +5,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Users.Commands.StartUserPremiumTrial;

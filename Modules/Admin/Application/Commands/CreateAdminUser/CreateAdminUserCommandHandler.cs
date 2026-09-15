@@ -1,5 +1,5 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Commands.CreateUserByAdministrator;
+using FoodDiary.Application.Abstractions.Users.Commands.CreateUserByAdministrator;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Models;

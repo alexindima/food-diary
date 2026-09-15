@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Abstractions.Queries.GetUsersForAdministration;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUsersForAdministration;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Users.Queries.GetUsersForAdministration;

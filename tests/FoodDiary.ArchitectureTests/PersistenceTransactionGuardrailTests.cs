@@ -24,6 +24,8 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "Admin", "Infrastructure", "Integrations", "MailInbox", "BugAcknowledgementReceipts.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiQuotaRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiDbContext.cs"),
+            // Framework save override translates exact provider conflicts; the shared unit of work still owns completion.
+            ArchitectureTestPaths.FromRoot("Modules", "BodyMetrics", "Infrastructure", "Persistence", "BodyMetricsDbContext.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetCleanupBatch.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "FoodDiaryDbContext.Modules.cs"),

@@ -126,7 +126,7 @@ public sealed class ModuleContextCompositionIntegrationTests(PostgresDatabaseFix
         DateTime today = DateTime.UtcNow.Date;
         metrics.WeightEntries.AddRange(WeightEntry.Create(user.Id, today, 80), WeightEntry.Create(user.Id, today, 81));
 
-        await Assert.ThrowsAsync<DbUpdateException>(() => unitOfWork.SaveChangesAsync());
+        await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => unitOfWork.SaveChangesAsync());
         Assert.True(unitOfWork.HasPendingChanges);
         Assert.Null(hydration.Database.CurrentTransaction);
         Assert.Null(metrics.Database.CurrentTransaction);

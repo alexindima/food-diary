@@ -1,5 +1,5 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Queries.GetUserForAdministration;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserForAdministration;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Application.Abstractions.Users.Common;

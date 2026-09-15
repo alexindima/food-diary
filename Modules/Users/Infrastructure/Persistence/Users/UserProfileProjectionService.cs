@@ -15,7 +15,7 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
     ICurrentUserAccessService, IUserAiProfileReadService, IUserDashboardProfileReadService,
     IUserDietologistProfileReadService, IUserGamificationProfileReadService,
     IUserHydrationProfileReadService, IUserTdeeProfileReadService, IUserWeeklyCheckInProfileReadService,
-    IUserBillingProfileReadRepository {
+    IUserBillingProfileReadModelRepository {
     private IQueryable<User> AccessibleUsers => users.AsNoTracking()
         .Where(user => user.IsActive && user.DeletedAt == null);
 

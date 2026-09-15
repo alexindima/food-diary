@@ -1,6 +1,6 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;

@@ -53,7 +53,7 @@ public sealed class DockerfileDependencyTests {
     }
 
     private static IEnumerable<string> GetDotNetDockerfiles(string root) =>
-        Directory.GetFiles(root, "Dockerfile", SearchOption.AllDirectories)
+        RepositoryFileDiscovery.EnumerateFiles(root, "Dockerfile")
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}FoodDiary.Web.Client{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(static path => Directory.GetFiles(Path.GetDirectoryName(path)!, "*.csproj", SearchOption.TopDirectoryOnly).Length > 0);

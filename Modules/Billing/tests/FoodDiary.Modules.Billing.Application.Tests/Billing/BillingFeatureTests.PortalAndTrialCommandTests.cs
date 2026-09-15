@@ -1,7 +1,7 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
-using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;

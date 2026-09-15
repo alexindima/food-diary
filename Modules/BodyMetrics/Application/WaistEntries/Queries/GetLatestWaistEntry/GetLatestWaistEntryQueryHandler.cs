@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetLatestWaistEntry;
 
 public sealed class GetLatestWaistEntryQueryHandler(
-    ISender waistEntryReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWaistEntryQuery, Result<WaistEntryModel?>> {
     public async Task<Result<WaistEntryModel?>> Handle(
@@ -24,7 +24,7 @@ public sealed class GetLatestWaistEntryQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        WaistEntryModel? latest = await waistEntryReadService.Send(new ReadLatestWaistEntryQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
+        WaistEntryModel? latest = await sender.Send(new ReadLatestWaistEntryQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
         return Result.Success(latest);
     }
 }

@@ -23,7 +23,7 @@
         "tracked:UserAchievement"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "f9b003a123f955d450ab00961dffb5775eee183254efa20e3bb748867c64c8ed"
+      "technicalSourceSha256": "7db5d366563d8edea048e3480d8e8fb057fb8d978276b23ff33308564fea24c7"
     },
     "Modules/Images/Infrastructure/DependencyInjection.cs": {
       "module": "Images",
@@ -699,7 +699,7 @@
         "write:AchievementDefinition"
       ],
       "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness. Added owner-only no-tracking aggregate of distinct award recipients by achievement key. Reviewed existing SQL insert, tracking lookup and update remain unchanged.",
-      "technicalSourceSha256": "0fb20ddb6bc9e040206510f9cb4fd30c33ddee2083346d9fd636c30a341b5e89"
+      "technicalSourceSha256": "8d4708dfc3ba8549e99c3ce53dac75b2b81e22d0a690806390bd322fd991c583"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs": {
       "module": "Gamification",
@@ -1679,7 +1679,15 @@
         "tracked:UserRoleAuditEvent"
       ],
       "reason": "Owner context saves before shared and dependent contexts; factories supply only owned sets, transaction synchronizers and the Telegram conflict interceptor.",
-      "technicalSourceSha256": "30c1008ae5666ec95a3f9972b0b2bccb61957e709df7d6a006bf90b078cf179e"
+      "technicalSourceSha256": "6fb450e73966150dd2092cce660c5b7b3e9b82397ffa2bbb0e2501a9cac1d580"
+    },
+    "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs": {
+      "module": "BodyMetrics",
+      "capabilities": [
+        "context:SaveChangesAsync"
+      ],
+      "reason": "Owner context delegates saving to EF and translates only public WeightEntries and WaistEntries UserId/Date unique constraints into concurrency conflicts. No retry or independent save; the shared unit of work retains rollback ownership.",
+      "technicalSourceSha256": "168cf07ac64b6be161216e58728bd9bddc4b040d66b8f2c151f31a87e4069e07"
     }
   }
 }

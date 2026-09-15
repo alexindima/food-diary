@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Commands.SetUserPasswordByAdministrator;
+using FoodDiary.Application.Abstractions.Users.Commands.SetUserPasswordByAdministrator;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;

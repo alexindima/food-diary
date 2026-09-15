@@ -206,9 +206,8 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Modules.Users.Presentation.Contracts": "[1.0.0, )",

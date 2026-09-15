@@ -9,13 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.BodyMetrics.Application.csproj" />
-    <ProjectReference Include="../Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj" />
     <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.BodyMetrics.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 

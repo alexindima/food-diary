@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Commands.RemoveUserPremiumRole;
+using FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Users.Commands.RemoveUserPremiumRole;

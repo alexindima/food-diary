@@ -86,6 +86,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [presentation] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WaistEntryHttpMappingsTests.cs`
 - [presentation] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WeightEntryHttpMappingsTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BodyMetricsModuleExtractionTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs`
 
 ## Working Rule
 

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1236,
+    "contracts": 1237,
     "ambiguousContracts": 2,
-    "consumerEdges": 9343,
-    "productionConsumerEdges": 5388,
-    "testConsumerEdges": 3955,
-    "consumedContracts": 1236,
+    "consumerEdges": 9350,
+    "productionConsumerEdges": 5390,
+    "testConsumerEdges": 3960,
+    "consumedContracts": 1237,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1909,7 +1909,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2946,7 +2946,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4052,7 +4052,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6143,7 +6143,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7401,7 +7401,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7435,7 +7435,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7452,7 +7452,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7486,7 +7486,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7520,7 +7520,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8065,6 +8065,23 @@
       ],
       "definitionPaths": [
         "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IAchievementDefinitionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14925,9 +14942,9 @@
       "collisionClassification": "unique"
     },
     {
-      "name": "IUserBillingProfileReadRepository",
+      "name": "IUserBillingProfileReadModelRepository",
       "roles": [
-        "ReadRepository"
+        "ReadModelRepository"
       ],
       "kinds": [
         "interface"
@@ -14936,7 +14953,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs"
+        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -18048,7 +18065,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -18695,7 +18712,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -19035,7 +19052,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20123,7 +20140,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -27407,7 +27424,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
@@ -27420,7 +27437,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/CheckUserAccess/CheckUserAccessQueryHandler.cs",
@@ -27433,7 +27450,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
@@ -27446,7 +27463,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -27459,7 +27476,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
@@ -27472,7 +27489,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs",
@@ -27485,7 +27502,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
@@ -27498,7 +27515,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -27511,7 +27528,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -31931,7 +31948,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
@@ -31944,7 +31961,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommandHandler.cs",
@@ -31957,7 +31974,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs",
@@ -31970,7 +31987,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs",
@@ -31983,7 +32000,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -36085,7 +36102,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingAccessService.cs",
@@ -36098,7 +36115,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommandHandler.cs",
@@ -36111,7 +36128,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -36124,7 +36141,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
@@ -36137,7 +36154,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -36150,7 +36167,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -36163,7 +36180,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -43625,7 +43642,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
@@ -43638,7 +43655,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQueryHandler.cs",
@@ -43651,7 +43668,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -43664,7 +43681,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -48422,7 +48439,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
@@ -48435,7 +48452,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQueryHandler.cs",
@@ -48448,7 +48465,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -48461,7 +48478,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
@@ -48474,7 +48491,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserApplicationServiceDelegationTests.cs",
@@ -48487,7 +48504,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -48565,7 +48582,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
@@ -48578,7 +48595,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
@@ -48591,7 +48608,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQueryHandler.cs",
@@ -48604,7 +48621,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -48617,7 +48634,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.InboxResilienceTests.cs",
@@ -48630,7 +48647,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
@@ -48643,7 +48660,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -48656,7 +48673,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs",
@@ -48669,7 +48686,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Workflows.cs",
@@ -48682,7 +48699,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -48695,7 +48712,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
@@ -48708,7 +48725,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
@@ -48721,7 +48738,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
@@ -48734,7 +48751,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
@@ -48747,7 +48764,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
@@ -48760,7 +48777,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
@@ -48773,7 +48790,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -48786,7 +48803,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
@@ -48799,7 +48816,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs",
@@ -48812,12 +48829,12 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetUserBillingProfileQuery",
@@ -48825,7 +48842,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -48838,7 +48855,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -48851,7 +48868,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs",
@@ -48864,7 +48881,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -48955,7 +48972,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
@@ -48968,7 +48985,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
@@ -48981,7 +48998,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserForAdministration/GetUserForAdministrationQueryHandler.cs",
@@ -48994,7 +49011,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -49007,7 +49024,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserApplicationServiceDelegationTests.cs",
@@ -49020,7 +49037,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -49124,7 +49141,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
@@ -49137,7 +49154,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUsersForAdministration/GetUsersForAdministrationQueryHandler.cs",
@@ -49150,7 +49167,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -49163,7 +49180,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetAdminUsersQueryHandlerTests.cs",
@@ -49176,7 +49193,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserApplicationServiceDelegationTests.cs",
@@ -49189,7 +49206,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
+        "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -51199,6 +51216,58 @@
       "referenceCount": 3
     },
     {
+      "contract": "IAchievementDefinitionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAchievementDefinitionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAchievementDefinitionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAchievementDefinitionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 11
+    },
+    {
       "contract": "IAchievementDefinitionStore",
       "roles": [
         "Other"
@@ -51233,19 +51302,6 @@
         "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAchievementDefinitionStore",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -51261,7 +51317,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IAchievementDefinitionStore",
@@ -51300,7 +51356,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
       "isTest": true,
-      "referenceCount": 21
+      "referenceCount": 18
     },
     {
       "contract": "IAchievementEvaluationOutbox",
@@ -63648,6 +63704,19 @@
         "Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/CheckUserAccess/CheckUserAccessQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -64496,6 +64565,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryProfileCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -68029,6 +68111,19 @@
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/CommunityPlanningContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -68524,6 +68619,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AdditionalPersistenceRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -100476,7 +100584,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100489,7 +100597,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100502,7 +100610,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100515,7 +100623,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100528,7 +100636,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100541,7 +100649,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100554,7 +100662,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100567,7 +100675,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100580,7 +100688,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100593,7 +100701,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100606,7 +100714,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100619,7 +100727,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100632,7 +100740,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
+      "consumerPath": "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -101077,32 +101185,6 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingWebhookControllerTests.cs",
       "isTest": true,
       "referenceCount": 5
-    },
-    {
-      "contract": "IRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
     },
     {
       "contract": "IRequest",
@@ -105548,7 +105630,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ISender",
@@ -105561,7 +105643,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ISender",
@@ -106094,7 +106176,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "ISender",
@@ -109472,6 +109554,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BoundaryReliabilityIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -111544,12 +111639,25 @@
       "referenceCount": 2
     },
     {
-      "contract": "IUserBillingProfileReadRepository",
+      "contract": "IUserBillingProfileReadModelRepository",
       "roles": [
-        "ReadRepository"
+        "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs"
+        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserBillingProfileReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQueryHandler.cs",
@@ -111557,12 +111665,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IUserBillingProfileReadRepository",
+      "contract": "IUserBillingProfileReadModelRepository",
       "roles": [
-        "ReadRepository"
+        "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs"
+        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
@@ -111570,12 +111678,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IUserBillingProfileReadRepository",
+      "contract": "IUserBillingProfileReadModelRepository",
       "roles": [
-        "ReadRepository"
+        "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs"
+        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
@@ -111583,17 +111691,17 @@
       "referenceCount": 1
     },
     {
-      "contract": "IUserBillingProfileReadRepository",
+      "contract": "IUserBillingProfileReadModelRepository",
       "roles": [
-        "ReadRepository"
+        "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs"
+        "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 10
     },
     {
       "contract": "IUserCleanupService",
@@ -113307,6 +113415,32 @@
         "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetLoginDeviceSummary/GetLoginDeviceSummaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserLoginEventQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetLoginEvents/GetLoginEventsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserLoginEventQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -113323,6 +113457,19 @@
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserLoginEventQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 10
     },
     {
       "contract": "IUserLoginEventQuery",
@@ -113360,32 +113507,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserLoginEventReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetLoginDeviceSummary/GetLoginDeviceSummaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserLoginEventReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetLoginEvents/GetLoginEventsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -113492,19 +113613,6 @@
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
-    },
-    {
-      "contract": "IUserLoginEventRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 10
     },
     {
       "contract": "IUserLoginEventRepository",
@@ -113749,32 +113857,6 @@
         "Modules/Users/Application/Abstractions/Users/Common/IUserLookupRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Application/Queries/CheckUserAccess/CheckUserAccessQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserLookupRepository",
-      "roles": [
-        "LookupRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Users/Application/Abstractions/Users/Common/IUserLookupRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserLookupRepository",
-      "roles": [
-        "LookupRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Users/Application/Abstractions/Users/Common/IUserLookupRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -113907,7 +113989,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "IUserLookupRepository",
@@ -118366,7 +118448,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IWaistEntryReadModelRepository",
@@ -118534,6 +118616,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -120797,7 +120892,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IWeightEntryReadModelRepository",
@@ -120978,6 +121073,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -127401,7 +127509,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ReadLatestWaistEntryQuery",
@@ -127466,7 +127574,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ReadLatestWeightEntryQuery",
@@ -127570,7 +127678,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ReadWaistEntriesQuery",
@@ -127726,7 +127834,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ReadWaistSummariesQuery",
@@ -127882,7 +127990,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ReadWeightEntriesQuery",
@@ -128038,7 +128146,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "ReadWeightSummariesQuery",
@@ -130724,7 +130832,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Services/BillingAccessService.cs",
@@ -130737,7 +130845,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommandHandler.cs",
@@ -130750,7 +130858,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -130763,7 +130871,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
@@ -130776,7 +130884,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -130789,7 +130897,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -133292,7 +133400,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
@@ -133305,7 +133413,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
@@ -133318,7 +133426,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -134397,7 +134505,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
@@ -134410,7 +134518,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
@@ -134423,7 +134531,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
@@ -134436,7 +134544,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs",
@@ -134449,7 +134557,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
@@ -134462,7 +134570,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
@@ -134475,7 +134583,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -138908,7 +139016,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
@@ -138921,7 +139029,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommandHandler.cs",
@@ -138934,7 +139042,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
+        "Modules/Users/Contracts/Users/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",

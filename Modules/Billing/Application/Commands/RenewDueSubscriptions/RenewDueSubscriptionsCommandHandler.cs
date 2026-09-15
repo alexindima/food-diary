@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfileIncludingDeleted;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
 using FoodDiary.Modules.Billing.Contracts.Models;

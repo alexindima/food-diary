@@ -23,6 +23,7 @@ public static class ModuleRegistration {
             IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();
             return new AchievementDefinitionStore(owned, owned.AchievementDefinitions, owned.UserAchievements, () => coordinator.CurrentTransaction);
         });
+        services.AddScoped<IAchievementDefinitionReadModelRepository>(static provider => (AchievementDefinitionStore)provider.GetRequiredService<IAchievementDefinitionStore>());
         services.AddScoped<IUserAchievementStore>(static provider => {
             GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
             IModuleTransactionCoordinator coordinator = provider.GetRequiredService<IModuleTransactionCoordinator>();

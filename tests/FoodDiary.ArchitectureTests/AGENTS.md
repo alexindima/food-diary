@@ -156,3 +156,7 @@ Contracts alongside its public read projections; repository models stay internal
 ModuleContextFactoryBoundaryTests protects the nine factory-only adapters (DailyAdvices, ContentReports, Favorites, Exercises, RecipeCommunity, Fasting, Usda, Marketing, Lessons) from both direct and transitive central Infrastructure dependencies. Keep their direct factory contract reference and host-coordinated unit of work.
 
 WeeklyGoals joins the adapters without a central Infrastructure dependency. Coordinated transaction calls and live transaction access stay fingerprint-reviewed in the capability inventory and FD0016 (including method groups). The shared EfModuleTransactionCoordinator replaces WeeklyGoals in the save/transaction allowlists.
+
+RepositoryFileDiscovery prunes build/cache/package directories before recursive descent. SourceScanner retains generated C# filtering; ProjectReferenceReader retains production/test and Wiki-tool classification. Discovery still includes unlisted projects and nested module tests; do not replace physical discovery with the solution list or filter after walking artifact worktrees.
+
+ADR 0041 owner requests preserve read projections. Users request namespaces explicitly include Users; Billing's RecordPremiumConversion request belongs to Marketing, and the manifest records Billing -> Marketing without a reverse edge. Query handler guards remain in force for owner aggregate reads.

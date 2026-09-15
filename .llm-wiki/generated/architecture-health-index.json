@@ -79,8 +79,8 @@
     },
     {
       "module": "Billing",
-      "fanIn": 2,
-      "fanOut": 0,
+      "fanIn": 1,
+      "fanOut": 1,
       "level": "informational",
       "role": "aggregate-owner"
     },
@@ -163,8 +163,8 @@
     },
     {
       "module": "Marketing",
-      "fanIn": 0,
-      "fanOut": 1,
+      "fanIn": 1,
+      "fanOut": 0,
       "level": "informational",
       "role": "aggregate-owner"
     },

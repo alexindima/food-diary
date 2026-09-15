@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4101,
-    "symbols": 4042,
+    "sourceFiles": 4102,
+    "symbols": 4043,
     "interfaceImplementationLinks": 240,
     "dependencyInjectionRegistrations": 134,
     "kinds": {
       "class": 2127,
       "enum": 64,
-      "interface": 446,
+      "interface": 447,
       "record": 1284,
       "record struct": 121
     },
@@ -35,8 +35,8 @@
       "Other": 1644,
       "Query": 237,
       "QueryHandler": 165,
-      "ReadModelRepository": 30,
-      "ReadRepository": 41,
+      "ReadModelRepository": 32,
+      "ReadRepository": 40,
       "Repository": 99,
       "Request": 150,
       "Response": 213,
@@ -6849,7 +6849,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "BodyMetricsUserDataPurgeParticipant",
@@ -12991,6 +12991,13 @@
       "line": 4
     },
     {
+      "name": "IAchievementDefinitionReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs",
+      "line": 4
+    },
+    {
       "name": "IAchievementDefinitionStore",
       "kind": "interface",
       "role": "Other",
@@ -13107,7 +13114,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "GetGamificationQuery",
@@ -13296,7 +13303,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AchievementEvaluationOutbox",
@@ -22763,10 +22770,10 @@
       "line": 4
     },
     {
-      "name": "IUserBillingProfileReadRepository",
+      "name": "IUserBillingProfileReadModelRepository",
       "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs",
+      "role": "ReadModelRepository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs",
       "line": 5
     },
     {
@@ -23131,7 +23138,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/CheckUserAccess/CheckUserAccessQueryHandler.cs",
-      "line": 10
+      "line": 7
     },
     {
       "name": "GetDesiredWaistQuery",
@@ -23215,7 +23222,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
-      "line": 12
+      "line": 9
     },
     {
       "name": "GetUserBillingProfileIncludingDeletedQueryHandler",
@@ -23358,48 +23365,6 @@
       "line": 12
     },
     {
-      "name": "CreateUserByAdministratorCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
-      "line": 8
-    },
-    {
-      "name": "EnsureUserPremiumRoleCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "RemoveUserPremiumRoleCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "SetUserPasswordByAdministratorCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "StartUserPremiumTrialCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs",
-      "line": 9
-    },
-    {
-      "name": "UpdateUserByAdministratorCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs",
-      "line": 8
-    },
-    {
       "name": "UserIdParser",
       "kind": "class",
       "role": "Other",
@@ -23407,53 +23372,46 @@
       "line": 6
     },
     {
-      "name": "CheckUserAccessQuery",
+      "name": "CreateUserByAdministratorCommand",
       "kind": "record",
-      "role": "Query",
-      "path": "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs",
-      "line": 6
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
+      "line": 8
     },
     {
-      "name": "GetFilteredUsersForAdministrationQuery",
+      "name": "EnsureUserPremiumRoleCommand",
       "kind": "record",
-      "role": "Query",
-      "path": "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetUserAdministrationSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs",
-      "line": 5
-    },
-    {
-      "name": "GetUserBillingProfileQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
       "line": 7
     },
     {
-      "name": "GetUserBillingProfileIncludingDeletedQuery",
+      "name": "RemoveUserPremiumRoleCommand",
       "kind": "record",
-      "role": "Query",
-      "path": "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs",
-      "line": 6
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
+      "line": 7
     },
     {
-      "name": "GetUserForAdministrationQuery",
+      "name": "SetUserPasswordByAdministratorCommand",
       "kind": "record",
-      "role": "Query",
-      "path": "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
-      "line": 6
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
+      "line": 7
     },
     {
-      "name": "GetUsersForAdministrationQuery",
+      "name": "StartUserPremiumTrialCommand",
       "kind": "record",
-      "role": "Query",
-      "path": "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
-      "line": 6
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs",
+      "line": 9
+    },
+    {
+      "name": "UpdateUserByAdministratorCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Users/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs",
+      "line": 8
     },
     {
       "name": "CurrentUserAccessResolver",
@@ -23923,6 +23881,55 @@
       "role": "Other",
       "path": "Modules/Users/Contracts/Users/Models/WeightHistoryProfileModel.cs",
       "line": 2
+    },
+    {
+      "name": "CheckUserAccessQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetFilteredUsersForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserAdministrationSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetUserBillingProfileQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetUserBillingProfileIncludingDeletedQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUsersForAdministrationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
+      "line": 6
     },
     {
       "name": "ActivityLevel",

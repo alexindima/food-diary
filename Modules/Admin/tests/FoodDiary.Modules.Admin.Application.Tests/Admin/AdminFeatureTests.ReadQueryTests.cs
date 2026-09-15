@@ -456,7 +456,7 @@ public partial class AdminFeatureTests {
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
         var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(
-RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Application.Abstractions.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)]))));
+RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)]))));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 

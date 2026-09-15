@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistEntries;
 
 public sealed class GetWaistEntriesQueryHandler(
-    ISender waistEntryReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistEntriesQuery, Result<IReadOnlyList<WaistEntryModel>>> {
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
@@ -33,7 +33,7 @@ public sealed class GetWaistEntriesQueryHandler(
             ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        IReadOnlyList<WaistEntryModel> response = await waistEntryReadService.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, Limit: PaginationPolicy.NormalizeCollectionLimit(query.Limit), Descending: query.Descending), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntryModel> response = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, Limit: PaginationPolicy.NormalizeCollectionLimit(query.Limit), Descending: query.Descending), cancellationToken).ConfigureAwait(false);
 
         return Result.Success<IReadOnlyList<WaistEntryModel>>(response);
     }

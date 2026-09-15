@@ -1,6 +1,6 @@
 using FoodDiary.Mediator;
 using FoodDiary.Application.ContentReports.Queries.CountContentReports;
-using FoodDiary.Application.Abstractions.Queries.GetUserAdministrationSummary;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Admin.Application.Mappings;
 using FoodDiary.Results;

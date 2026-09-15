@@ -275,6 +275,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Modules.Billing.Application",
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Marketing.Common",
+        "FoodDiary.Application.Marketing.Commands.RecordPremiumConversion",
         "FoodDiary.Application.Users.Common",
     };
 

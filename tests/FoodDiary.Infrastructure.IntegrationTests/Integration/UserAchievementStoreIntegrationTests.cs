@@ -1,3 +1,4 @@
+using FoodDiary.Application.Gamification.Models;
 using FoodDiary.ReadModel.Composition.Gamification;
 using FoodDiary.Application.Abstractions.Achievements.Models;
 using FoodDiary.Domain.Entities.Achievements;
@@ -235,6 +236,19 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         IReadOnlyDictionary<string, int> counts = await new AchievementDefinitionStore(assertionContext, assertionContext.AchievementDefinitions, assertionContext.UserAchievements).GetAwardCountsAsync();
         Assert.Equal(1, counts["streak-3"]);
         Assert.Single(counts);
+        assertionContext.AchievementDefinitions.AddRange(CreateDefinition("streak-3"), CreateDefinition("unawarded"));
+        await assertionContext.SaveChangesAsync();
+        assertionContext.ChangeTracker.Clear();
+        var reader = new AchievementDefinitionStore(assertionContext, assertionContext.AchievementDefinitions, assertionContext.UserAchievements);
+        IReadOnlyList<AchievementDefinitionAdminModel> models = await reader.GetForAdministrationAsync();
+        AchievementDefinitionAdminModel awarded = Assert.Single(models, item => string.Equals(item.Key, "streak-3", StringComparison.Ordinal));
+        AchievementDefinitionAdminModel unawarded = Assert.Single(models, item => string.Equals(item.Key, "unawarded", StringComparison.Ordinal));
+        Assert.Multiple(
+            () => Assert.Equal(1, awarded.AwardedUsers),
+            () => Assert.Equal(0, unawarded.AwardedUsers),
+            () => Assert.Equal("TotalMeals", awarded.Metric),
+            () => Assert.Equal("Title", awarded.TitleEn),
+            () => Assert.Empty(assertionContext.ChangeTracker.Entries()));
     }
 
     private static AchievementDefinition CreateDefinition(string key) => AchievementDefinition.Create(

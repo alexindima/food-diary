@@ -1,12 +1,25 @@
 using System.Data.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
-public sealed class AchievementDefinitionStore(DbContext context, DbSet<AchievementDefinition> definitions, DbSet<UserAchievement> achievements, Func<DbTransaction?>? currentTransaction = null) : IAchievementDefinitionStore {
+public sealed class AchievementDefinitionStore(DbContext context, DbSet<AchievementDefinition> definitions, DbSet<UserAchievement> achievements, Func<DbTransaction?>? currentTransaction = null) : IAchievementDefinitionStore, IAchievementDefinitionReadModelRepository {
+    public async Task<IReadOnlyList<AchievementDefinitionAdminModel>> GetForAdministrationAsync(CancellationToken cancellationToken = default) {
+        IReadOnlyDictionary<string, int> counts = await GetAwardCountsAsync(cancellationToken).ConfigureAwait(false);
+        List<AchievementDefinitionAdminModel> models = await definitions.AsNoTracking()
+            .OrderBy(item => item.SortOrder).ThenBy(item => item.Key)
+            .Select(item => new AchievementDefinitionAdminModel(
+                item.Id.Value, item.Key, item.Category, item.Metric.ToString(), item.Threshold,
+                item.TitleRu, item.TitleEn, item.DescriptionRu, item.DescriptionEn, item.Icon,
+                item.SortOrder, item.IsActive, item.Version, 0))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        return [.. models.Select(item => item with { AwardedUsers = counts.GetValueOrDefault(item.Key) })];
+    }
+
     public async Task<IReadOnlyDictionary<string, int>> GetAwardCountsAsync(CancellationToken cancellationToken = default) {
         await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         return await achievements.AsNoTracking().GroupBy(item => item.AchievementKey)

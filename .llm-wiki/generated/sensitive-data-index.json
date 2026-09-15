@@ -630,7 +630,7 @@
       "category": "credential",
       "name": "NewPassword",
       "type": "string",
-      "path": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
+      "path": "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
       "line": 10
     },
     {

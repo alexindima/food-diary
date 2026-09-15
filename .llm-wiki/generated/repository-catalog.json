@@ -1989,6 +1989,10 @@
           {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
           }
         ]
       },
@@ -2058,13 +2062,12 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "Modules/BodyMetrics/Application.Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj",
           "Modules/BodyMetrics/Application/FoodDiary.Modules.BodyMetrics.Application.csproj",
-          "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj",
           "Modules/BodyMetrics/Presentation.Contracts/FoodDiary.Modules.BodyMetrics.Presentation.Contracts.csproj",
           "Modules/BodyMetrics/Presentation.Mappings/FoodDiary.Modules.BodyMetrics.Presentation.Mappings.csproj",
           "Modules/Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj",
-          "Modules/Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj"
+          "Modules/Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
           {
@@ -5137,6 +5140,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
+          "Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj",
           "Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"

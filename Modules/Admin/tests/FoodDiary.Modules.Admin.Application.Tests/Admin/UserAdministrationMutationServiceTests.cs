@@ -1,5 +1,5 @@
 using FoodDiary.Testing;
-using FoodDiary.Application.Abstractions.Commands.CreateUserByAdministrator;
+using FoodDiary.Application.Abstractions.Users.Commands.CreateUserByAdministrator;
 using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
 using FoodDiary.Application.Users.Commands.UpdateUserByAdministrator;
 using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;

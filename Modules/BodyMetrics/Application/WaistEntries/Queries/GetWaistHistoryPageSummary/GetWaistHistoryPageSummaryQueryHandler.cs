@@ -15,7 +15,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
 
 public sealed class GetWaistHistoryPageSummaryQueryHandler(
-    ISender readService,
+    ISender sender,
     IUserProfileReadService userProfileReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistHistoryPageSummaryQuery, Result<WaistHistoryPageSummaryModel>> {
@@ -45,8 +45,8 @@ public sealed class GetWaistHistoryPageSummaryQueryHandler(
             return Result.Failure<WaistHistoryPageSummaryModel>(profileResult.Error);
         }
 
-        IReadOnlyList<WaistEntryModel> entries = await readService.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WaistEntrySummaryModel> summary = await readService.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntryModel> entries = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntrySummaryModel> summary = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
         WaistHistoryProfileModel profile = profileResult.Value;
         return Result.Success(new WaistHistoryPageSummaryModel(entries, summary, profile.HeightCm, profile.Goal, profile.GoalHistory));
     }

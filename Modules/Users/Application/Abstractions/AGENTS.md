@@ -9,4 +9,4 @@ Depend only on Users Contracts, Domain and Domain.Contracts; never on central
 Application.Abstractions, Identity or an implementation. Foreign use cases must
 use semantic Users capabilities rather than acquiring aggregate repositories.
 
-IUserBillingProfileReadRepository provides the persisted Billing profile through the existing projection adapter; it exposes no aggregate mutation.
+IUserBillingProfileReadModelRepository provides the persisted Billing profile through the existing projection adapter; it exposes no aggregate mutation.

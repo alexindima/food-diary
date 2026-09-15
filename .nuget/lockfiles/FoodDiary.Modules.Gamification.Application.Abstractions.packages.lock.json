@@ -17,6 +17,20 @@
       "fooddiary.domain.primitives": {
         "type": "Project"
       },
+      "fooddiary.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.gamification.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.gamification.domain": {
         "type": "Project",
         "dependencies": {
@@ -36,6 +50,12 @@
       },
       "fooddiary.results": {
         "type": "Project"
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "/a1aJz4m7ylhEDf25ugQChLQoN5XwoGjWw/BoR/ZWWKsO1v4DdJElS1uyngahz4B/eOzjFk1KNTkarRLE5wsIg=="
       }
     }
   }

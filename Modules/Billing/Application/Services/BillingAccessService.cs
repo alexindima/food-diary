@@ -1,6 +1,6 @@
 using FoodDiary.Mediator;
-using FoodDiary.Application.Abstractions.Commands.EnsureUserPremiumRole;
-using FoodDiary.Application.Abstractions.Commands.RemoveUserPremiumRole;
+using FoodDiary.Application.Abstractions.Users.Commands.EnsureUserPremiumRole;
+using FoodDiary.Application.Abstractions.Users.Commands.RemoveUserPremiumRole;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Users.Models;

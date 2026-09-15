@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Queries.GetWaistSummaries;
 
 public sealed class GetWaistSummariesQueryHandler(
-    ISender waistEntryReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistSummariesQuery, Result<IReadOnlyList<WaistEntrySummaryModel>>> {
     public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
@@ -49,7 +49,7 @@ public sealed class GetWaistSummariesQueryHandler(
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
-        IReadOnlyList<WaistEntrySummaryModel> response = await waistEntryReadService.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntrySummaryModel> response = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
 
         return Result.Success<IReadOnlyList<WaistEntrySummaryModel>>(response);
     }

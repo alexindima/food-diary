@@ -16,7 +16,7 @@ internal static class SourceScanner {
 
         string repositoryRoot = ArchitectureTestPaths.RepositoryRoot;
 
-        return [.. Directory.GetFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+        return [.. RepositoryFileDiscovery.EnumerateFiles(sourceRoot, "*.cs")
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .SelectMany(path => ReadCodeLines(path)
                 .Select((line, index) => new { path, index, line }))
@@ -37,7 +37,7 @@ internal static class SourceScanner {
             return [];
         }
 
-        return Directory.GetFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+        return RepositoryFileDiscovery.EnumerateFiles(sourceRoot, "*.cs")
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .Order(StringComparer.Ordinal);
     }

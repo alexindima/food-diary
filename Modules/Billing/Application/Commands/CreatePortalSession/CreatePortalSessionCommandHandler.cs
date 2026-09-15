@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Users.Models;

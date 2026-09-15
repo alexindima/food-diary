@@ -5,8 +5,8 @@ using FoodDiary.Application.Users.Queries.GetUserForAdministration;
 using FoodDiary.Application.Users.Queries.GetUsersForAdministration;
 using FoodDiary.Mediator;
 using FoodDiary.Application.ContentReports.Queries.CountContentReports;
-using FoodDiary.Application.Abstractions.Queries.GetUserForAdministration;
-using FoodDiary.Application.Abstractions.Queries.GetUsersForAdministration;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserForAdministration;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUsersForAdministration;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Modules.Admin.Application.Models;
@@ -68,7 +68,7 @@ public sealed class UserApplicationServiceDelegationTests {
         (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await service.Send(new GetUsersForAdministrationQuery(Search: "adm", Page: 2, Limit: 5, Status: UserAccountStatusFilter.Deleted), cancellationTokenSource.Token);
         ISender reports = Substitute.For<ISender>();
         reports.Send(new CountContentReportsQuery(Status: FoodDiary.Domain.Enums.ReportStatus.Pending), cancellationTokenSource.Token).Returns(4);
-        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(RequestTestSender.Route((service, [typeof(global::FoodDiary.Application.Abstractions.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (reports, [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)])))
+        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(RequestTestSender.Route((service, [typeof(global::FoodDiary.Application.Abstractions.Users.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (reports, [typeof(global::FoodDiary.Application.ContentReports.Queries.CountContentReports.CountContentReportsQuery)])))
             .GetSummaryAsync(3, cancellationTokenSource.Token)).Value;
 
         Assert.Multiple(

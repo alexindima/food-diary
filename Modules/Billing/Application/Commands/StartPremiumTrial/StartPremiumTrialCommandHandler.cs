@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Commands.StartUserPremiumTrial;
-using FoodDiary.Application.Abstractions.Queries.GetUserBillingProfile;
+using FoodDiary.Application.Abstractions.Users.Commands.StartUserPremiumTrial;
+using FoodDiary.Application.Abstractions.Users.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;

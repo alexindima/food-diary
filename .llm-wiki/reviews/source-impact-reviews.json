@@ -83,21 +83,21 @@
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "8da805ce13b6e16a5915199fae4fe4e292d995ef8a430e4f378a7a1e6dd01e7a",
+      "pageSha256": "75a4b660c413fe4b1c86c9db282cbf40c0dbeaabbd80edbbeed8bc59830b3c80",
       "sources": [
         {
-          "path": "docs/adr/0041-owner-requests-for-module-use-cases.md",
-          "sha256": "06b01f2a65a4e6a108c8e1f03de2ed3101b8a77fe1a0baa400be6078e9a22a28"
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "4f83c94c5d21bc880065f1857a705aab52b5a574f23d39f561da695f74f24522"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9518f0ab8a12170b76d6357fa4a3b8e1a22a5baf726d6c38738c4b309fb0161e"
+          "sha256": "d1be525d3e40166a223fa2863af2cec3c63719b3e2b96d48c946f9b66e658a26"
         }
       ],
-      "reason": "Updated and reviewed against ADR 0041 and the exact dependency matrix: owner Contracts requests, ISender dispatch, technical-port exceptions, caller-owned transactions and Billing-to-Marketing.Contracts direction are now documented. Existing persistence-coordinator content is preserved.",
+      "reason": "Reviewed owner-query and contract changes against ADR 0041 and current guides: Users requests have explicit owner namespaces; query handlers consume persisted Users/Identity projections and a narrow Gamification administration projection; Billing references Marketing with no reverse edge. Shared transaction ownership and migration composition remain unchanged. Existing Wiki architecture/read-model statements remain accurate; detailed follow-up is recorded in docs/ai/cross-module-mediator-refactor.md and owner guides. Generated contracts, symbols, topology, project graph and health indexes have been refreshed. Concurrent BodyMetrics error translation is module-owned and verified by rollback/provider tests.",
       "baseRef": "HEAD",
-      "gitHead": "c98fcf1d639319252ca959b488d9200304b61dd2",
-      "reviewedAtUtc": "2026-09-14T22:17:36.4033246Z"
+      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
+      "reviewedAtUtc": "2026-09-15T02:37:32.2764112Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -151,13 +151,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "5f82ab3e698119aa014a21f17e9b3b66176e37d5c942bef6415476b86948be10"
+          "sha256": "4f83c94c5d21bc880065f1857a705aab52b5a574f23d39f561da695f74f24522"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed owner-query and contract changes against ADR 0041 and current guides: Users requests have explicit owner namespaces; query handlers consume persisted Users/Identity projections and a narrow Gamification administration projection; Billing references Marketing with no reverse edge. Shared transaction ownership and migration composition remain unchanged. Existing Wiki architecture/read-model statements remain accurate; detailed follow-up is recorded in docs/ai/cross-module-mediator-refactor.md and owner guides. Generated contracts, symbols, topology, project graph and health indexes have been refreshed. Concurrent BodyMetrics error translation is module-owned and verified by rollback/provider tests.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:25.6538451Z"
+      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
+      "reviewedAtUtc": "2026-09-15T02:37:32.4805096Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -215,13 +215,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "a610e0d9ff0effefe775d719e52039d57f1d7d85ce3ca4449a3c723c9811a4cb"
+          "sha256": "d1be525d3e40166a223fa2863af2cec3c63719b3e2b96d48c946f9b66e658a26"
         }
       ],
-      "reason": "Reviewed removal of Products/Recipes central production references and the explicit Products provider-test reference. Owner SQL predicates stay unchanged; Images runs after Ai jobs to preserve FK restrictions. No new projects or module API cycles are introduced.",
+      "reason": "Reviewed BodyMetrics Presentation reference cleanup: unused owner Domain/Abstractions references removed, actual ISender use now references Mediator directly. Owner-request boundaries and shared transaction ownership are unchanged. The exact matrix and focused architecture checks passed; these pages still accurately describe the architecture and review process.",
       "baseRef": "HEAD",
-      "gitHead": "be74465f70b919aad941eaa95ce3ebe323b86025",
-      "reviewedAtUtc": "2026-09-14T22:57:57.2968835Z"
+      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
+      "reviewedAtUtc": "2026-09-15T02:25:44.2145456Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -707,13 +707,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "5f82ab3e698119aa014a21f17e9b3b66176e37d5c942bef6415476b86948be10"
+          "sha256": "4f83c94c5d21bc880065f1857a705aab52b5a574f23d39f561da695f74f24522"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed owner-query and contract changes against ADR 0041 and current guides: Users requests have explicit owner namespaces; query handlers consume persisted Users/Identity projections and a narrow Gamification administration projection; Billing references Marketing with no reverse edge. Shared transaction ownership and migration composition remain unchanged. Existing Wiki architecture/read-model statements remain accurate; detailed follow-up is recorded in docs/ai/cross-module-mediator-refactor.md and owner guides. Generated contracts, symbols, topology, project graph and health indexes have been refreshed. Concurrent BodyMetrics error translation is module-owned and verified by rollback/provider tests.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:27.6937693Z"
+      "gitHead": "59e37d5581a1a39bcb13a8700f1e54eecb2b0267",
+      "reviewedAtUtc": "2026-09-15T02:37:32.7958521Z"
     },
     {
       "pageId": "workflow-performance-observability-review",

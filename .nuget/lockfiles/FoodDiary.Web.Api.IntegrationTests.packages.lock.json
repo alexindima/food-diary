@@ -1874,7 +1874,8 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
         }
       },
       "fooddiary.modules.bodymetrics.persistencemodel": {
@@ -1890,9 +1891,8 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Modules.Users.Presentation.Contracts": "[1.0.0, )",
@@ -2512,6 +2512,7 @@
       "fooddiary.modules.gamification.application.abstractions": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Modules.Gamification.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
@@ -3260,7 +3261,6 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Products": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Images.Service.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
@@ -3442,7 +3442,6 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Recipes": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Images.Service.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",

@@ -56,3 +56,5 @@ Definition and user-achievement stores and evaluation enqueue read the live
 IModuleTransactionCoordinator.CurrentTransaction. The worker clean-entry callback
 checks the shared scope through IModuleScopeGuard before each claim;
 do not conflate that invariant with read-only transaction access.
+
+The administration definitions query receives only IAchievementDefinitionReadModelRepository. AchievementDefinitionStore implements that projection alias on the same scoped adapter, preserving SQL ordering and distinct award counts; commands and evaluation retain their aggregate store. Query handlers must not map AchievementDefinition aggregates.

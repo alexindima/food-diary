@@ -5,9 +5,7 @@ using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWe
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
 using FoodDiary.Testing;
-using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Mappings;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.DeleteWeightEntry;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.UpdateWeightEntry;
@@ -125,7 +123,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var user = User.Create("weight-summary-invalid-date-range@example.com", "hash");
         var handler = new GetWeightSummariesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(user));
         var query = new GetWeightSummariesQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
@@ -138,7 +136,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task GetWeightSummariesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetWeightSummariesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(User.Create("weight-summary-missing-user@example.com", "hash")));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
@@ -153,7 +151,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithNonPositiveQuantization_ReturnsValidationError() {
         var user = User.Create("weight-summary-invalid-step@example.com", "hash");
         var handler = new GetWeightSummariesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
@@ -168,7 +166,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithExcessivePeriod_ReturnsValidationError() {
         var user = User.Create("weight-summary-excessive-period@example.com", "hash");
         var handler = new GetWeightSummariesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(user));
         var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -184,7 +182,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_AtMaximumDate_ReturnsSingleBucketWithoutOverflow() {
         var user = User.Create("weight-summary-maximum-date@example.com", "hash");
         var handler = new GetWeightSummariesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
@@ -202,7 +200,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithDateOnlyValues_PreservesRequestedCalendarDates() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight-summary@example.com", "hash");
-        var handler = new GetWeightSummariesQueryHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new GetWeightSummariesQueryHandler(CreateReadSender(repository), CreateCurrentUserAccessService(user));
         var from = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
         var to = new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Unspecified);
 
@@ -221,7 +219,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("weight-summary-average@example.com", "hash");
         await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 80.23));
         await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 81.78));
-        var handler = new GetWeightSummariesQueryHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new GetWeightSummariesQueryHandler(CreateReadSender(repository), CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
             new GetWeightSummariesQuery(
@@ -243,7 +241,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("deleted-weight-summary@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetWeightSummariesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
@@ -257,7 +255,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task GetWeightEntriesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWeightEntriesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
@@ -272,7 +270,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightEntriesQueryHandler_WithDateOnlyRange_PreservesRequestedCalendarDates() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight-list-dateonly@example.com", "hash");
-        var handler = new GetWeightEntriesQueryHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new GetWeightEntriesQueryHandler(CreateReadSender(repository), CreateCurrentUserAccessService(user));
         var from = new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Unspecified);
         var to = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Unspecified);
 
@@ -298,7 +296,7 @@ public class WeightEntriesFeatureTests {
             new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc),
             81));
         await repository.AddAsync(WeightEntry.Create(UserId.New(), newer.Date.AddDays(1), 79));
-        var handler = new GetWeightEntriesQueryHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new GetWeightEntriesQueryHandler(CreateReadSender(repository), CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
             new GetWeightEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
@@ -498,7 +496,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("deleted-weight@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetWeightEntriesQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
@@ -528,7 +526,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task GetLatestWeightEntryQueryHandler_WithInvalidUserId_ReturnsInvalidToken() {
         var handler = new GetLatestWeightEntryQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(User.Create("latest-weight@example.com", "hash")));
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(Guid.Empty), CancellationToken.None);
@@ -542,7 +540,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("deleted-latest-weight@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetLatestWeightEntryQueryHandler(
-            new InMemoryWeightEntryRepository(),
+            CreateReadSender(new InMemoryWeightEntryRepository()),
             CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(user.Id.Value), CancellationToken.None);
@@ -558,7 +556,7 @@ public class WeightEntriesFeatureTests {
         await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc), 82));
         WeightEntry latest = await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), 81));
         await repository.AddAsync(WeightEntry.Create(UserId.New(), new DateTime(2026, 5, 28, 0, 0, 0, DateTimeKind.Utc), 79));
-        var handler = new GetLatestWeightEntryQueryHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new GetLatestWeightEntryQueryHandler(CreateReadSender(repository), CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(user.Id.Value), CancellationToken.None);
 
@@ -569,7 +567,7 @@ public class WeightEntriesFeatureTests {
     }
 
     [Fact]
-    public async Task WeightEntryReadService_MapsEntriesLatestAndSummariesFromReadModels() {
+    public async Task ReadWeightHandlers_MapEntriesLatestAndSummariesFromReadModels() {
         var userId = UserId.New();
         var repository = new InMemoryWeightEntryRepository();
         WeightEntry older = await repository.AddAsync(WeightEntry.Create(userId, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 80.23));
@@ -587,6 +585,12 @@ public class WeightEntriesFeatureTests {
             () => Assert.Equal(0, summaries[1].AverageWeightKg));
     }
 
+    private static ISender CreateReadSender(IWeightEntryReadModelRepository repository) =>
+        RequestTestSender.Create(
+            new ReadWeightEntriesQueryHandler(repository),
+            new ReadLatestWeightEntryQueryHandler(repository),
+            new ReadWeightSummariesQueryHandler(repository));
+
     private static DateTime NormalizeUtcDate(DateTime value) {
         DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
@@ -597,7 +601,7 @@ public class WeightEntriesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryWeightEntryRepository : RequestTestSender, IWeightEntryReadModelRepository, IWeightEntryWriteRepository {
+    private sealed class InMemoryWeightEntryRepository : IWeightEntryReadModelRepository, IWeightEntryWriteRepository {
         private readonly List<WeightEntry> _entries = [];
 
         public DateTime LastGetByDateDate { get; private set; }
@@ -702,62 +706,6 @@ public class WeightEntriesFeatureTests {
             return [.. entries.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))];
         }
 
-        private async Task<IReadOnlyList<WeightEntryModel>> GetEntriesForRequestAsync(
-            UserId userId,
-            DateTime? dateFrom,
-            DateTime? dateTo,
-            int? limit,
-            bool descending,
-            CancellationToken cancellationToken) {
-            IReadOnlyList<WeightEntry> entries = await GetEntriesAsync(
-                userId,
-                dateFrom,
-                dateTo,
-                limit,
-                descending,
-                cancellationToken).ConfigureAwait(false);
-
-            return [.. entries.Select(entry => entry.ToModel())];
-        }
-
-        private async Task<WeightEntryModel?> GetLatestForRequestAsync(UserId userId, CancellationToken cancellationToken) {
-            IReadOnlyList<WeightEntryModel> entries = await GetEntriesForRequestAsync(userId, dateFrom: null, dateTo: null, limit: 1, descending: true, cancellationToken)
-                .ConfigureAwait(false);
-
-            return entries.Count > 0 ? entries[0] : null;
-        }
-
-        private async Task<IReadOnlyList<WeightEntrySummaryModel>> GetSummariesForRequestAsync(
-            UserId userId,
-            DateTime dateFrom,
-            DateTime dateTo,
-            int quantizationDays,
-            CancellationToken cancellationToken) {
-            IReadOnlyList<WeightEntry> entries = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-            return [.. TemporalRangePolicy.BuildDateBuckets(dateFrom, dateTo, quantizationDays)
-                .Select(bucket => BuildResponse(bucket.Start, bucket.End, entries))];
-        }
-
-        private static WeightEntrySummaryModel BuildResponse(
-            DateTime start,
-            DateTime end,
-            IReadOnlyList<WeightEntry> entries) {
-            List<WeightEntry> bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
-
-            if (bucketEntries.Count == 0) {
-                return new WeightEntrySummaryModel(start, end, 0);
-            }
-
-            double avg = bucketEntries.Average(entry => entry.WeightKg);
-            return new WeightEntrySummaryModel(start, end, Math.Round(avg, 2, MidpointRounding.ToEven));
-        }
-
-        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
-            ReadWeightEntriesQuery r => (Task<TResponse>)(object)GetEntriesForRequestAsync(r.UserId, r.DateFrom, r.DateTo, r.Limit, r.Descending, cancellationToken),
-            ReadLatestWeightEntryQuery r => (Task<TResponse>)(object)GetLatestForRequestAsync(r.UserId, cancellationToken),
-            ReadWeightSummariesQuery r => (Task<TResponse>)(object)GetSummariesForRequestAsync(r.UserId, r.DateFrom, r.DateTo, r.QuantizationDays, cancellationToken),
-            _ => throw new InvalidOperationException(request.GetType().Name),
-        };
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {

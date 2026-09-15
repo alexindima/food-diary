@@ -19,3 +19,5 @@ Rules for `Modules/Users/Application/`.
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 UserContextService owns aggregate mutation and full profile/history reads. Register narrow consumer profiles and ICurrentUserAccessService through Users Infrastructure projections; preserve owner-internal tracked access separately.
+
+Owner request queries retain projection boundaries: CheckUserAccess uses the existing persisted access capability, billing queries use IUserBillingProfileReadModelRepository, and mutations retain tracked lookup ports. Public Users requests use FoodDiary.Application.Abstractions.Users.Commands/Queries namespaces so their owner remains visible. Billing profile access follows persisted IsActive/DeletedAt state, not unsaved tracked aggregate changes.

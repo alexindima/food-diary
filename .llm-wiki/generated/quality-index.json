@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5389,
+    "productionFiles": 5390,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 892,
@@ -18978,11 +18978,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
+      "nonBlankLines": 24,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 4.98
     },
     {
       "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
@@ -26105,6 +26105,14 @@
       "structuralRiskScore": 0.32
     },
     {
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionReadModelRepository.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -26242,11 +26250,11 @@
     },
     {
       "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 2.16
     },
     {
       "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs",
@@ -26458,19 +26466,19 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 45,
+      "nonBlankLines": 46,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.9
+      "structuralRiskScore": 0.92
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 64,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
+      "structuralRiskScore": 4.28
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
@@ -37473,7 +37481,7 @@
       "structuralRiskScore": 0.38
     },
     {
-      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadRepository.cs",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserBillingProfileReadModelRepository.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -37898,11 +37906,11 @@
     },
     {
       "path": "Modules/Users/Application/Queries/CheckUserAccess/CheckUserAccessQueryHandler.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.3
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
@@ -37994,11 +38002,11 @@
     },
     {
       "path": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.6
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Users/Application/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQueryHandler.cs",
@@ -38161,54 +38169,6 @@
       "structuralRiskScore": 38.3
     },
     {
-      "path": "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Users/Contracts/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
       "path": "Modules/Users/Contracts/Common/Validation/UserIdParser.cs",
       "nonBlankLines": 20,
       "decisionPoints": 1,
@@ -38217,31 +38177,7 @@
       "structuralRiskScore": 1.9
     },
     {
-      "path": "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Users/Contracts/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Users/Contracts/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs",
+      "path": "Modules/Users/Contracts/Users/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -38249,7 +38185,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs",
+      "path": "Modules/Users/Contracts/Users/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -38257,7 +38193,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
+      "path": "Modules/Users/Contracts/Users/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -38265,12 +38201,28 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
-      "nonBlankLines": 9,
+      "path": "Modules/Users/Contracts/Users/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Users/Contracts/Users/Common/CurrentUserAccessResolver.cs",
@@ -38807,6 +38759,62 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Queries/CheckUserAccess/CheckUserAccessQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Queries/GetFilteredUsersForAdministration/GetFilteredUsersForAdministrationQuery.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserAdministrationSummary/GetUserAdministrationSummaryQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Contracts/Users/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Users/Domain.Contracts/Enums/ActivityLevel.cs",
@@ -47871,7 +47879,7 @@
       "name": "CheckUserAccessQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/CheckUserAccess/CheckUserAccessQueryHandler.cs",
-      "line": 10,
+      "line": 7,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",
@@ -47934,7 +47942,7 @@
       "name": "GetAchievementDefinitionsForAdministrationQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetAchievementDefinitionsForAdministration/GetAchievementDefinitionsForAdministrationQueryHandler.cs",
-      "line": 7,
+      "line": 6,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
@@ -49482,7 +49490,7 @@
       "name": "GetUserBillingProfileQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserBillingProfile/GetUserBillingProfileQueryHandler.cs",
-      "line": 12,
+      "line": 9,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs",

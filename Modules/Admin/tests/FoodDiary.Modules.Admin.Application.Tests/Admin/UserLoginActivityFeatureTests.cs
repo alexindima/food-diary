@@ -29,7 +29,7 @@ public sealed class UserLoginActivityFeatureTests {
                 "Desktop",
                 new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
         ];
-        IUserLoginEventRepository repository = CreatePagedRepository(items, 42, out Func<(int Page, int Limit, string? Search)> getLastPaged);
+        IUserLoginEventQuery repository = CreatePagedRepository(items, 42, out Func<(int Page, int Limit, string? Search)> getLastPaged);
         GetAdminUserLoginEventsQueryHandler handler = new(RequestTestSender.Create(new GetLoginEventsQueryHandler(repository), new GetLoginDeviceSummaryQueryHandler(repository)));
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
@@ -61,7 +61,7 @@ public sealed class UserLoginActivityFeatureTests {
                 DeviceType: null,
                 new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
         ];
-        IUserLoginEventRepository repository = CreatePagedRepository(items, 1, out _);
+        IUserLoginEventQuery repository = CreatePagedRepository(items, 1, out _);
         GetAdminUserLoginEventsQueryHandler handler = new(RequestTestSender.Create(new GetLoginEventsQueryHandler(repository), new GetLoginDeviceSummaryQueryHandler(repository)));
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
@@ -88,7 +88,7 @@ public sealed class UserLoginActivityFeatureTests {
                 DeviceType: null,
                 new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
         ];
-        IUserLoginEventRepository repository = CreatePagedRepository(items, 1, out _);
+        IUserLoginEventQuery repository = CreatePagedRepository(items, 1, out _);
         GetAdminUserLoginEventsQueryHandler handler = new(RequestTestSender.Create(new GetLoginEventsQueryHandler(repository), new GetLoginDeviceSummaryQueryHandler(repository)));
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
@@ -107,7 +107,7 @@ public sealed class UserLoginActivityFeatureTests {
         IReadOnlyList<UserLoginDeviceSummaryModel> summaryItems = [
             new UserLoginDeviceSummaryModel("device:Desktop", 7, lastSeenAtUtc),
         ];
-        IUserLoginEventRepository repository = CreateSummaryRepository(summaryItems, out Func<(DateTime? FromUtc, DateTime? ToUtc)> getLastSummary);
+        IUserLoginEventQuery repository = CreateSummaryRepository(summaryItems, out Func<(DateTime? FromUtc, DateTime? ToUtc)> getLastSummary);
         GetAdminUserLoginSummaryQueryHandler handler = new(RequestTestSender.Create(new GetLoginEventsQueryHandler(repository), new GetLoginDeviceSummaryQueryHandler(repository)));
 
         Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>> result = await handler.Handle(new GetAdminUserLoginSummaryQuery(fromUtc, toUtc), CancellationToken.None);
@@ -121,11 +121,11 @@ public sealed class UserLoginActivityFeatureTests {
         Assert.Equal(lastSeenAtUtc, item.LastSeenAtUtc);
     }
 
-    private static IUserLoginEventRepository CreatePagedRepository(
+    private static IUserLoginEventQuery CreatePagedRepository(
         IReadOnlyList<UserLoginEventReadModel> items,
         int totalItems,
         out Func<(int Page, int Limit, string? Search)> getLastPaged) {
-        IUserLoginEventRepository repository = Substitute.For<IUserLoginEventRepository>();
+        IUserLoginEventQuery repository = Substitute.For<IUserLoginEventQuery>();
         (int Page, int Limit, string? Search) lastPaged = (0, 0, null);
         repository
             .GetPagedAsync(
@@ -139,10 +139,10 @@ public sealed class UserLoginActivityFeatureTests {
         return repository;
     }
 
-    private static IUserLoginEventRepository CreateSummaryRepository(
+    private static IUserLoginEventQuery CreateSummaryRepository(
         IReadOnlyList<UserLoginDeviceSummaryModel> items,
         out Func<(DateTime? FromUtc, DateTime? ToUtc)> getLastSummary) {
-        IUserLoginEventRepository repository = Substitute.For<IUserLoginEventRepository>();
+        IUserLoginEventQuery repository = Substitute.For<IUserLoginEventQuery>();
         (DateTime? FromUtc, DateTime? ToUtc) lastSummary = (null, null);
         repository
             .GetDeviceSummaryAsync(

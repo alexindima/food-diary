@@ -17,3 +17,5 @@ Rules for `FoodDiary.Application.Identity/`.
 - Keep HTTP authentication, provider implementations, persistence, transport, and host configuration outside this project.
 
 Consume RoleNames through Users Domain.Contracts; do not reference Users Domain for role constants. User mutation remains behind Users capabilities.
+
+Login-event owner query handlers consume IUserLoginEventQuery directly. This existing composed projection port preserves paging/filtering and device summaries without acquiring the repository's write/retention implementation. Hosts continue registering AddReadModelComposition.

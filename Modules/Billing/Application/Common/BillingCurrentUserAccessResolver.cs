@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Queries.CheckUserAccess;
+using FoodDiary.Application.Abstractions.Users.Queries.CheckUserAccess;
 using FoodDiary.Mediator;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;

@@ -36,3 +36,9 @@ CrossModuleRequestBoundaryTests rejects service interfaces exported by the four 
 OwnerRequestTransactionTests exercises real mediator dispatch with the transaction pipeline for success and failure of an outer command. SharedAiContextIntegrationTests additionally exercises the owner prompt request with real PostgreSQL save and rollback. Existing consumer tests dispatch to the actual relocated handlers where appropriate; focused mocks match request values.
 
 Tests are executed as one consolidated batch after implementation and compilation, without rebuilding for each test project. Execution receipts are recorded separately from this design description.
+
+## Owner-query projection follow-up
+
+Users public requests now use the owner-qualified legacy namespaces `FoodDiary.Application.Abstractions.Users.Commands` and `.Queries`. Consumers and exact exported-type guards move together; this is a coordinated backend rebuild with no HTTP or schema change. The dependency manifest records Billing consuming Marketing's conversion request; Marketing has no reverse Billing dependency.
+
+The owner handler migration retains the read-model boundary: Users billing queries read persisted scalar profiles, access queries use the existing persisted access service, Identity login queries use the composed query port, and Gamification administration reads project definitions and award counts in the adapter. Commands still use owner aggregates. Missing, inactive and deleted billing profiles follow the existing persisted lookup predicate and return `Authentication.InvalidToken`; an earlier mock returning a deleted aggregate did not reproduce that SQL predicate. Unsaved tracked account mutations are not substituted for persisted query state.

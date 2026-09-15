@@ -23,3 +23,5 @@ all account states; they do not grant authentication/access or filter inactive
 and soft-deleted accounts. No IQueryable or aggregate escapes these contracts.
 
 Administration reads/mutations and billing access/profile/trial/Premium operations use public requests. Their handlers remain in Users Application. Mutations participate in the caller unit of work. Billing dispatches CheckUserAccessQuery; the existing narrow ICurrentUserAccessService capability remains valid for other callers.
+
+Public request slices live under Users/Commands and Users/Queries alongside the legacy Users/Common and Users/Models folders. Their namespaces explicitly include Users and follow this project's existing FoodDiary.Application.Abstractions root. Do not restore unowned Abstractions.Commands/Queries namespaces. All consumers rebuild together for this namespace change.
