@@ -20534,7 +20534,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "ProductsModuleRegistration",
@@ -21773,7 +21773,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "RecipesModuleRegistration",

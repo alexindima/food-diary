@@ -1,17 +1,19 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Images.Infrastructure.Persistence;
 
 internal sealed class ImagesUserDataPurgeParticipant(
-    FoodDiaryDbContext context,
+    ImagesDbContext context,
+    IModuleTransactionCoordinator coordinator,
     IImageObjectDeletionOutbox imageObjectDeletionOutbox) : IUserDataPurgeParticipant {
-    public int Order => 110;
+    public int Order => 135;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
         var deletedImages = await context.ImageAssets
             .Where(asset => asset.UserId == userId)
             .Select(asset => new { asset.ObjectKey, asset.IsConfirmed })

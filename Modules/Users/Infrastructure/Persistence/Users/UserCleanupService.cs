@@ -94,8 +94,7 @@ public sealed class UserCleanupService(
         DateTime thresholdUtc,
         CancellationToken cancellationToken) {
         IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-        return await strategy.ExecuteAsync(async () => {
-            dbContext.ChangeTracker.Clear();
+        return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(dbContext, postCommitActionQueue: null, async () => {
             IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
                 FormattableString eligibilitySql = $"""
@@ -128,7 +127,7 @@ public sealed class UserCleanupService(
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 return true;
             }
-        }).ConfigureAwait(false);
+        }, cancellationToken)).ConfigureAwait(false);
     }
 
     private async Task DeleteUserRowsAsync(UserId userId, CancellationToken cancellationToken) {

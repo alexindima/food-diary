@@ -1,3 +1,6 @@
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -50,6 +53,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         await using (IDbContextTransaction transaction = await central.Database.BeginTransactionAsync()) {
             participants ??= Participants(provider);
             await PurgeAsync(participants, target.User.Id);
+            await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
             await AssertDataAsync(central, target, exists: false);
             await AssertDataAsync(central, survivor, exists: true);
             await transaction.RollbackAsync();
@@ -59,6 +63,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         await AssertDataAsync(verification, target, exists: true);
         await using (IDbContextTransaction transaction = await central.Database.BeginTransactionAsync()) {
             await PurgeAsync(participants, target.User.Id);
+            await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
             await transaction.CommitAsync();
         }
 
@@ -140,9 +145,12 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         var list = ShoppingList.Create(user.Id, "Purge list");
         list.AddItem("Apple", productId: null, amount: 100, MeasurementUnit.G, category: null, isChecked: false, sortOrder: 0);
         var image = ImageAsset.Create(user.Id, $"purge/{name}.jpg", "https://example.com/purge.jpg");
+        var ownedProduct = Product.Create(user.Id, "Owned apple", MeasurementUnit.G, 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, imageAssetId: image.Id);
+        var ownedRecipe = Recipe.Create(user.Id, "Owned recipe", servings: 1, imageAssetId: image.Id);
+        ownedRecipe.AddStep(1, "Prepare", imageAssetId: image.Id);
         context.AddRange(user, entry, HydrationOperationReceipt.Create(Guid.NewGuid(), entry),
             WeightEntry.Create(user.Id, now, 72.5), WaistEntry.Create(user.Id, now, 84), profile);
-        context.AddRange(peer, recipe, meal, list, image,
+        context.AddRange(peer, recipe, meal, list, image, ownedProduct, ownedRecipe,
             AdminImpersonationSession.Start(user.Id, peer.Id, "Purge actor test", actorIpAddress: null, actorUserAgent: null, now),
             AdminImpersonationSession.Start(peer.Id, user.Id, "Purge target test", actorIpAddress: null, actorUserAgent: null, now),
             ClientTask.Create(user.Id, peer.Id, "Dietologist task", details: null, dueAtUtc: null),
@@ -159,7 +167,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
                 CreatedAtUtc = now, NextAttemptAtUtc = now, Completed = true,
             },
             MealRecognitionReceipt.Create(Guid.NewGuid(), user.Id, Guid.NewGuid(), meal.Id, 1, now, now, TimeSpan.FromMinutes(5)));
-        return new SeededUser(user, profile.Id, peer.Id, recipe.Id, meal.Id, session.Id, list.Id);
+        return new SeededUser(user, profile.Id, peer.Id, recipe.Id, meal.Id, session.Id, list.Id, ownedProduct.Id, ownedRecipe.Id, image.Id, image.ObjectKey);
     }
 
     private static async Task AssertDataAsync(FoodDiaryDbContext context, SeededUser seeded, bool exists) {
@@ -187,6 +195,15 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         Assert.Equal(exists, await context.AiUsages.AnyAsync(item => item.UserId == seeded.User.Id));
         Assert.Equal(exists, await context.Set<FoodRecognitionJob>().AnyAsync(item => item.UserId == seeded.User.Id));
         Assert.Equal(exists, await context.Set<TelegramOperation>().AnyAsync(item => item.UserId == seeded.User.Id.Value));
+        Assert.Equal(exists, await context.Products.AnyAsync(item => item.Id == seeded.ProductId));
+        Assert.Equal(exists, await context.Recipes.AnyAsync(item => item.Id == seeded.OwnedRecipeId));
+        Assert.Equal(exists, await context.RecipeSteps.AnyAsync(item => item.RecipeId == seeded.OwnedRecipeId));
+        Assert.Equal(exists, await context.ImageAssets.AnyAsync(item => item.Id == seeded.ImageId));
+        bool[] destinations = await context.Set<ImageObjectDeletionOutboxMessage>()
+            .Where(item => item.ObjectKey == seeded.ObjectKey).OrderBy(item => item.IsConfirmed)
+            .Select(item => item.IsConfirmed).ToArrayAsync();
+        bool[] expectedDestinations = exists ? [] : [false, true];
+        Assert.Equal(expectedDestinations, destinations);
         Assert.True(await context.Users.AnyAsync(item => item.Id == seeded.PeerId));
         Assert.True(await context.Recipes.AnyAsync(item => item.Id == seeded.RecipeId));
     }
@@ -199,7 +216,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
 
     private static IUserDataPurgeParticipant[] Participants(ServiceProvider provider) {
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>().OrderBy(item => item.Order)];
-        Assert.Equal([30, 40, 50, 60, 70, 80, 90, 100, 120, 130], participants.Select(item => item.Order));
+        Assert.Equal([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 130, 135], participants.Select(item => item.Order));
         return participants;
     }
 
@@ -210,13 +227,14 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddHydrationModule().AddBodyMetricsModule().AddCyclesModule();
         services.AddAdminPersistence().AddDietologistModule().AddMealsPersistence().AddMealPlanningModule()
-            .AddRecentItemsModule().AddAiPersistence().AddIdentityPersistence();
+            .AddRecentItemsModule().AddAiPersistence().AddIdentityPersistence().AddProductsPersistence().AddRecipesPersistence()
+            .AddImagesInfrastructure();
         return services.BuildServiceProvider();
     }
 
     [ExcludeFromCodeCoverage]
     private sealed record SeededUser(User User, CycleProfileId ProfileId, UserId PeerId, RecipeId RecipeId, MealId MealId,
-        MealAiSessionId SessionId, ShoppingListId ListId);
+        MealAiSessionId SessionId, ShoppingListId ListId, ProductId ProductId, RecipeId OwnedRecipeId, ImageAssetId ImageId, string ObjectKey);
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingParticipant(UserId target) : IUserDataPurgeParticipant {

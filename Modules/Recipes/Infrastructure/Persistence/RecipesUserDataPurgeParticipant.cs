@@ -1,3 +1,5 @@
+using FoodDiary.Persistence.Abstractions;
+using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -6,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence;
 
 internal sealed class RecipesUserDataPurgeParticipant(
-    FoodDiaryDbContext context,
+    RecipesDbContext context,
+    IModuleTransactionCoordinator coordinator,
     IImageAssetOwnershipService imageAssetOwnershipService) : IUserDataPurgeParticipant {
     public int Order => 20;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
         if (reassignTarget is { } target) {
             List<ImageAssetId> assetIds = await context.Recipes
                 .Where(item => item.UserId == userId && item.ImageAssetId != null)

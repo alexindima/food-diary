@@ -214,18 +214,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "aa92bb749bcc33479f48d2cf9fce817e80e4443b6209c7f71c0ac38b1226802e"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9518f0ab8a12170b76d6357fa4a3b8e1a22a5baf726d6c38738c4b309fb0161e"
+          "sha256": "a610e0d9ff0effefe775d719e52039d57f1d7d85ce3ca4449a3c723c9811a4cb"
         }
       ],
-      "reason": "Reviewed the updated exact matrix and regenerated health index: 1591 production and 1370 test edges, no enforced drift. Owner request adoption remains governed by explicit edges and tests; workflow advice remains accurate.",
+      "reason": "Reviewed removal of Products/Recipes central production references and the explicit Products provider-test reference. Owner SQL predicates stay unchanged; Images runs after Ai jobs to preserve FK restrictions. No new projects or module API cycles are introduced.",
       "baseRef": "HEAD",
-      "gitHead": "c98fcf1d639319252ca959b488d9200304b61dd2",
-      "reviewedAtUtc": "2026-09-14T22:14:20.9992941Z"
+      "gitHead": "be74465f70b919aad941eaa95ce3ebe323b86025",
+      "reviewedAtUtc": "2026-09-14T22:57:57.2968835Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

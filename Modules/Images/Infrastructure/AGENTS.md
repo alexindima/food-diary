@@ -18,3 +18,5 @@ It must not create, save or commit a transaction. Preserve caller rollback and r
 after rollback, including resolving the service before the caller starts a transaction.
 
 Resolve IModuleScopeGuard for the processor's clean-entry callback instead of the concrete shared context. Invoke the live check before each claim; the shared engine and owner claimer retain their existing lifecycle and local transaction checks.
+
+ImagesUserDataPurgeParticipant uses ImagesDbContext with live coordinator transaction binding on every call. Order 135 follows Ai job removal (120) so restrictive image FKs remain valid. Enqueue deletion for staging and published variants as before; only Users saves and commits. The generic outbox engine and options retain the central Infrastructure project dependency.

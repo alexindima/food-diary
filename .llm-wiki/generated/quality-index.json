@@ -29514,11 +29514,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 28,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.52
+      "structuralRiskScore": 3.56
     },
     {
       "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs",
@@ -34842,11 +34842,11 @@
     },
     {
       "path": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 26,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.44
+      "structuralRiskScore": 3.52
     },
     {
       "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
@@ -36306,11 +36306,11 @@
     },
     {
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 30,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.02
+      "structuralRiskScore": 5.1
     },
     {
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
@@ -39330,11 +39330,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "nonBlankLines": 123,
+      "nonBlankLines": 122,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.46
+      "structuralRiskScore": 23.44
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",

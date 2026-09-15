@@ -881,11 +881,14 @@
     "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs": {
       "module": "Images",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:ImageAsset",
         "tracked:ImageAsset",
         "write:ImageAsset"
       ],
-      "reason": "Images owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
+      "technicalSourceSha256": "aeb462236afc0c43a28120721469f3c20498cd60a222abc7f42b48908ff311f0"
     },
     "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs": {
       "module": "Lessons",
@@ -1062,11 +1065,14 @@
     "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs": {
       "module": "Products",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:Product",
         "tracked:Product",
         "write:Product"
       ],
-      "reason": "Products owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
+      "technicalSourceSha256": "70f3fabad191dfc39de405ae0c258e95502ec42b9582bae929a5293fa6799286"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",
@@ -1136,13 +1142,16 @@
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",
       "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
         "entity:Recipe",
         "entity:RecipeStep",
         "tracked:Recipe",
         "tracked:RecipeStep",
         "write:Recipe"
       ],
-      "reason": "Recipes owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
+      "technicalSourceSha256": "10aaab668bd7778cd2175da6253d7ef48a21eb153ef889e6a15cce2477c0286c"
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -1187,8 +1196,8 @@
         "write:User",
         "write:UserRole"
       ],
-      "reason": "Users lifecycle coordinator locks eligibility, invokes ordered owner purge participants, deletes only User/UserRole rows and commits once per account. Owner adapters govern foreign data lifecycle. Reject pending caller state; clear tracking before retry attempts and after failed accounts so rolled-back outbox additions cannot leak into later commits.",
-      "technicalSourceSha256": "a23bbb43ad393c26bff7bcc59452ed63c46cc81ef7675885bebdcb0c53262e39"
+      "reason": "Users lifecycle coordinator locks eligibility, invokes ordered owner purge participants, deletes only User/UserRole rows and commits once per account. Owner adapters govern foreign data lifecycle. Reject pending caller state; reset the central and all registered module trackers through SharedTransactionBoundary before retry attempts and after failed accounts so rolled-back outbox additions cannot leak into later commits.",
+      "technicalSourceSha256": "74f80a411087b0641e80107bdf402ce8dae36db9dee7df046f084032d8444d32"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",

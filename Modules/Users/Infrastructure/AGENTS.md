@@ -40,3 +40,5 @@ Billing profile reads for webhook/renewal processing use IUserBillingProfileRead
 Registration uses IModuleTransactionCoordinator for live transaction synchronization,
 without resolving FoodDiaryDbContext. Retain the relational guard, operation
 cancellation, save priority -100 and conflict interceptor. Cleanup remains separate.
+
+Each cleanup retry uses SharedTransactionBoundary.ExecuteAttemptAsync to reset all registered owner trackers after rollback. Clearing only the central tracker is insufficient: unsaved Images outbox entries must never survive a failed user into the next user transaction.

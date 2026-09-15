@@ -70,7 +70,7 @@ Owner runtime contexts join the scoped host unit of work through
 without referencing central Infrastructure. Meals also delegates recognition
 transactions to this contract while retaining its intermediate receipt flush and
 owner-context purge. Products and Recipes delegate Serializable mutations and live
-transaction access to the same coordinator, retaining their purge bridges. This preserves shared transactions and
+transaction access to the same coordinator, using owner contexts for their purge participants. This preserves shared transactions and
 migrations; it does not introduce independent databases. See ADR 0040.
 
 ## Placement Rule

@@ -75,7 +75,7 @@ Adapter capabilities are reviewed in `docs/architecture/persistence-capabilities
 All 29 owner contexts participate in the shared scoped unit of work through
 `IModuleContextFactory`. WeeklyGoals and Meals use `IModuleTransactionCoordinator`
 for top-level transactions while retaining their owner locks. Products and Recipes use its
-Serializable operation with whole-attempt retries; their purge bridges remain. Central migration composition
+Serializable operation with whole-attempt retries; their purge participants now use owner contexts. Central migration composition
 and foreign-write restrictions remain. See ADR 0040. BCL-only transport helpers live in
 `Shared/FoodDiary.Integrations.Http`; consult the canonical architecture document
 and ADR 0029 for the remaining isolation limits.
@@ -124,3 +124,5 @@ use owner contexts and bind the live coordinated transaction on each invocation.
 Admin, Meals, MealPlanning and RecentItems no longer reference central Infrastructure.
 Ai telemetry, Identity JWT configuration and Dietologist audit retain existing central dependencies.
 Users still owns final deletion and transaction completion.
+
+Products, Recipes and Images purge now also use owner contexts. Products and Recipes lose their central Infrastructure reference; Images retains the generic outbox engine. Images cleanup follows Ai jobs to respect restrictive image FKs. Users resets every registered module tracker after failed attempts so pending deletion messages cannot leak into the next account.
