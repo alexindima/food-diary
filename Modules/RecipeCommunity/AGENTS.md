@@ -8,7 +8,7 @@ Hosts compose AddRecipeCommunityModule; shared DbContext applies ApplyRecipeComm
 
 Preserve current-user and recipe access contracts, author/recipe-owner deletion rules, pagination, cancellation and transaction boundaries. Comment notification creation stays through Notifications INotificationWriter. Do not alter shared outbox or provider infrastructure.
 
-Focused application and comment domain tests live in tests under this module. Mixed SocialInvariantTests and PostgreSQL suites remain central. Run focused suites, full ArchitectureTests, relevant donor/consumer suites, PostgreSQL relational operations and EF pending-model check for persistence moves. Keep all artifacts under repository .artifacts/recipecommunity-extraction; no coverage collectors.
+Focused application and comment domain tests live in tests under this module. RecipeLike validation from the retired SocialInvariantTests belongs to the module Domain.Tests. PostgreSQL composition suites retain their owners. Run focused suites, full ArchitectureTests, relevant donor/consumer suites, PostgreSQL relational operations and EF pending-model check for persistence moves. Keep all artifacts under repository .artifacts/recipecommunity-extraction; no coverage collectors.
 
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in

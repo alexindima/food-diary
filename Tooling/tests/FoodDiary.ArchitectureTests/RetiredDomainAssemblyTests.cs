@@ -100,9 +100,11 @@ public sealed class RetiredDomainAssemblyTests {
             "Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/NutritionContractTests.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
             "tests/FoodDiary.Nutrition.Domain.Tests/FoodDiary.Nutrition.Domain.Tests.csproj")));
-        string central = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "tests/FoodDiary.Domain.Tests/Domain/ValueObjects/AdditionalValueObjectsInvariantTests.cs"));
-        Assert.DoesNotContain("FoodQualityScore_Calculate_", central, StringComparison.Ordinal);
-        Assert.DoesNotContain("HealthAreaScores_Calculate_", central, StringComparison.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/FoodQualityScoreBoundaryTests.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/HealthAreaScoreBoundaryTests.cs")));
     }
 }

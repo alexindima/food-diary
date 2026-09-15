@@ -475,9 +475,6 @@
     <Project Path="Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj" />
     <Project Path="Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
   </Folder>
-  <Folder Name="/Tests/">
-    <Project Path="tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj" />
-  </Folder>
   <Folder Name="/Services/MailInbox/Tests/">
     <Project Path="Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj" />
     <Project Path="Services/MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj" />

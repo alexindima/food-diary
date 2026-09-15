@@ -30,15 +30,17 @@ public sealed class TestSupportOwnershipTests {
         }
     }
 
-    [Fact]
-    public void RetiredApplicationTestProject_IsNotRecreatedOrUsedAsLinkedSource() {
+    [Theory]
+    [InlineData("FoodDiary.Application.Tests")]
+    [InlineData("FoodDiary.Domain.Tests")]
+    public void RetiredHorizontalTestProject_IsNotRecreatedOrUsedAsLinkedSource(string retiredProject) {
         string[] projects = [.. RepositoryFileDiscovery.EnumerateFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj")
             .Where(path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))];
 
         Assert.Multiple(
-            () => Assert.DoesNotContain(projects, path => string.Equals(Path.GetFileName(path), "FoodDiary.Application.Tests.csproj", StringComparison.Ordinal)),
+            () => Assert.DoesNotContain(projects, path => string.Equals(Path.GetFileName(path), retiredProject + ".csproj", StringComparison.Ordinal)),
             () => Assert.All(projects, path => Assert.DoesNotContain(XDocument.Load(path).Descendants("Compile"),
-                item => ((string?)item.Attribute("Include"))?.Contains("FoodDiary.Application.Tests", StringComparison.Ordinal) == true)));
+                item => ((string?)item.Attribute("Include"))?.Contains(retiredProject, StringComparison.Ordinal) == true)));
     }
 
     [Fact]
@@ -69,6 +71,7 @@ public sealed class TestSupportOwnershipTests {
             () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Tooling", "Testing", "test.runsettings"))),
             () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Tooling", "Testing", "xunit.runner.json"))),
             () => Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("tests", "test.runsettings"))),
+            () => Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("tests", "Directory.Build.props"))),
             () => Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("tests", "xunit.runner.json"))));
     }
 }

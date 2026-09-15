@@ -2986,15 +2986,15 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void DashboardRuntimeReadPath_UsesDedicatedInfrastructureReadService() {
+    public void DashboardRuntimeReadPath_UsesSingleApplicationComposition() {
         string root = GetRepositoryRoot();
         string dashboardPlanPath = Path.Combine(root, "Modules/Dashboard/Application", "Dashboard-Query-Plan.md");
         Assert.False(File.Exists(dashboardPlanPath), "Dashboard migration plan should not be kept after the dedicated read path is implemented.");
 
         string repositoryRegistrationPath = Path.Combine(root, "Modules", "Dashboard", "Infrastructure", "DependencyInjection.cs");
         string registrationSource = File.ReadAllText(repositoryRegistrationPath);
-        Assert.Contains("services.RemoveAll<IDashboardReadService>();", registrationSource, StringComparison.Ordinal);
-        Assert.Contains("services.AddScoped<IDashboardReadService, DashboardReadService>();", registrationSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("IDashboardReadService", registrationSource, StringComparison.Ordinal);
+        Assert.False(File.Exists(Path.Combine(root, "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs")));
 
         string applicationRegistrationPath = Path.Combine(root, "Modules/Dashboard/Application", "DependencyInjection.cs");
         string applicationRegistrationSource = File.ReadAllText(applicationRegistrationPath);

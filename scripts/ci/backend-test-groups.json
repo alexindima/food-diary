@@ -37,7 +37,6 @@
         "Services/MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj",
         "Services/MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj",
         "Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj",
-        "tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FoodDiary.Modules.Ai.Application.Tests.csproj",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FoodDiary.Modules.Billing.Application.Tests.csproj",

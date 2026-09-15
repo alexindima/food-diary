@@ -17,8 +17,11 @@ Hosts and Platform are physical test groups and existing solution groups.
 Production host and platform projects retain their root paths in this step.
 Do not nest test projects inside a production project directory.
 
-`tests/FoodDiary.Domain.Tests` is the remaining mixed donor suite. Extract its
-owner-specific cases after the corresponding module moves stabilize.
+The mixed Domain.Tests project has been removed. Its invariant, event, atomicity,
+chronology and persistence-shape cases now live in 18 existing module Domain.Tests
+projects. Independent assertions in mixed methods are separated by owner. Meals
+retains the real Recipe-to-Meal snapshot compatibility case and explicitly references
+Recipes.Domain in its test project only. No production dependency was introduced.
 
 The mixed Application.Tests project has been removed. Runtime pipeline and queue
 tests live in `Shared/tests/FoodDiary.Application.Runtime.Tests`; generic validation,
@@ -43,7 +46,8 @@ test project. Image-access helpers used only by Users remain local to Users.
 `Tooling/Testing/TestProjects.props` imports root `Directory.Build.props` and owns
 the shared coverage exclusion, `test.runsettings` and `xunit.runner.json` copying.
 Each test group imports that file directly through its `Directory.Build.props`.
-The remaining root `tests/Directory.Build.props` is only a local forwarding import.
+The root `tests` folder and its forwarding import are retired. Common guidance
+lives in `Tooling/Testing/AGENTS.md`.
 
 `FoodDiary.Testing` is test support, not a runnable test project or a production
 dependency. Architecture discovery includes it in the test dependency matrix;

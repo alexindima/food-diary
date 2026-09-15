@@ -55,9 +55,11 @@ public sealed class ProductsModuleExtractionTests {
             "ProductMeasurementNutritionUpdate",
             "ProductMediaState",
         ]));
-        // Mixed Products/USDA score invariants require the scoring owner, while aggregate tests stay module-owned.
-        Assert.Contains("FoodDiary.Modules.Products.Domain.csproj", File.ReadAllText(
-            ArchitectureTestPaths.FromRoot("tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj")),
+        // Score invariants belong to the score owner; the horizontal donor is retired.
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj")));
+        Assert.Contains("FoodDiary.Modules.Products.FoodQuality.csproj", File.ReadAllText(
+            ArchitectureTestPaths.FromRoot("Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/FoodDiary.Modules.Products.Domain.Tests.csproj")),
             StringComparison.Ordinal);
     }
 

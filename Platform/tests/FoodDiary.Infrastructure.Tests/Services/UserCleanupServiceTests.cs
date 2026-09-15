@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Application.Abstractions.Models;
 using System.Data.Common;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
@@ -28,7 +29,7 @@ public sealed class UserCleanupServiceTests {
         var service = new UserCleanupService(dbContext: null!, participants: [Substitute.For<IUserDataPurgeParticipant>()], logger: NullLogger<UserCleanupService>.Instance, transactionCoordinator: Substitute.For<IModuleTransactionCoordinator>(), scopeGuard: Substitute.For<IModuleScopeGuard>());
 
         ArgumentOutOfRangeException ex = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-            service.CleanupDeletedUsersAsync(DateTime.UtcNow, 0, reassignUserId: null, CancellationToken.None));
+            service.CleanupDeletedUsersAsync(DateTime.UtcNow, 0, reassignUserId: null, cancellationToken: CancellationToken.None));
 
         Assert.Equal("batchSize", ex.ParamName);
     }
@@ -46,12 +47,34 @@ public sealed class UserCleanupServiceTests {
         var service = new UserCleanupService(context, [Substitute.For<IUserDataPurgeParticipant>()], NullLogger<UserCleanupService>.Instance,
             coordinator, Substitute.For<IModuleScopeGuard>());
 
-        int removed = await service.CleanupDeletedUsersAsync(
+        UserCleanupBatch batch = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
             batchSize: 10,
             reassignUserId: null);
 
-        Assert.Equal(0, removed);
+        Assert.Equal(0, batch.RemovedCount);
+        Assert.Equal(deletedUser.Id, Assert.IsType<UserCleanupCursor>(batch.LastExamined).UserId);
+    }
+
+    [Fact]
+    public async Task CleanupDeletedUsersAsync_WhenItemIsCancelled_PropagatesCancellation() {
+        await using UsersDbContext context = CreateInMemoryContext();
+        var deletedUser = User.Create("cancelled-cleanup@example.com", "hash");
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+        context.Users.Add(deletedUser);
+        await context.SaveChangesAsync();
+        using var cancellation = new CancellationTokenSource();
+        IModuleTransactionCoordinator coordinator = Substitute.For<IModuleTransactionCoordinator>();
+        coordinator.ExecuteItemAsync(Arg.Any<Func<DbTransaction, CancellationToken, Task<bool>>>(), cancellation.Token)
+            .Returns(async _ => {
+                await cancellation.CancelAsync();
+                return await Task.FromCanceled<bool>(cancellation.Token);
+            });
+        var service = new UserCleanupService(context, [Substitute.For<IUserDataPurgeParticipant>()],
+            NullLogger<UserCleanupService>.Instance, coordinator, Substitute.For<IModuleScopeGuard>());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.CleanupDeletedUsersAsync(
+            DateTime.UtcNow, 10, reassignUserId: null, cancellationToken: cancellation.Token));
     }
 
     [Fact]

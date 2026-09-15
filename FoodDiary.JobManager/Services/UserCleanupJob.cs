@@ -1,12 +1,13 @@
 using System.Diagnostics;
-using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Users.Contracts.Commands.CleanupDeletedUsers;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
 
 public sealed class UserCleanupJob(
-    IUserCleanupService cleanupService,
+    ISender sender,
     IOptions<UserCleanupOptions> options,
     JobExecutionObserver observer,
     ILogger<UserCleanupJob> logger) {
@@ -24,7 +25,8 @@ public sealed class UserCleanupJob(
         int totalDeleted = 0;
 
         try {
-            totalDeleted = await DeleteUsersAsync(olderThanUtc, batchSize, reassignUserId, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            totalDeleted = await sender.Send(new CleanupDeletedUsersCommand(olderThanUtc, batchSize, reassignUserId), cancellationToken).ConfigureAwait(false);
 
             if (totalDeleted > 0) {
                 logger.LogInformation("Removed {Count} users deleted before {OlderThan}", totalDeleted, olderThanUtc);
@@ -41,29 +43,6 @@ public sealed class UserCleanupJob(
             throw;
         } finally {
             JobExecutionObserver.RecordDuration(JobName, stopwatch);
-        }
-    }
-
-    private async Task<int> DeleteUsersAsync(
-        DateTime olderThanUtc,
-        int batchSize,
-        Guid? reassignUserId,
-        CancellationToken cancellationToken) {
-        int totalDeleted = 0;
-
-        while (true) {
-            cancellationToken.ThrowIfCancellationRequested();
-            int deleted = await cleanupService.CleanupDeletedUsersAsync(
-                olderThanUtc,
-                batchSize,
-                reassignUserId,
-                cancellationToken).ConfigureAwait(false);
-
-            totalDeleted += deleted;
-
-            if (deleted < batchSize) {
-                return totalDeleted;
-            }
         }
     }
 

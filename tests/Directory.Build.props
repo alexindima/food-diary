@@ -1,3 +1,0 @@
-<Project>
-  <Import Project="../Tooling/Testing/TestProjects.props" />
-</Project>

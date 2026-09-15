@@ -32,3 +32,5 @@ Administration reads/mutations and billing access/profile/trial/Premium operatio
 Public request slices live under Commands and Queries; other contracts live under Common and Models. Use FoodDiary.Modules.Users.Contracts namespaces matching their folders. Do not repeat a Users folder inside this project.
 
 All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
+
+Callers dispatch CleanupDeletedUsersCommand through ISender. Do not expose IUserCleanupService here. The cleanup request is an IRequest<int> without the automatic transactional command marker, preserving independently committed per-user work.

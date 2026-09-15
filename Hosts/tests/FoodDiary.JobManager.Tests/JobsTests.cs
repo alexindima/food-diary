@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Contracts.Commands.CleanupDeletedUsers;
 using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
 using FoodDiary.Mediator;
 using FoodDiary.Testing;
@@ -19,7 +20,6 @@ using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
-using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
@@ -143,7 +143,7 @@ public sealed class JobsTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new UserCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<UserCleanupJob>.Instance);
@@ -680,7 +680,7 @@ public sealed class JobsTests {
         });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var job = new UserCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<UserCleanupJob>.Instance);
@@ -703,7 +703,7 @@ public sealed class JobsTests {
         });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var job = new UserCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<UserCleanupJob>.Instance);
@@ -723,7 +723,7 @@ public sealed class JobsTests {
         });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var job = new UserCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             options,
             new JobExecutionObserver(new FixedDateTimeProvider(now), new JobExecutionStateTracker()),
             NullLogger<UserCleanupJob>.Instance);
@@ -753,7 +753,7 @@ public sealed class JobsTests {
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new UserCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             Options.Create(new UserCleanupOptions { BatchSize = 1, RetentionDays = 30 }),
             new JobExecutionObserver(new FixedDateTimeProvider(now), tracker),
             NullLogger<UserCleanupJob>.Instance);
@@ -1421,21 +1421,17 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingUserCleanupService(IEnumerable<int> results) : IUserCleanupService {
+    private sealed class RecordingUserCleanupService(IEnumerable<int> results) : IRequestHandler<CleanupDeletedUsersCommand, int> {
         private readonly Queue<int> _results = new(results);
 
         public List<int> BatchSizes { get; } = [];
         public List<DateTime> OlderThanValues { get; } = [];
         public List<Guid?> ReassignUserIds { get; } = [];
 
-        public Task<int> CleanupDeletedUsersAsync(
-            DateTime olderThanUtc,
-            int batchSize,
-            Guid? reassignUserId,
-            CancellationToken cancellationToken = default) {
-            OlderThanValues.Add(olderThanUtc);
-            BatchSizes.Add(batchSize);
-            ReassignUserIds.Add(reassignUserId);
+        public Task<int> Handle(CleanupDeletedUsersCommand request, CancellationToken cancellationToken) {
+            OlderThanValues.Add(request.OlderThanUtc);
+            BatchSizes.Add(request.BatchSize);
+            ReassignUserIds.Add(request.ReassignUserId);
             int value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
@@ -1812,12 +1808,8 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ThrowingUserCleanupService : IUserCleanupService {
-        public Task<int> CleanupDeletedUsersAsync(
-            DateTime olderThanUtc,
-            int batchSize,
-            Guid? reassignUserId,
-            CancellationToken cancellationToken = default) =>
+    private sealed class ThrowingUserCleanupService : IRequestHandler<CleanupDeletedUsersCommand, int> {
+        public Task<int> Handle(CleanupDeletedUsersCommand request, CancellationToken cancellationToken) =>
             throw new InvalidOperationException("cleanup failed");
     }
 

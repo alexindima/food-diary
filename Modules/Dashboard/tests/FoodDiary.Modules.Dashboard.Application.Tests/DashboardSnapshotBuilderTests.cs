@@ -282,11 +282,11 @@ public sealed class DashboardSnapshotBuilderTests {
             CancellationToken.None);
 
         DashboardSnapshotModel snapshot = ResultAssert.Success(result);
-        GetStatisticsQuery dailyStatisticsQuery = sender.StatisticsQueries[0];
+        GetStatisticsQuery weeklyStatisticsQuery = Assert.Single(sender.StatisticsQueries);
         Assert.Multiple(
             () => Assert.Equal(new DateTime(2026, 8, 1, 20, 0, 0, DateTimeKind.Utc), snapshot.Date),
-            () => Assert.Equal(new DateTime(2026, 8, 1, 20, 0, 0, DateTimeKind.Utc), dailyStatisticsQuery.DateFrom),
-            () => Assert.Equal(new DateTime(2026, 8, 2, 19, 59, 59, 999, DateTimeKind.Utc).AddTicks(9999), dailyStatisticsQuery.DateTo));
+            () => Assert.Equal(new DateTime(2026, 7, 26, 20, 0, 0, DateTimeKind.Utc), weeklyStatisticsQuery.DateFrom),
+            () => Assert.Equal(new DateTime(2026, 8, 2, 19, 59, 59, 999, DateTimeKind.Utc).AddTicks(9999), weeklyStatisticsQuery.DateTo));
     }
 
     [Fact]
@@ -479,7 +479,7 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [Fact]
-    public async Task BuildAsync_WhenWeeklyStatisticsQueryFails_ReturnsFailure() {
+    public async Task BuildAsync_ForMultipleDays_WhenWeeklyStatisticsQueryFails_ReturnsFailure() {
         var user = User.Create("dashboard-weekly-statistics-failure@example.com", "hash");
         var date = new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
         var sender = new ConfigurableDashboardSender {
@@ -488,13 +488,13 @@ public sealed class DashboardSnapshotBuilderTests {
         DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
 
         Result<DashboardSnapshotModel> result = await builder.BuildAsync(
-            CreateRequest(user.Id.Value, Sections(includeStatistics: true), date),
+            CreateRequest(user.Id.Value, Sections(includeStatistics: true), date, date.AddDays(1)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Equal(2, sender.StatisticsQueries.Count);
-        Assert.Equal(date.Date.AddDays(-6), sender.StatisticsQueries[1].DateFrom);
+        Assert.Equal(date.Date, sender.StatisticsQueries[1].DateFrom);
     }
 
     [Fact]

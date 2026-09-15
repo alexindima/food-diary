@@ -1213,7 +1213,7 @@
         "write:UserRole"
       ],
       "reason": "Users owner context executes eligibility SQL, profile unlink and User/UserRole deletion. The shared item coordinator owns per-account retries, unconditional successful UoW save, commit and all-owner tracker reset. Ordered owner participants never save. Scope guard rejects pending caller state; post-commit actions retain their existing untouched policy.",
-      "technicalSourceSha256": "f5078e6cf4a0380716e682e1ea93750d1934f715149cb4b28e2bfd7ea477dcd3"
+      "technicalSourceSha256": "3aefae17aab627a3d58dc46eb790d66dd717cb599db247a8072cc76fc68a313a"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",

@@ -76,6 +76,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/ReconcileAchievementsCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/AchievementDefinitionAtomicityTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/AchievementRequiredKeyTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/AchievementVersionOverflowTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Achievements/AchievementDefinitionTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Achievements/UserAchievementTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/GamificationIdConversionTests.cs`

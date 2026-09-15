@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Application.Abstractions.Models;
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -23,34 +26,41 @@ public sealed class UserCleanupService(
         return ordered;
     }
 
-    public async Task<int> CleanupDeletedUsersAsync(
+    public async Task<UserCleanupBatch> CleanupDeletedUsersAsync(
         DateTime olderThanUtc,
         int batchSize,
         Guid? reassignUserId,
+        UserCleanupCursor? after = null,
         CancellationToken cancellationToken = default) {
         if (batchSize <= 0) {
             throw new ArgumentOutOfRangeException(nameof(batchSize), "Batch size must be greater than zero.");
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         scopeGuard.EnsureCleanEntry();
         if (dbContext.Database.IsRelational()) {
             await dbContext.Database.UseTransactionAsync(transactionCoordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
         }
         UserId? reassignTarget = await ResolveReassignTargetAsync(reassignUserId, cancellationToken).ConfigureAwait(false);
         DateTime thresholdUtc = NormalizeUtc(olderThanUtc);
-        IReadOnlyList<UserId> userIds = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UserCleanupCursor> candidates = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, after, cancellationToken).ConfigureAwait(false);
         int removed = 0;
 
-        foreach (UserId userId in userIds) {
+        foreach (UserCleanupCursor candidate in candidates) {
+            cancellationToken.ThrowIfCancellationRequested();
+            UserId userId = candidate.UserId;
             try {
                 if (await CleanupUserAsync(userId, reassignTarget, thresholdUtc, cancellationToken).ConfigureAwait(false)) {
                     removed++;
                 }
+            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+                throw;
             } catch (Exception ex) {
                 logger.LogError(ex, "Failed to clean up deleted user {UserId}. Continuing with the next deleted user.", userId.Value);
             }
         }
-        return removed;
+        cancellationToken.ThrowIfCancellationRequested();
+        return new UserCleanupBatch(removed, candidates.Count == 0 ? null : candidates[^1]);
     }
 
     private async Task<UserId?> ResolveReassignTargetAsync(Guid? reassignUserId, CancellationToken cancellationToken) {
@@ -82,11 +92,18 @@ public sealed class UserCleanupService(
         };
     }
 
-    private async Task<IReadOnlyList<UserId>> GetDeletedUserIdsAsync(DateTime thresholdUtc, int batchSize, CancellationToken cancellationToken) {
-        return await dbContext.Users
-            .Where(u => u.DeletedAt != null && u.DeletedAt <= thresholdUtc)
-            .OrderBy(u => u.DeletedAt)
-            .Select(u => u.Id)
+    private async Task<IReadOnlyList<UserCleanupCursor>> GetDeletedUserIdsAsync(
+        DateTime thresholdUtc, int batchSize, UserCleanupCursor? after, CancellationToken cancellationToken) {
+        IQueryable<User> candidates = dbContext.Users.AsNoTracking()
+            .Where(user => user.DeletedAt != null && user.DeletedAt <= thresholdUtc);
+        if (after is not null) {
+            candidates = candidates.Where(user => EF.Functions.GreaterThan(
+                ValueTuple.Create(user.DeletedAt!.Value, user.Id), ValueTuple.Create(after.DeletedAtUtc, after.UserId)));
+        }
+        return await candidates
+            .OrderBy(user => user.DeletedAt)
+            .ThenBy(user => user.Id)
+            .Select(user => new UserCleanupCursor(user.DeletedAt!.Value, user.Id))
             .Take(batchSize)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }

@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5394,
+    "productionFiles": 5397,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 926,
-    "criticalSymbolsWithTestReferences": 899,
+    "criticalSymbols": 927,
+    "criticalSymbolsWithTestReferences": 900,
     "criticalSymbolsWithoutTestReferences": 27,
     "debtMarkers": 10
   },
@@ -826,11 +826,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
-      "nonBlankLines": 211,
+      "nonBlankLines": 216,
       "decisionPoints": 32,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 54.22
+      "structuralRiskScore": 54.32
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
@@ -3650,11 +3650,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/UserCleanupJob.cs",
-      "nonBlankLines": 65,
-      "decisionPoints": 6,
+      "nonBlankLines": 48,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.3
+      "structuralRiskScore": 6.96
     },
     {
       "path": "FoodDiary.JobManager/Services/UserCleanupOptions.cs",
@@ -20666,11 +20666,11 @@
     },
     {
       "path": "Modules/Dashboard/Application/Services/ComposedDashboardReadService.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 5,
+      "nonBlankLines": 75,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.66
+      "structuralRiskScore": 15
     },
     {
       "path": "Modules/Dashboard/Application/Services/DashboardBodyMapper.cs",
@@ -20874,19 +20874,11 @@
     },
     {
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
-      "nonBlankLines": 75,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
@@ -30802,11 +30794,11 @@
     },
     {
       "path": "Modules/MealPlanning/Domain/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
@@ -32002,11 +31994,11 @@
     },
     {
       "path": "Modules/Meals/Domain/AssemblyInfo.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
@@ -35794,11 +35786,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
@@ -37081,6 +37073,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
       "path": "Modules/Users/Application.Abstractions/Common/IUserGoogleIdentityRepository.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -37119,6 +37119,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Users/Application.Abstractions/Models/UserCleanupBatch.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Users/Application.Abstractions/Models/UserCleanupCursor.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Users/Application/AssemblyInfo.cs",
@@ -37167,6 +37183,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.24
+    },
+    {
+      "path": "Modules/Users/Application/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommandHandler.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.46
     },
     {
       "path": "Modules/Users/Application/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommandHandler.cs",
@@ -37729,6 +37753,14 @@
       "structuralRiskScore": 38.34
     },
     {
+      "path": "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
       "path": "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -37839,14 +37871,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
-    },
-    {
-      "path": "Modules/Users/Contracts/Common/IUserCleanupService.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Users/Contracts/Common/IUserCommentAuthorReadService.cs",
@@ -38450,11 +38474,11 @@
     },
     {
       "path": "Modules/Users/Domain/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Users/Domain/Entities/Role.cs",
@@ -38850,11 +38874,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "nonBlankLines": 119,
-      "decisionPoints": 15,
+      "nonBlankLines": 136,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.88
+      "structuralRiskScore": 28.22
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
@@ -39522,11 +39546,11 @@
     },
     {
       "path": "Modules/Wearables/Domain/AssemblyInfo.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Wearables/Domain/Entities/WearableConnection.cs",
@@ -44218,6 +44242,19 @@
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOperationHandlersTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "CleanupDeletedUsersCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 2,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/CleanupDeletedUsersCommandHandlerTests.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

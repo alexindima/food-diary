@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Application.Abstractions.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.Products.Infrastructure;
@@ -50,6 +52,35 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task CleanupDeletedUsersAsync_CursorAdvancesPastFailuresWithEqualDeletionDates() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var deletedAt = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);
+        var firstUser = User.Create("first-cursor@example.com", "hash");
+        var secondUser = User.Create("second-cursor@example.com", "hash");
+        firstUser.MarkDeleted(deletedAt);
+        secondUser.MarkDeleted(deletedAt);
+        context.Users.AddRange(firstUser, secondUser);
+        await context.SaveChangesAsync();
+        List<UserId> expectedIds = await context.Users.AsNoTracking().OrderBy(user => user.Id)
+            .Select(user => user.Id).ToListAsync();
+        context.ChangeTracker.Clear();
+        await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(),
+            out UserCleanupService service, new FailingParticipant(context));
+
+        UserCleanupBatch first = await service.CleanupDeletedUsersAsync(deletedAt.AddDays(1), 1, reassignUserId: null);
+        UserCleanupBatch second = await service.CleanupDeletedUsersAsync(deletedAt.AddDays(1), 1, reassignUserId: null, first.LastExamined);
+        UserCleanupBatch end = await service.CleanupDeletedUsersAsync(deletedAt.AddDays(1), 1, reassignUserId: null, second.LastExamined);
+
+        Assert.Equal(0, first.RemovedCount);
+        Assert.Equal(0, second.RemovedCount);
+        Assert.Equal(expectedIds[0], Assert.IsType<UserCleanupCursor>(first.LastExamined).UserId);
+        Assert.Equal(expectedIds[1], Assert.IsType<UserCleanupCursor>(second.LastExamined).UserId);
+        Assert.Null(end.LastExamined);
+        await using FoodDiaryDbContext verification = CreateVerificationContext(context);
+        Assert.Equal(2, await verification.Users.CountAsync());
+    }
+
     [RequiresDockerFact]
     public async Task CleanupDeletedUsersAsync_WithoutReassign_RemovesUserAndOwnedData() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -129,11 +160,11 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
         await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
 
-        int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
+        UserCleanupBatch batch = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
         await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
-        Assert.Equal(1, removed);
+        Assert.Equal(1, batch.RemovedCount);
         Assert.Equal(0, await verificationContext.Database.SqlQuery<int>($"""
             SELECT count(*)::int AS "Value" FROM "TelegramOperations" WHERE "UserId" = {deletedUser.Id.Value}
             """).SingleAsync());
@@ -165,14 +196,14 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
         await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
 
-        int removed = await service.CleanupDeletedUsersAsync(
+        UserCleanupBatch batch = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
             batchSize: 10,
             reassignUserId: survivorUser.Id.Value).ConfigureAwait(false);
 
         FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
         await using (verificationContext.ConfigureAwait(false)) {
-            Assert.Equal(1, removed);
+            Assert.Equal(1, batch.RemovedCount);
             await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
             Assert.Equal(
                 ["users/deleted/meal.webp", "users/deleted/profile.webp"],
@@ -212,14 +243,14 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
         await using ServiceProvider provider = CreateServiceProvider(context, imageObjectDeletionOutbox, out UserCleanupService service);
 
-        int removed = await service.CleanupDeletedUsersAsync(
+        UserCleanupBatch batch = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
             batchSize: 10,
             reassignUserId: deletedTarget.Id.Value);
 
         await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
-        Assert.Equal(2, removed);
+        Assert.Equal(2, batch.RemovedCount);
         Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
         Assert.False(await verificationContext.Products.AnyAsync());
         Assert.False(await verificationContext.ImageAssets.AnyAsync());
@@ -261,9 +292,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.NotNull(operation);
         await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service, new FailingParticipant(context));
 
-        int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, survivor.Id.Value);
+        UserCleanupBatch batch = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, survivor.Id.Value);
 
-        Assert.Equal(0, removed);
+        Assert.Equal(0, batch.RemovedCount);
         Assert.False(context.ChangeTracker.HasChanges());
         await context.SaveChangesAsync();
         await using FoodDiaryDbContext verification = CreateVerificationContext(context);

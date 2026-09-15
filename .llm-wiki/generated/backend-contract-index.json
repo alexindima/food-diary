@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1219,
+    "contracts": 1220,
     "ambiguousContracts": 2,
-    "consumerEdges": 9557,
+    "consumerEdges": 9563,
     "productionConsumerEdges": 5464,
-    "testConsumerEdges": 4093,
-    "consumedContracts": 1219,
+    "testConsumerEdges": 4099,
+    "consumedContracts": 1220,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1910,6 +1910,23 @@
       ],
       "definitionPaths": [
         "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CleanupDeletedUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14290,7 +14307,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Common/IUserCleanupService.cs"
+        "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -26042,6 +26059,58 @@
         "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingMetadataJsonBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookChronologyTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookPersistenceShapeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookRetryBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingInvariantTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -26097,58 +26166,6 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Workflows.cs",
       "isTest": true,
       "referenceCount": 5
-    },
-    {
-      "contract": "BillingWebhookEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "BillingWebhookEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/FourthPassDomainHardeningTests.cs",
-      "isTest": true,
-      "referenceCount": 4
-    },
-    {
-      "contract": "BillingWebhookEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/SecondPassDomainHardeningTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "BillingWebhookEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/ThirdPassDomainHardeningTests.cs",
-      "isTest": true,
-      "referenceCount": 7
     },
     {
       "contract": "BillingWebhookEvent",
@@ -27319,6 +27336,84 @@
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "CleanupDeletedUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/UserCleanupJob.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CleanupDeletedUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CleanupDeletedUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "CleanupDeletedUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/UserCleanupJobTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "CleanupDeletedUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/CleanupDeletedUsersCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CleanupDeletedUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "CleanupExpiredNotificationsCommand",
@@ -34934,9 +35029,9 @@
         "Modules/Dietologist/Domain/Events/DietologistInvitationAcceptedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/CollaborationDomainEventTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "DietologistInvitationAcceptedDomainEvent",
@@ -34947,9 +35042,9 @@
         "Modules/Dietologist/Domain/Events/DietologistInvitationAcceptedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventInvariantTests.cs",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "DietologistInvitationDeclinedDomainEvent",
@@ -34973,7 +35068,7 @@
         "Modules/Dietologist/Domain/Events/DietologistInvitationDeclinedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventInvariantTests.cs",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/CollaborationDomainEventTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -37570,6 +37665,19 @@
         "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingTelemetryDurationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FastingTelemetryEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingTelemetryEventTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -37597,19 +37705,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFastingContextCompositionIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "FastingTelemetryEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainHardeningInvariantTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -65949,20 +66044,7 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardBodyReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application.Abstractions/Common/IDashboardBodyReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/ComposedDashboardReadServiceTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -66053,20 +66135,7 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardMealsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application.Abstractions/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/ComposedDashboardReadServiceTests.cs",
       "isTest": true,
       "referenceCount": 7
     },
@@ -66144,32 +66213,6 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IDashboardReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application.Abstractions/Common/IDashboardReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application.Abstractions/Common/IDashboardReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -66198,7 +66241,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 2
     },
     {
       "contract": "IDashboardSectionDataLoader",
@@ -66391,7 +66434,7 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -66404,9 +66447,9 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardStatisticsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/ComposedDashboardReadServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 11
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -66433,19 +66476,6 @@
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/SenderStatisticsFixture.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Dashboard/Application.Abstractions/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
-      "isTest": true,
-      "referenceCount": 11
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -83241,7 +83271,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/UserCleanupServiceTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IModuleScopeGuard",
@@ -84047,7 +84077,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/UserCleanupServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IModuleTransactionCoordinator",
@@ -100177,6 +100207,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Contracts/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -102465,6 +102508,19 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -102987,7 +103043,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 8
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/UserCleanupJobTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IRequestHandler",
@@ -103311,6 +103380,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/PaddleNotificationRecoveryJob.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/UserCleanupJob.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -107460,6 +107542,19 @@
       "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Streams.cs",
       "isTest": true,
       "referenceCount": 13
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ISender",
@@ -112524,10 +112619,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Common/IUserCleanupService.cs"
+        "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.JobManager/Services/UserCleanupJob.cs",
+      "consumerPath": "Modules/Users/Application/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -112537,7 +112632,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Common/IUserCleanupService.cs"
+        "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
@@ -112550,7 +112645,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Common/IUserCleanupService.cs"
+        "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
@@ -112563,12 +112658,12 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Common/IUserCleanupService.cs"
+        "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/CleanupDeletedUsersCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserCleanupService",
@@ -112576,12 +112671,12 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Users/Contracts/Common/IUserCleanupService.cs"
+        "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/UserCleanupJobTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 2
     },
     {
       "contract": "IUserCommentAuthorReadService",
@@ -113686,7 +113781,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/UserCleanupServiceTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "IUserDietologistProfileReadService",
@@ -130142,7 +130237,7 @@
         "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionEventPayloadTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -130493,7 +130588,7 @@
         "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/RecipeNutritionEventPayloadTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -130857,6 +130952,19 @@
         "Modules/Dietologist/Domain/Events/RecommendationCreatedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/CollaborationDomainEventTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecommendationCreatedDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Domain/Events/RecommendationCreatedDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -130871,19 +130979,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Events/MediatorDomainEventPublisherTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "RecommendationCreatedDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Dietologist/Domain/Events/RecommendationCreatedDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventInvariantTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -142957,6 +143052,19 @@
         "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserLifecycleEventPayloadTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserDeletedDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserLifecycleEventTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -142971,19 +143079,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Events/DomainEventNotificationTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "UserDeletedDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -143529,7 +143624,7 @@
         "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserLifecycleEventTests.cs",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserLifecycleEventPayloadTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -143542,7 +143637,7 @@
         "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserLifecycleEventTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

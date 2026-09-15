@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4106,
-    "symbols": 4036,
-    "interfaceImplementationLinks": 189,
-    "dependencyInjectionRegistrations": 74,
+    "sourceFiles": 4109,
+    "symbols": 4039,
+    "interfaceImplementationLinks": 188,
+    "dependencyInjectionRegistrations": 73,
     "kinds": {
       "class": 2138,
       "enum": 64,
       "interface": 396,
-      "record": 1318,
+      "record": 1321,
       "record struct": 120
     },
     "roles": {
-      "Command": 209,
-      "CommandHandler": 205,
+      "Command": 210,
+      "CommandHandler": 206,
       "Configuration": 95,
       "Controller": 104,
       "Entity": 97,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1673,
+      "Other": 1675,
       "Query": 261,
       "QueryHandler": 189,
       "ReadModelRepository": 33,
@@ -40,7 +40,7 @@
       "Repository": 98,
       "Request": 150,
       "Response": 213,
-      "Service": 161,
+      "Service": 160,
       "Validator": 225,
       "ValueObject": 114,
       "WriteRepository": 45
@@ -1074,7 +1074,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/UserCleanupJob.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UserCleanupOptions",
@@ -8495,13 +8495,6 @@
       "role": "Other",
       "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
       "line": 7
-    },
-    {
-      "name": "DashboardReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
-      "line": 10
     },
     {
       "name": "DashboardStatisticsReadService",
@@ -22392,6 +22385,13 @@
       "line": 5
     },
     {
+      "name": "IUserCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs",
+      "line": 4
+    },
+    {
       "name": "IUserGoogleIdentityRepository",
       "kind": "interface",
       "role": "Repository",
@@ -22424,6 +22424,20 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/Users/Application.Abstractions/Common/IUserWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "UserCleanupBatch",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Application.Abstractions/Models/UserCleanupBatch.cs",
+      "line": 2
+    },
+    {
+      "name": "UserCleanupCursor",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Application.Abstractions/Models/UserCleanupCursor.cs",
       "line": 4
     },
     {
@@ -22460,6 +22474,13 @@
       "role": "Validator",
       "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "CleanupDeletedUsersCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommandHandler.cs",
+      "line": 7
     },
     {
       "name": "CreateUserByAdministratorCommandHandler",
@@ -22952,6 +22973,13 @@
       "line": 14
     },
     {
+      "name": "CleanupDeletedUsersCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/CleanupDeletedUsers/CleanupDeletedUsersCommand.cs",
+      "line": 4
+    },
+    {
       "name": "CreateUserByAdministratorCommand",
       "kind": "record",
       "role": "Command",
@@ -23048,13 +23076,6 @@
       "role": "Service",
       "path": "Modules/Users/Contracts/Common/IUserAuthenticationRegistrationService.cs",
       "line": 5
-    },
-    {
-      "name": "IUserCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Users/Contracts/Common/IUserCleanupService.cs",
-      "line": 2
     },
     {
       "name": "IUserCommentAuthorReadService",
@@ -23922,7 +23943,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "line": 9
+      "line": 12
     },
     {
       "name": "UserProfileProjectionService",
@@ -28484,13 +28505,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IDashboardReadService",
-      "interfacePath": "Modules/Dashboard/Application.Abstractions/Common/IDashboardReadService.cs",
-      "implementation": "DashboardReadService",
-      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/DashboardReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IDashboardSectionDataLoader",
       "interfacePath": "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs",
       "implementation": "DashboardSectionDataLoader",
@@ -29472,7 +29486,7 @@
     },
     {
       "interface": "IUserCleanupService",
-      "interfacePath": "Modules/Users/Contracts/Common/IUserCleanupService.cs",
+      "interfacePath": "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs",
       "implementation": "UserCleanupService",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
       "confidence": "naming-convention"
@@ -29800,13 +29814,6 @@
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
       "line": 20
-    },
-    {
-      "service": "IDashboardReadService",
-      "implementation": "DashboardReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
-      "line": 15
     },
     {
       "service": "IDietologistDashboardAccessService",

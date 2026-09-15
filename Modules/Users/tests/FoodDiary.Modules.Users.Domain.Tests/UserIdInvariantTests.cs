@@ -9,10 +9,6 @@ namespace FoodDiary.Modules.Users.Domain.Tests;
 public sealed class UserIdInvariantTests {
     public static IEnumerable<object[]> StronglyTypedGuidIdTypes() {
         return new[] { typeof(UserId), typeof(RoleId), typeof(WeightGoalId), typeof(WaistGoalId) }
-            .Where(static type =>
-                type is { IsValueType: true, IsAbstract: false } &&
-                string.Equals(type.Namespace, "FoodDiary.Domain.ValueObjects.Ids", StringComparison.Ordinal) &&
-                type.Name.EndsWith("Id", StringComparison.Ordinal))
             .OrderBy(static type => type.Name, StringComparer.Ordinal)
             .Select(static type => new object[] { type });
     }

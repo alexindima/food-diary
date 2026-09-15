@@ -6,6 +6,16 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CrossModuleRequestBoundaryTests {
+    [Fact]
+    public void UsersCleanup_ExposesRequestInsteadOfInfrastructurePort() {
+        var contracts = Assembly.Load("FoodDiary.Modules.Users.Contracts");
+        Assert.DoesNotContain(contracts.GetExportedTypes(), type => string.Equals(type.Name, "IUserCleanupService", StringComparison.Ordinal));
+        string job = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "Services", "UserCleanupJob.cs"));
+        Assert.Contains("ISender sender", job, StringComparison.Ordinal);
+        Assert.Contains("new CleanupDeletedUsersCommand(", job, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUserCleanupService", job, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("Admin")]
     [InlineData("Ai")]
@@ -82,6 +92,7 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("FoodDiary.Modules.Identity.Contracts.Email.Commands.UpsertEmailTemplate.UpsertEmailTemplateCommand, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Modules.Identity.Application.Email.Commands.UpsertEmailTemplate.UpsertEmailTemplateCommandHandler, FoodDiary.Modules.Identity.Application")]
     [InlineData("FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Modules.Identity.Application.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQueryHandler, FoodDiary.Modules.Identity.Application")]
     [InlineData("FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplates.GetEmailTemplatesQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Modules.Identity.Application.Email.Queries.GetEmailTemplates.GetEmailTemplatesQueryHandler, FoodDiary.Modules.Identity.Application")]
+    [InlineData("FoodDiary.Modules.Users.Contracts.Commands.CleanupDeletedUsers.CleanupDeletedUsersCommand, FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Application.Commands.CleanupDeletedUsers.CleanupDeletedUsersCommandHandler, FoodDiary.Modules.Users.Application")]
     [InlineData("FoodDiary.Modules.Users.Contracts.Commands.CreateUserByAdministrator.CreateUserByAdministratorCommand, FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Application.Commands.CreateUserByAdministrator.CreateUserByAdministratorCommandHandler, FoodDiary.Modules.Users.Application")]
     [InlineData("FoodDiary.Modules.Users.Contracts.Commands.UpdateUserByAdministrator.UpdateUserByAdministratorCommand, FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Application.Commands.UpdateUserByAdministrator.UpdateUserByAdministratorCommandHandler, FoodDiary.Modules.Users.Application")]
     [InlineData("FoodDiary.Modules.Users.Contracts.Commands.SetUserPasswordByAdministrator.SetUserPasswordByAdministratorCommand, FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Application.Commands.SetUserPasswordByAdministrator.SetUserPasswordByAdministratorCommandHandler, FoodDiary.Modules.Users.Application")]

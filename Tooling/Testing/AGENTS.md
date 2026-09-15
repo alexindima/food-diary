@@ -16,7 +16,7 @@ Shared rules for every backend test project. Import `Tooling/Testing/TestProject
 - `FoodDiary.Application.Runtime.Tests`: shared execution pipeline, transaction and post-commit queue behavior.
 - `FoodDiary.Application.Contracts.Tests`: generic parsing, pagination, temporal policy and error resolution.
 - `FoodDiary.Email.Contracts.Tests`: shared email configuration behavior.
-- `FoodDiary.Domain.Tests`: core domain entity, value object, domain event, and invariant behavior.
+- Module Domain.Tests projects: owner entities, value objects, domain events and invariant behavior.
 - `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
 - `FoodDiary.Infrastructure.Tests`: infrastructure unit behavior that does not require external services.
 - `FoodDiary.Infrastructure.IntegrationTests`: PostgreSQL/Testcontainers infrastructure behavior.
@@ -28,7 +28,7 @@ Shared rules for every backend test project. Import `Tooling/Testing/TestProject
 - Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.
 
 ## Rules
-- Shared-library tests live in `Shared/tests`; module and service tests live with their owners. Host tests live in `Hosts/tests`, platform composition tests in `Platform/tests`, and architecture/analyzer/development MCP tests in `Tooling/tests`. `FoodDiary.Testing` lives in `Tooling/FoodDiary.Testing`. Only the mixed Domain donor suite remains in root `tests` pending ownership extraction.
+- Shared-library tests live in `Shared/tests`; module and service tests live with their owners. Host tests live in `Hosts/tests`, platform composition tests in `Platform/tests`, and architecture/analyzer/development MCP tests in `Tooling/tests`. `FoodDiary.Testing` lives in `Tooling/FoodDiary.Testing`. Both mixed Application/Domain donor suites and the root `tests` configuration are retired; do not recreate them.
 - Prefer focused tests near the layer being changed.
 - Use NSubstitute for simple interface substitutes in unit tests when it avoids noisy hand-written `Fake`/`Stub`/`Recording` types.
 - Keep hand-written `InMemory`/`Recording` helpers when they make stateful behavior, call history, or side effects clearer than a mock setup.
@@ -48,7 +48,7 @@ Shared rules for every backend test project. Import `Tooling/Testing/TestProject
 - Analyzer tests: `dotnet test Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
 - Architecture tests: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 - Shared domain primitive tests: `dotnet test Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
-- Core domain tests: `dotnet test tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj`
+- Module domain tests: `dotnet test Modules/<Owner>/tests/FoodDiary.Modules.<Owner>.Domain.Tests/FoodDiary.Modules.<Owner>.Domain.Tests.csproj`
 - Shared result tests: `dotnet test Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj`
 - Web API unit tests: `dotnet test Hosts/tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj`
 - API integration tests: `dotnet test Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`

@@ -1,7 +1,9 @@
+using FoodDiary.Modules.Users.Contracts.Commands.CleanupDeletedUsers;
+using FoodDiary.Mediator;
+using FoodDiary.Testing;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.JobManager.Tests;
 
@@ -22,7 +24,7 @@ public sealed class UserCleanupJobTests : IDisposable {
     }
 
     [Fact]
-    public async Task Execute_WithDeletedUsers_CleansUpInBatches() {
+    public async Task Execute_WithDeletedUsers_DispatchesOneUseCase() {
         var cleanup = new StubUserCleanupService(usersPerBatch: 2, totalAvailable: 3);
         var options = new UserCleanupOptions { BatchSize = 2, RetentionDays = 30 };
         UserCleanupJob job = CreateJob(cleanup, options);
@@ -30,7 +32,7 @@ public sealed class UserCleanupJobTests : IDisposable {
         await job.Execute();
 
         Assert.Equal(3, cleanup.TotalDeleted);
-        Assert.Equal(2, cleanup.CallCount);
+        Assert.Equal(1, cleanup.CallCount);
     }
 
     [Fact]
@@ -68,10 +70,10 @@ public sealed class UserCleanupJobTests : IDisposable {
     }
 
     private UserCleanupJob CreateJob(
-        IUserCleanupService cleanupService,
+        IRequestHandler<CleanupDeletedUsersCommand, int> cleanupService,
         UserCleanupOptions? options = null) {
         return new UserCleanupJob(
-            cleanupService,
+            RequestTestSender.Create(cleanupService),
             Options.Create(options ?? new UserCleanupOptions()),
             new JobExecutionObserver(new FixedDateTimeProvider(), _stateTracker),
             NullLogger<UserCleanupJob>.Instance);
@@ -80,26 +82,24 @@ public sealed class UserCleanupJobTests : IDisposable {
     public void Dispose() => _stateTracker.Dispose();
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserCleanupService(int usersPerBatch, int totalAvailable = 0) : IUserCleanupService {
+    private sealed class StubUserCleanupService(int usersPerBatch, int totalAvailable = 0) : IRequestHandler<CleanupDeletedUsersCommand, int> {
         public int TotalDeleted { get; private set; }
         public int CallCount { get; private set; }
         public Guid? LastReassignUserId { get; private set; }
 
-        public Task<int> CleanupDeletedUsersAsync(
-            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken cancellationToken = default) {
+        public Task<int> Handle(CleanupDeletedUsersCommand request, CancellationToken cancellationToken) {
             CallCount++;
-            LastReassignUserId = reassignUserId;
+            LastReassignUserId = request.ReassignUserId;
             int remaining = totalAvailable - TotalDeleted;
-            int toDelete = Math.Min(Math.Min(usersPerBatch, batchSize), remaining);
+            int toDelete = usersPerBatch > 0 ? remaining : 0;
             TotalDeleted += toDelete;
             return Task.FromResult(toDelete);
         }
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ThrowingUserCleanupService : IUserCleanupService {
-        public Task<int> CleanupDeletedUsersAsync(
-            DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken cancellationToken = default) =>
+    private sealed class ThrowingUserCleanupService : IRequestHandler<CleanupDeletedUsersCommand, int> {
+        public Task<int> Handle(CleanupDeletedUsersCommand request, CancellationToken cancellationToken) =>
             throw new InvalidOperationException("DB error");
     }
 

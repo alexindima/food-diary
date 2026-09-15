@@ -87,6 +87,12 @@ backend code. Hosts are composition roots, presentation owns HTTP transport,
 application owns use cases, infrastructure owns persistence implementations,
 integrations owns external adapters, and domain owns business invariants.
 
+Test projects follow their component owners (ADR 0047). The mixed root
+Application.Tests and Domain.Tests projects are retired. Domain invariants live
+in module suites; shared tests must not acquire business-module dependencies.
+Meals owns the real Recipe-to-Meal snapshot compatibility test with an explicit
+test-only Recipes.Domain reference. Common test settings live in Tooling/Testing.
+
 ## Reusable HTTP contract boundary
 
 ADR 0039 separates owner Presentation.Contracts (wire DTOs) from Presentation.Mappings (pure response transformations). Module Presentation assemblies no longer reference foreign controller assemblies. Mappers consume narrow application/scalar contracts and DTOs; Dashboard public snapshot/query declarations now live in Dashboard.Contracts. The exact project matrix and PresentationContractBoundaryTests enforce these boundaries.

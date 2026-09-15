@@ -36,3 +36,5 @@ Dietologist client-task reminders dispatch SendClientTaskRemindersCommand throug
 Fasting notification scheduling and telemetry cleanup dispatch Contracts requests through ISender. The notification handler retains its explicit save and post-commit queue ordering; telemetry cleanup retains independently committed delete batches. Neither request acquires the automatic transactional-command marker.
 
 WeeklyGoals reminders dispatch SendWeeklyGoalRemindersCommand through ISender. Preserve scheduling, retries, concurrency exclusion, options and telemetry. The handler retains per-batch saves; no automatic whole-job transaction.
+
+UserCleanupJob dispatches one CleanupDeletedUsersCommand through ISender. Users Application owns paging; Users Infrastructure retains independent per-user transactions. Do not inject its internal cleanup port into the job.

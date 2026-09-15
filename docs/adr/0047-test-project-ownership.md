@@ -21,14 +21,13 @@ to that assembly.
 
 Tooling/Testing owns TestProjects.props, test.runsettings, xunit.runner.json and
 shared testing guidance. Each group imports the common settings directly through
-its Directory.Build.props. Root tests retains the mixed Domain donor suite and
-its forwarding import while module extraction continues.
+its Directory.Build.props. The root tests folder and its forwarding import are retired after semantic
+extraction of the mixed Domain donor.
 
 The Application donor has now been semantically extracted: shared Runtime,
 Application.Contracts and Email.Contracts have focused suites under Shared/tests;
 module scenarios live with their owners. Actual assembly-ownership and runtime
-registration boundary checks live in ArchitectureTests. Only Domain.Tests remains
-in root tests. Shared suites must not acquire business-module dependencies, even
+registration boundary checks live in ArchitectureTests. Domain cases now live in 18 existing owner test projects. Shared suites must not acquire business-module dependencies, even
 transitively. Modules reference the reusable assertion helper assembly instead of
 linking sources from a different test suite.
 
@@ -44,7 +43,9 @@ and documentation must move together. Architecture guards protect physical
 ownership, test-support classification and the single shared configuration owner.
 The existing CI partition continues to include every runnable test project once.
 
-Removing the remaining root tests folder requires a separate semantic extraction
-of its mixed cases; moving those suites wholesale into Shared is not the goal.
+The mixed Domain suite was split by owner, including independent assertions in
+mixed methods. Meals retains the real Recipe-to-Meal snapshot compatibility case
+with an explicit test-only Recipes.Domain reference. Shared gains no business-domain
+dependency; private-constructor smoke tests remain distinct from EF integration coverage.
 
 See [test project ownership](../architecture/TEST_PROJECT_OWNERSHIP.md).

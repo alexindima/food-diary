@@ -12,3 +12,5 @@ use semantic Users capabilities rather than acquiring aggregate repositories.
 IUserBillingProfileReadModelRepository provides the persisted Billing profile through the existing projection adapter; it exposes no aggregate mutation.
 
 All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
+
+IUserCleanupService is an internal persistence port for one cleanup batch. UserCleanupBatch reports successful removals separately from LastExamined; null cursor means no candidates. It is not a public module use case.

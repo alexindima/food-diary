@@ -24,3 +24,5 @@ Reference Products FoodQuality directly for the existing shared food-quality cal
 Application consumes scalar Users types through Users.Domain.Contracts and semantic
 capabilities through Users.Contracts. Do not reference the aggregate-bearing
 Users.Domain assembly for these types.
+
+ComposedDashboardReadService is the single snapshot read composition. Preserve the single weekly statistics query for a one-day snapshot and forward the exact dayEnd instant to body readers. Infrastructure supplies optimized ports, not a second IDashboardReadService implementation.

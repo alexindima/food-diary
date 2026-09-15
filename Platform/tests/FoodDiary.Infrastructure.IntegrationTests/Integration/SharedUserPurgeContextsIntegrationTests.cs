@@ -114,7 +114,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleScopeGuard>());
 
-        Assert.Equal(1, await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null));
+        Assert.Equal(1, (await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null)).RemovedCount);
 
         await using FoodDiaryDbContext verification = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         await AssertDataAsync(verification, failed, exists: true);

@@ -98,7 +98,7 @@ and dependencies. Do not run the same group concurrently in one checkout.
 | `Shared/tests/FoodDiary.Email.Contracts.Tests` | Shared email options. |
 | `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests` | Weight/waist entry commands, queries, validators, mappings, read services, and date/user-scoping semantics. |
 | `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests` | Product invariants and all 43 food scoring, grade and unit contract cases from the retired Nutrition suite. |
-| `tests/FoodDiary.Domain.Tests` | Core domain invariants, value objects, entities, and domain events. |
+| `Modules/<Owner>/tests/FoodDiary.Modules.<Owner>.Domain.Tests` | Owner domain invariants, value objects, entities and domain events. |
 | `Platform/tests/FoodDiary.Infrastructure.Tests` | Infrastructure unit behavior without external services. |
 | `Platform/tests/FoodDiary.Infrastructure.IntegrationTests` | PostgreSQL/Testcontainers persistence and migration behavior. |
 | `Tooling/FoodDiary.Testing` | Shared test-only helpers reused by multiple test projects, including Docker-gated test attributes. |

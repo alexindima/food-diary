@@ -235,7 +235,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared MailRelay email adapter: `Shared/FoodDiary.Email.MailRelay/AGENTS.md`
 - Shared mediator: `Shared/FoodDiary.Mediator/AGENTS.md`
 - Shared domain primitives: `Shared/FoodDiary.Domain.Primitives/AGENTS.md`
-- Tests: `tests/AGENTS.md`
+- Shared test rules: `Tooling/Testing/AGENTS.md`
 - Shared test configuration and rules: `Tooling/Testing/AGENTS.md`
 - Host tests: `Hosts/tests/AGENTS.md`
 - Platform tests: `Platform/tests/AGENTS.md`

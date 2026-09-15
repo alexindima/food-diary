@@ -89,6 +89,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/AiIdConversionTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/AiPromptVersionOverflowTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiUsageInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Diagnostics/AiQuotaTelemetryTests.cs`
@@ -106,7 +107,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/AiNamespaceTests.cs`
-- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/AiProjectLayoutTests.cs`
 
 ## Working Rule
 

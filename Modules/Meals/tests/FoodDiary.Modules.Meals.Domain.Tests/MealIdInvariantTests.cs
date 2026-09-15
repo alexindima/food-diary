@@ -11,7 +11,7 @@ public sealed class MealIdInvariantTests {
             .GetTypes()
             .Where(static type =>
                 type is { IsValueType: true, IsAbstract: false } &&
-                string.Equals(type.Namespace, "FoodDiary.Domain.ValueObjects.Ids", StringComparison.Ordinal) &&
+                string.Equals(type.Namespace, typeof(MealId).Namespace, StringComparison.Ordinal) &&
                 type.Name.EndsWith("Id", StringComparison.Ordinal))
             .OrderBy(static type => type.Name, StringComparer.Ordinal)
             .Select(static type => new object[] { type });

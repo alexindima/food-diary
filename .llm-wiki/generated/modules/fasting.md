@@ -91,17 +91,17 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingTelemetryCleanupServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingCheckInChronologyTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingCheckInInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingCompletionChronologyTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingIdContractTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingOccurrenceInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingPlanInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingSessionInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingSessionPersistenceShapeTests.cs`
+- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingTelemetryDurationTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingTelemetryEventTests.cs`
 - [integration] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FastingTelemetryEventRepositoryIntegrationTests.cs`
-- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs`
-- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/PostgresDatabaseCollection.cs`
-- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/PostgresDatabaseFixture.cs`
-- [presentation] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/ClientTelemetryLogHttpRequestValidationTests.cs`
 
 ## Working Rule
 

@@ -165,7 +165,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
             NullLogger<UserCleanupService>.Instance,
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleScopeGuard>());
-        Assert.Equal(1, await cleanup.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null));
+        Assert.Equal(1, (await cleanup.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null)).RemovedCount);
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         Assert.False(await read.Users.AnyAsync(item => item.Id == user.Id));
         Assert.False(await read.ImageAssets.AnyAsync(item => item.UserId == user.Id));

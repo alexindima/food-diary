@@ -140,7 +140,7 @@ Evidence: `CurrentUserAccessPolicy`, `FastingNotificationScheduler`, cleanup ser
 
 Entities expose behavior that validates and changes their own state rather than serving as public property bags. Invariants are tested independently of infrastructure.
 
-Evidence: `FoodDiary.Domain/Entities/`, `tests/FoodDiary.Domain.Tests/Domain/*InvariantTests.cs`.
+Evidence: `Modules/<Owner>/Domain/Entities/`, `Modules/<Owner>/tests/FoodDiary.Modules.<Owner>.Domain.Tests/`.
 
 ### 23. Aggregates and aggregate roots
 
