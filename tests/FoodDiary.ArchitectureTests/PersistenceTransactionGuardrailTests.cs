@@ -34,8 +34,8 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "Shared", "ModuleContextSaveCoordinator.cs"),
             Path.Combine(persistenceRoot, "Shared", "EfModuleSessionCoordinator.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Meals", "Infrastructure", "Persistence", "Meals", "EfMealRecognitionTransactionRunner.cs"),
-            Path.Combine(persistenceRoot, "Outbox", "OutboxProcessingEngine.cs"),
-            Path.Combine(persistenceRoot, "Outbox", "OutboxMessageClaimer.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxProcessingEngine.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxMessageClaimer.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxDeadLetterReplayService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
@@ -64,7 +64,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiQuotaRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxMessageClaimer.cs"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Shared", "EfModuleTransactionCoordinator.cs"),
         ];
         string[] forbiddenPatterns = [

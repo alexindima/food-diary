@@ -19,4 +19,6 @@ after rollback, including resolving the service before the caller starts a trans
 
 Resolve IModuleScopeGuard for the processor's clean-entry callback instead of the concrete shared context. Invoke the live check before each claim; the shared engine and owner claimer retain their existing lifecycle and local transaction checks.
 
-ImagesUserDataPurgeParticipant uses ImagesDbContext with live coordinator transaction binding on every call. Order 135 follows Ai job removal (120) so restrictive image FKs remain valid. Enqueue deletion for staging and published variants as before; only Users saves and commits. The generic outbox engine and options retain the central Infrastructure project dependency.
+ImagesUserDataPurgeParticipant uses ImagesDbContext with live coordinator transaction binding on every call. Order 135 follows Ai job removal (120) so restrictive image FKs remain valid. Enqueue deletion for staging and published variants as before; only Users saves and commits. The generic outbox engine and options belong to Shared/FoodDiary.Outbox.Infrastructure.
+
+Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.

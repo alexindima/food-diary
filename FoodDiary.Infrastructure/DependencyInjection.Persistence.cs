@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;

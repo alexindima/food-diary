@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 
 public readonly record struct CycleSymptomEntryId(Guid Value) : IEntityId<Guid> {
     public static CycleSymptomEntryId New() => new(Guid.NewGuid());

@@ -2308,7 +2308,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("RecipeLikes");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.BleedingEntry", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.BleedingEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -2350,7 +2350,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("CycleBleedingEntries", (string)null);
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleConsent", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleConsent", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -2383,7 +2383,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("CycleConsents", (string)null);
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleFactor", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleFactor", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -2420,7 +2420,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("CycleFactors", (string)null);
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CyclePredictionRevision", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CyclePredictionRevision", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -2487,7 +2487,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("CyclePredictionRevisions", (string)null);
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleProfile", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -2566,7 +2566,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("CycleProfiles", (string)null);
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleSymptomEntry", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleSymptomEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -2991,7 +2991,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("FastingTelemetryEvents");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FertilitySignal", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.FertilitySignal", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -3155,7 +3155,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("MarketingAttributionEvents");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.MenstrualEpisode", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.MenstrualEpisode", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -5041,9 +5041,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.BleedingEntry", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.BleedingEntry", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                    b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
                         .WithMany("BleedingEntries")
                         .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5052,9 +5052,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("CycleProfile");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleConsent", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleConsent", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                    b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
                         .WithMany("Consents")
                         .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5063,9 +5063,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("CycleProfile");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleFactor", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleFactor", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                    b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
                         .WithMany("Factors")
                         .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5074,9 +5074,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("CycleProfile");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CyclePredictionRevision", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CyclePredictionRevision", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                    b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
                         .WithMany("PredictionRevisions")
                         .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5085,7 +5085,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("CycleProfile");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleProfile", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                         .WithMany("Cycles")
@@ -5094,9 +5094,9 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleSymptomEntry", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleSymptomEntry", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                    b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
                         .WithMany("SymptomEntries")
                         .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5174,9 +5174,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FertilitySignal", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.FertilitySignal", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                    b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
                         .WithMany("FertilitySignals")
                         .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5196,9 +5196,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.MenstrualEpisode", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.MenstrualEpisode", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                    b.HasOne("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", "CycleProfile")
                         .WithMany("MenstrualEpisodes")
                         .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5460,7 +5460,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("Sources");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleProfile", b =>
+            modelBuilder.Entity("FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile", b =>
                 {
                     b.Navigation("BleedingEntries");
 

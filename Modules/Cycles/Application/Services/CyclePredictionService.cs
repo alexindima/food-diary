@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Cycles.Domain.Entities;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 
-namespace FoodDiary.Application.Cycles.Services;
+namespace FoodDiary.Modules.Cycles.Application.Services;
 
 public static class CyclePredictionService {
     private const string AlgorithmVersion = "period-v2.0";

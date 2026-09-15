@@ -18,7 +18,7 @@
     <ProjectReference Include="../Modules/ContentReports/PersistenceModel/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="../Modules/Cycles/Infrastructure/Model/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Cycles/PersistenceModel/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
     <ProjectReference Include="../Modules/DailyAdvices/Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
@@ -69,6 +69,7 @@
     <ProjectReference Include="../Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <ProjectReference Include="../Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
+    <ProjectReference Include="../Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
@@ -91,5 +92,6 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
+
 
 </Project>

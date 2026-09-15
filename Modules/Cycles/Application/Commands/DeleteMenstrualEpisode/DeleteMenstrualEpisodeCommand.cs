@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Cycles.Commands.DeleteMenstrualEpisode;
+namespace FoodDiary.Modules.Cycles.Application.Commands.DeleteMenstrualEpisode;
 
 public sealed record DeleteMenstrualEpisodeCommand(
     Guid? UserId,

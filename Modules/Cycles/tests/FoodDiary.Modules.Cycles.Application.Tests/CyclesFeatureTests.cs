@@ -1,0 +1,206 @@
+using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Cycles.Domain.Entities;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
+using FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
+using FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle;
+using System.Reflection;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Cycles.Application.Tests;
+
+[ExcludeFromCodeCoverage]
+public partial class CyclesFeatureTests {
+
+    private static CreateCycleCommand CreateCommand(Guid userId) =>
+        new(
+            userId,
+            new DateOnly(2026, 4, 1),
+            (int)CycleTrackingMode.PeriodTracking,
+            AverageCycleLength: 28,
+            AveragePeriodLength: 5,
+            LutealLength: 14,
+            IsRegular: false,
+            IsOnboardingComplete: false,
+            ShowFertilityEstimates: false,
+            DiscreetNotifications: true,
+            Notes: null,
+            CycleTrackingConsentGranted: true);
+
+    private static MealNutritionStatisticsBucket CreateNutritionBucket(DateTime date, double calories, double fiber) =>
+        new(date, date, calories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: fiber, TotalFiber: fiber);
+
+    private static MealNutritionStatisticsBucket CreateNutritionBucket(DateOnly date, double calories, double fiber) =>
+        CreateNutritionBucket(date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), calories, fiber);
+
+    private static GetCurrentCycleQueryHandler CreateCurrentCycleHandler(
+        ICycleReadModelRepository cycleRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(cycleRepository, currentUserAccessService, TimeProvider.System);
+
+    private static GetCycleNutritionSummaryQueryHandler CreateCycleNutritionSummaryHandler(
+        ICycleReadModelRepository cycleRepository,
+        IMealNutritionStatisticsReadService statisticsReadService,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(cycleRepository, statisticsReadService, currentUserAccessService);
+
+    private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
+        PropertyInfo? property = typeof(TTarget).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        Assert.NotNull(property);
+        property!.SetValue(target, value);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NoopCycleRepository : ICycleWriteRepository, ICycleReadModelRepository {
+        public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.FromResult(profile);
+
+        public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<CycleProfile?> GetByIdAsync(CycleProfileId id, UserId userId, bool includeDetails = false, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<CycleProfile?>(null);
+
+        public Task<CycleProfile?> GetCurrentAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) => Task.FromResult<CycleProfile?>(null);
+
+        public Task<CycleProfileReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<CycleProfileReadModel?>(null);
+
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryCycleRepository(CycleProfile profile) : ICycleWriteRepository, ICycleReadModelRepository {
+        public bool WasUpdated { get; private set; }
+
+        public bool WasDeleted { get; private set; }
+
+        public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.FromResult(profile);
+
+        public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
+            WasUpdated = true;
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
+            WasDeleted = true;
+            return Task.CompletedTask;
+        }
+
+        public Task<CycleProfile?> GetByIdAsync(CycleProfileId id, UserId userId, bool includeDetails = false, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult(profile.Id == id && profile.UserId == userId ? profile : null);
+
+        public Task<CycleProfile?> GetCurrentAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult(profile.UserId == userId ? profile : null);
+
+        public Task<CycleProfileReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(profile.UserId == userId ? ToReadModel(profile) : null);
+
+        private static CycleProfileReadModel ToReadModel(CycleProfile profile) =>
+            new(
+                profile.Id.Value,
+                profile.UserId.Value,
+                profile.Mode,
+                profile.Confidence,
+                profile.TrackingStartDate,
+                profile.AverageCycleLength,
+                profile.AveragePeriodLength,
+                profile.LutealLength,
+                profile.IsRegular,
+                profile.IsOnboardingComplete,
+                profile.ShowFertilityEstimates,
+                profile.DiscreetNotifications,
+                profile.Notes,
+                [.. profile.BleedingEntries.Select(static entry => new BleedingEntryReadModel(
+                    entry.Id.Value,
+                    entry.CycleProfileId.Value,
+                    entry.Date,
+                    entry.Type,
+                    entry.Flow,
+                    entry.PainImpact,
+                    entry.Notes))],
+                [.. profile.SymptomEntries.Select(static entry => new CycleSymptomEntryReadModel(
+                    entry.Id.Value,
+                    entry.CycleProfileId.Value,
+                    entry.Date,
+                    entry.Category,
+                    entry.Intensity,
+                    entry.Tags,
+                    entry.Note))],
+                [.. profile.Factors.Select(static factor => new CycleFactorReadModel(
+                    factor.Id.Value,
+                    factor.CycleProfileId.Value,
+                    factor.Type,
+                    factor.StartDate,
+                    factor.EndDate,
+                    factor.Notes))],
+                [.. profile.FertilitySignals.Select(static signal => new FertilitySignalReadModel(
+                    signal.Id.Value,
+                    signal.CycleProfileId.Value,
+                    signal.Date,
+                    signal.BasalBodyTemperatureCelsius,
+                    signal.OvulationTestResult,
+                    signal.CervicalFluid,
+                    signal.HadSex,
+                    signal.Notes))],
+                MenstrualEpisodes: [.. profile.MenstrualEpisodes.Select(static episode => new MenstrualEpisodeReadModel(
+                    episode.Id.Value,
+                    episode.CycleProfileId.Value,
+                    episode.StartDate,
+                    episode.EndDate,
+                    episode.Status,
+                    episode.ExcludedFromPredictions))],
+                Goal: profile.Goal,
+                ReproductiveState: profile.ReproductiveState,
+                HideFromDashboard: profile.HideFromDashboard,
+                Consents: ToConsentReadModels(profile));
+
+        private static IReadOnlyCollection<CycleConsentReadModel> ToConsentReadModels(CycleProfile profile) =>
+            [.. profile.Consents.Select(static consent => new CycleConsentReadModel(
+                consent.Id.Value,
+                consent.CycleProfileId.Value,
+                consent.Purpose,
+                consent.GrantedAtUtc,
+                consent.RevokedAtUtc))];
+    }
+
+    private static IMealNutritionStatisticsReadService CreateStatisticsReadService(IReadOnlyList<MealNutritionStatisticsBucket> buckets) {
+        IMealNutritionStatisticsReadService service = Substitute.For<IMealNutritionStatisticsReadService>();
+        service
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success(buckets)));
+        return service;
+    }
+
+    private static IMealNutritionStatisticsReadService CreateFailingStatisticsReadService(Error error) {
+        IMealNutritionStatisticsReadService service = Substitute.For<IMealNutritionStatisticsReadService>();
+        service
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(error)));
+        return service;
+    }
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                Error? error = user switch {
+                    null => Errors.Authentication.InvalidToken,
+                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
+                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    _ => null,
+                };
+                return Task.FromResult(error);
+            });
+
+        return service;
+    }
+}

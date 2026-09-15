@@ -1,0 +1,27 @@
+namespace FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
+
+public sealed record CycleHttpResponse(
+    Guid Id,
+    Guid UserId,
+    int Mode,
+    int Confidence,
+    DateTime TrackingStartDate,
+    int AverageCycleLength,
+    int AveragePeriodLength,
+    int LutealLength,
+    bool IsRegular,
+    bool IsOnboardingComplete,
+    bool ShowFertilityEstimates,
+    bool DiscreetNotifications,
+    string? Notes,
+    IReadOnlyCollection<BleedingEntryHttpResponse> BleedingEntries,
+    IReadOnlyCollection<CycleSymptomEntryHttpResponse> Symptoms,
+    IReadOnlyCollection<CycleFactorHttpResponse> Factors,
+    IReadOnlyCollection<FertilitySignalHttpResponse> FertilitySignals,
+    IReadOnlyCollection<MenstrualEpisodeHttpResponse> MenstrualEpisodes,
+    CyclePredictionsHttpResponse? Predictions,
+    int Goal = 0,
+    int ReproductiveState = 0,
+    bool HideFromDashboard = false,
+    IReadOnlyCollection<CycleConsentHttpResponse>? Consents = null,
+    IReadOnlyCollection<CyclePredictionRevisionHttpResponse>? PredictionRevisions = null);

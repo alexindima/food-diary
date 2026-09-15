@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Cycles.Commands.ClearCycleDay;
+namespace FoodDiary.Modules.Cycles.Application.Commands.ClearCycleDay;
 
 public sealed class ClearCycleDayCommandValidator : AbstractValidator<ClearCycleDayCommand> {
     public ClearCycleDayCommandValidator() {

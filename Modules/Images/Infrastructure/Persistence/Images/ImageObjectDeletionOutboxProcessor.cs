@@ -1,7 +1,7 @@
+using FoodDiary.Outbox.Infrastructure.Options;
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Infrastructure.Options;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

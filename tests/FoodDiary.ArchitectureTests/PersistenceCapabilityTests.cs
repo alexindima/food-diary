@@ -50,7 +50,8 @@ public sealed class PersistenceCapabilityTests {
         (string Path, string Source)[] sources = [.. ModuleSourceCatalog.InfrastructureFiles()
             .Where(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path).StartsWith($"Modules{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
                 || Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path).StartsWith($"FoodDiary.ReadModel.Composition{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Model{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Model{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
+                && !path.Contains($"{Path.DirectorySeparatorChar}PersistenceModel{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Select(path => (Path: Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path).Replace('\\', '/'), Source: File.ReadAllText(path)))];
         IReadOnlyDictionary<string, string[]> actual = PersistenceCapabilityScanner.Scan(
             sources.Select(source => (source.Path, WithProjectUsings(source.Path, source.Source))));

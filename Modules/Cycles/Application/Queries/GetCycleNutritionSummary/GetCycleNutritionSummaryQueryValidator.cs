@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
+namespace FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
 
 public sealed class GetCycleNutritionSummaryQueryValidator : AbstractValidator<GetCycleNutritionSummaryQuery> {
     public GetCycleNutritionSummaryQueryValidator() {

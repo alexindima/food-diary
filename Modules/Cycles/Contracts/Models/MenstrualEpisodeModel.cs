@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 
-namespace FoodDiary.Application.Cycles.Models;
+namespace FoodDiary.Modules.Cycles.Contracts.Models;
 
 public sealed record MenstrualEpisodeModel(
     Guid Id,

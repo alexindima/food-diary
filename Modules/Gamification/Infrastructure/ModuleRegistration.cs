@@ -1,11 +1,11 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
+using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using FoodDiary.Infrastructure.Options;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Gamification;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

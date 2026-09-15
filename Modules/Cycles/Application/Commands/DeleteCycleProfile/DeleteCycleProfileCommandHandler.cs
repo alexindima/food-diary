@@ -1,13 +1,15 @@
+using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Contracts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Cycles.Internal;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Cycles.Application.Internal;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
+namespace FoodDiary.Modules.Cycles.Application.Commands.DeleteCycleProfile;
 
 public sealed class DeleteCycleProfileCommandHandler(
     ICycleWriteRepository cycleRepository,

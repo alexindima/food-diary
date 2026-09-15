@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using System.Data.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Application.Abstractions.Email.Common;

@@ -23,13 +23,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
+          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
         }
       ],
-      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
+      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
       "baseRef": "HEAD",
-      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
-      "reviewedAtUtc": "2026-09-14T02:13:36.3567661Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:41:48.8189675Z"
     },
     {
       "pageId": "module.frontend",
@@ -67,22 +67,14 @@
       "pageSha256": "1f2d93b0ccd86a9a9aecd6ac712685b0936eba4ccc90213b6a8ae77189c78e86",
       "sources": [
         {
-          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
-          "sha256": "8b3edcf5ee1a8dc04880796a20fbc0c3a2f2e5788e11bb32bc0238a9972ca7b0"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
-        },
-        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "9635144912989b085b54fd13d7060d9a2a5242f779ff5d0aed404a179b9c8297"
+          "sha256": "549747e1cb63c31019af610d866f17a075952e016f38f5fd5cac6d92a6ac2513"
         }
       ],
-      "reason": "Verified unchanged ContentReports DTO and controller bodies after namespace/import normalization, unchanged HTTP snapshots, and passing Swagger/Admin/ContentReports and presentation tests. New ports are infrastructure-only.",
+      "reason": "Outbox runtime extraction has no HTTP payload or route changes; concurrent Cycles source moves are outside this behavioral attestation.",
       "baseRef": "HEAD",
-      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
-      "reviewedAtUtc": "2026-09-15T04:30:24.5885810Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:41:49.0925504Z"
     },
     {
       "pageId": "system.architecture",
@@ -90,22 +82,14 @@
       "pageSha256": "c247b430bbc9df2977a31d15bd2ccae1d483fc8e800dfab92db6fd031097f948",
       "sources": [
         {
-          "path": "docs/adr/0040-hydration-runtime-context-pilot.md",
-          "sha256": "8b3edcf5ee1a8dc04880796a20fbc0c3a2f2e5788e11bb32bc0238a9972ca7b0"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "82446d72bf86bca2bade30562654b54f2f6e961f45ce7c3b855b4741cd318d5b"
+          "sha256": "979b9671c00570d741800d17c2488cc82c67a59c214bf17d7d2ac3be720eb1dc"
         }
       ],
-      "reason": "Reviewed owner-context cleanup, per-item retry/save/reset semantics, typed Dietologist audit inspection and direct shared audit model ownership against current sources and ADR 0040.",
+      "reason": "Cycles review complete: sibling projects, canonical namespaces, two repository ports, owner requests through mediator and module-owned invariant tests. Dependency matrix reflects reviewed direct references; no HTTP or persistence schema change.",
       "baseRef": "HEAD",
-      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
-      "reviewedAtUtc": "2026-09-15T04:30:25.9935918Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:34:26.7362064Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -143,14 +127,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "995ead1cd535f9242447551e1ad8d3a1a4ac76766732617e6e1f9186de1ed99f"
+          "path": "AGENTS.md",
+          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
         }
       ],
-      "reason": "Reviewed after adding ADR 0041 to the ADR index. The accepted-decision versus living-guidance versus compiled-navigation authority model and ADR lifecycle are unchanged.",
+      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
       "baseRef": "HEAD",
-      "gitHead": "c98fcf1d639319252ca959b488d9200304b61dd2",
-      "reviewedAtUtc": "2026-09-14T22:14:17.8569922Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:41:49.4214401Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -222,18 +206,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "82446d72bf86bca2bade30562654b54f2f6e961f45ce7c3b855b4741cd318d5b"
+          "sha256": "979b9671c00570d741800d17c2488cc82c67a59c214bf17d7d2ac3be720eb1dc"
         }
       ],
-      "reason": "Reviewed transitive dependency guards, restricted tracker consumer, project discovery coverage, Docker relocation paths and deterministic regression corrections; test receipts distinguish complete focused runs from the stopped supplemental run.",
+      "reason": "Cycles review complete: sibling projects, canonical namespaces, two repository ports, owner requests through mediator and module-owned invariant tests. Dependency matrix reflects reviewed direct references; no HTTP or persistence schema change.",
       "baseRef": "HEAD",
-      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
-      "reviewedAtUtc": "2026-09-15T04:30:27.7205410Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:34:27.5759365Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -505,13 +485,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "9635144912989b085b54fd13d7060d9a2a5242f779ff5d0aed404a179b9c8297"
+          "sha256": "549747e1cb63c31019af610d866f17a075952e016f38f5fd5cac6d92a6ac2513"
         }
       ],
-      "reason": "Reviewed transitive dependency guards, restricted tracker consumer, project discovery coverage, Docker relocation paths and deterministic regression corrections; test receipts distinguish complete focused runs from the stopped supplemental run.",
+      "reason": "Dependency matrix, transitive boundary guards and persistence technical source inventory now cover the shared outbox owner; selected tests and corrective receipts are recorded.",
       "baseRef": "HEAD",
-      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
-      "reviewedAtUtc": "2026-09-15T04:30:29.6489359Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:41:50.1552976Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1106,13 +1086,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
+          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
         }
       ],
-      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
+      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
       "baseRef": "HEAD",
-      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
-      "reviewedAtUtc": "2026-09-14T02:13:42.2979378Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:41:49.7562454Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1165,18 +1145,14 @@
       "pageSha256": "e5c1c45cba2de6a789ce3cf71d779111b5c3925c6bdc3157e319c4bfac9cc3eb",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "5b9ea206e1ece9d170c5926c9b1734e1754172ee3811dc00e8effe67e9520945"
-        },
-        {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "297888c57004d3bda6fe1e3271133387f937db12d0d7e5cfd0df20963492ebaa"
+          "path": "AGENTS.md",
+          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:29.2635306Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:41:50.6727571Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1185,13 +1161,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "71c20bc713b2215770e89260a9967e9493b520e6539388d50c458c1e9c0e1a0c"
+          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
         }
       ],
-      "reason": "Reviewed infrastructure factory contract and Hydration registration against current sources. Factory implementation unchanged; scoped identity, shared connection and participant registration covered by DI tests; unit of work and transaction ownership retained. Parallel Ai edits are outside this factory pilot.",
+      "reason": "Dependency matrix, transitive boundary guards and persistence technical source inventory now cover the shared outbox owner; selected tests and corrective receipts are recorded.",
       "baseRef": "HEAD",
-      "gitHead": "78e4b522aa4b24da9da6cddbf579c5eb3a256fcb",
-      "reviewedAtUtc": "2026-09-14T02:13:46.013156Z"
+      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
+      "reviewedAtUtc": "2026-09-15T05:41:51.1800342Z"
     }
   ]
 }

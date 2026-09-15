@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Cycles.Commands.UpdateCycleConsent;
+namespace FoodDiary.Modules.Cycles.Application.Commands.UpdateCycleConsent;
 
 public sealed record UpdateCycleConsentCommand(
     Guid? UserId,

@@ -1,6 +1,6 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Notifications;

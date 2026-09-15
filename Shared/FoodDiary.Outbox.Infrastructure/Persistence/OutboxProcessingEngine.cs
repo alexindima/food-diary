@@ -1,0 +1,198 @@
+using FoodDiary.Infrastructure.Persistence.Outbox;
+using System.Diagnostics;
+using FoodDiary.Outbox.Infrastructure.Options;
+using FoodDiary.Outbox.Infrastructure.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace FoodDiary.Outbox.Infrastructure.Persistence;
+
+public static class OutboxProcessingEngine {
+    public static async Task<int> ProcessDueAsync<TMessage>(
+        DbContext context,
+        DbSet<TMessage> messages,
+        string tableName,
+        string outboxName,
+        int batchSize,
+        OutboxProcessingOptions options,
+        TimeProvider timeProvider,
+        Func<TMessage, CancellationToken, Task> dispatchAsync,
+        Func<TMessage, object?> messageIdentity,
+        ILogger logger,
+        IQueryable<TMessage>? claimedQuery = null,
+        CancellationToken cancellationToken = default,
+        Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync = null,
+        Action? ensureCleanEntry = null)
+        where TMessage : class, IOutboxMessage {
+        if (batchSize <= 0) {
+            return 0;
+        }
+
+        if (!OutboxProcessingOptions.HasValidConfiguration(options)) {
+            throw new ArgumentException("Outbox processing durations are invalid.", nameof(options));
+        }
+
+        var stopwatch = Stopwatch.StartNew();
+        try {
+            int processed = 0;
+            for (int i = 0; i < batchSize; i++) {
+                cancellationToken.ThrowIfCancellationRequested();
+                ensureCleanEntry?.Invoke();
+                DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+                OutboxClaimBatch<TMessage> claim = await OutboxMessageClaimer
+                    .ClaimDueAsync(
+                        context,
+                        messages,
+                        tableName,
+                        batchSize: 1,
+                        nowUtc,
+                        options.LeaseDuration,
+                        claimedQuery,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                if (claim.Messages.Count == 0) {
+                    break;
+                }
+
+                OutboxTelemetry.RecordOutboxMessages(outboxName, "claimed", claim.Messages.Count);
+                OutboxTelemetry.RecordOutboxMessages(outboxName, "reclaimed", claim.ReclaimedCount);
+                if (await ProcessClaimedMessageAsync(
+                        context,
+                        claim.Messages[0],
+                        outboxName,
+                        options,
+                        timeProvider,
+                        dispatchAsync,
+                        messageIdentity,
+                        logger,
+                        tryReleaseUpdatedRevisionAsync,
+                        cancellationToken).ConfigureAwait(false)) {
+                    processed++;
+                }
+            }
+
+            DateTime observedAtUtc = timeProvider.GetUtcNow().UtcDateTime;
+            DateTime? oldestCreatedOnUtc = await messages
+                .AsNoTracking()
+                .Where(message => message.ProcessedOnUtc == null && message.DeadLetteredOnUtc == null)
+                .MinAsync(message => (DateTime?)message.CreatedOnUtc, cancellationToken)
+                .ConfigureAwait(false);
+            OutboxTelemetry.RecordOutboxOldestPendingAge(outboxName, observedAtUtc, oldestCreatedOnUtc);
+            return processed;
+        } finally {
+            stopwatch.Stop();
+            OutboxTelemetry.RecordOutboxProcessingDuration(outboxName, stopwatch.Elapsed.TotalMilliseconds);
+        }
+    }
+
+    private static async Task<bool> ProcessClaimedMessageAsync<TMessage>(
+        DbContext context,
+        TMessage message,
+        string outboxName,
+        OutboxProcessingOptions options,
+        TimeProvider timeProvider,
+        Func<TMessage, CancellationToken, Task> dispatchAsync,
+        Func<TMessage, object?> messageIdentity,
+        ILogger logger,
+        Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync,
+        CancellationToken cancellationToken)
+        where TMessage : class, IOutboxMessage {
+        string outcome;
+        Exception? dispatchFailure = null;
+        try {
+            using var dispatchTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            dispatchTimeout.CancelAfter(options.DispatchTimeout);
+            await dispatchAsync(message, dispatchTimeout.Token).ConfigureAwait(false);
+            message.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
+            outcome = "processed";
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
+        } catch (OperationCanceledException ex) {
+            OutboxTelemetry.RecordOutboxMessages(outboxName, "dispatch_timeout", 1);
+            dispatchFailure = new TimeoutException("Outbox dispatch exceeded its configured time budget.", ex);
+            outcome = ApplyFailure(message, dispatchFailure, timeProvider);
+        } catch (Exception ex) {
+            dispatchFailure = ex;
+            outcome = ApplyFailure(message, ex, timeProvider);
+        }
+
+        using var finalizationTimeout = new CancellationTokenSource(options.FinalizationTimeout);
+        try {
+            await context.SaveChangesAsync(finalizationTimeout.Token).ConfigureAwait(false);
+        } catch (DbUpdateConcurrencyException exception) when (exception.Entries.Any(entry => ReferenceEquals(entry.Entity, message))) {
+            if (tryReleaseUpdatedRevisionAsync is null ||
+                await tryReleaseUpdatedRevisionAsync(message, finalizationTimeout.Token).ConfigureAwait(false) != OutboxCompletionResult.Requeued) {
+                return ReleaseLostClaim(context, outboxName);
+            }
+            try {
+                await context.SaveChangesAsync(finalizationTimeout.Token).ConfigureAwait(false);
+            } catch (DbUpdateConcurrencyException) {
+                return ReleaseLostClaim(context, outboxName);
+            }
+            outcome = "requeued";
+            dispatchFailure = null;
+        }
+        if (dispatchFailure is not null) {
+            LogFailure(message, dispatchFailure, outboxName, messageIdentity, logger);
+        }
+        RecordOutcome(outboxName, outcome);
+        context.ChangeTracker.Clear();
+        return string.Equals(outcome, "processed", StringComparison.Ordinal);
+    }
+
+    private static void RecordOutcome(string outboxName, string outcome) {
+        switch (outcome) {
+            case "processed":
+                OutboxTelemetry.RecordOutboxMessages(outboxName, "processed", 1);
+                break;
+            case "retried":
+                OutboxTelemetry.RecordOutboxMessages(outboxName, "retried", 1);
+                break;
+            case "dead_lettered":
+                OutboxTelemetry.RecordOutboxMessages(outboxName, "dead_lettered", 1);
+                break;
+            case "requeued":
+                OutboxTelemetry.RecordOutboxMessages(outboxName, "requeued", 1);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(outcome), outcome, "Unsupported outbox processing outcome.");
+        }
+    }
+
+    private static bool ReleaseLostClaim(DbContext context, string outboxName) {
+        OutboxTelemetry.RecordOutboxMessages(outboxName, "claim_lost", 1);
+        context.ChangeTracker.Clear();
+        return false;
+    }
+
+    private static string ApplyFailure<TMessage>(TMessage message, Exception exception, TimeProvider timeProvider)
+        where TMessage : IOutboxMessage {
+        int attemptCount = message.AttemptCount + 1;
+        string error = OutboxProcessingPolicy.FormatSafeError(exception);
+        DateTime failedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
+        if (OutboxProcessingPolicy.ShouldDeadLetter(attemptCount)) {
+            message.MarkDeadLettered(error, failedOnUtc);
+            return "dead_lettered";
+        }
+        message.MarkFailed(error, failedOnUtc.Add(OutboxProcessingPolicy.CalculateRetryDelay(attemptCount)));
+        return "retried";
+    }
+
+    private static void LogFailure<TMessage>(
+        TMessage message,
+        Exception exception,
+        string outboxName,
+        Func<TMessage, object?> messageIdentity,
+        ILogger logger)
+        where TMessage : IOutboxMessage {
+        if (message.DeadLetteredOnUtc is not null) {
+            logger.LogError(
+                "{OutboxName} outbox dead-lettered {MessageIdentity} after {AttemptCount} attempts. ErrorType={ErrorType}",
+                outboxName, messageIdentity(message), message.AttemptCount, exception.GetType().Name);
+            return;
+        }
+        logger.LogWarning(
+            "{OutboxName} outbox failed for {MessageIdentity}. Attempt {AttemptCount} of {MaxAttemptCount}. ErrorType={ErrorType}",
+            outboxName, messageIdentity(message), message.AttemptCount, OutboxProcessingPolicy.MaxAttemptCount, exception.GetType().Name);
+    }
+}

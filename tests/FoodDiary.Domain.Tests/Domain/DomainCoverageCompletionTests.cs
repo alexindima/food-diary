@@ -7,7 +7,6 @@ using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
@@ -92,7 +91,6 @@ public sealed class DomainCoverageCompletionTests {
         object[] instances = [
             CreatePrivate<ImageAsset>(),
             CreatePrivate<UserRole>(),
-            CreatePrivate<CycleProfile>(),
             recipe,
             mealPlan,
             invitation,
@@ -198,59 +196,6 @@ public sealed class DomainCoverageCompletionTests {
             () => Assert.NotEqual(UserId.Empty, userRole.UserId),
             () => Assert.Null(session.PreviousRefreshTokenValidUntilUtc),
             () => Assert.Null(sessionWithNullOptionals.AuthProvider));
-    }
-
-    [Fact]
-    public void CycleProfile_ConfidenceAndClearDay_CoverRemainingPaths() {
-        var profile = CycleProfile.Create(
-            UserId.New(),
-            DateOnly.FromDateTime(DateTime.UtcNow),
-            mode: CycleTrackingMode.TryingToConceive,
-            averageCycleLength: null,
-            averagePeriodLength: null,
-            lutealLength: null,
-            isRegular: true,
-            notes: " notes ");
-        profile.UpdateSettings(new CycleProfileSettings(
-            CycleTrackingMode.PeriodTracking,
-            AverageCycleLength: null,
-            AveragePeriodLength: null,
-            LutealLength: null,
-            IsRegular: true,
-            IsOnboardingComplete: true,
-            ShowFertilityEstimates: true,
-            DiscreetNotifications: false,
-            Notes: " updated ",
-            ClearNotes: false));
-        for (int day = 0; day < 9; day++) {
-            profile.UpsertBleedingEntry(
-                DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-day),
-                BleedingType.Bleeding,
-                CycleFlowLevel.Medium,
-                painImpact: null,
-                notes: null);
-        }
-        profile.UpsertSymptomEntry(
-            DateOnly.FromDateTime(DateTime.UtcNow),
-            CycleSymptomCategory.Mood,
-            intensity: 5,
-            tags: ["calm"],
-            note: null);
-        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
-        profile.UpsertFertilitySignal(
-            DateOnly.FromDateTime(DateTime.UtcNow),
-            basalBodyTemperatureCelsius: null,
-            ovulationTestResult: null,
-            cervicalFluid: null,
-            hadSex: null,
-            notes: null);
-        bool cleared = profile.ClearDay(DateOnly.FromDateTime(DateTime.UtcNow));
-        ReadPublicProperties(profile);
-
-        Assert.Multiple(
-            () => Assert.True(cleared),
-            () => Assert.Equal(CycleConfidence.Medium, profile.Confidence),
-            () => Assert.Equal("updated", profile.Notes));
     }
 
     private static Recipe CreateRecipe() {

@@ -2,7 +2,7 @@ using System.Reflection;
 using FoodDiary.Modules.Admin.Presentation.Responses;
 using FoodDiary.Modules.Ai.Presentation.Responses;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;
-using FoodDiary.Presentation.Api.Features.Cycles.Responses;
+using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
 using FoodDiary.Presentation.Api.Features.Lessons.Responses;

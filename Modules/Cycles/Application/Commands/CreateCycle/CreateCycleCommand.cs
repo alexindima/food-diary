@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 
-namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
+namespace FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
 
 public record CreateCycleCommand(
     Guid? UserId,

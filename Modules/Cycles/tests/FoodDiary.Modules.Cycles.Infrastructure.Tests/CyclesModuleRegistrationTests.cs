@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +17,10 @@ public sealed class CyclesModuleRegistrationTests {
 
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
-        ICycleRepository repository = scope.ServiceProvider.GetRequiredService<ICycleRepository>();
+        CycleRepository repository = scope.ServiceProvider.GetRequiredService<CycleRepository>();
 
         Assert.Multiple(
             () => Assert.IsType<CycleRepository>(repository),
-            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<ICycleReadRepository>()),
             () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<ICycleReadModelRepository>()),
             () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<ICycleWriteRepository>()));
     }

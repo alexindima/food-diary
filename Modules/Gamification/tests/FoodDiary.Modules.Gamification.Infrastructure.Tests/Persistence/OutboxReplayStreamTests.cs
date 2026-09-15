@@ -1,9 +1,9 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

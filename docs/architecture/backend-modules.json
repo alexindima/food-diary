@@ -276,7 +276,7 @@
           "Modules/Cycles/Application"
         ],
         "abstractionAreas": [
-          "Modules/Cycles/Application/Abstractions"
+          "Modules/Cycles/Application.Abstractions"
         ],
         "domainAreas": [
           "Modules/Cycles/Domain"

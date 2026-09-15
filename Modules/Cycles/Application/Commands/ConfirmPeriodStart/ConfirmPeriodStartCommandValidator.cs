@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
+namespace FoodDiary.Modules.Cycles.Application.Commands.ConfirmPeriodStart;
 
 public sealed class ConfirmPeriodStartCommandValidator : AbstractValidator<ConfirmPeriodStartCommand> {
     public ConfirmPeriodStartCommandValidator() {

@@ -570,7 +570,6 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Modules/Ai/Application.Abstractions/Common/AiErrors.cs", "AiErrors", "Ai")]
     [InlineData("Modules/Billing/Application.Abstractions/Common/BillingErrors.cs", "BillingErrors", "Billing")]
     [InlineData("Modules/Cycles/Contracts/Common/CycleErrors.cs", "CycleErrors", "Cycle")]
-    [InlineData("Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs", "CycleDayErrors", "CycleDay")]
     [InlineData("Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistErrors.cs", "DietologistErrors", "Dietologist")]
     [InlineData("Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs", "FavoriteMealErrors", "FavoriteMeal")]
     [InlineData("Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs", "FavoriteProductErrors", "FavoriteProduct")]
@@ -1185,7 +1184,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ExportCycleQuery_UsesDedicatedCycleReadServiceInsteadOfCycleRepository() {
+    public void ExportCycleQuery_UsesOwnerRequestInsteadOfCycleRepository() {
         string root = GetRepositoryRoot();
         string exportCycleQueriesRoot = Path.Combine(root, "Modules", "Export", "Application", "Queries", "ExportCycle");
         string[] exportCycleQueryFiles = [.. SourceScanner.SourceFiles(exportCycleQueriesRoot)];
@@ -1406,7 +1405,7 @@ public sealed class ApplicationGuardrailTests {
         string[] contractFiles = [
             Path.Combine(root, "Modules", "Ai", "Application.Abstractions", "Common", "IAiPromptTemplateReadModelRepository.cs"),
             Path.Combine(root, "Modules", "DailyAdvices", "Application", "Abstractions", "Common", "IDailyAdviceReadModelRepository.cs"),
-            Path.Combine(root, "Modules", "Cycles", "Application", "Abstractions", "Common", "ICycleReadRepository.cs"),
+            Path.Combine(root, "Modules", "Cycles", "Application.Abstractions", "Common", "ICycleReadModelRepository.cs"),
         ];
 
         string[] violations = [
@@ -1734,16 +1733,12 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void CycleReadService_UsesCycleReadModelsInsteadOfProfileAggregates() {
+    public void CycleQueries_UseCycleReadModelsInsteadOfProfileAggregates() {
         string root = GetRepositoryRoot();
-        string servicePath = Path.Combine(
-            root,
-            "Modules",
-            "Cycles",
-            "Application",
-            "Services",
-            "CycleReadService.cs");
-        string[] serviceFiles = [servicePath];
+        string[] serviceFiles = [
+            Path.Combine(root, "Modules", "Cycles", "Application", "Queries", "GetCurrentCycle", "GetCurrentCycleQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Cycles", "Application", "Queries", "GetCycleNutritionSummary", "GetCycleNutritionSummaryQueryHandler.cs"),
+        ];
 
         string[] violations = [
             .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),

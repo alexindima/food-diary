@@ -9,7 +9,7 @@ Rules for `Modules/Gamification/`.
 - Own achievement evaluation, awarding, reconciliation, administration, reads, achievement domain types, application ports, EF adapters, and owned EF configurations.
 - Preserve the legacy `FoodDiary.Application.Gamification` assembly and existing CLR namespaces.
 - Register the complete module through Infrastructure's `AddGamificationModule`; hosts remain composition roots.
-- Keep `FoodDiaryDbContext`, historical migrations, snapshot, and generic claiming/retry/dead-letter replay central. Gamification's evaluation outbox record and EF mapping belong to its PersistenceModel project, using the shared Outbox.Abstractions contract. Preserve revision/coalescing and claim-release behavior.
+- Keep `FoodDiaryDbContext`, historical migrations, snapshot and dead-letter replay coordination central. Generic claiming/retry live in shared Outbox.Infrastructure. Gamification's evaluation outbox record and EF mapping belong to its PersistenceModel project, using the shared Outbox.Abstractions contract. Preserve revision/coalescing and claim-release behavior.
 - Read Meals, Dashboard, Users, and Lessons only through application-level capabilities.
 - AchievementEvaluationOutboxReplayStream owns dead-letter queries and user-id preview metadata, registered once per scope through AddGamificationModule. The shared replay coordinator owns audit/reset/save/transaction; preserve revision and attempt-count semantics, and never save from the stream adapter.
 
@@ -58,3 +58,5 @@ checks the shared scope through IModuleScopeGuard before each claim;
 do not conflate that invariant with read-only transaction access.
 
 The administration definitions query receives only IAchievementDefinitionReadModelRepository. AchievementDefinitionStore implements that projection alias on the same scoped adapter, preserving SQL ordering and distinct award counts; commands and evaluation retain their aggregate store. Query handlers must not map AchievementDefinition aggregates.
+
+Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.

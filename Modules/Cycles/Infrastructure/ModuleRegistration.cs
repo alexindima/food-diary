@@ -1,8 +1,8 @@
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Cycles.Common;
-using FoodDiary.Application.Cycles;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Application;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,11 +14,10 @@ public static class ModuleRegistration {
         services.AddCyclesApplication();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<CyclesDbContext>(static options => new CyclesDbContext(options)));
-        services.AddScoped<ICycleRepository>(static provider => new CycleRepository(
+        services.AddScoped<CycleRepository>(static provider => new CycleRepository(
             provider.GetRequiredService<CyclesDbContext>().CycleProfiles));
-        services.AddScoped<ICycleReadRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
-        services.AddScoped<ICycleReadModelRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
-        services.AddScoped<ICycleWriteRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
+        services.AddScoped<ICycleReadModelRepository>(static provider => provider.GetRequiredService<CycleRepository>());
+        services.AddScoped<ICycleWriteRepository>(static provider => provider.GetRequiredService<CycleRepository>());
         return services;
     }
 }

@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4105,
-    "symbols": 4046,
-    "interfaceImplementationLinks": 240,
-    "dependencyInjectionRegistrations": 134,
+    "sourceFiles": 4103,
+    "symbols": 4043,
+    "interfaceImplementationLinks": 238,
+    "dependencyInjectionRegistrations": 133,
     "kinds": {
       "class": 2129,
       "enum": 64,
-      "interface": 448,
+      "interface": 445,
       "record": 1284,
       "record struct": 121
     },
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1645,
+      "Other": 1646,
       "Query": 237,
       "QueryHandler": 165,
       "ReadModelRepository": 32,
-      "ReadRepository": 40,
-      "Repository": 99,
+      "ReadRepository": 39,
+      "Repository": 98,
       "Request": 150,
       "Response": 213,
-      "Service": 261,
+      "Service": 259,
       "Validator": 225,
       "ValueObject": 115,
       "WriteRepository": 45
@@ -514,14 +514,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Options.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "DomainEventNotification",
@@ -550,13 +550,6 @@
       "role": "Options",
       "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
       "line": 4
-    },
-    {
-      "name": "OutboxProcessingOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Infrastructure/Options/OutboxProcessingOptions.cs",
-      "line": 2
     },
     {
       "name": "AuditEntryService",
@@ -850,7 +843,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "FoodDiaryDbContext",
@@ -895,60 +888,11 @@
       "line": 4
     },
     {
-      "name": "IOutboxReplayStream",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs",
-      "line": 6
-    },
-    {
-      "name": "OutboxClaimBatch",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxClaimBatch.cs",
-      "line": 2
-    },
-    {
-      "name": "OutboxCompletionResult",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxCompletionResult.cs",
-      "line": 2
-    },
-    {
       "name": "OutboxDeadLetterReplayService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 9
-    },
-    {
-      "name": "OutboxMessageClaimer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 8
-    },
-    {
-      "name": "OutboxProcessingEngine",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 8
-    },
-    {
-      "name": "OutboxProcessingPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "OutboxReplayEntry",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
-      "line": 4
+      "line": 10
     },
     {
       "name": "EfIndependentModuleContextOptionsFactory",
@@ -1011,7 +955,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Services/InfrastructureTelemetry.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "StructuredAuditLogger",
@@ -2264,7 +2208,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 55
+      "line": 56
     },
     {
       "name": "ApiTelemetry",
@@ -7342,94 +7286,73 @@
       "line": 2
     },
     {
-      "name": "CycleDayErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs",
-      "line": 5
-    },
-    {
       "name": "ICycleReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleReadModelRepository.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Common/ICycleReadModelRepository.cs",
       "line": 5
-    },
-    {
-      "name": "ICycleReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ICycleRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleRepository.cs",
-      "line": 2
     },
     {
       "name": "ICycleWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleWriteRepository.cs",
-      "line": 5
+      "path": "Modules/Cycles/Application.Abstractions/Common/ICycleWriteRepository.cs",
+      "line": 6
     },
     {
       "name": "BleedingEntryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/BleedingEntryReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/BleedingEntryReadModel.cs",
       "line": 4
     },
     {
       "name": "CycleConsentReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleConsentReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleConsentReadModel.cs",
       "line": 4
     },
     {
       "name": "CycleFactorReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleFactorReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleFactorReadModel.cs",
       "line": 4
     },
     {
       "name": "CyclePredictionRevisionReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CyclePredictionRevisionReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CyclePredictionRevisionReadModel.cs",
       "line": 2
     },
     {
       "name": "CycleProfileReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleProfileReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleProfileReadModel.cs",
       "line": 4
     },
     {
       "name": "CycleSymptomEntryReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleSymptomEntryReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleSymptomEntryReadModel.cs",
       "line": 4
     },
     {
       "name": "FertilitySignalReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/FertilitySignalReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/FertilitySignalReadModel.cs",
       "line": 4
     },
     {
       "name": "MenstrualEpisodeReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Application/Abstractions/Models/MenstrualEpisodeReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/MenstrualEpisodeReadModel.cs",
       "line": 4
     },
     {
@@ -7444,7 +7367,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "ClearCycleDayCommandValidator",
@@ -7465,7 +7388,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "ConfirmPeriodStartCommandValidator",
@@ -7507,7 +7430,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "DeleteCycleProfileCommandValidator",
@@ -7528,7 +7451,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "DeleteMenstrualEpisodeCommandValidator",
@@ -7549,7 +7472,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "UpdateCycleConsentCommandValidator",
@@ -7570,7 +7493,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "UpdateCycleSettingsCommandValidator",
@@ -7591,7 +7514,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "UpdateMenstrualEpisodeCommandValidator",
@@ -7633,7 +7556,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "UpsertCycleDayCommandValidator",
@@ -7654,7 +7577,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "UpsertCycleFactorCommandValidator",
@@ -7668,7 +7591,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Application/DependencyInjection.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "RequiredIdParser",
@@ -7696,7 +7619,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-      "line": 9
+      "line": 13
+    },
+    {
+      "name": "CycleNutritionSummaryCalculator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "line": 7
     },
     {
       "name": "GetCycleNutritionSummaryQuery",
@@ -7710,7 +7640,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "line": 10
+      "line": 14
     },
     {
       "name": "GetCycleNutritionSummaryQueryValidator",
@@ -7734,25 +7664,11 @@
       "line": 7
     },
     {
-      "name": "CycleReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "line": 13
-    },
-    {
       "name": "CycleErrors",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Contracts/Common/CycleErrors.cs",
       "line": 4
-    },
-    {
-      "name": "ICycleReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Cycles/Contracts/Common/ICycleReadService.cs",
-      "line": 6
     },
     {
       "name": "BleedingEntryModel",
@@ -7919,63 +7835,63 @@
       "name": "BleedingEntry",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/BleedingEntry.cs",
       "line": 6
     },
     {
       "name": "CycleConsent",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleConsent.cs",
       "line": 6
     },
     {
       "name": "CycleFactor",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
       "line": 6
     },
     {
       "name": "CyclePredictionRevision",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
       "line": 6
     },
     {
       "name": "CycleProfile",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 6
+      "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
+      "line": 7
     },
     {
       "name": "CycleProfileSettings",
       "kind": "record",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfileSettings.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleProfileSettings.cs",
       "line": 4
     },
     {
       "name": "CycleSymptomEntry",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleSymptomEntry.cs",
       "line": 7
     },
     {
       "name": "FertilitySignal",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
       "line": 6
     },
     {
       "name": "MenstrualEpisode",
       "kind": "class",
       "role": "Entity",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "path": "Modules/Cycles/Domain/Entities/MenstrualEpisode.cs",
       "line": 6
     },
     {
@@ -8042,69 +7958,6 @@
       "line": 4
     },
     {
-      "name": "BleedingEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/BleedingEntryConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleConsentConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleConsentConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleFactorConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleFactorConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CyclePredictionRevisionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CyclePredictionRevisionConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleProfileConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleProfileConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleSymptomEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleSymptomEntryConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FertilitySignalConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/FertilitySignalConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "MenstrualEpisodeConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/MenstrualEpisodeConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CyclesPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Cycles/Infrastructure/Model/CyclesPersistenceModelRegistration.cs",
-      "line": 4
-    },
-    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
@@ -8116,14 +7969,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "CyclesDbContext",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Infrastructure/Persistence/CyclesDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "CyclesUserDataPurgeParticipant",
@@ -8133,192 +7986,255 @@
       "line": 8
     },
     {
+      "name": "BleedingEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/BleedingEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleConsentConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleConsentConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleFactorConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleFactorConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CyclePredictionRevisionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CyclePredictionRevisionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleProfileConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleProfileConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "CycleSymptomEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleSymptomEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "FertilitySignalConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/FertilitySignalConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "MenstrualEpisodeConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/MenstrualEpisodeConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CyclesPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/PersistenceModel/CyclesPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
       "name": "BleedingEntryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CycleConsentHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleConsentHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CycleFactorHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleFactorHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CycleHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CycleLogDayHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleLogDayHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CycleNutritionSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CyclePredictionRevisionHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionRevisionHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CyclePredictionsHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionsHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CycleSymptomEntryHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleSymptomEntryHttpResponse.cs",
       "line": 2
     },
     {
       "name": "FertilitySignalHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/FertilitySignalHttpResponse.cs",
       "line": 2
     },
     {
       "name": "MenstrualEpisodeHttpResponse",
       "kind": "record",
       "role": "Response",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/MenstrualEpisodeHttpResponse.cs",
       "line": 2
     },
     {
       "name": "CycleHttpResponseMappings",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
+      "path": "Modules/Cycles/Presentation.Mappings/Mappings/CycleHttpResponseMappings.cs",
       "line": 5
-    },
-    {
-      "name": "CyclesPresentationServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Cycles/Presentation/Extensions/CyclesPresentationServiceCollectionExtensions.cs",
-      "line": 4
     },
     {
       "name": "CycleLogsController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/CycleLogsController.cs",
-      "line": 14
+      "path": "Modules/Cycles/Presentation/Controllers/CycleLogsController.cs",
+      "line": 15
     },
     {
       "name": "CyclesController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/CyclesController.cs",
-      "line": 15
-    },
-    {
-      "name": "CycleHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpMappings.cs",
+      "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
       "line": 16
     },
     {
       "name": "MenstrualEpisodesController",
       "kind": "class",
       "role": "Controller",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/MenstrualEpisodesController.cs",
-      "line": 14
+      "path": "Modules/Cycles/Presentation/Controllers/MenstrualEpisodesController.cs",
+      "line": 15
+    },
+    {
+      "name": "CyclesPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Presentation/Extensions/CyclesPresentationServiceCollectionExtensions.cs",
+      "line": 5
+    },
+    {
+      "name": "CycleHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Presentation/Mappings/CycleHttpMappings.cs",
+      "line": 16
     },
     {
       "name": "BleedingLogHttpModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/BleedingLogHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/BleedingLogHttpModel.cs",
       "line": 2
     },
     {
       "name": "ConfirmPeriodStartHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/ConfirmPeriodStartHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/ConfirmPeriodStartHttpRequest.cs",
       "line": 2
     },
     {
       "name": "CreateCycleHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs",
       "line": 2
     },
     {
       "name": "FertilitySignalHttpModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/FertilitySignalHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/FertilitySignalHttpModel.cs",
       "line": 2
     },
     {
       "name": "SymptomLogHttpModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/SymptomLogHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/SymptomLogHttpModel.cs",
       "line": 2
     },
     {
       "name": "UpdateCycleConsentHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateCycleConsentHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpdateCycleConsentHttpRequest.cs",
       "line": 2
     },
     {
       "name": "UpdateCycleSettingsHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpdateCycleSettingsHttpRequest.cs",
       "line": 2
     },
     {
       "name": "UpdateMenstrualEpisodeHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateMenstrualEpisodeHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpdateMenstrualEpisodeHttpRequest.cs",
       "line": 2
     },
     {
       "name": "UpsertCycleDayHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleDayHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpsertCycleDayHttpRequest.cs",
       "line": 2
     },
     {
       "name": "UpsertCycleFactorHttpRequest",
       "kind": "record",
       "role": "Request",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs",
       "line": 2
     },
     {
@@ -10916,7 +10832,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ExportCycleQueryValidator",
@@ -28251,6 +28167,69 @@
       "line": 2
     },
     {
+      "name": "OutboxTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Diagnostics/OutboxTelemetry.cs",
+      "line": 5
+    },
+    {
+      "name": "OutboxProcessingOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Options/OutboxProcessingOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "IOutboxReplayStream",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/IOutboxReplayStream.cs",
+      "line": 6
+    },
+    {
+      "name": "OutboxClaimBatch",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxClaimBatch.cs",
+      "line": 2
+    },
+    {
+      "name": "OutboxCompletionResult",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxCompletionResult.cs",
+      "line": 2
+    },
+    {
+      "name": "OutboxMessageClaimer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "line": 9
+    },
+    {
+      "name": "OutboxProcessingEngine",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxProcessingEngine.cs",
+      "line": 9
+    },
+    {
+      "name": "OutboxProcessingPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxProcessingPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "OutboxReplayEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxReplayEntry.cs",
+      "line": 5
+    },
+    {
       "name": "IOutboxDeadLetterReplayService",
       "kind": "interface",
       "role": "Service",
@@ -28551,20 +28530,6 @@
       "interfacePath": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskRepository.cs",
       "implementation": "ClientTaskRepository",
       "implementationPath": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "ICycleReadService",
-      "interfacePath": "Modules/Cycles/Contracts/Common/ICycleReadService.cs",
-      "implementation": "CycleReadService",
-      "implementationPath": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "ICycleRepository",
-      "interfacePath": "Modules/Cycles/Application/Abstractions/Common/ICycleRepository.cs",
-      "implementation": "CycleRepository",
-      "implementationPath": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -30121,56 +30086,56 @@
       "implementation": "EfUnitOfWork",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 25
+      "line": 26
     },
     {
       "service": "IModuleTransactionCoordinator",
       "implementation": "EfModuleTransactionCoordinator",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 26
+      "line": 27
     },
     {
       "service": "IModuleSessionCoordinator",
       "implementation": "EfModuleSessionCoordinator",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 27
+      "line": 28
     },
     {
       "service": "IModuleSessionLock",
       "implementation": "EfModuleSessionLock",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 28
+      "line": 29
     },
     {
       "service": "IModuleScopeGuard",
       "implementation": "EfModuleScopeGuard",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 29
+      "line": 30
     },
     {
       "service": "IIndependentModuleContextOptionsFactory",
       "implementation": "EfIndependentModuleContextOptionsFactory",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 30
+      "line": 31
     },
     {
       "service": "IOutboxDeadLetterReplayService",
       "implementation": "OutboxDeadLetterReplayService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 32
+      "line": 33
     },
     {
       "service": "IDomainEventPublisher",
       "implementation": "MediatorDomainEventPublisher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 34
+      "line": 35
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -30247,7 +30212,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 186
+      "line": 187
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30283,13 +30248,6 @@
       "lifetime": "Scoped",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
       "line": 35
-    },
-    {
-      "service": "ICycleReadService",
-      "implementation": "CycleReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Cycles/Application/DependencyInjection.cs",
-      "line": 14
     },
     {
       "service": "IDailyAdviceReadService",

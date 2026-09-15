@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Application.Abstractions.Achievements.Common;
@@ -6,7 +7,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 

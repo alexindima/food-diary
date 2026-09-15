@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;

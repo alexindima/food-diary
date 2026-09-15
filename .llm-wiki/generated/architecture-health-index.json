@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1587,
+    "productionProjectEdges": 1592,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -5483,21 +5483,6 @@
       "marker": "todo"
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 101,
-      "marker": "#pragma warning disable"
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 132,
-      "marker": "#pragma warning disable"
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 159,
-      "marker": "#pragma warning disable"
-    },
-    {
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
@@ -5505,6 +5490,21 @@
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "line": 51,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "line": 115,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "line": 146,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "line": 173,
       "marker": "#pragma warning disable"
     }
   ]

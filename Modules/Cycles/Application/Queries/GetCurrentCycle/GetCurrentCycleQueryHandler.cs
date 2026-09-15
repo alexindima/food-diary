@@ -1,15 +1,20 @@
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
+using FoodDiary.Modules.Cycles.Application.Mappings;
+using FoodDiary.Modules.Cycles.Application.Services;
+using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Cycles.Common;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
+namespace FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle;
 
 public sealed class GetCurrentCycleQueryHandler(
-    ICycleReadService cycleReadService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICycleReadModelRepository cycleRepository,
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider timeProvider)
     : IQueryHandler<GetCurrentCycleQuery, Result<CycleModel?>> {
     public async Task<Result<CycleModel?>> Handle(
         GetCurrentCycleQuery query,
@@ -23,7 +28,7 @@ public sealed class GetCurrentCycleQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        CycleModel? cycle = await cycleReadService.GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
-        return Result.Success(cycle);
+        CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
+        return Result.Success(profile?.ToModel(CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider)));
     }
 }

@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Modules.ContentReports.Contracts.Models;
@@ -65,7 +66,6 @@ using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Infrastructure.Persistence.Notifications;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
 using FoodDiary.Infrastructure.Persistence.RecentItems;

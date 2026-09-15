@@ -9,7 +9,11 @@ public class FeatureStructureTests {
             .. Directory.GetDirectories(Path.Combine(root, "FoodDiary.Presentation.Api", "Features")),
             .. Directory.GetDirectories(Path.Combine(root, "Modules"), "Features", SearchOption.AllDirectories)
                 .Where(path => string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), "Presentation", StringComparison.Ordinal))
-                .SelectMany(Directory.GetDirectories),
+                .SelectMany(Directory.GetDirectories)
+                .Where(static path => SourceScanner.SourceFiles(path).Any()),
+            .. Directory.GetDirectories(Path.Combine(root, "Modules"))
+                .Select(static path => Path.Combine(path, "Presentation", "Controllers"))
+                .Where(Directory.Exists),
         ];
 
         Assert.NotEmpty(featureDirectories);

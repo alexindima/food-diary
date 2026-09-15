@@ -1,5 +1,6 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Application.DailyAdvices.Models;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Meals.Models;
@@ -14,7 +15,6 @@ using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;
-using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Presentation.Api.Tests;
 

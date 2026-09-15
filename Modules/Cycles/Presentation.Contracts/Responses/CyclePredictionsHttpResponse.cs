@@ -1,0 +1,21 @@
+namespace FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
+
+public sealed record CyclePredictionsHttpResponse(
+    DateTime? NextPeriodStartFrom,
+    DateTime? NextPeriodStartTo,
+    DateTime? OvulationFrom,
+    DateTime? OvulationTo,
+    DateTime? PmsWindowStart,
+    DateTime? PmsWindowEnd,
+    string Confidence,
+    string Rationale,
+    string DataSufficiency,
+    string PatternConsistency,
+    int CompletedCycleCount,
+    int UsedEpisodeCount,
+    int ExcludedEpisodeCount,
+    IReadOnlyCollection<string> ReasonCodes,
+    string AlgorithmVersion,
+    int CalibrationSampleCount = 0,
+    double? HistoricalCoveragePercent = null,
+    double? MeanAbsoluteErrorDays = null);

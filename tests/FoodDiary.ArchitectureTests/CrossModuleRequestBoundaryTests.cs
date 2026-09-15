@@ -11,6 +11,7 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("Ai")]
     [InlineData("Billing")]
     [InlineData("BodyMetrics")]
+    [InlineData("Cycles")]
     [InlineData("ContentReports")]
     public void MigratedContracts_DoNotExportServiceInterfaces(string module) {
         var contracts = Assembly.Load($"FoodDiary.Modules.{module}.Contracts");
@@ -61,6 +62,7 @@ public sealed class CrossModuleRequestBoundaryTests {
     [InlineData("FoodDiary.Application.Marketing.Commands.RecordPremiumConversion.RecordPremiumConversionCommand, FoodDiary.Modules.Marketing.Contracts", "FoodDiary.Application.Marketing.Commands.RecordPremiumConversion.RecordPremiumConversionCommandHandler, FoodDiary.Application.Marketing")]
     [InlineData("FoodDiary.Application.Abstractions.Authentication.Queries.GetLoginEvents.GetLoginEventsQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Application.Identity.Authentication.Queries.GetLoginEvents.GetLoginEventsQueryHandler, FoodDiary.Application.Identity")]
     [InlineData("FoodDiary.Application.Abstractions.Authentication.Queries.GetLoginDeviceSummary.GetLoginDeviceSummaryQuery, FoodDiary.Modules.Identity.Contracts", "FoodDiary.Application.Identity.Authentication.Queries.GetLoginDeviceSummary.GetLoginDeviceSummaryQueryHandler, FoodDiary.Application.Identity")]
+    [InlineData("FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle.GetCurrentCycleQuery, FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle.GetCurrentCycleQueryHandler, FoodDiary.Modules.Cycles.Application")]
     public void OwnerRequest_HasMatchingHandlerAndPreservesCallerCommit(string requestName, string handlerName) {
         Type request = Type.GetType(requestName, throwOnError: true)!;
         Type handler = Type.GetType(handlerName, throwOnError: true)!;

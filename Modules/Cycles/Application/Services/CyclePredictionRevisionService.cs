@@ -1,7 +1,7 @@
-using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Cycles.Domain.Entities;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 
-namespace FoodDiary.Application.Cycles.Services;
+namespace FoodDiary.Modules.Cycles.Application.Services;
 
 public static class CyclePredictionRevisionService {
     public static void Record(

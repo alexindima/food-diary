@@ -1,10 +1,10 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Cycles.Requests;
+using FoodDiary.Modules.Cycles.Presentation.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;

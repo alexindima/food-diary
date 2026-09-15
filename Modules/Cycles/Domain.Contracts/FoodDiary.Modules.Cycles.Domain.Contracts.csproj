@@ -1,5 +1,2 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>FoodDiary.Domain</RootNamespace>
-  </PropertyGroup>
 </Project>

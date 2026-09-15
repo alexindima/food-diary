@@ -1,13 +1,14 @@
+using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Cycles.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Application.Abstractions.Cycles.Common;
-using FoodDiary.Application.Abstractions.Cycles.Models;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Linq.Expressions;
 
 namespace FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 
-public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleRepository {
+public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleWriteRepository, ICycleReadModelRepository {
     private static readonly Expression<Func<CycleProfile, CycleProfileReadModel>> ReadModelProjection = profile =>
         new CycleProfileReadModel(
             profile.Id.Value,
@@ -106,17 +107,6 @@ public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleReposi
             .OrderByDescending(profile => profile.CreatedOnUtc).ThenByDescending(profile => profile.Id)
             .Select(ReadModelProjection)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task<IReadOnlyList<CycleProfile>> GetByUserAsync(
-        UserId userId,
-        bool includeDetails = false,
-        CancellationToken cancellationToken = default) {
-        IOrderedQueryable<CycleProfile> query = BuildQuery(includeDetails, asTracking: false)
-            .Where(profile => profile.UserId == userId)
-            .OrderByDescending(profile => profile.CreatedOnUtc);
-
-        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private IQueryable<CycleProfile> BuildQuery(bool includeDetails, bool asTracking) {

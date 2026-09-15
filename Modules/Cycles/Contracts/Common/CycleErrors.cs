@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Cycles.Common;
+namespace FoodDiary.Modules.Cycles.Contracts.Common;
 
 public static class CycleErrors {
     public static Error NotFound(Guid id) => new(

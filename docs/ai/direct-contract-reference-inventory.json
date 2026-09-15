@@ -161,8 +161,8 @@
     "removed": []
   },
   {
-    "path": "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
-    "project": "FoodDiary.Application.Cycles",
+    "path": "Modules/Cycles/Application/FoodDiary.Modules.Cycles.Application.csproj",
+    "project": "FoodDiary.Modules.Cycles.Application",
     "added": [
       "FoodDiary.Modules.Dashboard.Contracts"
     ],

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Cycles.Models;
+namespace FoodDiary.Modules.Cycles.Contracts.Models;
 
 public sealed record CyclePredictionRevisionModel(
     Guid Id,

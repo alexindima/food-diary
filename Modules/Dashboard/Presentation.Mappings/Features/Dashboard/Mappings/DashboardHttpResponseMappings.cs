@@ -3,7 +3,7 @@ using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WaistEntries.
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Presentation.Api.Features.Meals.Mappings;
-using FoodDiary.Presentation.Api.Features.Cycles.Mappings;
+using FoodDiary.Modules.Cycles.Presentation.Mappings.Mappings;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Hydration.Mappings;

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Cycles.Commands.DeleteMenstrualEpisode;
+namespace FoodDiary.Modules.Cycles.Application.Commands.DeleteMenstrualEpisode;
 
 public sealed class DeleteMenstrualEpisodeCommandValidator : AbstractValidator<DeleteMenstrualEpisodeCommand> {
     public DeleteMenstrualEpisodeCommandValidator() {

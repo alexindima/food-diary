@@ -3,7 +3,7 @@
 ## Boundary
 
 - Own cycle profiles, factors, symptoms, bleeding entries, fertility signals, menstrual episodes, consent, predictions, use cases, persistence ports, EF configuration, and repository behavior.
-- Preserve legacy CLR namespaces and the `FoodDiary.Application.Cycles` application assembly name.
+- Use canonical FoodDiary.Modules.Cycles project names and project-relative namespaces; Application.Abstractions and PersistenceModel are sibling projects.
 - Keep `User` in Users Domain and `UserId` in Users Domain.Contracts; the Cycles relationship is unidirectional from `CycleProfile`.
 - Register application behavior through `AddCyclesApplication`; composition roots use Infrastructure's `AddCyclesModule` facade.
 - Keep `FoodDiaryDbContext`, historical migrations, and the model snapshot in central Infrastructure.
@@ -33,8 +33,10 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 ## Consumer boundary
 
-Own the cycle read DTOs, ICycleReadService and GetCurrentCycleQuery consumed by Dashboard and Export. Keep handlers, repositories and mutation policy in Application. The eleven public cycle enums belong to dependency-free Cycles Domain.Contracts; do not expose aggregate instances through these contracts. See `Contracts/AGENTS.md` and ADR 0033.
+Own the cycle read DTOs, GetCurrentCycleQuery consumed by Dashboard and Export. Keep handlers, repositories and mutation policy in Application. The eleven public cycle enums belong to dependency-free Cycles Domain.Contracts; do not expose aggregate instances through these contracts. See `Contracts/AGENTS.md` and ADR 0033.
 
 Consumer Contracts must not reference Cycles Domain. Preserve enum values and wire fields.
 
 CyclesDbContext is the fourth owned runtime context (ADR 0040), containing the profile and seven owned child types. Shared UoW, central migrations, composed reads and purge remain; no User aggregate enters the runtime model.
+
+Read use cases are owner requests dispatched through ISender. Keep current-profile and nutrition orchestration in their query handlers; the internal nutrition calculator and reused prediction/revision algorithms retain their existing calculations. Export preserves user access, sensitive-export credential verification and CSV fields. Keep only ICycleWriteRepository and ICycleReadModelRepository; do not restore ICycleRepository, ICycleReadRepository or the unused CycleDayErrors. Domain invariants are tested in this module.

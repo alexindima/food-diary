@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
+namespace FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleDay;
 
 public sealed record BleedingLogCommandModel(
     int Type,

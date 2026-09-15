@@ -2569,56 +2569,56 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Application/Abstractions/Models/BleedingEntryReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/BleedingEntryReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleConsentReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleConsentReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleFactorReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleFactorReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CyclePredictionRevisionReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CyclePredictionRevisionReadModel.cs",
       "line": 11
     },
     {
       "category": "health",
       "name": "AverageCycleLength",
       "type": "int",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleProfileReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleProfileReadModel.cs",
       "line": 11
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleSymptomEntryReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleSymptomEntryReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Application/Abstractions/Models/FertilitySignalReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/FertilitySignalReadModel.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Application/Abstractions/Models/MenstrualEpisodeReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/MenstrualEpisodeReadModel.cs",
       "line": 7
     },
     {
@@ -2702,43 +2702,43 @@
       "category": "health",
       "name": "Calories",
       "type": "double",
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "line": 247
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "line": 188
     },
     {
       "category": "health",
       "name": "NutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "line": 252
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "line": 193
     },
     {
       "category": "health",
       "name": "BleedingNutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "line": 253
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "line": 194
     },
     {
       "category": "health",
       "name": "NonBleedingNutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "line": 254
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "line": 195
     },
     {
       "category": "health",
       "name": "AverageBleedingCalories",
       "type": "double",
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "line": 255
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "line": 196
     },
     {
       "category": "health",
       "name": "AverageNonBleedingCalories",
       "type": "double",
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "line": 256
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "line": 197
     },
     {
       "category": "health",
@@ -2842,231 +2842,231 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/BleedingEntry.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/BleedingEntry.cs",
       "line": 15
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleConsent.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleConsent.cs",
       "line": 13
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
       "line": 14
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
       "line": 19
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
       "line": 26
     },
     {
       "category": "health",
       "name": "AverageCycleLength",
       "type": "int",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 26
+      "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
+      "line": 27
     },
     {
       "category": "health",
       "name": "AverageCycleLength",
       "type": "int?",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfileSettings.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleProfileSettings.cs",
       "line": 7
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleSymptomEntry.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleSymptomEntry.cs",
       "line": 19
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
       "line": 16
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "path": "Modules/Cycles/Domain/Entities/MenstrualEpisode.cs",
       "line": 8
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "path": "Modules/Cycles/Domain/Entities/MenstrualEpisode.cs",
       "line": 14
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleFactorHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "AverageCycleLength",
       "type": "int",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleHttpResponse.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleLogDayHttpResponse.cs",
       "line": 4
     },
     {
       "category": "health",
       "name": "LoggedCycleDays",
       "type": "int",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "AverageCaloriesOnBleedingDays",
       "type": "double",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
       "line": 9
     },
     {
       "category": "health",
       "name": "AverageCaloriesOnNonBleedingCycleDays",
       "type": "double",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
       "line": 10
     },
     {
       "category": "health",
       "name": "AverageFiberOnNonBleedingCycleDays",
       "type": "double",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
       "line": 12
     },
     {
       "category": "health",
       "name": "HasEnoughNutritionData",
       "type": "bool",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
       "line": 14
     },
     {
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionRevisionHttpResponse.cs",
       "line": 11
     },
     {
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionsHttpResponse.cs",
       "line": 14
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleSymptomEntryHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/FertilitySignalHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/MenstrualEpisodeHttpResponse.cs",
       "line": 5
     },
     {
       "category": "health",
       "name": "AverageCycleLength",
       "type": "int?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs",
       "line": 6
     },
     {
       "category": "health",
       "name": "AverageCycleLength",
       "type": "int",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpdateCycleSettingsHttpRequest.cs",
       "line": 5
     },
     {
@@ -8281,28 +8281,28 @@
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Application/Abstractions/Models/BleedingEntryReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/BleedingEntryReadModel.cs",
       "line": 12
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleFactorReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleFactorReadModel.cs",
       "line": 11
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleProfileReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleProfileReadModel.cs",
       "line": 18
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Application/Abstractions/Models/FertilitySignalReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/FertilitySignalReadModel.cs",
       "line": 13
     },
     {
@@ -8386,112 +8386,112 @@
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/BleedingEntry.cs",
       "line": 13
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
       "line": 12
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 34
+      "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
+      "line": 35
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfileSettings.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleProfileSettings.cs",
       "line": 14
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
       "line": 14
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
       "line": 10
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleFactorHttpResponse.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleHttpResponse.cs",
       "line": 16
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/FertilitySignalHttpResponse.cs",
       "line": 11
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/BleedingLogHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/BleedingLogHttpModel.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "ClearNotes",
       "type": "bool",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/BleedingLogHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/BleedingLogHttpModel.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs",
       "line": 13
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/FertilitySignalHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/FertilitySignalHttpModel.cs",
       "line": 8
     },
     {
       "category": "privateContent",
       "name": "ClearNotes",
       "type": "bool",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/FertilitySignalHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/FertilitySignalHttpModel.cs",
       "line": 9
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs",
       "line": 7
     },
     {
       "category": "privateContent",
       "name": "ClearNotes",
       "type": "bool",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs",
       "line": 8
     },
     {
@@ -10536,7 +10536,7 @@
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10544,7 +10544,7 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleFactorHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10552,7 +10552,7 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10560,42 +10560,42 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleLogDayHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 5
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionRevisionHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionsHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleSymptomEntryHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/FertilitySignalHttpResponse.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10603,21 +10603,21 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/MenstrualEpisodeHttpResponse.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/BleedingLogHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/BleedingLogHttpModel.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs",
       "categories": [
         "health",
         "privateContent"
@@ -10625,21 +10625,21 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/FertilitySignalHttpModel.cs",
+      "path": "Modules/Cycles/Presentation/Requests/FertilitySignalHttpModel.cs",
       "categories": [
         "privateContent"
       ],
       "fieldCount": 2
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpdateCycleSettingsHttpRequest.cs",
       "categories": [
         "health"
       ],
       "fieldCount": 1
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs",
       "categories": [
         "privateContent"
       ],

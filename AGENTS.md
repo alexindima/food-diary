@@ -44,10 +44,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - BodyMetrics tests: `Modules/BodyMetrics/tests/AGENTS.md`
 - Cycles logical module: `Modules/Cycles/AGENTS.md`
 - Cycles application: `Modules/Cycles/Application/AGENTS.md`
-- Cycles application abstractions: `Modules/Cycles/Application/Abstractions/AGENTS.md`
+- Cycles application abstractions: `Modules/Cycles/Application.Abstractions/AGENTS.md`
 - Cycles domain: `Modules/Cycles/Domain/AGENTS.md`
 - Cycles infrastructure: `Modules/Cycles/Infrastructure/AGENTS.md`
-- Cycles persistence model: `Modules/Cycles/Infrastructure/Model/AGENTS.md`
+- Cycles persistence model: `Modules/Cycles/PersistenceModel/AGENTS.md`
 - Dietologist logical module: `Modules/Dietologist/AGENTS.md`
 - Dietologist application: `Modules/Dietologist/Application/AGENTS.md`
 - Dietologist application abstractions: `Modules/Dietologist/Application/Abstractions/AGENTS.md`
@@ -443,3 +443,5 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Billing consumer contracts: `Modules/Billing/Contracts/AGENTS.md`
 
 - Dietologist consumer contracts: `Modules/Dietologist/Contracts/AGENTS.md`
+
+- Shared outbox runtime: `Shared/FoodDiary.Outbox.Infrastructure/AGENTS.md`

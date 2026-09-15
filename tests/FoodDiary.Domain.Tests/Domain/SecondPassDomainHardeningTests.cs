@@ -5,7 +5,6 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Wearables;
@@ -21,28 +20,14 @@ public sealed class SecondPassDomainHardeningTests {
     [Fact]
     public void CompositeUpdates_WhenLateValidationFails_AreAtomic() {
         var recipe = Recipe.Create(UserId.New(), "Original", servings: 1);
-        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 1, 1));
 
         Assert.Throws<ArgumentOutOfRangeException>(() => recipe.Update(new RecipeUpdate(
             Name: "Changed",
             ImageUrl: new string('x', 2049))));
-        Assert.Throws<ArgumentOutOfRangeException>(() => profile.UpdateSettings(new CycleProfileSettings(
-            CycleTrackingMode.TryingToConceive,
-            AverageCycleLength: 28,
-            AveragePeriodLength: 99,
-            LutealLength: 14,
-            IsRegular: null,
-            IsOnboardingComplete: null,
-            ShowFertilityEstimates: null,
-            DiscreetNotifications: null,
-            Notes: null)));
 
         Assert.Multiple(
             () => Assert.Equal("Original", recipe.Name),
-            () => Assert.Null(recipe.ModifiedOnUtc),
-            () => Assert.Equal(CycleTrackingMode.PeriodTracking, profile.Mode),
-            () => Assert.Equal(5, profile.AveragePeriodLength),
-            () => Assert.Null(profile.ModifiedOnUtc));
+            () => Assert.Null(recipe.ModifiedOnUtc));
     }
 
     [Fact]

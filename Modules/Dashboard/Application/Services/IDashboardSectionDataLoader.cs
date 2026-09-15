@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Tdee.Models;

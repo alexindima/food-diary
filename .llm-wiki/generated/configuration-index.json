@@ -595,7 +595,7 @@
         "FinalizationTimeout",
         "LeaseDuration"
       ],
-      "path": "FoodDiary.Infrastructure/Options/OutboxProcessingOptions.cs"
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Options/OutboxProcessingOptions.cs"
     },
     {
       "type": "PaddleOptions",

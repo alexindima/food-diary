@@ -43,6 +43,21 @@ public sealed class MigratedModuleNamespaceTests {
     [InlineData("ContentReports", "tests/FoodDiary.Modules.ContentReports.Domain.Tests")]
     [InlineData("ContentReports", "tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests")]
     [InlineData("ContentReports", "tests/FoodDiary.Modules.ContentReports.Presentation.Tests")]
+    [InlineData("Cycles", "Application")]
+    [InlineData("Cycles", "Application.Abstractions")]
+    [InlineData("Cycles", "Contracts")]
+    [InlineData("Cycles", "Domain")]
+    [InlineData("Cycles", "Domain.Contracts")]
+    [InlineData("Cycles", "Infrastructure")]
+    [InlineData("Cycles", "PersistenceModel")]
+    [InlineData("Cycles", "Presentation")]
+    [InlineData("Cycles", "Presentation.Contracts")]
+    [InlineData("Cycles", "Presentation.Mappings")]
+    [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Application.Tests")]
+    [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Domain.Tests")]
+    [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests")]
+    [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Infrastructure.Tests")]
+    [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Presentation.Tests")]
     public void Projects_UseProjectNamesAndFolderNamespaces(string module, string project) {
         string directory = ArchitectureTestPaths.FromRoot("Modules", module, project);
         string projectFile = Assert.Single(Directory.EnumerateFiles(directory, "*.csproj"));

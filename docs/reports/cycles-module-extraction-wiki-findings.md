@@ -5,9 +5,9 @@
 The extraction was based on current source, project references, tests, EF metadata, DI registrations, Docker build inputs, and host consumers rather than on Wiki mappings alone.
 
 - `Modules/Cycles/Application` owns cycle commands, queries, validation, prediction/calculation services, and the existing `ICycleReadService` implementation. Its assembly name remains `FoodDiary.Application.Cycles` for compatibility.
-- `Modules/Cycles/Application/Abstractions` owns `ICycleRepository`, cycle read models, and cycle errors. The central application-abstractions assembly retains a compatibility facade for the public error members and therefore references this project.
+- `Modules/Cycles/Application.Abstractions` owns `ICycleRepository`, cycle read models, and cycle errors. The central application-abstractions assembly retains a compatibility facade for the public error members and therefore references this project.
 - `Modules/Cycles/Domain` owns the cycle aggregate, entries, IDs, and enums. It intentionally continues to use the central `UserId` and the internal central `DomainGuard`; the latter is exposed only through an explicit friend-assembly seam.
-- `Modules/Cycles/Infrastructure/Model` owns the EF configurations and model-registration extension. `FoodDiaryDbContext`, its `DbSet` properties, historical migrations, and the model snapshot remain central so migration ownership and runtime identity do not change.
+- `Modules/Cycles/PersistenceModel` owns the EF configurations and model-registration extension. `FoodDiaryDbContext`, its `DbSet` properties, historical migrations, and the model snapshot remain central so migration ownership and runtime identity do not change.
 - `Modules/Cycles/Infrastructure` owns repository implementation and module registration. Web API and Initializer remain composition roots and call the module facade.
 - Focused application, domain, time-normalization, and DI registration tests now live under `Modules/Cycles/tests`.
 - Dashboard, Export, and Presentation are read consumers. Central user cleanup remains the database-lifecycle owner for deletion across aggregates. No independent Contracts project was justified by the current dependency graph.

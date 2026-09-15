@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 
 public enum CycleTrackingGoal {
     PeriodAwareness = 0,

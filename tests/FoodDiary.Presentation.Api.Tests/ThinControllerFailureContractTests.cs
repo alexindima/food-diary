@@ -3,7 +3,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Admin.Presentation.Controllers;
 using FoodDiary.Modules.Ai.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Auth;
-using FoodDiary.Presentation.Api.Features.Cycles;
+using FoodDiary.Modules.Cycles.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Export;
 using FoodDiary.Presentation.Api.Features.Fasting;
 using FoodDiary.Presentation.Api.Features.Images;

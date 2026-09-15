@@ -1,12 +1,12 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
+using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using FoodDiary.Infrastructure.Options;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Infrastructure.Persistence.Images;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

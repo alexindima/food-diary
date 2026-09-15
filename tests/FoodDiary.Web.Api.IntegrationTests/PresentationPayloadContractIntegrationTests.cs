@@ -1,12 +1,12 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Cycles.Requests;
+using FoodDiary.Modules.Cycles.Presentation.Requests;
 using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;

@@ -3,6 +3,14 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class CyclesModuleExtractionTests {
     [Fact]
+    public void RepositoryPorts_ExposeOnlyWritesAndReadModels() {
+        string folder = ArchitectureTestPaths.FromRoot("Modules/Cycles/Application.Abstractions/Common");
+        string[] ports = [.. Directory.GetFiles(folder, "I*Repository.cs").Select(static path => Path.GetFileName(path)!).Order(StringComparer.Ordinal)];
+        Assert.Equal(["ICycleReadModelRepository.cs", "ICycleWriteRepository.cs"], ports);
+        Assert.False(File.Exists(Path.Combine(folder, "CycleDayErrors.cs")));
+    }
+
+    [Fact]
     public void RuntimeRepositoryReceivesOnlyTheOwnedAggregateSet() {
         string registration = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Cycles/Infrastructure/ModuleRegistration.cs"));
         string repository = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs"));
@@ -13,12 +21,12 @@ public sealed class CyclesModuleExtractionTests {
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Domain.Enums.BleedingType))]
-    [InlineData(typeof(FoodDiary.Domain.Enums.CycleSymptomCategory))]
-    [InlineData(typeof(FoodDiary.Domain.Enums.OvulationTestResult))]
+    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType))]
+    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleSymptomCategory))]
+    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.OvulationTestResult))]
     public void CycleEnums_AreOwnedOnlyByCyclesDomainContracts(Type enumType) {
         Assert.Equal("FoodDiary.Modules.Cycles.Domain.Contracts", enumType.Assembly.GetName().Name);
-        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.Equal("FoodDiary.Modules.Cycles.Domain.Contracts.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Cycles", "Domain.Contracts", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
@@ -33,15 +41,21 @@ public sealed class CyclesModuleExtractionTests {
     }
 
     [Fact]
+    public void RetiredCycleId_HasNoRuntimeType() {
+        Assert.Null(typeof(FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile).Assembly.GetType(
+            "FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids.CycleId"));
+    }
+
+    [Fact]
     public void ExtractedCyclesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Cycles.Domain.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+            "Modules/Cycles/Application/FoodDiary.Modules.Cycles.Application.csproj");
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Cycles.Domain.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], references);
     }
 
     [Fact]
     public void CyclesPersistenceOwnership_IsModuleOwnedWhileDbContextAndMigrationsStayCentral() {
-        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Cycles", "Infrastructure", "Model", "Configurations")));
+        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Cycles", "PersistenceModel", "Configurations")));
         Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Cycles", "Infrastructure", "Persistence")));
         Assert.Empty(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Configurations", "Cycles"))
             ? SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Configurations", "Cycles")) : []);

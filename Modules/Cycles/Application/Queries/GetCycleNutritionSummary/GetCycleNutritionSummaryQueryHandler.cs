@@ -1,15 +1,20 @@
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Cycles.Common;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
+namespace FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
 
 public sealed class GetCycleNutritionSummaryQueryHandler(
-    ICycleReadService cycleReadService,
+    ICycleReadModelRepository cycleRepository,
+    IMealNutritionStatisticsReadService statisticsReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCycleNutritionSummaryQuery, Result<CycleNutritionSummaryModel?>> {
     private const int MaxSummaryRangeDays = 366;
@@ -35,10 +40,21 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Summary range must not exceed one year."));
         }
 
-        return await cycleReadService.GetNutritionSummaryAsync(
+        CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        if (profile is null) {
+            return Result.Success<CycleNutritionSummaryModel?>(value: null);
+        }
+        if (!profile.HasActiveConsent(CycleConsentPurpose.NutritionInsights)) {
+            return Result.Success<CycleNutritionSummaryModel?>(CycleNutritionSummaryCalculator.CreateConsentRequiredSummary(query.DateFrom, query.DateTo));
+        }
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> nutrition = await statisticsReadService.GetStatisticsAsync(
             userIdResult.Value,
-            query.DateFrom,
-            query.DateTo,
+            query.DateFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
+            query.DateTo.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc),
+            quantizationDays: 1,
             cancellationToken).ConfigureAwait(false);
+        return nutrition.IsFailure
+            ? Result.Failure<CycleNutritionSummaryModel?>(nutrition.Error)
+            : Result.Success<CycleNutritionSummaryModel?>(CycleNutritionSummaryCalculator.BuildSummary(profile, nutrition.Value, query.DateFrom, query.DateTo));
     }
 }

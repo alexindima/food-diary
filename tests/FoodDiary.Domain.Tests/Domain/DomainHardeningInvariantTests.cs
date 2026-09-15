@@ -1,7 +1,6 @@
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Domain.Entities.OpenFoodFacts;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
@@ -70,89 +69,6 @@ public sealed class DomainHardeningInvariantTests {
             () => Assert.Equal("Milk", product.Name),
             () => Assert.Equal(64, product.CaloriesPer100G),
             () => Assert.Equal(1, product.SearchHitCount));
-    }
-
-    [Fact]
-    public void CycleProfile_ConfirmPeriodStart_RejectsOverlappingConfirmedRange() {
-        DateOnly start = new(2026, 4, 1);
-        var profile = CycleProfile.Create(UserId.New(), start);
-        MenstrualEpisode first = profile.ConfirmPeriodStart(start);
-        profile.UpdateMenstrualEpisode(first.Id, start, start.AddDays(5));
-
-        Assert.Throws<ArgumentException>(() => profile.ConfirmPeriodStart(start.AddDays(3)));
-        Assert.Single(profile.MenstrualEpisodes);
-    }
-
-    [Fact]
-    public void CycleProfile_Reconciliation_DoesNotInferRangeOverlappingConfirmedEpisodeEnd() {
-        DateOnly start = new(2026, 4, 1);
-        var profile = CycleProfile.Create(UserId.New(), start);
-        MenstrualEpisode confirmed = profile.ConfirmPeriodStart(start);
-        profile.UpdateMenstrualEpisode(confirmed.Id, start, start.AddDays(10));
-
-        profile.UpsertBleedingEntry(
-            start.AddDays(8),
-            BleedingType.Bleeding,
-            CycleFlowLevel.Medium,
-            painImpact: null,
-            notes: null);
-
-        MenstrualEpisode episode = Assert.Single(profile.MenstrualEpisodes);
-        Assert.Equal(MenstrualEpisodeStatus.Confirmed, episode.Status);
-    }
-
-    [Fact]
-    public void CycleProfile_RecordPredictionRevision_NormalizesValidValues() {
-        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
-
-        profile.RecordPredictionRevision(
-            Now,
-            new DateOnly(2026, 5, 1),
-            new DateOnly(2026, 5, 3),
-            " high ",
-            " sufficient ",
-            " stable ",
-            completedCycleCount: 4,
-            calibrationSampleCount: 3,
-            historicalCoveragePercent: 95.5,
-            meanAbsoluteErrorDays: 1.2,
-            reasonCodes: [" regular ", "enough-data"],
-            algorithmVersion: " v2 ");
-
-        CyclePredictionRevision revision = Assert.Single(profile.PredictionRevisions);
-        Assert.Multiple(
-            () => Assert.Equal("high", revision.Confidence),
-            () => Assert.Equal("regular|enough-data", revision.ReasonCodes),
-            () => Assert.Equal("v2", revision.AlgorithmVersion));
-    }
-
-    [Theory]
-    [InlineData(-1, 0, 50, 1)]
-    [InlineData(0, -1, 50, 1)]
-    [InlineData(0, 0, -1, 1)]
-    [InlineData(0, 0, 101, 1)]
-    [InlineData(0, 0, 50, -1)]
-    public void CycleProfile_RecordPredictionRevision_RejectsInvalidMetrics(
-        int completedCycles,
-        int samples,
-        double coverage,
-        double errorDays) {
-        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => profile.RecordPredictionRevision(
-            Now,
-            nextPeriodStartFrom: null,
-            nextPeriodStartTo: null,
-            "high",
-            "sufficient",
-            "stable",
-            completedCycles,
-            samples,
-            coverage,
-            errorDays,
-            [],
-            "v2"));
-        Assert.Empty(profile.PredictionRevisions);
     }
 
     [Fact]

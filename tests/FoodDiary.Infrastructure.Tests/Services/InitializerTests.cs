@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Initializer;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
@@ -6,7 +7,6 @@ using FoodDiary.Results;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 

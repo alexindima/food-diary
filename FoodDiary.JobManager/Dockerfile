@@ -17,6 +17,7 @@ COPY Shared/FoodDiary.Email.Contracts/*.csproj Shared/FoodDiary.Email.Contracts/
 COPY Shared/FoodDiary.Email.MailRelay/*.csproj Shared/FoodDiary.Email.MailRelay/
 COPY Shared/FoodDiary.Integrations.Http/*.csproj Shared/FoodDiary.Integrations.Http/
 COPY Shared/FoodDiary.Nutrition.Contracts/*.csproj Shared/FoodDiary.Nutrition.Contracts/
+COPY Shared/FoodDiary.Outbox.Infrastructure/*.csproj Shared/FoodDiary.Outbox.Infrastructure/
 COPY Shared/FoodDiary.Outbox.Management.Contracts/*.csproj Shared/FoodDiary.Outbox.Management.Contracts/
 COPY Modules/Export/Application/Abstractions/*.csproj Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
@@ -192,10 +193,10 @@ COPY Modules/DailyAdvices/Domain/*.csproj Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/*.csproj Modules/DailyAdvices/Infrastructure/Model/
 COPY Modules/Cycles/Application/*.csproj Modules/Cycles/Application/
 COPY Modules/Cycles/Contracts/*.csproj Modules/Cycles/Contracts/
-COPY Modules/Cycles/Application/Abstractions/*.csproj Modules/Cycles/Application/Abstractions/
+COPY Modules/Cycles/Application.Abstractions/*.csproj Modules/Cycles/Application.Abstractions/
 COPY Modules/Cycles/Domain/*.csproj Modules/Cycles/Domain/
 COPY Modules/Cycles/Domain.Contracts/*.csproj Modules/Cycles/Domain.Contracts/
-COPY Modules/Cycles/Infrastructure/Model/*.csproj Modules/Cycles/Infrastructure/Model/
+COPY Modules/Cycles/PersistenceModel/*.csproj Modules/Cycles/PersistenceModel/
 COPY Modules/Gamification/Application/*.csproj Modules/Gamification/Application/
 COPY Modules/Gamification/Contracts/*.csproj Modules/Gamification/Contracts/
 COPY Modules/Favorites/Domain.Contracts/*.csproj Modules/Favorites/Domain.Contracts/
@@ -237,6 +238,7 @@ COPY Shared/FoodDiary.Email.Contracts/ Shared/FoodDiary.Email.Contracts/
 COPY Shared/FoodDiary.Email.MailRelay/ Shared/FoodDiary.Email.MailRelay/
 COPY Shared/FoodDiary.Integrations.Http/ Shared/FoodDiary.Integrations.Http/
 COPY Shared/FoodDiary.Nutrition.Contracts/ Shared/FoodDiary.Nutrition.Contracts/
+COPY Shared/FoodDiary.Outbox.Infrastructure/ Shared/FoodDiary.Outbox.Infrastructure/
 COPY Shared/FoodDiary.Outbox.Management.Contracts/ Shared/FoodDiary.Outbox.Management.Contracts/
 COPY Modules/Export/Application/Abstractions/ Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
@@ -417,10 +419,10 @@ COPY Modules/DailyAdvices/Domain/ Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/ Modules/DailyAdvices/Infrastructure/Model/
 COPY Modules/Cycles/Application/ Modules/Cycles/Application/
 COPY Modules/Cycles/Contracts/ Modules/Cycles/Contracts/
-COPY Modules/Cycles/Application/Abstractions/ Modules/Cycles/Application/Abstractions/
+COPY Modules/Cycles/Application.Abstractions/ Modules/Cycles/Application.Abstractions/
 COPY Modules/Cycles/Domain/ Modules/Cycles/Domain/
 COPY Modules/Cycles/Domain.Contracts/ Modules/Cycles/Domain.Contracts/
-COPY Modules/Cycles/Infrastructure/Model/ Modules/Cycles/Infrastructure/Model/
+COPY Modules/Cycles/PersistenceModel/ Modules/Cycles/PersistenceModel/
 COPY Modules/Gamification/ Modules/Gamification/
 COPY Modules/Gamification/Application/ Modules/Gamification/Application/
 COPY Modules/Gamification/Contracts/ Modules/Gamification/Contracts/

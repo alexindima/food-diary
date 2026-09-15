@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
+namespace FoodDiary.Modules.Cycles.Application.Commands.ConfirmPeriodStart;
 
 public sealed record ConfirmPeriodStartCommand(Guid? UserId, Guid CycleProfileId, DateOnly Date)
     : ICommand<Result<CycleModel>>, IUserRequest;

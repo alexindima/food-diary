@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FluentValidation;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
+namespace FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleFactor;
 
 public sealed class UpsertCycleFactorCommandValidator : AbstractValidator<UpsertCycleFactorCommand> {
     public UpsertCycleFactorCommandValidator() {

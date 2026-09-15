@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 
-namespace FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
+namespace FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleFactor;
 
 public record UpsertCycleFactorCommand(
     Guid? UserId,

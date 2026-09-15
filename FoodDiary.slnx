@@ -168,11 +168,11 @@
   <Folder Name="/Modules/Cycles/">
     <Project Path="Modules/Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
     <Project Path="Modules/Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
-    <Project Path="Modules/Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
-    <Project Path="Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj" />
+    <Project Path="Modules/Cycles/Application.Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
+    <Project Path="Modules/Cycles/Application/FoodDiary.Modules.Cycles.Application.csproj" />
     <Project Path="Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <Project Path="Modules/Cycles/Infrastructure/FoodDiary.Modules.Cycles.Infrastructure.csproj" />
-    <Project Path="Modules/Cycles/Infrastructure/Model/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
+    <Project Path="Modules/Cycles/PersistenceModel/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
     <Project Path="Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj" />
     <Project Path="Modules/Cycles/Presentation.Contracts/FoodDiary.Modules.Cycles.Presentation.Contracts.csproj" />
     <Project Path="Modules/Cycles/Presentation.Mappings/FoodDiary.Modules.Cycles.Presentation.Mappings.csproj" />
@@ -446,6 +446,7 @@
     <Project Path="Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <Project Path="Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj" />
     <Project Path="Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
+    <Project Path="Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />
     <Project Path="Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <Project Path="Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj" />
     <Project Path="Shared/FoodDiary.Results/FoodDiary.Results.csproj" />

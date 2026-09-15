@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="../../Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="../../Modules/Images/Application/FoodDiary.Application.Images.csproj" />
@@ -50,6 +49,7 @@
     <ProjectReference Include="../../Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj" />
     <ProjectReference Include="../../Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="../../Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Cycles/Application/FoodDiary.Modules.Cycles.Application.csproj" />
     <ProjectReference Include="../../Modules/Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="../../Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj" />

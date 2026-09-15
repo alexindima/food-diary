@@ -1,5 +1,5 @@
 using FoodDiary.Presentation.Api.Features.Hydration.Responses;
-using FoodDiary.Presentation.Api.Features.Cycles.Responses;
+using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 using FoodDiary.Presentation.Api.Features.Tdee.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Models;

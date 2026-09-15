@@ -1,8 +1,8 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Images;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Images.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

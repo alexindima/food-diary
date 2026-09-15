@@ -15,7 +15,7 @@ singleton lifetimes and shared telemetry. UserCleanup belongs to Modules/Users/I
 
 The image-deletion outbox record and mapping belong to Images PersistenceModel,
 using shared Outbox.Abstractions. Its enqueue/dispatch adapters remain in Images
-Infrastructure; generic claiming/retry/replay stay central. Preserve IsConfirmed,
+Infrastructure; generic claiming/retry live in shared Outbox.Infrastructure, while replay coordination stays central. Preserve IsConfirmed,
 object-key normalization, lifecycle and model identity during ownership changes.
 
 ImageDeletionOutboxReplayStream owns dead-letter list/find SQL and object-key
@@ -41,3 +41,5 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 Shared URI validation and integration telemetry are owned by `Shared/FoodDiary.Integrations.Http`. Reference it directly; the S3 provider must not acquire Billing/mail bridge dependencies through FoodDiary.Integrations.
 
 Image service reads return immutable Id/Url projections from Service.Contracts; legacy Contracts remains ID-only. Orphan cleanup uses a fresh scope per candidate and propagates cancellation. Six image FKs restrict deletion to preserve concurrent references; ordinary cleanup still defers SaveChanges to its caller. See ADR 0032.
+
+Shared outbox claiming, processing, policy, options and telemetry now belong to `Shared/FoodDiary.Outbox.Infrastructure` (see its AGENTS.md). Images, Notifications and Gamification Infrastructure reference that narrow runtime, never central Infrastructure, including transitively. Central Infrastructure retains replay coordination and the email adapter. The runtime checks `IModuleScopeGuard` on coordinated contexts; owner callbacks and dedicated-context clean-entry checks remain in force.

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5393,
+    "productionFiles": 5391,
     "wikiToolFiles": 205,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 894,
@@ -207,12 +207,12 @@
       "structuralRiskScore": 136.34
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
-      "nonBlankLines": 508,
+      "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
+      "nonBlankLines": 509,
       "decisionPoints": 84,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 136.16
+      "structuralRiskScore": 136.18
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
@@ -2994,19 +2994,19 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Options.cs",
-      "nonBlankLines": 49,
+      "nonBlankLines": 50,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
+      "structuralRiskScore": 4
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 54,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.56
+      "structuralRiskScore": 2.58
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -3047,14 +3047,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 6.64
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Options/OutboxProcessingOptions.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.76
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntryService.cs",
@@ -3362,11 +3354,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Modules.cs",
-      "nonBlankLines": 49,
+      "nonBlankLines": 50,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.48
+      "structuralRiskScore": 8.5
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
@@ -3378,11 +3370,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 34,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.68
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Users.cs",
@@ -3441,68 +3433,12 @@
       "structuralRiskScore": 7.54
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.7
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxClaimBatch.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxCompletionResult.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "nonBlankLines": 194,
+      "nonBlankLines": 195,
       "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.88
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "nonBlankLines": 196,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.92
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "nonBlankLines": 185,
-      "decisionPoints": 22,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.7
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 30.9
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/EfIndependentModuleContextOptionsFactory.cs",
@@ -3562,11 +3498,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -3578,11 +3514,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Services/InfrastructureTelemetry.cs",
-      "nonBlankLines": 73,
-      "decisionPoints": 2,
+      "nonBlankLines": 38,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.46
+      "structuralRiskScore": 2.26
     },
     {
       "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
@@ -5042,11 +4978,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 187,
+      "nonBlankLines": 188,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.74
+      "structuralRiskScore": 6.76
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -19553,15 +19489,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.68
-    },
-    {
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleReadModelRepository.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Common/ICycleReadModelRepository.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19569,7 +19497,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleReadRepository.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Common/ICycleWriteRepository.cs",
       "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19577,23 +19505,7 @@
       "structuralRiskScore": 0.38
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleWriteRepository.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "Modules/Cycles/Application/Abstractions/Models/BleedingEntryReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/BleedingEntryReadModel.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19601,7 +19513,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleConsentReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleConsentReadModel.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19609,7 +19521,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleFactorReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleFactorReadModel.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19617,7 +19529,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Models/CyclePredictionRevisionReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CyclePredictionRevisionReadModel.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19625,7 +19537,7 @@
       "structuralRiskScore": 0.3
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleProfileReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleProfileReadModel.cs",
       "nonBlankLines": 29,
       "decisionPoints": 2,
       "criticalSymbols": 0,
@@ -19633,7 +19545,7 @@
       "structuralRiskScore": 3.58
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Models/CycleSymptomEntryReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/CycleSymptomEntryReadModel.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19641,7 +19553,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Models/FertilitySignalReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/FertilitySignalReadModel.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19649,7 +19561,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Cycles/Application/Abstractions/Models/MenstrualEpisodeReadModel.cs",
+      "path": "Modules/Cycles/Application.Abstractions/Models/MenstrualEpisodeReadModel.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -19674,11 +19586,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 53,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.02
+      "structuralRiskScore": 9.06
     },
     {
       "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
@@ -19698,11 +19610,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "nonBlankLines": 48,
+      "nonBlankLines": 50,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.46
+      "structuralRiskScore": 7.5
     },
     {
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
@@ -19746,11 +19658,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 44,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.34
+      "structuralRiskScore": 7.38
     },
     {
       "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandValidator.cs",
@@ -19770,11 +19682,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
-      "nonBlankLines": 66,
+      "nonBlankLines": 68,
       "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.82
+      "structuralRiskScore": 13.86
     },
     {
       "path": "Modules/Cycles/Application/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
@@ -19794,11 +19706,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 61,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.18
+      "structuralRiskScore": 9.22
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
@@ -19818,11 +19730,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
-      "nonBlankLines": 61,
+      "nonBlankLines": 63,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.72
+      "structuralRiskScore": 7.76
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandValidator.cs",
@@ -19842,11 +19754,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs",
-      "nonBlankLines": 72,
+      "nonBlankLines": 74,
       "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.44
+      "structuralRiskScore": 15.48
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
@@ -19890,11 +19802,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-      "nonBlankLines": 110,
+      "nonBlankLines": 112,
       "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.7
+      "structuralRiskScore": 20.74
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
@@ -19914,11 +19826,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 57,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.1
+      "structuralRiskScore": 9.14
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
@@ -19930,11 +19842,11 @@
     },
     {
       "path": "Modules/Cycles/Application/DependencyInjection.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Cycles/Application/Internal/RequiredIdParser.cs",
@@ -19962,11 +19874,19 @@
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 30,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.02
+      "structuralRiskScore": 4.1
+    },
+    {
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
+      "nonBlankLines": 181,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 21.62
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
@@ -19978,11 +19898,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 3,
+      "nonBlankLines": 54,
+      "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.26
+      "structuralRiskScore": 10.58
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
@@ -20009,28 +19929,12 @@
       "structuralRiskScore": 42.52
     },
     {
-      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
-      "nonBlankLines": 231,
-      "decisionPoints": 16,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.62
-    },
-    {
       "path": "Modules/Cycles/Contracts/Common/CycleErrors.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Cycles/Contracts/Common/ICycleReadService.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Cycles/Contracts/Models/BleedingEntryModel.cs",
@@ -20217,7 +20121,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/BleedingEntry.cs",
       "nonBlankLines": 56,
       "decisionPoints": 4,
       "criticalSymbols": 0,
@@ -20225,7 +20129,7 @@
       "structuralRiskScore": 7.12
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleConsent.cs",
       "nonBlankLines": 64,
       "decisionPoints": 7,
       "criticalSymbols": 0,
@@ -20233,7 +20137,7 @@
       "structuralRiskScore": 11.78
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleFactor.cs",
       "nonBlankLines": 57,
       "decisionPoints": 6,
       "criticalSymbols": 0,
@@ -20241,7 +20145,7 @@
       "structuralRiskScore": 10.14
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
       "nonBlankLines": 85,
       "decisionPoints": 8,
       "criticalSymbols": 0,
@@ -20249,15 +20153,15 @@
       "structuralRiskScore": 13.7
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
-      "nonBlankLines": 508,
+      "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
+      "nonBlankLines": 509,
       "decisionPoints": 84,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 136.16
+      "structuralRiskScore": 136.18
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfileSettings.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleProfileSettings.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -20265,7 +20169,7 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/CycleSymptomEntry.cs",
       "nonBlankLines": 85,
       "decisionPoints": 7,
       "criticalSymbols": 0,
@@ -20273,7 +20177,7 @@
       "structuralRiskScore": 12.2
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "path": "Modules/Cycles/Domain/Entities/FertilitySignal.cs",
       "nonBlankLines": 82,
       "decisionPoints": 9,
       "criticalSymbols": 0,
@@ -20281,7 +20185,7 @@
       "structuralRiskScore": 15.14
     },
     {
-      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "path": "Modules/Cycles/Domain/Entities/MenstrualEpisode.cs",
       "nonBlankLines": 72,
       "decisionPoints": 9,
       "criticalSymbols": 0,
@@ -20361,100 +20265,28 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/BleedingEntryConfiguration.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleConsentConfiguration.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleFactorConfiguration.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CyclePredictionRevisionConfiguration.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleProfileConfiguration.cs",
-      "nonBlankLines": 67,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.34
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleSymptomEntryConfiguration.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/FertilitySignalConfiguration.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/Configurations/MenstrualEpisodeConfiguration.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "Modules/Cycles/Infrastructure/Model/CyclesPersistenceModelRegistration.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "Modules/Cycles/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
-      "nonBlankLines": 126,
+      "nonBlankLines": 118,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.52
+      "structuralRiskScore": 5.36
     },
     {
       "path": "Modules/Cycles/Infrastructure/Persistence/CyclesDbContext.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs",
@@ -20465,159 +20297,15 @@
       "structuralRiskScore": 0.38
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/BleedingEntryHttpResponse.cs",
-      "nonBlankLines": 9,
+      "path": "Modules/Cycles/PersistenceModel/Configurations/BleedingEntryConfiguration.cs",
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.42
     },
     {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleConsentHttpResponse.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleFactorHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleHttpResponse.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleLogDayHttpResponse.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Contracts/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "Modules/Cycles/Presentation.Mappings/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
-      "nonBlankLines": 168,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.86
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Extensions/CyclesPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/CycleLogsController.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.62
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/CyclesController.cs",
-      "nonBlankLines": 60,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpMappings.cs",
-      "nonBlankLines": 135,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.2
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/MenstrualEpisodesController.cs",
-      "nonBlankLines": 43,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.86
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/BleedingLogHttpModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/ConfirmPeriodStartHttpRequest.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleConsentConfiguration.cs",
       "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -20625,7 +20313,55 @@
       "structuralRiskScore": 0.36
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/FertilitySignalHttpModel.cs",
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleFactorConfiguration.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CyclePredictionRevisionConfiguration.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleProfileConfiguration.cs",
+      "nonBlankLines": 68,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.36
+    },
+    {
+      "path": "Modules/Cycles/PersistenceModel/Configurations/CycleSymptomEntryConfiguration.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.44
+    },
+    {
+      "path": "Modules/Cycles/PersistenceModel/Configurations/FertilitySignalConfiguration.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Modules/Cycles/PersistenceModel/Configurations/MenstrualEpisodeConfiguration.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Cycles/PersistenceModel/CyclesPersistenceModelRegistration.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -20633,39 +20369,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/SymptomLogHttpModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateCycleConsentHttpRequest.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpdateMenstrualEpisodeHttpRequest.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleDayHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/BleedingEntryHttpResponse.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -20673,7 +20377,207 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Cycles/Presentation/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleConsentHttpResponse.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleFactorHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleHttpResponse.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleLogDayHttpResponse.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CyclePredictionsHttpResponse.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/CycleSymptomEntryHttpResponse.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/FertilitySignalHttpResponse.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Contracts/Responses/MenstrualEpisodeHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Cycles/Presentation.Mappings/Mappings/CycleHttpResponseMappings.cs",
+      "nonBlankLines": 168,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.86
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Controllers/CycleLogsController.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.64
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
+      "nonBlankLines": 61,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.22
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Controllers/MenstrualEpisodesController.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.88
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Extensions/CyclesPresentationServiceCollectionExtensions.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Mappings/CycleHttpMappings.cs",
+      "nonBlankLines": 135,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.2
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/BleedingLogHttpModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/ConfirmPeriodStartHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/FertilitySignalHttpModel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/SymptomLogHttpModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/UpdateCycleConsentHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/UpdateCycleSettingsHttpRequest.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/UpdateMenstrualEpisodeHttpRequest.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/UpsertCycleDayHttpRequest.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Presentation/Requests/UpsertCycleFactorHttpRequest.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -23698,11 +23602,11 @@
     },
     {
       "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "nonBlankLines": 62,
-      "decisionPoints": 8,
+      "nonBlankLines": 67,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.24
+      "structuralRiskScore": 16.84
     },
     {
       "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryValidator.cs",
@@ -43825,6 +43729,86 @@
       "structuralRiskScore": 0.3
     },
     {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Diagnostics/OutboxTelemetry.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.3
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Options/OutboxProcessingOptions.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.76
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/IOutboxReplayStream.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.7
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxClaimBatch.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxCompletionResult.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "nonBlankLines": 209,
+      "decisionPoints": 16,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 28.18
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxProcessingEngine.cs",
+      "nonBlankLines": 186,
+      "decisionPoints": 22,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 36.72
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxProcessingPolicy.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxReplayEntry.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
       "path": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs",
       "nonBlankLines": 23,
       "decisionPoints": 0,
@@ -44213,10 +44197,10 @@
       "name": "ClearCycleDayCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-      "line": 13,
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayCommands.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44274,10 +44258,10 @@
       "name": "ConfirmPeriodStartCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "line": 13,
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44392,7 +44376,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.CreateAndRead.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.CreateAndRead.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44671,10 +44655,10 @@
       "name": "DeleteCycleProfileCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
-      "line": 11,
+      "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.DeleteProfile.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DeleteProfile.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44749,11 +44733,11 @@
       "name": "DeleteMenstrualEpisodeCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
-      "line": 14,
+      "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeCommands.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeValidation.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46042,10 +46026,10 @@
       "name": "UpdateCycleConsentCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
-      "line": 14,
+      "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46054,10 +46038,10 @@
       "name": "UpdateCycleSettingsCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
-      "line": 14,
+      "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.SettingsCommands.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.SettingsCommands.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46184,11 +46168,11 @@
       "name": "UpdateMenstrualEpisodeCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs",
-      "line": 14,
+      "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeCommands.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeValidation.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46385,10 +46369,10 @@
       "name": "UpsertCycleDayCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-      "line": 15,
+      "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayCommands.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46397,10 +46381,10 @@
       "name": "UpsertCycleFactorCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-      "line": 15,
+      "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.FactorCommands.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.FactorCommands.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46966,8 +46950,8 @@
     {
       "name": "CycleLogsController",
       "role": "Controller",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/CycleLogsController.cs",
-      "line": 14,
+      "path": "Modules/Cycles/Presentation/Controllers/CycleLogsController.cs",
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs"
@@ -46978,11 +46962,12 @@
     {
       "name": "CyclesController",
       "role": "Controller",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/CyclesController.cs",
-      "line": 15,
-      "testReferenceCount": 3,
+      "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
+      "line": 16,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/SensitiveMutationAndBillingContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
@@ -47437,8 +47422,8 @@
     {
       "name": "MenstrualEpisodesController",
       "role": "Controller",
-      "path": "Modules/Cycles/Presentation/Features/Cycles/MenstrualEpisodesController.cs",
-      "line": 14,
+      "path": "Modules/Cycles/Presentation/Controllers/MenstrualEpisodesController.cs",
+      "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
@@ -47947,7 +47932,7 @@
       "name": "ExportCycleQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportFeatureTests.cs"
@@ -48468,11 +48453,14 @@
       "name": "GetCurrentCycleQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-      "line": 9,
-      "testReferenceCount": 2,
+      "line": 13,
+      "testReferenceCount": 5,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.CreateAndRead.cs",
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.CreateAndRead.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.cs",
+        "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportFeatureTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+        "tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -48506,11 +48494,12 @@
       "name": "GetCycleNutritionSummaryQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "line": 10,
-      "testReferenceCount": 2,
+      "line": 14,
+      "testReferenceCount": 3,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.NutritionSummary.cs",
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionSummary.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50202,7 +50191,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesValidatorTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50237,7 +50226,7 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs",
         "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -50337,8 +50326,8 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.CreateAndRead.cs",
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesValidatorTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.CreateAndRead.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50521,7 +50510,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesValidatorTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50546,7 +50535,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeValidation.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -50951,7 +50940,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesValidatorTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -52465,7 +52454,7 @@
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -52477,7 +52466,7 @@
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.SettingsCommands.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.SettingsCommands.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -52572,7 +52561,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.EpisodeValidation.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -52707,8 +52696,8 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs",
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesValidatorTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.DayCommands.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -52720,7 +52709,7 @@
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesValidatorTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -55485,21 +55474,6 @@
       "marker": "todo"
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 101,
-      "marker": "#pragma warning disable"
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 132,
-      "marker": "#pragma warning disable"
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 159,
-      "marker": "#pragma warning disable"
-    },
-    {
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
@@ -55507,6 +55481,21 @@
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "line": 51,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "line": 115,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "line": 146,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
+      "line": 173,
       "marker": "#pragma warning disable"
     }
   ]

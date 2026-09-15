@@ -37,7 +37,7 @@ public sealed class RetiredDomainAssemblyTests {
     [InlineData(typeof(FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), "FoodDiary.Modules.BodyMetrics.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Products.Common.ProductErrors), "FoodDiary.Modules.Products.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Recipes.Common.RecipeErrors), "FoodDiary.Modules.Recipes.Contracts")]
-    [InlineData(typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors), "FoodDiary.Modules.Cycles.Contracts")]
+    [InlineData(typeof(FoodDiary.Modules.Cycles.Contracts.Common.CycleErrors), "FoodDiary.Modules.Cycles.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetCleanupService), "FoodDiary.Modules.Images.Service.Contracts")]
     [InlineData(typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetOwnershipService), "FoodDiary.Modules.Images.Service.Contracts")]
     public void ConsumerValueAndCapability_HasNarrowAssemblyOwner(Type type, string assembly) {
@@ -57,7 +57,6 @@ public sealed class RetiredDomainAssemblyTests {
     [InlineData(typeof(FoodDiary.Domain.ValueObjects.LanguageCode), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/ValueObjects", "FoodDiary.Domain.ValueObjects")]
     [InlineData(typeof(FoodDiary.Domain.Primitives.EmailAddress), "FoodDiary.Domain.Primitives", "Shared/FoodDiary.Domain.Primitives", "FoodDiary.Domain.Primitives")]
     [InlineData(typeof(FoodDiary.Domain.Primitives.Visibility), "FoodDiary.Domain.Primitives", "Shared/FoodDiary.Domain.Primitives", "FoodDiary.Domain.Primitives")]
-    [InlineData(typeof(FoodDiary.Domain.ValueObjects.Ids.CycleId), "FoodDiary.Modules.Cycles.Domain", "Modules/Cycles/Domain/ValueObjects/Ids", "FoodDiary.Domain.ValueObjects.Ids")]
     public void RelocatedTypes_HaveExactlyOneApprovedOwner(Type type, string assembly, string folder, string expectedNamespace) {
         Assert.Equal(assembly, type.Assembly.GetName().Name);
         Assert.Equal(expectedNamespace, type.Namespace);

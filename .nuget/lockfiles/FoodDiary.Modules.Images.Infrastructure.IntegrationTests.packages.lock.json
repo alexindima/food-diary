@@ -603,6 +603,7 @@
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
+          "FoodDiary.Outbox.Infrastructure": "[1.0.0, )",
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Outbox.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
@@ -774,8 +775,8 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -1085,7 +1086,6 @@
           "AWSSDK.S3": "[4.0.102.4, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Images": "[1.0.0, )",
-          "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
@@ -1094,6 +1094,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
+          "FoodDiary.Outbox.Infrastructure": "[1.0.0, )",
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
@@ -1520,6 +1521,17 @@
       },
       "fooddiary.outbox.abstractions": {
         "type": "Project"
+      },
+      "fooddiary.outbox.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
+          "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
+          "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
+        }
       },
       "fooddiary.outbox.management.contracts": {
         "type": "Project"

@@ -1,21 +1,22 @@
+using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Results;
-using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
-using FoodDiary.Application.Cycles.Commands.CreateCycle;
-using FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
-using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
-using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
-using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
-using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Cycles.Application.Commands.ClearCycleDay;
+using FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
+using FoodDiary.Modules.Cycles.Application.Commands.DeleteCycleProfile;
+using FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleFactor;
+using FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleDay;
+using FoodDiary.Modules.Cycles.Contracts.Models;
+using FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
+using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
 using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Features.Cycles;
-using FoodDiary.Presentation.Api.Features.Cycles.Requests;
-using FoodDiary.Presentation.Api.Features.Cycles.Responses;
+using FoodDiary.Modules.Cycles.Presentation.Controllers;
+using FoodDiary.Modules.Cycles.Presentation.Requests;
+using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Cycles.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CyclesControllerCoverageTests {

@@ -23,7 +23,7 @@
         "tracked:UserAchievement"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "7db5d366563d8edea048e3480d8e8fb057fb8d978276b23ff33308564fea24c7"
+      "technicalSourceSha256": "dfe03b54e48d4643eecfe6c87781e92f535f426ded28c935a40ea11dd7691460"
     },
     "Modules/Images/Infrastructure/DependencyInjection.cs": {
       "module": "Images",
@@ -35,7 +35,7 @@
         "tracked:ImageObjectDeletionOutboxMessage"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "bda4e81975c18bbd0b3b39b3601382e3a504c37c055309e92920a333622ca2e9"
+      "technicalSourceSha256": "80ac5e752e1cd3677502b9123ce657e0f190860be910b8f45d5053cec7aba3ae"
     },
     "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs": {
       "module": "ReadModelComposition",
@@ -463,7 +463,7 @@
         "tracked:CycleProfile"
       ],
       "reason": "Cycles DI supplies its aggregate root set from its eight-entity owned runtime model, using shared connection and UoW coordination. Central migrations/read/purge remain. ADR 0040.",
-      "technicalSourceSha256": "022d48bd4102143c6b4fce303564210dd12b344ee0fe658cbac9ce07c42f5a31"
+      "technicalSourceSha256": "3db1c7556be92d1d6e8c572a3b0caf6b75133c576dcae6fb4379f41fab8d1b9f"
     },
     "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs": {
       "module": "Cycles",
@@ -496,7 +496,7 @@
         "write:FertilitySignal"
       ],
       "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
-      "technicalSourceSha256": "fa8daa4dcb4da1ea9afece7f58270d5f2a9acc4129f0ebbca70477e22f042db8"
+      "technicalSourceSha256": "2bf553080d290f9c0cf50c092b30404454842060d1bf03babfcce59ad1e8360e"
     },
     "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs": {
       "module": "DailyAdvices",
@@ -724,7 +724,7 @@
         "tracked:AchievementEvaluationOutboxMessage"
       ],
       "reason": "Shared EF finalization fences success and failure by Revision and LockedBy. On conflict Gamification discards stale tracking and releases only a changed revision held by the original owner, preserving new request state.",
-      "technicalSourceSha256": "86429277defaa50b9b16567db100e00ffabd7a03ab55391413dff06cef2084e6"
+      "technicalSourceSha256": "86be97acf0be5085bb80dcde69b352f62311f2acef25e5560915cbe1f6228bc9"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs": {
       "module": "Gamification",
@@ -985,7 +985,7 @@
         "tracked:WebPushSubscription"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "5b6d4aa65430565df99c3920e7b22413cfdf01e1c5a1c8f5668ca763768f2766"
+      "technicalSourceSha256": "f1cc95d8bcc99f6da671a7de5cab274ff7dda7301ab2b25b1257b73a0613860a"
     },
     "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
       "module": "Notifications",

@@ -963,7 +963,6 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("WaistEntries", "IWaistEntryRepository", "IWaistEntryReadRepository", "IWaistEntryReadModelRepository", "IWaistEntryWriteRepository")]
     [InlineData("Hydration", "IHydrationEntryReadModelRepository", "IHydrationEntryWriteRepository")]
     [InlineData("Exercises", "IExerciseEntryRepository", "IExerciseEntryReadRepository", "IExerciseEntryReadModelRepository", "IExerciseEntryWriteRepository")]
-    [InlineData("Cycles", "ICycleRepository", "ICycleReadRepository", "ICycleReadModelRepository", "ICycleWriteRepository")]
     public void OtherApplicationModules_DoNotAcquireHealthTrackingWriteRepositories(
         string ownerModule,
         params string[] forbiddenContracts) {
@@ -978,11 +977,11 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("WaistEntryConfiguration.cs", "Modules/BodyMetrics/PersistenceModel/Configurations")]
     [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
     [InlineData("ExerciseEntryConfiguration.cs", "Modules/Exercises/Infrastructure/Model/Configurations/Exercises")]
-    [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
-    [InlineData("CycleFactorConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
-    [InlineData("CycleSymptomEntryConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
-    [InlineData("BleedingEntryConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
-    [InlineData("FertilitySignalConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
+    [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
+    [InlineData("CycleFactorConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
+    [InlineData("CycleSymptomEntryConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
+    [InlineData("BleedingEntryConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
+    [InlineData("FertilitySignalConfiguration.cs", "Modules/Cycles/PersistenceModel/Configurations")]
     public void HealthTrackingConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {

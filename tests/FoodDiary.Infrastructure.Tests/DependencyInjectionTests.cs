@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure;

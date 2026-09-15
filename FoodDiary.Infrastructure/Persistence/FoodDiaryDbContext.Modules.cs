@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public sealed partial class FoodDiaryDbContext : IModuleContextFactory, IModuleChangeTrackerSource {
+public sealed partial class FoodDiaryDbContext : IModuleContextFactory, IModuleChangeTrackerSource, IModuleScopeGuard {
+    void IModuleScopeGuard.EnsureCleanEntry() => Shared.SharedTransactionBoundary.EnsureCleanEntry(this);
+
     private readonly List<DbContext> _moduleContexts = [];
     private readonly Dictionary<DbContext, int> _moduleSaveOrders = [];
 

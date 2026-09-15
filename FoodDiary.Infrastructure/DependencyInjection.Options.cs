@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Configuration;

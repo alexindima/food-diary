@@ -19,8 +19,6 @@
     <ProjectReference Include="../../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
     <ProjectReference Include="../../Modules/Billing/Domain.Contracts/FoodDiary.Modules.Billing.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
-    <ProjectReference Include="../../Modules/Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="../../Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="../../Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />

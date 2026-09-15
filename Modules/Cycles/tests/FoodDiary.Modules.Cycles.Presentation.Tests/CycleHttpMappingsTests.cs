@@ -1,21 +1,22 @@
-using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
-using FoodDiary.Application.Cycles.Commands.CreateCycle;
-using FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
-using FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
-using FoodDiary.Application.Cycles.Commands.UpdateCycleConsent;
-using FoodDiary.Application.Cycles.Commands.UpdateCycleSettings;
-using FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
-using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
-using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
-using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
-using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Presentation.Api.Features.Cycles.Mappings;
-using FoodDiary.Presentation.Api.Features.Cycles.Requests;
-using FoodDiary.Presentation.Api.Features.Cycles.Responses;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using FoodDiary.Modules.Cycles.Application.Commands.ClearCycleDay;
+using FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
+using FoodDiary.Modules.Cycles.Application.Commands.DeleteCycleProfile;
+using FoodDiary.Modules.Cycles.Application.Commands.ConfirmPeriodStart;
+using FoodDiary.Modules.Cycles.Application.Commands.UpdateCycleConsent;
+using FoodDiary.Modules.Cycles.Application.Commands.UpdateCycleSettings;
+using FoodDiary.Modules.Cycles.Application.Commands.UpdateMenstrualEpisode;
+using FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleFactor;
+using FoodDiary.Modules.Cycles.Application.Commands.UpsertCycleDay;
+using FoodDiary.Modules.Cycles.Contracts.Models;
+using FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
+using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
+using FoodDiary.Modules.Cycles.Presentation.Mappings;
+using FoodDiary.Modules.Cycles.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Cycles.Presentation.Requests;
+using FoodDiary.Modules.Cycles.Presentation.Contracts.Responses;
 
-namespace FoodDiary.Presentation.Api.Tests;
+namespace FoodDiary.Modules.Cycles.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CycleHttpMappingsTests {

@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 
-namespace FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 
 public readonly record struct BleedingEntryId(Guid Value) : IEntityId<Guid> {
     public static BleedingEntryId New() => new(Guid.NewGuid());

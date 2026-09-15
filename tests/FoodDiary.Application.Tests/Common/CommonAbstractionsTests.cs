@@ -53,8 +53,7 @@ public class CommonAbstractionsTests {
             .Concat([
                 typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
                 typeof(FoodDiary.Modules.Billing.Application.Abstractions.Common.BillingErrors),
-                typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
-                typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),
+                typeof(FoodDiary.Modules.Cycles.Contracts.Common.CycleErrors),
                 typeof(FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors),
                 typeof(FoodDiary.Application.Abstractions.FavoriteMeals.Common.FavoriteMealErrors),
                 typeof(FoodDiary.Application.Abstractions.FavoriteProducts.Common.FavoriteProductErrors),
@@ -677,8 +676,7 @@ public class CommonAbstractionsTests {
             .Concat([
                 typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
                 typeof(FoodDiary.Modules.Billing.Application.Abstractions.Common.BillingErrors),
-                typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
-                typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),
+                typeof(FoodDiary.Modules.Cycles.Contracts.Common.CycleErrors),
                 typeof(FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors),
                 typeof(FoodDiary.Application.Abstractions.FavoriteMeals.Common.FavoriteMealErrors),
                 typeof(FoodDiary.Application.Abstractions.FavoriteProducts.Common.FavoriteProductErrors),

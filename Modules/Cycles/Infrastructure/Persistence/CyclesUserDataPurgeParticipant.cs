@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
-using FoodDiary.Domain.Entities.Tracking;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Cycles.Infrastructure.Persistence;

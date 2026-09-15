@@ -868,11 +868,11 @@
     },
     {
       "old": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-      "current": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "current": "Modules/Cycles/Domain/Entities/CycleConsent.cs",
       "gitRenameChain": [
         {
           "old": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-          "new": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+          "new": "Modules/Cycles/Domain/Entities/CycleConsent.cs",
           "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
           "score": "R100"
         }

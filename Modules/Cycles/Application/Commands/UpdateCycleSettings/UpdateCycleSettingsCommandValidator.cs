@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FluentValidation;
-using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Cycles.Commands.UpdateCycleSettings;
+namespace FoodDiary.Modules.Cycles.Application.Commands.UpdateCycleSettings;
 
 public sealed class UpdateCycleSettingsCommandValidator : AbstractValidator<UpdateCycleSettingsCommand> {
     public UpdateCycleSettingsCommandValidator() {

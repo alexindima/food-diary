@@ -115,7 +115,7 @@ public sealed class SideEffectReliabilityGuardrailTests {
     public void OutboxProcessors_UseSharedProcessingPolicyForRetriesAndErrorTruncation() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
-        string policyPath = Path.Combine(persistenceRoot, "Outbox", "OutboxProcessingPolicy.cs");
+        string policyPath = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxProcessingPolicy.cs");
         string[] forbiddenPatterns = [
             "private static TimeSpan CalculateRetryDelay",
             "private static string TruncateError",
@@ -123,7 +123,7 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "error[..MaxErrorLength]",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(persistenceRoot)
+        string[] violations = [.. ModuleSourceCatalog.InfrastructureFiles()
             .Where(path => !string.Equals(path, policyPath, StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
@@ -139,9 +139,9 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void OutboxMessageClaimer_DoesNotUseReflectionForMessageOperations() {
         string claimerPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure",
+            "Shared",
+            "FoodDiary.Outbox.Infrastructure",
             "Persistence",
-            "Outbox",
             "OutboxMessageClaimer.cs");
         string source = File.ReadAllText(claimerPath);
 
@@ -170,9 +170,9 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void OutboxClaiming_ExcludesDeadLetteredMessages() {
         string claimerPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure",
+            "Shared",
+            "FoodDiary.Outbox.Infrastructure",
             "Persistence",
-            "Outbox",
             "OutboxMessageClaimer.cs");
         string source = File.ReadAllText(claimerPath);
 
@@ -183,9 +183,9 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void OutboxProcessors_DeadLetterAfterSharedMaxAttempts() {
         string enginePath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure",
+            "Shared",
+            "FoodDiary.Outbox.Infrastructure",
             "Persistence",
-            "Outbox",
             "OutboxProcessingEngine.cs");
         string source = File.ReadAllText(enginePath);
 
@@ -213,9 +213,9 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void OutboxProcessors_RecordOperationalTelemetry() {
         string enginePath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure",
+            "Shared",
+            "FoodDiary.Outbox.Infrastructure",
             "Persistence",
-            "Outbox",
             "OutboxProcessingEngine.cs");
         string source = File.ReadAllText(enginePath);
 
@@ -235,9 +235,10 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void InfrastructureTelemetry_DefinesOutboxOperationalMetrics() {
         string telemetryPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure",
-            "Services",
-            "InfrastructureTelemetry.cs");
+            "Shared",
+            "FoodDiary.Outbox.Infrastructure",
+            "Diagnostics",
+            "OutboxTelemetry.cs");
         string source = File.ReadAllText(telemetryPath);
 
         Assert.Contains("fooddiary.outbox.messages", source, StringComparison.Ordinal);

@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Data.Common;
 using System.Reflection;
@@ -80,7 +81,7 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
         listener.Start();
         var nowUtc = new DateTime(2026, 7, 18, 12, 0, 0, DateTimeKind.Utc);
 
-        InfrastructureTelemetry.RecordOutboxOldestPendingAge("telemetry_test", nowUtc, nowUtc.AddMinutes(-7));
+        OutboxTelemetry.RecordOutboxOldestPendingAge("telemetry_test", nowUtc, nowUtc.AddMinutes(-7));
         listener.RecordObservableInstruments();
 
         Assert.Multiple(

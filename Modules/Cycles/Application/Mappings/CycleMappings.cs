@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Cycles.Domain.Entities;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 
-namespace FoodDiary.Application.Cycles.Mappings;
+namespace FoodDiary.Modules.Cycles.Application.Mappings;
 
 public static class CycleMappings {
     public static CycleModel ToModel(this CycleProfileReadModel profile, CyclePredictionsModel? predictions = null) =>
@@ -23,7 +23,7 @@ public static class CycleMappings {
             profile.BleedingEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Type).Select(entry => entry.ToModel()).ToList(),
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
-            profile.HasActiveConsent(global::FoodDiary.Domain.Enums.CycleConsentPurpose.FertilitySignals)
+            profile.HasActiveConsent(global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConsentPurpose.FertilitySignals)
                 ? profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList()
                 : [],
             predictions,
@@ -56,7 +56,7 @@ public static class CycleMappings {
             profile.BleedingEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Type).Select(entry => entry.ToModel()).ToList(),
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
-            profile.HasActiveConsent(global::FoodDiary.Domain.Enums.CycleConsentPurpose.FertilitySignals)
+            profile.HasActiveConsent(global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConsentPurpose.FertilitySignals)
                 ? profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList()
                 : [],
             predictions,
@@ -108,7 +108,7 @@ public static class CycleMappings {
         var persisted = new List<MenstrualEpisodeModel>(
             (profile.MenstrualEpisodes ?? []).Select(episode => episode.ToModel()));
         DateOnly[] bleedingDates = [.. profile.BleedingEntries
-            .Where(entry => entry.Type == global::FoodDiary.Domain.Enums.BleedingType.Bleeding)
+            .Where(entry => entry.Type == global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType.Bleeding)
             .Select(entry => entry.Date)
             .Distinct()
             .Order()];
@@ -127,7 +127,7 @@ public static class CycleMappings {
                     profile.Id,
                     start,
                     end,
-                    global::FoodDiary.Domain.Enums.MenstrualEpisodeStatus.Inferred,
+                    global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.MenstrualEpisodeStatus.Inferred,
                     ExcludedFromPredictions: false));
             }
         }
@@ -235,7 +235,7 @@ public static class CycleMappings {
                 .OrderBy(entry => entry.Category)
                 .Select(entry => entry.ToModel())
                 .ToList(),
-            profile.HasActiveConsent(global::FoodDiary.Domain.Enums.CycleConsentPurpose.FertilitySignals)
+            profile.HasActiveConsent(global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConsentPurpose.FertilitySignals)
                 ? profile.FertilitySignals
                     .Where(signal => signal.Date == date)
                     .Select(signal => signal.ToModel())

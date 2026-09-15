@@ -1,4 +1,5 @@
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Cycles.PersistenceModel;
+using FoodDiary.Modules.Cycles.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Cycles.Infrastructure.Persistence;

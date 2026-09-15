@@ -1,6 +1,6 @@
 using System.Reflection;
 using FoodDiary.Modules.Billing.Presentation.Controllers;
-using FoodDiary.Presentation.Api.Features.Cycles;
+using FoodDiary.Modules.Cycles.Presentation.Controllers;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;

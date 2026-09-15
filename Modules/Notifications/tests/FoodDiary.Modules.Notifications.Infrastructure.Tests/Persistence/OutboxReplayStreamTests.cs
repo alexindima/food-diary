@@ -1,9 +1,9 @@
+using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Notifications;
-using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

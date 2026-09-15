@@ -1,8 +1,9 @@
-using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Modules.Cycles.Domain.Entities;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
@@ -59,7 +60,6 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
 
         CycleProfile? byId = await repository.GetByIdAsync(profile.Id, user.Id, includeDetails: true);
         CycleProfile? current = await repository.GetCurrentAsync(user.Id, includeDetails: true);
-        IReadOnlyList<CycleProfile> profiles = await repository.GetByUserAsync(user.Id, includeDetails: true);
 
         Assert.Equal("Updated", byId?.Notes);
         Assert.NotEmpty(byId!.BleedingEntries);
@@ -67,7 +67,6 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
         Assert.NotEmpty(byId.Factors);
         Assert.NotEmpty(byId.FertilitySignals);
         Assert.Equal(profile.Id, current?.Id);
-        Assert.Equal(profile.Id, Assert.Single(profiles).Id);
     }
 
     [RequiresDockerFact]

@@ -16,7 +16,7 @@ using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using FoodDiary.Modules.Favorites.Infrastructure.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
-using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
+using FoodDiary.Modules.Cycles.PersistenceModel;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Model;
 using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using FoodDiary.Modules.Usda.Infrastructure.Model;

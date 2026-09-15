@@ -1,11 +1,12 @@
-using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Cycles.Contracts.Queries.GetCurrentCycle;
+using FoodDiary.Modules.Cycles.Contracts.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Cycles.Common;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +14,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
 
 public sealed class ExportCycleQueryHandler(
-    ICycleReadService cycleReadService,
+    ISender sender,
     ICurrentUserAccessService currentUserAccessService,
     IUserCredentialVerificationService? credentialVerificationService = null)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {
@@ -41,7 +42,11 @@ public sealed class ExportCycleQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Export range must not exceed one year."));
         }
 
-        CycleModel? cycle = await cycleReadService.GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<CycleModel?> cycleResult = await sender.Send(new GetCurrentCycleQuery(userId.Value), cancellationToken).ConfigureAwait(false);
+        if (cycleResult.IsFailure) {
+            return Result.Failure<FileExportResult>(cycleResult.Error);
+        }
+        CycleModel? cycle = cycleResult.Value;
         if (cycle is null) {
             return Result.Failure<FileExportResult>(CycleErrors.NotFound(Guid.Empty));
         }

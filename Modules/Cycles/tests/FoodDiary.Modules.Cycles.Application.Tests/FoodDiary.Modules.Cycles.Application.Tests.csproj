@@ -1,7 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -12,13 +9,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="FoodDiary.Modules.Cycles.Application.Tests.Support" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application/FoodDiary.Application.Cycles.csproj" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.Cycles.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
     <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
+namespace FoodDiary.Modules.Cycles.Application.Commands.DeleteCycleProfile;
 
 public sealed class DeleteCycleProfileCommandValidator : AbstractValidator<DeleteCycleProfileCommand> {
     public DeleteCycleProfileCommandValidator() {

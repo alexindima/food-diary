@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Cycles.Common;
-using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;

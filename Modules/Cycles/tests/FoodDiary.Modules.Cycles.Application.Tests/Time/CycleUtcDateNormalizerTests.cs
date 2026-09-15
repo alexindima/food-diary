@@ -1,6 +1,6 @@
-using FoodDiary.Application.Cycles.Internal;
+using FoodDiary.Modules.Cycles.Application.Internal;
 
-namespace FoodDiary.Application.Tests.Time;
+namespace FoodDiary.Modules.Cycles.Application.Tests.Time;
 
 [ExcludeFromCodeCoverage]
 public sealed class CycleUtcDateNormalizerTests {

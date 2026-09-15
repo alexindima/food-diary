@@ -1,3 +1,4 @@
+using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.ReadModel.Composition.Gamification;
 using FoodDiary.Application.Abstractions.Achievements.Models;
@@ -8,7 +9,6 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
 using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using Microsoft.Extensions.Logging.Abstractions;

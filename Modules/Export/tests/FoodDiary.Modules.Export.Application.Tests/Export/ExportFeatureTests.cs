@@ -1,10 +1,13 @@
+using FoodDiary.Testing;
+using FoodDiary.Modules.Cycles.Application.Queries.GetCurrentCycle;
+using FoodDiary.Modules.Cycles.Domain.Entities;
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Export.Models;
-using FoodDiary.Application.Abstractions.Cycles.Common;
-using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Application.Cycles.Services;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
@@ -14,7 +17,6 @@ using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -754,7 +756,7 @@ public class ExportFeatureTests {
     }
 
     private static ICycleReadModelRepository CreateCycleRepository(CycleProfile? profile) {
-        ICycleRepository repository = Substitute.For<ICycleRepository>();
+        ICycleReadModelRepository repository = Substitute.For<ICycleReadModelRepository>();
         repository
             .GetCurrentReadModelAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
@@ -824,7 +826,7 @@ public class ExportFeatureTests {
         ICurrentUserAccessService currentUserAccessService,
         IUserCredentialVerificationService? credentialVerificationService = null) =>
         new(
-            new CycleReadService(CreateCycleRepository(profile), Substitute.For<IMealNutritionStatisticsReadService>()),
+            RequestTestSender.Create(new GetCurrentCycleQueryHandler(CreateCycleRepository(profile), currentUserAccessService, TimeProvider.System)),
             currentUserAccessService,
             credentialVerificationService);
 

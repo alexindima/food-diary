@@ -1,8 +1,8 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Modules.Cycles.Contracts.Models;
 
-namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
+namespace FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
 
 public record GetCycleNutritionSummaryQuery(
     Guid? UserId,

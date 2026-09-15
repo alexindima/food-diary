@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
+namespace FoodDiary.Modules.Cycles.Application.Commands.UpdateMenstrualEpisode;
 
 public sealed class UpdateMenstrualEpisodeCommandValidator : AbstractValidator<UpdateMenstrualEpisodeCommand> {
     public UpdateMenstrualEpisodeCommandValidator() {
