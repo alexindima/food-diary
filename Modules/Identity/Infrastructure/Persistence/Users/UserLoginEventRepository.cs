@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 
 public sealed class UserLoginEventRepository(DbSet<UserLoginEvent> events, IUserLoginEventQuery query, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserLoginEventRepository {
     public async Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) {

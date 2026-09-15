@@ -1,11 +1,11 @@
-using FoodDiary.Modules.Identity.Infrastructure.Persistence;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using System.Security.Cryptography;
 using System.Text;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
 
 public sealed class TelegramOperationStore(IdentityDbContext context, IDataProtectionProvider protectionProvider,
     TimeProvider timeProvider, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : ITelegramOperationStore {

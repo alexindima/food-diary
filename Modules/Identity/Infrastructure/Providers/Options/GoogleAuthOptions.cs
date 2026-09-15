@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 
 public sealed class GoogleAuthOptions {
     public const string SectionName = "GoogleAuth";

@@ -23,11 +23,11 @@
   </Folder>
   <Folder Name="/Modules/Identity/">
     <Project Path="Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
-    <Project Path="Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <Project Path="Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <Project Path="Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <Project Path="Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj" />
     <Project Path="Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
-    <Project Path="Modules/Identity/Infrastructure/Model/FoodDiary.Modules.Identity.PersistenceModel.csproj" />
+    <Project Path="Modules/Identity/PersistenceModel/FoodDiary.Modules.Identity.PersistenceModel.csproj" />
     <Project Path="Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/tests/">

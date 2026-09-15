@@ -2994,11 +2994,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Options.cs",
-      "nonBlankLines": 50,
+      "nonBlankLines": 51,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
+      "structuralRiskScore": 4.02
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
@@ -3039,14 +3039,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.64
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntryService.cs",
@@ -3394,11 +3386,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 92,
+      "nonBlankLines": 93,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
+      "structuralRiskScore": 1.86
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -3498,11 +3490,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.08
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -3514,11 +3506,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Services/InfrastructureTelemetry.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 1,
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 0.62
     },
     {
       "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
@@ -3570,11 +3562,11 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 369,
+      "nonBlankLines": 370,
       "decisionPoints": 44,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 73.38
+      "structuralRiskScore": 73.4
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -3602,11 +3594,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 72,
+      "nonBlankLines": 73,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.94
+      "structuralRiskScore": 2.96
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -4978,11 +4970,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 188,
+      "nonBlankLines": 189,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.76
+      "structuralRiskScore": 6.78
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -17105,6 +17097,14 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Modules/Ai/Infrastructure/Diagnostics/AiQuotaTelemetry.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.74
+    },
+    {
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "nonBlankLines": 41,
       "decisionPoints": 1,
@@ -19610,11 +19610,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "nonBlankLines": 50,
-      "decisionPoints": 3,
+      "nonBlankLines": 55,
+      "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.5
+      "structuralRiskScore": 9.1
     },
     {
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
@@ -19642,11 +19642,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/CreateCycle/CreateCycleCommandValidator.cs",
-      "nonBlankLines": 46,
-      "decisionPoints": 3,
+      "nonBlankLines": 51,
+      "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.42
+      "structuralRiskScore": 9.02
     },
     {
       "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommand.cs",
@@ -19810,11 +19810,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
-      "nonBlankLines": 77,
-      "decisionPoints": 5,
+      "nonBlankLines": 93,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.04
+      "structuralRiskScore": 17.36
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
@@ -19834,11 +19834,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 2,
+      "nonBlankLines": 37,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.64
+      "structuralRiskScore": 7.24
     },
     {
       "path": "Modules/Cycles/Application/DependencyInjection.cs",
@@ -19874,19 +19874,19 @@
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 31,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.1
+      "structuralRiskScore": 4.12
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "nonBlankLines": 181,
-      "decisionPoints": 12,
+      "nonBlankLines": 187,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.62
+      "structuralRiskScore": 24.74
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
@@ -19922,11 +19922,11 @@
     },
     {
       "path": "Modules/Cycles/Application/Services/CyclePredictionService.cs",
-      "nonBlankLines": 251,
-      "decisionPoints": 25,
+      "nonBlankLines": 255,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.52
+      "structuralRiskScore": 48.6
     },
     {
       "path": "Modules/Cycles/Contracts/Common/CycleErrors.cs",
@@ -20210,14 +20210,6 @@
     },
     {
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -26969,7 +26961,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -26977,7 +26969,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -26985,7 +26977,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -26993,7 +26985,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27001,7 +26993,7 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/AdminSsoCode.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/AdminSsoCode.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27009,7 +27001,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27017,7 +27009,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27025,7 +27017,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27033,7 +27025,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
       "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27041,7 +27033,7 @@
       "structuralRiskScore": 0.72
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27049,7 +27041,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27057,7 +27049,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27065,7 +27057,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27073,7 +27065,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtImpersonationClaimNames.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtImpersonationClaimNames.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27081,7 +27073,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27089,7 +27081,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27097,7 +27089,7 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramInitData.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramInitData.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27105,7 +27097,7 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27113,7 +27105,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27121,7 +27113,7 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27129,7 +27121,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27137,7 +27129,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27145,7 +27137,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27153,7 +27145,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27161,7 +27153,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
       "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27169,7 +27161,7 @@
       "structuralRiskScore": 0.66
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27177,7 +27169,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27185,7 +27177,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27193,7 +27185,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27201,7 +27193,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27209,7 +27201,7 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27217,7 +27209,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27225,7 +27217,7 @@
       "structuralRiskScore": 0.28
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27233,7 +27225,7 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27241,7 +27233,7 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27249,7 +27241,7 @@
       "structuralRiskScore": 0.08
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TelegramIdentityErrors.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramIdentityErrors.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27257,7 +27249,7 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TelegramOperationLease.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramOperationLease.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27265,7 +27257,7 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27273,7 +27265,7 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27281,7 +27273,7 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27289,7 +27281,7 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -27658,11 +27650,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-      "nonBlankLines": 65,
+      "nonBlankLines": 66,
       "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.3
+      "structuralRiskScore": 15.32
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
@@ -27858,11 +27850,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.94
+      "structuralRiskScore": 6.96
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
@@ -28098,11 +28090,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
-      "nonBlankLines": 110,
+      "nonBlankLines": 111,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.7
+      "structuralRiskScore": 3.72
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
@@ -28130,19 +28122,19 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 60,
       "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.18
+      "structuralRiskScore": 28.2
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
-      "nonBlankLines": 80,
+      "nonBlankLines": 81,
       "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.1
+      "structuralRiskScore": 39.12
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/TelegramOperationService.cs",
@@ -28170,11 +28162,11 @@
     },
     {
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Identity/Application/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommandHandler.cs",
@@ -28386,11 +28378,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 39,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.26
+      "structuralRiskScore": 8.28
     },
     {
       "path": "Modules/Identity/Infrastructure/Authentication/ImpersonationTokenIssuer.cs",
@@ -28418,11 +28410,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "nonBlankLines": 54,
+      "nonBlankLines": 55,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.58
+      "structuralRiskScore": 2.6
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -28431,86 +28423,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.42
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Authentication/ConsumedTelegramAssertion.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Authentication/TelegramLoginTicket.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Authentication/TelegramOperation.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramLoginTicketConfiguration.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramOperationConfiguration.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Email/EmailTemplateConfiguration.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Model/IdentityPersistenceModelRegistration.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
@@ -28530,11 +28442,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 27,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.06
+      "structuralRiskScore": 2.04
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
@@ -28554,11 +28466,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
-      "nonBlankLines": 47,
+      "nonBlankLines": 46,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.94
+      "structuralRiskScore": 12.92
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs",
@@ -28679,6 +28591,86 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 6.54
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Authentication/ConsumedTelegramAssertion.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Authentication/TelegramLoginTicket.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Authentication/TelegramOperation.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramLoginTicketConfiguration.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramOperationConfiguration.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserLoginEventConfiguration.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.7
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.7
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Configurations/Email/EmailTemplateConfiguration.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.76
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/IdentityPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationApplicationBuilderExtensions.cs",
@@ -43345,6 +43337,14 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.64
+    },
+    {
       "path": "Shared/FoodDiary.Domain.Primitives/AggregateRoot.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
@@ -44258,7 +44258,7 @@
       "name": "ConfirmPeriodStartCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "line": 15,
+      "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs"
@@ -45377,7 +45377,7 @@
       "name": "RefreshTokenCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
@@ -45834,7 +45834,7 @@
       "name": "StartTelegramOidcCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
-      "line": 9,
+      "line": 10,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs"
@@ -50323,7 +50323,7 @@
       "name": "CreateCycleCommandValidator",
       "role": "Validator",
       "path": "Modules/Cycles/Application/Commands/CreateCycle/CreateCycleCommandValidator.cs",
-      "line": 5,
+      "line": 6,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.CreateAndRead.cs",
@@ -52706,7 +52706,7 @@
       "name": "UpsertCycleFactorCommandValidator",
       "role": "Validator",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
-      "line": 5,
+      "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs"

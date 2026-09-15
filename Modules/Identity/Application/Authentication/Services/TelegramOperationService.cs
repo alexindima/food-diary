@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;

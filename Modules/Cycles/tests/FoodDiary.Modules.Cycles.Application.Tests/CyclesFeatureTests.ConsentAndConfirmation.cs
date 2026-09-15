@@ -11,6 +11,31 @@ namespace FoodDiary.Modules.Cycles.Application.Tests;
 
 public partial class CyclesFeatureTests {
     [Fact]
+    public async Task ConfirmPeriodStartCommandHandler_WithOverlappingEpisode_ReturnsValidationFailureWithoutMutation() {
+        var user = User.Create("confirm-overlap@example.com", "hash");
+        DateOnly start = new(2026, 4, 1);
+        var profile = CycleProfile.Create(user.Id, start);
+        MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
+        profile.UpdateMenstrualEpisode(episode.Id, start, start.AddDays(5));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new ConfirmPeriodStartCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new ConfirmPeriodStartCommand(user.Id.Value, profile.Id.Value, start.AddDays(3)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        MenstrualEpisode unchanged = Assert.Single(profile.MenstrualEpisodes);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Equal(episode.Id, unchanged.Id),
+            () => Assert.Equal(start, unchanged.StartDate),
+            () => Assert.Equal(start.AddDays(5), unchanged.EndDate),
+            () => Assert.Empty(profile.PredictionRevisions),
+            () => Assert.False(repository.WasUpdated));
+    }
+
+    [Fact]
     public async Task ConfirmPeriodStartCommandHandler_WithOwnedProfile_ConfirmsEpisode() {
         var user = User.Create("confirm-period@example.com", "hash");
         var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));

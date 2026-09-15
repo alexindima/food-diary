@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Email;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Infrastructure.Persistence.Email;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;

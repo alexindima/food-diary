@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
@@ -17,7 +20,6 @@ using Amazon.S3;
 using System.Net;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -1011,17 +1013,17 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Authentication.Common.IUserLoginEventRepository",
+            "FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common.IUserLoginEventRepository",
             [
-                "FoodDiary.Application.Abstractions.Authentication.Common.IUserLoginEventReadRepository",
-                "FoodDiary.Application.Abstractions.Authentication.Common.IUserLoginEventWriteRepository",
+                "FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common.IUserLoginEventReadRepository",
+                "FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common.IUserLoginEventWriteRepository",
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionRepository",
+            "FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common.IRefreshTokenSessionRepository",
             [
-                "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionReadRepository",
-                "FoodDiary.Application.Abstractions.Authentication.Common.IRefreshTokenSessionWriteRepository",
+                "FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common.IRefreshTokenSessionReadRepository",
+                "FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common.IRefreshTokenSessionWriteRepository",
             ]
         },
         {
@@ -1037,11 +1039,11 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateRepository",
+            "FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common.IEmailTemplateRepository",
             [
-                "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateReadRepository",
-                "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateReadModelRepository",
-                "FoodDiary.Application.Abstractions.Admin.Common.IEmailTemplateWriteRepository",
+                "FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common.IEmailTemplateReadRepository",
+                "FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common.IEmailTemplateReadModelRepository",
+                "FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common.IEmailTemplateWriteRepository",
             ]
         },
         {

@@ -1,16 +1,16 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Integrations.Options;
 using FoodDiary.Results;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FoodDiary.Integrations.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
 public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> options, TimeProvider timeProvider)
     : ITelegramOidcTokenValidator {

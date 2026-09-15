@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;

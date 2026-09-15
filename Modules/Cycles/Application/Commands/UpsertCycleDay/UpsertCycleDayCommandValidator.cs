@@ -41,6 +41,11 @@ public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCyc
 
     private sealed class BleedingLogCommandModelValidator : AbstractValidator<BleedingLogCommandModel> {
         public BleedingLogCommandModelValidator() {
+            RuleFor(x => x.Notes)
+                .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage($"Notes must be at most {CycleProfile.MaxNotesLength} characters.");
+
             RuleFor(x => x.Type).Must(static type => Enum.IsDefined((BleedingType)type));
             RuleFor(x => x.Flow).Must(static flow => Enum.IsDefined((CycleFlowLevel)flow));
             RuleFor(x => x.PainImpact).InclusiveBetween(0, 10).When(x => x.PainImpact.HasValue);
@@ -53,6 +58,11 @@ public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCyc
 
     private sealed class SymptomLogCommandModelValidator : AbstractValidator<SymptomLogCommandModel> {
         public SymptomLogCommandModelValidator() {
+            RuleFor(x => x.Note)
+                .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage($"Note must be at most {CycleProfile.MaxNotesLength} characters.");
+
             RuleFor(x => x.Category).Must(static category => Enum.IsDefined((CycleSymptomCategory)category));
             RuleFor(x => x.Intensity).InclusiveBetween(0, 10);
             RuleFor(x => x.Tags)
@@ -74,6 +84,15 @@ public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCyc
 
     private sealed class FertilitySignalCommandModelValidator : AbstractValidator<FertilitySignalCommandModel> {
         public FertilitySignalCommandModelValidator() {
+            RuleFor(x => x.Notes)
+                .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage($"Notes must be at most {CycleProfile.MaxNotesLength} characters.");
+            RuleFor(x => x.CervicalFluid)
+                .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage($"CervicalFluid must be at most {CycleProfile.MaxNotesLength} characters.");
+
             RuleFor(x => x.BasalBodyTemperatureCelsius).InclusiveBetween(34, 42).When(x => x.BasalBodyTemperatureCelsius.HasValue);
             RuleFor(x => x.OvulationTestResult)
                 .Must(static result => result.HasValue && Enum.IsDefined((OvulationTestResult)result.Value))

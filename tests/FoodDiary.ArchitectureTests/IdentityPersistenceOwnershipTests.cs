@@ -8,8 +8,8 @@ public sealed class IdentityPersistenceOwnershipTests {
     [InlineData("tests/FoodDiary.Infrastructure.Tests/Services/EmailTemplateProviderTests.cs", "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/EmailTemplateProviderTests.cs")]
     [InlineData("tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserLoginEventRepositoryIntegrationTests.cs", "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/UserLoginEventRepositoryIntegrationTests.cs")]
     [InlineData("FoodDiary.Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs", "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs")]
-    [InlineData("FoodDiary.Infrastructure/Persistence/Authentication/ConsumedTelegramAssertion.cs", "Modules/Identity/Infrastructure/Model/Authentication/ConsumedTelegramAssertion.cs")]
-    [InlineData("FoodDiary.Infrastructure/Persistence/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs", "Modules/Identity/Infrastructure/Model/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs")]
+    [InlineData("FoodDiary.Infrastructure/Persistence/Authentication/ConsumedTelegramAssertion.cs", "Modules/Identity/PersistenceModel/Authentication/ConsumedTelegramAssertion.cs")]
+    [InlineData("FoodDiary.Infrastructure/Persistence/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs", "Modules/Identity/PersistenceModel/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs")]
     public void IdentityPersistenceAdaptersAndFocusedTests_StayWithTheirOwner(string donorPath, string ownedPath) {
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(donorPath)), $"Obsolete donor source: {donorPath}");
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(ownedPath)), $"Missing Identity source: {ownedPath}");

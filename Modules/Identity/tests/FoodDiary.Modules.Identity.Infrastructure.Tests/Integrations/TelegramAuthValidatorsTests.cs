@@ -1,11 +1,11 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Results;
-using FoodDiary.Integrations.Authentication;
-using FoodDiary.Integrations.Options;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;

@@ -33,6 +33,8 @@ public sealed class ModuleContextFactoryBoundaryTests {
     [InlineData("Images")]
     [InlineData("Notifications")]
     [InlineData("Gamification")]
+    [InlineData("Ai")]
+    [InlineData("Identity")]
     public void CoordinatedAdapter_DoesNotDependOnCentralInfrastructureTransitively(string module) {
         IReadOnlyDictionary<string, string[]> graph = ProjectReferenceReader.ReadProductionProjectReferences();
         string project = $"FoodDiary.Modules.{module}.Infrastructure";

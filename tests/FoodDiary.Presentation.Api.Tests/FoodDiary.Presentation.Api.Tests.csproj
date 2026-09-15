@@ -72,7 +72,7 @@
     <ProjectReference Include="../../Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj" />
     <ProjectReference Include="../../Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="../../Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj" />
-    <ProjectReference Include="../../Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj" />
     <ProjectReference Include="../../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />

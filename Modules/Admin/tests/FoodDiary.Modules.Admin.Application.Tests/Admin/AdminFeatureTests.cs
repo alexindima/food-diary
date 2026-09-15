@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Identity.Email.Commands.UpsertEmailTemplate;
 using FoodDiary.Application.Users.Commands.CreateUserByAdministrator;
 using FoodDiary.Application.Users.Commands.SetUserPasswordByAdministrator;
@@ -17,7 +18,6 @@ using FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 using FoodDiary.Modules.Admin.Application.Commands.UpdateAdminUser;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Modules.Admin.Application.Commands.UpsertAdminEmailTemplate;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;

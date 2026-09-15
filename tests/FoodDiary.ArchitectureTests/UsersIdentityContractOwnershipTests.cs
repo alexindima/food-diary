@@ -8,7 +8,7 @@ public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
     [InlineData("Modules/Users/Contracts", 81)]
     [InlineData("Modules/Users/Application/Abstractions", 8)]
-    [InlineData("Modules/Identity/Application/Abstractions", 41)]
+    [InlineData("Modules/Identity/Application.Abstractions", 41)]
     [InlineData("Modules/Identity/Contracts", 19)]
     [InlineData("Modules/BodyMetrics/Contracts", 10)]
     public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot, int count) {
@@ -18,9 +18,9 @@ public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
     [InlineData("Modules/Users/Contracts/Users/Common/IUserTelegramAccountService.cs")]
     [InlineData("Modules/Users/Contracts/Users/Models/UserTelegramRegistrationModel.cs")]
-    [InlineData("Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs")]
-    [InlineData("Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs")]
-    [InlineData("Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs")]
+    [InlineData("Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs")]
+    [InlineData("Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs")]
+    [InlineData("Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs")]
     public void TelegramCapabilities_StayWithTheirDeclaredOwner(string path) {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(path)));
     }
@@ -49,7 +49,7 @@ public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
     [InlineData("Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj")]
     [InlineData("Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj")]
-    [InlineData("Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj")]
+    [InlineData("Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj")]
     public void OwnedContracts_NeverDependBackOnCentralOrImplementations(string project) {
         string[] references = ProjectReferenceReader.ReadProjectReferences(project);
         if (!project.StartsWith("Modules/Users/Contracts/", StringComparison.Ordinal)) {

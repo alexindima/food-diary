@@ -4372,7 +4372,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("AuditEntries", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Authentication.ConsumedTelegramAssertion", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Identity.PersistenceModel.Authentication.ConsumedTelegramAssertion", b => {
                 b.Property<string>("Fingerprint")
                     .HasMaxLength(64)
                     .HasColumnType("character varying(64)");
@@ -4387,7 +4387,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ConsumedTelegramAssertions", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Authentication.TelegramLoginTicket", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Identity.PersistenceModel.Authentication.TelegramLoginTicket", b => {
                 b.Property<string>("Fingerprint")
                     .HasMaxLength(64)
                     .HasColumnType("character varying(64)");
@@ -4417,7 +4417,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("TelegramLoginTickets", (string)null);
             });
 
-            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Authentication.TelegramOperation", b => {
+            modelBuilder.Entity("FoodDiary.Modules.Identity.PersistenceModel.Authentication.TelegramOperation", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");

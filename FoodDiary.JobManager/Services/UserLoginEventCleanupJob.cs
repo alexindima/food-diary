@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

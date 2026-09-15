@@ -1,7 +1,7 @@
 using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Modules.Ai.Infrastructure.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Runtime.CompilerServices;
@@ -254,6 +254,6 @@ public sealed class AiQuotaRepository(
             reservation.MarkOrphaned(nowUtc);
         }
 
-        InfrastructureTelemetry.RecordAiQuotaOrphans(expired.Count);
+        AiQuotaTelemetry.RecordOrphans(expired.Count);
     }
 }

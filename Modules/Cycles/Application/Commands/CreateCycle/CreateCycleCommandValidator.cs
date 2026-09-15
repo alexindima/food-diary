@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FluentValidation;
 
@@ -5,6 +6,11 @@ namespace FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
 
 public sealed class CreateCycleCommandValidator : AbstractValidator<CreateCycleCommand> {
     public CreateCycleCommandValidator() {
+        RuleFor(x => x.Notes)
+            .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Notes must be at most {CycleProfile.MaxNotesLength} characters.");
+
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()

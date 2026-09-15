@@ -73,7 +73,7 @@ public sealed class ModuleContextFactoryRegistrationTests {
         global::FoodDiary.Modules.Images.Infrastructure.DependencyInjection.AddImagesInfrastructure(services);
         global::FoodDiary.Modules.Marketing.Infrastructure.ModuleRegistration.AddMarketingModule(services);
         global::FoodDiary.Modules.Lessons.Infrastructure.ModuleRegistration.AddLessonsModule(services);
-        global::FoodDiary.Infrastructure.IdentityModuleRegistration.AddIdentityPersistence(services);
+        global::FoodDiary.Modules.Identity.Infrastructure.IdentityModuleRegistration.AddIdentityPersistence(services);
         global::FoodDiary.Modules.Hydration.Infrastructure.ModuleRegistration.AddHydrationModule(services);
     }
 }

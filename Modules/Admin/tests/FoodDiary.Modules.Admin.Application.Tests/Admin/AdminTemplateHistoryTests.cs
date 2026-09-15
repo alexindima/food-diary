@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
 using FoodDiary.Testing;
 using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplateRevisions;
 using FoodDiary.Application.Identity.Email.Queries.GetEmailTemplates;
@@ -8,7 +9,6 @@ using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageForUser;
 using FoodDiary.Modules.Ai.Application.Queries.GetAiUsageSummary;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetAiUsageForUser;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminTemplateRevisions;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;

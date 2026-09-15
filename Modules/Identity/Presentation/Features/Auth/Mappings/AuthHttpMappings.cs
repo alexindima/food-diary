@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
@@ -19,7 +20,6 @@ using FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget
 using FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
-using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using Microsoft.AspNetCore.Http;
 

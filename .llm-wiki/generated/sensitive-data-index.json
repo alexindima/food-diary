@@ -19,27 +19,6 @@
   "fields": [
     {
       "category": "credential",
-      "name": "SecretKey",
-      "type": "string",
-      "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
-      "line": 10
-    },
-    {
-      "category": "credential",
-      "name": "RefreshTokenExpirationDays",
-      "type": "int",
-      "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
-      "line": 22
-    },
-    {
-      "category": "credential",
-      "name": "RememberMeRefreshTokenExpirationDays",
-      "type": "int",
-      "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
-      "line": 25
-    },
-    {
-      "category": "credential",
       "name": "Password",
       "type": "string",
       "path": "FoodDiary.Initializer/InitialAdminBootstrapOptions.cs",
@@ -57,7 +36,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 86
+      "line": 87
     },
     {
       "category": "credential",
@@ -343,14 +322,14 @@
       "category": "credential",
       "name": "AccessToken",
       "type": "string",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
       "line": 3
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
       "line": 3
     },
     {
@@ -1101,6 +1080,27 @@
       "type": "string",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
       "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "SecretKey",
+      "type": "string",
+      "path": "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs",
+      "line": 10
+    },
+    {
+      "category": "credential",
+      "name": "RefreshTokenExpirationDays",
+      "type": "int",
+      "path": "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs",
+      "line": 22
+    },
+    {
+      "category": "credential",
+      "name": "RememberMeRefreshTokenExpirationDays",
+      "type": "int",
+      "path": "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs",
+      "line": 25
     },
     {
       "category": "credential",
@@ -2703,42 +2703,42 @@
       "name": "Calories",
       "type": "double",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 188
+      "line": 194
     },
     {
       "category": "health",
       "name": "NutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 193
+      "line": 199
     },
     {
       "category": "health",
       "name": "BleedingNutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 194
+      "line": 200
     },
     {
       "category": "health",
       "name": "NonBleedingNutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 195
+      "line": 201
     },
     {
       "category": "health",
       "name": "AverageBleedingCalories",
       "type": "double",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 196
+      "line": 202
     },
     {
       "category": "health",
       "name": "AverageNonBleedingCalories",
       "type": "double",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 197
+      "line": 203
     },
     {
       "category": "health",
@@ -2906,7 +2906,7 @@
       "name": "AverageCycleLength",
       "type": "int",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "health",
@@ -7266,35 +7266,35 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "TelegramUserId",
       "type": "long",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "IpAddress",
       "type": "string?",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
       "line": 6
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
       "line": 6
     },
     {
@@ -7379,14 +7379,14 @@
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
-      "line": 63
+      "line": 64
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
-      "line": 84
+      "line": 85
     },
     {
       "category": "identity",
@@ -8401,7 +8401,7 @@
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 35
+      "line": 36
     },
     {
       "category": "privateContent",
@@ -10870,7 +10870,7 @@
       "fieldCount": 2
     },
     {
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
       "categories": [
         "identity"
       ],

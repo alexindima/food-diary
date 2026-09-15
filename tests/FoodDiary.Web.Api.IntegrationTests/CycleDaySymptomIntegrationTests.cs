@@ -13,6 +13,30 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
     [RequiresDockerFact]
+    public async Task CreateCycle_WithOversizedNotes_ReturnsValidationErrorAndAcceptsTrimmedLimit() {
+        HttpClient client = factory.CreateClient();
+        string token = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var request = new CreateCycleHttpRequest(
+            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            (int)CycleTrackingMode.PeriodTracking,
+            AverageCycleLength: 28, AveragePeriodLength: 5, LutealLength: 14,
+            IsRegular: true, IsOnboardingComplete: true, ShowFertilityEstimates: false,
+            DiscreetNotifications: true, Notes: new string('x', 1025), CycleTrackingConsentGranted: true);
+
+        HttpResponseMessage invalid = await client.PostAsJsonAsync("/api/v1/cycles", request);
+        Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+        using var error = JsonDocument.Parse(await invalid.Content.ReadAsStringAsync());
+        Assert.Equal("Validation.Invalid", error.RootElement.GetProperty("code").GetString());
+
+        HttpResponseMessage valid = await client.PostAsJsonAsync("/api/v1/cycles",
+            request with { Notes = "  " + new string('x', 1024) + "  " });
+        Assert.Equal(HttpStatusCode.OK, valid.StatusCode);
+        using var body = JsonDocument.Parse(await valid.Content.ReadAsStringAsync());
+        Assert.Equal(new string('x', 1024), body.RootElement.GetProperty("notes").GetString());
+    }
+
+    [RequiresDockerFact]
     public async Task DeleteCycle_WithOwnedProfile_ReturnsNoContentAndClearsCurrentCycle() {
         HttpClient client = factory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);

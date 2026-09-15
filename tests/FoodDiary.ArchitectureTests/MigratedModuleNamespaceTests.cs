@@ -58,6 +58,9 @@ public sealed class MigratedModuleNamespaceTests {
     [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests")]
     [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Infrastructure.Tests")]
     [InlineData("Cycles", "tests/FoodDiary.Modules.Cycles.Presentation.Tests")]
+    [InlineData("Identity", "Infrastructure")]
+    [InlineData("Identity", "PersistenceModel")]
+    [InlineData("Identity", "Application.Abstractions")]
     public void Projects_UseProjectNamesAndFolderNamespaces(string module, string project) {
         string directory = ArchitectureTestPaths.FromRoot("Modules", module, project);
         string projectFile = Assert.Single(Directory.EnumerateFiles(directory, "*.csproj"));

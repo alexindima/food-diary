@@ -192,7 +192,7 @@
         "write:TelegramOperation"
       ],
       "reason": "Identity purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "f4f3933ff6063d165543854cec3917839147a0c274f7294be918799f4a1a774f"
+      "technicalSourceSha256": "8aff279817012c3169e568a57a2f5aa06429c3c3f140d850486256e222d43537"
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs": {
       "module": "Hydration",
@@ -244,7 +244,7 @@
         "write:TelegramOperation"
       ],
       "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
-      "technicalSourceSha256": "643d5b32b59329b6b8d5d0509987337ff4c77550450e2db0bc8726bdd060a33f"
+      "technicalSourceSha256": "b238a1f814e2e02f7987e317feb02fae23ecefdd9f72cfa6b590a3d88ede55f7"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
@@ -255,7 +255,7 @@
         "write:TelegramLoginTicket"
       ],
       "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
-      "technicalSourceSha256": "070d5ad8d66e37ac31a51c2745fcdd306777ccc46e1860ce32f19629340f37d7"
+      "technicalSourceSha256": "3e5cd9f2ce75d5b1aa9928f0d2fb94829995b40f2e1972dfeef5622f7f1be95a"
     },
     "Modules/Admin/Infrastructure/AdminModuleRegistration.cs": {
       "module": "Admin",
@@ -333,7 +333,7 @@
         "write:AiUsage"
       ],
       "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
-      "technicalSourceSha256": "899297f7749b790a9a718e7c7316078652e577dc51bf66d8e3fb1b3cfe346834"
+      "technicalSourceSha256": "6233c631b1245a844bf4262bcda68eb1e8052a53b1c0196dd954fd990cbaced4"
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
@@ -791,7 +791,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "fdd22de27d7bb8114133bb4dcea4a973f8b5d552bbaad171a3754f8b3523b2eb"
+      "technicalSourceSha256": "5e213c5d64db68ccf0fd00c872c6b48271684c98fa50110195c6b258ace178d0"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -811,7 +811,7 @@
         "context:Database"
       ],
       "reason": "Identity replay prevention atomically inserts assertion fingerprints and deletes expired fingerprints in ConsumedTelegramAssertions.",
-      "technicalSourceSha256": "acc5f65c42c1c0b04dda7e80c671049aa619bfdc403d529ae6f7d8a28bae8f4d"
+      "technicalSourceSha256": "5d22dc7b87572bc4956be47b9176006f2126526877e3f2db474d088197794955"
     },
     "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs": {
       "module": "Identity",
@@ -830,7 +830,7 @@
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-      "technicalSourceSha256": "556f9a050a1d047f0c908f5abc628357053c8d3e32aa45950ef1a7dfc14c922e"
+      "technicalSourceSha256": "e2017cd0cb8a32b80139584ba3e2fb7afd62681cd9af365a8e484de8218fbcf7"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",

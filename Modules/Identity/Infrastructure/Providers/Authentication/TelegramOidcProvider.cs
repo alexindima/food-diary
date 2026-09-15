@@ -1,15 +1,15 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Integrations.Options;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
 public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<TelegramOidcOptions> options, ITelegramOidcTokenValidator tokens)
     : ITelegramOidcProvider {

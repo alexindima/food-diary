@@ -1,5 +1,6 @@
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;

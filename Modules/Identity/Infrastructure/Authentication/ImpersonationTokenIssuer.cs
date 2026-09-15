@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 
-namespace FoodDiary.Infrastructure.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Authentication;
 
 public sealed class ImpersonationTokenIssuer(IJwtTokenGenerator tokenGenerator) : IImpersonationTokenIssuer {
     public string IssueAccessToken(ImpersonationTokenRequest request) {

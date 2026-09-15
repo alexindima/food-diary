@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Identity.Domain.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+  </ItemGroup>
+</Project>

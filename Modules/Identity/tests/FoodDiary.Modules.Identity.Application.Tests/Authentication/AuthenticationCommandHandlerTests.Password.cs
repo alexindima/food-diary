@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordReset;
 using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
@@ -6,8 +8,6 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Identity.Authentication.Models;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

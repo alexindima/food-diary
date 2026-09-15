@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Cryptography;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Authentication;
 
 public sealed class AdminSsoService(IAdminSsoCodeStore codeStore, TimeProvider dateTimeProvider) : IAdminSsoService {
     private static readonly TimeSpan CodeTtl = TimeSpan.FromMinutes(2);

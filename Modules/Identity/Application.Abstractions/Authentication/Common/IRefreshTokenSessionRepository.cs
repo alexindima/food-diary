@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+
+public interface IRefreshTokenSessionRepository : IRefreshTokenSessionReadRepository, IRefreshTokenSessionWriteRepository;

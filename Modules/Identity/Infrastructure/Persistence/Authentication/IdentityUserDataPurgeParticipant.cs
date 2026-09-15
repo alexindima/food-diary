@@ -1,10 +1,10 @@
-using FoodDiary.Modules.Identity.Infrastructure.Persistence;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
 
 internal sealed class IdentityUserDataPurgeParticipant(IdentityDbContext context, IModuleTransactionCoordinator coordinator) : IUserDataPurgeParticipant {
     public int Order => 130;

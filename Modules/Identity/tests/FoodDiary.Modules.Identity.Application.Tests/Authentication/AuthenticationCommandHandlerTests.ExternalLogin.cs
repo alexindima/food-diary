@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
 using FoodDiary.Application.Identity.Authentication.Commands.LinkGoogle;
 using FoodDiary.Results;

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;

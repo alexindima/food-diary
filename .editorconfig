@@ -525,7 +525,7 @@ dotnet_diagnostic.RCS1170.severity = none
 dotnet_diagnostic.IDE0130.severity = none
 
 # Provider relocations preserve public CLR names and ILogger<T> categories; exact owner tests guard these types.
-[Modules/{Ai,Wearables,Usda,OpenFoodFacts,Identity,Images}/Infrastructure/Providers/**/*.cs]
+[Modules/{Ai,Wearables,Usda,OpenFoodFacts,Images}/Infrastructure/Providers/**/*.cs]
 dotnet_diagnostic.IDE0130.severity = none
 
 [Modules/*/Infrastructure/**/*.cs]
@@ -552,9 +552,6 @@ dotnet_diagnostic.IDE0130.severity = none
 [Modules/Users/Infrastructure/Persistence/UsersDbContext.cs]
 dotnet_diagnostic.IDE0130.severity = none
 
-[Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs]
-dotnet_diagnostic.IDE0130.severity = none
-
 [Modules/Meals/Infrastructure/Persistence/MealsDbContext.cs]
 dotnet_diagnostic.IDE0130.severity = none
 
@@ -575,5 +572,10 @@ dotnet_diagnostic.IDE0130.severity = none
 
 # Admin production projects use their project names as namespace roots.
 [Modules/Admin/{Application,Application.Abstractions,Contracts,Domain,Infrastructure,PersistenceModel,Presentation}/**/*.cs]
+dotnet_style_namespace_match_folder = true
+dotnet_diagnostic.IDE0130.severity = error
+
+# Identity technical projects use their canonical project and folder namespaces.
+[Modules/Identity/{Infrastructure,PersistenceModel,Application.Abstractions}/**/*.cs]
 dotnet_style_namespace_match_folder = true
 dotnet_diagnostic.IDE0130.severity = error

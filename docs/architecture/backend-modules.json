@@ -108,7 +108,7 @@
           "Email"
         ],
         "abstractionAreas": [
-          "Modules/Identity/Application/Abstractions"
+          "Modules/Identity/Application.Abstractions"
         ],
         "adapterAreas": [
           "Modules/Identity/Presentation/Features/Auth",
@@ -118,7 +118,7 @@
           "Modules/Identity/Domain"
         ],
         "persistenceModelProjects": [
-          "Modules/Identity/Infrastructure/Model"
+          "Modules/Identity/PersistenceModel"
         ],
         "infrastructureProjects": [
           "Modules/Identity/Infrastructure"

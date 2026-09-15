@@ -49,3 +49,5 @@ Preserve code encoding, two-minute TTL, validation-before-consumption and GUID
 payload semantics. Do not register the shared store here or override host Redis selection.
 
 IdentityDbContext owns runtime persistence for Identity records and template revisions. Central FoodDiaryDbContext remains the migration/composed-read model and shared transaction coordinator; tracked owner changes save through IUnitOfWork.
+
+Infrastructure, PersistenceModel and Application.Abstractions now use project-and-folder namespaces. The latter two projects are siblings of Application and Infrastructure. Application, Domain and HTTP CLR names are unchanged in this wave. JwtOptions is a shared technical configuration type; central registration still binds and validates it. No module Infrastructure may reference central Infrastructure.

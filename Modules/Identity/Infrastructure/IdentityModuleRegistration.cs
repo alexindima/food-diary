@@ -1,18 +1,19 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Admin;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Email;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Infrastructure.Persistence.Admin;
-using FoodDiary.Infrastructure.Persistence.Authentication;
-using FoodDiary.Infrastructure.Persistence.Email;
-using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Identity.Infrastructure;
 
 public static class IdentityModuleRegistration {
     public static IServiceCollection AddIdentityPersistence(this IServiceCollection services) {

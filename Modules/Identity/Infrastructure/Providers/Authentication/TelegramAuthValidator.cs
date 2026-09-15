@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -5,13 +7,11 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Integrations.Options;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
-namespace FoodDiary.Integrations.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
 public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options, TimeProvider dateTimeProvider) : ITelegramAuthValidator {
     private static readonly JsonSerializerOptions TelegramUserJsonOptions = new() {

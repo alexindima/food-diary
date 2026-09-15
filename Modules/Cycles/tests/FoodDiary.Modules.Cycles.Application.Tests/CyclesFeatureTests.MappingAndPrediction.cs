@@ -11,6 +11,37 @@ namespace FoodDiary.Modules.Cycles.Application.Tests;
 
 public partial class CyclesFeatureTests {
 
+    [Theory]
+    [InlineData(1, null, false)]
+    [InlineData(-10, -1, false)]
+    [InlineData(-10, 1, true)]
+    [InlineData(0, null, true)]
+    [InlineData(-10, 0, true)]
+    [InlineData(-10, null, true)]
+    public async Task CyclePredictionService_LimitingFactorsRespectInclusiveDateRange(
+        int startOffset, int? endOffset, bool paused) {
+        DateOnly today = new(2026, 4, 1);
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 1, 1));
+        foreach (int offset in (int[])[0, 28, 56, 84]) {
+            profile.ConfirmPeriodStart(new DateOnly(2026, 1, 1).AddDays(offset));
+        }
+        profile.UpsertFactor(CycleFactorType.HormonalContraception, today.AddDays(startOffset),
+            endOffset.HasValue ? today.AddDays(endOffset.Value) : null, notes: null);
+        CycleProfileReadModel readModel = Assert.IsType<CycleProfileReadModel>(
+            await new InMemoryCycleRepository(profile).GetCurrentReadModelAsync(profile.UserId));
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
+
+        CyclePredictionsModel aggregatePrediction = CyclePredictionService.CalculatePredictions(profile, timeProvider: clock);
+        CyclePredictionsModel readPrediction = CyclePredictionService.CalculatePredictions(readModel, timeProvider: clock);
+
+        Assert.Multiple(
+            () => Assert.Equal(paused, aggregatePrediction.NextPeriodStartFrom is null),
+            () => Assert.Equal(paused, readPrediction.NextPeriodStartFrom is null),
+            () => Assert.Equal(paused, aggregatePrediction.ReasonCodes.Contains("prediction_paused_by_state", StringComparer.Ordinal)),
+            () => Assert.Equal(aggregatePrediction.NextPeriodStartFrom, readPrediction.NextPeriodStartFrom));
+    }
+
     [Fact]
     public void CycleMappings_ToModel_SortsLogsByDate() {
         var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
@@ -114,7 +145,7 @@ public partial class CyclesFeatureTests {
             endDate: null,
             notes: null);
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, new DateOnly(2026, 4, 2));
 
         Assert.Null(predictions.NextPeriodStartFrom);
         Assert.Null(predictions.NextPeriodStartTo);

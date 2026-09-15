@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Email.Queries.GetEmailTemplateRevisions;
 using FoodDiary.Mediator;

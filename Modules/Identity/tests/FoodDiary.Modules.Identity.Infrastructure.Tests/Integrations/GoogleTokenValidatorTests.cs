@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using FoodDiary.Results;
-using FoodDiary.Integrations.Authentication;
-using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;

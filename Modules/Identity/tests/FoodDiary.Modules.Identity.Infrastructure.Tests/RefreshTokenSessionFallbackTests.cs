@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests;

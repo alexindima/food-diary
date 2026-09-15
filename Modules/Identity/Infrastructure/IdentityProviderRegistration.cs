@@ -1,13 +1,13 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Integrations.Authentication;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FoodDiary.Integrations.Options;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Identity.Infrastructure;
 
 public static class IdentityProviderRegistration {
     public static IServiceCollection AddIdentityProvider(this IServiceCollection services, IConfiguration configuration) {

@@ -1,10 +1,11 @@
+using FoodDiary.Application.Abstractions.Options;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure.Authentication;
+using FoodDiary.Modules.Identity.Infrastructure.Services;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure;
-using FoodDiary.Infrastructure.Authentication;
-using FoodDiary.Infrastructure.Options;
-using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

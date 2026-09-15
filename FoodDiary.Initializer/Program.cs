@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Admin.Infrastructure;
@@ -34,7 +36,6 @@ using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Application.Export;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;

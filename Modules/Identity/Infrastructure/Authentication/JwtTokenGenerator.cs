@@ -1,14 +1,14 @@
+using FoodDiary.Application.Abstractions.Options;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FoodDiary.Infrastructure.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Authentication;
 
 public sealed class JwtTokenGenerator : IJwtTokenGenerator {
     private readonly TimeProvider _dateTimeProvider;

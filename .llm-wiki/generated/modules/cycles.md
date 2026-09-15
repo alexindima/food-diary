@@ -96,7 +96,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleAdditionalInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleEnumContractTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleIdConversionTests.cs`
-- [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleIdInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleInternalOperationsTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleProfileInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleSettingsAtomicityTests.cs`

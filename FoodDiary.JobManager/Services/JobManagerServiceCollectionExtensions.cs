@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Dietologist.Services;
 

@@ -1,7 +1,7 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.JobManager.Services;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.JobManager.Tests;
 

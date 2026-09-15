@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
 internal static class TelegramAuthTimestampValidator {
     internal enum Status {

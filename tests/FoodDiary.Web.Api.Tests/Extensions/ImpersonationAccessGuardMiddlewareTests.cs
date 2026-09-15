@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Claims;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Web.Api.Extensions;

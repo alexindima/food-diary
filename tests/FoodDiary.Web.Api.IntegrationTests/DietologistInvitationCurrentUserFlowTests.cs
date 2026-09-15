@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
@@ -5,7 +6,6 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

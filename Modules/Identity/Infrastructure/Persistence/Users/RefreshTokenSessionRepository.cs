@@ -1,11 +1,11 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Users;
+namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 
 public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession> sessions, Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
     public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActiveReadModelsAsync(

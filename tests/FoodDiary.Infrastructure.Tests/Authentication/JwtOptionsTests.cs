@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Options;
+using FoodDiary.Application.Abstractions.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Authentication;
 

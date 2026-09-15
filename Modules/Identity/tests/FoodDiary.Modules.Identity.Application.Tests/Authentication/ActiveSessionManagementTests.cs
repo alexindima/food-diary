@@ -1,5 +1,6 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Identity.Authentication.Commands.Logout;
 using FoodDiary.Application.Identity.Authentication.Commands.RevokeSession;
@@ -7,7 +8,6 @@ using FoodDiary.Application.Identity.Authentication.Commands.RevokeOtherSessions
 using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 

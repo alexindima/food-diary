@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Net;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Results;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.AspNetCore.Mvc.Testing;

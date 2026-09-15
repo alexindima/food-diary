@@ -1,9 +1,9 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Presentation.Api.Extensions;
 

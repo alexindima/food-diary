@@ -1,11 +1,11 @@
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure.Authentication;
+using FoodDiary.Modules.Identity.Infrastructure.Services;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Infrastructure.Authentication;
-using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Identity.Infrastructure;
 
 public static class IdentityAuthenticationRegistration {
     public static IServiceCollection AddIdentityAuthenticationInfrastructure(this IServiceCollection services) {

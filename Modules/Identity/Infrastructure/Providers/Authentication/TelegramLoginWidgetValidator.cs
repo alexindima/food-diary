@@ -1,13 +1,13 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Integrations.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
 public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> options, TimeProvider dateTimeProvider) : ITelegramLoginWidgetValidator {
     private readonly TelegramAuthOptions _options = options.Value;

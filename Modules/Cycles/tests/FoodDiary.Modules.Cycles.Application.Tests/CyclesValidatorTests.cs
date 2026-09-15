@@ -12,6 +12,36 @@ namespace FoodDiary.Modules.Cycles.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public class CyclesValidatorTests {
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1024, false)]
+    [InlineData(1025, true)]
+    public async Task TextFields_ValidateTrimmedDomainLimit(int length, bool invalid) {
+        string text = "  " + new string('x', length) + "  ";
+        TestValidationResult<CreateCycleCommand> create = await new CreateCycleCommandValidator()
+            .TestValidateAsync(CreateCommand() with { Notes = text });
+        TestValidationResult<UpsertCycleFactorCommand> factor = await new UpsertCycleFactorCommandValidator()
+            .TestValidateAsync(CreateFactorCommand(notes: text));
+        TestValidationResult<UpsertCycleDayCommand> day = await new UpsertCycleDayCommandValidator()
+            .TestValidateAsync(CreateDayCommand(
+                bleeding: new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: text, ClearNotes: false),
+                symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], text, ClearNote: false)],
+                fertilitySignal: new FertilitySignalCommandModel(BasalBodyTemperatureCelsius: null, OvulationTestResult: null, CervicalFluid: text, HadSex: null, Notes: text, ClearNotes: false)));
+
+        if (invalid) {
+            create.ShouldHaveValidationErrorFor(command => command.Notes).WithErrorCode("Validation.Invalid");
+            factor.ShouldHaveValidationErrorFor(command => command.Notes).WithErrorCode("Validation.Invalid");
+            day.ShouldHaveValidationErrorFor("Bleeding.Notes").WithErrorCode("Validation.Invalid");
+            day.ShouldHaveValidationErrorFor("Symptoms[0].Note").WithErrorCode("Validation.Invalid");
+            day.ShouldHaveValidationErrorFor("FertilitySignal.Notes").WithErrorCode("Validation.Invalid");
+            day.ShouldHaveValidationErrorFor("FertilitySignal.CervicalFluid").WithErrorCode("Validation.Invalid");
+        } else {
+            create.ShouldNotHaveAnyValidationErrors();
+            factor.ShouldNotHaveAnyValidationErrors();
+            day.ShouldNotHaveAnyValidationErrors();
+        }
+    }
+
     [Fact]
     public async Task DeleteCycleProfile_WithNullUserId_HasError() {
         TestValidationResult<DeleteCycleProfileCommand> result = await new DeleteCycleProfileCommandValidator().TestValidateAsync(

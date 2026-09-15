@@ -1,4 +1,4 @@
-using FoodDiary.Infrastructure.Services;
+using FoodDiary.Modules.Identity.Infrastructure.Services;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Authentication;
 

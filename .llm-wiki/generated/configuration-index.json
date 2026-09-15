@@ -294,7 +294,7 @@
         "RememberMeRefreshTokenExpirationDays",
         "SecretKey"
       ],
-      "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs"
+      "path": "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs"
     },
     {
       "type": "MailInboxClientOptions",

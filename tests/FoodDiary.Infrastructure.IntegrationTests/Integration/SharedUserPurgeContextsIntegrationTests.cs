@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
@@ -19,7 +21,6 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Modules.Admin.Domain.Entities;
 using FoodDiary.Modules.Admin.Infrastructure;

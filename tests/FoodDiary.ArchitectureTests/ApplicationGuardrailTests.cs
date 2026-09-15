@@ -1331,7 +1331,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
             Path.Combine(root, "Modules", "Lessons", "Application", "Abstractions", "Common", "INutritionLessonReadRepository.cs"),
-            Path.Combine(root, "Modules", "Identity", "Application", "Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application.Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
             Path.Combine(root, "Modules", "ContentReports", "Application.Abstractions", "Common", "IContentReportReadModelRepository.cs"),
         ];
 

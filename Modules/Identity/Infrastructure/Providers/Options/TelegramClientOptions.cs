@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 
 public sealed class TelegramClientOptions : ITelegramIdentityPolicy, ITelegramOperationPolicy {
     public const string SectionName = "TelegramClient";

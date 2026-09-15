@@ -1,10 +1,10 @@
+using FoodDiary.Application.Abstractions.Options;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure.Authentication;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Infrastructure.Authentication;
-using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Authentication;

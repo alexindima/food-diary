@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

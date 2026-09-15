@@ -55,7 +55,7 @@
     <ProjectReference Include="../../Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="../../Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />

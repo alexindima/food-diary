@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation;
 using FluentValidation.Results;
@@ -5,7 +6,6 @@ using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;

@@ -16,9 +16,6 @@ internal static class InfrastructureTelemetry {
     public static readonly Counter<long> AiFallbackCounter = Meter.CreateCounter<long>(
         "fooddiary.ai.fallbacks");
 
-    public static readonly Counter<long> AiQuotaOrphanCounter = Meter.CreateCounter<long>(
-        "fooddiary.ai.quota_orphans");
-
     public static readonly Counter<long> DatabaseCommandFailureCounter = Meter.CreateCounter<long>(
         "fooddiary.db.command.failures");
 
@@ -32,12 +29,6 @@ internal static class InfrastructureTelemetry {
             new KeyValuePair<string, object?>("fooddiary.db.operation", operation),
             new KeyValuePair<string, object?>("fooddiary.db.source", source),
             new KeyValuePair<string, object?>("error.type", errorType));
-    }
-
-    internal static void RecordAiQuotaOrphans(int count) {
-        if (count > 0) {
-            AiQuotaOrphanCounter.Add(count);
-        }
     }
 
     internal static void RecordStorageOperation(string operation, string outcome, string? errorType = null) {

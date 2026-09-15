@@ -1,8 +1,8 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 using System.Net;
 using System.Text;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Integrations.Authentication;
-using FoodDiary.Integrations.Options;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -46,7 +47,11 @@ public sealed class ConfirmPeriodStartCommandHandler(
             return Result.Failure<CycleModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
 
-        profile.ConfirmPeriodStart(command.Date);
+        try {
+            profile.ConfirmPeriodStart(command.Date);
+        } catch (ArgumentException exception) {
+            return Result.Failure<CycleModel>(Errors.Validation.Invalid(nameof(command.Date), exception.Message));
+        }
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);

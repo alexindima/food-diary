@@ -6,8 +6,7 @@ change claims, expiry, role handling or refresh validation during this extractio
 
 Own Identity persistence adapters, including `UserLoginEventRepository` and `EmailTemplateProvider`. Preserve login-event search/date/deletion semantics and the provider's singleton lifetime, one-minute cache and locale fallback. Keep `UserRepository` with Users Infrastructure, and shared SSO/Redis storage, mail transport and cleanup with their established owners.
 
-Google and Telegram validators/options now belong to Providers, preserving legacy
-CLR names, signing/issuer/audience/lifetime rules and cancellation. API and JobManager
+Google and Telegram validators/options now belong to Providers, using module-owned CLR namespaces while preserving signing/issuer/audience/lifetime rules and cancellation. API and JobManager
 explicitly compose AddIdentityProvider; Initializer does not acquire these options.
 Keep singleton lifetimes and supplied TimeProvider, and do not merge provider
 registration into persistence or JWT/password/SSO registration. See
@@ -27,10 +26,10 @@ cleanup and ON CONFLICT behavior unchanged during physical relocation. The guard
 does not replace signature/age validation in Telegram application/provider flows.
 
 Own `JwtTokenGenerator` under Authentication and `PasswordHasher` under Services
-(matching retained CLR namespaces). Register their
+(using project-and-folder CLR namespaces). Register their
 existing ports as singletons through `AddIdentityAuthenticationInfrastructure`,
 separately from persistence. Preserve claims, signatures, expiry, refresh checks
-and legacy/enhanced bcrypt compatibility. Keep JwtOptions/binding central and
+and legacy/enhanced bcrypt compatibility. Keep JwtOptions in Shared/FoodDiary.Authentication.Contracts/Options with binding central and
 Users credential operations with Users; relocation must not redesign security.
 
 Own ordinary `AdminSsoService` under Authentication, registered as the existing
@@ -50,4 +49,4 @@ without resolving FoodDiaryDbContext. Preserve the relational guard and pass the
 operation cancellation token to UseTransactionAsync. Purge uses IdentityDbContext
 and binds the live coordinator transaction on every invocation. Preserve order 130,
 scalar user filtering and journal/deduplication deletion. Users retains transaction
-completion; The remaining central reference supplies shared JwtOptions and authentication framework dependencies.
+completion; There is no central Infrastructure reference. Shared authentication options and HTTP dependencies are referenced explicitly.

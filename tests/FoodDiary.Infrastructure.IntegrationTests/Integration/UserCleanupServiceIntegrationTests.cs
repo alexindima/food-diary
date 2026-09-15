@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;
@@ -30,9 +33,7 @@ using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
-using FoodDiary.Infrastructure.Persistence.Authentication;
 using Microsoft.AspNetCore.DataProtection;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 

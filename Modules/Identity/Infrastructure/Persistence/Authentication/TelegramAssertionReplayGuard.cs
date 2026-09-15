@@ -1,10 +1,9 @@
-using FoodDiary.Modules.Identity.Infrastructure.Persistence;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Security.Cryptography;
 using System.Text;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
 
 public sealed class TelegramAssertionReplayGuard(IdentityDbContext context, TimeProvider timeProvider, Func<CancellationToken, Task>? synchronizeTransactionAsync = null)
     : ITelegramAssertionReplayGuard {

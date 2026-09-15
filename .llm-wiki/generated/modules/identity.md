@@ -25,11 +25,11 @@ sources:
 ## Source Areas
 
 - `Modules/Identity/Application`
-- `Modules/Identity/Application/Abstractions`
+- `Modules/Identity/Application.Abstractions`
 - `Modules/Identity/Domain`
 - `Modules/Identity/Infrastructure`
-- `Modules/Identity/Infrastructure/Model`
 - `Modules/Identity/Infrastructure/Providers`
+- `Modules/Identity/PersistenceModel`
 - `Modules/Identity/Presentation`
 - `Modules/Identity/Presentation/Features/Auth`
 

@@ -1,4 +1,4 @@
-namespace FoodDiary.Integrations.Options;
+namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 
 public sealed class TelegramOidcOptions {
     public const string SectionName = "TelegramOidc";

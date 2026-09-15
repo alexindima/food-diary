@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Presentation.Api.Hubs;
 using Microsoft.AspNetCore.SignalR;
 

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
-namespace FoodDiary.Infrastructure.Services;
+namespace FoodDiary.Modules.Identity.Infrastructure.Services;
 
 public sealed class PasswordHasher : IPasswordHasher {
     private const string EnhancedHashPrefix = "$fd$bcrypt-sha384$";

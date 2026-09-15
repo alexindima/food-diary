@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Initializer;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Results;

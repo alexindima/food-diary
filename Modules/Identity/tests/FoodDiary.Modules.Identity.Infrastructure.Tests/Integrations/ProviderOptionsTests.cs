@@ -1,4 +1,4 @@
-using FoodDiary.Integrations.Options;
+using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
 

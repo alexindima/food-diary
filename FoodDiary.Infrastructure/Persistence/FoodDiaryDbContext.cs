@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Identity.PersistenceModel;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.ContentReports.PersistenceModel;
 using FoodDiary.Modules.BodyMetrics.PersistenceModel;
 using FoodDiary.Modules.Billing.PersistenceModel;
 using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.Admin.PersistenceModel;
 using FoodDiary.Infrastructure.Persistence.Composition;
-using FoodDiary.Infrastructure.Persistence.Authentication;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.MealPlanning.Infrastructure.Model;
 using FoodDiary.Infrastructure.Persistence.Audit;

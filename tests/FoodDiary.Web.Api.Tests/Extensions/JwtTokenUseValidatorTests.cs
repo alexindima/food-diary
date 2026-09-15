@@ -1,5 +1,5 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Claims;
-using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Web.Api.Extensions;
 
 namespace FoodDiary.Web.Api.Tests.Extensions;

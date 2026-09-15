@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Cycles.Domain.Entities;
 
 public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
+    public const int MaxNotesLength = 1024;
     private const int DefaultCycleLength = 28;
     private const int DefaultPeriodLength = 5;
     private const int DefaultLutealLength = 14;
@@ -506,14 +507,13 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         };
 
     internal static string? NormalizeNotes(string? value) {
-        const int maxLength = 1024;
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
         string normalized = value.Trim();
-        return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {maxLength} characters.")
+        return normalized.Length > MaxNotesLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {MaxNotesLength} characters.")
             : normalized;
     }
 

@@ -23,13 +23,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
+          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
         }
       ],
-      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
+      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:41:48.8189675Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:34.2222244Z"
     },
     {
       "pageId": "module.frontend",
@@ -67,14 +67,22 @@
       "pageSha256": "1f2d93b0ccd86a9a9aecd6ac712685b0936eba4ccc90213b6a8ae77189c78e86",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
+        },
+        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "549747e1cb63c31019af610d866f17a075952e016f38f5fd5cac6d92a6ac2513"
+          "sha256": "720e162ee94fe105b0730e327159f9841e2503d59c330bb9bfece993a65838df"
+        },
+        {
+          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
+          "sha256": "891eb74ef39019c72af0b35d998de969db1b840f6a134398966d06d18a1cbb90"
         }
       ],
-      "reason": "Outbox runtime extraction has no HTTP payload or route changes; concurrent Cycles source moves are outside this behavioral attestation.",
+      "reason": "Identity internal namespace and shared JWT options relocation preserves controller DTOs and token format; offline token and API host unit tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:41:49.0925504Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:34.6710871Z"
     },
     {
       "pageId": "system.architecture",
@@ -82,14 +90,18 @@
       "pageSha256": "c247b430bbc9df2977a31d15bd2ccae1d483fc8e800dfab92db6fd031097f948",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "979b9671c00570d741800d17c2488cc82c67a59c214bf17d7d2ac3be720eb1dc"
+          "sha256": "69f77e38d381ddd84c88da9e93a2003d2da2d9deafe3ed3c3ff2d84b3650e013"
         }
       ],
-      "reason": "Cycles review complete: sibling projects, canonical namespaces, two repository ports, owner requests through mediator and module-owned invariant tests. Dependency matrix reflects reviewed direct references; no HTTP or persistence schema change.",
+      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:34:26.7362064Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:35.0545159Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -128,13 +140,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
+          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
         }
       ],
-      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
+      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:41:49.4214401Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:35.4135685Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -143,13 +155,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "0cff749094cf7e6c7b013d9ea80e20be5725585018cb06b4df4ff72515e20851"
+          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
         }
       ],
-      "reason": "Reviewed ContentReports canonical sibling project paths and explicit PersistenceModel source coverage. Primary-backend ownership, scalar Contracts boundary, shared transaction composition and catalog limitations remain accurate; Swagger snapshots and all 2162 selected cases passed after focused architecture recheck.",
+      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
       "baseRef": "HEAD",
-      "gitHead": "ac0c44b83f4bf4753c73bb091f2ad65876cb203a",
-      "reviewedAtUtc": "2026-09-15T03:58:46.0651385Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:35.8218499Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -206,14 +218,18 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "a07e47c669b5d2fc1ba143c450c596fb536d6739d49e4f769fa60ce44d35af99"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "979b9671c00570d741800d17c2488cc82c67a59c214bf17d7d2ac3be720eb1dc"
+          "sha256": "69f77e38d381ddd84c88da9e93a2003d2da2d9deafe3ed3c3ff2d84b3650e013"
         }
       ],
-      "reason": "Cycles review complete: sibling projects, canonical namespaces, two repository ports, owner requests through mediator and module-owned invariant tests. Dependency matrix reflects reviewed direct references; no HTTP or persistence schema change.",
+      "reason": "Updated exact dependency, namespace and nesting guards. Existing provider and model tests cover behavior; final runtime source bodies are equivalent except imports and namespace.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:34:27.5759365Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:36.2131037Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -221,14 +237,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6aaee4588636cc5d5a31cea452b155b9d053253239222945911343f6b468f258"
+          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
+          "sha256": "891eb74ef39019c72af0b35d998de969db1b840f6a134398966d06d18a1cbb90"
         }
       ],
-      "reason": "Reviewed current owner-context purge and canonical BodyMetrics graph. Final architecture health index matches exact project matrix and consumer graph; existing navigation and workflow guidance remain applicable.",
+      "reason": "Identity internal namespace and shared JWT options relocation preserves controller DTOs and token format; offline token and API host unit tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "222d6f76593c790fb3aa7c230750eac538bfb786",
-      "reviewedAtUtc": "2026-09-14T20:29:26.6184839Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:36.6649680Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -485,13 +501,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "549747e1cb63c31019af610d866f17a075952e016f38f5fd5cac6d92a6ac2513"
+          "sha256": "720e162ee94fe105b0730e327159f9841e2503d59c330bb9bfece993a65838df"
         }
       ],
-      "reason": "Dependency matrix, transitive boundary guards and persistence technical source inventory now cover the shared outbox owner; selected tests and corrective receipts are recorded.",
+      "reason": "Updated exact dependency, namespace and nesting guards. Existing provider and model tests cover behavior; final runtime source bodies are equivalent except imports and namespace.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:41:50.1552976Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:37.6799816Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1086,13 +1102,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
+          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
         }
       ],
-      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
+      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:41:49.7562454Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:37.1137116Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1146,13 +1162,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
+          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
         }
       ],
-      "reason": "Reviewed new shared runtime ownership guide and central/module guides against actual references and unchanged processing bodies.",
+      "reason": "Reviewed canonical Identity technical project ownership and sibling paths against sources; central Jwt binding remains and no production module references central Infrastructure.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:41:50.6727571Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:38.3409509Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1161,13 +1177,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "cb44931885c000e9420572b648d3839f2a23711d9707567185285d957f5cbc04"
+          "sha256": "939cc73391950282411ff1d66d7ba126f1fb7dc9f9a3c317c4742c9103366576"
         }
       ],
-      "reason": "Dependency matrix, transitive boundary guards and persistence technical source inventory now cover the shared outbox owner; selected tests and corrective receipts are recorded.",
+      "reason": "Updated exact dependency, namespace and nesting guards. Existing provider and model tests cover behavior; final runtime source bodies are equivalent except imports and namespace.",
       "baseRef": "HEAD",
-      "gitHead": "9180a26e9febb283bca31ba0c26b9447a5baf293",
-      "reviewedAtUtc": "2026-09-15T05:41:51.1800342Z"
+      "gitHead": "70d3efaa3899399013ac95d832a74335c8952135",
+      "reviewedAtUtc": "2026-09-15T06:36:38.9149604Z"
     }
   ]
 }

@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Admin;
+namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Admin;
 
 public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IEmailTemplateRepository {
     public async Task<IReadOnlyList<EmailTemplateRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) {

@@ -1,0 +1,3 @@
+namespace FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
+
+public interface IEmailTemplateRepository : IEmailTemplateReadRepository, IEmailTemplateReadModelRepository, IEmailTemplateWriteRepository;

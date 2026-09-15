@@ -18,8 +18,9 @@ public static class CyclePredictionService {
 
     public static CyclePredictionsModel CalculatePredictions(CycleProfileReadModel profile, DateOnly? currentDate = null, TimeProvider? timeProvider = null) {
         ArgumentNullException.ThrowIfNull(profile);
+        DateOnly today = currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
 
-        if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors)) {
+        if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors, today)) {
             return Limited(profile.Confidence, "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
         }
 
@@ -27,13 +28,14 @@ public static class CyclePredictionService {
             profile.Confidence,
             profile.ShowFertilityEstimates,
             ResolvePredictionHistory(profile.BleedingEntries, profile.MenstrualEpisodes ?? []),
-            currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime));
+            today);
     }
 
     public static CyclePredictionsModel CalculatePredictions(CycleProfile profile, DateOnly? currentDate = null, TimeProvider? timeProvider = null) {
         ArgumentNullException.ThrowIfNull(profile);
+        DateOnly today = currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
 
-        if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors)) {
+        if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors, today)) {
             return Limited(profile.Confidence, "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
         }
 
@@ -41,7 +43,7 @@ public static class CyclePredictionService {
             profile.Confidence,
             profile.ShowFertilityEstimates,
             ResolvePredictionHistory(profile),
-            currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime));
+            today);
     }
 
     private static CyclePredictionsModel CalculatePredictions(
@@ -263,18 +265,20 @@ public static class CyclePredictionService {
             or CycleReproductiveState.Perimenopause
             or CycleReproductiveState.NoPeriod;
 
-    private static bool HasActivePredictionLimitingFactor(IEnumerable<CycleFactor> factors) =>
+    private static bool HasActivePredictionLimitingFactor(IEnumerable<CycleFactor> factors, DateOnly currentDate) =>
         factors.Any(factor =>
-            factor.EndDate is null &&
+            factor.StartDate <= currentDate &&
+            (factor.EndDate is null || factor.EndDate >= currentDate) &&
             factor.Type is CycleFactorType.Pregnancy
                 or CycleFactorType.Lactation
                 or CycleFactorType.HormonalContraception
                 or CycleFactorType.Postpartum
                 or CycleFactorType.NoPeriod);
 
-    private static bool HasActivePredictionLimitingFactor(IEnumerable<CycleFactorReadModel> factors) =>
+    private static bool HasActivePredictionLimitingFactor(IEnumerable<CycleFactorReadModel> factors, DateOnly currentDate) =>
         factors.Any(factor =>
-            factor.EndDate is null &&
+            factor.StartDate <= currentDate &&
+            (factor.EndDate is null || factor.EndDate >= currentDate) &&
             factor.Type is CycleFactorType.Pregnancy
                 or CycleFactorType.Lactation
                 or CycleFactorType.HormonalContraception

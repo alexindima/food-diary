@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1235,
     "ambiguousContracts": 2,
-    "consumerEdges": 9356,
-    "productionConsumerEdges": 5391,
-    "testConsumerEdges": 3965,
+    "consumerEdges": 9354,
+    "productionConsumerEdges": 5390,
+    "testConsumerEdges": 3964,
     "consumedContracts": 1235,
     "unconsumedContracts": 0
   },
@@ -8370,7 +8370,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8642,7 +8642,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8659,7 +8659,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9696,7 +9696,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9713,7 +9713,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9730,7 +9730,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9747,7 +9747,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9781,7 +9781,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10733,7 +10733,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11192,7 +11192,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14086,7 +14086,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14103,7 +14103,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14120,7 +14120,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14137,7 +14137,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14443,7 +14443,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14460,7 +14460,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14477,7 +14477,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14494,7 +14494,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14511,7 +14511,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14528,7 +14528,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14545,7 +14545,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14562,7 +14562,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14579,7 +14579,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15174,7 +15174,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15191,7 +15191,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15208,7 +15208,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15225,7 +15225,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -28240,7 +28240,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.ConsentAndConfirmation.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "ConfirmPeriodStartCommand",
@@ -29423,7 +29423,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "CreateCycleCommand",
@@ -29514,7 +29514,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "CreateCycleHttpRequest",
@@ -41809,7 +41809,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.CreateAndRead.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetCurrentCycleQuery",
@@ -42082,7 +42082,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionSummary.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 12
     },
     {
       "contract": "GetCycleNutritionSummaryQuery",
@@ -52737,7 +52737,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
@@ -52750,7 +52750,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
@@ -52763,7 +52763,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
@@ -52776,7 +52776,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
@@ -52789,7 +52789,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -52802,7 +52802,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs",
@@ -52815,7 +52815,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs",
@@ -54297,7 +54297,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/UserLoginEventCleanupJob.cs",
@@ -54310,7 +54310,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
@@ -54323,7 +54323,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/DependencyInjection.cs",
@@ -54336,7 +54336,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
@@ -54349,7 +54349,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandHandler.cs",
@@ -54362,7 +54362,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
@@ -54375,7 +54375,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
@@ -54388,7 +54388,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs",
@@ -54401,7 +54401,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
@@ -54414,7 +54414,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
@@ -54427,7 +54427,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
@@ -54440,7 +54440,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
@@ -54453,7 +54453,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
@@ -54466,7 +54466,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
@@ -54479,7 +54479,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
@@ -54492,7 +54492,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/DependencyInjection.cs",
@@ -54505,7 +54505,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -54518,7 +54518,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
@@ -54531,7 +54531,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
@@ -69455,10 +69455,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -69468,7 +69468,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Email/Queries/GetEmailTemplateRevisions/GetEmailTemplateRevisionsQueryHandler.cs",
@@ -69481,7 +69481,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatesQueryHandler.cs",
@@ -69494,7 +69494,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -69507,7 +69507,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
@@ -69520,7 +69520,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -69533,7 +69533,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -69546,10 +69546,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -69559,7 +69559,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -69572,7 +69572,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -69585,7 +69585,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -69598,7 +69598,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -69611,7 +69611,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
@@ -69624,7 +69624,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -69637,7 +69637,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Compatibility/UsersIdentityContractAssemblyTests.cs",
@@ -69650,7 +69650,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -69663,7 +69663,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -69676,7 +69676,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -69689,7 +69689,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -69702,10 +69702,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -69715,7 +69715,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommandHandler.cs",
@@ -69728,7 +69728,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -69741,7 +69741,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -69754,7 +69754,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -69975,7 +69975,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Initializer/NoOpEmailVerificationNotifier.cs",
@@ -69988,7 +69988,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Initializer/Program.cs",
@@ -70001,7 +70001,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
@@ -70014,7 +70014,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/NoOpEmailVerificationNotifier.cs",
@@ -70027,7 +70027,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
@@ -70040,7 +70040,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
@@ -70053,7 +70053,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Services/EmailVerificationNotifier.cs",
@@ -70066,7 +70066,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -70079,7 +70079,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailServiceTests.cs",
@@ -70092,7 +70092,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/IdentityPresentationCompositionTests.cs",
@@ -70105,7 +70105,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Services/InitializerTests.cs",
@@ -70118,7 +70118,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/HostFallbackServicesTests.cs",
@@ -70226,19 +70226,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -70969,19 +70956,6 @@
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
       "isTest": false,
       "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleIdInvariantTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IEntityId",
@@ -75487,7 +75461,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
@@ -75500,7 +75474,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
@@ -75513,7 +75487,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -75526,7 +75500,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
@@ -75539,7 +75513,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -75552,7 +75526,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
@@ -75565,7 +75539,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -78490,7 +78464,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/Logout/LogoutCommandHandler.cs",
@@ -78503,7 +78477,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
@@ -78516,7 +78490,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
@@ -78529,7 +78503,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Authentication/ImpersonationTokenIssuer.cs",
@@ -78542,7 +78516,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
@@ -78555,7 +78529,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
@@ -78568,7 +78542,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/ActiveSessionManagementTests.cs",
@@ -78581,7 +78555,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
@@ -78594,7 +78568,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
@@ -78607,7 +78581,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs",
@@ -78620,7 +78594,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/ImpersonationTokenIssuerTests.cs",
@@ -78633,7 +78607,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationCurrentUserFlowTests.cs",
@@ -78646,7 +78620,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs",
@@ -99406,7 +99380,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
@@ -99419,7 +99393,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -99432,7 +99406,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -99445,7 +99419,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/ActiveSessionManagementTests.cs",
@@ -99458,7 +99432,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
@@ -99471,10 +99445,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -99484,7 +99458,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -99497,7 +99471,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -99510,7 +99484,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -99523,7 +99497,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -99536,7 +99510,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -99549,7 +99523,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
@@ -99562,7 +99536,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
@@ -99575,7 +99549,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
@@ -99588,7 +99562,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -99601,7 +99575,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -99614,10 +99588,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -99627,7 +99601,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
@@ -99640,7 +99614,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/Logout/LogoutCommandHandler.cs",
@@ -99653,7 +99627,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
@@ -99666,7 +99640,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
@@ -99679,7 +99653,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
@@ -99692,7 +99666,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
@@ -99705,7 +99679,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
@@ -99718,7 +99692,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -99731,7 +99705,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/ActiveSessionManagementTests.cs",
@@ -99744,7 +99718,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Password.cs",
@@ -99757,7 +99731,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -99770,7 +99744,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedUsersContextIntegrationTests.cs",
@@ -99783,7 +99757,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -107739,7 +107713,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommandHandler.cs",
@@ -107752,7 +107726,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
@@ -107765,7 +107739,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
@@ -107778,7 +107752,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
@@ -107791,7 +107765,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommandHandler.cs",
@@ -107804,7 +107778,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
@@ -107817,7 +107791,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -107830,7 +107804,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
@@ -107843,7 +107817,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -107856,7 +107830,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
@@ -107869,7 +107843,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
@@ -107882,7 +107856,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailServiceTests.cs",
@@ -107895,7 +107869,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
@@ -107908,7 +107882,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
@@ -107921,7 +107895,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
@@ -107934,7 +107908,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -107947,7 +107921,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommandHandler.cs",
@@ -107960,7 +107934,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
@@ -107973,7 +107947,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
@@ -107986,7 +107960,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommandHandler.cs",
@@ -107999,7 +107973,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
@@ -108012,7 +107986,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -108025,7 +107999,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
@@ -108038,7 +108012,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -108051,7 +108025,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
@@ -108064,7 +108038,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
@@ -108077,7 +108051,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailServiceTests.cs",
@@ -108090,7 +108064,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
@@ -108103,7 +108077,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
@@ -108116,7 +108090,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
@@ -108129,7 +108103,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -108142,7 +108116,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/BeginTelegramMiniApp/BeginTelegramMiniAppCommandHandler.cs",
@@ -108155,7 +108129,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandHandler.cs",
@@ -108168,7 +108142,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
@@ -108181,7 +108155,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
@@ -108194,7 +108168,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQueryHandler.cs",
@@ -108207,7 +108181,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -108220,7 +108194,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs",
@@ -108233,7 +108207,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
@@ -108246,7 +108220,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
@@ -108259,7 +108233,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandHandler.cs",
@@ -108272,7 +108246,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
@@ -108285,7 +108259,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
@@ -108298,7 +108272,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramAuthenticationIntentService.cs",
@@ -108311,7 +108285,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
@@ -108324,7 +108298,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
@@ -108337,7 +108311,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -108350,7 +108324,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
@@ -108363,7 +108337,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
@@ -108376,7 +108350,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
@@ -108389,7 +108363,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailServiceTests.cs",
@@ -108402,7 +108376,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
@@ -108415,7 +108389,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersIdentityContractOwnershipTests.cs",
@@ -108428,7 +108402,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -108441,7 +108415,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
@@ -108454,7 +108428,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -108467,7 +108441,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
@@ -108480,7 +108454,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -108493,7 +108467,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
@@ -108506,7 +108480,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -108519,7 +108493,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
@@ -108532,7 +108506,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
@@ -108545,7 +108519,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetTelegramConfiguration/GetTelegramConfigurationQueryHandler.cs",
@@ -108558,7 +108532,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
@@ -108571,7 +108545,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -108584,7 +108558,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
@@ -108597,7 +108571,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
@@ -108610,7 +108584,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailOidcServiceTests.cs",
@@ -108623,7 +108597,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
@@ -108636,7 +108610,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersIdentityContractOwnershipTests.cs",
@@ -108649,7 +108623,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/TelegramOidcPostgresTests.cs",
@@ -108662,7 +108636,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -108675,7 +108649,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
@@ -108688,7 +108662,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
@@ -108701,7 +108675,7 @@
         "Validator"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramOidcProviderTests.cs",
@@ -108714,7 +108688,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramOperationService.cs",
@@ -108727,7 +108701,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -108740,7 +108714,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs",
@@ -108753,7 +108727,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOperationServiceTests.cs",
@@ -108766,7 +108740,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommandHandler.cs",
@@ -108779,7 +108753,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/TelegramOperationService.cs",
@@ -108792,7 +108766,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -108805,7 +108779,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
@@ -108818,7 +108792,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOperationServiceTests.cs",
@@ -108831,7 +108805,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
@@ -108844,7 +108818,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersIdentityContractOwnershipTests.cs",
@@ -108857,7 +108831,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -113394,7 +113368,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs",
@@ -113407,7 +113381,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
@@ -113420,7 +113394,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetLoginDeviceSummary/GetLoginDeviceSummaryQueryHandler.cs",
@@ -113433,7 +113407,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetLoginEvents/GetLoginEventsQueryHandler.cs",
@@ -113446,7 +113420,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -113459,7 +113433,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
@@ -113472,7 +113446,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs",
@@ -113485,7 +113459,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
@@ -113498,10 +113472,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -113511,10 +113485,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -113524,7 +113498,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -113537,7 +113511,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
@@ -113550,7 +113524,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -113563,7 +113537,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -113576,7 +113550,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -113589,7 +113563,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -113602,7 +113576,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -113615,7 +113589,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
@@ -113628,7 +113602,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
@@ -113641,7 +113615,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
@@ -113654,7 +113628,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -113667,7 +113641,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -113680,7 +113654,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/UserLoginEventCleanupJobTests.cs",
@@ -113693,10 +113667,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -113706,7 +113680,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
@@ -113719,7 +113693,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
@@ -113732,7 +113706,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
@@ -113745,7 +113719,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
@@ -113758,7 +113732,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
@@ -113771,7 +113745,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -139851,7 +139825,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 19
+      "referenceCount": 20
     },
     {
       "contract": "UpsertCycleDayCommand",
@@ -140007,7 +139981,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "UpsertCycleFactorCommand",
@@ -140993,7 +140967,7 @@
         "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -141019,19 +140993,6 @@
         "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "UserLoginEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs",
       "isTest": false,
       "referenceCount": 2
@@ -141046,6 +141007,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserLoginEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserLoginEventConfiguration.cs",
       "isTest": false,
       "referenceCount": 2
     },

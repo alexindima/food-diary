@@ -1,13 +1,14 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.ReadModel.Composition;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;

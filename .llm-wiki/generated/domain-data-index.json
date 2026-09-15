@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 225,
+    "domainTypes": 224,
     "entities": 86,
-    "valueObjects": 93,
+    "valueObjects": 92,
     "invariants": 514,
     "persistenceMappings": 91,
     "indexes": 167,
@@ -890,13 +890,6 @@
       "name": "CycleFactorId",
       "role": "value-object",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
-      "name": "CycleId",
-      "role": "value-object",
-      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs",
       "line": 4
     },
     {
@@ -2082,75 +2075,75 @@
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(settings)",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 106
+      "line": 107
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Active fertility consent is required.\")",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 278
+      "line": 279
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(categories)",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 309
+      "line": 310
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Confirmed menstrual episodes cannot overlap.\", nameof(date))",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 363
+      "line": 364
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Menstrual episode id is required.\", nameof(episodeId))",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 383
+      "line": 384
     },
     {
       "area": "FoodDiary",
       "type": "KeyNotFoundException",
       "message": "throw new KeyNotFoundException($\"Menstrual episode {episodeId.Value} was not found.\")",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 387
+      "line": 388
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Confirmed menstrual episodes cannot overlap.\", nameof(startDate))",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 395
+      "line": 396
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Menstrual episode id is required.\", nameof(episodeId))",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 409
+      "line": 410
     },
     {
       "area": "FoodDiary",
       "type": "KeyNotFoundException",
       "message": "throw new KeyNotFoundException($\"Menstrual episode {episodeId.Value} was not found.\")",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 413
+      "line": 414
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Only confirmed menstrual episodes can be removed.\")",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 415
+      "line": 416
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Notes must be at most {maxLength} characters.\")",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Notes must be at most {MaxNotesLength} characters.\")",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
       "line": 516
     },
@@ -5355,7 +5348,7 @@
         "e => e.ExpiresAtUtc)"
       ],
       "relationships": [],
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs"
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5512,7 +5505,7 @@
         "e => new { e.Key, e.Locale })"
       ],
       "relationships": [],
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Email/EmailTemplateConfiguration.cs"
+      "path": "Modules/Identity/PersistenceModel/Configurations/Email/EmailTemplateConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6083,7 +6076,7 @@
         "ticket => ticket.ExpiresAtUtc)"
       ],
       "relationships": [],
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramLoginTicketConfiguration.cs"
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramLoginTicketConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6095,7 +6088,7 @@
         "item => new { item.BotId, item.UpdateId }).IsUnique()"
       ],
       "relationships": [],
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramOperationConfiguration.cs"
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramOperationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6218,7 +6211,7 @@
         "e => e.UserId)"
       ],
       "relationships": [],
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs"
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserLoginEventConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6230,7 +6223,7 @@
         "e => e.UserId)"
       ],
       "relationships": [],
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs"
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs"
     },
     {
       "area": "FoodDiary",

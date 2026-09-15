@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure.Providers;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Ai.Infrastructure;

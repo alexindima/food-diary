@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;

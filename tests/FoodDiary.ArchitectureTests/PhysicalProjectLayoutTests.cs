@@ -20,8 +20,6 @@ public sealed class PhysicalProjectLayoutTests {
         "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj -> Modules/Gamification/Infrastructure/Model/FoodDiary.Modules.Gamification.PersistenceModel.csproj",
         "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj -> Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj",
         "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj -> Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj",
-        "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj -> Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
-        "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj -> Modules/Identity/Infrastructure/Model/FoodDiary.Modules.Identity.PersistenceModel.csproj",
         "Modules/Images/Application/FoodDiary.Application.Images.csproj -> Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
         "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj -> Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj",
         "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj -> Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj",

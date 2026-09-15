@@ -1,6 +1,6 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Commands.Login;
 using FoodDiary.Application.Identity.Authentication.Commands.Register;
-using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Identity.Authentication.Models;

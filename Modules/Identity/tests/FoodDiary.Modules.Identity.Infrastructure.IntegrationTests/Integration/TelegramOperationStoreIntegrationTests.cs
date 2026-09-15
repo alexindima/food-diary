@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Infrastructure.Persistence.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;

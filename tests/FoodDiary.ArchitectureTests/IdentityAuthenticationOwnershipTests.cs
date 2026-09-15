@@ -34,7 +34,7 @@ public sealed class IdentityAuthenticationOwnershipTests {
     }
 
     [Fact]
-    public void CentralInfrastructure_KeepsOptionsButNotAuthenticationRegistrationsOrPackages() {
+    public void CentralInfrastructure_BindsSharedOptionsWithoutOwningAuthenticationAdapters() {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/DependencyInjection.Authentication.cs"));
         string[] identifiers = [.. CSharpSyntaxTree.ParseText(source).GetRoot().DescendantTokens()
             .Where(token => token.RawKind == (int)SyntaxKind.IdentifierToken)
@@ -51,7 +51,7 @@ public sealed class IdentityAuthenticationOwnershipTests {
             () => Assert.DoesNotContain("System.IdentityModel.Tokens.Jwt", centralPackages, StringComparer.Ordinal),
             () => Assert.Contains("BCrypt.Net-Next", modulePackages, StringComparer.Ordinal),
             () => Assert.Contains("System.IdentityModel.Tokens.Jwt", modulePackages, StringComparer.Ordinal),
-            () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Options/JwtOptions.cs"))),
+            () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs"))),
             () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("tests/FoodDiary.Infrastructure.Tests/Authentication/JwtOptionsTests.cs"))));
     }
 

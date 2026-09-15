@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.PersistenceModel;
 using FoodDiary.Modules.Cycles.PersistenceModel;
 using FoodDiary.Modules.ContentReports.PersistenceModel;
 using FoodDiary.Modules.Billing.PersistenceModel;

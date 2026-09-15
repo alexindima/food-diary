@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="../../../Notifications/Application/FoodDiary.Application.Notifications.csproj" />

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Events;

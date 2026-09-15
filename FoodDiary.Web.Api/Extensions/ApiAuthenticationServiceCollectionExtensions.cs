@@ -1,6 +1,6 @@
+using FoodDiary.Application.Abstractions.Options;
 using System.Text;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Infrastructure.Options;
 using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Web.Api.Build;
 using FoodDiary.Web.Api.Options;

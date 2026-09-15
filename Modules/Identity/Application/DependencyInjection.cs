@@ -1,6 +1,7 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Mediator;

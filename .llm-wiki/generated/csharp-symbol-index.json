@@ -13,11 +13,11 @@
     "interfaceImplementationLinks": 238,
     "dependencyInjectionRegistrations": 133,
     "kinds": {
-      "class": 2129,
+      "class": 2130,
       "enum": 64,
       "interface": 445,
       "record": 1284,
-      "record struct": 121
+      "record struct": 120
     },
     "roles": {
       "Command": 200,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 70,
-      "Other": 1646,
+      "Other": 1647,
       "Query": 237,
       "QueryHandler": 165,
       "ReadModelRepository": 32,
@@ -42,7 +42,7 @@
       "Response": 213,
       "Service": 259,
       "Validator": 225,
-      "ValueObject": 115,
+      "ValueObject": 114,
       "WriteRepository": 45
     }
   },
@@ -514,7 +514,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Options.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "DependencyInjection",
@@ -543,13 +543,6 @@
       "role": "Options",
       "path": "FoodDiary.Infrastructure/Options/DatabaseOptions.cs",
       "line": 2
-    },
-    {
-      "name": "JwtOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
-      "line": 4
     },
     {
       "name": "AuditEntryService",
@@ -801,7 +794,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 26
+      "line": 27
     },
     {
       "name": "FoodDiaryDbContext",
@@ -1004,7 +997,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 354
+      "line": 355
     },
     {
       "name": "UsdaCsvReader",
@@ -1025,7 +1018,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 79
+      "line": 80
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -2208,7 +2201,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 56
+      "line": 57
     },
     {
       "name": "ApiTelemetry",
@@ -5235,6 +5228,13 @@
       "line": 10
     },
     {
+      "name": "AiQuotaTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Diagnostics/AiQuotaTelemetry.cs",
+      "line": 4
+    },
+    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
@@ -7388,7 +7388,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "ConfirmPeriodStartCommandValidator",
@@ -7416,7 +7416,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Cycles/Application/Commands/CreateCycle/CreateCycleCommandValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DeleteCycleProfileCommand",
@@ -7584,7 +7584,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DependencyInjection",
@@ -7913,13 +7913,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs",
       "line": 4
     },
     {
@@ -13729,287 +13722,287 @@
       "name": "IEmailTemplateReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
       "line": 4
     },
     {
       "name": "IEmailTemplateReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs",
       "line": 4
     },
     {
       "name": "IEmailTemplateRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "line": 2
     },
     {
       "name": "IEmailTemplateWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
       "line": 4
     },
     {
       "name": "AdminSsoCode",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/AdminSsoCode.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/AdminSsoCode.cs",
       "line": 2
     },
     {
       "name": "GoogleIdentityPayload",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
       "line": 2
     },
     {
       "name": "IAdminSsoService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
       "line": 4
     },
     {
       "name": "IGoogleTokenValidator",
       "kind": "interface",
       "role": "Validator",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
       "line": 4
     },
     {
       "name": "IJwtTokenGenerator",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
       "line": 4
     },
     {
       "name": "ITelegramAuthValidator",
       "kind": "interface",
       "role": "Validator",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
       "line": 4
     },
     {
       "name": "ITelegramLoginWidgetValidator",
       "kind": "interface",
       "role": "Validator",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
       "line": 4
     },
     {
       "name": "ITelegramOidcProvider",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
       "line": 4
     },
     {
       "name": "ITelegramOidcTokenValidator",
       "kind": "interface",
       "role": "Validator",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
       "line": 4
     },
     {
       "name": "JwtImpersonationClaimNames",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtImpersonationClaimNames.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtImpersonationClaimNames.cs",
       "line": 2
     },
     {
       "name": "JwtImpersonationContext",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
       "line": 4
     },
     {
       "name": "JwtTokenUseClaimNames",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
       "line": 2
     },
     {
       "name": "TelegramInitData",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramInitData.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramInitData.cs",
       "line": 2
     },
     {
       "name": "TelegramLoginWidgetData",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
       "line": 2
     },
     {
       "name": "TelegramOidcIdentity",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
       "line": 2
     },
     {
       "name": "IAuthenticationLoginEventCleanupService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "line": 2
     },
     {
       "name": "IEmailVerificationNotifier",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
       "line": 2
     },
     {
       "name": "IRefreshTokenSessionReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs",
       "line": 5
     },
     {
       "name": "IRefreshTokenSessionReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
       "line": 5
     },
     {
       "name": "IRefreshTokenSessionRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "line": 2
     },
     {
       "name": "IRefreshTokenSessionWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
       "line": 5
     },
     {
       "name": "ITelegramAssertionReplayGuard",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
       "line": 2
     },
     {
       "name": "ITelegramIdentityPolicy",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramIdentityPolicy.cs",
       "line": 2
     },
     {
       "name": "ITelegramLoginTicketStore",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
       "line": 2
     },
     {
       "name": "ITelegramOperationPolicy",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationPolicy.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs",
       "line": 2
     },
     {
       "name": "ITelegramOperationStore",
       "kind": "interface",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs",
       "line": 2
     },
     {
       "name": "IUserLoginEventQuery",
       "kind": "interface",
       "role": "Query",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
       "line": 2
     },
     {
       "name": "IUserLoginEventReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs",
       "line": 4
     },
     {
       "name": "IUserLoginEventRepository",
       "kind": "interface",
       "role": "Repository",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
       "line": 2
     },
     {
       "name": "IUserLoginEventWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
       "line": 4
     },
     {
       "name": "JwtSecurityClaimNames",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
       "line": 2
     },
     {
       "name": "TelegramIdentityErrors",
       "kind": "class",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TelegramIdentityErrors.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramIdentityErrors.cs",
       "line": 4
     },
     {
       "name": "TelegramOperationLease",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TelegramOperationLease.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramOperationLease.cs",
       "line": 2
     },
     {
       "name": "AuthenticationClientContext",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
       "line": 2
     },
     {
       "name": "RefreshTokenSessionReadModel",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
       "line": 2
     },
     {
       "name": "IAuthenticationTokenService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
       "line": 5
     },
     {
       "name": "IssuedAuthenticationTokens",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
       "line": 2
     },
     {
@@ -14325,7 +14318,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "RefreshTokenCommandValidator",
@@ -14500,14 +14493,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "OidcAttempt",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
-      "line": 23
+      "line": 24
     },
     {
       "name": "TelegramBotAuthCommand",
@@ -14717,7 +14710,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "EmailSender",
@@ -14752,14 +14745,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailOidcService.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "TelegramBackupEmailService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "TelegramOperationService",
@@ -14787,7 +14780,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "UpsertEmailTemplateCommandHandler",
@@ -14976,7 +14969,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ImpersonationTokenIssuer",
@@ -15004,7 +14997,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "IdentityProviderRegistration",
@@ -15012,76 +15005,6 @@
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
       "line": 11
-    },
-    {
-      "name": "ConsumedTelegramAssertion",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Infrastructure/Model/Authentication/ConsumedTelegramAssertion.cs",
-      "line": 6
-    },
-    {
-      "name": "TelegramLoginTicket",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Infrastructure/Model/Authentication/TelegramLoginTicket.cs",
-      "line": 6
-    },
-    {
-      "name": "TelegramOperation",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Infrastructure/Model/Authentication/TelegramOperation.cs",
-      "line": 6
-    },
-    {
-      "name": "ConsumedTelegramAssertionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "TelegramLoginTicketConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramLoginTicketConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "TelegramOperationConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/TelegramOperationConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "UserLoginEventConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserRefreshTokenSessionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "EmailTemplateConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "Modules/Identity/Infrastructure/Model/Configurations/Email/EmailTemplateConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "IdentityPersistenceModelRegistration",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Infrastructure/Model/IdentityPersistenceModelRegistration.cs",
-      "line": 4
     },
     {
       "name": "EmailTemplateRepository",
@@ -15102,7 +15025,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "TelegramLoginTicketStore",
@@ -15123,7 +15046,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "IdentityDbContext",
@@ -15228,6 +15151,76 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
+      "line": 4
+    },
+    {
+      "name": "ConsumedTelegramAssertion",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/PersistenceModel/Authentication/ConsumedTelegramAssertion.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramLoginTicket",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/PersistenceModel/Authentication/TelegramLoginTicket.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramOperation",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/PersistenceModel/Authentication/TelegramOperation.cs",
+      "line": 6
+    },
+    {
+      "name": "ConsumedTelegramAssertionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramLoginTicketConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramLoginTicketConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramOperationConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramOperationConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "UserLoginEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserLoginEventConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserRefreshTokenSessionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "EmailTemplateConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/PersistenceModel/Configurations/Email/EmailTemplateConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "IdentityPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/PersistenceModel/IdentityPersistenceModelRegistration.cs",
       "line": 4
     },
     {
@@ -27845,6 +27838,13 @@
       "line": 2
     },
     {
+      "name": "JwtOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Shared/FoodDiary.Authentication.Contracts/Options/JwtOptions.cs",
+      "line": 4
+    },
+    {
       "name": "AggregateRoot",
       "kind": "class",
       "role": "Other",
@@ -28443,7 +28443,7 @@
     },
     {
       "interface": "IAdminSsoService",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
       "implementation": "AdminSsoService",
       "implementationPath": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
       "confidence": "naming-convention"
@@ -28485,14 +28485,14 @@
     },
     {
       "interface": "IAuthenticationLoginEventCleanupService",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "implementation": "AuthenticationLoginEventCleanupService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAuthenticationTokenService",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
       "implementation": "AuthenticationTokenService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
       "confidence": "naming-convention"
@@ -28793,14 +28793,14 @@
     },
     {
       "interface": "IEmailTemplateRepository",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "implementation": "EmailTemplateRepository",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailVerificationNotifier",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
       "implementation": "EmailVerificationNotifier",
       "implementationPath": "Modules/Identity/Presentation/Services/EmailVerificationNotifier.cs",
       "confidence": "naming-convention"
@@ -28996,7 +28996,7 @@
     },
     {
       "interface": "IGoogleTokenValidator",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
       "implementation": "GoogleTokenValidator",
       "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
       "confidence": "naming-convention"
@@ -29115,7 +29115,7 @@
     },
     {
       "interface": "IJwtTokenGenerator",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
       "implementation": "JwtTokenGenerator",
       "implementationPath": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
       "confidence": "naming-convention"
@@ -29661,7 +29661,7 @@
     },
     {
       "interface": "IRefreshTokenSessionRepository",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "implementation": "RefreshTokenSessionRepository",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "confidence": "naming-convention"
@@ -29703,49 +29703,49 @@
     },
     {
       "interface": "ITelegramAssertionReplayGuard",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
       "implementation": "TelegramAssertionReplayGuard",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramAuthValidator",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
       "implementation": "TelegramAuthValidator",
       "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramLoginTicketStore",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
       "implementation": "TelegramLoginTicketStore",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramLoginWidgetValidator",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
       "implementation": "TelegramLoginWidgetValidator",
       "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramOidcProvider",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
       "implementation": "TelegramOidcProvider",
       "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramOidcTokenValidator",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs",
       "implementation": "TelegramOidcTokenValidator",
       "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramOperationStore",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramOperationStore.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs",
       "implementation": "TelegramOperationStore",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
       "confidence": "naming-convention"
@@ -29864,14 +29864,14 @@
     },
     {
       "interface": "IUserLoginEventQuery",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
       "implementation": "UserLoginEventQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserLoginEventRepository",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
       "implementation": "UserLoginEventRepository",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "confidence": "naming-convention"
@@ -30142,21 +30142,21 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 396
+      "line": 397
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 397
+      "line": 398
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 70
+      "line": 71
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -30212,7 +30212,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 187
+      "line": 188
     },
     {
       "service": "IAdminDashboardReadService",
@@ -30478,28 +30478,28 @@
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IAuthenticationTokenService",
       "implementation": "AuthenticationTokenService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 19
     },
     {
       "service": "IInitialAdminBootstrapService",
       "implementation": "InitialAdminBootstrapService",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 23
+      "line": 24
     },
     {
       "service": "IEmailSender",
       "implementation": "EmailSender",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 24
+      "line": 25
     },
     {
       "service": "IEmailVerificationNotifier",
